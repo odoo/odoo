@@ -26,6 +26,7 @@ import pytz
 import pooler
 from tools.translate import _
 from service import security
+import netsvc
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -83,7 +84,6 @@ class groups(osv.osv):
 
 groups()
 
-
 class roles(osv.osv):
     _name = "res.roles"
     _columns = {
@@ -113,16 +113,31 @@ def _lang_get(self, cr, uid, context={}):
 def _tz_get(self,cr,uid, context={}):
     return [(x, x) for x in pytz.all_timezones]
 
-def _companies_get(self,cr, uid, context={}):
-    res=[]
-    ids = self.pool.get('res.users').browse(cr, uid, uid, context).company_ids
-    res = [(i.id,i.name) for i in ids]
-    return res
-
 class users(osv.osv):
     __admin_ids = {}
     _uid_cache = {}
     _name = "res.users"
+
+    WELCOME_MAIL_SUBJECT = u"Welcome to OpenERP"
+    WELCOME_MAIL_BODY = u"An OpenERP account has been created for you, "\
+        "\"%(name)s\".\n\nYour login is %(login)s, "\
+        "you should ask your supervisor or system administrator if you "\
+        "haven't been given your password yet.\n\n"\
+        "If you aren't %(name)s, this email reached you errorneously, "\
+        "please delete it."
+
+    def get_welcome_mail_subject(self, cr, uid, context=None):
+        """ Returns the subject of the mail new users receive (when
+        created via the res.config.users wizard), default implementation
+        is to return config_users.WELCOME_MAIL_SUBJECT
+        """
+        return self.WELCOME_MAIL_SUBJECT
+    def get_welcome_mail_body(self, cr, uid, context=None):
+        """ Returns the subject of the mail new users receive (when
+        created via the res.config.users wizard), default implementation
+        is to return config_users.WELCOME_MAIL_BODY
+        """
+        return self.WELCOME_MAIL_BODY
 
     def get_current_company(self, cr, uid):
         res=[]
@@ -130,12 +145,39 @@ class users(osv.osv):
         res = cr.fetchall()
         return res
 
+    def send_welcome_email(self, cr, uid, id, context=None):
+        logger= netsvc.Logger()
+        user = self.pool.get('res.users').read(cr, uid, id, context=context)
+        if not tools.config.get('smtp_server'):
+            logger.notifyChannel('mails', netsvc.LOG_WARNING,
+                _('"smtp_server" needs to be set to send mails to users'))
+            return False
+        if not tools.config.get('email_from'):
+            logger.notifyChannel("mails", netsvc.LOG_WARNING,
+                _('"email_from" needs to be set to send welcome mails '
+                  'to users'))
+            return False
+        if not user.get('email'):
+            return False
+
+        return tools.email_send(email_from=None, email_to=[user['email']],
+                                subject=self.get_welcome_mail_subject(
+                                    cr, uid, context=context),
+                                body=self.get_welcome_mail_body(
+                                    cr, uid, context=context) % user)
+
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=True),
-        'login': fields.char('Login', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True, select=True,
+                            help="The new user's real name, used for searching"
+                                 " and most listings"),
+        'login': fields.char('Login', size=64, required=True,
+                             help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
-        'email': fields.char('E-mail', size=64, help='If an email is provided'\
-                             ', the user will be sent a message welcoming him'),
+        'email': fields.char('E-mail', size=64,
+            help='If an email is provided, the user will be sent a message '
+                 'welcoming him.\n\nWarning: if "email_from" and "smtp_server"'
+                 " aren't configured, it won't be possible to email new "
+                 "users."),
         'signature': fields.text('Signature', size=64),
         'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
@@ -144,11 +186,15 @@ class users(osv.osv):
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
         'rules_id': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules'),
-        'company_id': fields.many2one('res.company', 'Company', help="The company this user is currently working on.", required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True,
+            help="The company this user is currently working for."),
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Accepted Companies'),
-        'context_lang': fields.selection(_lang_get, 'Language', required=True),
-        'context_tz': fields.selection(_tz_get,  'Timezone', size=64),
-        'company': fields.selection(_companies_get,  'Company', size=64),
+        'context_lang': fields.selection(_lang_get, 'Language', required=True,
+            help="Sets the language for the user's user interface, when UI "
+                 "translations are available"),
+        'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
+            help="The user's timezone, used to perform timezone conversions "
+                 "between the server and the client."),
     }
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
@@ -180,8 +226,11 @@ class users(osv.osv):
         ids = self.pool.get('ir.ui.menu').search(cr, uid, [('usage','=','menu')])
         return ids and ids[0] or False
 
-    def _get_company(self,cr, uid, context={}):
-        return self.pool.get('res.users').browse(cr, uid, uid, context).company_id.id
+    def _get_company(self,cr, uid, context={}, uid2=False):
+        if not uid2:
+            uid2 = uid
+        user = self.pool.get('res.users').browse(cr, uid, uid2, context)        
+        return user.company_id.id
 
     def _get_menu(self,cr, uid, context={}):
         ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')])
@@ -201,9 +250,8 @@ class users(osv.osv):
         'groups_id': _get_group,
         'address_id': False,
     }
-    def company_get(self, cr, uid, uid2):
-        company_id = self.pool.get('res.users').browse(cr, uid, uid2).company_id.id
-        return company_id
+    def company_get(self, cr, uid, uid2, context={}):
+        return self._get_company(cr, uid, context=context, uid2=uid2)
     company_get = tools.cache()(company_get)
 
     def write(self, cr, uid, ids, values, *args, **argv):
@@ -251,13 +299,7 @@ class users(osv.osv):
                 result[k[8:]] = getattr(user,k)
         return result
 
-
-    def _check_company(self, cursor, user, ids):
-        for user in self.browse(cursor, user, ids):
-            if user.company_ids and (user.company_id.id not in map(lambda x: x.id, user.company_ids)):
-                return False
-        return True
-
+    
     def action_get(self, cr, uid, context={}):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
@@ -312,10 +354,7 @@ class users(osv.osv):
         if not res:
             raise security.ExceptionNoTb('Bad username or password')
         return res[0]
-
-    _constraints = [
-        (_check_company, 'This user can not connect using this company !', ['company_id']),
-    ]
+   
 users()
 
 class config_users(osv.osv_memory):
@@ -329,9 +368,14 @@ class config_users(osv.osv_memory):
             }
 
     def create_user(self, cr, uid, new_id, context=None):
-        ''' create a new res.user instance from the data stored
-        in the current res.config.users
-        '''
+        """ create a new res.user instance from the data stored
+        in the current res.config.users.
+
+        If an email address was filled in for the user, sends a mail
+        composed of the return values of ``get_welcome_mail_subject``
+        and ``get_welcome_mail_body`` (which should be unicode values),
+        with the user's data %-formatted into the mail body
+        """
         base_data = self.read(cr, uid, new_id, context=context)
         partner_id = self.pool.get('res.partner').main_partner(cr, uid)
         address = self.pool.get('res.partner.address').create(
@@ -345,10 +389,14 @@ class config_users(osv.osv_memory):
                 cr, base_data['name'], base_data['email'], context=context),
             address_id=address,
             )
-        self.pool.get('res.users').create(
+        new_user = self.pool.get('res.users').create(
             cr, uid, user_data, context)
-
+        self.send_welcome_email(cr, uid, new_user, context=context)
     def execute(self, cr, uid, ids, context=None):
+        'Do nothing on execution, just launch the next action/todo'
+        pass
+    def action_add(self, cr, uid, ids, context=None):
+        'Create a user, and re-display the view'
         self.create_user(cr, uid, ids[0], context=context)
         return {
             'view_type': 'form',

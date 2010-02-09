@@ -19,21 +19,24 @@
 #
 ##############################################################################
 
-import os
-from os.path import join
+import codecs
+import csv
 import fnmatch
-import csv, re
+import inspect
+import locale
+import os
+import re
+import tarfile
+import tempfile
+from os.path import join
+
+from datetime import datetime
 from lxml import etree
+
 import osv, tools, pooler
 import ir
 import netsvc
 from tools.misc import UpdateableStr
-import inspect
-import mx.DateTime as mxdt
-import tempfile
-import tarfile
-import codecs
-import locale
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
@@ -283,7 +286,7 @@ class TinyPoFile(object):
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
                               'bugmail': release.support_email,
-                              'now': mxdt.ISO.strUTC(mxdt.ISO.DateTime.utc()),
+                              'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')+"+0000",
                             }
                           )
 
@@ -764,6 +767,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 # the same source
                 obj = pool.get(model)
                 if obj:
+                    if not field in obj._columns:
+                        continue
                     ids = obj.search(cr, uid, [(field, '=', dic['src'])])
 
                     # if the resource id (res_id) is in that list, use it,

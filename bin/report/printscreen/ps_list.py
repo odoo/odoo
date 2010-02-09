@@ -27,19 +27,21 @@ from report import render
 import locale
 
 import time, os
-import mx.DateTime
+from datetime import datetime
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
+        self.context = {}
 
     def _parse_node(self, root_node):
         result = []
         for node in root_node:
-            if node.tag == 'field':
-                result.append(node.get('name'))
-            else:
-                result.extend(self._parse_node(node))
+            if not eval(str(node.attrib.get('invisible',False)),{'context':self.context}):
+                if node.tag == 'field':
+                    result.append(node.get('name'))
+                else:
+                    result.extend(self._parse_node(node))
         return result
 
     def _parse_string(self, view):
@@ -52,6 +54,7 @@ class report_printscreen_list(report_int):
     def create(self, cr, uid, ids, datas, context=None):
         if not context:
             context={}
+        self.context = context
         pool = pooler.get_pool(cr.dbname)
         model = pool.get(datas['model'])
         model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
@@ -64,7 +67,6 @@ class report_printscreen_list(report_int):
 
         datas['ids'] = ids
         model = pooler.get_pool(cr.dbname).get(datas['model'])
-
         result = model.fields_view_get(cr, uid, view_type='tree', context=context)
         fields_order = self._parse_string(result['arch'])
         rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
@@ -165,22 +167,22 @@ class report_printscreen_list(report_int):
 
                 if fields[f]['type'] == 'date' and line[f]:
                     format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
-                    d1= mx.DateTime.strptime(line[f],'%Y-%m-%d')
+                    d1 = datetime.strptime(line[f],'%Y-%m-%d')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'time' and line[f]:
                     format = str(locale.nl_langinfo(locale.T_FMT))
-                    d1= mx.DateTime.strptime(line[f],'%H:%M:%S')
+                    d1 = datetime.strptime(line[f], '%H:%M:%S')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'datetime' and line[f]:
                     format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
-                    d1= mx.DateTime.strptime(line[f],'%Y-%m-%d %H:%M:%S')
+                    d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
                     new_d1 = d1.strftime(format)
                     line[f] = new_d1
-                    
+
                 col = etree.SubElement(node_line, 'col', para='yes', tree='no')
                 if line[f] != None:
                     col.text = tools.ustr(line[f] or '')

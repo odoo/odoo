@@ -395,13 +395,22 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     for i, url in enumerate(url_index):
         if i == 0:
             html += '\n\n'
-        html += '[%s] %s\n' % (i+1, url)       
+        html += '[%s] %s\n' % (i+1, url)
     return html
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attach=None, openobject_id=False, ssl=False, debug=False, subtype='plain', x_headers=None, priority='3'):
 
-    """Send an email."""
+    """Send an email.
+
+    Arguments:
+
+    `email_from`: A string used to fill the `From` header, if falsy,
+                  config['email_from'] is used instead.  Also used for
+                  the `Reply-To` header if `reply_to` is not provided
+
+    `email_to`: a sequence of addresses to send the mail to.
+    """
     import smtplib
     from email.MIMEText import MIMEText
     from email.MIMEBase import MIMEBase
@@ -410,32 +419,30 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     from email.Utils import formatdate, COMMASPACE
     from email.Utils import formatdate, COMMASPACE
     from email import Encoders
-    import netsvc    
+    import netsvc
 
     if x_headers is None:
         x_headers = {}
 
-    if not ssl:
-        ssl = config.get('smtp_ssl', False)
+    if not ssl: ssl = config.get('smtp_ssl', False)
 
-    if not email_from and not config['email_from']:
-        raise Exception("No Email sender by default, see config file")
+    if not (email_from or config['email_from']):
+        raise ValueError("Sending an email requires either providing a sender "
+                         "address or having configured one")
 
-    if not email_from:
-        email_from = config.get('email_from', False)
+    if not email_from: email_from = config.get('email_from', False)
 
-    if not email_cc:
-        email_cc = []
-    if not email_bcc:
-        email_bcc = []
+    if not email_cc: email_cc = []
+    if not email_bcc: email_bcc = []
+    if not body: body = u''
+    try: email_body = body.encode('utf-8')
+    except (UnicodeEncodeError, UnicodeDecodeError):
+        email_body = body
 
-    if not attach:
-        try:
-            msg = MIMEText(body.encode('utf8') or '',_subtype=subtype,_charset='utf-8')
-        except:
-            msg = MIMEText(body or '',_subtype=subtype,_charset='utf-8')
-    else:
-        msg = MIMEMultipart()
+    email_text = MIMEText(email_body, _subtype=subtype, _charset='utf-8')
+
+    if attach: msg = MIMEMultipart()
+    else: msg = email_text
 
     msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
@@ -455,21 +462,18 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     msg['X-Generated-By'] = 'OpenERP (http://www.openerp.com)'
     msg['X-OpenERP-Server-Host'] = socket.gethostname()
     msg['X-OpenERP-Server-Version'] = release.version
-    if priority:
-        msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
+
+    msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 
     # Add dynamic X Header
-    for key, value in x_headers.items():
+    for key, value in x_headers.iteritems():
         msg['X-OpenERP-%s' % key] = str(value)
 
     if openobject_id:
         msg['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
     if attach:
-        try:
-            msg.attach(MIMEText(body.encode('utf8') or '',_subtype=subtype,_charset='utf-8'))
-        except:
-            msg.attach(MIMEText(body or '', _charset='utf-8', _subtype=subtype) )
+        msg.attach(email_text)
         for (fname,fcontent) in attach:
             part = MIMEBase('application', "octet-stream")
             part.set_payload( fcontent )

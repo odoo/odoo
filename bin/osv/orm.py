@@ -165,7 +165,7 @@ class browse_record(object):
             else:
                 self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING,
                     "Field '%s' does not exist in object '%s': \n%s" % (
-                        name, self, ''.join(traceback.format_trace())))
+                        name, self, ''.join(traceback.format_exc())))
                 raise KeyError("Field '%s' does not exist in object '%s'" % (
                     name, self))
 
@@ -203,7 +203,7 @@ class browse_record(object):
                 # Where did those ids come from? Perhaps old entries in ir_model_dat?
                 self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING,
                     "No datas found for ids %s in %s \n%s" % (
-                        ids, self, ''.join(traceback.format_trace())))
+                        ids, self, ''.join(traceback.format_exc())))
                 raise KeyError('Field %s not found in %s'%(name,self))
             # create browse records for 'remote' objects
             for data in datas:
@@ -932,6 +932,17 @@ class orm_template(object):
             self._invalids.clear()
 
     def default_get(self, cr, uid, fields_list, context=None):
+        """ Set default values for the object's fields.
+
+        Returns a dict of {field_name:default_value}
+
+        Arguments:
+        `fields_list`: the fields for which the object doesn't have
+                       any value yet, and default values need to be
+                       provided. If fields outside this list are
+                       returned, the user-provided values will be
+                       overwritten.
+        """
         return {}
 
     def perm_read(self, cr, user, ids, context=None, details=True):
@@ -1065,6 +1076,7 @@ class orm_template(object):
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
                         dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
+                        context.update(eval(node.get('context','{}')))                        
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
@@ -1450,6 +1462,7 @@ class orm_template(object):
                     'client_action_relate', [(self._name, False)], False,
                     context)
             resprint = map(clean, resprint)
+            print "resprintresprint",resprint
             resaction = map(clean, resaction)
             resaction = filter(lambda x: not x.get('multi', False), resaction)
             resprint = filter(lambda x: not x.get('multi', False), resprint)
@@ -1831,23 +1844,17 @@ class orm(orm_template):
             alldata[r['id']] = r
             del r['id']
 
-        today = ''
-        if fget.has_key(groupby) and fget[groupby]['type'] in ('date','datetime'):
-            today = datetime.date.today()
-            yesterday = (today - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
-
         data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
         for d in data:
             if fget.has_key(groupby):
                 if fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and d[groupby][1] or ''
-            if today:
-                if d[groupby][:10] == str(today):
-                    d[groupby] = 'Today'
-                elif d[groupby][:10] == yesterday:
-                    d[groupby] = 'Yesterday'
-                else:
-                    d[groupby] = 'Old'
+                if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
+                   today = datetime.date.today()
+                   if d[groupby][:10] == str(today):
+                       d[groupby] = 'Today'
+                   else:
+                       d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
             d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
             del alldata[d['id']][groupby]
             d.update(alldata[d['id']])

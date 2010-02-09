@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
+from operator import attrgetter
+
 from osv import osv, fields
+from tools.translate import _
 import netsvc
 import pooler
 
@@ -57,10 +60,30 @@ class res_config_configurable(osv.osv_memory):
                                   'getting next %s' % todos)
         active_todos = todos.search(cr, uid, [('state','=','open'),
                                               ('active','=',True)],
-                                    limit=1, context=None)
+                                    limit=1)
         if active_todos:
             return todos.browse(cr, uid, active_todos[0], context=None)
         return None
+
+    def _set_previous_todo(self, cr, uid, state):
+        """ lookup the previous (which is still the next at this point)
+        ir.actions.todo, set it to whatever state was provided.
+
+        Raises
+        `LookupError`: if we couldn't find *any* previous todo
+        `ValueError`: if no state is provided
+        anything ir_actions_todo.write can throw
+        """
+        # this is ultra brittle, but apart from storing the todo id
+        # into the res.config view, I'm not sure how to get the
+        # "previous" todo
+        previous_todo = self._next_action(cr, uid)
+        if not previous_todo:
+            raise LookupError(_("Couldn't find previous ir.actions.todo"))
+        if not state:
+            raise ValueError(_("Can't set an ir.actions.todo's state to "
+                               "nothingness"))
+        previous_todo.write({'state':state})
 
     def _next(self, cr, uid):
         self.logger.notifyChannel('actions', netsvc.LOG_INFO,
@@ -69,9 +92,6 @@ class res_config_configurable(osv.osv_memory):
         self.logger.notifyChannel('actions', netsvc.LOG_INFO,
                                   'next action is %s' % next)
         if next:
-            self.pool.get('ir.actions.todo').write(cr, uid, next.id, {
-                    'state':'done',
-                    }, context=None)
             action = next.action_id
             return {
                 'view_mode': action.view_mode,
@@ -90,42 +110,221 @@ class res_config_configurable(osv.osv_memory):
         # return the action associated with the menu
         return self.pool.get(current_user_menu.type)\
             .read(cr, uid, current_user_menu.id)
+
     def next(self, cr, uid, ids, context=None):
+        """ Returns the next todo action to execute (using the default
+        sort order)
+        """
         return self._next(cr, uid)
 
     def execute(self, cr, uid, ids, context=None):
+        """ Method called when the user clicks on the ``Next`` button.
+
+        Execute *must* be overloaded unless ``action_next`` is overloaded
+        (which is something you generally don't need to do).
+
+        If ``execute`` returns an action dictionary, that action is executed
+        rather than just going to the next configuration item.
+        """
         raise NotImplementedError(
             'Configuration items need to implement execute')
     def cancel(self, cr, uid, ids, context=None):
+        """ Method called when the user click on the ``Skip`` button.
+
+        ``cancel`` should be overloaded instead of ``action_skip``. As with
+        ``execute``, if it returns an action dictionary that action is
+        executed in stead of the default (going to the next configuration item)
+
+        The default implementation is a NOOP.
+
+        ``cancel`` is also called by the default implementation of
+        ``action_cancel``.
+        """
         pass
 
     def action_next(self, cr, uid, ids, context=None):
+        """ Action handler for the ``next`` event.
+
+        Sets the status of the todo the event was sent from to
+        ``done``, calls ``execute`` and -- unless ``execute`` returned
+        an action dictionary -- executes the action provided by calling
+        ``next``.
+        """
+        self._set_previous_todo(cr, uid, state='done')
         next = self.execute(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
 
     def action_skip(self, cr, uid, ids, context=None):
+        """ Action handler for the ``skip`` event.
+
+        Sets the status of the todo the event was sent from to
+        ``skip``, calls ``cancel`` and -- unless ``cancel`` returned
+        an action dictionary -- executes the action provided by calling
+        ``next``.
+        """
+        self._set_previous_todo(cr, uid, state='skip')
+        next = self.cancel(cr, uid, ids, context=None)
+        if next: return next
+        return self.next(cr, uid, ids, context=context)
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        """ Action handler for the ``cancel`` event. That event isn't
+        generated by the res.config.view.base inheritable view, the
+        inherited view has to overload one of the buttons (or add one
+        more).
+
+        Sets the status of the todo the event was sent from to
+        ``cancel``, calls ``cancel`` and -- unless ``cancel`` returned
+        an action dictionary -- executes the action provided by calling
+        ``next``.
+        """
+        self._set_previous_todo(cr, uid, state='cancel')
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
 res_config_configurable()
 
 class res_config_installer(osv.osv_memory):
-    ''' New-style configuration base specialized for modules selection
+    """ New-style configuration base specialized for addons selection
     and installation.
-    '''
+
+    Basic usage
+    -----------
+
+    Subclasses can simply define a number of _columns as
+    fields.boolean objects. The keys (column names) should be the
+    names of the addons to install (when selected). Upon action
+    execution, selected boolean fields (and those only) will be
+    interpreted as addons to install, and batch-installed.
+
+    Additional addons
+    -----------------
+
+    It is also possible to require the installation of an additional
+    addon set when a specific preset of addons has been marked for
+    installation (in the basic usage only, additionals can't depend on
+    one another).
+
+    These additionals are defined through the ``_install_if``
+    property. This property is a mapping of a collection of addons (by
+    name) to a collection of addons (by name) [#]_, and if all the *key*
+    addons are selected for installation, then the *value* ones will
+    be selected as well. For example::
+
+        _install_if = {
+            ('sale','crm'): ['sale_crm'],
+        }
+
+    This will install the ``sale_crm`` addon if and only if both the
+    ``sale`` and ``crm`` addons are selected for installation.
+
+    You can define as many additionals as you wish, and additionals
+    can overlap in key and value. For instance::
+
+        _install_if = {
+            ('sale','crm'): ['sale_crm'],
+            ('sale','project'): ['project_mrp'],
+        }
+
+    will install both ``sale_crm`` and ``project_mrp`` if all of
+    ``sale``, ``crm`` and ``project`` are selected for installation.
+
+    Hook methods
+    ------------
+
+    Subclasses might also need to express dependencies more complex
+    than that provided by additionals. In this case, it's possible to
+    define methods of the form ``_if_%(name)s`` where ``name`` is the
+    name of a boolean field. If the field is selected, then the
+    corresponding module will be marked for installation *and* the
+    hook method will be executed.
+
+    Hook methods take the usual set of parameters (cr, uid, ids,
+    context) and can return a collection of additional addons to
+    install (if they return anything, otherwise they should not return
+    anything, though returning any "falsy" value such as None or an
+    empty collection will have the same effect).
+
+    Complete control
+    ----------------
+
+    The last hook is to simply overload the ``modules_to_install``
+    method, which implements all the mechanisms above. This method
+    takes the usual set of parameters (cr, uid, ids, context) and
+    returns a ``set`` of addons to install (addons selected by the
+    above methods minus addons from the *basic* set which are already
+    installed) [#]_ so an overloader can simply manipulate the ``set``
+    returned by ``res_config_installer.modules_to_install`` to add or
+    remove addons.
+
+    Skipping the installer
+    ----------------------
+
+    Unless it is removed from the view, installers have a *skip*
+    button which invokes ``action_skip`` (and the ``cancel`` hook from
+    ``res.config``). Hooks and additionals *are not run* when skipping
+    installation, even for already installed addons.
+
+    Again, setup your hooks accordinly.
+
+    .. [#] note that since a mapping key needs to be hashable, it's
+           possible to use a tuple or a frozenset, but not a list or a
+           regular set
+
+    .. [#] because the already-installed modules are only pruned at
+           the very end of ``modules_to_install``, additionals and
+           hooks depending on them *are guaranteed to execute*. Setup
+           your hooks accordingly.
+    """
     _name = 'res.config.installer'
     _inherit = 'res.config'
 
     _install_if = {}
 
-    def _modules_to_install(self, cr, uid, ids, context=None):
+    def _already_installed(self, cr, uid, context=None):
+        """ For each module (boolean fields in a res.config.installer),
+        check if it's already installed (neither uninstallable nor uninstalled)
+        and if it is, check it by default
+        """
+        modules = self.pool.get('ir.module.module')
+
+        selectable = [field for field in self._columns
+                      if type(self._columns[field]) is fields.boolean]
+        return modules.browse(
+            cr, uid,
+            modules.search(cr, uid,
+                           [('name','in',selectable),
+                            ('state','not in',['uninstallable', 'uninstalled'])],
+                           context=context),
+            context=context)
+
+
+    def modules_to_install(self, cr, uid, ids, context=None):
+        """ selects all modules to install:
+
+        * checked boolean fields
+        * return values of hook methods. Hook methods are of the form
+          ``_if_%(addon_name)s``, and are called if the corresponding
+          addon is marked for installation. They take the arguments
+          cr, uid, ids and context, and return an iterable of addon
+          names
+        * additionals, additionals are setup through the ``_install_if``
+          class variable. ``_install_if`` is a dict of {iterable:iterable}
+          where key and value are iterables of addon names.
+
+          If all the addons in the key are selected for installation
+          (warning: addons added through hooks don't count), then the
+          addons in the value are added to the set of modules to install
+        * not already installed
+        """
         base = set(module_name
                    for installer in self.read(cr, uid, ids, context=context)
                    for module_name, to_install in installer.iteritems()
                    if module_name != 'id'
                    if type(self._columns[module_name]) is fields.boolean
                    if to_install)
+
         hooks_results = set()
         for module in base:
             hook = getattr(self, '_if_%s'%(module), None)
@@ -138,11 +337,40 @@ class res_config_installer(osv.osv_memory):
                    if base.issuperset(requirements)
                    for module in consequences)
 
-        return base | hooks_results | additionals
+        return (base | hooks_results | additionals) - set(
+            map(attrgetter('name'), self._already_installed(cr, uid, context)))
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        ''' If an addon is already installed, check it by default
+        '''
+        defaults = super(res_config_installer, self).default_get(
+            cr, uid, fields_list, context=context)
+
+        return dict(defaults,
+                    **dict.fromkeys(
+                        map(attrgetter('name'),
+                            self._already_installed(cr, uid, context=context)),
+                        True))
+
+    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+        """ If an addon is already installed, set it to readonly as
+        res.config.installer doesn't handle uninstallations of already
+        installed addons
+        """
+        fields = super(res_config_installer, self).fields_get(
+            cr, uid, fields, context, read_access)
+
+        for module in self._already_installed(cr, uid, context=context):
+            fields[module.name].update(
+                readonly=True,
+                help=fields[module.name].get('help', '') +
+                     _('\n\nThis addon is already installed on your system'))
+
+        return fields
 
     def execute(self, cr, uid, ids, context=None):
         modules = self.pool.get('ir.module.module')
-        to_install = list(self._modules_to_install(
+        to_install = list(self.modules_to_install(
             cr, uid, ids, context=context))
         self.logger.notifyChannel(
             'installer', netsvc.LOG_INFO,

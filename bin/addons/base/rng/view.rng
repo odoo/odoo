@@ -135,6 +135,7 @@
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:optional><rng:attribute name="fill"/></rng:optional>
             <rng:optional><rng:attribute name="help"/></rng:optional>
+            <rng:optional><rng:attribute name="width"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="notebook"/>
@@ -189,7 +190,7 @@
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
-    
+
     <rng:define name="vpaned">
         <rng:element name="vpaned">
             <rng:optional><rng:attribute name="position"/></rng:optional>
@@ -342,11 +343,14 @@
             <rng:optional><rng:attribute name="password"/></rng:optional>
             <rng:optional><rng:attribute name="comparator"/></rng:optional>
             <rng:optional><rng:attribute name="sum"/></rng:optional>
+            <rng:optional><rng:attribute name="bold"/></rng:optional>
+            <rng:optional><rng:attribute name="avg"/></rng:optional>
             <rng:optional><rng:attribute name="select"/></rng:optional>
             <rng:optional><rng:attribute name="group"/></rng:optional>
             <rng:optional><rng:attribute name="operator"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="nolabel"/></rng:optional>
+            <rng:optional><rng:attribute name="default"/></rng:optional>
             <rng:optional><rng:attribute name="default_get"/></rng:optional>
             <rng:optional><rng:attribute name="required"/></rng:optional>
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
@@ -367,7 +371,7 @@
             <rng:optional><rng:attribute name="height"/></rng:optional>
             <rng:optional><rng:attribute name="rowspan"/></rng:optional>
             <rng:optional><rng:attribute name="align"/></rng:optional>
-            <rng:optional><rng:attribute name="selection"/></rng:optional>            
+            <rng:optional><rng:attribute name="selection"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="diagram"/>
@@ -457,6 +461,7 @@
     <rng:define name="button">
         <rng:element name="button">
             <rng:optional><rng:attribute name="attrs"/></rng:optional>
+            <rng:optional><rng:attribute name="invisible"/></rng:optional>
             <rng:optional><rng:attribute name="name" /></rng:optional>
             <rng:optional><rng:attribute name="icon" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
@@ -471,7 +476,7 @@
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:optional><rng:attribute name="confirm"/></rng:optional>
-            <rng:optional><rng:attribute name="help"/></rng:optional>            
+            <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="attribute" />
@@ -510,9 +515,9 @@
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:optional><rng:attribute name="context"/></rng:optional>
-            <rng:optional><rng:attribute name="help"/></rng:optional>            
+            <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="domain"/></rng:optional>
-            <rng:optional><rng:attribute name="default"/></rng:optional>            
+            <rng:optional><rng:attribute name="default"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="form" />
@@ -543,12 +548,12 @@
             <rng:optional><rng:attribute name="goto" /></rng:optional>
         </rng:element>
     </rng:define>
-	
+
     <rng:start>
         <rng:choice>
             <rng:ref name="diagram" />
             <rng:ref name="form" />
-            <rng:ref name="search" />            
+            <rng:ref name="search" />
             <rng:ref name="group" />
             <rng:ref name="field" />
             <rng:ref name="tree" />
