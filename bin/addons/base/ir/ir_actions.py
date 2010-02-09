@@ -165,7 +165,7 @@ class act_window(osv.osv):
         act_ids = self.search(cr,uid,[('res_model','=',model),('filter','=',1),('default_user_ids','in',(','.join(map(str,[uid,])),))])
         act_ids += filter_ids
         act_ids = list(set(act_ids))
-        my_acts = self.read(cr, uid, act_ids, ['name', 'domain'])
+        my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'])
         return my_acts
 
     def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
