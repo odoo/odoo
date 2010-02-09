@@ -204,6 +204,7 @@ class browse_record(object):
 
             # create browse records for 'remote' objects
             for data in datas:
+                new_data = {}
                 for n, f in ffields:
                     if f._type in ('many2one', 'one2one'):
                         if data[n]:
@@ -219,18 +220,20 @@ class browse_record(object):
                                 #        testing to be sure we got the right
                                 #        object and not the parent one.
                                 if not isinstance(ids2, browse_record):
-                                    data[n] = browse_record(self._cr,
+                                    new_data[n] = browse_record(self._cr,
                                         self._uid, ids2, obj, self._cache,
                                         context=self._context,
                                         list_class=self._list_class,
                                         fields_process=self._fields_process)
                             else:
-                                data[n] = browse_null()
+                                new_data[n] = browse_null()
                         else:
-                            data[n] = browse_null()
+                            new_data[n] = browse_null()
                     elif f._type in ('one2many', 'many2many') and len(data[n]):
-                        data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
-                self._data[data['id']].update(data)
+                        new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
+                    else:
+                        new_data[n] = data[n]
+                self._data[data['id']].update(new_data)
         return self._data[self._id][name]
 
     def __getattr__(self, name):
