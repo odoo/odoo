@@ -36,7 +36,7 @@ class project_task_type(osv.osv):
         'sequence': fields.integer('Sequence'),
     }
     _order = 'sequence'
-    
+
     _defaults = {
         'sequence': lambda *args: 1
     }
@@ -191,7 +191,7 @@ class project(osv.osv):
                 self.pool.get('project.task').copy(cr, uid, tasks_id, default = {
                                     'project_id': new_id,
                                     'active':True}, context=context)
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])            
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])
             if child_ids:
                 self.duplicate_template(cr, uid, child_ids, context={'parent_id':new_id})
         return result
@@ -204,7 +204,7 @@ class project(osv.osv):
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
                 self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)]) 
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])
             if child_ids:
                 self.setActive(cr, uid, child_ids, value, context)
         return True
@@ -238,7 +238,7 @@ class task(osv.osv):
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
         return res
 
-    def onchange_planned(self, cr, uid, ids, planned, effective, date_start,occupation_rate=0.0):
+    def onchange_planned(self, cr, uid, ids, planned=0.0, effective=0.0, date_start=None,occupation_rate=0.0):
         result = {}
         for res in self.browse(cr, uid, ids):
             if date_start and planned:
@@ -249,7 +249,7 @@ class task(osv.osv):
                     hrs = (planned)/(occupation_rate)
                     work_times = self.pool.get('resource.calendar').interval_get(cr, uid, resource_obj.calendar_id.id or False, d, hrs or 0.0, resource_obj.id)
                     result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-            result['remaining_hours'] = planned-effective
+        result['remaining_hours'] = planned-effective
         return {'value':result}
 
     def _default_project(self, cr, uid, context={}):
@@ -272,7 +272,7 @@ class task(osv.osv):
              if task['date_start'] > task['date_end']:
                  return False
          return True
-     
+
     _columns = {
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the task without removing it."),
         'name': fields.char('Task Summary', size=128, required=True),
@@ -534,8 +534,8 @@ class message(osv.osv):
         return False
 
     _defaults = {
-        'user_id' : lambda self,cr,uid,ctx : uid,                 
-        'project_id':_default_project}    
+        'user_id' : lambda self,cr,uid,ctx : uid,
+        'project_id':_default_project}
 
 message()
 
