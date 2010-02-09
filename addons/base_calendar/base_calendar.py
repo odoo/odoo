@@ -421,6 +421,16 @@ class basic_calendar_line(osv.osv):
         'domain': lambda *a: '[]', 
     }
     
+    def create(self, cr, uid, vals, context={}):
+        cr.execute("Select count(id) from basic_calendar_lines \
+                                where name='%s' and calendar_id=%s" % (vals.get('name'), vals.get('calendar_id')))
+        res = cr.fetchone()
+        if res:
+            if res[0] > 0:
+                raise osv.except_osv(_('Warning !'), _('Can not create \
+line "%s" more than once' % (vals.get('name'))))
+        return super(basic_calendar_line, self).create(cr, uid, vals, context=context)
+
 basic_calendar_line()
 
 class basic_calendar_attribute(osv.osv):
@@ -482,7 +492,7 @@ class basic_calendar_fields(osv.osv):
         res = cr.fetchone()
         if res:
             if res[0] > 0:
-                raise osv.except_osv(_('Warning !'), _('Can not map same field more than once'))
+                raise osv.except_osv(_('Warning !'), _('Can not map the field more than once'))
         return super(basic_calendar_fields, self).create(cr, uid, vals, context=context)
     
     def write(self, cr, uid, ids, vals, context=None):

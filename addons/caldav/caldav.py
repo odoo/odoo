@@ -190,7 +190,7 @@ class invite_attendee_wizard(osv.osv_memory):
  to send an Email to Invited Person')
               }
 
-    def do_invite(self, cr, uid, ids, context={}):            
+    def do_invite(self, cr, uid, ids, context={}):
         datas = self.read(cr, uid, ids)[0]
         model = False
         model_field = False
@@ -386,7 +386,7 @@ request was delegated to"),
         'language':  fields.function(_compute_data, method=True, string='Language', type="selection", selection=_lang_get, multi='language', store=True, help="To specify the language for text values in a property or property parameter."), 
         'user_id': fields.many2one('res.users', 'User'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
-        'partner_id':fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'), 
+        'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'), 
         'email': fields.char('Email', size=124, required=True), 
         'event_date': fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'), 
         'event_end_date': fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'), 
@@ -753,6 +753,16 @@ rule or repeating pattern for anexception to a recurrence set"),
          'class': lambda *a: 'public', 
          'show_as': lambda *a: 'busy', 
     }
+    
+    def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
+        if not user_id:
+            return {'value': {'vtimezone': ''}}
+        value = {}
+        cr.execute('select context_tz from res_users where id=%s' % (user_id))
+        timezone = cr.fetchone()
+        if timezone:
+            value.update({'vtimezone': timezone[0].lower()})
+        return {'value': value}
 
     def export_cal(self, cr, uid, ids, context={}):
         ids = map(lambda x: caldav_id2real_id(x), ids)

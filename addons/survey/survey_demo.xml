@@ -2137,6 +2137,7 @@
 	<data noupdate="1">
 		<record id="survey_0_Community" model="survey">
 			<field name="title">Community Survey</field>
+			<field name="note">Please take a few minutes to complete this survey on the quality of service we provide. We welcome your feedback and appreciate your honesty. With your help, we hope to strengthen the bond between our clients.</field>
 			<field eval="1" name="response_user"/>
 			<field name="state">draft</field>
 			<field name="responsible_id" ref="base.user_root"/>
@@ -2146,7 +2147,6 @@
 	</data>
 	<data>
 		<record id="survey_page_0_Community" model="survey.page">
-			<field name="note">Please take a few minutes to complete this survey on the quality of service we provide. We welcome your feedback and appreciate your honesty. With your help, we hope to strengthen the bond between our clients.</field>
 			<field name="title">Service Characteristics</field>
 			<field name="survey_id" ref="survey_0_Community"/>
 			<field eval="1" name="sequence"/>
@@ -2805,13 +2805,4 @@
 			<field eval="8" name="sequence"/>
 		</record>
 	</data>
-
-
-
-
-
-
-
-
-
 </openerp>

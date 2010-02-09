@@ -193,7 +193,7 @@ class account_invoice(osv.osv):
                     temp_lines = map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
                 lines += [x for x in temp_lines if x not in lines]
                 src.append(m.id)
-                
+
             lines = filter(lambda x: x not in src, lines)
             result[invoice.id] = lines
         return result
@@ -230,7 +230,7 @@ class account_invoice(osv.osv):
     _order = "number"
     _columns = {
         'name': fields.char('Description', size=64, select=True,readonly=True, states={'draft':[('readonly',False)]}),
-        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this invoice."),
+        'origin': fields.char('Source Document', size=64, help="Reference of the document that produced this invoice."),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -1000,7 +1000,7 @@ class account_invoice(osv.osv):
         if invoice.type in ('in_invoice', 'in_refund'):
             ref = invoice.reference
         else:
-            ref = self._convert_ref(cr, uid, invoice.number)        
+            ref = self._convert_ref(cr, uid, invoice.number)
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
@@ -1240,11 +1240,11 @@ class account_invoice_line(osv.osv):
 
         company = self.pool.get('res.company').browse(cr, uid, company_id)
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
-        
+
         if not currency.company_id.id == company.id:
             raise osv.except_osv(_('Configration Error !'),
                         _('Can not select currency that is not related to any company.\nPlease select accordingly !.'))
-        
+
         if company.currency_id.id != currency.id:
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
