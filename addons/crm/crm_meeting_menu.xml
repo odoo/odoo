@@ -13,7 +13,7 @@
 
 
     <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
-        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="context" eval="{'default_state':'draft'}"/>
     </record>
 
 
@@ -52,7 +52,7 @@
         />
 
     <record model="ir.actions.act_window" id="crm_case_categ_meet_case">
-        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="context" eval="{'default_state':'draft'}"/>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet_case">
@@ -84,7 +84,6 @@
         <field name="res_model">crm.meeting</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
-        <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>        
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet">
@@ -142,7 +141,6 @@
         <field name="view_mode">tree,calendar,form,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
         <field name="domain" eval="[('state','in',('pending','draft','open')),('date','>=',time.strftime('%Y-%m-%d'))]"/>
-        <field name="context" eval="{'default_state':'open'}"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_meetall3">
         <field name="sequence" eval="2"/>

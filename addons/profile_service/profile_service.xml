@@ -5,19 +5,21 @@
             <field name="name">Service Profile : Install extra modules</field>
             <field name="model">profile.service.config.install_modules_wizard</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Install Extra Modules
-                </attribute></form>
-                <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0" string="
-                    A few modules are proposed according to the
-                    'service profile' you selected. You will be able to
-                    install them or more modules later through the
-                    Administration menu."/>
-                  <separator string="Services Management" colspan="4"/>
+                <form position="attributes">
+                  <attribute name="string">Install Extra Service Profile Modules</attribute>
+                </form>
+                <xpath expr="//label[@string='description']"
+                       posititon="attributes">
+                  <attribute name="string"
+                             >A few modules are proposed according to the 'service profile' you selected. You will be able to install them or more modules later through the Administration menu.</attribute>
+                </xpath>
+                <separator string="title" position="attributes">
+                  <attribute name="string">Services Management</attribute>
+                </separator>
+                <group colspan="8">
                   <field name="project_timesheet"/>
                   <field name="hr_timesheet_invoice"/>
                   <field name="project_gtd"/>
@@ -51,9 +53,8 @@
 
       <record model="ir.actions.todo"
             id="config_install_module">
-            <field name="action_id" ref="action_config_install_module"/>
-        </record>
-
-
+        <field name="action_id" ref="action_config_install_module"/>
+        <field name="sequence">3</field>
+      </record>
     </data>
 </openerp>

@@ -371,13 +371,14 @@ class task(osv.osv):
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
             self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
-            if task.parent_ids and task.parent_ids.state in ('pending','draft'):
-                reopen = True
-                for child in task.parent_ids.child_ids:
-                    if child.id != task.id and child.state not in ('done','cancelled'):
-                        reopen = False
-                if reopen:
-                    self.do_reopen(cr, uid, [task.parent_ids.id])
+            for parent_id in task.parent_ids:
+                if parent_id.state in ('pending','draft'):
+                    reopen = True
+                    for child in parent_id.child_ids:
+                        if child.id != task.id and child.state not in ('done','cancelled'):
+                            reopen = False
+                    if reopen:
+                        self.do_reopen(cr, uid, [parent_id.id])
         return True
 
     def do_reopen(self, cr, uid, ids, *args):
@@ -546,10 +547,9 @@ def _project_get(self, cr, uid, context={}):
     else:
         cr.execute("""SELECT project.id,account.name FROM project_project project
                    LEFT JOIN account_analytic_account account ON account.id = project.category_id
-                   WHERE (account.user_id = %s) OR project.id IN (SELECT project_id FROM project_resource_rel
-                                                                 WHERE resource_id IN (SELECT id FROM resource_resource
-                                                                                       WHERE (user_id= %s)))"""%(uid, uid))
+                   WHERE (account.user_id = %s)"""%(uid))
         res = cr.fetchall()
+        print res
         res = [(str(r[0]),r[1]) for r in res]
     return res
 

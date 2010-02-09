@@ -8,13 +8,12 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Configure Calendars for CRM Sections
-                </attribute></form>
+                <form position="attributes">
+                  <attribute name="string">Configure Calendars for CRM Sections</attribute>
+                </form>
                 <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0" string="
-                    OpenERP can create and pre-configure a series of integrated
-                    calendar for you."/>
+                  <label colspan="4" align="0.0"
+                         string="OpenERP can create and pre-configure a series of integrated calendar for you."/>
                   <separator string="Create Pre-Configured Calendars"
                              colspan="4"/>
                   <newline/>

@@ -36,7 +36,7 @@ This module implements a dashboard for project member that includes:
         'project',
         'report_timesheet',
         'board',
-        'report_analytic_planning',
+        'project_planning',
         'report_analytic_line',
         'report_task',
         'hr_timesheet_sheet',

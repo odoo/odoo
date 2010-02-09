@@ -242,13 +242,12 @@
                             <filter icon="terp-sale" domain="[('user_id','child_of',[uid])]" help="My Departments Sale Orders"/>
                         </field>
                         <field name="date_order" select="1"/>
-                        </group>
-                   		<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
-                        <filter string="By Parnter" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
+					</group>
+					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+						<filter string="By Customer" icon="terp-sale" domain="[]" default="1" context="{'group_by':'partner_id'}"/>
                         <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="By Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
-                        
-						</group>                        
+					</group>                        
                </search>
             </field>
         </record>
@@ -412,6 +411,12 @@
                             <filter icon="terp-sale" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
                             <filter icon="terp-sale" domain="[('salesman_id','child_of',[uid])]" help="My Departments Sale Order Lines"/>
                         </field>
+					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+						<filter string="By Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="By Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="By Scheduled" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
+					</group>                        
+                        
                     </group>
                 </search>
             </field>
@@ -453,13 +458,12 @@
             <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Sales Configuration
-                </attribute></form>
+                <form position="attributes">
+                  <attribute name="string">Sales Configuration</attribute>
+                </form>
                 <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0" string="
-                    Set the policies selected by default when creating a new
-                    sale order."/>
+                  <label colspan="4" align="0.0"
+                         string="Set the policies selected by default when creating a new sale order."/>
                   <separator colspan="4"
                        string="Configure Sale Order Logistic"/>
                   <newline/>

@@ -98,7 +98,7 @@ class opportunity2phonecall(wizard.interface):
                     'section_id' : form['section_id'],
                     'partner_id': opportunity.partner_id.id,
                     'partner_address_id':opportunity.partner_address_id.id,
-                    'description':opportunity.description,
+                    'description': data['form']['note'] or opportunity.description,
                     'opportunity_id':opportunity.id
             }, context=context)
             vals = {}
