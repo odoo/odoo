@@ -61,11 +61,12 @@ class base_action_rule(osv.osv):
         return True
     
     def button_deactivate_rule(self, cr, uid, ids, context=None):
+        checkids = self.pool.get('base.action.rule').search(cr, uid, [])
         cronobj = self.pool.get('ir.cron')
         cronids = cronobj.search(cr,uid,[('model','=','base.action.rule'),('active','=',True)])
-        if cronids:
-            cronobj.write(cr, uid, cronids, {'active': False})
         self.write(cr, uid, ids, {'state': 'deactivate'})
+        if cronids and all(rule.state == 'deactivate' for rule in self.browse(cr, uid, checkids)):
+            cronobj.write(cr, uid, cronids, {'active': False})
         return True
     
     def remind_partner(self, cr, uid, ids, context={}, attach=False):
@@ -120,7 +121,7 @@ class base_action_rule(osv.osv):
         Function called by the scheduler to process models
         '''
         ruleobj = self.pool.get('base.action.rule')
-        ids = ruleobj.search(cr, uid, [])
+        ids = ruleobj.search(cr, uid, [('state','=','activate')])
         rules = ruleobj.browse(cr, uid, ids, context) 
         return ruleobj._action(cr, uid, rules, False, context=context)
     
