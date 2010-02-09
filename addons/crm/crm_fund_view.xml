@@ -59,27 +59,34 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Funds Form">
-                <group colspan="4" col="6">
-                    <field name="name" select="1" string="Name" colspan="2"/>
-                    <field name="section_id" colspan="1" widget="selection"/>
-                    <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)"/>
-                    <newline/>
-                    <field name="date" string="Next Meeting"/>
-                    <field name="duration"/>
-                    <field name="type_id" select="1" string="Payment Mode"/>
+                <group colspan="4" col="4">
+                    <field name="name" select="1" string="Name"/>                    
+                    <field name="type_id" string="Payment Mode" select="1" widget="selection"
+                    		domain="[('object_id.model', '=', 'crm.fundraising')]" />
                 </group>
                 <notebook colspan="4">
                 <page string="Funds">
-                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
-                    <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
-                    <newline/>
-                    <field name="email_from" colspan="2"/>
-                    <field name="user_id" select="2" string="Responsible"/>
+                	<separator colspan="4" string="Communication"/>
+                	<group colspan="4" col="4">
+	                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+	                    <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+	                    <field name="email_from" colspan="2"/>
+                    </group>
                     <separator colspan="4" string="Estimates"/>
                     <field name="planned_cost"/>
                     <field name="planned_revenue"/>
                     <field name="probability"/>
-                    <separator colspan="4" string="Description Information"/>
+                    <separator colspan="4" string="Categarization"/>
+                    <group colspan="4" col="6">
+                    	<field name="user_id" select="2" string="Responsible"/>
+                        <field name="section_id" colspan="1" widget="selection"/>
+                    	<field name="categ_id" select="1"
+                    		on_change="onchange_categ_id(categ_id)"  widget="selection"
+                    		domain="[('object_id.model', '=', 'crm.fundraising')]" />
+                    	<field name="date"/>
+	                    <field name="duration"/>
+                    </group>
+                    <separator colspan="4" string="Details"/>
                         <field name="description" nolabel="1" colspan="4"/>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
@@ -92,7 +99,7 @@
                         <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
                     </group>
                 </page>
-                <page string="History">
+                <page string="History" groups="base.group_extended">
                     <field name="id" select="1"/>
                     <field name="active"/>
                     <field name="priority" string="Priority"/>
@@ -119,7 +126,7 @@
                         </form>
                     </field>
                 </page>
-                 <page string="Emails">
+                 <page string="Emails" groups="base.group_extended">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
                    </group>

@@ -158,7 +158,7 @@ class survey_browse_response(report_rml):
                               <para style="terp_tblheader_General_Centre">Response Create Date </para>
                             </td>
                             <td>
-                              <para style="terp_tblheader_General_Centre">Respose By </para>
+                              <para style="terp_tblheader_General_Centre">Response By </para>
                             </td>
                             <td>
                               <para style="terp_tblheader_General_Centre">Status</para>
@@ -243,17 +243,17 @@ class survey_browse_response(report_rml):
                                 ans_list = []
                                 for ans in answer[0].response_answer_ids:
                                     ans_list.append(to_xml(tools.ustr(ans.answer_id.answer)))
-                        
+
                                 answer_choice=[]
                                 _divide_columns_for_matrix = 20
                                 _display_ans_in_rows = 5
                                 _tbl_widths = 500
                                 for ans in que['answer_choice_ids']:
                                     answer_choice.append(to_xml(tools.ustr((ans.answer))))
-        
+
                                 def divide_list(lst, n):
                                     return [lst[i::n] for i in range(n)]
-        
+
                                 divide_list = divide_list(answer_choice,_display_ans_in_rows)
                                 for lst in divide_list:
                                     if que.type == 'multiple_choice_multiple_ans':

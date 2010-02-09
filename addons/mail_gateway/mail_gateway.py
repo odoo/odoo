@@ -388,6 +388,7 @@ class mail_gateway_history(osv.osv):
         'name': fields.char('Message Id', size=64, help="Message Id in Email Server."),
         'res_id': fields.integer("Resource ID"),        
         'gateway_id': fields.many2one('mail.gateway',"Mail Gateway", required=True),
+        'model_id':fields.related('gateway_id', 'object_id', type='many2one', relation='ir.model', string='Model'), 
         'note': fields.text('Notes'),
     }
     _order = 'id desc'
