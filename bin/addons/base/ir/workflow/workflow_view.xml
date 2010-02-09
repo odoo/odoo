@@ -30,7 +30,7 @@
             <field name="type">diagram</field>
             <field name="arch" type="xml">
                 <diagram string="Workflow Editor">
-				  <node object="workflow.activity">
+				  <node object="workflow.activity" shape="circle" bgcolor="red">
 				    <field name="name"/>
 				  </node>
 				  <arrow object="workflow.transition" source="activity_from" destination="activity_to">
