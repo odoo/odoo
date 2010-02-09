@@ -740,7 +740,10 @@ form: module.record_id""" % (xml_id,)
         if '.' in id_str:
             mod,id_str = id_str.split('.')
         result = self.pool.get('ir.model.data')._get_id(cr, self.uid, mod, id_str)
-        return int(self.pool.get('ir.model.data').read(cr, self.uid, [result], ['res_id'])[0]['res_id'])
+        res = self.pool.get('ir.model.data').read(cr, self.uid, [result], ['res_id'])
+        if res and res[0] and res[0]['res_id']:
+            return int(res[0]['res_id'])
+        return False
 
     def parse(self, de):
         if not de.tag in ['terp', 'openerp']:

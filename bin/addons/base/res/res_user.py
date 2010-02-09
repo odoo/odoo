@@ -26,6 +26,7 @@ import pytz
 import pooler
 from tools.translate import _
 from service import security
+import netsvc
 
 class groups(osv.osv):
     _name = "res.groups"
