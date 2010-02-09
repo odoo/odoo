@@ -801,8 +801,8 @@ class mrp_procurement(osv.osv):
 
         'close_move': fields.boolean('Close Move at end', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Requisition Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
-            readonly=True, required=True, help="If you encode manually a Requisition, you probably want to use" \
+        'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
+            readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
 
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
@@ -810,7 +810,7 @@ class mrp_procurement(osv.osv):
 
         'property_ids': fields.many2many('mrp.property', 'mrp_procurement_property_rel', 'procurement_id','property_id', 'Properties'),
 
-        'message': fields.char('Latest error', size=64),
+        'message': fields.char('Latest error', size=64, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
             ('confirmed','Confirmed'),
