@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-02-07 22:30+0000\n"
+"PO-Revision-Date: 2010-02-08 18:31+0000\n"
 "Last-Translator: Selma <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-02-08 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-02-09 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -61,7 +61,7 @@ msgstr "Definiraj članski proizvod"
 #. module: membership
 #: field:product.product,membership_date_to:0
 msgid "Date to"
-msgstr "Datum do"
+msgstr "Do datuma:"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
@@ -101,7 +101,7 @@ msgstr ""
 #. module: membership
 #: field:product.product,membership_date_from:0
 msgid "Date from"
-msgstr "Datum od"
+msgstr "Od datuma:"
 
 #. module: membership
 #: field:membership.membership_line,partner:0
@@ -132,7 +132,7 @@ msgstr "Od"
 #. module: membership
 #: constraint:membership.membership_line:0
 msgid "Error, this membership product is out of date"
-msgstr ""
+msgstr "Greška: ovom članskom proizvodu je istekao rok."
 
 #. module: membership
 #: wizard_button:wizard_invoice_membership,init,ok:0
@@ -142,7 +142,7 @@ msgstr "Potvrdi"
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
-msgstr "Kreiraj"
+msgstr "Napravi"
 
 #. module: membership
 #: constraint:ir.ui.view:0
@@ -195,12 +195,12 @@ msgstr "Nije član"
 #. module: membership
 #: model:process.node,note:membership.process_node_invoicedmember0
 msgid "Open invoice."
-msgstr "Otvorena faktira."
+msgstr "Otvorena faktura"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_conf
 msgid "Configuration"
-msgstr "Konfiguracija"
+msgstr "Podešavanje"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
@@ -210,7 +210,7 @@ msgstr "Definiraj proizvod za članstvo"
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetoassociate0
 msgid "Invoiced member may be Associated member."
-msgstr ""
+msgstr "Fakturisani član može biti udruženi član."
 
 #. module: membership
 #: constraint:product.template:0
@@ -221,7 +221,7 @@ msgstr ""
 #: model:ir.ui.menu,name:membership.menu_membership_products
 #: view:product.product:0
 msgid "Membership products"
-msgstr ""
+msgstr "Članski proizvodi"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_members_waiting
@@ -236,12 +236,12 @@ msgstr ""
 #. module: membership
 #: model:product.template,name:membership.member_product_1_product_template
 msgid "Membership Product - 2"
-msgstr ""
+msgstr "Članski proizvod - 2"
 
 #. module: membership
 #: model:product.template,name:membership.member_product_0_product_template
 msgid "Membership Product - 1"
-msgstr ""
+msgstr "Članski proizvod - 1"
 
 #. module: membership
 #: field:report.partner_member.year,canceled_amount:0
@@ -338,7 +338,7 @@ msgstr "Članstvo"
 #. module: membership
 #: help:product.product,membership:0
 msgid "Specify if this product is a membership product"
-msgstr ""
+msgstr "Naznačite da li je ovaj proizvod članski proizvod"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -456,7 +456,7 @@ msgstr "Otkazani član"
 #: model:product.price.type,name:membership.product_price_type_memberprice
 #: field:product.template,member_price:0
 msgid "Member Price"
-msgstr ""
+msgstr "Cijena člana"
 
 #. module: membership
 #: field:res.partner,free_member:0
@@ -505,7 +505,7 @@ msgstr ""
 #: model:process.node,name:membership.process_node_membershipproduct0
 #: wizard_field:wizard_invoice_membership,init,product:0
 msgid "Membership product"
-msgstr "Proizvod članstva"
+msgstr "Članski proizvod"
 
 #. module: membership
 #: constraint:product.product:0

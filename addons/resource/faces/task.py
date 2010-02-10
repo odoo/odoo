@@ -1941,7 +1941,7 @@ class Task(object):
 
         func.task_func = instrumented # will be used in the gui
         self._function = instrumented
-        self.name = name
+        self.name = func.func_name
         self.up = parent
         self.children = []
         self._sources = {} # all tasks, I am linked to

@@ -24,7 +24,7 @@ import tools
 
 class report_sale_journal_invoice_type_stats(osv.osv):
     _name = "sale_journal.invoice.type.stats"
-    _description = "Stats on packing by invoice method"
+    _description = "Stats on picking by invoice method"
     _auto = False
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
@@ -96,7 +96,7 @@ class report_sale_journal_picking(osv.osv):
         'count': fields.integer('# of Lines', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
-    
+
     }
     _order = 'journal_id,name desc,price_total desc'
     def init(self, cr):

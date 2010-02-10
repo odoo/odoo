@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,7 +26,7 @@
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
     The sale journal modules allows you to categorise your
-    sales and deliveries (packing lists) between different journals.
+    sales and deliveries (picking lists) between different journals.
     This module is very helpful for bigger companies that
     works by departments.
 

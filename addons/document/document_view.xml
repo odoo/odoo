@@ -43,11 +43,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-   <!-- <menuitem
+   <menuitem
         name="Storage Media"
         action="action_document_storage_form"
         id="menu_document_storage_media"
-        parent="menu_document_configuration"/>-->
+        parent="menu_document_management_configuration"/>
 
     <record model="ir.ui.view" id="view_document_directory_form">
         <field name="name">document.directory</field>
@@ -173,14 +173,13 @@
         <field name="priority" eval="1"/>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Files">
+            <form string="Documents">
                 <group colspan="4" col="6">
                     <field name="name" select="1" />
                     <field name="title" select="1"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="create_uid" select="2"/>
-                    <field name="create_date" select="2"/>
+                    <field name="parent_id" select="2"/>                    
                 </group>
                 <notebook colspan="4">
                 <page string="Attachment">
@@ -208,17 +207,18 @@
                     <field name="index_content" nolabel="1" colspan="4" select="1"/>
                 </page><page string="Security">
                     <field name="group_ids" colspan="4" nolabel="1"/>
-                </page><page string="Others Info">
-                    <group colspan="2" col="2">
-                        <separator string="History" colspan="2"/>
-                        <field name="write_date"/>
+                </page><page string="Others Info">                                        
+                    <group colspan="4" col="4">   
+                        <separator string="File Information" colspan="4"/>                     
+                        <field name="file_size" readonly="1"/>                      
+                        <newline/>
+                        <separator string="History" colspan="4"/>                     
+                        <field name="create_uid"/>
+                        <field name="create_date"/>
                         <field name="write_uid"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <separator string="File Information" colspan="2"/>
-                        <field name="file_size" readonly="1"/>
-                        <field name="parent_id" select="2"/>
-                    </group>
+                        <field name="write_date"/>                        
+                    </group>                   
+                    
                 </page><page string="Notes">
                     <field colspan="4" name="description" nolabel="1"/>
                 </page>
@@ -232,7 +232,7 @@
         <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Files">
+            <tree string="Documents">
                 <field name="name"/>
                 <field name="title" />
                 <field name="partner_id"/>
@@ -251,7 +251,7 @@
     </record>
     <menuitem name="Documents" id="menu_document_doc" parent="base.menu_document" sequence="5"/>
     <menuitem
-        name="Search a File"
+        name="Documents"
         action="action_document_file_form"
         id="menu_document_files"
         parent="menu_document_doc"/>

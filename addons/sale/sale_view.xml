@@ -82,7 +82,8 @@
                     <field name="partner_shipping_id"/>
                     <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
-                    <field name="amount_untaxed"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount"/>
+                    <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -231,20 +232,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <group col='8' colspan='4'>
+                    <group col='10' colspan='4'>
                         <filter icon="terp-sale" string="Quotation" domain="[('state','=','draft')]"/>
                         <filter icon="terp-sale" string="Running" domain="[('state','in',('manual','progress'))]"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="partner_id" select="1"/>
                         <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-sale" domain="[('user_id','=',uid)]" help="My Sale Orders"/>
-                            <filter icon="terp-sale" domain="[('user_id','child_of',[uid])]" help="My Departments Sale Orders"/>
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Sale Orders"/>                            
                         </field>
                         <field name="date_order" select="1"/>
 					</group>
-					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
-						<filter string="By Customer" icon="terp-sale" domain="[]" default="1" context="{'group_by':'partner_id'}"/>
+					<group expand="1" string="Group By..." colspan="4" col="8">
+						<filter string="By Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="By Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
 					</group>                        
@@ -414,7 +414,7 @@
 					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
 						<filter string="By Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="By Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
-                        <filter string="By Scheduled" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
 					</group>                        
                         
                     </group>

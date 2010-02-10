@@ -798,8 +798,8 @@
             <field name="arch" type="xml">
                 <search string="Search Entry Lines">
                     <group col='10' colspan='4'>
-                        <filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Move Lines"/>
-                        <filter icon="terp-account" string="Posted" domain="[('state','=','valid')]" help="Posted Move Lines"/>
+                        <filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Entry Lines"/>
+                        <filter icon="terp-account" string="Posted" domain="[('state','=','valid')]" help="Posted Entry Lines"/>
                         <separator orientation="vertical"/>
                         <field name="date" select='1'/>
                         <field name="account_id" select='1'/>
