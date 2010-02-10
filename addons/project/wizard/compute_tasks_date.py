@@ -154,7 +154,7 @@ class wizard_compute_tasks(wizard.interface):
             for no in range(len(resource)):
                 leaves = []
                 resource_id = resource_pool.search(cr,uid,[('user_id','=',resource[no].id)])
-                if resource_id:
+                if resource_id and wktime_cal:
             #   Getting list of leaves for specific resource
                     leaves = leaves_resource(cr,uid,resource_id)
                 resource_objs.append(classobj(str(resource[no].name),(Resource,),{'__doc__':resource[no].name,'__name__':resource[no].name,'vacation':tuple(leaves)}))
@@ -184,12 +184,11 @@ class wizard_compute_tasks(wizard.interface):
 
 #    Creating the project with all the tasks and resources
             def Project():
-                resource = reduce(operator.or_,resource_objs)
                 title = project.name
                 start = date_start
-
+                resource = reduce(operator.or_,resource_objs)
 #    If project has calendar
-                if wktime_cal or leaves:
+                if wktime_cal:
                         working_days = wktime_cal
                         vacation = tuple(leaves)
 
