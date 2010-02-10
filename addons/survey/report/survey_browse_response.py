@@ -218,16 +218,16 @@ class survey_browse_response(report_rml):
                         </blockTable>"""
                 if survey.note:
                     rml += """<blockTable colWidths='""" + _tbl_widths + """' style="note_table">
-                            <tr><td><para style="descriptive_text">""" + to_xml(tools.ustr(survey.note)) + """</para><para style="P2"><font></font></para></td></tr>
+                            <tr><td><para style="response">""" + to_xml(tools.ustr(survey.note or '')) + """</para><para style="P2"><font></font></para></td></tr>
                         </blockTable>"""
                 for page in survey.page_ids:
                     rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="page_tbl">
-                                  <tr><td><para style="page">Page :- """ + to_xml(tools.ustr(page.title)) + """</para></td></tr>
+                                  <tr><td><para style="page">Page :- """ + to_xml(tools.ustr(page.title or '')) + """</para></td></tr>
                               </blockTable>"""
                     if page.note:
                         rml += """<para style="P2"></para>
                                  <blockTable colWidths='""" + str(_tbl_widths) + """' style="note_table">
-                                      <tr><td><para style="response">""" + to_xml(tools.ustr(page.note)) + """</para></td></tr>
+                                      <tr><td><para style="response">""" + to_xml(tools.ustr(page.note or '')) + """</para></td></tr>
                                  </blockTable>"""
                     for que in page.question_ids:
                         rml += """<para style="P2"></para>

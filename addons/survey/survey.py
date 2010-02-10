@@ -31,6 +31,7 @@ from tools import to_xml
 import tools
 from mx.DateTime import *
 import netsvc
+import os
 
 class survey_type(osv.osv):
     _name = 'survey.type'
@@ -902,7 +903,7 @@ class survey_question_wiz(osv.osv_memory):
                             context.update({'response_id':response_id})
                             report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
                             attachments = []
-                            file = open("/tmp/" + survey_data.title + ".pdf")
+                            file = open(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
                             file_data = ""
                             while 1:
                                 line = file.readline()
@@ -910,6 +911,8 @@ class survey_question_wiz(osv.osv_memory):
                                 if not line:
                                     break
                             attachments.append((survey_data.title + ".pdf",file_data))
+                            file.close()
+                            os.remove(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
                             user_email = False
                             resp_email = False
                             if user_obj.browse(cr, uid, uid).address_id.id:
@@ -938,7 +941,7 @@ class survey_question_wiz(osv.osv_memory):
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
-            ret_file_name = '/tmp/'+file_name+'.pdf'
+            ret_file_name = tools.config['addons_path'] + '/survey/report/' + file_name + '.pdf'
             service = netsvc.LocalService(report_name);
             (result, format) = service.create(cr, uid, res_ids, {}, context)
             fp = open(ret_file_name, 'wb+');

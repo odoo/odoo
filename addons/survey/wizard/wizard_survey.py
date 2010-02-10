@@ -114,7 +114,7 @@ def send_mail(self, cr, uid, data, context):
     attachments = []
     for id in survey_ref.browse(cr, uid, data['ids']):
         report = create_report(cr, uid, [id.id], 'report.survey.form', id.title)
-        file = open("/tmp/" + id.title +".pdf")
+        file = open(tools.config['addons_path'] + '/survey/report/' + id.title +".pdf")
         file_data = ""
         while 1:
             line = file.readline()
@@ -122,6 +122,8 @@ def send_mail(self, cr, uid, data, context):
             if not line:
                 break
         attachments.append((id.title +".pdf",file_data))
+        file.close()
+        os.remove(tools.config['addons_path'] + '/survey/report/' + id.title + ".pdf")
 
     for partner in pool.get('res.partner').browse(cr, uid, partner_ids):
         for addr in partner.address:
@@ -191,7 +193,7 @@ def create_report(cr, uid, res_ids, report_name=False, file_name=False):
     if not report_name or not res_ids:
         return (False, Exception('Report name and Resources ids are required !!!'))
     try:
-        ret_file_name = '/tmp/'+file_name+'.pdf'
+        ret_file_name = tools.config['addons_path'] + '/survey/report/' + file_name + '.pdf'
         service = netsvc.LocalService(report_name);
         (result, format) = service.create(cr, uid, res_ids, {}, {})
         fp = open(ret_file_name, 'wb+');
