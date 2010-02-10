@@ -9,9 +9,9 @@
         <field name="name">Helpdesk Categories</field>
         <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
- 		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>        
-        <field name="domain">[('object_id.model', '=', 'crm.helpdesk')]</field>	
-		<field name="context">{'object_id':'crm.helpdesk'}</field>  	        
+ 		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+        <field name="domain">[('object_id.model', '=', 'crm.helpdesk')]</field>
+		<field name="context">{'object_id':'crm.helpdesk'}</field>
     </record>
 	<menuitem action="crm_helpdesk_categ_action" id="menu_crm_case_helpdesk-act" parent="crm.menu_crm_case_categ"/>
     # ------------------------------------------------------
@@ -26,9 +26,9 @@
         <field name="arch" type="xml">
             <form string="Helpdesk Support">
                 <group colspan="4" col="4">
-                    <field colspan="4" name="name" select="1"/>                    					
+                    <field colspan="4" name="name" select="1"/>
                     <field name="date" select="1"/>
-                    <field name="date_deadline" select="2"/>                    
+                    <field name="date_deadline" select="2"/>
                 </group>
                 <notebook colspan="4">
                     <page string="General">
@@ -36,10 +36,10 @@
                         <group col="7" colspan="4">
                             <field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" select="1"/>
                             <field  name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" select="2"/>
-                            
+
                             <field  name="email_from" select="2"/>
                             <button name="remind_partner" states="open,pending" string="Send Reminder" type="object" icon="gtk-go-forward"/>
-                            
+
                         </group>
                         <separator colspan="4" string="Categarization"/>
                         <group col="7" colspan="4">
@@ -158,7 +158,7 @@
             </calendar>
         </field>
     </record>
-    
+
     <record id="view_crm_case_helpdesk_filter" model="ir.ui.view">
         <field name="name">CRM - Helpdesk Search</field>
         <field name="model">crm.helpdesk</field>
@@ -186,11 +186,11 @@
                    <field name="state" select="1">
                        <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current " default="1"/>
                    </field>
-					<field name="section_id" select="1" widget="selection" string="Section">
+					<field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
 						<filter icon="terp-crm"
                                domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section"/>		
-			   		</field>     				
+                               help="My section"/>
+			   		</field>
                    </group>
            </search>
         </field>
