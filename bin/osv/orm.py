@@ -1831,31 +1831,50 @@ class orm(orm_template):
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float','integer'), fields)
         sum = {}
-        flist = groupby
+
+        group_by = groupby
+        if fget[groupby]['type'] in ('date','datetime'):
+            flist = "to_char(%s,'yyyy-mm') as %s "%(groupby,groupby)
+            groupby = "to_char(%s,'yyyy-mm')"%(groupby)
+        else:
+            flist = groupby
+
         fields_pre = [f for f in float_int_fields if
                    f == self.CONCURRENCY_CHECK_FIELD
                 or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
+        avg_fields = context.get('avg',[])
         for f in fields_pre:
             if f not in ['id','sequence']:
-                flist += ',sum('+f+') as '+f
+                if f in avg_fields:
+                    flist += ',avg('+f+') as '+f
+                else:
+                    flist += ',sum('+f+') as '+f
         cr.execute('select min(id) as id,'+flist+' from ' + self._table +qu1+' group by '+ groupby + limit_str + offset_str,qu2)
         alldata = {}
+        groupby = group_by
         for r in cr.dictfetchall():
             alldata[r['id']] = r
             del r['id']
-
         data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
+        today = datetime.date.today()
+
         for d in data:
+            d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
             if fget.has_key(groupby):
-                if fget[groupby]['type'] == 'many2one':
-                    d[groupby] = d[groupby] and d[groupby][1] or ''
                 if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
-                   today = datetime.date.today()
-                   if d[groupby][:10] == str(today):
-                       d[groupby] = 'Today'
+                   dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
+                   days = calendar.monthrange(dt.year, dt.month)[1]
+
+                   if d[groupby][:7] == today.strftime('%Y-%m'):
+                       d[groupby] = 'This Month'
                    else:
                        d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
-            d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
+
+                   d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
+                                    (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
+                elif fget[groupby]['type'] == 'many2one':
+                    d[groupby] = d[groupby] and d[groupby][1] or ''
+
             del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
