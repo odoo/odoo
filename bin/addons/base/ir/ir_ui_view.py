@@ -144,6 +144,7 @@ class view(osv.osv):
         _Node_Obj = self.pool.get(node_obj)
         _Arrow_Obj = self.pool.get(conn_obj)
 
+        print model, node_obj, conn_obj, src_node, des_node
         for model_key,model_value in _Model_Obj._columns.items():
                 if model_value._type=='one2many':
                     if model_value._obj==node_obj:
@@ -151,17 +152,19 @@ class view(osv.osv):
                     flag=False
                     for node_key,node_value in _Node_Obj._columns.items():
                         if node_value._type=='one2many':
-                             if src_node in _Arrow_Obj._columns and flag:
-                                _Source_Field=node_key
-                             if des_node in _Arrow_Obj._columns and not flag:
-                                _Destination_Field=node_key
-                                flag = True
+                             if node_value._obj==conn_obj:
+                                 if src_node in _Arrow_Obj._columns and flag:
+                                    _Source_Field=node_key
+                                 if des_node in _Arrow_Obj._columns and not flag:
+                                    _Destination_Field=node_key
+                                    flag = True
 
         datas = _Model_Obj.read(cr, uid, id, [],context)
+        print ":::::::::::::::::",_Node_Field,_Source_Field,_Destination_Field
         for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
             nodes_name.append((a['id'],a['name']))
             nodes.append(a['id'])
-            if a['flow_start']:
+            if a.has_key('flow_start') and a['flow_start']:
                 start.append(a['id'])
             else:
                 if not a[_Source_Field]:
@@ -169,7 +172,10 @@ class view(osv.osv):
             for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
                 transitions.append((a['id'], t[des_node][0]))
                 tres[t['id']] = (a['id'], t[des_node][0])
+
+        print nodes, transitions, no_ancester
         g  = graph(nodes, transitions, no_ancester)
+#        print start
         g.process(start)
         g.scale(*scale)
         result = g.result_get()
@@ -177,6 +183,7 @@ class view(osv.osv):
         for node in nodes_name:
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
+#        print {'nodes': results, 'transitions': tres}
         return {'nodes': results, 'transitions': tres}
 view()
 
