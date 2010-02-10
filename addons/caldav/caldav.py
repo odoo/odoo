@@ -241,8 +241,7 @@ class invite_attendee_wizard(osv.osv_memory):
             })
         att_id = att_obj.create(cr, uid, vals)
         if model_field:
-            obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)], 
-                                            'state': 'delegated'})
+            obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
         
         if datas.get('send_mail'):
             att_obj._send_mail(cr, uid, [att_id], mail_to, \
@@ -665,13 +664,13 @@ or contains the text to be used for display"""),
                 mail_to = [alarm.user_id.address_id.email]
                 for att in alarm.attendee_ids:
                     mail_to.append(att.user_id.address_id.email)
-
-                tools.email_send(
-                    tools.config.get('email_from', False), 
-                    mail_to, 
-                    sub, 
-                    body
-                )
+                if mail_to:
+                    tools.email_send(
+                        tools.config.get('email_from', False), 
+                        mail_to, 
+                        sub, 
+                        body
+                    )
             self.write(cr, uid, [alarm.id], {'state':'done'})
         return True
 
@@ -756,12 +755,12 @@ rule or repeating pattern for anexception to a recurrence set"),
     
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         if not user_id:
-            return {'value': {'vtimezone': ''}}
-        value = {}
+            return {'value': {'vtimezone': None}}
+        value = {'vtimezone': None}
         cr.execute('select context_tz from res_users where id=%s' % (user_id))
-        timezone = cr.fetchone()
+        timezone = cr.fetchone()[0]
         if timezone:
-            value.update({'vtimezone': timezone[0].lower()})
+            value.update({'vtimezone': timezone.lower()})
         return {'value': value}
 
     def export_cal(self, cr, uid, ids, context={}):

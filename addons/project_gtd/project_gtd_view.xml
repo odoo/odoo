@@ -105,7 +105,7 @@
         <field eval="2" name="priority"/>
         <field name="arch" type="xml">
              <field name="name" position="after">
-                <field name="planned_hours" widget="float_time" invisible="not context.get('set_visible',False)"/>
+                <field name="planned_hours" widget="float_time" on_change="onchange_planned(planned_hours)" invisible="not context.get('set_visible',False)"/>
              </field>
         </field>
     </record>
