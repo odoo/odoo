@@ -75,6 +75,7 @@ def french_number(val):
             return ret
 
 def amount_to_text_fr(number, currency):
+    number = '%.2f' % number
     units_name = currency
     list = str(number).split('.')
     start_word = french_number(abs(int(list[0])))
@@ -138,6 +139,7 @@ def dutch_number(val):
             return ret
 
 def amount_to_text_nl(number, currency):
+    number = '%.2f' % number
     units_name = currency
     list = str(number).split('.')
     start_word = dutch_number(int(list[0]))
