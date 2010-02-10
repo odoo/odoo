@@ -1,3 +1,24 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 import time
 import mx.DateTime
 import re
@@ -34,6 +55,8 @@ class base_action_rule(osv.osv):
                 res[check.id] = len(check.rule_lines)
             elif len(check.rule_lines) > 15:
                 raise osv.except_osv(_('Error !'), _('Max Level exceeded.'))
+            else:
+                res[check.id] = 0
         return res
     
     _columns = {
@@ -42,17 +65,17 @@ class base_action_rule(osv.osv):
                     type='integer', store=True, help='Specifies maximum rule lines can be entered.'),
         'rule_lines': fields.one2many('base.action.rule.line','rule_id','Rule Lines', states={'activate': [('readonly', True)]}),
         'create_date': fields.datetime('Create Date', readonly=1),
-        'state': fields.selection([('draft','Draft'),('activate','Activated'),('deactivate','Deactivated')],'State',readonly=1)
+        'state': fields.selection([('activate','Activated'),('deactivate','Deactivated')],'State',readonly=1)
     }
     
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': lambda *a: 'deactivate',
     }
     
     def button_activate_rule(self, cr, uid, ids, context=None):
-        check = self.browse(cr, uid, ids[0]).rule_lines
+        check = all(rule.rule_lines for rule in self.browse(cr, uid, ids))
         if not check:
-            raise osv.except_osv(_('Error !'), _('Rule Lines are empty ! Cannot activate the Rule.'))
+            raise osv.except_osv(_('Error !'), _('Rule Lines are empty ! Cannot activate the Rule(s).'))
         cronobj = self.pool.get('ir.cron')
         cronids = cronobj.search(cr,uid,[('model','=','base.action.rule'),('active','=',False)])
         if cronids:
