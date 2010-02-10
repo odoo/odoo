@@ -144,11 +144,11 @@ class view(osv.osv):
         _Node_Obj = self.pool.get(node_obj)
         _Arrow_Obj = self.pool.get(conn_obj)
 
-        print model, node_obj, conn_obj, src_node, des_node
         for model_key,model_value in _Model_Obj._columns.items():
                 if model_value._type=='one2many':
                     if model_value._obj==node_obj:
                         _Node_Field=model_key
+                        _Model_Field=model_value._fields_id
                     flag=False
                     for node_key,node_value in _Node_Obj._columns.items():
                         if node_value._type=='one2many':
@@ -160,7 +160,6 @@ class view(osv.osv):
                                     flag = True
 
         datas = _Model_Obj.read(cr, uid, id, [],context)
-        print ":::::::::::::::::",_Node_Field,_Source_Field,_Destination_Field
         for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
             nodes_name.append((a['id'],a['name']))
             nodes.append(a['id'])
@@ -173,9 +172,7 @@ class view(osv.osv):
                 transitions.append((a['id'], t[des_node][0]))
                 tres[t['id']] = (a['id'], t[des_node][0])
 
-        print nodes, transitions, no_ancester
         g  = graph(nodes, transitions, no_ancester)
-#        print start
         g.process(start)
         g.scale(*scale)
         result = g.result_get()
@@ -183,7 +180,6 @@ class view(osv.osv):
         for node in nodes_name:
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
-#        print {'nodes': results, 'transitions': tres}
         return {'nodes': results, 'transitions': tres}
 view()
 
