@@ -564,14 +564,8 @@ class actions_server(osv.osv):
             if action.state == 'sms':
                 #TODO: set the user and password from the system
                 # for the sms gateway user / password
-                api_id = ''
-                text = action.sms
-                to = self.get_mobile(cr, uid, action, context)
-                #TODO: Apply message mearge with the field
-                if tools.sms_send(user, password, api_id, text, to) == True:
-                    logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
-                else:
-                    logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
+                # USE smsclient module from extra-addons
+                logger.notifyChannel('sms', netsvc.LOG_ERROR, 'SMS Facility has not been implemented yet. Use smsclient module!')
             
             if action.state == 'other':
                 res = []
