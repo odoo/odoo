@@ -45,8 +45,8 @@
     <rng:define name="node">
         <rng:element name="node">
             <rng:attribute name="object"/>
-            <rng:attribute name="shape"/>
-            <rng:attribute name="bgcolor"/>
+            <rng:optional><rng:attribute name="shape"/></rng:optional>
+            <rng:optional><rng:attribute name="bgcolor"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>                    
