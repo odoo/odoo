@@ -380,7 +380,7 @@ class orm_template(object):
                 'select_level': tools.ustr(f.select or 0),
                 'readonly':(f.readonly and 1) or 0,
                 'required':(f.required and 1) or 0,
-                'relation_field': f._type=='one2many' and f._fields_id or '',
+                'relation_field': (f._type=='one2many' and isinstance(f,fields.one2many)) and f._fields_id or '',
             }
             # When its a custom field,it does not contain f.select
             if context.get('field_state','base') == 'manual':
