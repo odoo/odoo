@@ -74,6 +74,7 @@ def english_number(val):
             return ret
 
 def amount_to_text(number, currency):
+    number = '%.2f' % number
     units_name = currency
     list = str(number).split('.')
     start_word = english_number(int(list[0]))
