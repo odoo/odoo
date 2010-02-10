@@ -45,7 +45,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
         </record>
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="60"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="70"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -239,7 +239,7 @@
                         <field name="name" select="1"/>
                         <field name="partner_id" select="1"/>
                         <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Sale Orders"/>                            
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Sale Orders"/>
                         </field>
                         <field name="date_order" select="1"/>
 					</group>
@@ -247,7 +247,7 @@
 						<filter string="By Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="By Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
-					</group>                        
+					</group>
                </search>
             </field>
         </record>
@@ -415,8 +415,8 @@
 						<filter string="By Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="By Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
                         <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
-					</group>                        
-                        
+					</group>
+
                     </group>
                 </search>
             </field>
