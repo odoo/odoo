@@ -47,19 +47,12 @@ success_msg = """<?xml version="1.0" ?>
 def timeformat_convert(cr, uid, time_string, context={}):
 #    Function to convert input time string:: 8.5 to output time string 8:30
 
-        strg = str(time_string)[-2:]
-        last_strg = str(time_string)[0:-2]
-        if strg != '.0':
-            if '.' not in strg:
-                strg = '.' + strg
-                last_strg = str(time_string)[:-3]
-
-            new_strg = round(float(strg) / 0.016666667)
-            converted_strg = last_strg + ':' + str(new_strg)[:-2]
-        else:
-            converted_strg = last_strg + ':00'
-
-        return converted_strg
+        split_list = str(time_string).split('.')
+        hour_part = split_list[0]
+        mins_part = split_list[1]
+        round_mins  = int(round(float(mins_part) * 60,-2))
+        converted_string = hour_part + ':' + str(round_mins)[0:2]
+        return converted_string
 
 def leaves_resource(cr,uid,id):
 #    To get the leaves for the resource_ids working on phase
@@ -185,7 +178,7 @@ class wizard_compute_phases(wizard.interface):
                 resources_list = resource_list(cr,uid,phase)
                 if not avg_hour:
                     avg_hour = 8.0
-                man_days = str(phase.duration * avg_hour)[:-2] + 'H'
+                man_days = str(phase.duration * avg_hour) + 'H'
 
                 #    Creating a new project for each phase
                 def Project():
@@ -221,7 +214,6 @@ class wizard_compute_phases(wizard.interface):
 
                 #    Recursive calling the next phases till all the phases are scheduled
                 for phase in phase.next_phase_ids:
-                   print 'Phase Start Date::',date_start
                    phase_schedule(cr,uid,phase,date_start)
 
         #    Phase Scheduling starts from here with the call to phase_schedule method

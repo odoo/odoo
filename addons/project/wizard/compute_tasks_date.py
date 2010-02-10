@@ -44,17 +44,12 @@ compute_fields = {
 def timeformat_convert(cr, uid, time_string, context={}):
 #    Function to convert input time string:: 8.5 to output time string 8:30
 
-        strg = str(time_string)[-2:]
-        last_strg = str(time_string)[0:-2]
-        if strg != '.0':
-            if '.' not in strg:
-                strg = '.' + strg
-                last_strg = str(time_string)[:-3]
-            new_strg = round(float(strg) / 0.016666667)
-            converted_strg = last_strg + ':' + str(new_strg)[:-2]
-        else:
-            converted_strg = last_strg + ':00'
-        return converted_strg
+        split_list = str(time_string).split('.')
+        hour_part = split_list[0]
+        mins_part = split_list[1]
+        round_mins  = int(round(float(mins_part) * 60,-2))
+        converted_string = hour_part + ':' + str(round_mins)[0:2]
+        return converted_string
 
 def leaves_resource(cr,uid,id):
 #    To get the leaves for the members working on project
@@ -94,7 +89,7 @@ class wizard_compute_tasks(wizard.interface):
             task_ids.sort()
             task_obj = task_pool.browse(cr,uid,task_ids)
             task_1 = task_obj[0]
-            dt_start = datetime.datetime.strftime(datetime.datetime.strptime(project.date_start,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
+            date_start = datetime.datetime.strftime(datetime.datetime.strptime(project.date_start,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
             calendar_id = project.resource_calendar_id.id
 
 #     If project has a working calendar then that would be used otherwise
@@ -117,7 +112,6 @@ class wizard_compute_tasks(wizard.interface):
                     if wk.has_key(week['dayofweek']):
                         day = wk[week['dayofweek']]
                         wk_days[week['dayofweek']] = wk[week['dayofweek']]
-
                     hour_from_str = timeformat_convert(cr,uid,week['hour_from'])
                     hour_to_str = timeformat_convert(cr,uid,week['hour_to'])
                     res_str = hour_from_str + '-' + hour_to_str
@@ -192,7 +186,7 @@ class wizard_compute_tasks(wizard.interface):
             def Project():
                 resource = reduce(operator.or_,resource_objs)
                 title = project.name
-                start = dt_start
+                start = date_start
 
 #    If project has calendar
                 if wktime_cal or leaves:
@@ -201,7 +195,7 @@ class wizard_compute_tasks(wizard.interface):
 
 #    Dynamic Creation of tasks
                 for i in range(len(task_obj)):
-                    hours = str(task_obj[i].remaining_hours / task_obj[i].occupation_rate)[:-2] + 'H'
+                    hours = str(task_obj[i].remaining_hours / task_obj[i].occupation_rate)+ 'H'
                     if task_obj[i].user_id:
                         for resource_object in resource_objs:
                             if resource_object.__name__ == task_obj[i].user_id.name:
