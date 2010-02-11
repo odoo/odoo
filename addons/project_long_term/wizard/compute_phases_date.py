@@ -79,13 +79,15 @@ def resource_list(cr,uid,obj):
         resource_pool = pool.get('resource.resource')
         resources = obj.resource_ids
         resource_objs = []
+        leaves = []
+        calendar_id = obj.project_id.resource_calendar_id
         for no in range(len(resources)):
             resource_id = resource_pool.search(cr,uid,[('id','=',resources[no].resource_id.id)])
-            if resource_id:
+            if resource_id and calendar_id:
             #   Getting list of leaves for specific resource
                 leaves = leaves_resource(cr,uid,resource_id)
             #   Creating the faces.Resource object with resource specific efficiency and vacation
-                resource_objs.append(classobj(str(resources[no].resource_id.name),(Resource,),{'__doc__':resources[no].resource_id.name,'__name__':resources[no].resource_id.name,'efficiency':resources[no].useability/100,'vacation':tuple(leaves)}))
+            resource_objs.append(classobj(str(resources[no].resource_id.name),(Resource,),{'__doc__':resources[no].resource_id.name,'__name__':resources[no].resource_id.name,'efficiency':resources[no].useability/100,'vacation':tuple(leaves)}))
         return resource_objs
 
 class wizard_compute_phases(wizard.interface):
@@ -185,7 +187,7 @@ class wizard_compute_phases(wizard.interface):
                     start = start_date
 
                     #    If project has working calendar else the default one would be considered
-                    if wktime_cal or leaves:
+                    if wktime_cal:
                         working_days = wktime_cal
                         vacation = tuple(leaves)
 
