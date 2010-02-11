@@ -160,25 +160,18 @@ class wizard_compute_tasks(wizard.interface):
                     leaves = leaves_resource(cr,uid,resource_id)
                 resource_objs.append(classobj(str(resource[no].name),(Resource,),{'__doc__':resource[no].name,'__name__':resource[no].name,'vacation':tuple(leaves)}))
 
-#     To create dynamic no of tasks
-            def tasks(j,eff):
-                def task():
-                    """
-                    task is a dynamic method!
-                    """
-                    effort = eff
-                task.__doc__ = "TaskNO%d" %j
-                task.__name__ = "task%d" %j
-                return task
+            priority_dict = {'0':1000,'1':800,'2':500,'3':300,'4':100}
 
 #     To create dynamic no of tasks with the resource specified
-            def tasks_resource(j,eff,obj):
+            def tasks_resource(j,eff,priorty = 500,obj=None):
                 def task():
                     """
                     task is a dynamic method!
                     """
                     effort = eff
-                    resource = obj
+                    if obj:
+                        resource = obj
+                    priority = priorty
                 task.__doc__ = "TaskNO%d" %j
                 task.__name__ = "task%d" %j
                 return task
@@ -188,6 +181,7 @@ class wizard_compute_tasks(wizard.interface):
                 title = project.name
                 start = date_start
                 resource = reduce(operator.or_,resource_objs)
+
 #    If project has calendar
                 if wktime_cal:
                         working_days = wktime_cal
@@ -196,12 +190,14 @@ class wizard_compute_tasks(wizard.interface):
 #    Dynamic Creation of tasks
                 for i in range(len(task_obj)):
                     hours = str(task_obj[i].remaining_hours / task_obj[i].occupation_rate)+ 'H'
+                    if task_obj[i].priority in priority_dict.keys():
+                        priorty = priority_dict[task_obj[i].priority]
                     if task_obj[i].user_id:
-                        for resource_object in resource_objs:
+                       for resource_object in resource_objs:
                             if resource_object.__name__ == task_obj[i].user_id.name:
-                               task = tasks_resource(i,hours,resource_object)
+                               task = tasks_resource(i,hours,priorty,resource_object)
                     else:
-                        task = tasks(i,hours)
+                        task = tasks_resource(i,hours,priorty)
 
             project = BalancedProject(Project)
             task_no = len(task_obj)
@@ -212,6 +208,7 @@ class wizard_compute_tasks(wizard.interface):
                     s_date = t.start.to_datetime()
                     e_date = t.end.to_datetime()
                     if loop_no != 0:
+                        print 's_date,e_date>>>>',s_date,e_date,t.name,t.booked_resource,t.priority
                         user_id = user_pool.search(cr,uid,[('name','=',t.booked_resource[0].__name__)])
                         task_pool.write(cr,uid,[task_obj[loop_no - 1].id],{'date_start':s_date,'date_end':e_date,'user_id':user_id[0]})
                     loop_no = task_no + 1
