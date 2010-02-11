@@ -120,6 +120,7 @@ class project(osv.osv):
     _columns = {
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
         'priority': fields.integer('Sequence'),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
@@ -138,10 +139,11 @@ class project(osv.osv):
 #                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
      }
-
+    _order = "sequence"
     _defaults = {
         'active': lambda *a: True,
         'priority': lambda *a: 1,
+        'sequence': lambda *a: 10,
     }
     def _check_dates(self, cr, uid, ids):
          leave = self.read(cr, uid, ids[0],['date_start','date'])
