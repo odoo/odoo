@@ -1072,7 +1072,7 @@ class account_invoice_line(osv.osv):
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
 
         if not name:
-            result['name'] = res.name
+            result['name'] = res.partner_ref
 
         domain = {}
         result['uos_id'] = uom or res.uom_id.id or False
