@@ -8,7 +8,7 @@
 	 	<field name="res_model">calendar.attendee</field>
 	 	<field name="view_type">form</field>
 	 	<field name="view_mode">tree,form</field>
-	 	<field name="view_id" ref="caldav.caldav_attendee_tree_view" />	 	
+	 	<field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view" />	 	
         <field name="domain">[('ref','like','crm.meeting,')]</field>
 	 	<field name="context">{'default_sent_by_uid': uid}</field>
 	 </record>

@@ -33,19 +33,17 @@
 """, 
     'author': 'Tiny', 
     'website': 'http://www.openerp.com', 
-    'depends': ['base', 
-                        'caldav', 
-                        'crm', 
-                        'mail_gateway', 
+    'depends': ['base_calendar', 
+                        'crm'
                     ], 
     'init_xml': [ 
-                'crm_meeting_data.xml',                 
+                'crm_caldav_data.xml',                 
     ], 
 
     'update_xml': [        
-        'crm_meeting_wizard.xml', 
-        'crm_meeting_view.xml', 
-        'crm_meeting_menu.xml',         
+        'crm_caldav_wizard.xml', 
+        'crm_caldav_view.xml', 
+        'crm_caldav_menu.xml',         
     ],
     'demo_xml': [], 
     'installable': True, 

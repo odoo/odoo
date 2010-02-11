@@ -14,12 +14,12 @@
                                 	on_change="onchange_rrule_type(rrule_type)"
                                 	colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
                                 <button string="Custom"
-                					name="%(caldav.action_calendar_custom_rrule_wizard)d"
+                					name="%(base_calendar.action_calendar_custom_rrule_wizard)d"
                 					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}"
                                     attrs="{'invisible': [('rrule_type','!=','custom')]}"
                                     />
                                 <button string="Edit" help="Edit only this Occurrency Meeting" attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
-                    			name="%(base_calendar.wizard_edit_this_event)d" icon="gtk-save"
+                    			name="%(caldav.wizard_edit_this_event)d" icon="gtk-save"
                     			type="action" context="{'model' : 'crm.meeting', 'date': date, 'date_deadline': date_deadline}" />
                         </group>
                         <field name="alarm_id" string="Reminder" widget="selection" /> 
@@ -37,7 +37,7 @@
                     <xpath expr="/form/notebook/page[@string='Meeting']" position="after">
                         <page string="Invitation Detail">
                 			<button string="Invite People"
-                				name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
+                				name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
                 				icon="terp-partner" type="action"
                 				context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
                 			<field name="attendee_ids" colspan="4"
@@ -106,7 +106,7 @@
                 <field name="name">calendar.attendee.form.inherit</field>
                 <field name="model">calendar.attendee</field>
                 <field name="type">form</field>
-                <field name="inherit_id" ref="caldav.caldav_attendee_form_view"/>                
+                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_form_view"/>                
                 <field name="arch" type="xml">
                     <field name="language" position="after">
                         <field name="categ_id" string="Event Type"/>
@@ -118,7 +118,7 @@
                 <field name="name">calendar.attendee.tree.inherit</field>
                 <field name="model">calendar.attendee</field>
                 <field name="type">tree</field>
-                <field name="inherit_id" ref="caldav.caldav_attendee_tree_view"/>                
+                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_tree_view"/>                
                 <field name="arch" type="xml">
                     <field name="role" position="after">
                         <field name="categ_id" string="Event Type"/>
