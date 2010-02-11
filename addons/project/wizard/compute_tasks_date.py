@@ -44,17 +44,30 @@ compute_fields = {
 def timeformat_convert(cr, uid, time_string, context={}):
 #    Function to convert input time string:: 8.5 to output time string 8:30
 
-        strg = str(time_string)[-2:]
-        last_strg = str(time_string)[0:-2]
-        if strg != '.0':
-            if '.' not in strg:
-                strg = '.' + strg
-                last_strg = str(time_string)[:-3]
-            new_strg = round(float(strg) / 0.016666667)
-            converted_strg = last_strg + ':' + str(new_strg)[:-2]
-        else:
-            converted_strg = last_strg + ':00'
-        return converted_strg
+        split_list = str(time_string).split('.')
+        hour_part = split_list[0]
+        mins_part = split_list[1]
+        round_mins  = int(round(float(mins_part) * 60,-2))
+        converted_string = hour_part + ':' + str(round_mins)[0:2]
+        return converted_string
+
+def leaves_resource(cr,uid,id):
+#    To get the leaves for the members working on project
+
+        pool = pooler.get_pool(cr.dbname)
+        resource_leaves_pool = pool.get('resource.calendar.leaves')
+        resource_leave_ids = resource_leaves_pool.search(cr,uid,[('resource_id','=',id)])
+        leaves = []
+        if resource_leave_ids:
+            res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
+            for leave in range(len(res_leaves)):
+                    dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
+                    dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
+                    no = dt_end - dt_start
+                    leave_days = no.days + 1
+            [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(leave_days))]
+            leaves.sort()
+        return leaves
 
 class wizard_compute_tasks(wizard.interface):
 
@@ -76,13 +89,14 @@ class wizard_compute_tasks(wizard.interface):
             task_ids.sort()
             task_obj = task_pool.browse(cr,uid,task_ids)
             task_1 = task_obj[0]
-            dt_start = datetime.datetime.strftime(datetime.datetime.strptime(project.date_start,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
+
+            date_start = datetime.datetime.strftime(datetime.datetime.strptime(project.date_start,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
             calendar_id = project.resource_calendar_id.id
 
 #     If project has a working calendar then that would be used otherwise
 #     the default faces calendar would  be used
             if calendar_id:
-                resource_leave_ids = resource_leaves_pool.search(cr,uid,[('calendar_id','=',project.resource_calendar_id.id)])
+                resource_leave_ids = resource_leaves_pool.search(cr,uid,[('calendar_id','=',calendar_id)])
                 time_range = "8:00-8:00"
                 non_working = ""
                 wk = {"0":"mon","1":"tue","2":"wed","3":"thu","4":"fri","5":"sat","6":"sun"}
@@ -99,7 +113,6 @@ class wizard_compute_tasks(wizard.interface):
                     if wk.has_key(week['dayofweek']):
                         day = wk[week['dayofweek']]
                         wk_days[week['dayofweek']] = wk[week['dayofweek']]
-
                     hour_from_str = timeformat_convert(cr,uid,week['hour_from'])
                     hour_to_str = timeformat_convert(cr,uid,week['hour_to'])
                     res_str = hour_from_str + '-' + hour_to_str
@@ -140,8 +153,12 @@ class wizard_compute_tasks(wizard.interface):
             resource = project.members
             resource_objs = []
             for no in range(len(resource)):
+                leaves = []
                 resource_id = resource_pool.search(cr,uid,[('user_id','=',resource[no].id)])
-                resource_objs.append(classobj(str(resource[no].name),(Resource,),{'__doc__':resource[no].name,'__name__':resource[no].name}))
+                if resource_id and wktime_cal:
+            #   Getting list of leaves for specific resource
+                    leaves = leaves_resource(cr,uid,resource_id)
+                resource_objs.append(classobj(str(resource[no].name),(Resource,),{'__doc__':resource[no].name,'__name__':resource[no].name,'vacation':tuple(leaves)}))
 
 #     To create dynamic no of tasks
             def tasks(j,eff):
@@ -168,18 +185,17 @@ class wizard_compute_tasks(wizard.interface):
 
 #    Creating the project with all the tasks and resources
             def Project():
-                resource = reduce(operator.or_,resource_objs)
                 title = project.name
-                start = dt_start
-
+                start = date_start
+                resource = reduce(operator.or_,resource_objs)
 #    If project has calendar
-                if wktime_cal or leaves:
+                if wktime_cal:
                         working_days = wktime_cal
                         vacation = tuple(leaves)
 
 #    Dynamic Creation of tasks
                 for i in range(len(task_obj)):
-                    hours = str(task_obj[i].planned_hours / task_obj[i].occupation_rate)[:-2] + 'H'
+                    hours = str(task_obj[i].remaining_hours / task_obj[i].occupation_rate)+ 'H'
                     if task_obj[i].user_id:
                         for resource_object in resource_objs:
                             if resource_object.__name__ == task_obj[i].user_id.name:
@@ -195,7 +211,6 @@ class wizard_compute_tasks(wizard.interface):
                 while loop_no <= task_no:
                     s_date = t.start.to_datetime()
                     e_date = t.end.to_datetime()
-                    print 'Start Date And End Date:::',s_date,e_date,t.name,t.booked_resource
                     if loop_no != 0:
                         user_id = user_pool.search(cr,uid,[('name','=',t.booked_resource[0].__name__)])
                         task_pool.write(cr,uid,[task_obj[loop_no - 1].id],{'date_start':s_date,'date_end':e_date,'user_id':user_id[0]})

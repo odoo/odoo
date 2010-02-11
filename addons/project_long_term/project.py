@@ -40,12 +40,12 @@ class project_phase(osv.osv):
          if (obj_self in prev_ids) or (obj_self in next_ids):
              return False
          ids = [id for id in prev_ids if id in next_ids]
-         
+
          #both prev_ids and next_ids must be unique
          if ids:
              return False
          #unrelated project
-         
+
          prev_ids = [rec.id for rec in prev_ids]
          next_ids = [rec.id for rec in next_ids]
 
@@ -59,7 +59,7 @@ class project_phase(osv.osv):
              if ids:
                  return False
              prev_ids = prv_phase_ids
-             
+
         #iter next_ids
          while next_ids:
              cr.execute('select distinct next_phase_id from project_phase_next_rel where phase_id in ('+','.join(map(str, next_ids))+')')
@@ -100,7 +100,9 @@ project_phase()
 class project_resource_allocation(osv.osv):
     _name = 'project.resource.allocation'
     _description = 'Project Resource Allocation'
+    _rec_name = 'resource_id'
     _columns = {
+#        'name': fields.char('Name',size = 64),
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', required=True),
         'useability': fields.float('Useability', help="Useability of this ressource for this project phase in percentage (=50%)"),
@@ -108,6 +110,7 @@ class project_resource_allocation(osv.osv):
     _defaults = {
         'useability': lambda *a: 100,
     }
+
 project_resource_allocation()
 
 class project(osv.osv):

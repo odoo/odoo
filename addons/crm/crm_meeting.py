@@ -21,6 +21,8 @@
 
 from osv import fields, osv
 import crm
+from datetime import datetime, timedelta
+from datetime import datetime, timedelta
 
 class crm_opportunity(osv.osv):
     _name = 'crm.opportunity'
@@ -32,7 +34,27 @@ class crm_meeting(osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting Cases"
     _order = "id desc"
-    _inherit = ["crm.case", "calendar.event"]
+    _inherit = "crm.case"
+
+    def _get_duration(self, cr, uid, ids, name, arg, context):
+        res = {}
+        for event in self.browse(cr, uid, ids, context=context):
+            start = datetime.strptime(event.date, "%Y-%m-%d %H:%M:%S")
+            res[event.id] = 0
+            if event.date_deadline:
+                end = datetime.strptime(event.date_deadline[:19], "%Y-%m-%d %H:%M:%S")
+                diff = end - start
+                duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
+                res[event.id] = round(duration, 2)
+        return res
+
+    def _set_duration(self, cr, uid, id, name, value, arg, context):
+        event = self.browse(cr, uid, id, context=context)
+        start = datetime.strptime(event.date, "%Y-%m-%d %H:%M:%S")
+        end = start + timedelta(hours=value)
+        cr.execute("UPDATE %s set date_deadline='%s' \
+                        where id=%s"% (self._table, end.strftime("%Y-%m-%d %H:%M:%S"), id))
+        return True
 
     _columns = {
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
@@ -41,7 +63,8 @@ class crm_meeting(osv.osv):
                             ('object_id.model', '=', 'crm.meeting')]", \
             help='Category related to the section.Subdivide the CRM cases \
 independently or section-wise.'), 
-        'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'),
+        'duration': fields.function(_get_duration, method=True, \
+                                    fnct_inv=_set_duration, string='Duration'),        
         'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),        
         'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),
     }

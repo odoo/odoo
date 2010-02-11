@@ -49,13 +49,14 @@ class project(osv.osv):
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        if user==1:
+        if user == 1:
                 return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
                                                        context=context, count=count)
         if context and context.has_key('user_prefence') and context['user_prefence']:
                 cr.execute("""SELECT project.id FROM project_project project
                            LEFT JOIN account_analytic_account account ON account.id = project.category_id
-                           WHERE (account.user_id = %s)"""%(user))
+                           LEFT JOIN project_user_rel rel ON rel.project_id = project.category_id
+                           WHERE (account.user_id = %s or rel.uid = %s)"""%(user, user))
                 res = cr.fetchall()
                 return [(r[0]) for r in res]
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
@@ -120,6 +121,7 @@ class project(osv.osv):
     _columns = {
         'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the project without removing it."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc."),
         'priority': fields.integer('Sequence'),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
@@ -138,10 +140,11 @@ class project(osv.osv):
 #                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
      }
-
+    _order = "sequence"
     _defaults = {
         'active': lambda *a: True,
         'priority': lambda *a: 1,
+        'sequence': lambda *a: 10,
     }
     def _check_dates(self, cr, uid, ids):
          leave = self.read(cr, uid, ids[0],['date_start','date'])
@@ -536,6 +539,7 @@ config_compute_remaining()
 class message(osv.osv):
     _name = "project.message"
     _description = "Message"
+
     _columns = {
         'subject': fields.char('Subject', size=128, required="True"),
         'description': fields.text('Description'),
@@ -543,6 +547,7 @@ class message(osv.osv):
         'date': fields.date('Date'),
         'user_id': fields.many2one('res.users', 'User', required="True"),
         }
+
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
             return int(context['project_id'])
@@ -553,20 +558,6 @@ class message(osv.osv):
         'project_id':_default_project}
 
 message()
-
-def _project_get(self, cr, uid, context={}):
-    if uid==1:
-        ids = self.pool.get('project.project').search(cr, uid, [])
-        res = self.pool.get('project.project').read(cr, uid, ids, ['id','name'], context)
-        res = [(str(r['id']),r['name']) for r in res]
-    else:
-        cr.execute("""SELECT project.id,account.name FROM project_project project
-                   LEFT JOIN account_analytic_account account ON account.id = project.category_id
-                   WHERE (account.user_id = %s)"""%(uid))
-        res = cr.fetchall()
-        print res
-        res = [(str(r[0]),r[1]) for r in res]
-    return res
 
 class users(osv.osv):
     _inherit = 'res.users'

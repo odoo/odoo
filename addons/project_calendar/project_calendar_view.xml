@@ -11,7 +11,7 @@
 				<notebook position="inside">
 					<page string="Assignees Detail">
             			<button string="Assign Task"
-            				name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
+            				name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
             				icon="terp-partner" type="action"
             				context="{'model' : 'project.task'}" colspan="2"/>
             			<field name="attendee_ids" colspan="4"
@@ -89,7 +89,7 @@
 					<field name="vtimezone" colspan="2" />
 					<field name="location" colspan="2" />
 					<field name="alarm_id" string="Reminder" widget="selection" />
-					<field name="caldav_url" widget="url" />
+					<field name="base_calendar_url" widget="url" />
 					<field name="rrule" invisible="1"/>
 				</field>
 			</field>

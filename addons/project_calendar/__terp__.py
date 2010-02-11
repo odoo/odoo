@@ -25,7 +25,7 @@
     "author" : "Tiny", 
     "category" : "Generic Modules/Others", 
     "description": """ Synchronize between Project task and Caldav Vtodo.""", 
-    "depends" : ["project", "caldav"], 
+    "depends" : ["project", "base_calendar"], 
     "init_xml" : ["project_calendar_data.xml"], 
     "demo_xml" : [], 
     "update_xml" : ["project_calendar_view.xml", 

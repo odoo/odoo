@@ -19,11 +19,12 @@
 #
 ##############################################################################
 
-import caldav
-import caldav_cache
-import caldav_fs
-import caldav_node
-import webdav_server
-import wizard
+
+import crm_caldav
+
+
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

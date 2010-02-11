@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,15 +15,38 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import caldav
-import caldav_cache
-import caldav_fs
-import caldav_node
-import webdav_server
-import wizard
 
+{
+    'name': 'Extened Module to Add CalDav future on Meeting',
+    'version': '1.0',
+    'category': 'Generic Modules/CRM & SRM',
+    'description': """
+    New Futures in Meeting:
+        *  Recurrent meeting
+        *  Alarms
+        *  Invitation facility
+        *  Share meeting with other calendar clients like sunbird         
+""", 
+    'author': 'Tiny', 
+    'website': 'http://www.openerp.com', 
+    'depends': ['base_calendar', 
+                        'crm'
+                    ], 
+    'init_xml': [ 
+                'crm_caldav_data.xml',                 
+    ], 
+
+    'update_xml': [        
+        'crm_caldav_wizard.xml', 
+        'crm_caldav_view.xml', 
+        'crm_caldav_menu.xml',         
+    ],
+    'demo_xml': [], 
+    'installable': True, 
+    'active': False,     
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
