@@ -9,6 +9,7 @@
         src_model="res.partner"
         view_mode="calendar,tree,form,gantt"
         context="{'default_partner_id': active_id, 'default_duration': 4.0}"
+        domain="[('partner_id', '=', active_id)]"
     />
 
 

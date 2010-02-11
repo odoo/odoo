@@ -32,11 +32,22 @@
             		<field name="date" string="Start Date" required="1" />
             		<field name="duration" widget="float_time" />
             		<field name="date_deadline" string="End Date" required="1" />
-            		
-            		
             	</group>
             	<notebook colspan="4">
             		<page string="Meeting">
+            		<separator colspan="4" string="Communication"/>
+                        <field name="partner_id" string="Partner"
+                        	on_change="onchange_partner_id(partner_id)" />
+                        <field name="partner_address_id"
+                        	string="Contact"
+                        	on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                        <field name="email_from"/>
+            		<separator colspan="4" string="Status and Categarization"/>
+                        <group colspan="4" col="6">
+                            <field name="priority"/>
+							 <field name="user_id" />
+	                        <field name="section_id" widget="selection" />            	
+	                    </group>
             			<separator string="Description" colspan="4" />
             			<field name="description" nolabel="1" colspan="4" />
                         <separator colspan="4"/>
@@ -50,12 +61,6 @@
                             <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
                         </group>
             		</page>            		
-            		<page string="Other Information">
-            			<field name="priority"/>
-            			<field name="user_id" on_change="onchange_user_id(user_id)"/>
-                        <field name="section_id" widget="selection"
-            			/>            			
-            		</page>
             	</notebook>
     
                             	

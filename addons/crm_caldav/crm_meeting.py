@@ -37,7 +37,6 @@ independently or section-wise.'),
         'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),        
         'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),       
         'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'),
-        
     }
 
 crm_meeting()
