@@ -22,13 +22,14 @@
 from osv import fields, osv
 from crm import crm
 from caldav import caldav
+from base_calendar import base_calendar
 class crm_meeting(osv.osv):   
     _inherit = 'crm.meeting'
 
     
 
     def export_cal(self, cr, uid, ids, context={}):
-        ids = map(lambda x: base_calendar_id2real_id(x), ids)
+        ids = map(lambda x: base_calendar.base_calendar_id2real_id(x), ids)
         event_data = self.read(cr, uid, ids)
         event_obj = self.pool.get('basic.calendar.event')
         ical = event_obj.export_cal(cr, uid, event_data, context={'model': self._name})
