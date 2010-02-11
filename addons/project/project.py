@@ -49,13 +49,14 @@ class project(osv.osv):
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        if user==1:
+        if user == 1:
                 return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
                                                        context=context, count=count)
         if context and context.has_key('user_prefence') and context['user_prefence']:
                 cr.execute("""SELECT project.id FROM project_project project
                            LEFT JOIN account_analytic_account account ON account.id = project.category_id
-                           WHERE (account.user_id = %s)"""%(user))
+                           LEFT JOIN project_user_rel rel ON rel.project_id = project.category_id
+                           WHERE (account.user_id = %s or rel.uid = %s)"""%(user, user))
                 res = cr.fetchall()
                 return [(r[0]) for r in res]
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
@@ -538,6 +539,7 @@ config_compute_remaining()
 class message(osv.osv):
     _name = "project.message"
     _description = "Message"
+
     _columns = {
         'subject': fields.char('Subject', size=128, required="True"),
         'description': fields.text('Description'),
@@ -545,6 +547,7 @@ class message(osv.osv):
         'date': fields.date('Date'),
         'user_id': fields.many2one('res.users', 'User', required="True"),
         }
+
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
             return int(context['project_id'])
@@ -555,20 +558,6 @@ class message(osv.osv):
         'project_id':_default_project}
 
 message()
-
-def _project_get(self, cr, uid, context={}):
-    if uid==1:
-        ids = self.pool.get('project.project').search(cr, uid, [])
-        res = self.pool.get('project.project').read(cr, uid, ids, ['id','name'], context)
-        res = [(str(r['id']),r['name']) for r in res]
-    else:
-        cr.execute("""SELECT project.id,account.name FROM project_project project
-                   LEFT JOIN account_analytic_account account ON account.id = project.category_id
-                   WHERE (account.user_id = %s)"""%(uid))
-        res = cr.fetchall()
-        print res
-        res = [(str(r[0]),r[1]) for r in res]
-    return res
 
 class users(osv.osv):
     _inherit = 'res.users'
