@@ -389,7 +389,7 @@ request was delegated to"),
         'email': fields.char('Email', size=124, required=True, help="Email of Invited Person"), 
         'event_date': fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'), 
         'event_end_date': fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'), 
-        'ref': fields.reference('Document Ref', selection=_links_get, size=128), 
+        'ref': fields.reference('Event Ref', selection=_links_get, size=128), 
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"), 
      }
     _defaults = {
