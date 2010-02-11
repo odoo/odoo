@@ -33,11 +33,9 @@
         'base',
         'sale',
         'project',
-        'product',
     ],
     'init_xml': [],
     'update_xml': [
-        "multi_company_view.xml",
         #'security/ir.model.access.csv',
     ],
     'demo_xml': [
