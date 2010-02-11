@@ -30,8 +30,7 @@
 """, 
     'author': 'Tiny', 
     'website': 'http://www.openerp.com', 
-    'depends': ['base_calendar', 
-                        'crm'
+    'depends': ['caldav', 'crm'
                     ], 
     'init_xml': [ 
                 'crm_caldav_data.xml',                 
