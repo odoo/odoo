@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>	
+
+        <record id="meeting_form_view_inherit1" model="ir.ui.view">
+                <field name="name">CRM - Meetings Form Inherit1</field>
+                <field name="model">crm.meeting</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="crm.crm_case_form_view_meet"/>                
+                <field name="arch" type="xml">
+                    <field name="date_deadline" position="after">                        
+                        <group colspan="2" col="4" >
+                                <field name="rrule_type" string="Recurrency"
+                                	on_change="onchange_rrule_type(rrule_type)"
+                                	colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
+                                <button string="Custom"
+                					name="%(caldav.action_calendar_custom_rrule_wizard)d"
+                					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}"
+                                    attrs="{'readonly': [('rrule_type','!=','custom')]}"
+                                    />
+                                <button string="Edit" help="Edit only this Occurrency Meeting" attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
+                    			name="%(base_calendar.wizard_edit_this_event)d" icon="gtk-save"
+                    			type="action" context="{'model' : 'crm.meeting', 'date': date, 'date_deadline': date_deadline}" />
+                        </group>
+                        <field name="alarm_id" string="Reminder" widget="selection" /> 
+                        <field name="location" />
+                    </field>
+                </field>
+        </record>
+
+        <record id="meeting_form_view_inherit2" model="ir.ui.view">
+                <field name="name">CRM - Meetings Form Inherit2</field>
+                <field name="model">crm.meeting</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="crm.crm_case_form_view_meet"/>                
+                <field name="arch" type="xml">
+                    <xpath expr="/form/notebook/page[@string='Meeting']" position="after">
+                        <page string="Invitation Detail">
+                			<button string="Invite People"
+                				name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
+                				icon="terp-partner" type="action"
+                				context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
+                			<field name="attendee_ids" colspan="4"
+                				nolabel="1" widget="one2many" mode="tree,form">
+                				<tree string="Invitation details" editable="top">
+                					<field name="email" />
+                					<field name="role" select="1" />
+                					<field name="state" />
+                				</tree>
+                				<form string="Invitation details">
+                					<notebook colspan="4">
+                						<page string="Details">
+                							<field name="email" />
+                							<field name="rsvp" select="1" />
+                							<field name="cutype" select="1" />
+                							<field name="role" select="1" />
+                							<separator colspan="4" string="" />
+                							<field name="state" />
+                						</page>
+                						<page string="Other">
+                							<field name="user_id"/>
+                							<field name="partner_address_id" select="1" />
+                							<newline />
+                						</page>
+                					</notebook>
+                				</form>
+                			</field>
+            		    </page>
+                    </xpath>
+                </field>
+        </record>
+
+
+        <record id="meeting_form_view_inherit3" model="ir.ui.view">
+                <field name="name">CRM - Meetings Form Inherit3</field>
+                <field name="model">crm.meeting</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="crm.crm_case_form_view_meet"/>                
+                <field name="arch" type="xml">
+                    <xpath expr="/form/notebook/page[@string='Other Information']/field[@name='section_id']" position="after">
+                        <newline/>
+                        <field name="show_as"/>            			
+            			<field name="class"/>
+                        <field name="vtimezone"/>
+            			<field name="recurrent_id" invisible="1" />
+            			<field name="recurrent_uid" invisible="1" />
+            			<field name="rrule" invisible="1" />
+                    </xpath>
+                </field>
+        </record>
+	</data>
+</openerp>
