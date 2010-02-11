@@ -21,23 +21,55 @@
 
 from osv import fields, osv
 import crm
+from datetime import datetime, timedelta
+from datetime import datetime, timedelta
 
+class crm_opportunity(osv.osv):
+    _name = 'crm.opportunity'
+crm_opportunity()    
+class crm_phonecall(osv.osv):
+    _name = 'crm.phonecall'
+crm_phonecall()    
 class crm_meeting(osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting Cases"
     _order = "id desc"
-    _inherit = ["crm.case", "calendar.event"]
+    _inherit = ["crm.case", "calendar.event"]   
 
-    _columns = {
+    _columns = { 
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                            domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.meeting')]", \
-            help='Category related to the section.Subdivide the CRM cases \
-independently or section-wise.'), 
+        'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
+                            domain="[('object_id.model', '=', 'crm.meeting')]", \
+            ),            
+        'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),        
+        'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),       
         'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'),
     }
 
 crm_meeting()
+
+class calendar_attendee(osv.osv):
+    _inherit = 'calendar.attendee'
+
+    def _compute_data(self, cr, uid, ids, name, arg, context):        
+        name = name[0]
+        result = super(calendar_attendee, self)._compute_data(cr, uid, ids, name, arg, context)
+
+        for attdata in self.browse(cr, uid, ids, context=context):
+            id = attdata.id
+            result[id] = {}
+            if name == 'categ_id':
+                if attdata.ref:
+                    model, res_id = tuple(attdata.ref.split(','))
+                    model_obj = self.pool.get(model)
+                    obj = model_obj.read(cr, uid, res_id, ['categ_id'])[0]
+                    result[id][name] = obj.get('categ_id')
+                else:
+                    result[id][name] = False
+        return result
+    _columns = {
+        'categ_id': fields.function(_compute_data, method=True, string='Event Type', type="many2one", relation="crm.case.categ", multi='categ_id'), 
+    }
+calendar_attendee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

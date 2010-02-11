@@ -5,14 +5,20 @@
             <field name="name">Manufacturing Profile: Install Extra Modules</field>
             <field name="model">profile.manufacturing.config.install_modules_wizard</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
               <data>
-                <form position="attributes"><attribute name="string">
-                  Manufacturing Profile: Install Extra Modules
-                </attribute></form>
-                <group string="res_config_contents" position="replace">
-                  <label colspan="4" align="0.0" string="Here are a few modules which might be useful along with the rest of the Manufacturing profile. You can also install them the normal way later on, but if you think you'll need them to fit your requirements, you can select them now and they'll be installed immediately."/>
+                <form position="attributes">
+                  <attribute name="string">Manufacturing Profile: Install Extra Modules</attribute>
+                </form>
+                <xpath expr="//label[@string='description']"
+                       position="attributes">
+                  <attribute name="string">Here are a few modules which might be useful along with the rest of the Manufacturing profile. You can also install them the normal way later on, but if you think you'll need them to fit your requirements, you can select them now and they'll be installed immediately.</attribute>
+                </xpath>
+                <separator string="title" position="attributes">
+                  <attribute name="string">Manufacturing Modules</attribute>
+                </separator>
+                <group colspan="8">
                   <separator string="Stock &amp; Manufacturing" colspan="4"/>
                   <field name="stock_location"/>
                   <field name="mrp_jit"/>
@@ -29,7 +35,6 @@
                   <field name="warning"/>
                   <field name="portal"/>
                 </group>
-                <xpath expr='//button[@name="action_skip"]' position='replace'/>
               </data>
             </field>
         </record>
@@ -44,7 +49,8 @@
         </record>
       <record model="ir.actions.todo"
             id="config_install_module">
-            <field name="action_id" ref="action_config_install_module"/>
-        </record>
+        <field name="action_id" ref="action_config_install_module"/>
+        <field name="sequence">3</field>
+      </record>
     </data>
 </openerp>

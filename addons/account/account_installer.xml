@@ -4,43 +4,31 @@
       <field name="name">account.installer.view</field>
       <field name="model">account.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_view_base"/>
+      <field name="inherit_id" ref="base.res_config_installer"/>
       <field name="arch" type="xml">
         <data>
-          <form position="attributes"><attribute name="string">
-              Accounting Modules Installation
-          </attribute></form>
+          <form position="attributes">
+            <attribute name="string">Accounting Modules Installation</attribute>
+          </form>
 
-          <group string="res_config_contents" position="replace">
-            <separator string="Configure Your Accounting System" colspan="4"/>
-            <image name="gtk-dialog-info"/>
-            <newline/>
-            <label align="0.0" string=" Lorem ipsum dolor
-                sit amet, consectetur adipiscing elit. Cras metus
-                augue, ultricies et vehicula id, fringilla quis
-                mauris. Vestibulum fringilla ipsum sit amet est
-                adipiscing eget euismod velit semper. Proin non mauris
-                velit. Donec malesuada nisi sed augue viverra commodo
-                sagittis nisi rutrum. Cras vitae libero nunc, a
-                molestie sapien. Proin et augue sit amet est egestas
-                fermentum ut eu lacus. Etiam nisi orci, volutpat
-                aliquam viverra interdum, vehicula iaculis
-                lectus. Mauris ligula sapien, auctor in pharetra non,
-                ultrices quis odio."/>
-            <group>
-              <separator string="Accounting" colspan="4"/>
-              <field name="account_analytic_default"/>
-              <field name="account_analytic_plans"/>
-              <!-- insert suppliers payment management here -->
-              <field name="account_followup"/>
-              <field name="account_asset"/>
-            </group>
-          </group>
-
-          <xpath expr='//button[@name="action_skip"]' position='replace'/>
-          <xpath expr='//button[@name="action_next"]' position='attributes'>
-            <attribute name='string'>Install Modules</attribute>
+          <separator string="title" position="attributes">
+            <attribute name="string"
+                       >Configure Your Accounting System</attribute>
+          </separator>
+          <xpath expr="//label[@string='description']"
+                 position="attributes">
+            <attribute name="string">You can enhance OpenERP's basic accounting support with a few additional OpenERP applications</attribute>
           </xpath>
+
+          <group colspan="8">
+            <separator string="Accounting" colspan="4"/>
+            <field name="charts"/>
+            <field name="account_analytic_default"/>
+            <field name="account_analytic_plans"/>
+            <field name="account_payment"/>
+            <field name="account_followup"/>
+            <field name="account_asset"/>
+          </group>
         </data>
       </field>
     </record>
@@ -57,7 +45,7 @@
 
     <record id="account_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_account_installer"/>
-      <field name="sequence">1</field>
+      <field name="sequence">3</field>
     </record>
   </data>
 </openerp>

@@ -22,14 +22,14 @@
 import time
 import re
 import os
-
-import mx.DateTime
 import base64
+import tools
+import mx.DateTime
 
 from tools.translate import _
-
-import tools
-from osv import fields,osv,orm
+from osv import fields 
+from osv import osv 
+from osv import orm
 from osv.orm import except_orm
 
 MAX_LEVEL = 15
@@ -79,7 +79,7 @@ class crm_case_section(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from crm_case_section where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from crm_case_section where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -188,7 +188,7 @@ class crm_case_rule(osv.osv):
 
         'trg_section_id': fields.many2one('crm.case.section', 'Section'),
     
-        #'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
+#        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
         'trg_user_id':  fields.many2one('res.users', 'Responsible'),
 
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
@@ -313,7 +313,7 @@ class crm_case(osv.osv):
 
     _columns = {
         'id': fields.integer('ID', readonly=True),
-        'name': fields.char('Description',size=64,required=True),
+        'name': fields.char('Description', size=1024, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
         'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
@@ -405,6 +405,12 @@ class crm_case(osv.osv):
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
 
         return True
+
+    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+        if not categ:
+            return {'value':{}}
+        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
+        return {'value':{'probability':cat}}
 
     def onchange_case_id(self, cr, uid, ids, case_id, name, partner_id, context={}):
         if not case_id:
@@ -580,7 +586,7 @@ class crm_case(osv.osv):
 
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
-        model_obj = self.pool.get('ir.model')
+        model_obj = self.pool.get('ir.model')        
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model','=',case._name)])            
             data = {
@@ -613,24 +619,21 @@ class crm_case(osv.osv):
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
-    def remind_user(self, cr, uid, ids, context={}, attach=False,
+    def remind_user(self, cr, uid, ids, context={}, attach=False, 
             destination=True):
         for case in self.browse(cr, uid, ids):
             if not case.section_id.reply_to:
-                raise osv.except_osv(_('Error!'),("Reply TO is not specified in Section"))
+                raise osv.except_osv(_('Error!'), ("Reply To is not specified in Section"))
             if not case.email_from:
-                raise osv.except_osv(_('Error!'),("Partner Email is not specified in Case"))
+                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
-                if not src:
-                    raise osv.except_osv(_('Error!'),
-                        _("No E-Mail ID Found for the Responsible Partner or missing reply address in section!"))
                 dest = case.section_id.reply_to
                 body = case.email_last or case.description
                 if not destination:
-                    src,dest = dest,src
+                    src, dest = dest, src
                     if case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature)
+                        body += '\n\n%s' % (case.user_id.signature or '')
                 dest = [dest]
 
                 attach_to_send = None
@@ -647,7 +650,7 @@ class crm_case(osv.osv):
                     "Reminder: [%s] %s" % (str(case.id), case.name, ),
                     self.format_body(body),
                     reply_to=case.section_id.reply_to,
-                    tinycrm=str(case.id),
+                    openobject_id=str(case.id),
                     attach=attach_to_send
                 )
                 if flag:
@@ -707,29 +710,28 @@ class crm_case(osv.osv):
                 '['+str(case.id)+'] '+case.name,
                 self.format_body(body),
                 reply_to=case.section_id.reply_to,
-                tinycrm=str(case.id)
+                openobject_id=str(case.id)
             )
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         if not part:
-            return {'value':{'partner_address_id': False}}
+            return {'value':{'partner_address_id': False, 
+                            'email_from': False,
+                            'partner_name2': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-        data = {'partner_address_id':addr['contact']}
-        if addr['contact'] and not email:
-            data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, addr['contact']).email
+        data = {'partner_address_id': addr['contact']}
+        data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value':data}
 
-
-
-
-    def onchange_partner_address_id(self, cr, uid, ids, part, email=False):
-        if not part:
-            return {'value':{}}
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         data = {}
-        if not email:
-            data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, part).email
-        return {'value':data}
+        if not add:
+            return {'value': {'email_from': False, 'partner_name2': False}}
+        address= self.pool.get('res.partner.address').browse(cr, uid, add)
+        data['email_from'] = address.email
+        data['partner_name2'] = address.name or ''
+        return {'value': data}
 
     def case_close(self, cr, uid, ids, *args):
         cases = self.browse(cr, uid, ids)
@@ -820,14 +822,7 @@ class crm_case_history(osv.osv):
     _name = "crm.case.history"
     _description = "Case history"
     _order = "id desc"
-    _inherits = {'crm.case.log':"log_id"}
-
-    def create(self, cr, user, vals, context=None):
-        if vals.has_key('res_id') and vals['res_id']:
-            case_obj = self.pool.get(vals['model_id'])
-            cases = case_obj.browse(cr, user, [vals['res_id']])
-            case_obj._action(cr, user, cases, '')
-        return super(crm_case_history, self).create(cr, user, vals, context)
+    _inherits = {'crm.case.log':"log_id"}    
 
     def _note_get(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -877,19 +872,21 @@ class crm_email_add_cc_wizard(osv.osv_memory):
         if not context:
             return {}
         history_line = self.pool.get('crm.case.history').browse(cr, uid, context['active_id'])
-        crm_case = self.pool.get('crm.case')
-        case = history_line.log_id.case_id
+        model = history_line.log_id.model_id.model
+        model_pool = self.pool.get(model)
+        case = model_pool.browse(cr, uid, history_line.log_id.res_id)
         body = history_line.description.replace('\n','\n> ')
         flag = tools.email_send(
             case.user_id.address_id.email,
             [case.email_from],
             subject or '['+str(case.id)+'] '+case.name,
-            crm_case.format_body(body),
+            model_pool.format_body(body),
             email_cc = [email],
-            tinycrm=str(case.id)
+            openobject_id=str(case.id),
+            subtype="html"
         )
         if flag:
-            crm_case.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})
+            model_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc +','+ email or email})
         else:
             raise osv.except_osv(_('Email Fail!'),("Lastest Email is not sent successfully"))
         return {}
@@ -907,9 +904,8 @@ class users(osv.osv):
     _inherit = 'res.users'
     _description = "Users"
     _columns = {
-        'context_section_id': fields.selection(_section_get, 'Sales Section'),
-        }
-
+        'context_section_id': fields.many2one('crm.case.section', 'Sales Section'),
+    }
 users()
 
 

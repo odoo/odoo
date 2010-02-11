@@ -80,6 +80,7 @@
 		<record id="survey_job_0" model="survey">
 			<field name="title">Job Survey</field>
 			<field name="state">draft</field>
+			<field name="max_response_limit">20</field>
 			<field eval="[(6,0,[])]" name="users"/>
 		</record>
 	</data>
@@ -92,7 +93,7 @@
 	</data>
 	<data>
 		<record id="survey_page_job_1" model="survey.page">
-			<field name="title">Education &amp;amp; Activities</field>
+			<field name="title">Education &amp; Activities</field>
 			<field name="survey_id" ref="survey_job_0"/>
 			<field eval="2" name="sequence"/>
 		</record>
@@ -106,6 +107,7 @@
 	</data>
 	<data>
 		<record id="survey_question_job_0" model="survey.question">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="validation_type">do_not_validate</field>
 			<field name="comment_valid_type">do_not_validate</field>
 			<field name="make_comment_field_err_msg">Please enter a comment.</field>
@@ -129,6 +131,7 @@
 	</data>
 	<data>
 		<record id="survey_question_job_1" model="survey.question">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="validation_type">do_not_validate</field>
 			<field name="comment_valid_type">do_not_validate</field>
 			<field name="make_comment_field_err_msg">Please enter a comment.</field>
@@ -152,6 +155,7 @@
 	</data>
 	<data>
 		<record id="survey_question_job_2" model="survey.question">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="validation_type">do_not_validate</field>
 			<field name="comment_valid_type">do_not_validate</field>
 			<field name="make_comment_field_err_msg">Please enter a comment.</field>
@@ -175,6 +179,7 @@
 	</data>
 	<data>
 		<record id="survey_question_job_3" model="survey.question">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="validation_type">do_not_validate</field>
 			<field name="comment_valid_type">do_not_validate</field>
 			<field name="make_comment_field_err_msg">Please enter a comment.</field>
@@ -198,6 +203,7 @@
 	</data>
 	<data>
 		<record id="survey_question_job_4" model="survey.question">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="validation_type">do_not_validate</field>
 			<field name="comment_valid_type">do_not_validate</field>
 			<field name="make_comment_field_err_msg">Please enter a comment.</field>
@@ -220,12 +226,14 @@
 		</record>
 
 		<record id="survey_answer_job_70" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Male</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_4"/>
 			<field eval="1" name="sequence"/>
 		</record>
 
 		<record id="survey_answer_job_71" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Female</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_4"/>
 			<field eval="2" name="sequence"/>
@@ -234,6 +242,7 @@
 	</data>
 	<data>
 		<record id="survey_question_job_5" model="survey.question">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="validation_type">do_not_validate</field>
 			<field name="comment_valid_type">do_not_validate</field>
 			<field name="make_comment_field_err_msg">Please enter a comment.</field>
@@ -256,41 +265,49 @@
 		</record>
 
 		<record id="survey_answer_job_81" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">0 - 15</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_5"/>
 			<field eval="1" name="sequence"/>
 		</record>
 		<record id="survey_answer_job_82" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">16 - 20</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_5"/>
 			<field eval="2" name="sequence"/>
 		</record>
 		<record id="survey_answer_job_83" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">21 - 30</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_5"/>
 			<field eval="3" name="sequence"/>
 		</record>
 		<record id="survey_answer_job_84" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">31 - 40</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_5"/>
 			<field eval="4" name="sequence"/>
 		</record>
 		<record id="survey_answer_job_85" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">41 - 50</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_5"/>
 			<field eval="5" name="sequence"/>
 		</record>
 		<record id="survey_answer_job_86" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">51 - 60</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_5"/>
 			<field eval="6" name="sequence"/>
 		</record>
 		<record id="survey_answer_job_87" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">61 - 70</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_5"/>
 			<field eval="7" name="sequence"/>
 		</record>
 		<record id="survey_answer_job_88" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">71 +</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_5"/>
 			<field eval="8" name="sequence"/>
@@ -299,6 +316,7 @@
 	</data>
 	<data>
 		<record id="survey_question_job_6" model="survey.question">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="validation_type">do_not_validate</field>
 			<field name="comment_valid_type">do_not_validate</field>
 			<field name="make_comment_field_err_msg">Please enter a comment.</field>
@@ -322,6 +340,7 @@
 	</data>
 	<data>
 		<record id="survey_question_job_7" model="survey.question">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="validation_type">do_not_validate</field>
 			<field name="comment_valid_type">do_not_validate</field>
 			<field name="make_comment_field_err_msg">Please enter a comment.</field>
@@ -386,6 +405,7 @@
 
 	<data>
 		<record id="survey_answer_job_0" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Good pay</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="1" name="sequence"/>
@@ -393,6 +413,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_1" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Getting on with colleagues</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="2" name="sequence"/>
@@ -400,6 +421,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_2" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Office environment (décor, light, space etc)</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="3" name="sequence"/>
@@ -407,6 +429,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_3" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Desk space</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="4" name="sequence"/>
@@ -414,6 +437,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_4" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">State of the art technology</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="5" name="sequence"/>
@@ -421,6 +445,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_5" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Office location (proximity to home)</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="6" name="sequence"/>
@@ -428,6 +453,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_6" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Good management/boss</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="7" name="sequence"/>
@@ -435,6 +461,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_7" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Freebies such as tea, coffee and stationery</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="8" name="sequence"/>
@@ -442,6 +469,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_8" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Perks such as free parking, gym passes etc</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="9" name="sequence"/>
@@ -449,6 +477,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_9" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">No out of hours working</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="10" name="sequence"/>
@@ -456,6 +485,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_10" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Dress code</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="11" name="sequence"/>
@@ -463,6 +493,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_11" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Regular meetings</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="12" name="sequence"/>
@@ -470,6 +501,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_job_12" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field name="answer">Good social life (office nights out, good Christmas parties etc)</field>
 			<field name="question_id" ref="crm_hr.survey_question_job_1"/>
 			<field eval="13" name="sequence"/>

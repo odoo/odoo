@@ -21,26 +21,23 @@
 
 
 {
-    "name" : "CalDAV", 
+    "name" : "Share Calendar using Caldav", 
     "version" : "1.0", 
     "depends" : [
                     "base_calendar", 
                 ], 
      'description': """
- Full featured caldav system that support:
-  - alerts (create requests)
-  - recurring events (*)
-  - invitations to others people (exactly like sunbird)
+ Contains basic functionality for caldav system like:  
+  - Availabilities of synchronisation using WebDAV
 """, 
     "author" : "Tiny", 
     'category': 'Generic Modules/Others', 
     'website': 'http://www.openerp.com', 
-    "init_xml" : [
-                   'caldav_data.xml'
-                   ], 
+    "init_xml" : ["caldav_data.xml"], 
     "demo_xml" : [], 
     "update_xml" : [
                     'security/ir.model.access.csv', 
+                    'caldav_wizard.xml', 
                     'caldav_view.xml'
                     ], 
     "installable" : True, 

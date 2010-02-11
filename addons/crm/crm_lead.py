@@ -19,21 +19,8 @@
 #
 ##############################################################################
 
-import time
-import re
-import os
-
-import mx.DateTime
-import base64
-
-from tools.translate import _
-
-import tools
 from osv import fields,osv,orm
-from osv.orm import except_orm
-
 import crm
-
 
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
@@ -46,10 +33,11 @@ class crm_lead(osv.osv):
     _order = "id desc"
     _inherit = 'crm.case'    
     _columns = {
-            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
+            'name': fields.char('Lead Subject', size=64),
+            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
             'type_id': fields.many2one('crm.case.resource.type', 'Lead Type Name', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
-            'partner_name': fields.char("Employee's Name", size=64),
-            'partner_name2': fields.char('Employee Email', size=64),
+            'partner_name': fields.char("Lead Name", size=64),
+            'partner_name2': fields.char('Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
             'partner_mobile': fields.char('Mobile', size=32),
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
@@ -61,17 +49,11 @@ class crm_lead(osv.osv):
                                                                             " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
-            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
+            'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
             'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-                                                                       
-             'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
+            'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'),
     }
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}        
 
 crm_lead()

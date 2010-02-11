@@ -22,35 +22,9 @@
 	        <field name="object_id" search="[('model','=','crm.meeting')]" model="ir.model"/>
 	    </record>
 
-	    <record model="res.request.link" id="request_link_meeting">
+         <record model="res.request.link" id="request_link_meeting">
 	        <field name="name">Case Meeting</field>
 	        <field name="object">crm.meeting</field>
-	    </record>
-
-
-<!--		Event Attribute mapping-->
-
-		<record model="basic.calendar.fields" id="caldav.map_event_4">
-			<field name="name" ref="base_calendar.field_event_attendee" />
-			<field name="type_id" ref="caldav.calendar_lines_event" />
-			<field name="field_id" search="[('name','=','attendee_ids'),('model_id.model','=','crm.meeting')]" />
-			<field name="fn">field</field>
-		</record>
-
-
-		<record model="basic.calendar.fields" id="caldav.map_event_8">
-			<field name="name" ref="base_calendar.field_event_priority"/>
-		    <field name="type_id" ref="caldav.calendar_lines_event" />
-			<field name="field_id" search="[('name','=','priority'),('model_id.model','=','crm.meeting')]" />
-		    <field name="fn">field</field>
-		</record>
-		
-		<record model="basic.calendar.fields" id="caldav.map_event_11">
-			<field name="name" ref="base_calendar.field_event_status"/>
-		    <field name="type_id" ref="caldav.calendar_lines_event" />
-			<field name="field_id" search="[('name','=','state'),('model_id.model','=','crm.meeting')]" />
-		    <field name="fn">field</field>
-		</record>
-
+	    </record>   	    
 	</data>
 </openerp>

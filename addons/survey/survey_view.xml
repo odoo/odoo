@@ -2,19 +2,17 @@
 <openerp>
     <data>
 
-<!--        <menuitem name="Survey Management" id="main_menu_survey"
-            icon="terp-crm" sequence="1"
-            groups="group_survey_manager,group_survey_user"/>-->
-    <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools"/>
-	<menuitem name="Survey" id="main_menu_survey"
-            icon="terp-crm" sequence="1"
-            groups="group_survey_manager,group_survey_user" parent="base.menu_tools"/>
-<!--        <menuitem name="Configuration" id="menu_survey_config"
-            parent="main_menu_survey" groups="group_survey_manager"/>-->
-	<menuitem name="Configuration" parent="base.menu_tools"
-         id="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="5"/>
-    <menuitem name="survey" id="menu_survey_config"
-        parent="base.menu_lunch_survey_root" groups="group_survey_manager"/>
+<!--        <menuitem name="Survey Management" id="main_menu_survey" icon="terp-crm" sequence="1" groups="group_survey_manager,group_survey_user"/>-->
+		    <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="15"/>
+			<menuitem name="Survey" id="main_menu_survey"
+				 sequence="3" groups="group_survey_manager,group_survey_user"
+				 parent="base.menu_tools" />
+			<menuitem id="menu_defination" name="Defination" parent="main_menu_survey" sequence="1"/>
+<!--        <menuitem name="Configuration" id="menu_survey_config" parent="main_menu_survey" groups="group_survey_manager"/>-->
+			<menuitem name="Configuration" parent="base.menu_tools"
+				id="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="6"/>
+		    <menuitem name="Surveys" id="menu_survey_config"
+		    	parent="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="2"/>
         <!--
             Survey
         -->
@@ -24,8 +22,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey">
-                    <field name="title" select="1"/>
-                    <field name="responsible_id"/>
+                	<field name="title" select="1"/>
+                	<group col="6" colspan="6">
+	                    <field name="responsible_id"/>
+	                	<button name="%(action_view_survey_name)d" states="open,draft,close,cancel"
+	                    	string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}"/>
+						<button name="%(action_view_survey_name)d" states="open,draft,close,cancel"
+	                        string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'readonly':[('state','!=','open')]}"/>
+						<button name="%(action_view_survey_name)d" states="open,draft,close,cancel"
+	                        string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
+					</group>
                     <notebook colspan="4">
                         <page string="Survey">
                             <field name="page_ids" colspan="4" nolabel="1" mode="form,tree" context="{'line_order': page_ids}">
@@ -41,116 +47,128 @@
                                             <field name="type" on_change="on_change_type(type)"/>
 						                    <field name="in_visible_rating_weight" invisible="1"/>
 						                    <field name="in_visible_menu_choice" invisible="1"/>
-                                            <notebook colspan="4">
-						                        <page string="Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
-												   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
-							                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}"/>
-							                       </group>
-							                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
-							                           <field name="column_heading_ids" colspan="4" nolabel="1" default_get="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
-														<group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
-														   <field name="no_of_rows"/>
+						                    <field name="in_visible_answer_type" invisible="1"/>
+						                    <notebook colspan="4">
+						                        <page string="Options">
+													<group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
+							                          <separator string="Answer" colspan="4"/>
+													   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
+								                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}" default_get="{'in_visible_answer_type': in_visible_answer_type}"/>
+								                       </group>
+								                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
+								                           <field name="column_heading_ids" colspan="4" nolabel="1" default_get="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
+															<group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
+															   <field name="no_of_rows"/>
+															</group>
+								                       </group>
+							                        </group>
+							                        <newline/>
+													<group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+							                            <separator string="Comment Field" colspan="4"/>
+							                            <group colspan="4">
+															<field name="is_comment_require"/>
 														</group>
-							                       </group>
-						                        </page>
-                                                <page string="Comment Field" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
-                                                    <group>
-	                                                    <field name="comment_field_type"/>
-	                                                    <group colspan="2" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-	                                                        <field name="comment_label"/>
-	                                                    </group>
-													</group>
-                                                    <group col="6" colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-                                                        <field name="comment_valid_type" colspan="2"/>
-                                                        <group colspan="2" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'), ('comment_valid_type','!=','must_be_whole_number')]}">
-                                                            <field name="comment_minimum_no" string="Between"/>
-                                                            <field name="comment_maximum_no" string="and"/>
-                                                        </group>
-                                                        <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_decimal_number')]}">
-                                                            <field name="comment_minimum_float" string="Between"/>
-                                                            <field name="comment_maximum_float" string="and"/>
-                                                        </group>
-                                                        <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_date')]}">
-                                                            <field name="comment_minimum_date" string="Between"/>
-                                                            <field name="comment_maximum_date" string="and"/>
-                                                        </group>
-                                                        <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'),('comment_valid_type','!=','must_be_decimal_number'),('comment_valid_type','!=','must_be_whole_number'),('comment_valid_type','!=','must_be_date'),('comment_valid_type','!=','must_be_email_address')]}">
-                                                            <separator string="When the comment is an invalid format, display this error message" colspan="4"/>
-                                                            <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
-                                                        </group>
-                                                    </group>
-                                                    <!-- group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
-                                                        <group colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-                                                            <field name="make_comment_field"/>
-                                                            <group colspan="4" attrs="{'invisible':[('make_comment_field','!=',True)]}">
-                                                                <separator string="When the comment field is left blank, display this error message:" colspan="4"/>
-                                                                <field name="make_comment_field_err_msg" nolabel="1"/>
-                                                            </group>
-                                                        </group>
-                                                    </group-->
-						                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+							                            <group attrs="{'invisible':[('is_comment_require','=',False)]}">
+								                            <group col="4" colspan="4">
+									                            <field name="comment_field_type" colspan="1"/>
+									                            <group colspan="2" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
+									                                <field colspan="2" name="comment_label" />
+									                            </group>
+															</group>
+								                            <group col="6" colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
+								                                <field name="comment_valid_type" colspan="2"/>
+								                                <group colspan="2" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'), ('comment_valid_type','!=','must_be_whole_number')]}">
+								                                    <field name="comment_minimum_no" string="Between"/>
+								                                    <field name="comment_maximum_no" string="and"/>
+								                                </group>
+								                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_decimal_number')]}">
+								                                    <field name="comment_minimum_float" string="Between"/>
+								                                    <field name="comment_maximum_float" string="and"/>
+								                                </group>
+								                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_date')]}">
+								                                    <field name="comment_minimum_date" string="Between"/>
+								                                    <field name="comment_maximum_date" string="and"/>
+								                                </group>
+								                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'),('comment_valid_type','!=','must_be_decimal_number'),('comment_valid_type','!=','must_be_whole_number'),('comment_valid_type','!=','must_be_date'),('comment_valid_type','!=','must_be_email_address')]}">
+								                                    <label string="When the comment is an invalid format, display this error message" colspan="4"/>
+								                                    <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
+								                                </group>
+								                            </group>
+														</group>
+							                        </group>
+													<newline/>
+						                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
 							                            <field name="comment_column"/>
 							                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
 							                                <field name="column_name" colspan="2"/>
 							                            </group>
 													</group>
-                                                </page>
-                                                <page string="Validation" attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
-                                                    <group col="6" colspan="4">
-                                                        <field name="validation_type" colspan="2"/>
-                                                        <group colspan="2" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'), ('validation_type','!=','must_be_whole_number')]}">
-                                                            <field name="validation_minimum_no" string="Between"/>
-                                                            <field name="validation_maximum_no" string="and"/>
-                                                        </group>
-                                                        <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_decimal_number')]}">
-                                                            <field name="validation_minimum_float" string="Between"/>
-                                                            <field name="validation_maximum_float" string="and"/>
-                                                        </group>
-                                                        <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_date')]}">
-                                                            <field name="validation_minimum_date" string="Between"/>
-                                                            <field name="validation_maximum_date" string="and"/>
-                                                        </group>
-                                                    </group>
-                                                    <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'),('validation_type','!=','must_be_decimal_number'),('validation_type','!=','must_be_whole_number'),('validation_type','!=','must_be_date'),('validation_type','!=','must_be_email_address')]}">
-                                                        <separator string="When the comment is an invalid format, display this error message" colspan="4"/>
-                                                        <field name="validation_valid_err_msg" nolabel="1" colspan="4"/>
-                                                    </group>
-                                                </page>
-                       	                        <page string="Required Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment')]}">
-                                                    <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'),('type','!=','single_textbox'),('type','!=','comment')]}">
-                                                        <field name="is_require_answer"/>
-                                                    </group>
-                                                    <group attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time')]}">
-                                                        <field name="required_type"/>
-                                                        <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
-                                                            <field name="req_ans" />
-                                                        </group>
-                                                        <group colspan="4" attrs="{'invisible':[('required_type','!=','a range')]}">
-                                                            <field name="minimum_req_ans"/>
-                                                            <field name="maximum_req_ans"/>
-                                                        </group>
-                                                    </group>
-                                                    <group colspan="4" attrs="{'invisible':[('required_type','!=','all'),('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly'),('required_type','!=','a range'),('is_require_answer','!=',True)]}">
-                                                        <separator string="When the question is not answered, display this error message:"/>
-                                                        <field name="req_error_msg" colspan="4" nolabel="1"/>
-                                                    </group>
-                                                    <group colspan="4" attrs="{'invisible':[('type','!=','numerical_textboxes')]}">
-                                                        <group colspan="2" >
-                                                            <field name="numeric_required_sum"/>
-                                                        </group>
-                                                        <newline/>
-                                                        <separator string="When the choices do not add up correctly, display this error message"/>
-                                                        <field name="numeric_required_sum_err_msg" colspan="4" nolabel="1"/>
-                                                    </group>
-                                                    <group colspan="4" attrs="{'invisible':[('type','!=','rating_scale')]}">
-                                                        <field name="rating_allow_one_column_require"/>
-                                                    </group>
-                                                </page>
-                                                <page string="Descriptive" attrs="{'invisible':[('type','!=','descriptive_text')]}">
-                                                    <separator string="Descriptive Text" colspan="4"/>
-                                                    <field name="descriptive_text" colspan="4" nolabel="1"/>
-                                                </page>
-                                            </notebook>
+							                        <newline/>
+							                        <group attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
+							                            <separator string="Validation" colspan="4"/>
+							                            <group colspan="4">
+															<field name="is_validation_require"/>
+														</group>
+							                            <group col="6" colspan="4" attrs="{'invisible':[('is_validation_require','=',False)]}">
+							                                <field name="validation_type" colspan="2"/>
+							                                <group colspan="2" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'), ('validation_type','!=','must_be_whole_number')]}">
+							                                    <field name="validation_minimum_no" string="Between"/>
+							                                    <field name="validation_maximum_no" string="and"/>
+							                                </group>
+							                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_decimal_number')]}">
+							                                    <field name="validation_minimum_float" string="Between"/>
+							                                    <field name="validation_maximum_float" string="and"/>
+							                                </group>
+							                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_date')]}">
+							                                    <field name="validation_minimum_date" string="Between"/>
+							                                    <field name="validation_maximum_date" string="and"/>
+							                                </group>
+							                            </group>
+							                            <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'),('validation_type','!=','must_be_decimal_number'),('validation_type','!=','must_be_whole_number'),('validation_type','!=','must_be_date'),('validation_type','!=','must_be_email_address')]}">
+							                                <label string="When the comment is an invalid format, display this error message" colspan="4"/>
+							                                <field name="validation_valid_err_msg" nolabel="1" colspan="4"/>
+							                            </group>
+							                        </group>
+							                        <newline/>
+							                        <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
+							                            <separator string="Required Answer" colspan="4"/>
+							                            <newline/>
+						                                <field name="is_require_answer"/>
+														<group col="6" colspan="4" attrs="{'invisible':[('is_require_answer','=',False)]}">
+								                            <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
+								                                <field name="required_type"/>
+								                                <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
+								                                    <field name="req_ans" />
+								                                </group>
+								                                <group colspan="4" attrs="{'invisible':[('required_type','!=','a range')]}">
+								                                    <field name="minimum_req_ans"/>
+								                                    <field name="maximum_req_ans"/>
+								                                </group>
+								                            </group>
+								                            <group colspan="4" attrs="{'invisible':[('required_type','!=','all'),('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly'),('required_type','!=','a range'),('is_require_answer','!=',True)]}">
+								                                <label string="When the question is not answered, display this error message:"/>
+								                                <field name="req_error_msg" colspan="4" nolabel="1"/>
+								                            </group>
+								                            <group colspan="4" attrs="{'invisible':[('type','!=','numerical_textboxes')]}">
+								                                <group colspan="2" >
+								                                    <field name="numeric_required_sum"/>
+								                                </group>
+								                                <newline/>
+								                                <label string="When the choices do not add up correctly, display this error message"/>
+								                                <field name="numeric_required_sum_err_msg" colspan="4" nolabel="1"/>
+								                            </group>
+								                            <group colspan="4" attrs="{'invisible':[('type','!=','rating_scale')]}">
+								                                <field name="rating_allow_one_column_require"/>
+								                            </group>
+														</group>
+							                        </group>
+							                        <newline/>
+							                        <group attrs="{'invisible':[('type','!=','descriptive_text')]}">
+							                            <separator string="Descriptive Text" colspan="4"/>
+							                            <field name="descriptive_text" colspan="4" nolabel="1"/>
+							                        </group>
+						                        </page>
+						                    </notebook>
                                         </form>
                                         <tree string="Survey Question">
                                             <field name="sequence" string="Seq"/>
@@ -171,12 +189,6 @@
                                     string="Close" states="open" type="object" icon="gtk-close"/>
                                 <button name="survey_cancel"
                                     string="Cancel" states="open" type="object" icon="gtk-cancel"/>
-								<button name="%(action_view_survey_name)d" states="open,draft,close,cancel"
-                                	string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}"/>
-								<button name="%(action_view_survey_name)d" states="open,draft,close,cancel"
-                                	string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}"/>
-								<button name="%(action_view_survey_name)d" states="open,draft,close,cancel"
-                                	string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
                             </group>
                         </page>
                         <page string="Other">
@@ -185,19 +197,11 @@
 	                                attrs="{'readonly':[('state','in',('open','close'))]}"/>
 	                            <field name="response_user" select="2"
 	                                attrs="{'readonly':[('state','in',('open','close'))]}"/>
-	                            <field name="question_prefix"/>
+								<field name="type"/>
 	                            <field name="send_response"/>
-	                        </group>
-	                        <!--group colspan="4" col='4'>
-	                            <field name="question_prefix"/>
-	                            <field name="send_response"/>
-							</group-->
+							</group>
                             <separator colspan="4" string="Survey Details"/>
                             <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Users">
-                            <separator colspan="4" string="Users Details"/>
-                            <field name="users" colspan="4" nolabel="1"/>
                         </page>
                         <page string="History">
                             <field name="date_open" select="1"/>
@@ -227,12 +231,11 @@
             <field name="arch" type="xml">
                 <tree string="Survey">
                     <field name="title" select="1"/>
-                    <field name="date_open" select="1"/>
-                    <field name="date_close" select="2"/>
-                    <field name="max_response_limit" select="2"/>
-                       <field name="tot_start_survey" select="2"/>
-                    <field name="tot_comp_survey" select="2"/>
-                    <field name="responsible_id" select="2"/>
+                    <field name="type" select="1"/>
+                    <field name="date_open" select="1" string="Open Date"/>
+					<field name="responsible_id" select="2"/>
+                    <field name="tot_start_survey" select="2" string="Started"/>
+                    <field name="tot_comp_survey" select="2" string="Completed"/>
                     <field name="state" select="1"/>
 					<button name="%(action_view_survey_name)d" states="open,draft,close,cancel"
                                 	string="Test Survey" type="action" icon="gtk-execute" context="{'active':True,'survey_id': active_id}"/>
@@ -246,17 +249,39 @@
             </field>
         </record>
 
+       <record id="survey_search" model="ir.ui.view">
+            <field name="name">survey_search</field>
+            <field name="model">survey</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Survey">
+                   <group col='10' colspan='4'>
+                        <filter icon="terp-crm" string="Draft" domain="[('state','=','draft')]"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Open" icon="terp-stock" domain="[('state','=','open')]"/>
+                        <separator orientation="vertical"/>
+                        <field name="title" select="1"/>
+                        <field name="type" select="1"/>
+                        <field name="responsible_id" select="1" widget="selection">
+                        <filter string="MY" icon="terp-partner" domain="[('responsible_id','=',uid)]"/>
+                        </field>
+                   </group>
+               </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_survey_form1">
-            <field name="name">All Surveys</field>
+            <field name="name">Surveys</field>
             <field name="res_model">survey</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="survey_tree"></field>
+            <field name="search_view_id" ref="survey_search"/>
         </record>
 
 
         <menuitem name="Surveys" id="menu_survey_form"
-            action="action_survey_form1" parent="menu_survey_config"
+            action="action_survey_form1" parent="menu_defination"
             groups="group_survey_manager"/>
 
         <!--
@@ -282,116 +307,129 @@
                         <field name="type" on_change="on_change_type(type)"/>
 	                    <field name="in_visible_rating_weight" invisible="1"/>
 	                    <field name="in_visible_menu_choice" invisible="1"/>
+	                    <field name="in_visible_answer_type" invisible="1"/>
                         <notebook colspan="4">
-	                        <page string="Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
-							   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
-		                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}"/>
-		                       </group>
-		                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
-		                           <field name="column_heading_ids" colspan="4" nolabel="1" default_get="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
-									<group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
-									   <field name="no_of_rows"/>
+	                        <page string="Options">
+								<group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
+		                          <separator string="Answer" colspan="4"/>
+								   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
+			                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}" default_get="{'in_visible_answer_type': in_visible_answer_type}"/>
+			                       </group>
+			                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
+			                           <field name="column_heading_ids" colspan="4" nolabel="1" default_get="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
+										<group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
+										   <field name="no_of_rows"/>
+										</group>
+			                       </group>
+		                        </group>
+		                        <newline/>
+								<group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+		                            <separator string="Comment Field" colspan="4"/>
+		                            <group colspan="4">
+										<field name="is_comment_require"/>
 									</group>
-		                       </group>
-	                        </page>
-                            <page string="Comment Field" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
-                                <group>
-	                                <field name="comment_field_type"  colspan="1"/>
-	                                <group colspan="2" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-	                                    <field colspan="2" name="comment_label"/>
-	                                </group>
-								</group>
-                                <group col="6" colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-                                    <field name="comment_valid_type" colspan="2"/>
-                                    <group colspan="2" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'), ('comment_valid_type','!=','must_be_whole_number')]}">
-                                        <field name="comment_minimum_no" string="Between"/>
-                                        <field name="comment_maximum_no" string="and"/>
-                                    </group>
-                                    <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_decimal_number')]}">
-                                        <field name="comment_minimum_float" string="Between"/>
-                                        <field name="comment_maximum_float" string="and"/>
-                                    </group>
-                                    <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_date')]}">
-                                        <field name="comment_minimum_date" string="Between"/>
-                                        <field name="comment_maximum_date" string="and"/>
-                                    </group>
-                                    <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'),('comment_valid_type','!=','must_be_decimal_number'),('comment_valid_type','!=','must_be_whole_number'),('comment_valid_type','!=','must_be_date'),('comment_valid_type','!=','must_be_email_address')]}">
-                                        <separator string="When the comment is an invalid format, display this error message" colspan="4"/>
-                                        <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
-                                    </group>
-                                </group>
-                                <!--group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
-                                    <group colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-                                        <field name="make_comment_field"/>
-                                        <group colspan="4" attrs="{'invisible':[('make_comment_field','!=',True)]}">
-                                            <separator string="When the comment field is left blank, display this error message:" colspan="4"/>
-                                            <field name="make_comment_field_err_msg" nolabel="1"/>
-                                        </group>
-                                    </group>
-                                </group-->
-	                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+		                            <group attrs="{'invisible':[('is_comment_require','=',False)]}">
+			                            <group col="4" colspan="4">
+				                            <field name="comment_field_type" colspan="1"/>
+				                            <group colspan="2" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
+				                                <field colspan="2" name="comment_label" />
+				                            </group>
+										</group>
+			                            <group col="6" colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
+			                                <field name="comment_valid_type" colspan="2"/>
+			                                <group colspan="2" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'), ('comment_valid_type','!=','must_be_whole_number')]}">
+			                                    <field name="comment_minimum_no" string="Between"/>
+			                                    <field name="comment_maximum_no" string="and"/>
+			                                </group>
+			                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_decimal_number')]}">
+			                                    <field name="comment_minimum_float" string="Between"/>
+			                                    <field name="comment_maximum_float" string="and"/>
+			                                </group>
+			                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_date')]}">
+			                                    <field name="comment_minimum_date" string="Between"/>
+			                                    <field name="comment_maximum_date" string="and"/>
+			                                </group>
+			                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'),('comment_valid_type','!=','must_be_decimal_number'),('comment_valid_type','!=','must_be_whole_number'),('comment_valid_type','!=','must_be_date'),('comment_valid_type','!=','must_be_email_address')]}">
+			                                    <label string="When the comment is an invalid format, display this error message" colspan="4"/>
+			                                    <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
+			                                </group>
+			                            </group>
+									</group>
+		                        </group>
+		                        <newline/>
+	                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
 		                            <field name="comment_column"/>
 		                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
 		                                <field name="column_name" colspan="2"/>
 		                            </group>
 								</group>
-                            </page>
-                            <page string="Validation" attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
-                                <group col="6" colspan="4">
-                                    <field name="validation_type" colspan="2"/>
-                                    <group colspan="2" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'), ('validation_type','!=','must_be_whole_number')]}">
-                                        <field name="validation_minimum_no" string="Between"/>
-                                        <field name="validation_maximum_no" string="and"/>
-                                    </group>
-                                    <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_decimal_number')]}">
-                                        <field name="validation_minimum_float" string="Between"/>
-                                        <field name="validation_maximum_float" string="and"/>
-                                    </group>
-                                    <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_date')]}">
-                                        <field name="validation_minimum_date" string="Between"/>
-                                        <field name="validation_maximum_date" string="and"/>
-                                    </group>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'),('validation_type','!=','must_be_decimal_number'),('validation_type','!=','must_be_whole_number'),('validation_type','!=','must_be_date'),('validation_type','!=','must_be_email_address')]}">
-                                    <separator string="When the comment is an invalid format, display this error message" colspan="4"/>
-                                    <field name="validation_valid_err_msg" nolabel="1" colspan="4"/>
-                                </group>
-                            </page>
-	                        <page string="Required Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment')]}">
-                                <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'),('type','!=','single_textbox'),('type','!=','comment')]}">
-                                    <field name="is_require_answer"/>
-                                </group>
-                                <group attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time')]}">
-                                    <field name="required_type"/>
-                                    <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
-                                        <field name="req_ans" />
-                                    </group>
-                                    <group colspan="4" attrs="{'invisible':[('required_type','!=','a range')]}">
-                                        <field name="minimum_req_ans"/>
-                                        <field name="maximum_req_ans"/>
-                                    </group>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('required_type','!=','all'),('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly'),('required_type','!=','a range'),('is_require_answer','!=',True)]}">
-                                    <separator string="When the question is not answered, display this error message:"/>
-                                    <field name="req_error_msg" colspan="4" nolabel="1"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('type','!=','numerical_textboxes')]}">
-                                    <group colspan="2" >
-                                        <field name="numeric_required_sum"/>
-                                    </group>
-                                    <newline/>
-                                    <separator string="When the choices do not add up correctly, display this error message"/>
-                                    <field name="numeric_required_sum_err_msg" colspan="4" nolabel="1"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('type','!=','rating_scale')]}">
-                                    <field name="rating_allow_one_column_require"/>
-                                </group>
-                            </page>
-                            <page string="Descriptive" attrs="{'invisible':[('type','!=','descriptive_text')]}">
-                                <separator string="Descriptive Text" colspan="4"/>
-                                <field name="descriptive_text" colspan="4" nolabel="1"/>
-                            </page>
-                        </notebook>
+		                        <newline/>
+		                        <group attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
+		                            <separator string="Validation" colspan="4"/>
+		                            <group colspan="4">
+										<field name="is_validation_require"/>
+									</group>
+		                            <group col="6" colspan="4" attrs="{'invisible':[('is_validation_require','=',False)]}">
+		                                <field name="validation_type" colspan="2"/>
+		                                <group colspan="2" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'), ('validation_type','!=','must_be_whole_number')]}">
+		                                    <field name="validation_minimum_no" string="Between"/>
+		                                    <field name="validation_maximum_no" string="and"/>
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_decimal_number')]}">
+		                                    <field name="validation_minimum_float" string="Between"/>
+		                                    <field name="validation_maximum_float" string="and"/>
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_date')]}">
+		                                    <field name="validation_minimum_date" string="Between"/>
+		                                    <field name="validation_maximum_date" string="and"/>
+		                                </group>
+		                            </group>
+		                            <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'),('validation_type','!=','must_be_decimal_number'),('validation_type','!=','must_be_whole_number'),('validation_type','!=','must_be_date'),('validation_type','!=','must_be_email_address')]}">
+		                                <label string="When the comment is an invalid format, display this error message" colspan="4"/>
+		                                <field name="validation_valid_err_msg" nolabel="1" colspan="4"/>
+		                            </group>
+		                        </group>
+		                        <newline/>
+		                        <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
+		                            <separator string="Required Answer" colspan="4"/>
+		                            <newline/>
+	                                <field name="is_require_answer"/>
+									<group col="6" colspan="4" attrs="{'invisible':[('is_require_answer','=',False)]}">
+			                            <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
+			                                <field name="required_type"/>
+			                                <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
+			                                    <field name="req_ans" />
+			                                </group>
+			                                <group colspan="4" attrs="{'invisible':[('required_type','!=','a range')]}">
+			                                    <field name="minimum_req_ans"/>
+			                                    <field name="maximum_req_ans"/>
+			                                </group>
+			                            </group>
+			                            <group colspan="4" attrs="{'invisible':[('required_type','!=','all'),('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly'),('required_type','!=','a range'),('is_require_answer','!=',True)]}">
+			                                <label string="When the question is not answered, display this error message:"/>
+			                                <field name="req_error_msg" colspan="4" nolabel="1"/>
+			                            </group>
+			                            <group colspan="4" attrs="{'invisible':[('type','!=','numerical_textboxes')]}">
+			                                <group colspan="2" >
+			                                    <field name="numeric_required_sum"/>
+			                                </group>
+			                                <newline/>
+			                                <label string="When the choices do not add up correctly, display this error message"/>
+			                                <field name="numeric_required_sum_err_msg" colspan="4" nolabel="1"/>
+			                            </group>
+			                            <group colspan="4" attrs="{'invisible':[('type','!=','rating_scale')]}">
+			                                <field name="rating_allow_one_column_require"/>
+			                            </group>
+									</group>
+		                        </group>
+		                        <newline/>
+		                        <group attrs="{'invisible':[('type','!=','descriptive_text')]}">
+		                            <separator string="Descriptive Text" colspan="4"/>
+		                            <field name="descriptive_text" colspan="4" nolabel="1"/>
+		                        </group>
+	                        </page>
+	                    </notebook>
+
                     </form>
                     <tree string="Survey Question">
                         <field name="sequence" string="Seq"/>
@@ -412,14 +450,14 @@
                 <tree string="Survey Page">
                     <field name="sequence" string="Seq"/>
                     <field name="title"/>
+                    <field name="survey_id"/>
                     <field name="question_ids" string="#Questions"/>
                 </tree>
             </field>
         </record>
 
-
         <record model="ir.actions.act_window" id="action_survey_page_form">
-            <field name="name">All Survey Pages</field>
+            <field name="name">Survey Pages</field>
             <field name="res_model">survey.page</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -427,9 +465,8 @@
         </record>
 
         <menuitem name="Survey Pages" id="menu_survey_page_form1"
-            action="action_survey_page_form" parent='menu_survey_config'
+            action="action_survey_page_form" parent='menu_defination'
             groups="group_survey_manager"/>
-
 
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
@@ -466,120 +503,131 @@
                     <field name="type" on_change="on_change_type(type)"/>
                     <field name="in_visible_rating_weight" invisible="1"/>
                     <field name="in_visible_menu_choice" invisible="1"/>
+                    <field name="in_visible_answer_type" invisible="1"/>
                     <notebook colspan="4">
-                        <page string="Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
-						   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
-	                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}"/>
-	                       </group>
-	                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
-	                           <field name="column_heading_ids" colspan="4" nolabel="1" default_get="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
-								<group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
-								   <field name="no_of_rows"/>
+                        <page string="Options">
+							<group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
+	                          <separator string="Answer" colspan="4"/>
+							   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
+		                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}" default_get="{'in_visible_answer_type': in_visible_answer_type}"/>
+		                       </group>
+		                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
+		                           <field name="column_heading_ids" colspan="4" nolabel="1" default_get="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
+									<group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
+									   <field name="no_of_rows"/>
+									</group>
+		                       </group>
+	                        </group>
+	                        <newline/>
+							<group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+	                            <separator string="Comment Field" colspan="4"/>
+	                            <group colspan="4">
+									<field name="is_comment_require"/>
 								</group>
-	                       </group>
-                        </page>
-                        <page string="Comment Field" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
-							<group>
-								<field name="comment_field_type"/>
-	                            <group attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-	                                <field name="comment_label" />
-	                            </group>
-							</group>
-                            <group col="6" colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-                                <field name="comment_valid_type" colspan="2"/>
-                                <group colspan="2" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'), ('comment_valid_type','!=','must_be_whole_number')]}">
-                                    <field name="comment_minimum_no" string="Between"/>
-                                    <field name="comment_maximum_no" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_decimal_number')]}">
-                                    <field name="comment_minimum_float" string="Between"/>
-                                    <field name="comment_maximum_float" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_date')]}">
-                                    <field name="comment_minimum_date" string="Between"/>
-                                    <field name="comment_maximum_date" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'),('comment_valid_type','!=','must_be_decimal_number'),('comment_valid_type','!=','must_be_whole_number'),('comment_valid_type','!=','must_be_date'),('comment_valid_type','!=','must_be_email_address')]}">
-                                    <separator string="When the comment is an invalid format, display this error message" colspan="4"/>
-                                    <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
-                                </group>
-                            </group>
-                            <!--group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
-                                <group colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-                                    <field name="make_comment_field"/>
-                                    <group colspan="4" attrs="{'invisible':[('make_comment_field','!=',True)]}">
-                                        <separator string="When the comment field is left blank, display this error message:" colspan="4"/>
-                                        <field name="make_comment_field_err_msg" nolabel="1"/>
-                                    </group>
-                                </group>
-                            </group-->
-                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+	                            <group attrs="{'invisible':[('is_comment_require','=',False)]}">
+		                            <group col="4" colspan="4">
+			                            <field name="comment_field_type" colspan="1"/>
+			                            <group colspan="2" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
+			                                <field colspan="2" name="comment_label" />
+			                            </group>
+									</group>
+		                            <group col="6" colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
+		                                <field name="comment_valid_type" colspan="2"/>
+		                                <group colspan="2" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'), ('comment_valid_type','!=','must_be_whole_number')]}">
+		                                    <field name="comment_minimum_no" string="Between"/>
+		                                    <field name="comment_maximum_no" string="and"/>
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_decimal_number')]}">
+		                                    <field name="comment_minimum_float" string="Between"/>
+		                                    <field name="comment_maximum_float" string="and"/>
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_date')]}">
+		                                    <field name="comment_minimum_date" string="Between"/>
+		                                    <field name="comment_maximum_date" string="and"/>
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'),('comment_valid_type','!=','must_be_decimal_number'),('comment_valid_type','!=','must_be_whole_number'),('comment_valid_type','!=','must_be_date'),('comment_valid_type','!=','must_be_email_address')]}">
+		                                    <label string="When the comment is an invalid format, display this error message" colspan="4"/>
+		                                    <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
+		                                </group>
+		                            </group>
+								</group>
+	                        </group>
+	                        <newline/>
+                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
 	                            <field name="comment_column"/>
 	                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
 	                                <field name="column_name" colspan="2"/>
 	                            </group>
 							</group>
-                        </page>
-                        <page string="Validation" attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
-                            <group col="6" colspan="4">
-                                <field name="validation_type" colspan="2"/>
-                                <group colspan="2" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'), ('validation_type','!=','must_be_whole_number')]}">
-                                    <field name="validation_minimum_no" string="Between"/>
-                                    <field name="validation_maximum_no" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_decimal_number')]}">
-                                    <field name="validation_minimum_float" string="Between"/>
-                                    <field name="validation_maximum_float" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_date')]}">
-                                    <field name="validation_minimum_date" string="Between"/>
-                                    <field name="validation_maximum_date" string="and"/>
-                                </group>
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'),('validation_type','!=','must_be_decimal_number'),('validation_type','!=','must_be_whole_number'),('validation_type','!=','must_be_date'),('validation_type','!=','must_be_email_address')]}">
-                                <separator string="When the comment is an invalid format, display this error message" colspan="4"/>
-                                <field name="validation_valid_err_msg" nolabel="1" colspan="4"/>
-                            </group>
-                        </page>
-                        <page string="Required Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment')]}">
-                            <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'),('type','!=','single_textbox'),('type','!=','comment')]}">
+	                        <newline/>
+	                        <group attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
+	                            <separator string="Validation" colspan="4"/>
+	                            <group colspan="4">
+									<field name="is_validation_require"/>
+								</group>
+	                            <group col="6" colspan="4" attrs="{'invisible':[('is_validation_require','=',False)]}">
+	                                <field name="validation_type" colspan="2"/>
+	                                <group colspan="2" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'), ('validation_type','!=','must_be_whole_number')]}">
+	                                    <field name="validation_minimum_no" string="Between"/>
+	                                    <field name="validation_maximum_no" string="and"/>
+	                                </group>
+	                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_decimal_number')]}">
+	                                    <field name="validation_minimum_float" string="Between"/>
+	                                    <field name="validation_maximum_float" string="and"/>
+	                                </group>
+	                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_date')]}">
+	                                    <field name="validation_minimum_date" string="Between"/>
+	                                    <field name="validation_maximum_date" string="and"/>
+	                                </group>
+	                            </group>
+	                            <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'),('validation_type','!=','must_be_decimal_number'),('validation_type','!=','must_be_whole_number'),('validation_type','!=','must_be_date'),('validation_type','!=','must_be_email_address')]}">
+	                                <label string="When the comment is an invalid format, display this error message" colspan="4"/>
+	                                <field name="validation_valid_err_msg" nolabel="1" colspan="4"/>
+	                            </group>
+	                        </group>
+	                        <newline/>
+	                        <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
+	                            <separator string="Required Answer" colspan="4"/>
+	                            <newline/>
                                 <field name="is_require_answer"/>
-                            </group>
-                            <group attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time')]}">
-                                <field name="required_type"/>
-                                <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
-                                    <field name="req_ans" />
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('required_type','!=','a range')]}">
-                                    <field name="minimum_req_ans"/>
-                                    <field name="maximum_req_ans"/>
-                                </group>
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('required_type','!=','all'),('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly'),('required_type','!=','a range'),('is_require_answer','!=',True)]}">
-                                <separator string="When the question is not answered, display this error message:"/>
-                                <field name="req_error_msg" colspan="4" nolabel="1"/>
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','numerical_textboxes')]}">
-                                <group colspan="2" >
-                                    <field name="numeric_required_sum"/>
-                                </group>
-                                <newline/>
-                                <separator string="When the choices do not add up correctly, display this error message"/>
-                                <field name="numeric_required_sum_err_msg" colspan="4" nolabel="1"/>
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','rating_scale')]}">
-                                <field name="rating_allow_one_column_require"/>
-                            </group>
-                        </page>
-                        <page string="Descriptive" attrs="{'invisible':[('type','!=','descriptive_text')]}">
-                            <separator string="Descriptive Text" colspan="4"/>
-                            <field name="descriptive_text" colspan="4" nolabel="1"/>
+								<group col="6" colspan="4" attrs="{'invisible':[('is_require_answer','=',False)]}">
+		                            <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
+		                                <field name="required_type"/>
+		                                <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
+		                                    <field name="req_ans" />
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('required_type','!=','a range')]}">
+		                                    <field name="minimum_req_ans"/>
+		                                    <field name="maximum_req_ans"/>
+		                                </group>
+		                            </group>
+		                            <group colspan="4" attrs="{'invisible':[('required_type','!=','all'),('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly'),('required_type','!=','a range'),('is_require_answer','!=',True)]}">
+		                                <label string="When the question is not answered, display this error message:"/>
+		                                <field name="req_error_msg" colspan="4" nolabel="1"/>
+		                            </group>
+		                            <group colspan="4" attrs="{'invisible':[('type','!=','numerical_textboxes')]}">
+		                                <group colspan="2" >
+		                                    <field name="numeric_required_sum"/>
+		                                </group>
+		                                <newline/>
+		                                <label string="When the choices do not add up correctly, display this error message"/>
+		                                <field name="numeric_required_sum_err_msg" colspan="4" nolabel="1"/>
+		                            </group>
+		                            <group colspan="4" attrs="{'invisible':[('type','!=','rating_scale')]}">
+		                                <field name="rating_allow_one_column_require"/>
+		                            </group>
+								</group>
+	                        </group>
+	                        <newline/>
+	                        <group attrs="{'invisible':[('type','!=','descriptive_text')]}">
+	                            <separator string="Descriptive Text" colspan="4"/>
+	                            <field name="descriptive_text" colspan="4" nolabel="1"/>
+	                        </group>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
-
 
         <record model="ir.ui.view" id="survey_question_tree">
             <field name="name">survey_question_tree</field>
@@ -587,14 +635,27 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Survey Question">
+					<field name="sequence" string="Seq"/>
                     <field name="question" colspan="4" select="1"/>
-                    <field name="sequence" string="Seq"/>
                     <field name="page_id" select="1"/>
                     <field name="survey" select="1"/>
                     <field name="type" select="2" />
                 </tree>
             </field>
         </record>
+
+        <record model="ir.actions.act_window" id="action_survey_question_form">
+            <field name="name">Survey Questions</field>
+            <field name="res_model">survey.question</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="survey_question_tree"></field>
+        </record>
+
+        <menuitem name="Survey Question" id="menu_survey_question_form1"
+            action="action_survey_question_form" parent='menu_defination'
+            groups="group_survey_manager"/>
+
 
         <record model="ir.ui.view" id="survey_question_wizard_test">
             <field name="name">survey_question_wizard_test</field>
@@ -608,109 +669,126 @@
                     <field name="type" on_change="on_change_type(type)"/>
                     <field name="in_visible_rating_weight" invisible="1"/>
                     <field name="in_visible_menu_choice" invisible="1"/>
+                    <field name="in_visible_answer_type" invisible="1"/>
                     <notebook colspan="4">
-                        <page string="Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
-                          	<field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}"/>
-	                       <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
-	                           <field name="column_heading_ids" colspan="4" nolabel="1" default_get="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
-	                       </group>
-                        </page>
-                        <page string="Comment Field" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
-                            <group>
-	                            <field name="comment_field_type" colspan="1"/>
-	                            <group colspan="2" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-	                                <field colspan="2" name="comment_label" />
-	                            </group>
-							</group>
-                            <group col="6" colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-                                <field name="comment_valid_type" colspan="2"/>
-                                <group colspan="2" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'), ('comment_valid_type','!=','must_be_whole_number')]}">
-                                    <field name="comment_minimum_no" string="Between"/>
-                                    <field name="comment_maximum_no" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_decimal_number')]}">
-                                    <field name="comment_minimum_float" string="Between"/>
-                                    <field name="comment_maximum_float" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_date')]}">
-                                    <field name="comment_minimum_date" string="Between"/>
-                                    <field name="comment_maximum_date" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'),('comment_valid_type','!=','must_be_decimal_number'),('comment_valid_type','!=','must_be_whole_number'),('comment_valid_type','!=','must_be_date'),('comment_valid_type','!=','must_be_email_address')]}">
-                                    <separator string="When the comment is an invalid format, display this error message" colspan="4"/>
-                                    <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
-                                </group>
-                            </group>
-                            <!--group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans')]}">
-                                <group colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
-                                    <field name="make_comment_field"/>
-                                    <group colspan="4" attrs="{'invisible':[('make_comment_field','!=',True)]}">
-                                        <separator string="When the comment field is left blank, display this error message:" colspan="4"/>
-                                        <field name="make_comment_field_err_msg" nolabel="1"/>
-                                    </group>
-                                </group>
-                            </group-->
-                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+                        <page string="Options">
+							<group attrs="{'invisible':[('type','!=','multiple_textboxes_diff_type'),('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','table')]}">
+	                          <separator string="Answer" colspan="4"/>
+							   <group colspan="4" attrs="{'invisible':[('type','=','table')]}">
+		                           <field name="answer_choice_ids" nolabel="1" colspan="4" context="{'line_order': answer_choice_ids}" default_get="{'in_visible_answer_type': in_visible_answer_type}"/>
+		                       </group>
+		                       <group colspan="4" attrs="{'invisible':[('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','table')]}">
+		                           <field name="column_heading_ids" colspan="4" nolabel="1" default_get="{'in_visible_rating_weight':in_visible_rating_weight,'in_visible_menu_choice':in_visible_menu_choice}"/>
+									<group colspan="4" attrs="{'invisible':[('type','!=','table')]}">
+									   <field name="no_of_rows"/>
+									</group>
+		                       </group>
+	                        </group>
+	                        <newline/>
+							<group  attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'), ('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale')]}">
+	                            <separator string="Comment Field" colspan="4"/>
+	                            <group colspan="4">
+									<field name="is_comment_require"/>
+								</group>
+	                            <group attrs="{'invisible':[('is_comment_require','=',False)]}">
+		                            <group col="4" colspan="4">
+			                            <field name="comment_field_type" colspan="1"/>
+			                            <group colspan="2" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
+			                                <field colspan="2" name="comment_label" />
+			                            </group>
+									</group>
+		                            <group col="6" colspan="4" attrs="{'invisible':[('comment_field_type','!=','char'),('comment_field_type','!=','text')]}">
+		                                <field name="comment_valid_type" colspan="2"/>
+		                                <group colspan="2" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'), ('comment_valid_type','!=','must_be_whole_number')]}">
+		                                    <field name="comment_minimum_no" string="Between"/>
+		                                    <field name="comment_maximum_no" string="and"/>
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_decimal_number')]}">
+		                                    <field name="comment_minimum_float" string="Between"/>
+		                                    <field name="comment_maximum_float" string="and"/>
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_date')]}">
+		                                    <field name="comment_minimum_date" string="Between"/>
+		                                    <field name="comment_maximum_date" string="and"/>
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('comment_valid_type','!=','must_be_specific_length'),('comment_valid_type','!=','must_be_decimal_number'),('comment_valid_type','!=','must_be_whole_number'),('comment_valid_type','!=','must_be_date'),('comment_valid_type','!=','must_be_email_address')]}">
+		                                    <label string="When the comment is an invalid format, display this error message" colspan="4"/>
+		                                    <field name="comment_valid_err_msg" nolabel="1" colspan="4"/>
+		                                </group>
+		                            </group>
+								</group>
+	                        </group>
+	                        <newline/>
+                            <group attrs="{'invisible':[('type','!=','matrix_of_choices_only_one_ans'),('type','!=','rating_scale')]}">
 	                            <field name="comment_column"/>
 	                            <group colspan="2" attrs="{'invisible':[('comment_column','!=',True)]}">
 	                                <field name="column_name" colspan="2"/>
 	                            </group>
 							</group>
-                        </page>
-                        <page string="Validation" attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
-                            <group col="6" colspan="4">
-                                <field name="validation_type" colspan="2"/>
-                                <group colspan="2" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'), ('validation_type','!=','must_be_whole_number')]}">
-                                    <field name="validation_minimum_no" string="Between"/>
-                                    <field name="validation_maximum_no" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_decimal_number')]}">
-                                    <field name="validation_minimum_float" string="Between"/>
-                                    <field name="validation_maximum_float" string="and"/>
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_date')]}">
-                                    <field name="validation_minimum_date" string="Between"/>
-                                    <field name="validation_maximum_date" string="and"/>
-                                </group>
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'),('validation_type','!=','must_be_decimal_number'),('validation_type','!=','must_be_whole_number'),('validation_type','!=','must_be_date'),('validation_type','!=','must_be_email_address')]}">
-                                <separator string="When the comment is an invalid format, display this error message" colspan="4"/>
-                                <field name="validation_valid_err_msg" nolabel="1" colspan="4"/>
-                            </group>
-                        </page>
-                        <page string="Required Answer" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment')]}">
-                            <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'),('type','!=','single_textbox'),('type','!=','comment')]}">
+	                        <newline/>
+	                        <group attrs="{'invisible':[('type','!=','single_textbox'), ('type','!=','multiple_textboxes')]}">
+	                            <separator string="Validation" colspan="4"/>
+	                            <group colspan="4">
+									<field name="is_validation_require"/>
+								</group>
+	                            <group col="6" colspan="4" attrs="{'invisible':[('is_validation_require','=',False)]}">
+	                                <field name="validation_type" colspan="2"/>
+	                                <group colspan="2" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'), ('validation_type','!=','must_be_whole_number')]}">
+	                                    <field name="validation_minimum_no" string="Between"/>
+	                                    <field name="validation_maximum_no" string="and"/>
+	                                </group>
+	                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_decimal_number')]}">
+	                                    <field name="validation_minimum_float" string="Between"/>
+	                                    <field name="validation_maximum_float" string="and"/>
+	                                </group>
+	                                <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_date')]}">
+	                                    <field name="validation_minimum_date" string="Between"/>
+	                                    <field name="validation_maximum_date" string="and"/>
+	                                </group>
+	                            </group>
+	                            <group colspan="4" attrs="{'invisible':[('validation_type','!=','must_be_specific_length'),('validation_type','!=','must_be_decimal_number'),('validation_type','!=','must_be_whole_number'),('validation_type','!=','must_be_date'),('validation_type','!=','must_be_email_address')]}">
+	                                <label string="When the comment is an invalid format, display this error message" colspan="4"/>
+	                                <field name="validation_valid_err_msg" nolabel="1" colspan="4"/>
+	                            </group>
+	                        </group>
+	                        <newline/>
+	                        <group attrs="{'invisible':[('type','!=','multiple_choice_only_one_ans'), ('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','single_textbox'),('type','!=','comment'),('type','!=','multiple_textboxes_diff_type')]}">
+	                            <separator string="Required Answer" colspan="4"/>
+	                            <newline/>
                                 <field name="is_require_answer"/>
-                            </group>
-                            <group attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time')]}">
-                                <field name="required_type"/>
-                                <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
-                                    <field name="req_ans" />
-                                </group>
-                                <group colspan="4" attrs="{'invisible':[('required_type','!=','a range')]}">
-                                    <field name="minimum_req_ans"/>
-                                    <field name="maximum_req_ans"/>
-                                </group>
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('required_type','!=','all'),('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly'),('required_type','!=','a range'),('is_require_answer','!=',True)]}">
-                                <separator string="When the question is not answered, display this error message:"/>
-                                <field name="req_error_msg" colspan="4" nolabel="1"/>
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','numerical_textboxes')]}">
-                                <group colspan="2" >
-                                    <field name="numeric_required_sum"/>
-                                </group>
-                                <newline/>
-                                <separator string="When the choices do not add up correctly, display this error message"/>
-                                <field name="numeric_required_sum_err_msg" colspan="4" nolabel="1"/>
-                            </group>
-                            <group colspan="4" attrs="{'invisible':[('type','!=','rating_scale')]}">
-                                <field name="rating_allow_one_column_require"/>
-                            </group>
-                        </page>
-                        <page string="Descriptive" attrs="{'invisible':[('type','!=','descriptive_text')]}">
-                            <separator string="Descriptive Text" colspan="4"/>
-                            <field name="descriptive_text" colspan="4" nolabel="1"/>
+								<group col="6" colspan="4" attrs="{'invisible':[('is_require_answer','=',False)]}">
+		                            <group colspan="4" attrs="{'invisible':[('type','!=','multiple_choice_multiple_ans'),('type','!=','matrix_of_choices_only_one_ans'),('type','!=','matrix_of_choices_only_multi_ans'),('type','!=','matrix_of_drop_down_menus'),('type','!=','rating_scale'),('type','!=','multiple_textboxes'),('type','!=','numerical_textboxes'),('type','!=','date'),('type','!=','date_and_time'),('type','!=','multiple_textboxes_diff_type')]}">
+		                                <field name="required_type"/>
+		                                <group colspan="2" attrs="{'invisible':[('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly')]}">
+		                                    <field name="req_ans" />
+		                                </group>
+		                                <group colspan="4" attrs="{'invisible':[('required_type','!=','a range')]}">
+		                                    <field name="minimum_req_ans"/>
+		                                    <field name="maximum_req_ans"/>
+		                                </group>
+		                            </group>
+		                            <group colspan="4" attrs="{'invisible':[('required_type','!=','all'),('required_type','!=','at least'),('required_type','!=','at most'),('required_type','!=','exactly'),('required_type','!=','a range'),('is_require_answer','!=',True)]}">
+		                                <label string="When the question is not answered, display this error message:"/>
+		                                <field name="req_error_msg" colspan="4" nolabel="1"/>
+		                            </group>
+		                            <group colspan="4" attrs="{'invisible':[('type','!=','numerical_textboxes')]}">
+		                                <group colspan="2" >
+		                                    <field name="numeric_required_sum"/>
+		                                </group>
+		                                <newline/>
+		                                <label string="When the choices do not add up correctly, display this error message"/>
+		                                <field name="numeric_required_sum_err_msg" colspan="4" nolabel="1"/>
+		                            </group>
+		                            <group colspan="4" attrs="{'invisible':[('type','!=','rating_scale')]}">
+		                                <field name="rating_allow_one_column_require"/>
+		                            </group>
+								</group>
+	                        </group>
+	                        <newline/>
+	                        <group attrs="{'invisible':[('type','!=','descriptive_text')]}">
+	                            <separator string="Descriptive Text" colspan="4"/>
+	                            <field name="descriptive_text" colspan="4" nolabel="1"/>
+	                        </group>
                         </page>
                     </notebook>
                   	<group colspan="4">
@@ -733,6 +811,14 @@
                 <form string="Survey Answer">
                     <field name="answer" colspan="4" select="1"/>
                     <field name="sequence"/>
+                    <field name="in_visible_answer_type" invisible="1"/>
+                   	<group colspan="4" attrs="{'invisible':[('in_visible_answer_type','=',True)]}">
+                        <field name="type" colspan="2"/>
+                        <group colspan="4" attrs="{'invisible':[('type','!=','selection')]}">
+                        	<separator string="Menu Choices (each choice on separate by lines)" colspan="4"/>
+                        	<field name="menu_choice" colspan="4" nolabel="1"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -743,7 +829,7 @@
             <field name="model">survey.answer</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Survey Answer">
+                <tree editable="top" string="Survey Answer">
                     <field name="sequence" string="Seq"/>
                     <field name="answer" select="1"/>
                 </tree>
@@ -767,13 +853,6 @@
                             <field name="response_answer_ids" colspan="4" nolabel="1"/>
                             <group col="5" colspan="4">
                                 <field name="state"/>
-                                <button name="response_draft"
-                                    string="Set to draft" states="done,skip" type="object"
-                                    icon="gtk-new"/>
-                                <button name="response_done" string="Done"
-                                    states="draft" type="object" icon="gtk-go-forward"/>
-                                <button name="response_skip" string="Skip"
-                                    states="draft" type="object" icon="gtk-close"/>
                             </group>
                         </page>
                         <page string="Single Textboxes">
@@ -831,6 +910,7 @@
                     <field name="user_id" select="1"/>
                     <field name="response_type" select="1"/>
                     <field name="question_ids" nolabel="1" colspan="4" />
+                    <field name="state" select="1"/>
                 </form>
             </field>
         </record>
@@ -845,22 +925,10 @@
                     <field name="date_create" select="1"/>
                     <field name="user_id" select="1"/>
                     <field name="response_type" select="1"/>
+                    <field name="state" select="1"/>
                 </tree>
             </field>
         </record>
-
-        <record model="ir.actions.act_window" id="action_survey_request_form">
-            <field name="name">Survey Response</field>
-            <field name="res_model">survey.response</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="survey_response_tree"></field>
-        </record>
-
-        <menuitem name="Survey Response" id="menu_survey_response_tree"
-            action="action_survey_request_form" parent='menu_survey_config'
-            groups="group_survey_manager"/>
-
 
         <!--
             Survey Response Answer
@@ -878,7 +946,10 @@
                     </group>
                     <field name="value_choice"/>
                     <label string="(Use Only Question Type is matrix_of_drop_down_menus)" align="0.0"/>
-                    <field name="comment_field"/>
+                    <group colspan="4" col="4">
+	                    <field name="comment_field"/>
+	                    <field name="column_id"/>
+	                </group>
                 </form>
             </field>
         </record>
@@ -892,6 +963,7 @@
                     <field name="answer_id"/>
                     <field name="answer" />
                     <field name="value_choice" />
+                    <field name="column_id"/>
                     <field name="comment_field"/>
                 </tree>
             </field>
@@ -927,27 +999,9 @@
             <field name="model">survey.question.column.heading</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Column Heading">
+                <tree editable="bottom" string="Column Heading">
                     <field name="title"/>
                 </tree>
-            </field>
-        </record>
-
-        <!--
-            res.users
-        -->
-
-        <record id="view_res_user_form" model="ir.ui.view">
-            <field name="name">view.res.users.form</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <notebook>
-                    <page string="Survey">
-                        <field name="survey_id" nolabel="1"/>
-                    </page>
-                </notebook>
             </field>
         </record>
 
@@ -990,6 +1044,46 @@
             </field>
         </record>
 
+        <!--
+            Survey Type
+        -->
+
+        <record model="ir.ui.view" id="survey_type_form">
+            <field name="name">survey_type_form</field>
+            <field name="model">survey.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Survey Type">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="survey_type_tree">
+            <field name="name">survey_type_tree</field>
+            <field name="model">survey.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Survey Type">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_survey_type_form">
+            <field name="name">Survey Type</field>
+            <field name="res_model">survey.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="survey_type_tree"></field>
+        </record>
+
+        <menuitem name="Survey Types" id="menu_survey_type_form1"
+            action="action_survey_type_form" parent='menu_survey_config'
+            groups="group_survey_manager"/>
+
         <act_window domain="[('survey_id', '=', active_id)]"
             id="act_survey_pages"
             name="Survey Pages"
@@ -1021,9 +1115,12 @@
             res_model="survey.response"
             src_model="survey"/>
 
-		<menuitem name="Give Survey Response" id="menu_run_survey_form"
+		<menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
 			action="action_view_survey_name" parent="main_menu_survey"
 			groups="group_survey_manager,group_survey_user" icon="STOCK_INDEX"/>
+
+		<menuitem action="wizard_browse_answer" id="menu_wizard_browse_answer"
+			parent="main_menu_survey" type="wizard" groups="group_survey_manager"/>
 
     </data>
 </openerp>

@@ -5,11 +5,10 @@
 
     ######################## JOB OPPORTUNITIES (menu) ###########################
      <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
-        <field name="name">All Jobs Requests</field>
+        <field name="name">Jobs Requests</field>
         <field name="res_model">crm.job</field>
         <field name="view_mode">tree,calendar,form,graph</field>
         <field name="view_id" ref="crm_case_tree_view_job"/>
-        <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="view_crm_case_jobs_filter"/>       
 
     </record>

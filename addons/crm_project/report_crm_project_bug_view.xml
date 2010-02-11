@@ -35,7 +35,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="view_crm_project_bug_user_graph" model="ir.ui.view">
             <field name="name">report.crm.project.bug.user.graph</field>
             <field name="model">report.crm.project.bug.user</field>
@@ -59,7 +59,7 @@
                </field>
             </field>
         </record>
-        
+
         <record id="action_report_crm_project_bug_user_tree" model="ir.actions.act_window">
             <field name="name">Project Bug by User and Section</field>
             <field name="res_model">report.crm.project.bug.user</field>
@@ -68,11 +68,11 @@
             <field name="view_id" ref="view_crm_project_bug_user_graph"/>
             <field name="search_view_id" ref="view_crm_project_bug_user_filter"/>
         </record>
-        
-        <menuitem id="menu_project_report" name="Reporting" parent="project.menu_main" sequence="50"/>
-        <menuitem name="Project Bug" id="menu_crm_project_bug_tree" parent="menu_project_report"/>
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+        <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
+        <menuitem name="Project Bug" id="menu_crm_project_bug_tree" parent="base.menu_project_report" sequence="1"/>
         <menuitem action="action_report_crm_project_bug_user_tree" id="menu_crm_project_bug_user_tree" parent="menu_crm_project_bug_tree"/>
-        
+
         <!-- # Project Bug by section and category of case -->
 
         <record id="view_crm_project_bug_categ_tree" model="ir.ui.view">
@@ -188,6 +188,6 @@
             <field name="view_id" ref="view_report_crm_project_bug_section_graph"/>
             <field name="search_view_id" ref="view_report_crm_project_bug_section_filter"/>
         </record>
-        <menuitem action="action_report_crm_project_bug_section_tree" id="menu_crm_project_bug_section_tree" parent="menu_crm_project_bug_tree"/>        
+        <menuitem action="action_report_crm_project_bug_section_tree" id="menu_crm_project_bug_section_tree" parent="menu_crm_project_bug_tree"/>
   </data>
 </openerp>

@@ -6,11 +6,10 @@
 <!--        MENU        -->
 
     <record model="ir.actions.act_window" id="crm_case_category_act_leads_all">
-        <field name="name">All Leads</field>
+        <field name="name">Leads</field>
         <field name="res_model">crm.lead</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
-        <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_leads_all">

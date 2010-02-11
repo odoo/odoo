@@ -62,6 +62,15 @@ class lead2opportunity(wizard.interface):
         'probability': {'type':'float', 'digits':(16,2), 'string': 'Success Probability'},
         'partner_id' : {'type':'many2one', 'relation':'res.partner', 'string':'Partner'},
     }
+    
+    def _check_state(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        case_obj = pool.get('crm.lead')
+        for case in case_obj.browse(cr, uid, data['ids']):
+            if case.state != 'open':
+                raise wizard.except_wizard(_('Warning !'),
+                    _('Lead should be in \'Open\' state before converting to Opportunity.'))
+        return {}
 
     def _selectopportunity(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -97,7 +106,6 @@ class lead2opportunity(wizard.interface):
         lead_case_obj = pool.get('crm.lead')
         opportunity_case_obj = pool.get('crm.opportunity')        
         for lead in lead_case_obj.browse(cr, uid, data['ids']):
-            #TODO : Take other info from lead       
             new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
                 'name': data['form']['name'],
                 'planned_revenue': data['form']['planned_revenue'],
@@ -105,8 +113,14 @@ class lead2opportunity(wizard.interface):
                 'partner_id': data['form']['partner_id'],
                 'section_id':lead.section_id.id,
                 'description':lead.description,
+                'date_deadline': lead.date_deadline,
                 'partner_address_id':lead.partner_address_id.id, 
-                'priority':lead.priority,         
+                'priority': lead.priority,
+                'date': lead.date,
+                'partner_phone': lead.partner_phone,
+                'canal_id': lead.canal_id,
+                'som': lead.som,
+                'email_from': lead.email_from
             })       
             
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
@@ -118,7 +132,7 @@ class lead2opportunity(wizard.interface):
                 vals.update({'opportunity_id' : new_opportunity.id})
 
             lead_case_obj.write(cr, uid, [lead.id], vals)
-            lead_case_obj.case_cancel(cr, uid, [lead.id])
+            lead_case_obj.case_close(cr, uid, [lead.id])
             opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
         
         value = {            
@@ -170,7 +184,7 @@ class lead2opportunity(wizard.interface):
 
     states = {
         'init': {
-            'actions': [],
+            'actions': [_check_state],
             'result': {'type':'choice','next_state':_selectChoice}
         },
         'create_partner': {

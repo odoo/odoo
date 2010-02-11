@@ -111,8 +111,7 @@ class purchase_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             WHERE
-                p.purchase_id in ('''+','.join(map(str, ids))+''')
-            GROUP BY m.state, p.purchase_id''')
+                p.purchase_id = ANY(%s) GROUP BY m.state, p.purchase_id''',(ids,))
         for oid,nbr,state in cr.fetchall():
             if state=='cancel':
                 continue
@@ -145,7 +144,7 @@ class purchase_order(osv.osv):
 
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
-        'origin': fields.char('Origin', size=64,
+        'origin': fields.char('Source Document', size=64,
             help="Reference of the document that generated this purchase order request."
         ),
         'partner_ref': fields.char('Supplier Reference', size=64),
@@ -252,6 +251,8 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids):
             if self.pool.get('res.partner.event.type').check(cr, uid, 'purchase_open'):
                 self.pool.get('res.partner.event').create(cr, uid, {'name':'Purchase Order: '+po.name, 'partner_id':po.partner_id.id, 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id':uid, 'partner_type':'retailer', 'probability': 1.0, 'planned_cost':po.amount_untaxed})
+            if not po.order_line:
+                raise osv.except_osv(_('Error !'),_('You can not confirm purchase order without Purchase Order Lines.'))
         current_name = self.name_get(cr, uid, ids)[0][1]
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
@@ -470,7 +471,7 @@ class purchase_order_line(osv.osv):
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False, fiscal_position=False, date_planned=False, 
+            partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
@@ -512,7 +513,7 @@ class purchase_order_line(osv.osv):
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
 
 
-        res = {'value': {'price_unit': price, 'name': name or prod_name, 
+        res = {'value': {'price_unit': price, 'name': name or prod_name,
             'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
             'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
             'product_qty': qty,

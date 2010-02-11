@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-       <!-- <menuitem name="Document Management" icon="terp-stock" id="menu_document2"/>-->
-       <menuitem name="Knowledge Management" icon="terp-stock" id="menu_document2"/>
-        <!--<menuitem name="Wiki Configuration" id="menu_document_configuration" parent="menu_document2"/>-->
-        <menuitem name="Wiki" id="menu_document_configuration" parent="document.menu_document_configuration"/>
-        <!--<menuitem parent="menu_document2" name="Wiki" id="menu_document"/>-->
-        <menuitem parent="menu_document2" name="Collaborative Content" id="menu_document"/>
+       <menuitem name="Knowledge Management" icon="terp-stock" id="base.menu_document" sequence="4"/>
+        <menuitem name="Configuration" id="base.menu_document_configuration" parent="base.menu_document" sequence="50"/>
+        <menuitem name="Wiki" id="menu_wiki_configuration" parent="base.menu_document_configuration" sequence="2"/>
+        <menuitem id="base.menu_document2" name="Collaborative Content" parent="base.menu_document"/>
+
         <wizard
             id="wizard_group_menu_create"
             string="Create Menu"
@@ -70,7 +69,7 @@
             id="menu_action_wiki_groups"
             action="action_wiki_groups"/>-->
       <menuitem name="Wiki Groups"
-            parent="menu_document_configuration"
+            parent="menu_wiki_configuration"
             id="menu_action_wiki_groups"
             action="action_wiki_groups"/>
 
@@ -169,7 +168,7 @@
             <field name="context">{'section':'1'}</field>
             <field name="search_view_id" ref="view_wiki_filter"/>
         </record>
-        <menuitem parent="menu_document" id="menu_action_wiki_wiki" name="Wiki Pages" action="action_wiki"/>
+        <menuitem parent="base.menu_document2" id="menu_action_wiki_wiki" name="Wiki Pages" action="action_wiki"/>
 
         <!--  Pages Waiting Review -->
         <record model="ir.actions.act_window" id="action_wiki_review">

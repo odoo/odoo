@@ -24,7 +24,7 @@ import pooler
 
 class event_edit_this(wizard.interface):
     event_form = """<?xml version="1.0"?>
-                <form string="Edit Event">
+                <form string="Edit this Occurence">
                     <separator string="" colspan="4" />
                     <newline />
                     <field name='name' colspan="4" />

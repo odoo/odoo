@@ -19,21 +19,8 @@
 #
 ##############################################################################
 
-import time
-import re
-import os
-
-import mx.DateTime
-import base64
-
-from tools.translate import _
-
-import tools
 from osv import fields,osv,orm
-from osv.orm import except_orm
-
 import crm
-
 
 class crm_opportunity(osv.osv):
     _name = "crm.opportunity"
@@ -57,12 +44,8 @@ class crm_opportunity(osv.osv):
         'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
         'date_closed': fields.datetime('Closed', readonly=True),
         'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),
+        'partner_phone': fields.char('Phone', size=32),
     }
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}        
 
 crm_opportunity()
 

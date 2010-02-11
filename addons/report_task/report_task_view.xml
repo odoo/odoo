@@ -8,6 +8,7 @@
             sequence="40" />
 
         <!-- Tasks by projects and users -->
+        
 
         <record id="view_task_project_form" model="ir.ui.view">
             <field name="name">report.project.task.form</field>
@@ -81,8 +82,8 @@
             <field name="domain">[]</field>
             <field name="search_view_id" ref="view_report_task_user_pipeline_open_search"/>
         </record>
-        <menuitem id="next_id_57" name="Reporting" parent="project.menu_main" sequence="50"/>
-        <menuitem action="action_project_task" id="menu_project_task_user_tree" parent="next_id_57"/>
+        <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
+        <menuitem action="action_project_task" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
 
         <!-- Closed Task in Random Acitivities dashboard -->
 

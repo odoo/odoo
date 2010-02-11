@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-<!--        <menuitem icon="terp-hr" id="base.menu_resource_root" name="Resources Management"/> -->
-<!--        <menuitem-->
-<!--            id="menu_resource_reporting"-->
-<!--            name="Reporting"-->
-<!--            parent="menu_resource_root"-->
-<!--            sequence="40" />-->
-<!--        <menuitem-->
-<!--            id="menu_resource_configuration"-->
-<!--            name="Configuration"-->
-<!--            parent="menu_resource_root"-->
-<!--            sequence="5"/>-->
+        <menuitem icon="terp-project" id="base.menu_main" name="Project Management" sequence="1"/>
+        <menuitem id="base.menu_pm_resources" name="Resources" parent="base.menu_main" sequence="2"/>
 
         <record id="resource_calendar_form" model="ir.ui.view">
             <field name="name">resource.calendar.form</field>
@@ -33,7 +24,7 @@
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
         </record>
-<!--        <menuitem string="Resource Calendar" action="action_resource_calendar_form" id="menu_resource_calendar_form" parent="menu_resource_configuration"/>-->
+        <menuitem string="Resource Calendar" action="action_resource_calendar_form" id="menu_resource_calendar_form" parent="base.menu_pm_resources"/>
 
         <record id="view_resource_calendar_week_tree" model="ir.ui.view">
             <field name="name">resource.calendar.week.tree</field>
@@ -129,7 +120,7 @@
             <field name="res_model">resource.resource</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem icon="terp-project" id="base.menu_main" name="Project Management"/>
+
         <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main" sequence="3"/>
         <menuitem action="action_resource_resource_tree" id="base.menu_resource_resource_tree" parent="base.menu_pm_planning" />
 
@@ -164,12 +155,24 @@
             </field>
         </record>
         <record id="action_resource_calendar_leave_tree" model="ir.actions.act_window">
-            <field name="name">Leaves</field>
+            <field name="name">Resource Leaves</field>
             <field name="res_model">resource.calendar.leaves</field>
             <field name="view_mode">tree,form,calendar</field>
         </record>
-<!--        <menuitem action="action_resource_calendar_leave_tree" id="menu_resource_calendar_leave_tree" parent="menu_resource_root"/>-->
 
+        <menuitem action="action_resource_calendar_leave_tree" id="menu_resource_calendar_leave_tree" parent="base.menu_pm_resources"/>
 
+		<!-- project member -->
+        <record id="view_project_member_tree" model="ir.ui.view">
+            <field name="name">project.member.tree</field>
+            <field name="model">resource.resource</field>
+            <field name="type">tree</field>
+            <field eval="99" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Project's Members">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
     </data>
 </openerp>

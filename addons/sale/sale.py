@@ -99,8 +99,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             WHERE
-                p.sale_id in ('''+','.join(map(str, ids))+''')
-            GROUP BY m.state, p.sale_id''')
+                p.sale_id = ANY(%s) GROUP BY m.state, p.sale_id''',(ids,))
         for oid, nbr, state in cr.fetchall():
             if state == 'cancel':
                 continue
@@ -184,7 +183,7 @@ class sale_order(osv.osv):
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'origin': fields.char('Origin', size=64, help="Reference of the document that generated this sale order request."),
+        'origin': fields.char('Source document', size=64, help="Reference of the document that generated this sale order request."),
         'client_order_ref': fields.char('Customer Reference', size=64),
 
         'state': fields.selection([
@@ -215,10 +214,10 @@ class sale_order(osv.osv):
             ('picking', 'Invoice from Picking'),
         ], 'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
                     help="""The Shipping Policy is used to synchronise invoice and delivery operations.
-  - The 'Pay before delivery' choice will first generate the invoice and then generate the packing order after the payment of this invoice.
-  - The 'Shipping & Manual Invoice' will create the packing order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
+  - The 'Pay before delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
+  - The 'Shipping & Manual Invoice' will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
   - The 'Invoice on Order After Delivery' choice will generate the draft invoice based on sale order after all picking lists have been finished.
-  - The 'Invoice from the picking' choice is used to create an invoice during the packing process."""),
+  - The 'Invoice from the picking' choice is used to create an invoice during the picking process."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
 
@@ -297,7 +296,7 @@ class sale_order(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):
             return False
-        cr.execute('select id from sale_order_line where order_id in ('+','.join(map(str, ids))+')', ('draft',))
+        cr.execute('select id from sale_order_line where order_id = ANY(%s) and state=%s',(ids,'cancel'))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
@@ -453,13 +452,13 @@ class sale_order(osv.osv):
                 self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced})
         self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False})
         return True
-    
+
     def action_invoice_end(self, cr, uid, ids, context={}):
         for order in self.browse(cr, uid, ids):
             val = {'invoiced': True}
             if order.state == 'invoice_except':
                 val['state'] = 'progress'
-                
+
             for line in order.order_line:
                 towrite = []
                 if line.state == 'exception':
@@ -467,9 +466,9 @@ class sale_order(osv.osv):
                 if towrite:
                     self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'confirmed'}, context=context)
             self.write(cr, uid, [order.id], val)
-            
+
         return True
-    
+
     def action_cancel(self, cr, uid, ids, context={}):
         ok = True
         sale_order_line_obj = self.pool.get('sale.order.line')
@@ -478,7 +477,7 @@ class sale_order(osv.osv):
                 if pick.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
                         _('Could not cancel sale order !'),
-                        _('You must first cancel all packing attached to this sale order.'))
+                        _('You must first cancel all picking attached to this sale order.'))
             for r in self.read(cr, uid, ids, ['picking_ids']):
                 for pick in r['picking_ids']:
                     wf_service = netsvc.LocalService("workflow")

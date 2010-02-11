@@ -26,7 +26,7 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "account", "hr", "process", "mail_gateway","hr_timesheet_sheet","report_timesheet","account_budget"],
+    "depends" : ["product", "analytic", "hr", "process", "mail_gateway"],
     "description": """Project management module that track multi-level projects, tasks,
 works done on tasks, eso. It is able to render planning, order tasks, eso.
     """,

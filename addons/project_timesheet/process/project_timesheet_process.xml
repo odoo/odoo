@@ -27,6 +27,19 @@
             <field eval="1" name="flow_start"/>
         </record>
 
+        <record id="process_node_triggerinvoice0" model="process.node">
+            <field name="menu_id" ref="account.menu_finance_invoice"/>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Trigger Invoice&quot;&quot;&quot;" name="name"/>
+            <field name="subflow_id" ref="account.process_process_invoiceprocess0"/>
+            <field eval="&quot;&quot;&quot;Trigger invoices from sale order lines&quot;&quot;&quot;" name="note"/>
+            <field name="process_id" ref="project.process_process_tasksprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
+
+
          <!--
             Process Transition
         -->
@@ -48,6 +61,17 @@
             <field model="process.node" name="target_node_id" ref="hr_timesheet_sheet.process_node_timesheet0"/>
             <field model="process.node" name="source_node_id" ref="process_node_taskwork0"/>
         </record>
+
+        <record id="process_transition_taskinvoice0" model="process.transition">
+            <field eval="[(6,0,[])]" name="role_ids"/>
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;Task invoice&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;After task is completed, Create its invoice.&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_triggerinvoice0"/>
+            <field model="process.node" name="source_node_id" ref="project.process_node_donetask0"/>
+        </record>
+
+
 
     </data>
 </openerp>

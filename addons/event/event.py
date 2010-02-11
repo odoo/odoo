@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -77,8 +77,8 @@ class event(osv.osv):
     def _get_register(self, cr, uid, ids, name, args, context=None):
         res={}
         for event in self.browse(cr, uid, ids, context):
-            query = """select sum(nb_register) from crm_case c left join crm_case_section s on (c.section_id=s.id) right join event_event e on (e.section_id=s.id) right join event_registration r on (r.case_id=c.id) where e.section_id = %s and c.state in ('open','done')""" % event.section_id.id
-            cr.execute(query)
+            query = """select sum(nb_register) from crm_case c left join crm_case_section s on (c.section_id=s.id) right join event_event e on (e.section_id=s.id) right join event_registration r on (r.case_id=c.id) where e.section_id = %s and c.state in ('open','done')"""
+            cr.execute(query,(event.section_id.id,))
             res2 = cr.fetchone()
             if res2 and res2[0]:
                 res[event.id] = res2[0]
@@ -89,8 +89,8 @@ class event(osv.osv):
     def _get_prospect(self, cr, uid, ids, name, args, context=None):
         res={}
         for event in self.browse(cr, uid, ids, context):
-            query = """select sum(nb_register) from crm_case c left join crm_case_section s on (c.section_id=s.id) right join event_event e on (e.section_id=s.id) right join event_registration r on (r.case_id=c.id) where e.section_id = %s and c.state = 'draft'""" % event.section_id.id
-            cr.execute(query)
+            query = """select sum(nb_register) from crm_case c left join crm_case_section s on (c.section_id=s.id) right join event_event e on (e.section_id=s.id) right join event_registration r on (r.case_id=c.id) where e.section_id = %s and c.state = 'draft'"""
+            cr.execute(query,(event.section_id.id,))
             res2 = cr.fetchone()
             if res2 and res2[0]:
                 res[event.id] = res2[0]
@@ -201,7 +201,7 @@ class event_registration(osv.osv):
             if reg_id.email_cc:
                 dest += [reg_id.email_cc]
             if dest and src:
-                tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, tinycrm = str(reg_id.case_id.id))
+                tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, openobject_id = str(reg_id.case_id.id))
             if not src:
                 raise osv.except_osv(_('Error!'), _('You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering'))
         return False
@@ -216,9 +216,9 @@ class event_registration(osv.osv):
             if reg_id.event_id.mail_auto_confirm or reg_id.event_id.mail_auto_registr:
                 if dest and src:
                     if reg_id.event_id.state in ['draft', 'fixed', 'open','confirm','running'] and reg_id.event_id.mail_auto_registr:
-                        tools.email_send(src, dest,'Auto Registration: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_registr, tinycrm = str(reg_id.case_id.id))
+                        tools.email_send(src, dest,'Auto Registration: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_registr, openobject_id = str(reg_id.case_id.id))
                     if (reg_id.event_id.state in ['confirm','running']) and reg_id.event_id.mail_auto_confirm:
-                        tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, tinycrm = str(reg_id.case_id.id))
+                        tools.email_send(src, dest,'Auto Confirmation: '+'['+str(reg_id.id)+']'+' '+reg_id.name, reg_id.event_id.mail_confirm, openobject_id = str(reg_id.case_id.id))
                 if not src:
                     raise osv.except_osv(_('Error!'), _('You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering'))
         return False

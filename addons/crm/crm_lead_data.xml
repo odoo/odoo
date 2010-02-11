@@ -2,42 +2,7 @@
 <openerp>
 <data noupdate="1">
 
-    <record model="crm.case.categ" id="categ_lead1">
-        <field name="name">Existing Customer</field>
-        <field name="section_id" ref="section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>         
-    </record>
-    <record model="crm.case.categ" id="categ_lead2">
-        <field name="name">Self Generated</field>
-        <field name="section_id" ref="section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>           
-    </record>
-    <record model="crm.case.categ" id="categ_lead3">
-        <field name="name">Employee</field>
-        <field name="section_id" ref="section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>   
-    </record>
-    <record model="crm.case.categ" id="categ_lead4">
-        <field name="name">Partner</field>
-        <field name="section_id" ref="section_sales_department"/>
-   		<field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>           
-    </record>
-    <record model="crm.case.categ" id="categ_lead6">
-        <field name="name">Website</field>
-        <field name="section_id" ref="section_sales_department"/>
-   		<field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>           
-    </record>
-    <record model="crm.case.categ" id="categ_lead7">
-        <field name="name">Word of mouth</field>
-        <field name="section_id" ref="section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>   
-    </record>
-    <record model="crm.case.categ" id="categ_lead8">
-        <field name="name">Other</field>
-        <field name="section_id" ref="section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>           
-    </record>
-
+   
 <!--        CASE STATUS(stage_id)        -->
     <record model="crm.case.stage" id="stage_lead1">
         <field name="name">New</field>

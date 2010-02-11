@@ -52,12 +52,12 @@ class wizard_delegate(wizard.interface):
         task_obj = pooler.get_pool(cr.dbname).get('project.task')
         task = task_obj.browse(cr, uid, data['id'], context)
         newname = data['form']['prefix'] or ''
-        task_obj.copy(cr, uid, data['id'], {
+        new_task_id = task_obj.copy(cr, uid, data['id'], {
             'name': data['form']['name'],
             'user_id': data['form']['user_id'],
             'planned_hours': data['form']['planned_hours'],
             'remaining_hours': data['form']['planned_hours'],
-            'parent_id': data['id'],
+            'parent_ids': [(6, 0, [data['id']])],
             'state': 'open',
             'description': data['form']['new_task_description'] or '',
             'child_ids': [],
@@ -65,7 +65,8 @@ class wizard_delegate(wizard.interface):
         })
         task_obj.write(cr, uid, [data['id']], {
             'remaining_hours': data['form']['planned_hours_me'],
-            'name': newname
+            'name': newname,
+            'child_ids': [(6, 0, [new_task_id])]
         })
         if data['form']['state']=='pending':
             task_obj.do_pending(cr, uid, [data['id']])

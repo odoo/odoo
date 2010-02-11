@@ -56,6 +56,10 @@ class opportunity2phonecall(wizard.interface):
         case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')        
         categ_id = pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])            
         case = case_obj.browse(cr, uid, data['id'])
+        if case.state != 'open':
+            raise wizard.except_wizard(_('Warning !'),
+                _('Opportunity should be in \'Open\' state before converting to Phone Call.'))
+            return {}
         return {
                 'user_id' : case.user_id and case.user_id.id,
                 'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id,
@@ -94,13 +98,11 @@ class opportunity2phonecall(wizard.interface):
                     'section_id' : form['section_id'],
                     'partner_id': opportunity.partner_id.id,
                     'partner_address_id':opportunity.partner_address_id.id,
-                    'description':opportunity.description
+                    'description': data['form']['note'] or opportunity.description,
+                    'opportunity_id':opportunity.id
             }, context=context)
             vals = {}
-            if not opportunity.phonecall_id:
-                vals.update({'phonecall_id' : new_case})
-            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)
-            opportunity_case_obj.case_cancel(cr, uid, [opportunity.id])
+
             phonecall_case_obj.case_open(cr, uid, [new_case])        
             
         value = {            
@@ -142,11 +144,11 @@ class opportunity2meeting(wizard.interface):
                 'section_id' : opportunity.section_id and opportunity.section_id.id or False,
                 'date_deadline': opportunity.date_deadline,
                 'description':opportunity.description,
+                'opportunity_id':opportunity.id
                 })
             new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
             vals = {}
-            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)
-            opportunity_case_obj.case_cancel(cr, uid, [opportunity.id])
+            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)            
             meeting_case_obj.case_open(cr, uid, [new_meeting_id])        
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
@@ -162,6 +164,7 @@ class opportunity2meeting(wizard.interface):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
         return {            
             'name': _('Meetings'),
+            'domain' : "[('opportunity_id','in',%s)]"%(data['ids']),         
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',

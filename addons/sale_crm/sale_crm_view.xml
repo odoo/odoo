@@ -8,13 +8,9 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
-            <field name="user_id" position="replace">
-                <label string="Responsible: " align="1.0"/>
-                <group colspan="1" col="2">
-                    <field name="user_id" select="2" nolabel="1" string="Responsible"/>
-                    <button string="Convert to Quote" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/>
-                </group>
-            </field>
+            <xpath expr="/form[@string='Opportunities']/group/group/button[@string='Schedule Call']" position="after">
+                <button string="Quotation" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/> 
+            </xpath>           
         </field>
     </record>
 
@@ -30,6 +26,21 @@
         </field>
     </record>
 
+	<record id="view_sales_order_filter_inherit" model="ir.ui.view">
+        <field name="name">sale.order.list.select</field>
+        <field name="model">sale.order</field>
+        <field name="type">search</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+        	<field name="date_order" position="after">
+        		<field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
+					<filter icon="terp-crm"
+                            domain="[('section_id','=',context.get('section_id',False))]"
+                            help="My section"/>
+			    </field>
+        	</field>
+	    </field>
+	</record>
 </data>
 </openerp>
 

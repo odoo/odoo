@@ -62,6 +62,15 @@ class phonecall2opportunity(wizard.interface):
         'probability': {'type':'float', 'digits':(16,2), 'string': 'Success Probability'},
         'partner_id' : {'type':'many2one', 'relation':'res.partner', 'string':'Partner'},
     }
+    
+    def _check_state(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        case_obj = pool.get('crm.phonecall')
+        for case in case_obj.browse(cr, uid, data['ids']):
+            if case.state != 'open':
+                raise wizard.except_wizard(_('Warning !'),
+                    _('Phone Call state should be \'Open\' before converting to Opportunity.'))
+        return {}
 
     def _selectopportunity(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -103,17 +112,19 @@ class phonecall2opportunity(wizard.interface):
                 'planned_revenue': data['form']['planned_revenue'],
                 'probability': data['form']['probability'],
                 'partner_id': data['form']['partner_id'],                 
-                'section_id':phonecall.section_id.id,
-                'description':phonecall.description,                
+                'section_id': phonecall.section_id.id,
+                'description': phonecall.description,         
+                'phonecall_id': phonecall.id,
+                'date': phonecall.date,
+                'priority': phonecall.priority    
             })
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
             vals = {
-                'partner_id': data['form']['partner_id'],                
-                }
-            if not phonecall.opportunity_id:
-                vals.update({'opportunity_id' : new_opportunity.id})
+                'partner_id': data['form']['partner_id'], 
+                'opportunity_id' : new_opportunity_id,                
+                }            
             phonecall_case_obj.write(cr, uid, [phonecall.id], vals)
-            phonecall_case_obj.case_cancel(cr, uid, [phonecall.id])
+            phonecall_case_obj.case_close(cr, uid, [phonecall.id])
             opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
         value = {            
             'name': _('Opportunity'),
@@ -164,7 +175,7 @@ class phonecall2opportunity(wizard.interface):
 
     states = {
         'init': {
-            'actions': [],
+            'actions': [_check_state],
             'result': {'type':'choice','next_state':_selectChoice}
         },
         'create_partner': {
@@ -202,6 +213,7 @@ class phonecall2meeting(wizard.interface):
                 'section_id' : phonecall.section_id and phonecall.section_id.id or False,
                 'duration': phonecall.duration,
                 'description':phonecall.description,
+                'phonecall_id':phonecall.id
                 })
             new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
             vals = {}
@@ -222,6 +234,7 @@ class phonecall2meeting(wizard.interface):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
         return {            
             'name': _('Meetings'),
+            'domain' : "[('phonecall_id','in',%s)]"%(data['ids']),         
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
@@ -274,18 +287,18 @@ class partner_create(wizard.interface):
         partner_obj = pool.get('res.partner')
         contact_obj = pool.get('res.partner.address')
         for case in case_obj.browse(cr, uid, data['ids']):
-            partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])
+            partner_id = partner_obj.search(cr, uid, [('name', '=', case.name)])
             if partner_id:
                 raise wizard.except_wizard(_('Warning !'),_('A partner is already existing with the same name.'))
             else:
                 partner_id = partner_obj.create(cr, uid, {
-                    'name': case.partner_name or case.name,
+                    'name': case.name,
                     'user_id': case.user_id.id,
                     'comment': case.description,
                 })
             contact_id = contact_obj.create(cr, uid, {
                 'partner_id': partner_id,
-                'name': case.partner_name2,
+                'name': case.name,
                 'phone': case.partner_phone,
                 'mobile': case.partner_mobile,
                 'email': case.email_from

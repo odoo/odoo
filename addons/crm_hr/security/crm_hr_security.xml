@@ -3,17 +3,6 @@
 <data noupdate="1">
 
 
-    <!--rule for Jobs-->
-    <record model="ir.rule.group" id="crm_job_rule_group">
-        <field name="name">crm.meeting.rule</field>
-        <field name="model_id" search="[('model','=','crm.job')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-    </record>
-	<record id="crm_job_rule" model="ir.rule">
-        <field name="domain_force">['|',('section_id','=',False),('section_id','=',user.context_section_id)]</field>
-        <field name="rule_group" ref="crm_job_rule_group"/>
-    </record>
-
 
   </data>
 </openerp>

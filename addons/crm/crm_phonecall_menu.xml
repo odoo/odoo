@@ -9,6 +9,7 @@
         src_model="res.partner"
         view_mode="calendar,tree,form"
         context="{'default_partner_id': active_id, 'default_duration': 1.0}"
+        domain="[('partner_id', '=', active_id)]"
         />
 
 
@@ -49,7 +50,6 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
-        <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming0">
@@ -78,7 +78,6 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone2'))+')]'"/>
-        <field name="context" eval="{'default_state':'open'}"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing0">

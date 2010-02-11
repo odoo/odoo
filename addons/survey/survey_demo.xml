@@ -23,6 +23,7 @@
             <field name="in_visible_rating_weight">1</field>
             <field name="in_visible_menu_choice">1</field>
             <field eval="1" name="sequence"/>
+            <field name="in_visible_answer_type">1</field>
         </record>
 
         <record id="survey_question_company_size" model="survey.question">
@@ -31,39 +32,47 @@
             <field name="type">multiple_choice_only_one_ans</field>
             <field name="in_visible_single_text">1</field>
             <field eval="2" name="sequence"/>
+            <field name="in_visible_answer_type">1</field>
         </record>
 
         <record id="survey_question_company_size_1" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">1 - 10</field>
             <field name="question_id" ref="survey_question_company_size" />
             <field eval="1" name="sequence"/>
         </record>
         <record id="survey_question_company_size_11" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">11 - 50</field>
             <field name="question_id" ref="survey_question_company_size" />
             <field eval="2" name="sequence"/>
         </record>
         <record id="survey_question_company_size_51" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">51 - 100</field>
             <field name="question_id" ref="survey_question_company_size" />
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_question_company_size_101" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">101 - 250</field>
             <field name="question_id" ref="survey_question_company_size" />
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_question_company_size_251" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">251 - 500</field>
             <field name="question_id" ref="survey_question_company_size" />
             <field name="sequence" eval="5"/>
         </record>
         <record id="survey_question_company_size_501" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">501 - 1000</field>
             <field name="question_id" ref="survey_question_company_size" />
             <field name="sequence" eval="6"/>
         </record>
         <record id="survey_question_company_size_1000" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">> 1000</field>
             <field name="question_id" ref="survey_question_company_size" />
             <field name="sequence" eval="7"/>
@@ -73,6 +82,7 @@
         </record>
 
         <record id="survey_question_located" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">Where are you located?</field>
             <field name="page_id" ref="survey_page_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
@@ -80,26 +90,31 @@
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_question_company_size_Europ" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Europ</field>
             <field name="question_id" ref="survey_question_located" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_question_company_size_North_America" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">North America</field>
             <field name="question_id" ref="survey_question_located" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_question_company_size_Asia" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Asia</field>
             <field name="question_id" ref="survey_question_located" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_question_company_size_South_America" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">South America</field>
             <field name="question_id" ref="survey_question_located" />
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_question_company_size_Australia" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Australia</field>
             <field name="question_id" ref="survey_question_located" />
             <field name="sequence" eval="5"/>
@@ -111,6 +126,7 @@
         </record>
 
         <record id="survey_question_offical_partner" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">When did you become an OpenERP official partner?</field>
             <field name="page_id" ref="survey_page_who_are_you" />
             <field name="type">multiple_choice_only_one_ans</field>
@@ -118,26 +134,31 @@
             <field eval="4" name="sequence"/>
         </record>
         <record id="survey_question_company_size_2009" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">in 2009</field>
             <field name="question_id" ref="survey_question_offical_partner" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_question_company_size_2008" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">in 2008</field>
             <field name="question_id" ref="survey_question_offical_partner" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_question_company_size_2007" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">in 2007</field>
             <field name="question_id" ref="survey_question_offical_partner" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_question_company_size_2006" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">in 2006</field>
             <field name="question_id" ref="survey_question_offical_partner" />
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_question_company_size_before_2006" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">before 2006</field>
             <field name="question_id" ref="survey_question_offical_partner" />
             <field name="sequence" eval="5"/>
@@ -147,6 +168,7 @@
         </record>
 
         <record id="survey_question_your_customers" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">What kind of solutions do you sell to your customers? </field>
             <field name="page_id" ref="survey_page_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
@@ -154,16 +176,19 @@
             <field eval="5" name="sequence"/>
         </record>
         <record id="survey_answer_specific_devlopments" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Integrations without specific developments</field>
             <field name="question_id" ref="survey_question_your_customers" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_with_specific_devlopments" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Integrations with specific developments</field>
             <field name="question_id" ref="survey_question_your_customers" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_saas_services" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Odoo Saas Offer</field>
             <field name="question_id" ref="survey_question_your_customers" />
             <field name="sequence" eval="3"/>
@@ -177,6 +202,7 @@
         </record>
 
         <record id="survey_question_partnership_contract" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">What do you think about the partnership contract?</field>
             <field name="page_id" ref="survey_page_Contracts" />
             <field name="type">multiple_choice_only_one_ans</field>
@@ -184,21 +210,25 @@
             <field eval="1" name="sequence"/>
         </record>
         <record id="survey_answer_Ambiguous" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Ambiguous</field>
             <field name="question_id" ref="survey_question_partnership_contract" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_enough" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Not clear enough</field>
             <field name="question_id" ref="survey_question_partnership_contract" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_Clear" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Clear</field>
             <field name="question_id" ref="survey_question_partnership_contract" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_answer_very_clear" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Very Clear</field>
             <field name="question_id" ref="survey_question_partnership_contract" />
             <field name="sequence" eval="4"/>
@@ -208,6 +238,7 @@
         </record>
 
         <record id="survey_question_contract_customers" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">When do you propose a maintenance contract to your customers?</field>
             <field name="page_id" ref="survey_page_Contracts" />
             <field name="type">multiple_choice_only_one_ans</field>
@@ -215,18 +246,22 @@
             <field name="comment_label">Why?</field>
             <field name="in_visible_single_text">1</field>
             <field eval="2" name="sequence"/>
+            <field name="is_comment_require">True</field>
         </record>
         <record id="survey_answer_very_integration" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">With each integration</field>
             <field name="question_id" ref="survey_question_contract_customers" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_sometimes" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Sometimes</field>
             <field name="question_id" ref="survey_question_contract_customers" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_never" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Never... </field>
             <field name="question_id" ref="survey_question_contract_customers" />
             <field name="sequence" eval="2"/>
@@ -236,6 +271,7 @@
         </record>
 
         <record id="survey_question_sell_to_your_customers" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">Which maintenance contract do you sell to your customers.</field>
             <field name="page_id" ref="survey_page_Contracts" />
             <field name="type">multiple_choice_only_one_ans</field>
@@ -243,16 +279,19 @@
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_answer_maintenance_contract" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">OpenERP maintenance contract</field>
             <field name="question_id" ref="survey_question_sell_to_your_customers" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_buy_an_openerp_one" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Your own contract, but you buy an OpenERP one</field>
             <field name="question_id" ref="survey_question_sell_to_your_customers" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_buying_an_openerp" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Your own contract without buying an OpenERP one</field>
             <field name="question_id" ref="survey_question_sell_to_your_customers" />
             <field name="sequence" eval="3"/>
@@ -268,6 +307,7 @@
         </record>
 
         <record id="survey_question_launchpad_reporting" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">Give your opinion about Launchpad reporting :</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
@@ -275,16 +315,19 @@
             <field eval="2" name="sequence"/>
         </record>
         <record id="survey_answer_find_openobject_website1" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Is Launchpad easy to find in OpenObject website?</field>
             <field name="question_id" ref="survey_question_launchpad_reporting" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_bug_or_blueprint" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Is it easy to report a bug or a blueprint?</field>
             <field name="question_id" ref="survey_question_launchpad_reporting" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_modify_a_translation" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Is it easy to add or modify a translation?</field>
             <field name="question_id" ref="survey_question_launchpad_reporting" />
             <field name="sequence" eval="3"/>
@@ -314,17 +357,20 @@
             <field name="in_visible_menu_choice">1</field>
         </record>
  		<record id="survey_question_Leads" model="survey.question">
+ 			<field name="in_visible_answer_type">1</field>
             <field name="question">Leads</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
             <field name="in_visible_single_text">1</field>
         </record>
         <record id="survey_answer_find_openobject_website" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Is Launchpad easy to find in OpenObject website?</field>
             <field name="question_id" ref="survey_question_Leads" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_converted_in_customers" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">How are the leads that you find thanks to Tiny be converted in customers?</field>
             <field name="question_id" ref="survey_question_Leads" />
             <field name="sequence" eval="2"/>
@@ -361,6 +407,7 @@
         </record>
 
         <record id="survey_question_partners_about" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">How is Tiny's communication with partners about...</field>
             <field name="page_id" ref="survey_page_communication" />
             <field name="type">matrix_of_choices_only_one_ans</field>
@@ -368,16 +415,19 @@
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_answer_Maintenance_contracts" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Maintenance contracts</field>
             <field name="question_id" ref="survey_question_partners_about" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_partner_Leads" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Leads</field>
             <field name="question_id" ref="survey_question_partners_about" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_Training_sessions" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Training sessions</field>
             <field name="question_id" ref="survey_question_partners_about" />
             <field name="sequence" eval="3"/>
@@ -407,15 +457,17 @@
             <field name="in_visible_menu_choice">1</field>
         </record>
         <record id="survey_question_partners_about" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="required_type">at least</field>
             <field eval="1" name="req_ans"/>
             <field name="req_error_msg">This question requires an answer.</field>
         </record>
 
         <record id="survey_question_partners_on_which_subjects" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">In your opinion, how could Tiny better communicate with partners and on which subjects?</field>
             <field name="page_id" ref="survey_page_communication" />
-            <field name="type">single_textbox</field>
+            <field name="type">comment</field>
             <field name="in_visible_rating_weight">1</field>
             <field name="in_visible_menu_choice">1</field>
             <field eval="4" name="sequence"/>
@@ -436,6 +488,7 @@
         </record>
 
         <record id="survey_question_odoo_company_name" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">What is your company's name?</field>
             <field name="page_id" ref="survey_page_odoo_who_are_you" />
             <field name="type">single_textbox</field>
@@ -445,6 +498,7 @@
         </record>
 
         <record id="survey_question_odoo_company_sector" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">What is your company's sector?</field>
             <field name="page_id" ref="survey_page_odoo_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
@@ -452,96 +506,115 @@
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_question_Agriculture" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Agriculture</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_question_Bank_Finance" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Bank &amp; Finance</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_question_Engineering" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Engineering</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_question_Chemical_Pharmaceutical" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Chemical &amp; Pharmaceutical</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_question_HR" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">HR</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="5"/>
         </record>
         <record id="survey_question_Construction" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Construction</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="6"/>
         </record>
         <record id="survey_question_Retail" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Retail</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="7"/>
         </record>
         <record id="survey_question_Electronics" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Electronics</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="8"/>
         </record>
         <record id="survey_question_Energy" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Energy</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="9"/>
         </record>
         <record id="survey_question_Education" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Education</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="10"/>
         </record>
         <record id="survey_question_Industry" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Industry</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="11"/>
         </record>
         <record id="survey_question_Logistics" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Logistics</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="12"/>
         </record>
         <record id="survey_question_Media_Entertainment" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Media &amp; Entertainment</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="13"/>
         </record>
         <record id="survey_question_Public_Nonprofit" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Public &amp; Nonprofit</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="14"/>
         </record>
         <record id="survey_question_Services" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Services</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="15"/>
         </record>
         <record id="survey_question_Healthcare" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Healthcare</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="16"/>
         </record>
         <record id="survey_question_Telecommunication" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Telecommunication And ICT</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
            <field name="sequence" eval="17"/>
         </record>
         <record id="survey_question_Tourism_Catering" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Tourism &amp; Catering</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="18"/>
         </record>
         <record id="survey_question_Other_sector" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Other sector</field>
             <field name="question_id" ref="survey_question_odoo_company_sector" />
             <field name="sequence" eval="19"/>
@@ -553,6 +626,7 @@
          </record>
 
          <record id="survey_question_odoo_mange_with_odoo" model="survey.question">
+         	<field name="in_visible_answer_type">1</field>
             <field name="question">Which activities do you plan to manage with Odoo ?</field>
             <field name="page_id" ref="survey_page_odoo_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
@@ -560,41 +634,49 @@
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_question_Customer_Relationship_Management" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Customer Relationship Management</field>
             <field name="question_id" ref="survey_question_odoo_mange_with_odoo" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_question_Customer_Accounting_Finance" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Accounting &amp; Finance</field>
             <field name="question_id" ref="survey_question_odoo_mange_with_odoo" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_question_Customer_inventory_Management" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Inventory Management</field>
             <field name="question_id" ref="survey_question_odoo_mange_with_odoo" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_question_Customer_Manufacturing" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Manufacturing</field>
             <field name="question_id" ref="survey_question_odoo_mange_with_odoo" />
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_question_Customer_Human_Resources" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Human Resources</field>
             <field name="question_id" ref="survey_question_odoo_mange_with_odoo" />
             <field name="sequence" eval="5"/>
         </record>
         <record id="survey_question_Project_Management" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Project Management</field>
             <field name="question_id" ref="survey_question_odoo_mange_with_odoo" />
             <field name="sequence" eval="6"/>
         </record>
         <record id="survey_question_Sales_Purchases" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Sales &amp; Purchases</field>
             <field name="question_id" ref="survey_question_odoo_mange_with_odoo" />
             <field name="sequence" eval="7"/>
         </record>
         <record id="survey_question_Other_odoo_mange_with_odoo" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Other</field>
             <field name="question_id" ref="survey_question_odoo_mange_with_odoo" />
             <field name="sequence" eval="8"/>
@@ -606,6 +688,7 @@
         </record>
 
         <record id="survey_question_odoo_discover_odoo" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">How did you discover Odoo ?</field>
             <field name="page_id" ref="survey_page_odoo_who_are_you" />
             <field name="type">multiple_choice_multiple_ans</field>
@@ -613,31 +696,37 @@
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_question_OpenERP_website" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">OpenERP website</field>
             <field name="question_id" ref="survey_question_odoo_discover_odoo" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_question_Search_Engine" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Search Engine</field>
             <field name="question_id" ref="survey_question_odoo_discover_odoo" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_question_Word_of_mouth" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Word of mouth</field>
             <field name="question_id" ref="survey_question_odoo_discover_odoo" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_question_Trade_show" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Trade show</field>
             <field name="question_id" ref="survey_question_odoo_discover_odoo" />
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_question_Press" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Press</field>
             <field name="question_id" ref="survey_question_odoo_discover_odoo" />
             <field name="sequence" eval="5"/>
         </record>
         <record id="survey_question_Other" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Other</field>
             <field name="question_id" ref="survey_question_odoo_discover_odoo" />
             <field name="sequence" eval="6"/>
@@ -655,6 +744,7 @@
         </record>
 
         <record id="survey_question_odoo_subscribe_to_odoo" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">Why did you subscribe to Odoo?</field>
             <field name="page_id" ref="survey_page_odoo_Subscription_and_configuration" />
             <field name="type">multiple_choice_only_one_ans</field>
@@ -662,32 +752,38 @@
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_switch_to_online_offer1" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">I was already using OpenERP and wanted to switch to an online offer</field>
             <field name="question_id" ref="survey_question_odoo_subscribe_to_odoo" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_maintaining_by_myself" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">It's easier and cheaper than maintaining by myself</field>
             <field name="question_id" ref="survey_question_odoo_subscribe_to_odoo" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_saas_offr_my_customers" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">I am looking for a SaaS offer for my customers</field>
             <field name="question_id" ref="survey_question_odoo_subscribe_to_odoo" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_answer_download_install_later_use" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">After having tested it, I plan to download and install it by myself for later use</field>
             <field name="question_id" ref="survey_question_odoo_subscribe_to_odoo" />
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_answer_tested_planto_use_it" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">After having tested it, I don't plan to use it</field>
             <field name="question_id" ref="survey_question_odoo_subscribe_to_odoo" />
             <field name="sequence" eval="5"/>
         </record>
 
         <record id="survey_question_odoo_configure_the_application" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">How much time did you spend to configure the application?</field>
             <field name="page_id" ref="survey_page_odoo_Subscription_and_configuration" />
             <field name="type">matrix_of_choices_only_one_ans</field>
@@ -695,26 +791,31 @@
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_switch_to_online_offer" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Creating users and access rights</field>
             <field name="question_id" ref="survey_question_odoo_configure_the_application" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_adding_modules_need" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Adding the modules I need</field>
             <field name="question_id" ref="survey_question_odoo_configure_the_application" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_configuring_the_modules" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Configuring the modules</field>
             <field name="question_id" ref="survey_question_odoo_configure_the_application" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_answer_importing_my_data" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Importing my data</field>
             <field name="question_id" ref="survey_question_odoo_configure_the_application" />
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_answer_initial_data" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Creating the initial data</field>
             <field name="question_id" ref="survey_question_odoo_configure_the_application" />
             <field name="sequence" eval="5"/>
@@ -751,6 +852,7 @@
         </record>
 
         <record id="survey_question_odoo_continue_using_odoo" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">Do you plan to continue using Odoo?</field>
             <field name="page_id" ref="survey_page_odoo_Subscription_and_configuration" />
             <field name="type">multiple_choice_only_one_ans</field>
@@ -758,13 +860,16 @@
             <field name="comment_label">No...Why?</field>
             <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="3"/>
+            <field name="is_comment_require">True</field>
         </record>
         <record id="survey_answer_yes" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Yes</field>
             <field name="question_id" ref="survey_question_odoo_continue_using_odoo" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_no" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">No</field>
             <field name="question_id" ref="survey_question_odoo_continue_using_odoo" />
             <field name="sequence" eval="2"/>
@@ -779,6 +884,7 @@
             <field eval="3" name="sequence"/>
         </record>
         <record id="survey_question_odoo_would_you_prefer_use" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">Which interface would you prefer to use?</field>
             <field name="page_id" ref="survey_page_odoo_using_odoo" />
             <field name="type">multiple_choice_only_one_ans</field>
@@ -786,16 +892,19 @@
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_web_interface" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">The web interface</field>
             <field name="question_id" ref="survey_question_odoo_would_you_prefer_use" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_KDE_interface" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">The rich interface (GTK or KDE)</field>
             <field name="question_id" ref="survey_question_odoo_would_you_prefer_use" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_both_interface" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Both</field>
             <field name="question_id" ref="survey_question_odoo_would_you_prefer_use" />
             <field name="sequence" eval="3"/>
@@ -805,6 +914,7 @@
         </record>
 
         <record id="survey_question_odoo_give_your_opinion" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">Give your opinion :</field>
             <field name="page_id" ref="survey_page_odoo_using_odoo" />
             <field name="type">matrix_of_choices_only_one_ans</field>
@@ -812,21 +922,25 @@
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_appropriately_structured" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Is Odoo Website appropriately structured?</field>
             <field name="question_id" ref="survey_question_odoo_give_your_opinion" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_faq_clear_and_choicese" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Are Odoo Website FAQ clear and concise?</field>
             <field name="question_id" ref="survey_question_odoo_give_your_opinion" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_webclient_simple_and_useful" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Is OpenERP Web Client simple and useful?</field>
             <field name="question_id" ref="survey_question_odoo_give_your_opinion" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_answer_control_center_user_friendly" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Is the Control Center user-friendly?</field>
             <field name="question_id" ref="survey_question_odoo_give_your_opinion" />
             <field name="sequence" eval="4"/>
@@ -870,6 +984,7 @@
         </record>
 
         <record id="survey_question_odoo_you_think_about" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">What do you think about ... </field>
             <field name="page_id" ref="survey_page_odoo_using_odoo" />
             <field name="type">matrix_of_choices_only_one_ans</field>
@@ -879,26 +994,31 @@
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_database_new_version" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Migrating a database to a new version</field>
             <field name="question_id" ref="survey_question_odoo_you_think_about" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_downloadin_your_backups" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Browsing and downloading your backups</field>
             <field name="question_id" ref="survey_question_odoo_you_think_about" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_duplicating_database" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Duplicating a database</field>
             <field name="question_id" ref="survey_question_odoo_you_think_about" />
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_answer_monthly_hours_statistics" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Checking your monthly hours statistics</field>
             <field name="question_id" ref="survey_question_odoo_you_think_about" />
             <field name="sequence" eval="4"/>
         </record>
         <record id="survey_answer_support_ticket" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Creating a support ticket</field>
             <field name="question_id" ref="survey_question_odoo_you_think_about" />
             <field name="sequence" eval="5"/>
@@ -934,12 +1054,14 @@
             <field name="in_visible_menu_choice">1</field>
         </record>
         <record id="survey_question_odoo_you_think_about" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="required_type">at least</field>
             <field eval="1" name="req_ans"/>
             <field name="req_error_msg">This question requires an answer.</field>
         </record>
 
         <record id="survey_question_odoo_modules_are_missing_in_odoo" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">In your opinion, which modules are missing in Odoo? Give examples :</field>
             <field name="page_id" ref="survey_page_odoo_using_odoo" />
             <field name="type">single_textbox</field>
@@ -956,6 +1078,7 @@
         </record>
 
         <record id="survey_question_odoo_would_you_prefer_receive_your_prepaid_bill" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">How often would you prefer to receive your prepaid bill?</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">multiple_choice_only_one_ans</field>
@@ -963,16 +1086,19 @@
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_Monthly" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Monthly</field>
             <field name="question_id" ref="survey_question_odoo_would_you_prefer_receive_your_prepaid_bill" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_annually_with_discount" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Annually with 20% discount</field>
             <field name="question_id" ref="survey_question_odoo_would_you_prefer_receive_your_prepaid_bill" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_with_25_discount" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Every 2 years with 25% discount</field>
             <field name="question_id" ref="survey_question_odoo_would_you_prefer_receive_your_prepaid_bill" />
             <field name="sequence" eval="3"/>
@@ -982,6 +1108,7 @@
         </record>
 
         <record id="survey_question_odoo_dms" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">Do you plan to use the document management system?</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">multiple_choice_only_one_ans</field>
@@ -989,13 +1116,16 @@
             <field name="comment_label">Comment</field>
             <field name="in_visible_single_text">1</field>
             <field name="sequence" eval="2"/>
+            <field name="is_comment_require">True</field>
         </record>
         <record id="survey_answer_YES" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Yes, I plan to use (GB)</field>
             <field name="question_id" ref="survey_question_odoo_dms" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_No" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">No</field>
             <field name="question_id" ref="survey_question_odoo_dms" />
             <field name="sequence" eval="2"/>
@@ -1005,6 +1135,7 @@
         </record>
 
         <record id="survey_question_odoo_support_services" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">How satisfied are you with Odoo's support services :</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">matrix_of_choices_only_one_ans</field>
@@ -1012,11 +1143,13 @@
             <field name="sequence" eval="3"/>
         </record>
         <record id="survey_answer_our_answer_is" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">The time between your question and our answer is</field>
             <field name="question_id" ref="survey_question_odoo_support_services" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_pertinence_our_answer" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">The pertinence of our answers is</field>
             <field name="question_id" ref="survey_question_odoo_support_services" />
             <field name="sequence" eval="2"/>
@@ -1058,6 +1191,7 @@
         </record>
 
         <record id="survey_question_offer_opinion_about_odoo" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">Give your opinion about Odoo's</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">matrix_of_choices_only_one_ans</field>
@@ -1065,16 +1199,19 @@
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_pricing_criteria" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Pricing criteria</field>
             <field name="question_id" ref="survey_question_offer_opinion_about_odoo" />
             <field name="sequence" eval="1"/>
         </record>
         <record id="survey_answer_pricing_understanding" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Pricing understanding</field>
             <field name="question_id" ref="survey_question_offer_opinion_about_odoo" />
             <field name="sequence" eval="2"/>
         </record>
         <record id="survey_answer_pricing_available_modules" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
             <field name="answer">Range of available modules</field>
             <field name="question_id" ref="survey_question_offer_opinion_about_odoo" />
             <field name="sequence" eval="3"/>
@@ -1116,6 +1253,7 @@
         </record>
 
         <record id="survey_question_offer_comments_them_here" model="survey.question">
+        	<field name="in_visible_answer_type">1</field>
             <field name="question">If you have any additional comments, write them here :</field>
             <field name="page_id" ref="survey_page_odoo_the_offer" />
             <field name="type">comment</field>
@@ -1191,6 +1329,7 @@
 	</data>
 	<data>
 		<record id="survey_question_0" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="1" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1210,6 +1349,7 @@
 	</data>
 	<data>
 		<record id="survey_question_1" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="2" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1229,6 +1369,7 @@
 	</data>
 	<data>
 		<record id="survey_question_2" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="1" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1249,6 +1390,7 @@
 
 	<data>
 		<record id="survey_question_3" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="3" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1269,6 +1411,7 @@
 	</data>
 	<data>
 		<record id="survey_question_4" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="4" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1288,6 +1431,7 @@
 	</data>
 	<data>
 		<record id="survey_question_5" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="2" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1307,6 +1451,7 @@
 	</data>
 	<data>
 		<record id="survey_question_6" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="3" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1326,6 +1471,7 @@
 	</data>
 	<data>
 		<record id="survey_question_7" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="1" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1345,6 +1491,7 @@
 	</data>
 	<data>
 		<record id="survey_question_8" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="1" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1364,6 +1511,7 @@
 	</data>
 	<data>
 		<record id="survey_question_9" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="5" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1383,6 +1531,7 @@
 	</data>
 	<data>
 		<record id="survey_question_10" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="2" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1403,6 +1552,7 @@
 	</data>
 	<data>
 		<record id="survey_question_11" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="3" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1423,6 +1573,7 @@
 	</data>
 	<data>
 		<record id="survey_question_12" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="6" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1442,6 +1593,7 @@
 	</data>
 	<data>
 		<record id="survey_question_13" model="survey.question">
+			<field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;do_not_validate&quot;&quot;&quot;" name="comment_valid_type"/>
 			<field eval="7" name="sequence"/>
 			<field eval="&quot;&quot;&quot;The choices need to add up to [enter sum here].&quot;&quot;&quot;" name="numeric_required_sum_err_msg"/>
@@ -1589,6 +1741,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_0" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I participate to discussion and forums&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_8"/>
 			<field eval="1" name="sequence"/>
@@ -1596,6 +1749,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_1" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I'd like to contribute but I don't know how ?&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_8"/>
 			<field eval="2" name="sequence"/>
@@ -1603,6 +1757,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_2" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;There is too many groups defined, security is too complex to set&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_12"/>
 			<field eval="1" name="sequence"/>
@@ -1610,6 +1765,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_3" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;There is too few groups defined, security isn't accurate enough&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_12"/>
 			<field eval="2" name="sequence"/>
@@ -1617,6 +1773,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_4" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;The number of groups is good&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_12"/>
 			<field eval="3" name="sequence"/>
@@ -1624,6 +1781,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_5" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;The GTK client&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_5"/>
 			<field eval="1" name="sequence"/>
@@ -1631,6 +1789,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_6" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;The web interface&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_5"/>
 			<field eval="2" name="sequence"/>
@@ -1638,6 +1797,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_7" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;The KDE client&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_5"/>
 			<field eval="3" name="sequence"/>
@@ -1645,6 +1805,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_8" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;At least two of them&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_5"/>
 			<field eval="4" name="sequence"/>
@@ -1652,6 +1813,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_9" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Yes, I use a version &lt; 5.0&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_2"/>
 			<field eval="1" name="sequence"/>
@@ -1659,6 +1821,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_10" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Yes, I use the 5.0 version, installed locally&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_2"/>
 			<field eval="2" name="sequence"/>
@@ -1666,6 +1829,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_11" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Yes, I use the latest version on Odoo&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_2"/>
 			<field eval="3" name="sequence"/>
@@ -1673,6 +1837,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_12" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;No, I just tested it&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_2"/>
 			<field eval="4" name="sequence"/>
@@ -1680,6 +1845,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_13" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Sales Management&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_6"/>
 			<field eval="1" name="sequence"/>
@@ -1687,6 +1853,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_14" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Purchases Management&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_6"/>
 			<field eval="2" name="sequence"/>
@@ -1694,6 +1861,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_15" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Financial Management&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_6"/>
 			<field eval="3" name="sequence"/>
@@ -1701,6 +1869,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_16" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;CRM / SRM&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_6"/>
 			<field eval="4" name="sequence"/>
@@ -1708,6 +1877,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_17" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Project Management&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_6"/>
 			<field eval="5" name="sequence"/>
@@ -1715,6 +1885,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_18" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Human Ressources&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_6"/>
 			<field eval="6" name="sequence"/>
@@ -1722,6 +1893,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_19" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Descriptions and help tooltips are clear enough&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_13"/>
 			<field eval="1" name="sequence"/>
@@ -1729,6 +1901,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_20" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Configuration wizard exists for each important setting&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_13"/>
 			<field eval="2" name="sequence"/>
@@ -1736,6 +1909,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_21" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Extra modules proposed are relevant&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_13"/>
 			<field eval="3" name="sequence"/>
@@ -1743,6 +1917,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_22" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;The current menu structure is good&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_4"/>
 			<field eval="1" name="sequence"/>
@@ -1750,6 +1925,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_23" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;It can be improved&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_4"/>
 			<field eval="2" name="sequence"/>
@@ -1757,6 +1933,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_24" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;They are too much menus, it's complex to understand&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_4"/>
 			<field eval="3" name="sequence"/>
@@ -1764,6 +1941,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_25" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I develop new features&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_8"/>
 			<field eval="3" name="sequence"/>
@@ -1771,6 +1949,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_26" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I help to translate&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_8"/>
 			<field eval="4" name="sequence"/>
@@ -1778,6 +1957,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_27" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I write documentations&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_8"/>
 			<field eval="5" name="sequence"/>
@@ -1785,6 +1965,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_28" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Running the configuration wizards is a good way to spare time&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_13"/>
 			<field eval="4" name="sequence"/>
@@ -1792,6 +1973,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_29" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I use Launchpad, like all official OpenERP projects&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_7"/>
 			<field eval="1" name="sequence"/>
@@ -1799,6 +1981,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_30" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;The security rules defined on groups are helpfull&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_9"/>
 			<field eval="1" name="sequence"/>
@@ -1806,6 +1989,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_31" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;They are covering all objects&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_9"/>
 			<field eval="2" name="sequence"/>
@@ -1813,6 +1997,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_32" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;Those security rules are standard and can be used out-of-the-box in most cases&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_9"/>
 			<field eval="3" name="sequence"/>
@@ -1820,6 +2005,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_33" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;The 'Usability/Extended View' group helps in daily work&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_9"/>
 			<field eval="4" name="sequence"/>
@@ -1827,6 +2013,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_34" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;The 'Usability/Extended View' group hides only optional fields&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_9"/>
 			<field eval="5" name="sequence"/>
@@ -1834,6 +2021,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_35" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;The groups set on menu items are relevant&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_9"/>
 			<field eval="6" name="sequence"/>
@@ -1841,6 +2029,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_36" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;It is up-to-date&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_0"/>
 			<field eval="1" name="sequence"/>
@@ -1848,6 +2037,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_37" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;It helps in the beginning&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_0"/>
 			<field eval="2" name="sequence"/>
@@ -1855,6 +2045,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_38" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I use the contextual help in OpenERP&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_0"/>
 			<field eval="3" name="sequence"/>
@@ -1862,6 +2053,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_39" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;It is complete&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_0"/>
 			<field eval="4" name="sequence"/>
@@ -1869,6 +2061,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_40" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;It is clear&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_0"/>
 			<field eval="5" name="sequence"/>
@@ -1876,6 +2069,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_41" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;They help new users to understand OpenERP&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_1"/>
 			<field eval="1" name="sequence"/>
@@ -1883,6 +2077,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_42" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;They are clean and correct&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_1"/>
 			<field eval="2" name="sequence"/>
@@ -1890,6 +2085,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_43" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;They are useful on a daily usage&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_1"/>
 			<field eval="3" name="sequence"/>
@@ -1897,6 +2093,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_44" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;A process is defined for all enterprise flows&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_1"/>
 			<field eval="4" name="sequence"/>
@@ -1904,6 +2101,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_45" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;It's easy to find the process you need&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_1"/>
 			<field eval="5" name="sequence"/>
@@ -1911,6 +2109,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_46" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I use another repository system (sourceforge, ...)&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_7"/>
 			<field eval="2" name="sequence"/>
@@ -1918,6 +2117,7 @@
 	</data>
 	<data>
 		<record id="survey_answer_47" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I host on my own website&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_7"/>
 			<field eval="3" name="sequence"/>
@@ -1925,9 +2125,684 @@
 	</data>
 	<data>
 		<record id="survey_answer_48" model="survey.answer">
+		    <field name="in_visible_answer_type">1</field>
 			<field eval="&quot;&quot;&quot;I don't publish my developments&quot;&quot;&quot;" name="answer"/>
 			<field name="question_id" ref="survey_question_7"/>
 			<field eval="4" name="sequence"/>
+		</record>
+	</data>
+
+
+
+	<data noupdate="1">
+		<record id="survey_0_Community" model="survey">
+			<field name="title">Community Survey</field>
+			<field name="note">Please take a few minutes to complete this survey on the quality of service we provide. We welcome your feedback and appreciate your honesty. With your help, we hope to strengthen the bond between our clients.</field>
+			<field eval="1" name="response_user"/>
+			<field name="state">draft</field>
+			<field name="responsible_id" ref="base.user_root"/>
+			<field eval="1" name="send_response"/>
+			<field eval="[(6,0,[])]" name="users"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_page_0_Community" model="survey.page">
+			<field name="title">Service Characteristics</field>
+			<field name="survey_id" ref="survey_0_Community"/>
+			<field eval="1" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_page_1_Community" model="survey.page">
+			<field name="title">Performance Indicator</field>
+			<field name="survey_id" ref="survey_0_Community"/>
+			<field eval="2" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_page_2_Community" model="survey.page">
+			<field name="title">Client Information</field>
+			<field name="survey_id" ref="survey_0_Community"/>
+			<field eval="3" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_0_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="1" name="sequence"/>
+			<field name="question">Please rank, your criteria for choosing an organization.</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="0" name="is_comment_require"/>
+			<field name="type">matrix_of_choices_only_one_ans</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="1" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_0_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_1_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="2" name="sequence"/>
+			<field name="question">Please rate the following questions.</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="0" name="is_comment_require"/>
+			<field name="type">matrix_of_choices_only_one_ans</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="1" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_0_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_2_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="3" name="sequence"/>
+			<field name="question">How would you prefer for us to provide most communications?</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="1" name="is_comment_require"/>
+			<field name="type">multiple_choice_only_one_ans</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="1" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_0_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_3_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="4" name="sequence"/>
+			<field name="question">What should we improve on (please be specific)?</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="0" name="is_comment_require"/>
+			<field name="type">comment</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="1" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_1_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_4_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="5" name="sequence"/>
+			<field name="question">What do we do well?</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="0" name="is_comment_require"/>
+			<field name="type">comment</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="1" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_1_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_5_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="6" name="sequence"/>
+			<field name="question">What are the most important challenges facing your organization this year?</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="0" name="is_comment_require"/>
+			<field name="type">comment</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="1" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_1_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_6_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="7" name="sequence"/>
+			<field name="question">How can we help you do your job better?</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="0" name="is_comment_require"/>
+			<field name="type">comment</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="1" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_1_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_7_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="8" name="sequence"/>
+			<field name="question">Please provide any additional comments.</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="0" name="is_comment_require"/>
+			<field name="type">comment</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="1" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_1_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_8_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="9" name="sequence"/>
+			<field name="question">Contact information</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="0" name="is_comment_require"/>
+			<field name="type">multiple_textboxes_diff_type</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_2_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_9_Community" model="survey.question">
+			<field name="validation_type">do_not_validate</field>
+			<field name="comment_valid_type">do_not_validate</field>
+			<field name="make_comment_field_err_msg">Please enter a comment.</field>
+			<field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+			<field eval="0" name="comment_column"/>
+			<field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="rating_allow_one_column_require"/>
+			<field eval="0" name="is_validation_require"/>
+			<field name="req_error_msg">This question requires an answer.</field>
+			<field eval="10" name="sequence"/>
+			<field name="question">How many years have you been a client?</field>
+			<field name="comment_field_type">char</field>
+			<field eval="0" name="is_require_answer"/>
+			<field eval="0" name="is_comment_require"/>
+			<field name="type">multiple_choice_only_one_ans</field>
+			<field eval="1" name="req_ans"/>
+			<field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+			<field eval="0" name="make_comment_field"/>
+			<field eval="1" name="in_visible_menu_choice"/>
+			<field eval="1" name="in_visible_answer_type"/>
+			<field name="page_id" ref="survey_page_2_Community"/>
+			<field name="required_type">at least</field>
+			<field name="comment_label">Other (please specify)</field>
+			<field eval="1" name="in_visible_rating_weight"/>
+			<field eval="0" name="allow_comment"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_0_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Most Important</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_0_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_1_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Very Important</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_0_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_2_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Important</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_0_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_3_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Less Important</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_0_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_4_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Not Important</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_0_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_5_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Excellent</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_1_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_6_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Above Average</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_1_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_7_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Average</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_1_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_8_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Below Average</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_1_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_9_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">Poor</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_1_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_question_column_heading_10_Community" model="survey.question.column.heading">
+			<field eval="0" name="in_visible_menu_choice"/>
+			<field name="title">N/A</field>
+			<field eval="0" name="in_visible_rating_weight"/>
+			<field name="question_id" ref="survey_question_1_Community"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_0_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Email</field>
+			<field name="question_id" ref="survey_question_2_Community"/>
+			<field name="type">char</field>
+			<field eval="1" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_1_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">The quality of our responses to your questions and concerns.</field>
+			<field name="question_id" ref="survey_question_1_Community"/>
+			<field name="type">char</field>
+			<field eval="1" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_2_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">0 - 2 years</field>
+			<field name="question_id" ref="survey_question_9_Community"/>
+			<field name="type">char</field>
+			<field eval="1" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_3_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Name</field>
+			<field name="question_id" ref="survey_question_8_Community"/>
+			<field name="type">char</field>
+			<field eval="1" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_4_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Industry/marketplace knowledge</field>
+			<field name="question_id" ref="survey_question_0_Community"/>
+			<field name="type">char</field>
+			<field eval="1" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_5_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Phone</field>
+			<field name="question_id" ref="survey_question_2_Community"/>
+			<field name="type">char</field>
+			<field eval="2" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_6_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">3 - 5 years</field>
+			<field name="question_id" ref="survey_question_9_Community"/>
+			<field name="type">char</field>
+			<field eval="2" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_7_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Length of time in business</field>
+			<field name="question_id" ref="survey_question_0_Community"/>
+			<field name="type">char</field>
+			<field eval="2" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_8_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">The timeliness of our Representatives' response to your needs.</field>
+			<field name="question_id" ref="survey_question_1_Community"/>
+			<field name="type">char</field>
+			<field eval="2" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_9_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Company</field>
+			<field name="question_id" ref="survey_question_8_Community"/>
+			<field name="type">char</field>
+			<field eval="2" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_10_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">The knowledge level of your Representative.</field>
+			<field name="question_id" ref="survey_question_1_Community"/>
+			<field name="type">char</field>
+			<field eval="3" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_11_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Mail</field>
+			<field name="question_id" ref="survey_question_2_Community"/>
+			<field name="type">char</field>
+			<field eval="3" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_12_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Phone number</field>
+			<field name="question_id" ref="survey_question_8_Community"/>
+			<field name="type">char</field>
+			<field eval="3" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_13_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Consultative capabilities</field>
+			<field name="question_id" ref="survey_question_0_Community"/>
+			<field name="type">char</field>
+			<field eval="3" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_14_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">6 - 10 years</field>
+			<field name="question_id" ref="survey_question_9_Community"/>
+			<field name="type">char</field>
+			<field eval="3" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_15_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">10 + years</field>
+			<field name="question_id" ref="survey_question_9_Community"/>
+			<field name="type">char</field>
+			<field eval="4" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_16_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Your Representative keeps you informed of changes.</field>
+			<field name="question_id" ref="survey_question_1_Community"/>
+			<field name="type">char</field>
+			<field eval="4" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_17_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Face-to-Face</field>
+			<field name="question_id" ref="survey_question_2_Community"/>
+			<field name="type">char</field>
+			<field eval="4" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_18_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Technology and Tools provided</field>
+			<field name="question_id" ref="survey_question_0_Community"/>
+			<field name="type">char</field>
+			<field eval="4" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_19_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Email address</field>
+			<field name="question_id" ref="survey_question_8_Community"/>
+			<field name="type">email</field>
+			<field eval="4" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_20_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Other</field>
+			<field name="question_id" ref="survey_question_2_Community"/>
+			<field name="type">char</field>
+			<field eval="5" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_21_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Personal Referral</field>
+			<field name="question_id" ref="survey_question_0_Community"/>
+			<field name="type">char</field>
+			<field eval="5" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_22_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">How is our ability to anticipate your needs and provide assistance pro actively.</field>
+			<field name="question_id" ref="survey_question_1_Community"/>
+			<field name="type">char</field>
+			<field eval="5" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_23_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Lowest rate</field>
+			<field name="question_id" ref="survey_question_0_Community"/>
+			<field name="type">char</field>
+			<field eval="6" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_24_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Our products and services we provide meet your objectives.</field>
+			<field name="question_id" ref="survey_question_1_Community"/>
+			<field name="type">char</field>
+			<field eval="6" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_25_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Responsiveness to requests</field>
+			<field name="question_id" ref="survey_question_0_Community"/>
+			<field name="type">char</field>
+			<field eval="7" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_26_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">We are easy to work with.</field>
+			<field name="question_id" ref="survey_question_1_Community"/>
+			<field name="type">char</field>
+			<field eval="7" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_27_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Value-added services</field>
+			<field name="question_id" ref="survey_question_0_Community"/>
+			<field name="type">char</field>
+			<field eval="8" name="sequence"/>
+		</record>
+	</data>
+	<data>
+		<record id="survey_answer_28_Community" model="survey.answer">
+			<field eval="0" name="in_visible_answer_type"/>
+			<field name="answer">Overall, how do you rank our services to you.</field>
+			<field name="question_id" ref="survey_question_1_Community"/>
+			<field name="type">char</field>
+			<field eval="8" name="sequence"/>
 		</record>
 	</data>
 </openerp>

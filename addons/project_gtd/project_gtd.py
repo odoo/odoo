@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -49,7 +49,7 @@ class project_gtd_context(osv.osv):
         'sequence': lambda *args: 1
     }
     _order = "sequence, name"
-    
+
 project_gtd_context()
 
 
@@ -61,7 +61,7 @@ class project_gtd_timebox(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of timebox."),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
     }
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(project_gtd_timebox,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if (res['type']=='form') and ('record_id' in context):
@@ -123,14 +123,14 @@ class project_task(osv.osv):
         'timebox_id': fields.many2one('project.gtd.timebox', "Timebox"),
         'context_id': fields.many2one('project.gtd.context', "Context"),
      }
-    
+
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         default['timebox_id']=False
         default['context_id']=False
         return super(project_task,self).copy_data(cr, uid, id, default, context)
-    
+
     def _get_context(self,cr, uid, ctx):
         ids = self.pool.get('project.gtd.context').search(cr, uid, [], context=ctx)
         return ids and ids[0] or False
@@ -169,19 +169,19 @@ class project_task(osv.osv):
         timebox_obj = self.pool.get('project.gtd.timebox')
         if res['type'] == 'search':
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
-            search_extended ='''<newline/><group col="%d" expand="1" string="%s">''' % (len(tt)+6,_('Getting Things Done'))
-            search_extended += '''<filter domain="[('timebox_id','=', False)]" icon="gtk-new" string="Inbox"/>'''
+            search_extended ='''<newline/><group col="%d" expand="1" string="%s" groups="project_gtd.group_project_getting">''' % (len(tt)+7,_('Getting Things Done'))
+            search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="Inbox"/>'''
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
                 if time.icon:
                     icon = time.icon
                 else :
                     icon=""
-                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''"/>'''
+                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'set_visible':True}"/>'''
             search_extended += '''
             <separator orientation="vertical"/>
-            <field name="context_id" select="1" widget="selection"/> 
-            <field name="priority" select="1"/>
+            <field name="context_id" select="1" widget="selection" />
+            <field name="priority" select="1" />
             </group>
             </search> '''
         if search_extended:
@@ -191,7 +191,7 @@ class project_task(osv.osv):
             context_id_info['context_id']['selection'] = attrs_sel
             res['fields'].update(context_id_info)
         return res
- 
+
     # Override read for using this method if context set !!!
     #_order = "((55-ascii(coalesce(priority,'2')))*2 +  coalesce((date_start::date-current_date)/2,8))"
 project_task()

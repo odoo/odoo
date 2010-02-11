@@ -201,20 +201,19 @@ class account_account(osv.osv):
         }
         #get all the necessary accounts
         ids2 = self._get_children_and_consol(cr, uid, ids, context)
-        acc_set = ",".join(map(str, ids2))
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
         if ids2:
             query = self.pool.get('account.move.line')._query_get(cr, uid,
                     context=context)
-            cr.execute(("SELECT l.account_id as id, " +\
+            cr.execute("SELECT l.account_id as id, " +\
                     ' , '.join(map(lambda x: mapping[x], field_names)) +
                     "FROM " \
                         "account_move_line l " \
                     "WHERE " \
-                        "l.account_id IN (%s) " \
+                        "l.account_id =ANY(%s) " \
                         "AND " + query + " " \
-                    "GROUP BY l.account_id") % (acc_set, ))
+                    "GROUP BY l.account_id",(ids2,))
 
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
@@ -334,7 +333,7 @@ class account_account(osv.osv):
         if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
             return False
         while(ids):
-            cr.execute('select distinct child_id from account_account_consol_rel where parent_id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct child_id from account_account_consol_rel where parent_id =ANY(%s)',(ids,))
             child_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
             c_ids = child_ids
             if (p_id and (p_id in c_ids)) or (obj_self.id in c_ids):
@@ -774,7 +773,7 @@ class account_move(osv.osv):
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
-        cr.execute('select move_id,sum(debit) from account_move_line where move_id in ('+','.join(map(str,map(int, ids)))+') group by move_id')
+        cr.execute('select move_id,sum(debit) from account_move_line where move_id =ANY(%s) group by move_id',(ids,))
         result = dict(cr.fetchall())
         for id in ids:
             result.setdefault(id, 0.0)
@@ -819,6 +818,7 @@ class account_move(osv.osv):
             ('journal_pur_voucher','Journal Purchase'),
             ('journal_voucher','Journal Voucher'),
         ],'Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
+        'narration':fields.text('Narration', readonly=True, select=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
     }
     _defaults = {
@@ -872,7 +872,7 @@ class account_move(osv.osv):
                     if new_name:
                         self.write(cr, uid, [move.id], {'name':new_name})
 
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str, ids))+')', ('posted',))
+            cr.execute('update account_move set state=%s where id =ANY(%s) ',('posted',ids,))
         else:
             raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !'))
         return True
@@ -885,7 +885,7 @@ class account_move(osv.osv):
             if not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
         if len(ids):
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str, ids))+')', ('draft',))
+            cr.execute('update account_move set state=%s where id =ANY(%s)',('draft',ids,))
         return True
 
     def write(self, cr, uid, ids, vals, context={}):
@@ -1155,23 +1155,22 @@ class account_tax_code(osv.osv):
     """
     def _sum(self, cr, uid, ids, name, args, context, where =''):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
         if context.get('based_on', 'invoices') == 'payments':
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line, \
                         account_move AS move \
                         LEFT JOIN account_invoice invoice ON \
                             (invoice.move_id = move.id) \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
+                    WHERE line.tax_code_id =ANY(%s) '+where+' \
                         AND move.id = line.move_id \
                         AND ((invoice.state = \'paid\') \
                             OR (invoice.id IS NULL)) \
-                    GROUP BY line.tax_code_id')
+                    GROUP BY line.tax_code_id',(ids2,))
         else:
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
-                    GROUP BY line.tax_code_id')
+                    WHERE line.tax_code_id =ANY(%s) '+where+' \
+                    GROUP BY line.tax_code_id',(ids2,))
         res=dict(cr.fetchall())
         for record in self.browse(cr, uid, ids, context):
             def _rec_get(record):
@@ -1246,7 +1245,7 @@ class account_tax_code(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from account_tax_code where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -1749,15 +1748,6 @@ class account_config_wizard(osv.osv_memory):
     _name = 'account.config.wizard'
     _inherit = 'res.config'
 
-    def _get_charts(self, cr, uid, context):
-        module_obj=self.pool.get('ir.module.module')
-        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account Charts'),
-                                        ('state', '<>', 'installed')])
-        res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
-        res.append((-1, 'None'))
-        res.sort(key=lambda x: x[1])
-        return res
-
     _columns = {
         'name':fields.char(
             'Name', required=True, size=64,
@@ -1769,7 +1759,6 @@ class account_config_wizard(osv.osv_memory):
         'date2': fields.date('End Date', required=True),
         'period':fields.selection([('month','Month'), ('3months','3 Months')],
                                   'Periods', required=True),
-        'charts' : fields.selection(_get_charts, 'Charts of Account',required=True)
     }
     _defaults = {
         'code': lambda *a: time.strftime('%Y'),
@@ -1778,14 +1767,6 @@ class account_config_wizard(osv.osv_memory):
         'date2': lambda *a: time.strftime('%Y-12-31'),
         'period':lambda *a:'month',
     }
-    def install_account_chart(self, cr, uid, ids, context=None):
-        for res in self.read(cr,uid,ids):
-            chart_id = res['charts']
-            if chart_id > 0:
-                mod_obj = self.pool.get('ir.module.module')
-                mod_obj.button_install(cr, uid, [chart_id], context=context)
-        cr.commit()
-        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
     def execute(self, cr, uid, ids, context=None):
         for res in self.read(cr,uid,ids):
@@ -1805,7 +1786,6 @@ class account_config_wizard(osv.osv_memory):
                     res_obj.create_period(cr,uid,[new_id])
                 elif res['period']=='3months':
                     res_obj.create_period3(cr,uid,[new_id])
-        self.install_account_chart(cr,uid,ids)
 account_config_wizard()
 
 
@@ -1858,7 +1838,7 @@ class account_account_template(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select parent_id from account_account_template where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select parent_id from account_account_template where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -1978,7 +1958,7 @@ class account_tax_code_template(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code_template where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from account_tax_code_template where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False

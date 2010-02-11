@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-          <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools"/>
+          <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="15"/>
         <!--<menuitem name="Tools" id="menu_tools" icon="STOCK_PREFERENCES"/>
         <menuitem name="Lunch Order" parent="menu_tools" id="menu_lunch" sequence="1"/>
         <menuitem name="Reporting" parent="menu_tools" id="menu_lunch_reporting" sequence="4"/>
         <menuitem name="Lunch Orders" parent="menu_lunch_reporting" id="menu_lunch_reporting_order" sequence="1"/>
-        <menuitem name="Configuration" parent="menu_tools" id="menu_lunch_category_root" sequence="5"/>-->
+        <menuitem name="Configuration" parent="menu_tools" id="menu_lunch_category_root" sequence="5"/>
        <menuitem name="Tools" id="menu_tools" icon="STOCK_PREFERENCES"/>-->
 
         <menuitem name="Lunch Order" parent="base.menu_tools" id="menu_lunch" sequence="1"/>
-        <menuitem name="Reporting" parent="base.menu_tools" id="menu_lunch_reporting" sequence="4"/>
-        <menuitem name="Lunch Orders" parent="menu_lunch_reporting" id="menu_lunch_reporting_order" sequence="1"/>
-        <menuitem name="Configuration" parent="base.menu_tools" id="base.menu_lunch_survey_root" sequence="5"/>
+        <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="5"/>
+        <menuitem name="Lunch Orders" parent="base.menu_lunch_reporting" id="menu_lunch_reporting_order" sequence="1"/>
+        <menuitem name="Configuration" parent="base.menu_tools" id="base.menu_lunch_survey_root" sequence="6"/>
 
 
-       <menuitem name="Lunch" parent="base.menu_lunch_survey_root" id="menu_lunch_category_root_configuration" sequence="5"/>
+       <menuitem name="Lunch" parent="base.menu_lunch_survey_root" id="menu_lunch_category_root_configuration" sequence="1"/>
         <record model="ir.ui.view" id="view_lunch_order_form">
             <field name="name">Order</field>
             <field name="model">lunch.order</field>
@@ -54,11 +54,11 @@
 
 
         <record model="ir.actions.act_window" id="action_lunch_order_form">
-                <field name="name">Orders</field>
+                <field name="name">Lunch Orders</field>
                 <field name="res_model">lunch.order</field>
-                <field name="view_mode">form,tree</field>
+                <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="Order" parent="menu_lunch" id="menu_lunch_order_form" action="action_lunch_order_form"/>
+        <menuitem name="Lunch Order" parent="menu_lunch" id="menu_lunch_order_form" action="action_lunch_order_form"/>
 
 <!--        <record model="ir.actions.act_window" id="action_lunch_order_day_form">-->
 <!--                <field name="name"> Order of the day</field>-->

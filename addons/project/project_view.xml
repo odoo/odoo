@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-project" id="menu_main" name="Project Management"/>
-         <menuitem id="menu_project_management" name="Project Management" parent="menu_main" sequence="1"/>
-        <!-- <menuitem id="menu_tasks" name="Tasks" parent="menu_main"/>-->
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+        <menuitem id="menu_project_management" name="Project Management" parent="base.menu_main_pm" sequence="1"/>
 
-        <menuitem id="menu_pm_invoicing" name="Invoicing" parent="menu_main" sequence="7"/>
-        <menuitem id="menu_pm_budget" name="Budgets" parent="menu_pm_invoicing"/>
-        <menuitem action="account_budget.open_budget_post_form" id="menu_pm_budget_post_form" parent="menu_pm_budget"/>
-        <menuitem parent="menu_pm_budget"
-             id="menu_act_pm_crossovered_budget_view"
-             action="account_budget.act_crossovered_budget_view" />
-         <menuitem id="menu_definitions" name="Configuration" parent="project.menu_main" sequence="60"/>
-         <!--Time Tracking menu-->
- 		<menuitem
-             id="menu_project_management_time_tracking"
-             name="Time Tracking"
-             parent="menu_main" sequence="3"/>
-         <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="menu_project_management_time_tracking"
-             groups="hr.group_hr_manager"/>
-        <menuitem action="report_timesheet.action_random_timesheet_lines_board" id="menu_project_management_timesheet_lines_board" parent="menu_project_management_time_tracking"/>
-        <menuitem action="hr_attendance.si_so" id="menu_project_management_si_so" parent="menu_project_management_time_tracking" type="wizard"/>
+         <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -44,12 +28,13 @@
                             <field name="priority"/>
                             <field name="resource_calendar_id"/>
                             <field name="active" select="2"/>
+                            <newline/>
                             <field name="planned_hours" widget="float_time"/>
                             <field name="effective_hours" widget="float_time"/>
 
                             <newline/>
                             <separator colspan="4" string="Project's members"/>
-                            <field colspan="4" name="resource_ids" nolabel="1"/>
+                            <field colspan="4" name="members" nolabel="1"/>
                             <group col="9" colspan="8">
                                 <field name="state" select="1"/>
                                 <button name="set_template" string="Set as Template" type="object" states="open" icon="gtk-convert"/>
@@ -58,9 +43,9 @@
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-                                <button 
+                                <button
                                     string="New Project Based on Template"
-                                    name="%(wizard_duplicate_template)d"  type="action" 
+                                    name="%(wizard_duplicate_template)d"  type="action"
                                     states="template" icon="gtk-new"/>
                             </group>
                         </page>
@@ -83,8 +68,7 @@
                                 <label string="Date Stop: %%(date_stop)s"/>
                             </group>
                         </page>
-                        <page string="Tasks" groups="base.group_extended">
-                           <separator string="Task Types"/>
+                        <page string="Tasks Stages" groups="base.group_extended">
                            <field nolabel="1" name="type_ids" colspan="4"/>
                         </page>
                         <page string="Notes">
@@ -137,6 +121,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Projects">
+                    <field name="sequence" invisible="1"/>
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Partner"/>
@@ -148,7 +133,7 @@
                 </tree>
             </field>
         </record>
-        <!--<menuitem id="menu_all_project" parent="project.menu_main" name="Projects"/> -->
+        <!--<menuitem id="menu_all_project" parent="base.menu_main_pm" name="Projects"/> -->
 
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
@@ -168,7 +153,7 @@
             <field name="view_id" ref="view_project"/>
         </record>
         <!--<menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_definitions"/>-->
-		<menuitem  id="menu_template_project_specification" parent="project.menu_definitions" name="Specification" sequence="1"/>
+        <menuitem  id="menu_template_project_specification" parent="project.menu_definitions" name="Specification" sequence="1"/>
         <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_template_project_specification" name="Specification Template"/>
         <record id="view_task_work_form" model="ir.ui.view">
             <field name="name">project.task.work.form</field>
@@ -198,37 +183,6 @@
                 </tree>
             </field>
         </record>
-
-        <record id="view_my_project" model="ir.ui.view">
-            <field name="name">project.project.tree</field>
-            <field name="model">project.project</field>
-            <field name="type">tree</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="My projects">
-                    <field name="name" string="Project Name"/>
-                    <field name="partner_id" string="Partner"/>
-                    <field name="planned_hours" widget="float_time"/>
-                    <field name="effective_hours" widget="float_time"/>
-                    <field name="progress_rate" widget="progressbar"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
-       <record id="open_view_my_project_open" model="ir.actions.act_window">
-            <field name="name">Projects Structure</field>
-            <field name="res_model">project.project</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="view_id" ref="view_my_project"/>
-        </record>
-        <!--<menuitem
-            action="open_view_my_project_open"
-            id="menu_open_view_my_project_open"
-            parent="project.menu_all_project"/>-->
-
-    <!-- Wizard for compute remaining hours -->
 
         <record id="view_config_compute_remaining" model="ir.ui.view">
             <field name="name">Compute Remaining Hours </field>
@@ -268,10 +222,7 @@
                         <field name="name" select="1"/>
                         <field name="project_id" required="1" select="1"/>
                         <field name="total_hours" widget="float_time"/>
-                        <field name="date_start"/>
                         <field name="date_deadline" select="2"/>
-                        <field name="occupation_rate"/>
-                        <field name="date_end"/>
                         <field name="user_id" select="1"/>
                         <field name="progress" widget="progressbar"/>
                     </group>
@@ -313,7 +264,7 @@
                             </group>
                         </page>
                         <page groups="base.group_extended" string="Delegations">
-                        	<separator string="Parent Tasks" colspan="4"/>
+                            <separator string="Parent Tasks" colspan="4"/>
                             <field colspan="4" height="150" name="parent_ids" nolabel="1"/>
                             <separator string="Delegated tasks" colspan="4"/>
                             <field colspan="4" height="150" name="child_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
@@ -327,7 +278,6 @@
                                     <field name="date_deadline"/>
                                 </tree>
                             </field>
-                            <field colspan="4" name="history" nolabel="1"/>
                         </page>
 
                         <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','=','done')]}">
@@ -338,16 +288,18 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Dates" colspan="2"/>
-                                <field name="date_close" select="2"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="occupation_rate"/>
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="partner_id" select="2"/>
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <group col="4" colspan="2">
                                 <field name="type" widget="selection" />
-	    						<button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Type"/>
-                                <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Type"/>
-	                        </group>
+                                <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
+                                <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
+                            </group>
                             <field name="active" select="2"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="notes" nolabel="1"/>
@@ -367,59 +319,25 @@
                     <field name="name"/>
                     <field name="project_id" icon="gtk-indent"/>
                     <field name="user_id"/>
-                    <field name="date_deadline"/>
-                    <field name="remaining_hours" widget="float_time"/>
-                    <field name="type"/>
-                    <button name="next_type" states="draft,open,pending" string="Change Type" type="object" icon="gtk-go-forward" help="Change Type"/>
-                    <field name="progress" widget="progressbar"/>
-                    <field name="state"/>
-                    <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state"/>
+                    <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours"  invisible="context.get('set_visible',False)"/>
+                    <field name="date_deadline" invisible="context.get('set_visible',False)"/>
+                    <field name="type" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
+                    <field name="date_start" invisible="1"/>
+                    <field name="date_end" invisible="1"/>
+                    <button name="next_type" invisible="context.get('set_visible',False)"
+                        states="draft,open,pending"
+                        string="Change Stage"
+                        type="object"
+                        icon="gtk-go-forward"
+                        groups="base.group_extended"
+                        help="Change Type"/>
+                    <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
+                    <field name="state" invisible="context.get('set_visible',False)"/>
+                    <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
                     <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-execute" help="For changing to delegate state"/>
                     <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to" help="For changing to done state"/>
                     <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_task_tree3" model="ir.ui.view">
-            <field name="name">project.task.tree</field>
-            <field name="model">project.task</field>
-            <field name="type">tree</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <tree editable="top" colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
-                    <field name="sequence" string="Seq."/>
-                    <field name="name"/>
-                    <field name="project_id" icon="gtk-indent"/>
-                    <field name="user_id"/>
-                    <field name="date_deadline"/>
-                    <field name="remaining_hours" widget="float_time"/>
-                    <field name="progress" widget="progressbar"/>
-                    <field name="state"/>
-                    <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state"/>
-                    <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-execute" help="For changing to delegate state"/>
-                    <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to" help="For changing to done state"/>
-                    <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="my_pending_task" model="ir.ui.view">
-            <field name="name">my.pending.task.tree</field>
-            <field name="model">project.task</field>
-            <field name="type">tree</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
-                    <field name="sequence" string="Seq."/>
-                    <field name="name"/>
-                    <field name="project_id"/>
-                    <field name="delegated_user_id"/>
-                    <field name="date_deadline"/>
-                    <field name="remaining_hours" widget="float_time"/>
-                    <field name="progress" widget="progressbar"/>
-                    <field name="priority"/>
-                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -471,12 +389,14 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Draft" domain="[('state','=','draft')]" help="Draft Tasks" icon="terp-project"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Open and Draft Tasks" icon="terp-project" default="1"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
-                        <filter string="Pending" domain="[('state','=','pending')]" help="Pending Tasks" icon="terp-project"/>
+                        <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-project"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Deadlines" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-project"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1" widget="selection">
+                        <field name="project_id" select="1" widget="selection" default="context.get('project_id', False)">
                              <filter domain="[('manager_id','=',False)]" help="Unassigned Project" icon="terp-project"/>
                         </field>
                         <field name="user_id" select="1" widget="selection">
@@ -487,7 +407,12 @@
                     <group expand="1" string="Group By..." colspan="4" col="20">
                         <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="By Type" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="By Stage" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="By State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Deadline" icon="terp-project" domain="[]" context="{'group_by':'date_deadline'}"/>
+                        <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="End Date" icon="terp-project" domain="[]" context="{'group_by':'date_end'}"/>
                     </group>
                 </search>
             </field>
@@ -498,13 +423,11 @@
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
-            <field eval="False" name="view_id"/>
-            <field eval="True" name="filter"/>
+            <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        <!--<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_tasks"/> -->
-		<menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" name="Tasks" sequence="2"/>
+        <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="2"/>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
@@ -539,7 +462,7 @@
             <field name="model">project.task.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Task type">
+                <form string="Task Stage">
                     <field name="name" select="1"/>
                     <field name="sequence"/>
                     <field colspan="4" name="description" select="1"/>
@@ -551,8 +474,8 @@
             <field name="model">project.task.type</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Task type">
-                	<field name="sequence"/>
+                <tree string="Task Stage">
+                    <field name="sequence"/>
                     <field name="name"/>
                 </tree>
             </field>
@@ -618,7 +541,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <field name="password" position="after">
-                 <field name="context_project_id" completion="1"/>
+                 <field name="context_project_id" completion="1" widget="selection"/>
                 </field>
             </field>
         </record>
@@ -631,7 +554,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
              <page string="Current Activity" position="inside">
-                    <field name="context_project_id" completion="1" />
+                    <field name="context_project_id" completion="1" widget="selection" context="{'user_prefence':True}"/>
                 </page>
             </field>
         </record>
@@ -644,18 +567,19 @@
             <field name="arch" type="xml">
                 <form string="Messages">
                     <group colspan="6">
-                        <field name="subject" select="1"/>
-                        <field name="description"/>
-                        <field name="project_id" />
-                        <field name="date" select="2"/>
+                        <field name="subject" select="1" string="Title"/>
+                        <field name="project_id"/>
                         <field name="user_id" select="1"/>
-                    </group>
+                          <field name="date" select="2"/>
+                     </group>
+                        <separator string="Description"  colspan="4"/>
+                        <field name="description"  nolabel="1" colspan="4"/>
                 </form>
             </field>
        </record>
 
      <record id="view_project_message_tree" model="ir.ui.view">
-            <field name="name">project.message.form</field>
+            <field name="name">project.message.tree</field>
             <field name="model">project.message</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -677,7 +601,7 @@
             <field name="view_id" ref="view_project_message_tree"/>
        </record>
 
-		<!--<menuitem id="menu_message_main" name="Message" parent="menu_main"/>-->
+        <!--<menuitem id="menu_message_main" name="Message" parent="base.menu_main_pm"/>-->
         <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_project_management" sequence="11"/>
 
         <act_window domain="[('user_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>

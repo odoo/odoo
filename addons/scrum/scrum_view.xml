@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
-        
+
+
         <!--
               Usual views
               -->
-        
-        
+
+
         <!-- Scrum Project -->
-        
+
         <record id="view_scrum_project_form" model="ir.ui.view">
             <field name="name">scrum.project.form</field>
             <field name="model">scrum.project</field>
@@ -24,7 +24,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="view_scrum_project_tree" model="ir.ui.view">
             <field name="name">scrum.project.tree</field>
             <field name="model">scrum.project</field>
@@ -47,8 +47,8 @@
             <field name="view_id" ref="view_scrum_project_tree"/>
             <field name="domain">[('parent_id','=',False),('scrum','=',1)]</field>
         </record>
-        <menuitem id="next_id_67" name="Scrum" parent="project.menu_main"/><menuitem action="action_scrum_project_tree" id="menu_action_scrum_project_tree" parent="next_id_67"/>
-        
+        <menuitem id="next_id_67" name="Scrum" parent="base.menu_main_pm"/><menuitem action="action_scrum_project_tree" id="menu_action_scrum_project_tree" parent="next_id_67"/>
+
         <record id="action_scrum_project_form" model="ir.actions.act_window">
             <field name="name">Edit Projects</field>
             <field name="res_model">scrum.project</field>
@@ -57,12 +57,12 @@
             <field name="domain">[('scrum','=',1)]</field>
         </record>
         <menuitem action="action_scrum_project_form" id="menu_action_scrum_project_form" parent="scrum.menu_action_scrum_project_tree"/>
-        
-        
+
+
         <!--
        Product backlog
        -->
-        
+
         <record id="view_scrum_product_backlog_tree" model="ir.ui.view">
             <field name="name">scrum.product.backlog.tree</field>
             <field name="model">scrum.product.backlog</field>
@@ -80,7 +80,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_scrum_product_backlog_form" model="ir.ui.view">
             <field name="name">scrum.product.backlog.form</field>
             <field name="model">scrum.product.backlog</field>
@@ -111,7 +111,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_scrum_product_backlog_search">
 			<field name="name">scrum.product.backlog.search</field>
 			<field name="model">scrum.product.backlog</field>
@@ -123,7 +123,7 @@
 						<filter icon="terp-project" string="Open" domain="[('state','=','open')]" help="Open Backlogs"/>
 						<separator orientation="vertical"/>
 						<field name="name" select="1"/>
-                        <field name="project_id" select="1"/>
+                        <field name="project_id" select="1" default="context.get('project_id', False)"/>
                         <field name="sprint_id" select="1"/>
                         <field name="user_id" select="1"/>
                         <field name="state" select="1"/>
@@ -131,7 +131,7 @@
 				</search>
 			</field>
 		</record>
-		
+
         <record id="action_product_backlog_form" model="ir.actions.act_window">
             <field name="name">Backlogs</field>
             <field name="res_model">scrum.product.backlog</field>
@@ -139,11 +139,11 @@
             <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
         </record>
         <menuitem action="action_product_backlog_form" id="menu_action_product_backlog_form" parent="scrum.next_id_67"/>
-        
+
         <!--
               Scrum Sprint
        -->
-        
+
         <record id="view_scrum_sprint_tree" model="ir.ui.view">
             <field name="name">scrum.sprint.tree</field>
             <field name="model">scrum.sprint</field>
@@ -195,7 +195,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_scrum_sprint_search">
 			<field name="name">scrum.sprint.search</field>
 			<field name="model">scrum.sprint</field>
@@ -215,7 +215,7 @@
 				</search>
 			</field>
 		</record>
-		
+
         <record id="action_sprint_all_tree" model="ir.actions.act_window">
             <field name="name">Sprints</field>
             <field name="res_model">scrum.sprint</field>
@@ -224,12 +224,12 @@
             <field name="view_id" ref="view_scrum_sprint_tree"/>
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
         </record>
-        <menuitem action="action_sprint_all_tree" id="menu_action_sprint_all_tree" parent="scrum.next_id_67"/>        
+        <menuitem action="action_sprint_all_tree" id="menu_action_sprint_all_tree" parent="scrum.next_id_67"/>
 
         <!--
               Daily Meeting
        -->
-        
+
         <record id="view_scrum_meeting_tree" model="ir.ui.view">
             <field name="name">scrum.meeting.tree</field>
             <field name="model">scrum.meeting</field>
@@ -276,11 +276,11 @@
             <field name="view_id" ref="view_scrum_meeting_form"/>
         </record>
         <menuitem action="action_meeting_form" id="menu_action_meeting_form" parent="scrum.next_id_67"/>
-        
+
         <!--
        Clicks on a sprint: what a hack
        -->
-        
+
         <record id="action_sprint_task_open" model="ir.actions.act_window">
             <field name="res_model">project.task</field>
             <field name="name">View sprint Tasks</field>
@@ -295,7 +295,7 @@
             <field eval="'ir.actions.act_window,'+str(action_sprint_task_open)" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
+
         <record id="action_sprint_backlog_open" model="ir.actions.act_window">
             <field name="res_model">scrum.product.backlog</field>
             <field name="name">View sprint backlog</field>
@@ -310,11 +310,11 @@
             <field eval="'ir.actions.act_window,'+str(action_sprint_backlog_open)" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
+
         <!--
        Clicks on a project
        -->
-        
+
         <record id="dblc_proj" model="ir.actions.act_window">
             <field name="res_model">scrum.product.backlog</field>
             <field name="name">View project's backlog</field>
@@ -343,7 +343,7 @@
             <field eval="'ir.actions.act_window,'+str(dblc_proj2)" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
+
         <!--
         Tasks
         -->
@@ -361,7 +361,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="view_task_search_form" model="ir.ui.view">
             <field name="name">scrum.task.search</field>
             <field name="model">scrum.task</field>
@@ -382,23 +382,23 @@
             <field name="domain">[('scrum','=',1)]</field>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
-        
+
         <record id="action_view_scrum_task_tree_view" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="project.view_task_tree2"/>
             <field name="act_window_id" ref="action_view_task"/>
         </record>
-        
+
         <record id="action_view_scrum_task_form_view" model="ir.actions.act_window.view">
             <field eval="2" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_task_form2"/>
             <field name="act_window_id" ref="action_view_task"/>
         </record>
-        
+
         <menuitem action="action_view_task" id="menu_action_view_task" parent="scrum.next_id_67"/>
-        
+
         <record id="action_view_task6" model="ir.actions.act_window">
             <field name="name">Opened tasks</field>
             <field name="res_model">scrum.task</field>
@@ -407,6 +407,6 @@
             <field name="domain">[('state','=','open'),('scrum','=',1)]</field>
             <field name="filter" eval="True"/>
         </record>
-    
+
     </data>
 </openerp>

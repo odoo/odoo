@@ -39,7 +39,7 @@ class hr_employee_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee_category where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from hr_employee_category where id=ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -84,7 +84,7 @@ class hr_employee(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from hr_employee where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False

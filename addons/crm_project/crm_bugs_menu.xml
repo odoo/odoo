@@ -1,38 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
-
-
-    <record model="crm.case.categ" id="categ1">
-        <field name="name">Bugs</field>
-        <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
-    </record>
-    <record model="crm.case.categ" id="categ2">
-        <field name="name">Patches</field>
-        <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
-    </record>
-    <record model="crm.case.categ" id="categ3">
-        <field name="name">Feature Requests</field>
-        <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
-    </record>
-    <record model="crm.case.stage" id="stage2">
-        <field name="name">Fixed</field>
-        <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
-    </record>
-    <record model="crm.case.stage" id="stage5">
-        <field name="name">Awaiting Response</field>
-        <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>           
-    </record>    
-    <record model="crm.case.stage" id="stage7">
-        <field name="name">Future</field>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.project.bug')]" model="ir.model"/>   
-    </record>       
+<data noupdate="1">   
     
 
     ######################## BUG TRACKING (menu) ###########################
@@ -40,12 +8,12 @@
         ALL BUGS
     -->
     <record model="ir.actions.act_window" id="crm_case_categ_act0">
-        <field name="name">Bugs</field>
+        <field name="name">Issues</field>
         <field name="res_model">crm.project.bug</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_tree_view"/>
-        <field name="context" eval="{'default_state':'open'}"/>
+        <field name="domain" eval="[('categ_id','=',ref('bug_categ'))]"/>
         <field name="search_view_id" ref="view_crm_case_bugs_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view0">

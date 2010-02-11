@@ -3,7 +3,7 @@
     <data>
 
         <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager"/>
+            groups="group_mrp_user,group_mrp_manager" sequence="3"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
 		<menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="menu_mrp_root" sequence="1"/>
 
@@ -540,6 +540,11 @@
                        <field name="routing_id" select='1'/>
                        <field name="origin" select='1'/>
                     </group>
+					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+                        <filter string="By Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="By State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+					</group>
                </search>
             </field>
         </record>
@@ -669,16 +674,14 @@
             <field name="model">mrp.procurement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines">
-                    <field name="name"/>
+                <tree string="Procurement Lines" colors="red:state=='draft';black:state=='running';green:state=='confirmed';gray:state in ['done','cancel']">
+                    <field name="origin"/>
+                    <field name="date_planned" widget="date"/>                    
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" string="UOM"/>
-                    <field name="date_planned"/>
                     <field name="procure_method"/>
-                    <field name="origin"/>
                     <field name="state"/>
-                    <field name="message"/>
                 </tree>
             </field>
         </record>
@@ -696,7 +699,7 @@
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Planification"/>
-                        <field name="date_planned" select="1"/>
+                        <field name="date_planned" select="1" widget="date"/>
                         <field name="procure_method" select="2"/>
                         <field name="priority" groups="base.group_extended"/>
                     </group>
@@ -728,8 +731,10 @@
                         <field name="date_close" select="2"/>
                         <field name="close_move" groups="base.group_extended"/>
                         <field name="purchase_id"/>
-                        <separator colspan="4" string="Properties"/>
-                        <field colspan="4" name="property_ids" nolabel="1" groups="base.group_extended"/>
+                        <group colspan="4"  groups="base.group_extended">
+                            <separator colspan="4" string="Properties" />
+                            <field colspan="4" name="property_ids" nolabel="1"/>
+                        </group>
                     </page>
                     <page string="Notes">
                         <separator colspan="4" string="Note" />
@@ -745,14 +750,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
-                       <group col='8' colspan='4'>
+                    <group col='10' colspan='4'>
+                       <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" default="1" help="Procurement Orders in draft or open state."/>
                        <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement Orders with exceptions"/>
                        <separator orientation="vertical"/>
-                       <field name="name" select='1'/>
-                       <field name="product_id" select='1'/>
-                       <field name="date_planned" select='1'/>
-                       <field name="state" select='1'/>
+                       <field name="name"/>
+                       <field name="origin"/> 
+                       <field name="product_id" />
+                       <field name="date_planned" widget="date"/>
+                       <field name="state" />
                     </group>
+					<group expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="By Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="By Procurement Reason" icon="terp-mrp" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="By Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+					</group>
                 </search>
             </field>
         </record>
@@ -773,21 +785,13 @@
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','confirmed')]</field>
+            <field name="search_view_id" ref="view_mrp_procurement_filter"/>
+            <field name="domain">[]</field> 
+            <field name="context">{}</field>            
         </record>
 
       <menuitem action="mrp_procurement_action3" id="menu_procurement_requisitions" parent="purchase.menu_procurement_management"
-                  name="Requisitions" sequence="5" />
-		<record id="mrp_procurement_action_quotation" model="ir.actions.act_window">
-            <field name="name">Quotation Request</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','draft')]</field>
-        </record>
-	    <menuitem action="mrp_procurement_action_quotation" id="menu_procurement_request_quotation" parent="purchase.menu_procurement_management"
-                  name="Request for Quotations" sequence="6" />
+                  name="Requisitions" sequence="5" />	
 
 
 

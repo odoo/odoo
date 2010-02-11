@@ -45,7 +45,7 @@ The validation can be configured in te company:
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process','hr_attendance'],
+    'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',

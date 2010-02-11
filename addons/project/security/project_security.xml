@@ -37,47 +37,5 @@
     </record>
 
 
-    <!--rule for Tasks-->
-    <record model="ir.rule.group" id="project_task_rule_group">
-        <field name="name">project.task.rule.group</field>
-        <field name="model_id" search="[('model','=','project.task')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-    </record>
- 	<record id="project_task_rule" model="ir.rule">
-        <field name="domain_force">['|',('project_id','=',False),('project_id','in',[user.context_project_id])]</field>
-        <field name="rule_group" ref="project_task_rule_group"/>
-    </record>
-
-	<record model="ir.rule.group" id="project_task_work_rule_group">
-        <field name="name">project.task.work.rule.group</field>
-        <field name="model_id" search="[('model','=','project.task.work')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-    </record>
- 	<record id="project_task_work_rule" model="ir.rule">
-        <field name="domain_force">['|',('task_id.project_id','=',False),('task_id.project_id','in',[user.context_project_id])]</field>
-        <field name="rule_group" ref="project_task_work_rule_group"/>
-    </record>
-
-    <record model="ir.rule.group" id="project_project_rule_group">
-        <field name="name">project.project.work.rule.group</field>
-        <field name="model_id" search="[('model','=','project.project')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-    </record>
- 	<record id="project_project_rule" model="ir.rule">
-        <field name="domain_force">['|',('id','=',False),('id','in',[user.context_project_id])]</field>
-        <field name="rule_group" ref="project_project_rule_group"/>
-    </record>
-
-    <record model="ir.rule.group" id="project_message_rule_group">
-        <field name="name">project.project.work.rule.group</field>
-        <field name="model_id" search="[('model','=','project.message')]" model="ir.model"/>
-        <field name="global" eval="True"/>
-    </record>
- 	<record id="project_message_rule" model="ir.rule">
-        <field name="domain_force">['|',('project_id','=',False),('project_id','in',[user.context_project_id])]</field>
-        <field name="rule_group" ref="project_message_rule_group"/>
-    </record>
-
-
 </data>
 </openerp>

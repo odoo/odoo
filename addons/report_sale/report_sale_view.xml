@@ -64,6 +64,12 @@
 	                    <field name="month" select="1"/>
 	                    <field name="product_id" select="1"/>
 	                    <field name="state" select="1"/>
+	                    </group>	 
+                   		<group expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="By Year" icon="terp-sale" domain="[]"  context="{'group_by':'name'}"/>
+                        <filter string="By Month" icon="terp-sale" domain="[]" context="{'group_by':'month'}"/>
+                        <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="By Product" icon="terp-sale" domain="[]" context="{'group_by':'product_id'}"/>
                 	</group>
                 </search>
             </field>
@@ -77,8 +83,9 @@
             <field name="search_view_id" ref="view_order_product_search"/>
         </record>
 
-        <menuitem id="next_id_80" name="Reporting" parent="base.menu_base_partner" sequence="7"/>
-        <menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="next_id_80"/>
+		<menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="8"/>
+<!--        <menuitem id="base.next_id_80" name="Reporting" parent="base.menu_base_partner" sequence="7"/>-->
+        <menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="base.next_id_64" sequence="3"/>
 
         <!-- Sales by category by month -->
 
@@ -144,7 +151,14 @@
 	                    <field name="month" select="1"/>
 	                    <field name="category_id" select="1"/>
 	                    <field name="state" select="1"/>
-					</group>
+						</group>	                    
+                   		<group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="By Year" icon="terp-sale" domain="[]"  context="{'group_by':'name'}"/>
+                        <filter string="By Month" icon="terp-sale" domain="[]" context="{'group_by':'month'}"/>
+                        <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="By Category" icon="terp-sale" domain="[]" context="{'group_by':'category_id'}"/>
+						</group>	                    
+					
                 </search>
             </field>
         </record>
@@ -156,7 +170,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_order_category_search"/>
         </record>
-        <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="report_sale.next_id_80"/>
+        <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="base.next_id_64" sequence="4"/>
 
         <!-- Sales of the month -->
         <record id="view_order_graph" model="ir.ui.view">
@@ -177,7 +191,7 @@
             <field name="view_mode">graph,tree,form</field>
             <field name="domain">[('date_order','&gt;=',time.strftime('%Y-%m-01')),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
         </record>
-        <menuitem action="action_order_sale_list" id="menu_report_order_sale_list" parent="report_sale.next_id_80"/>
+        <menuitem action="action_order_sale_list" id="menu_report_order_sale_list" parent="base.next_id_64" sequence="5"/>
 
 		<record id="view_so_pipeline_graph" model="ir.ui.view">
              <field name="name">sale.order.dashboard.graph</field>

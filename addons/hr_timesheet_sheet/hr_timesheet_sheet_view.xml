@@ -19,6 +19,25 @@
             </field>
         </record>
 
+        <!-- Editable current timesheet used  in dashboard-->
+        <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheets" editable="top">
+                    <field name="user_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="name"/>
+                    <field name="total_attendance" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="total_timesheet"/>
+                    <field name="total_difference" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="hr_timesheet_account_form" model="ir.ui.view">
             <field name="name">hr.timesheet.account.form</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
@@ -46,7 +65,7 @@
                 </tree>
             </field>
         </record>
-<!-- 
+<!--
         <record id="hr_timesheet_day_form" model="ir.ui.view">
             <field name="name">hr.timesheet.day.form</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
@@ -61,7 +80,7 @@
                 </form>
             </field>
         </record>
- 
+
         <record id="hr_timesheet_day_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.day.tree</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
@@ -200,6 +219,14 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
+        <!--Time Tracking menu in project Management-->
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+          <menuitem
+             id="base.menu_project_management_time_tracking"
+             name="Time Tracking"
+             parent="base.menu_main_pm" sequence="3"/>
+         <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
+             groups="hr.group_hr_manager" sequence="5"/>
         <!--<menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/>-->
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
             groups="hr.group_hr_manager"/>

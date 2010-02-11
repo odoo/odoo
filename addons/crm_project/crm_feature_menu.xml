@@ -1,55 +1,35 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">   
-
-    
-    <record model="crm.case.categ" id="future_patch_categ">
-        <field name="name">Patches</field>
-        <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.future')]" model="ir.model"/>          
-    </record>
-    <record model="crm.case.stage" id="future_fixed_categ">
-        <field name="name">Fixed</field>
-        <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.future')]" model="ir.model"/>           
-    </record>
-    <record model="crm.case.stage" id="future_awaiting_categ">
-        <field name="name">Awaiting Response</field>
-        <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.project.future')]" model="ir.model"/>           
-    </record>  
-    
+<data noupdate="1">
     
 
     ######################## Future Request (menu) ###########################
-    <!--
-        ALL BUGS
-    -->
+    
     <record model="ir.actions.act_window" id="action_crm_case_future">
         <field name="name">Future Requests</field>
-        <field name="res_model">crm.project.future</field>
+        <field name="res_model">crm.project.bug</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
-        <field name="view_id" ref="crm_case_future_tree_view"/>
-        <field name="context" eval="{'default_state':'open'}"/>
-        <field name="search_view_id" ref="view_crm_case_future_filter"/>
+        <field name="view_id" ref="crm_case_tree_view"/>
+        <field name="domain" eval="[('categ_id','=',ref('feature_request_categ'))]"/>
+        <field name="search_view_id" ref="view_crm_case_bugs_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_future_tree_view0">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="crm_case_future_tree_view"/>
+        <field name="view_id" ref="crm_case_tree_view"/>
         <field name="act_window_id" ref="action_crm_case_future"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_future_calendar_view0">
         <field name="sequence" eval="2"/>
         <field name="view_mode">calendar</field>
-        <field name="view_id" ref="crm_case_future_calendar_view"/>
+        <field name="view_id" ref="crm_case_calendar_view"/>
         <field name="act_window_id" ref="action_crm_case_future"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_future_form_view0">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="crm_case_future_form_view"/>
+        <field name="view_id" ref="crm_case_form_view"/>
         <field name="act_window_id" ref="action_crm_case_future"/>
     </record>
 

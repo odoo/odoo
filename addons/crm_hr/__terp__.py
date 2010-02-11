@@ -40,6 +40,7 @@
         'crm_hr_menu.xml',
         'report_crm_hr_view.xml',
         'security/crm_hr_security.xml',
+        'security/ir.model.access.csv',
         'board_crm_hr_statistical_view.xml',
      ],
     'demo_xml': [
@@ -47,6 +48,5 @@
     ],
     'installable': True,
     'active': False,
-    'certificate': '',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
