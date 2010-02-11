@@ -25,10 +25,7 @@
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-    New Futures in Meeting:
-        *  Recurrent meeting
-        *  Alarms
-        *  Invitation facility
+    New Futures in Meeting:        
         *  Share meeting with other calendar clients like sunbird         
 """, 
     'author': 'Tiny', 
@@ -41,9 +38,7 @@
     ], 
 
     'update_xml': [        
-        'crm_caldav_wizard.xml', 
-        'crm_caldav_view.xml', 
-        'crm_caldav_menu.xml',         
+        'crm_caldav_wizard.xml',               
     ],
     'demo_xml': [], 
     'installable': True, 

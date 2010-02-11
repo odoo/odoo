@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,19 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+import wizard_cal_edit_event
 
-{
-    "name" : "Caldav task management", 
-    "version" : "1.0", 
-    "author" : "Tiny", 
-    "category" : "Generic Modules/Others", 
-    "description": """ Synchronize between Project task and Caldav Vtodo.""", 
-    "depends" : ["project", "caldav"], 
-    "init_xml" : ["project_caldav_data.xml"], 
-    "demo_xml" : [], 
-    "update_xml" : ["project_caldav_view.xml", 
-                                "project_caldav_wizard.xml"], 
-    "active": False, 
-    "website": "http://www.openerp.com", 
-    "installable": True, 
-}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
