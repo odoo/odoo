@@ -16,7 +16,7 @@
                                 <button string="Custom"
                 					name="%(caldav.action_calendar_custom_rrule_wizard)d"
                 					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}"
-                                    attrs="{'readonly': [('rrule_type','!=','custom')]}"
+                                    attrs="{'invisible': [('rrule_type','!=','custom')]}"
                                     />
                                 <button string="Edit" help="Edit only this Occurrency Meeting" attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
                     			name="%(base_calendar.wizard_edit_this_event)d" icon="gtk-save"
