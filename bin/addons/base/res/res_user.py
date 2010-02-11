@@ -299,7 +299,7 @@ class users(osv.osv):
                 res = getattr(user,k) or False
                 if isinstance(res, browse_record):
                     res = res.id
-                result[k[8:]] = res
+                result[k[8:]] = res or False
         return result
 
     def action_get(self, cr, uid, context={}):
