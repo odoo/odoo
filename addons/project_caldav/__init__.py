@@ -19,6 +19,6 @@
 #
 ##############################################################################
 
-import project_calendar
+import project_caldav
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
