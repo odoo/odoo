@@ -144,7 +144,7 @@ class purchase_order(osv.osv):
 
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
-        'origin': fields.char('Origin', size=64,
+        'origin': fields.char('Source Document', size=64,
             help="Reference of the document that generated this purchase order request."
         ),
         'partner_ref': fields.char('Supplier Reference', size=64),
@@ -471,7 +471,7 @@ class purchase_order_line(osv.osv):
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False, fiscal_position=False, date_planned=False, 
+            partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
@@ -513,7 +513,7 @@ class purchase_order_line(osv.osv):
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
 
 
-        res = {'value': {'price_unit': price, 'name': name or prod_name, 
+        res = {'value': {'price_unit': price, 'name': name or prod_name,
             'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
             'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
             'product_qty': qty,

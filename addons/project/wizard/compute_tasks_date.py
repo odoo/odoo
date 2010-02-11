@@ -89,6 +89,7 @@ class wizard_compute_tasks(wizard.interface):
             task_ids.sort()
             task_obj = task_pool.browse(cr,uid,task_ids)
             task_1 = task_obj[0]
+
             date_start = datetime.datetime.strftime(datetime.datetime.strptime(project.date_start,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
             calendar_id = project.resource_calendar_id.id
 
@@ -210,7 +211,6 @@ class wizard_compute_tasks(wizard.interface):
                 while loop_no <= task_no:
                     s_date = t.start.to_datetime()
                     e_date = t.end.to_datetime()
-                    print 'Start Date And End Date:::',s_date,e_date,t.name,t.booked_resource
                     if loop_no != 0:
                         user_id = user_pool.search(cr,uid,[('name','=',t.booked_resource[0].__name__)])
                         task_pool.write(cr,uid,[task_obj[loop_no - 1].id],{'date_start':s_date,'date_end':e_date,'user_id':user_id[0]})

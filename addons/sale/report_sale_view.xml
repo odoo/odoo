@@ -7,10 +7,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sale Orders">
-                	<field name="partner_id" invisible="True"/>
+                	<field name="name"/>
+                	<field name="partner_id"/>
                     <field name="date_order"/>
-                    <field name="invoiced_rate"/>
-                    <field name="picked_rate"/>
+                    <field name="invoiced_rate" widget="progressbar"/>
+                    <field name="picked_rate" widget="progressbar"/>
                     <field name="amount_untaxed"/>
                     <field name="amount_tax"/>
                     <field name="amount_total" sum="Total Amount"/>
@@ -20,7 +21,7 @@
         </record>
 
         <record id="action_sale_order_report_all" model="ir.actions.act_window">
-            <field name="name">Sale Orders By Customer </field>
+            <field name="name">Sale Orders By Partner </field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
@@ -49,8 +50,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sale Orders by Product">
-                    <field name="name"/>
-                    <field name="order_id" invisible="True"/>
+                    <field name="order_id"/>
                     <field name="product_uom_qty" />
                     <field name="product_uos_qty"/>
                     <field name="product_uos"/>

@@ -77,7 +77,7 @@
                                 -->
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
 
-                                <button name="%(pos_return_picking)d" string="Return Packing" type="action" icon="gtk-ok" states="paid"
+                                <button name="%(pos_return_picking)d" string="Return Picking" type="action" icon="gtk-ok" states="paid"
                                     attrs="{'invisible':[('state','!=','paid'),('state','!=','invoiced')]}"/>
 
                             </group>
@@ -167,7 +167,7 @@
         </record>
         <menuitem name="Point of Sale" id="menu_point_root" sequence="10"/>
         <menuitem name="Point of Sale" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
-        <menuitem name="New Sale" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
+        <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
 		<menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale" sequence="2" name="Products"/>
 
         <!--  POS Order view (date_payment)  -->

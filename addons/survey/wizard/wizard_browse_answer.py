@@ -30,11 +30,32 @@ from tools.translate import _
 
 _survey_form = '''<?xml version="1.0"?>
 <form string="Browse Answer">
-    <field name="response_ids" colspan="4" nolabel="1"/>
+    <separator string="Responses" colspan="4"/>
+     <field name="response_ids" colspan="4" nolabel="1"/>
+    <separator string="Print Option" colspan="4"/>
+    <field name="orientation" colspan="4"/>
+    <field name="paper_size" colspan="4"/>
+    <field name="page_number" colspan="4"/>
+    <field name="without_pagebreak" colspan="4"/>
 </form>'''
 
 _survey_fields = {
-    'response_ids': {'string': 'Survey', 'type': 'many2many', 'relation': 'survey.response'},
+    'response_ids': {'string': 'Survey', 'type': 'many2many', 'relation': 'survey.response','required':'1'},
+    'orientation':{
+        'string':"Orientation",
+        'type':'selection',
+        'selection':[('vertical','Portrait(Vertical)'),
+                     ('horizontal','Landscape(Horizontal)')],
+        'default': lambda *a:'vertical'},
+    'paper_size':{
+        'string':"Paper Size",
+        'type':'selection',
+        'selection':[('letter','Letter (8.5" x 11")'),
+                     ('legal','Legal (8.5" x 14")'),
+                     ('a4','A4 (210mm x 297mm)')],
+        'default': lambda *a:'letter'},
+    'page_number': {'string':'Include Page Numbers', 'type':'boolean', 'default':lambda *a: 0},
+    'without_pagebreak': {'string':'Print Without Page Breaks', 'type':'boolean', 'default':lambda *a: 0},
     }
 
 class browse_answer_wizard(wizard.interface):

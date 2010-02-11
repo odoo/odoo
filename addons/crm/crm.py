@@ -904,7 +904,7 @@ class users(osv.osv):
     _inherit = 'res.users'
     _description = "Users"
     _columns = {
-        'context_section_id': fields.selection(_section_get, 'Sales Section'),
+        'context_section_id': fields.many2one('crm.case.section', 'Sales Section'),
     }
 users()
 

@@ -153,17 +153,16 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-purchase" string="To Invoice" domain="[('invoiced','=',1)]" separator="1"/>
                     <separator orientation="vertical"/>
-                    <field name="name" select="1"/>
+                    <field name="name" select="1" string="Reference"/>
                     <field name="partner_id" select="1"/>
                     <field name="product_id" select="1"/>
                     <field name="create_uid" select="1" widget="selection">
-                        <filter icon="terp-purchase" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>
-                        <filter icon="terp-purchase" domain="[('create_uid','child_of',[uid])]" help="My Departments Purchase Orders"/>
+                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>                        
                     </field>
                 </group>
-  				<group expand="context.get('report',False)" string="Group By..." colspan="4" col="10">
-					<filter string="By Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>
-					<filter string="By State" icon="terp-purchase" domain="[]"  context="{'group_by':'state'}"/>
+  				<group expand="1" string="Group By..." colspan="4" col="10">
+					<filter string="By Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>	
+                    <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>				
 					<filter string="By Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
 				</group>
               </search>
@@ -176,10 +175,11 @@
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="domain">[('state','=','draft')]</field>
-            <field name="view_mode">tree,form</field>            
+            <field name="view_mode">tree,form</field>  
+            <field name="search_view_id" ref="view_purchase_order_filter"/>          
         </record>
-	    <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management"
-                  name="Request for Quotations" sequence="6" />
+	    <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management" 
+	    		name="Request for Quotations" sequence="6"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
@@ -207,15 +207,16 @@
             <field name="arch" type="xml">
                 <tree string="Purchase Order">
                     <field name="name" string="Reference"/>
-                    <field name="date_order"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="minimum_planned_date"/>
+                    <field name="origin"/>
+                    <field name="date_order" string="Order Date"/>
                     <field name="partner_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="location_id"/>
+                    <field name="minimum_planned_date"/>
                     <field name="invoiced_rate" widget="progressbar"/>
                     <field name="shipped_rate" widget="progressbar"/>
-                    <field name="amount_untaxed"/>
-                    <field name="origin"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount"/>                               
+                    <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -233,7 +234,7 @@
                             <field context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
                             <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
                             <field colspan="4" name="name"/>
-                            <field name="date_planned"/>
+                            <field name="date_planned" widget="date"/>
                             <field name="price_unit"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="price_subtotal" readonly="1"/>
@@ -263,7 +264,7 @@
                 <tree colors="red:date_planned&lt;=current_date;black:date_planned&gt;current_date" string="Purchase Order Lines">
                     <field name="order_id"/>
                     <field name="name"/>
-                    <field name="date_planned"/>
+                    <field name="date_planned" widget="date"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
