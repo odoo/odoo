@@ -63,26 +63,27 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Invitation details">
-            		<field name="user_id"
-            			on_change="onchange_user_id(user_id)" readonly="1" />
-            		<field name="email" select="1" readonly="1" />
-                    <field name="partner_id" select="1" readonly="1" />
-                    <field name="partner_address_id" select="1" readonly="1" />
-            		<newline />
-            		<field name="role" select="1" readonly="1" string="Role" />
-            		<field name="cutype" select="1" readonly="1"  string="Invite type" />
-            		<newline />
-            		<field name="rsvp" readonly="1" />
+            		<field name="email" string="Invitation To"/> 
+                    <field name="sent_by_uid" string="Invitation From"/>
             		<notebook colspan="4">
-            			<page string="Events">
-            				<field name="event_date" />
-                            <field name="event_end_date" />
-            				<newline />
-            				<field name="sent_by_uid" readonly="1"/>
-            				<field name="dir" widget='url' readonly="1"/>
-            				<field name="language" readonly="1"/>
-            				<newline />
-            				<field name="ref" colspan="4" readonly="1"/>
+            			<page string="Invitation">
+                            <separator string="Invitation Detail" colspan="4" />
+                            <group colspan="4" col="4">
+                                <field name="user_id" string="Invited User"/>
+                                <newline/>
+                                <field name="partner_id" string="Partner"/>
+                                <field name="partner_address_id" string="Contact"/>
+                                <field name="role" string="Role" />
+                                <field name="cutype" string="Invitation type" />
+                                <field name="rsvp" /> 
+                            </group>
+                            <separator string="Event Detail" colspan="4" />
+                            <group colspan="4" col="4">
+                                <field name="event_date" />
+                                <field name="event_end_date" />
+                                <field name="language"/>
+                                <field name="ref" colspan="4"/>
+                            </group>
             			</page>
             			<page string="Delegation Info">
             				<separator string="Delegated From" colspan="4" />
@@ -117,8 +118,8 @@
             <field name="model">calendar.attendee</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Invitation details" editable="top">
-            		<field name="email" />
+            	<tree string="Invitation details">
+            		<field name="email" string="Invitation To"/>
                     <field name="partner_id" string="Partner" />
                     <field name="partner_address_id" string="Contact" />
             		<field name="role" />            		
