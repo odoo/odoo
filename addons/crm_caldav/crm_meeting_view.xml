@@ -100,6 +100,31 @@
                     </xpath>
                 </field>
         </record>
+
+
+        <record id="attendee_form_view_inherit" model="ir.ui.view">
+                <field name="name">calendar.attendee.form.inherit</field>
+                <field name="model">calendar.attendee</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="caldav.caldav_attendee_form_view"/>                
+                <field name="arch" type="xml">
+                    <field name="language" position="after">
+                        <field name="categ_id" string="Event Type"/>
+                    </field>
+                </field>
+        </record>
+
+        <record id="attendee_tree_view_inherit" model="ir.ui.view">
+                <field name="name">calendar.attendee.tree.inherit</field>
+                <field name="model">calendar.attendee</field>
+                <field name="type">tree</field>
+                <field name="inherit_id" ref="caldav.caldav_attendee_tree_view"/>                
+                <field name="arch" type="xml">
+                    <field name="role" position="after">
+                        <field name="categ_id" string="Event Type"/>
+                    </field>
+                </field>
+        </record>
         
 	</data>
 </openerp>

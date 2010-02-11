@@ -62,7 +62,7 @@
             <field name="model">calendar.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string="Atendee details">
+            	<form string="Invitation details">
             		<field name="user_id"
             			on_change="onchange_user_id(user_id)" readonly="1" />
             		<field name="email" select="1" readonly="1" />
@@ -70,11 +70,11 @@
                     <field name="partner_address_id" select="1" readonly="1" />
             		<newline />
             		<field name="role" select="1" readonly="1" string="Role" />
-            		<field name="cutype" select="1" readonly="1"  string="Invitation type" />
+            		<field name="cutype" select="1" readonly="1"  string="Invite type" />
             		<newline />
             		<field name="rsvp" readonly="1" />
             		<notebook colspan="4">
-            			<page string="Details">
+            			<page string="Events">
             				<field name="event_date" />
                             <field name="event_end_date" />
             				<newline />
@@ -117,10 +117,11 @@
             <field name="model">calendar.attendee</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Atendee details" editable="top">
-            		<field name="email" select="1" />
-            		<field name="role" select="1" />
-            		<field name="cutype" select="1" />
+            	<tree string="Invitation details" editable="top">
+            		<field name="email" />
+                    <field name="partner_id" string="Partner" />
+                    <field name="partner_address_id" string="Contact" />
+            		<field name="role" />            		
             		<field name="state" />
             	</tree>
             </field>

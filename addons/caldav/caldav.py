@@ -314,7 +314,7 @@ class calendar_attendee(osv.osv):
                     obj = model_obj.read(cr, uid, res_id, ['date'])[0]
                     result[id][name] = obj.get('date')
                 else:
-                    result[id][name] = None
+                    result[id][name] = False
             if name == 'event_end_date':
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
@@ -322,7 +322,7 @@ class calendar_attendee(osv.osv):
                     obj = model_obj.read(cr, uid, res_id, ['date_deadline'])[0]
                     result[id][name] = obj.get('date_deadline')
                 else:
-                    result[id][name] = None
+                    result[id][name] = False
             if name == 'sent_by_uid':
                 if attdata.ref:
                     model, res_id = tuple(attdata.ref.split(','))
@@ -353,8 +353,8 @@ class calendar_attendee(osv.osv):
     _columns = {
         'cutype': fields.selection([('individual', 'Individual'), \
                     ('group', 'Group'), ('resource', 'Resource'), \
-                    ('room', 'Room'), ('unknown', 'Unknown') ], \
-                    'User Type', help="Specify the type of calendar user"), 
+                    ('room', 'Room'), ('unknown', '') ], \
+                    'Invite Type', help="Specify the type of Invitation"), 
         'member': fields.char('Member', size=124, 
                     help="Indicate the groups that the attendee belongs to"), 
         'role': fields.selection([('req-participant', 'Participation required'), \
@@ -438,7 +438,7 @@ request was delegated to"),
                                 att2.email) +  ' - Status: ' + att2.state.title())
             body_vals = {'name': res_obj.name, 
                         'start_date': res_obj.date, 
-                        'end_date': res_obj.date_deadline or None, 
+                        'end_date': res_obj.date_deadline or False, 
                         'description': res_obj.description or '-', 
                         'location': res_obj.location or '-', 
                         'attendees': '<br>'.join(att_infos), 
@@ -737,7 +737,7 @@ defines the list of date/time exceptions for arecurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
 rule or repeating pattern for anexception to a recurrence set"), 
         'rrule': fields.char('Recurrent Rule', size=124), 
-        'rrule_type': fields.selection([('none', 'None'), ('daily', 'Daily'), \
+        'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'), 
         'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
@@ -745,7 +745,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         'recurrent_uid': fields.integer('Recurrent ID'), 
         'recurrent_id': fields.datetime('Recurrent ID date'), 
         'vtimezone': fields.selection(_tz_get, 'Timezone', size=64), 
-        'user_id': fields.many2one('res.users', 'Responsible'), 
+        'user_id': fields.many2one('res.users', 'Responsible'),        
     }
     
     _defaults = {
