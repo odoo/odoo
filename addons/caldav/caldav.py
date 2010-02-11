@@ -755,8 +755,8 @@ rule or repeating pattern for anexception to a recurrence set"),
     
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         if not user_id:
-            return {'value': {'vtimezone': None}}
-        value = {'vtimezone': None}
+            return {'value': {'vtimezone': False}}
+        value = {'vtimezone': False}
         cr.execute('select context_tz from res_users where id=%s' % (user_id))
         timezone = cr.fetchone()[0]
         if timezone:
