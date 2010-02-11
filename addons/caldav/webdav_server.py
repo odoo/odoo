@@ -28,7 +28,7 @@
 
 
 import netsvc
-from dav_fs import tinydav_handler
+from caldav_fs import tinydav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
 from service.websrv_lib import HTTPDir,FixSendError

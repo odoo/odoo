@@ -24,25 +24,23 @@
     "name" : "Basic Calendar Functionality", 
     "version" : "1.0", 
     "depends" : [
-                    "base", 
+                    "caldav", 
                 ], 
      'description': """
- Contains basic functionality for caldav system like:
-  - Maintenance of basic objects needed for caldav calendar
-      * Event(Meeting)
-      * Todo(Task)
-      * Reminder
-      * Attendee
-  - Availabilities of synchronisation using WebDAV
+ Full featured calendar system that support:
+  - Alerts (create requests)
+  - Recurring events (*)
+  - Invitations to others people
 """, 
     "author" : "Tiny", 
     'category': 'Generic Modules/Others', 
     'website': 'http://www.openerp.com', 
-    "init_xml" : ["base_calendar_data.xml"], 
+    "init_xml" : [
+                   'base_calendar_data.xml'
+                   ], 
     "demo_xml" : [], 
     "update_xml" : [
                     'security/ir.model.access.csv', 
-                    'base_calendar_wizard.xml', 
                     'base_calendar_view.xml'
                     ], 
     "installable" : True, 
