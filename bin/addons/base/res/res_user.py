@@ -229,7 +229,7 @@ class users(osv.osv):
     def _get_company(self,cr, uid, context={}, uid2=False):
         if not uid2:
             uid2 = uid
-        user = self.pool.get('res.users').browse(cr, uid, uid2, context)        
+        user = self.pool.get('res.users').browse(cr, uid, uid2, context)
         return user.company_id.id
 
     def _get_menu(self,cr, uid, context={}):
@@ -296,13 +296,12 @@ class users(osv.osv):
         result = {}
         for k in self._columns.keys():
             if k.startswith('context_'):
-                res = getattr(user,k)
+                res = getattr(user,k) or False
                 if isinstance(res, browse_record):
-                    res = res.id 
-                result[k[8:]] = res        
+                    res = res.id
+                result[k[8:]] = res
         return result
 
-    
     def action_get(self, cr, uid, context={}):
         dataobj = self.pool.get('ir.model.data')
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
@@ -312,7 +311,7 @@ class users(osv.osv):
     def login(self, db, login, password):
         if not password:
             return False
-        cr = pooler.get_db(db).cursor()    
+        cr = pooler.get_db(db).cursor()
         cr.execute('select id from res_users where login=%s and password=%s and active', (tools.ustr(login), tools.ustr(password)))
         res = cr.fetchone()
         cr.close()
@@ -333,8 +332,8 @@ class users(osv.osv):
         cached_pass = self._uid_cache.get(db, {}).get(uid)
         if (cached_pass is not None) and cached_pass == passwd:
             return True
-        cr = pooler.get_db(db).cursor()    
-        cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))    
+        cr = pooler.get_db(db).cursor()
+        cr.execute('select count(1) from res_users where id=%s and password=%s and active=%s', (int(uid), passwd, True))
         res = cr.fetchone()[0]
         cr.close()
         if not bool(res):
@@ -350,14 +349,14 @@ class users(osv.osv):
     def access(self, db, uid, passwd, sec_level, ids):
         if not passwd:
             return False
-        cr = pooler.get_db(db).cursor()    
+        cr = pooler.get_db(db).cursor()
         cr.execute('select id from res_users where id=%s and password=%s', (uid, passwd))
         res = cr.fetchone()
         cr.close()
         if not res:
             raise security.ExceptionNoTb('Bad username or password')
         return res[0]
-   
+
 users()
 
 class config_users(osv.osv_memory):
