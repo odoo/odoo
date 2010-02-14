@@ -121,8 +121,9 @@ class _dttime_format(str, _format):
     def __str__(self):
         if self.val:
             if getattr(self,'name', None):
-                datetime = datetime.strptime(self.name, DHM_FORMAT)
-                return datetime.strftime(self.lang_obj.date_format+ " " + self.lang_obj.time_format)
+                return datetime.strptime(self.name, DHM_FORMAT)\
+                       .strftime("%s %s"%(self.lang_obj.date_format,
+                                          self.lang_obj.time_format))
         return self.val
 
 
