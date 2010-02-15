@@ -20,7 +20,19 @@
                 </field>
             </field>
         </record>
-
+        
+        <record id="view_account_analytic_account_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="company_currency_id" select="2" position="replace">
+                    <field name="currency_id" select="2"/>
+                </field>
+            </field>
+        </record>
+            
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>

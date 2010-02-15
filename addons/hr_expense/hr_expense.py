@@ -210,12 +210,18 @@ class hr_expense_line(osv.osv):
         'date_value' : lambda *a: time.strftime('%Y-%m-%d'),
     }
     _order = "sequence"
-    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, context={}):
+    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context={}):
         v={}
         if product_id:
             product=self.pool.get('product.product').browse(cr,uid,product_id, context=context)
             v['name']=product.name
-            v['unit_amount']=product.standard_price
+            
+            # Compute based on pricetype of employee company
+            pricetype_id = self.pool.get('hr.employee').browse(cr,uid,employee_id).user_id.company_id.property_valuation_price_type.id
+            pricetype=self.pool.get('product.price.type').browse(cr,uid,pricetype_id)
+            amount_unit=product.price_get(pricetype.field, context)[product.id]
+            
+            v['unit_amount']=amount_unit
             if not uom_id:
                 v['uom_id']=product.uom_id.id
         return {'value':v}

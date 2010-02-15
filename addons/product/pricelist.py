@@ -62,6 +62,7 @@ class price_type(osv.osv):
         "active": lambda *args: True,
         "currency_id": _get_currency
     }
+    
 price_type()
 
 #----------------------------------------------------------

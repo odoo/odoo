@@ -33,65 +33,19 @@ class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _description = 'Analytic Accounts'
 
-    def _credit_calc(self, cr, uid, ids, name, arg, context={}):
-
-        where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount<0 and a.id =ANY(%s) GROUP BY a.id",(ids,))
-        r = dict(cr.fetchall())
-        for i in ids:
-            r.setdefault(i,0.0)
-        return r
-
-    def _debit_calc(self, cr, uid, ids, name, arg, context={}):
-
-        where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount>0 and a.id =ANY(%s) GROUP BY a.id" ,(ids,))
-        r= dict(cr.fetchall())
-        for i in ids:
-            r.setdefault(i,0.0)
-        return r
-
-    def _balance_calc(self, cr, uid, ids, name, arg, context={}):
-        res = {}
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        for i in ids:
-            res.setdefault(i,0.0)
-        if not ids2:
-            return res
-
-        where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id =ANY(%s) GROUP BY a.id",(ids2,))
-
-        for account_id, sum in cr.fetchall():
-            res[account_id] = sum
-
-        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id =ANY(%s)",(ids2,))
-
+    def _compute_currency_for_level_tree(self, cr, uid, ids, ids2, res, acc_set, context={}):
+        # Handle multi-currency on each level of analytic account
+        # This is a refactoring of _balance_calc computation
+        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id in (%s)" % acc_set)
         currency= dict(cr.fetchall())
-
         res_currency= self.pool.get('res.currency')
         for id in ids:
             if id not in ids2:
                 continue
             for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
-                if child <> id:
+                if child != id:
                     res.setdefault(id, 0.0)
-                    if  currency[child]<>currency[id]:
+                    if  currency[child]!=currency[id]:
                         res[id] += res_currency.compute(cr, uid, currency[child], currency[id], res.get(child, 0.0), context=context)
                     else:
                         res[id] += res.get(child, 0.0)
@@ -104,24 +58,88 @@ class account_analytic_account(osv.osv):
 
         return dict([(i, res[i]) for i in ids ])
 
-    def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
-        #XXX must convert into one uom
+
+    def _credit_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-
+        
         for i in ids:
             res.setdefault(i,0.0)
-
-        if not acc_set:
+            
+        if not ids2:
             return res
-
+            
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency<0 and a.id =ANY(%s) GROUP BY a.id",(ids2,))
+        r = dict(cr.fetchall())
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
+        
+    def _debit_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        acc_set = ",".join(map(str, ids2))
+        
+        for i in ids:
+            res.setdefault(i,0.0)
+            
+        if not ids2:
+            return res
+        
+        where_date = ''
+        if context.get('from_date',False):
+            where_date += " AND l.date >= '" + context['from_date'] + "'"
+        if context.get('to_date',False):
+            where_date += " AND l.date <= '" + context['to_date'] + "'"
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency>0 and a.id =ANY(%s) GROUP BY a.id" ,(ids2,))
+        r= dict(cr.fetchall())
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
+        
+    def _balance_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        acc_set = ",".join(map(str, ids2))
+        
+        for i in ids:
+            res.setdefault(i,0.0)
+            
+        if not ids2:
+            return res
+        
+        where_date = ''
+        if context.get('from_date',False):
+            where_date += " AND l.date >= '" + context['from_date'] + "'"
+        if context.get('to_date',False):
+            where_date += " AND l.date <= '" + context['to_date'] + "'"
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id =ANY(%s) GROUP BY a.id",(ids2,))
+        
+        for account_id, sum in cr.fetchall():
+            res[account_id] = sum
 
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
+                
+    def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
+        #XXX must convert into one uom
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        acc_set = ",".join(map(str, ids2))
+        
+        for i in ids:
+            res.setdefault(i,0.0)
+            
+        if not ids2:
+            return res
+        
+        where_date = ''
+        if context.get('from_date',False):
+            where_date += " AND l.date >= '" + context['from_date'] + "'"
+        if context.get('to_date',False):
+            where_date += " AND l.date <= '" + context['to_date'] + "'"
+            
         cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
                 FROM account_analytic_account a \
                     LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
@@ -134,7 +152,7 @@ class account_analytic_account(osv.osv):
             if id not in ids2:
                 continue
             for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
-                if child <> id:
+                if child != id:
                     res.setdefault(id, 0.0)
                     res[id] += res.get(child, 0.0)
         return dict([(i, res[i]) for i in ids])
@@ -161,11 +179,14 @@ class account_analytic_account(osv.osv):
             result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code) or False
         return result
 
+    def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
+        result=self._get_company_currency(cr, uid, ids, field_name, arg, context={})
+        return result
+            
     _columns = {
         'name' : fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
         'code' : fields.char('Account Code', size=24),
-#        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the analytic account without removing it."),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type'),
         'description' : fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
@@ -190,6 +211,7 @@ class account_analytic_account(osv.osv):
                                   \n* And finally when all the transactions are over, it can be in \'Close\' state. \
                                   \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
                                  \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
+       'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency', store=True),
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -198,14 +220,13 @@ class account_analytic_account(osv.osv):
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
     _defaults = {
-#        'active' : lambda *a : True,
         'type' : lambda *a : 'normal',
         'company_id': _default_company,
         'state' : lambda *a : 'open',
         'user_id' : lambda self,cr,uid,ctx : uid,
         'partner_id': lambda self,cr, uid, ctx: ctx.get('partner_id', False),
         'contact_id': lambda self,cr, uid, ctx: ctx.get('contact_id', False),
-        'date_start': lambda *a: time.strftime('%Y-%m-%d')
+		'date_start': lambda *a: time.strftime('%Y-%m-%d')
     }
 
     def check_recursion(self, cr, uid, ids, parent=None):
@@ -260,3 +281,4 @@ class account_analytic_account(osv.osv):
         return self.name_get(cr, uid, account, context=context)
 
 account_analytic_account()
+

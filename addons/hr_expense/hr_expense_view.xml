@@ -73,8 +73,8 @@
                             <newline/>
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <form string="Expense Lines">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, uom_id)" select="2"/>
-                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id)" select="2"/>
+                                    <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" select="2"/>
+                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" select="2"/>
                                     <field name="name" select="1"/>
                                     <field name="date_value" select="1"/>
                                     <field name="unit_quantity" select="2"/>

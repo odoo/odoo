@@ -57,7 +57,9 @@ class hr_analytic_timesheet(osv.osv):
         res = {}
 #        if prod_id and unit_amount:
         if prod_id:
-            res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount,unit, context)
+            # find company
+            company_id=self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context)
+            res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount,company_id,unit, context)
         return res
 
     def _getEmployeeProduct(self, cr, uid, context):
