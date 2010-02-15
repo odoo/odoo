@@ -188,7 +188,7 @@ class crm_case_rule(osv.osv):
 
         'trg_section_id': fields.many2one('crm.case.section', 'Section'),
     
-#        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
+        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
         'trg_user_id':  fields.many2one('res.users', 'Responsible'),
 
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
@@ -365,7 +365,7 @@ class crm_case(osv.osv):
 
     def _get_section(self, cr, uid, context):
        user = self.pool.get('res.users').browse(cr, uid, uid,context=context)
-       return user.context_section_id
+       return user.context_section_id.id or False
 
     _defaults = {
         'active': lambda *a: 1,
@@ -564,8 +564,8 @@ class crm_case(osv.osv):
             level -= 1
         return True
 
-    def format_body(self, body):
-        return body and tools.ustr(body.encode('ascii', 'replace')) or ''
+    def format_body(self, body):        
+        return body and tools.ustr(body) or ''
 
     def format_mail(self, case, body):
         data = {
@@ -586,7 +586,7 @@ class crm_case(osv.osv):
 
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
-        model_obj = self.pool.get('ir.model')        
+        model_obj = self.pool.get('ir.model')          
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model','=',case._name)])            
             data = {
