@@ -97,17 +97,5 @@
             </field>
         </field>
     </record>
-    <record id="view_project_task_tree2" model="ir.ui.view">
-        <field name="name">Tasks</field>
-        <field name="model">project.task</field>
-        <field name="type">tree</field>
-        <field name="inherit_id" ref="project.view_task_tree2"/>
-        <field eval="2" name="priority"/>
-        <field name="arch" type="xml">
-             <field name="name" position="after">
-                <field name="planned_hours" widget="float_time" on_change="onchange_planned(planned_hours)" invisible="not context.get('set_visible',False)"/>
-             </field>
-        </field>
-    </record>
     </data>
 </openerp>
