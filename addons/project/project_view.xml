@@ -103,12 +103,17 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group col='8' colspan='4'>
-                           <filter icon="terp-project" string="My Projects" domain="[('user_id', '=', uid)]" help="My Projects"/>
-                           <filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
-                           <separator orientation="vertical"/>
-                           <field name="name" string="Project Name" select='1'/>
-                           <field name="partner_id" string="Partner" select='1'/>
-                           <field name="state" select="1"/>
+                       <filter icon="terp-project" string="Open" domain="[('state', '=', 'open')]" help="Open Projects" default="1"/>
+                       <filter icon="terp-project" string="Pending" domain="[('state', '=', 'pending')]" help="Pending Projects"/>
+                       <separator orientation="vertical"/>
+                       <filter icon="terp-project" string="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
+                       <filter icon="terp-project" string="Member" domain="[('members', '=', uid)]" help="Projects in which I am a member." default="1"/>
+                       <separator orientation="vertical"/>
+                       <filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
+                       <separator orientation="vertical"/>
+                       <field name="name" string="Project Name" select='1'/>
+                       <field name="partner_id" string="Partner" select='1'/>
+                       <field name="state" select="1"/>
                    </group>
                </search>
             </field>
@@ -267,7 +272,7 @@
                             <separator string="Parent Tasks" colspan="4"/>
                             <field colspan="4" height="150" name="parent_ids" nolabel="1"/>
                             <separator string="Delegated tasks" colspan="4"/>
-                            <field colspan="4" height="150" name="child_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                            <field colspan="4" height="150" name="child_ids" nolabel="1">
                                 <tree string="Delegated tasks">
                                     <field name="name"/>
                                     <field name="user_id"/>

@@ -307,7 +307,7 @@ class task(osv.osv):
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade',
             help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
-        'child_ids': fields.many2many('project.task', 'project_task_child_rel', 'task_id', 'child_id', 'Delegated Tasks'),
+        'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
         'occupation_rate': fields.float('Occupation Rate', help='The occupation rate fields indicates how much of his time a user is working on a task. A 100% occupation rate means the user works full time on the tasks. The ending date of a task is computed like this: Starting Date + Duration / Occupation Rate.'),
         'planned_hours': fields.float('Planned Hours', required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
