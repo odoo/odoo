@@ -170,8 +170,11 @@ class account_voucher(osv.osv):
         total=0
         for i in obj[0].payment_ids:
             total+=i.amount
-        self.write(cr,uid,ids,{'amount':total})
-        self.write(cr, uid, ids, {'state':'proforma'})
+        if total!=0:
+            self.write(cr,uid,ids,{'amount':total})
+            self.write(cr, uid, ids, {'state':'proforma'})
+        else:
+            raise osv.except_osv('Invalid action !', 'You can not post to Pro-Forma a voucher with Total amount = 0')
         return True
     
     def proforma_voucher(self, cr, uid, ids, context={}):
@@ -196,7 +199,7 @@ class account_voucher(osv.osv):
             if t['state'] in ('draft', 'cancel'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv('Invalid action !', 'Cannot delete invoice(s) which are already opened or paid !')
+                raise osv.except_osv('Invalid action !', 'Cannot delete Voucher(s) which are already opened or paid !')
         osv.osv.unlink(self, cr, uid, unlink_ids)
         return True
          
