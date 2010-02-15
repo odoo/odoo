@@ -159,6 +159,7 @@ class base_action_rule(osv.osv):
                 write['email_cc'] = obj.act_email_cc
         
         model_obj.write(cr, uid, [obj.id], write, context)
+        emails = []
         if hasattr(obj, 'email_from') and action.act_mail_to_partner:
             emails.append(obj.email_from)
         emails = filter(None, emails)
