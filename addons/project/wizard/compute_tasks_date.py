@@ -26,10 +26,12 @@ import datetime
 from resource.faces import *
 from new import classobj
 import operator
+import time
 
 compute_form = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
     <field name="project_id" colspan="4"/>
+    <field name= "date_from" colspan="4"/>
 </form>"""
 
 success_msg = """<?xml version="1.0" ?>
@@ -39,8 +41,9 @@ success_msg = """<?xml version="1.0" ?>
 
 compute_fields = {
     'project_id': {'string':'Project', 'type':'many2one', 'relation': 'project.project', 'required':'True'},
-
+    'date_from': {'string':"Start date",'type':'datetime','required':'True' ,'default': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')},
 }
+
 def timeformat_convert(cr, uid, time_string, context={}):
 #    Function to convert input time string:: 8.5 to output time string 8:30
 
@@ -71,6 +74,7 @@ def leaves_resource(cr,uid,id):
 
 class wizard_compute_tasks(wizard.interface):
 
+
     def _compute_date(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         project_pool = pool.get('project.project')
@@ -89,8 +93,7 @@ class wizard_compute_tasks(wizard.interface):
             task_ids.sort()
             task_obj = task_pool.browse(cr,uid,task_ids)
             task_1 = task_obj[0]
-
-            date_start = datetime.datetime.strftime(datetime.datetime.strptime(project.date_start,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
+            date_start = datetime.datetime.strftime(datetime.datetime.strptime(data['form']['date_from'],"%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M")
             calendar_id = project.resource_calendar_id.id
 
 #     If project has a working calendar then that would be used otherwise
@@ -154,12 +157,16 @@ class wizard_compute_tasks(wizard.interface):
             resource_objs = []
             for no in range(len(resource)):
                 leaves = []
+                resource_eff = 1.00
                 resource_id = resource_pool.search(cr,uid,[('user_id','=',resource[no].id)])
-                if resource_id and wktime_cal:
-            #   Getting list of leaves for specific resource
-                    leaves = leaves_resource(cr,uid,resource_id)
-                resource_objs.append(classobj(str(resource[no].name),(Resource,),{'__doc__':resource[no].name,'__name__':resource[no].name,'vacation':tuple(leaves)}))
+                if resource_id:
+#    Getting the efficiency for specific resource
+                    resource_eff = resource_pool.browse(cr,uid,resource_id)[0].time_efficiency
 
+#   Getting list of leaves for specific resource
+                    if wktime_cal:
+                        leaves = leaves_resource(cr,uid,resource_id)
+                resource_objs.append(classobj(str(resource[no].name),(Resource,),{'__doc__':resource[no].name,'__name__':resource[no].name,'vacation':tuple(leaves),'efficiency':resource_eff}))
             priority_dict = {'0':1000,'1':800,'2':500,'3':300,'4':100}
 
 #     To create dynamic no of tasks with the resource specified
@@ -181,6 +188,7 @@ class wizard_compute_tasks(wizard.interface):
                 title = project.name
                 start = date_start
                 resource = reduce(operator.or_,resource_objs)
+                minimum_time_unit = 1
 
 #    If project has calendar
                 if wktime_cal:
@@ -200,20 +208,17 @@ class wizard_compute_tasks(wizard.interface):
                         task = tasks_resource(i,hours,priorty)
 
             project = BalancedProject(Project)
-            task_no = len(task_obj)
             loop_no = 0
             for t in project:
-                no2 = loop_no
-                while loop_no <= task_no:
-                    s_date = t.start.to_datetime()
-                    e_date = t.end.to_datetime()
-                    if loop_no != 0:
-                        print 's_date,e_date>>>>',s_date,e_date,t.name,t.booked_resource,t.priority
-                        user_id = user_pool.search(cr,uid,[('name','=',t.booked_resource[0].__name__)])
-                        task_pool.write(cr,uid,[task_obj[loop_no - 1].id],{'date_start':s_date,'date_end':e_date,'user_id':user_id[0]})
-                    loop_no = task_no + 1
-                loop_no = no2
+                s_date = t.start.to_datetime()
+                e_date = t.end.to_datetime()
+                if loop_no == 0:
+                    project_pool.write(cr,uid,[project_id],{'date':e_date})
+                else:
+                    user_id = user_pool.search(cr,uid,[('name','=',t.booked_resource[0].__name__)])
+                    task_pool.write(cr,uid,[task_obj[loop_no-1].id],{'date_start':s_date,'date_deadline':e_date,'user_id':user_id[0]})
                 loop_no +=1
+
         return {}
 
     states = {
