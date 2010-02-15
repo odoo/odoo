@@ -36,7 +36,6 @@
         <field name="rule_group" ref="task_comp_rule_group"/>
     </record>
 
-
     <record model="ir.rule.group" id="task_visibility_rule_group">
         <field name="name" >Tasks According to User and Project</field>
         <field name="model_id" ref="model_project_task"/>
@@ -46,7 +45,6 @@
         <field name="domain_force">['|','|',('user_id','=',user.id),('project_id.members','=',user.id),('project_id.user_id','=',user.id)]</field>
         <field name="rule_group" ref="task_visibility_rule_group"/>
     </record>
-
 
 </data>
 </openerp>
