@@ -35,7 +35,14 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Accounts'
 
     def _credit_calc(self, cr, uid, ids, name, arg, context={}):
+        r = {}
         acc_set = ",".join(map(str, ids))
+        
+        for i in ids:
+            r.setdefault(i,0.0)
+            
+        if not acc_set:
+            return r
 
         where_date = ''
         if context.get('from_date',False):
@@ -50,8 +57,14 @@ class account_analytic_account(osv.osv):
         return r
 
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
-
+        r = {}
         acc_set = ",".join(map(str, ids))
+
+        for i in ids:
+            r.setdefault(i,0.0)
+            
+        if not acc_set:
+            return r
         
         where_date = ''
         if context.get('from_date',False):
