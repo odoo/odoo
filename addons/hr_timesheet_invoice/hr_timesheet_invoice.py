@@ -52,6 +52,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
+
     _inherit = "account.analytic.account"
     _columns = {
         'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist'),
@@ -77,7 +78,6 @@ class account_analytic_line(osv.osv):
     }
 
     def unlink(self, cursor, user, ids, context=None):
-        self._check(cursor, user, ids)
         return super(account_analytic_line,self).unlink(cursor, user, ids,
                 context=context)
 
@@ -90,11 +90,11 @@ class account_analytic_line(osv.osv):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
-	if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
-		for line in self.browse(cr, uid, select):
-		    if line.invoice_id:
-			raise osv.except_osv(_('Error !'),
-				_('You can not modify an invoiced analytic line!'))
+        if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
+            for line in self.browse(cr, uid, select):
+                if line.invoice_id:
+                    raise osv.except_osv(_('Error !'),
+                        _('You can not modify an invoiced analytic line!'))
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
