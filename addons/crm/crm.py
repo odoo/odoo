@@ -564,8 +564,8 @@ class crm_case(osv.osv):
             level -= 1
         return True
 
-    def format_body(self, body):
-        return body and tools.ustr(body.encode('ascii', 'replace')) or ''
+    def format_body(self, body):        
+        return body and tools.ustr(body) or ''
 
     def format_mail(self, case, body):
         data = {
