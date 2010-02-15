@@ -8,7 +8,7 @@
 <!--            parent="product.menu_main_product"-->
 <!--            sequence="1"-->
 <!--            groups="group_product_manager"/>-->
-
+		<menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="50"/>
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
             <field name="model">product.product</field>
@@ -255,7 +255,7 @@
             <field name="view_id" ref="product_category_list_view"/>
         </record>
 <!--        <menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="product.menu_config_product" sequence="1"/>-->
-		<menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="base.menu_base_config" sequence="60"/>
+		<menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="prod_config_main" sequence="60"/>
 
 
         <record id="product_normal_action_tree" model="ir.actions.act_window">
@@ -315,7 +315,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_uom_tree_view"/>
         </record>
-        <menuitem id="next_id_16" name="Units of Measure" parent="base.menu_base_config" sequence="65"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="65"/>
 		<menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
 
         <record id="product_uom_categ_form_view" model="ir.ui.view">
@@ -367,7 +367,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 <!--        <menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="product.menu_config_product" sequence="4"/>-->
-		<menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="base.menu_base_config" sequence="65"/>
+		<menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="65"/>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>
