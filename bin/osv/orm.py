@@ -1832,8 +1832,8 @@ class orm(orm_template):
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float','integer'), fields)
         sum = {}
 
-        group_by = groupby
-        if fget[groupby]['type'] in ('date','datetime'):
+        group_by = groupby       
+        if fget.get(groupby,False) and fget[groupby]['type'] in ('date','datetime'):
             flist = "to_char(%s,'yyyy-mm') as %s "%(groupby,groupby)
             groupby = "to_char(%s,'yyyy-mm')"%(groupby)
         else:
