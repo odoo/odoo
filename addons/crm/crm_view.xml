@@ -129,109 +129,8 @@
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
 <!--        <menuitem action="crm_case_section_act_tree" id="menu_crm_case_section_act_tree" parent="next_id_52"/>-->
-
-
-
-        <!-- Case rules -->
-        <record id="crm_case_rule-view" model="ir.ui.view">
-            <field name="name">crm.case.rule.form</field>
-            <field name="model">crm.case.rule</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Case Rule">
-                    <field name="name" select="1"/>
-                    <field name="active" select="2"/>
-                    <notebook colspan="4">
-                        <page string="Conditions">
-                            <separator colspan="4" string="Conditions on States"/>
-                            <field name="trg_state_from" select="2"/>
-                            <field name="trg_state_to" select="2"/>
-
-                            <separator colspan="4" string="Conditions on Case Fields"/>
-                            <field name="regex_name" string="Regex on Case Name" colspan="2"/>
-                            <field name="trg_section_id" select="1" widget="selection"/>
-                            <!--<field name="trg_categ_id"/>-->
-                            <field name="trg_user_id" select="2"/>
-                            <separator colspan="4" string="Conditions on Case Partner"/>
-                            <field name="trg_partner_id"/>
-                            <field name="trg_partner_categ_id"/>
-                            <separator colspan="4" string="Conditions on Priority Range"/>
-                            <field name="trg_priority_from"/>
-                            <field name="trg_priority_to"/>
-                            <separator colspan="4" string="Conditions on Timing"/>
-                            <field name="trg_date_type"/>
-                            <label align="1.0" string="Delay After Trigger Date:"/>
-                            <group col="2" colspan="1">
-                                <field name="trg_date_range" nolabel="1"/>
-                                <field name="trg_date_range_type" nolabel="1"/>
-                            </group>
-                            <separator colspan="4" string="Condition on Communication History"/>
-                            <field name="regex_history" string="Regex on Communication History"/>
-                            <field name="trg_max_history"/>
-                            <separator colspan="4" string="Note"/>
-                            <label align="0.0" string="The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab." colspan="4"/>
-                        </page>
-                        <page string="Actions">
-                            <separator colspan="4" string="Fields to Change"/>
-                            <field name="act_state"/>
-                            <field name="act_section_id"/>
-                            <field name="act_user_id"/>
-                            <field name="act_priority"/>
-                            <separator colspan="4" string="E-Mail Reminders (includes the content of the case)"/>
-                            <field name="act_remind_user"/>
-                            <field name="act_remind_partner"/>
-                            <field name="act_remind_attach"/>
-                            <field colspan="4" name="act_email_cc"/>
-                            <separator colspan="4" string="Server Action to be Triggered"/>
-                            <field name="server_action_id"/>
-                            <!--
-                    <field name="act_method" colspan="4" readonly="1"/>
-                    -->
-                        </page>
-                        <page string="E-Mail Actions">
-                            <separator colspan="4" string="Template of Email to Send"/>
-                            <field name="act_mail_to_user"/>
-                            <field name="act_mail_to_partner"/>
-                            <field name="act_mail_to_watchers"/>
-                            <field colspan="4" name="act_mail_to_email"/>
-                            <field colspan="4" name="act_mail_body"/>
-
-                            <separator colspan="4" string="Special Keywords to Be Used in The Body"/>
-                            <label align="0.0" string="%%(case_id)s = Case ID" colspan="2"/>
-                            <label align="0.0" string="%%(case_subject)s = Case subject" colspan="2"/>
-                            <label align="0.0" string="%%(case_description)s = Case description" colspan="2"/>
-                            <label align="0.0" string="%%(case_date)s = Creation date" colspan="2"/>
-                            <label align="0.0" string="%%(email_from)s = Partner email" colspan="2"/>
-                            <label align="0.0" string="%%(partner)s = Partner name" colspan="2"/>
-                            <label align="0.0" string="%%(partner_email)s = Partner email" colspan="2"/>
-                            <label align="0.0" string="%%(case_user)s = Responsible name" colspan="2"/>
-                            <label align="0.0" string="%%(case_user_email)s = Responsible email" colspan="2"/>
-                            <label align="0.0" string="%%(case_user_phone)s = Responsible phone" colspan="2"/>
-                            <label align="0.0" string="%% = The &apos;%%&apos; Character" colspan="2"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-        <record id="crm_case_rule_tree-view" model="ir.ui.view">
-            <field name="name">crm.case.rule.tree</field>
-            <field name="model">crm.case.rule</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Case Rule">
-                    <field name="name"/>
-                    <field name="active"/>
-                </tree>
-            </field>
-        </record>
-        <record id="crm_case_rule-act" model="ir.actions.act_window">
-            <field name="name">Rules</field>
-            <field name="res_model">crm.case.rule</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm_case_rule_tree-view"/>
-        </record>
-        <menuitem action="crm_case_rule-act" id="menu_crm_case_rule-act" parent="crm.menu_crm_configuration"/>
-
+        
+        
        <record id="view_crm_email_add_cc_wizard" model="ir.ui.view">
             <field name="name">Add CC</field>
             <field name="model">crm.email.add.cc</field>
@@ -377,8 +276,6 @@
                             <field name="active" select="2"/>
                             <separator colspan="4" string="Dates"/>
                             <field name="create_date"/>
-                            <field name="date_action_last"/>
-                            <field name="date_action_next"/>
                             <field colspan="4" name="log_ids" nolabel="1">
                                 <form string="Actions">
                                     <separator colspan="4" string="Action Information"/>

@@ -19,21 +19,8 @@
 #
 ##############################################################################
 
-import time
-import re
-import os
-
-import mx.DateTime
-import base64
-
-from tools.translate import _
-
-import tools
 from osv import fields,osv,orm
-from osv.orm import except_orm
-
 from crm import crm
-
 
 class crm_job(osv.osv):
     _name = "crm.job"
@@ -63,13 +50,6 @@ class crm_job(osv.osv):
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
             'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),                                                                            
-
-            
     }
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}
    
 crm_job()

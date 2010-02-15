@@ -24,7 +24,7 @@
     "name" : "Share Calendar using Caldav", 
     "version" : "1.0", 
     "depends" : [
-                    "base_calendar", 
+                    "base", 
                 ], 
      'description': """
  Contains basic functionality for caldav system like:  
