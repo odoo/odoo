@@ -19,24 +19,21 @@
 #
 ##############################################################################
 
-import crm
-import crm_mailgate
-import crm_action_rule
-import crm_segmentation
-import crm_meeting
-import crm_lead
-import crm_phonecall
-import crm_opportunity
-import crm_claim
-import crm_fundraising
-import crm_helpdesk
-
-
-#import report
-import wizard
-
-
-
-
+{
+    'name': 'Action Rule',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': "This module allows to implement action rules for any object.",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': [],
+    'update_xml': [
+        'base_action_rule_view.xml',        
+        'security/ir.model.access.csv',
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

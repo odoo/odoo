@@ -19,24 +19,6 @@
 #
 ##############################################################################
 
-import crm
-import crm_mailgate
-import crm_action_rule
-import crm_segmentation
-import crm_meeting
-import crm_lead
-import crm_phonecall
-import crm_opportunity
-import crm_claim
-import crm_fundraising
-import crm_helpdesk
-
-
-#import report
-import wizard
-
-
-
+import base_action_rule
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
