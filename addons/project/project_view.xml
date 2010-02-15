@@ -102,12 +102,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Project">
-                   <group col='8' colspan='4'>
+                   <group col='15' colspan='4'>
                        <filter icon="terp-project" string="Open" domain="[('state', '=', 'open')]" help="Open Projects" default="1"/>
                        <filter icon="terp-project" string="Pending" domain="[('state', '=', 'pending')]" help="Pending Projects"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-project" string="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
-                       <filter icon="terp-project" string="Member" domain="[('members', '=', uid)]" help="Projects in which I am a member." default="1"/>
+                       <filter icon="terp-project" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member." default="1"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
                        <separator orientation="vertical"/>
