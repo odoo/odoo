@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-12-18 08:39+0000\n"
-"PO-Revision-Date: 2010-01-10 09:01+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-02-14 16:49+0000\n"
+"Last-Translator: Luigi Grilli <luigi.grilli@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-01-14 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-02-15 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -1012,7 +1012,7 @@ msgstr "STOCK_COPY"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "Model %s Does not Exist !"
-msgstr ""
+msgstr "Il modello %s non esiste!"
 
 #. module: base
 #: code:addons/base/module/module.py:0
@@ -1021,6 +1021,8 @@ msgid ""
 "You try to install the module '%s' that depends on the module:'%s'.\n"
 "But this module is not available in your system."
 msgstr ""
+"Hai provato ad installare il modulo '%s' che dipende dal modulo '%s'.\n"
+"Tuttavia quest'ultimo non è presente nel sistema."
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
@@ -1140,7 +1142,7 @@ msgstr "Report Personalizzato"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (copia)"
 
 #. module: base
 #: view:ir.sequence:0
@@ -1155,7 +1157,7 @@ msgstr "7. %H:%M:%S ==> 18:25:20"
 #. module: base
 #: help:res.users,company_id:0
 msgid "The company this user is currently working on."
-msgstr ""
+msgstr "L'azienda per la quale lavora attualmente l'utente."
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -1163,6 +1165,8 @@ msgid ""
 "Specify the message. You can use the fields from the object. e.g. `Dear [[ "
 "object.partner_id.name ]]`"
 msgstr ""
+"Inserisci il messaggo. Puoi usare i campi oggetto. i.e.'Caro [[ "
+"object.partner_id.name ]]'"
 
 #. module: base
 #: field:ir.actions.server,trigger_name:0
@@ -1201,7 +1205,7 @@ msgstr "Formula"
 #: code:addons/base/res/res_user.py:0
 #, python-format
 msgid "Can not remove root user!"
-msgstr ""
+msgstr "Non posso rimuovere l'utente root"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1211,7 +1215,7 @@ msgstr "STOCK_JUSTIFY_LEFT"
 #. module: base
 #: model:res.country,name:base.mw
 msgid "Malawi"
-msgstr ""
+msgstr "Malawi"
 
 #. module: base
 #: field:res.partner.address,type:0
@@ -1256,6 +1260,8 @@ msgid ""
 "If set, sequence will only be used in case this python expression matches, "
 "and will precede other sequences."
 msgstr ""
+"Se impostata, la sequenza verrà utilizzata solo nel caso in cui questa "
+"espressione python si verifica, e precederà le altre sequenze."
 
 #. module: base
 #: selection:ir.actions.act_window,view_type:0
@@ -1306,7 +1312,7 @@ msgstr "STOCK_PROPERTIES"
 #. module: base
 #: view:res.partner.address:0
 msgid "Search Contact"
-msgstr ""
+msgstr "Ricerca Contatto"
 
 #. module: base
 #: view:ir.module.module:0
@@ -1322,7 +1328,7 @@ msgstr "Nuova Finestra"
 #. module: base
 #: model:res.country,name:base.bs
 msgid "Bahamas"
-msgstr ""
+msgstr "Bahamas"
 
 #. module: base
 #: selection:res.partner.event,partner_type:0
@@ -1335,6 +1341,8 @@ msgstr "Potenziale Cliente Commerciale"
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
 msgstr ""
+"Impossibile generare il prossimo ID poichè alcuni partner hanno un ID "
+"alfabetico"
 
 #. module: base
 #: view:ir.attachment:0
@@ -1344,7 +1352,7 @@ msgstr "Allegato"
 #. module: base
 #: model:res.country,name:base.ie
 msgid "Ireland"
-msgstr ""
+msgstr "Irlanda"
 
 #. module: base
 #: wizard_field:module.module.update,update,update:0
@@ -1370,7 +1378,7 @@ msgstr "Gruppi"
 #. module: base
 #: constraint:res.users:0
 msgid "This user can not connect using this company !"
-msgstr ""
+msgstr "Questo utente non può connettersi a questa azienda!"
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -1380,12 +1388,12 @@ msgstr "Belize"
 #. module: base
 #: model:res.country,name:base.ge
 msgid "Georgia"
-msgstr ""
+msgstr "Georgia"
 
 #. module: base
 #: model:res.country,name:base.pl
 msgid "Poland"
-msgstr ""
+msgstr "Polonia"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -1414,6 +1422,9 @@ msgid ""
 "order in Object, and you can have loop on the sales order line. Expression = "
 "`object.order_line`."
 msgstr ""
+"Inserire il campo/espressione che ritornerà la lista. Per esempio, "
+"selezionare l'ordine di vendita fra gli oggetti, è possibile evere un loop "
+"nelle righe dellìordine di vendita. Expression = `object.order_line`."
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -1448,12 +1459,12 @@ msgstr "STOCK_REDO"
 #. module: base
 #: model:res.country,name:base.bb
 msgid "Barbados"
-msgstr ""
+msgstr "Barbados"
 
 #. module: base
 #: model:res.country,name:base.mg
 msgid "Madagascar"
-msgstr ""
+msgstr "Madagascar"
 
 #. module: base
 #: constraint:ir.model:0
@@ -1467,6 +1478,7 @@ msgstr ""
 #: help:ir.rule.group,global:0
 msgid "Make the rule global, otherwise it needs to be put on a group"
 msgstr ""
+"Rende la regola globale, altrimenti deve essere inserita in un gruppo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_admin
@@ -1479,12 +1491,12 @@ msgstr "Menu"
 #. module: base
 #: field:res.currency,rate:0
 msgid "Current Rate"
-msgstr ""
+msgstr "Tasso corrente"
 
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Greek / Ελληνικά"
-msgstr ""
+msgstr "Greco / Ελληνικά"
 
 #. module: base
 #: view:ir.values:0
@@ -1508,18 +1520,18 @@ msgstr "Obiettivo Azione"
 #. module: base
 #: model:res.country,name:base.ai
 msgid "Anguilla"
-msgstr ""
+msgstr "Anguilla"
 
 #. module: base
 #: field:ir.model.config,password_check:0
 msgid "Confirmation"
-msgstr ""
+msgstr "Conferma"
 
 #. module: base
 #: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Enter at least one field !"
-msgstr ""
+msgstr "Inserisci almeno un campo !"
 
 #. module: base
 #: field:ir.ui.view_sc,name:0
@@ -1537,11 +1549,13 @@ msgid ""
 "Provide the field name that the record id refers to for the write operation. "
 "If it is empty it will refer to the active id of the object."
 msgstr ""
+"Fornire il nome del campo a cui il record si riferisce per le operazioni di "
+"scrittura. Se fosse vuoto, si riferirà all'ID attivo dell'oggetto"
 
 #. module: base
 #: model:res.country,name:base.zw
 msgid "Zimbabwe"
-msgstr ""
+msgstr "Zimbabwe"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_export
@@ -1562,13 +1576,13 @@ msgstr "Indirizzo di posta elettronica"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "French (BE) / Français (BE)"
-msgstr ""
+msgstr "Francese (BE) / Français (BE)"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not write in this document! (%s)"
-msgstr ""
+msgstr "Non puoi scrivere in questo documento! (%s)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -1579,12 +1593,12 @@ msgstr "Azione Server"
 #. module: base
 #: model:res.country,name:base.tt
 msgid "Trinidad and Tobago"
-msgstr ""
+msgstr "Trinidad e Tobago"
 
 #. module: base
 #: model:res.country,name:base.lv
 msgid "Latvia"
-msgstr ""
+msgstr "Lettonia"
 
 #. module: base
 #: view:ir.values:0
@@ -1600,7 +1614,7 @@ msgstr "Mappatura Campi"
 #: model:ir.actions.act_window,name:base.res_request-closed
 #: model:ir.ui.menu,name:base.next_id_12_close
 msgid "My Closed Requests"
-msgstr ""
+msgstr "Mie richieste chiuse"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
@@ -1610,7 +1624,7 @@ msgstr "Personalizzazione"
 #. module: base
 #: model:res.country,name:base.py
 msgid "Paraguay"
-msgstr ""
+msgstr "Paraguay"
 
 #. module: base
 #: selection:ir.report.custom.fields,alignment:0
@@ -1630,7 +1644,7 @@ msgstr "Destinazione"
 #. module: base
 #: model:res.country,name:base.lt
 msgid "Lithuania"
-msgstr ""
+msgstr "Lituania"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1640,7 +1654,7 @@ msgstr "STOCK_PRINT_PREVIEW"
 #. module: base
 #: model:res.country,name:base.si
 msgid "Slovenia"
-msgstr ""
+msgstr "Slovenia"
 
 #. module: base
 #: view:res.partner.canal:0
@@ -1666,7 +1680,7 @@ msgstr "Data Fine"
 #. module: base
 #: model:res.country,name:base.nz
 msgid "New Zealand"
-msgstr ""
+msgstr "Nuova Zelanda"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
@@ -1691,7 +1705,7 @@ msgstr "Operatore"
 #. module: base
 #: wizard_view:module.lang.install,start:0
 msgid "Installation Done"
-msgstr ""
+msgstr "Installazione Completata"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -1712,7 +1726,7 @@ msgstr "destra"
 #. module: base
 #: model:res.country,name:base.bd
 msgid "Bangladesh"
-msgstr ""
+msgstr "Bangladesh"
 
 #. module: base
 #: constraint:res.company:0
@@ -1728,7 +1742,7 @@ msgstr "Valido"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not delete this document! (%s)"
-msgstr ""
+msgstr "Non puoi cancellare questo documento (%s)"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -1739,12 +1753,12 @@ msgstr "XSL"
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
-msgstr ""
+msgstr "Impossibile aggiornare il modulo '%s'. Non è installato.,"
 
 #. module: base
 #: model:res.country,name:base.cu
 msgid "Cuba"
-msgstr ""
+msgstr "Cuba"
 
 #. module: base
 #: view:res.lang:0
@@ -1769,7 +1783,7 @@ msgstr "Quotidiano"
 #. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
-msgstr ""
+msgstr "Svezia"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -1802,7 +1816,7 @@ msgstr "Configurazione iterazione di azione"
 #. module: base
 #: model:res.country,name:base.at
 msgid "Austria"
-msgstr ""
+msgstr "Austria"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -1883,7 +1897,7 @@ msgstr "Data di Nascita"
 #: model:ir.actions.act_window,name:base.action_partner_title_contact
 #: model:ir.ui.menu,name:base.menu_partner_title_contact
 msgid "Contact Titles"
-msgstr ""
+msgstr "Qualifiche Contatti"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_som
@@ -1903,7 +1917,7 @@ msgstr "Cercabile"
 #. module: base
 #: model:res.country,name:base.uy
 msgid "Uruguay"
-msgstr ""
+msgstr "Uruguay"
 
 #. module: base
 #: view:res.partner.event:0
@@ -1933,7 +1947,7 @@ msgstr "German / Deutsch"
 #. module: base
 #: help:ir.actions.server,trigger_name:0
 msgid "Select the Signal name that is to be used as the trigger."
-msgstr ""
+msgstr "Seleziona il nome del segnale che deve essere usato come trigger."
 
 #. module: base
 #: view:ir.actions.server:0
@@ -1963,12 +1977,12 @@ msgstr "French / Français"
 #. module: base
 #: model:res.country,name:base.mt
 msgid "Malta"
-msgstr ""
+msgstr "Malta"
 
 #. module: base
 #: field:ir.actions.server,fields_lines:0
 msgid "Field Mappings."
-msgstr ""
+msgstr "Mappatura dei campi"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -1983,7 +1997,7 @@ msgstr "Modulo"
 #: model:ir.actions.act_window,name:base.action_res_bank_form
 #: model:ir.ui.menu,name:base.menu_action_res_bank_form
 msgid "Bank List"
-msgstr ""
+msgstr "Lista Banche"
 
 #. module: base
 #: field:ir.attachment,description:0
@@ -2052,13 +2066,13 @@ msgstr "Possibile importare anche .po files"
 #: code:addons/base/maintenance/maintenance.py:0
 #, python-format
 msgid "Unable to find a valid contract"
-msgstr ""
+msgstr "Impossibile trovare un contratto valido"
 
 #. module: base
 #: code:addons/base/ir/ir_actions.py:0
 #, python-format
 msgid "Please specify an action to launch !"
-msgstr ""
+msgstr "Per favore specificare una azione da lanciare !"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2079,7 +2093,7 @@ msgstr "Moduli da installare, aggiornare o rimuovere"
 #. module: base
 #: view:res.payterm:0
 msgid "Payment Term"
-msgstr ""
+msgstr "Termini di pagamento"
 
 #. module: base
 #: field:ir.report.custom,footer:0
@@ -2124,7 +2138,7 @@ msgstr "terp-account"
 #: code:addons/base/module/module.py:0
 #, python-format
 msgid "Recursion error in modules dependencies !"
-msgstr ""
+msgstr "Errore di ricorsione delle dipendenze dei moduli !"
 
 #. module: base
 #: view:ir.model:0
@@ -2150,7 +2164,7 @@ msgstr "Categorie di Moduli"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Ukrainian / украї́нська мо́ва"
-msgstr ""
+msgstr "Ucraino / украї́нська мо́ва"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
@@ -2160,7 +2174,7 @@ msgstr "Non Avviato"
 #. module: base
 #: model:res.country,name:base.ru
 msgid "Russian Federation"
-msgstr ""
+msgstr "Federazione Russa"
 
 #. module: base
 #: field:res.company,name:0
@@ -2215,6 +2229,10 @@ msgid ""
 "- The second parenthesis must match the whole version number.\n"
 "- The last parenthesis must match the extension of the module."
 msgstr ""
+"Espressioni regolari per cercare un modulo nella pagina web del repository\n"
+"-La prima parentesi deve combaciare con il nome del modulo\n"
+"-La seconda parentesi deve combaciare con l'intero numero di versione\n"
+"-L'ultima parentesi deve combaciare con l'estensione del modulo"
 
 #. module: base
 #: view:res.lang:0
@@ -2224,7 +2242,7 @@ msgstr "%M - Minuto come numero decimale [00,59]."
 #. module: base
 #: model:res.country,name:base.tj
 msgid "Tajikistan"
-msgstr ""
+msgstr "Tagikistan"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_values_form_action
@@ -2269,7 +2287,7 @@ msgstr "Modulo"
 #. module: base
 #: model:res.country,name:base.me
 msgid "Montenegro"
-msgstr ""
+msgstr "Montenegro"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2279,7 +2297,7 @@ msgstr "STOCK_QUIT"
 #. module: base
 #: view:ir.cron:0
 msgid "Technical Data"
-msgstr ""
+msgstr "Informazioni Tecniche"
 
 #. module: base
 #: view:res.partner:0
@@ -2302,7 +2320,7 @@ msgstr "Da aggiornare"
 #. module: base
 #: model:res.country,name:base.ly
 msgid "Libya"
-msgstr ""
+msgstr "Libia"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2337,7 +2355,7 @@ msgstr "EAN13"
 #. module: base
 #: model:res.country,name:base.pt
 msgid "Portugal"
-msgstr ""
+msgstr "Portogallo"
 
 #. module: base
 #: selection:maintenance.contract,state:0
@@ -2347,7 +2365,7 @@ msgstr "Non valido"
 #. module: base
 #: field:ir.module.module,certificate:0
 msgid "Quality Certificate"
-msgstr ""
+msgstr "Certificato di qualità"
 
 #. module: base
 #: view:res.lang:0
@@ -2385,17 +2403,20 @@ msgid ""
 "spreadsheet software. The file encoding is UTF-8. You have to translate the "
 "latest column before reimporting it."
 msgstr ""
+"Salva questo documento con formato .CSV ed aprilo con il tuo foglio di "
+"calcolo preferito. La codifica del file è UTF-8. Devi tradurre l'ultima "
+"colonna prima di reimportarlo."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
 #: view:res.partner:0
 msgid "Customers"
-msgstr ""
+msgstr "Clienti"
 
 #. module: base
 #: model:res.country,name:base.au
 msgid "Australia"
-msgstr ""
+msgstr "Australia"
 
 #. module: base
 #: help:res.partner,lang:0
@@ -2472,6 +2493,8 @@ msgid ""
 "Specify the subject. You can use fields from the object, e.g. `Hello [[ "
 "object.partner_id.name ]]`"
 msgstr ""
+"Specificare l'oggetto. E' possibile utilizzare campi dell'oggetto, per "
+"esempio `Ciao [[ object.partner_id.name ]]`"
 
 #. module: base
 #: view:res.company:0
@@ -2491,7 +2514,7 @@ msgstr "Nome lingua"
 #. module: base
 #: model:res.country,name:base.va
 msgid "Holy See (Vatican City State)"
-msgstr ""
+msgstr "Stato del Vaticano"
 
 #. module: base
 #: help:ir.actions.server,condition:0
@@ -2499,6 +2522,8 @@ msgid ""
 "Condition that is to be tested before action is executed, e.g. "
 "object.list_price > object.cost_price"
 msgstr ""
+"Condizione da verificare prima che l'azione sia eseguita, per esempio "
+"object.list_price > object.cost_price"
 
 #. module: base
 #: wizard_field:base.module.import,init,module_file:0
@@ -2508,12 +2533,12 @@ msgstr "File .ZIP del modulo"
 #. module: base
 #: field:res.roles,child_id:0
 msgid "Children"
-msgstr ""
+msgstr "Bambini"
 
 #. module: base
 #: field:workflow.transition,trigger_model:0
 msgid "Trigger Object"
-msgstr ""
+msgstr "Oggetto di innesco"
 
 #. module: base
 #: selection:ir.report.custom,state:0
@@ -2529,7 +2554,7 @@ msgstr "Aggiornamento Sistema"
 #. module: base
 #: field:workflow.activity,in_transitions:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Transizioni in Ingresso"
 
 #. module: base
 #: model:res.country,name:base.sr
@@ -2561,6 +2586,8 @@ msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Si è tentato di fare l'upgrade di un modulo che dipenda dal modulo: %s.\n"
+"Ma questo modulo non è disponibile nel sistema."
 
 #. module: base
 #: view:res.partner.address:0
@@ -2576,7 +2603,7 @@ msgstr "Licenza"
 #: code:addons/base/ir/ir_report_custom.py:0
 #, python-format
 msgid "Invalid operation"
-msgstr ""
+msgstr "Operazione non valida"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2614,13 +2641,13 @@ msgstr "Guinea Equatoriale"
 #. module: base
 #: wizard_view:base.module.import,init:0
 msgid "Module Import"
-msgstr ""
+msgstr "Importazione Modulo"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You can not remove the field '%s' !"
-msgstr ""
+msgstr "Non puoi rimuovere il campo '%s' !"
 
 #. module: base
 #: field:res.bank,zip:0
@@ -2637,7 +2664,7 @@ msgstr "Autore"
 #. module: base
 #: model:res.country,name:base.mk
 msgid "FYROM"
-msgstr ""
+msgstr "FYROM"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -2652,12 +2679,12 @@ msgstr "%c - Rappresentazione appropriata della data e dell'ora."
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Finland / Suomi"
-msgstr ""
+msgstr "Finlandese / Suomi"
 
 #. module: base
 #: model:res.country,name:base.bo
 msgid "Bolivia"
-msgstr ""
+msgstr "Bolivia"
 
 #. module: base
 #: model:res.country,name:base.gh
@@ -2699,6 +2726,7 @@ msgstr "Regole"
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr ""
+"Stai provando a rimuovere un modulo che è installato o che verrà installato."
 
 #. module: base
 #: help:ir.values,key2:0
@@ -2714,7 +2742,7 @@ msgstr "STOCK_PASTE"
 #. module: base
 #: model:res.country,name:base.gt
 msgid "Guatemala"
-msgstr ""
+msgstr "Guatemala"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_form
@@ -2761,7 +2789,7 @@ msgstr "Lesotho"
 #. module: base
 #: model:res.country,name:base.ke
 msgid "Kenya"
-msgstr ""
+msgstr "Kenia"
 
 #. module: base
 #: view:res.config.view:0
@@ -2778,7 +2806,7 @@ msgstr ""
 #. module: base
 #: model:res.country,name:base.sm
 msgid "San Marino"
-msgstr ""
+msgstr "San Marino"
 
 #. module: base
 #: model:res.country,name:base.bm
@@ -2788,7 +2816,7 @@ msgstr "Bermuda"
 #. module: base
 #: model:res.country,name:base.pe
 msgid "Peru"
-msgstr ""
+msgstr "Perù"
 
 #. module: base
 #: selection:ir.model.fields,on_delete:0
@@ -2831,7 +2859,7 @@ msgstr "Chiave"
 #. module: base
 #: field:ir.cron,nextcall:0
 msgid "Next Call Date"
-msgstr ""
+msgstr "Data della prossima chiamata"
 
 #. module: base
 #: field:res.company,rml_header:0
@@ -2869,6 +2897,7 @@ msgstr "Sicurezza"
 #, python-format
 msgid "Using a relation field which uses an unknown object"
 msgstr ""
+"Utilizzo di un campo di relazione, che si avvale di un oggetto sconosciuto"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -2920,7 +2949,7 @@ msgstr "Tassi"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "Albanian / Shqipëri"
-msgstr ""
+msgstr "Albania / Shqipëri"
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -2935,22 +2964,22 @@ msgstr "======================================================"
 #. module: base
 #: field:ir.report.custom.fields,field_child2:0
 msgid "Field child2"
-msgstr ""
+msgstr "Campo figlio2"
 
 #. module: base
 #: field:ir.report.custom.fields,field_child3:0
 msgid "Field child3"
-msgstr ""
+msgstr "Campo figlio3"
 
 #. module: base
 #: field:ir.report.custom.fields,field_child0:0
 msgid "Field child0"
-msgstr ""
+msgstr "Campo figlio0"
 
 #. module: base
 #: field:ir.report.custom.fields,field_child1:0
 msgid "Field child1"
-msgstr ""
+msgstr "Campo figlio1"
 
 #. module: base
 #: field:ir.model.fields,selection:0
@@ -3003,11 +3032,13 @@ msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
+"Se impostato a vero, l'azione non comparirà nella barra degli strumenti di "
+"destra di un form"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom_multicompany
 msgid "Multi company"
-msgstr ""
+msgstr "Multi azienda"
 
 #. module: base
 #: view:ir.attachment:0
@@ -3044,7 +3075,7 @@ msgstr "Swedish / svenska"
 #. module: base
 #: field:res.company,child_ids:0
 msgid "Child Companies"
-msgstr ""
+msgstr "Aziende Figlie"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users
@@ -3110,7 +3141,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,parent_id:0
 msgid "Parent Partner"
-msgstr ""
+msgstr "Partner Padre"
 
 #. module: base
 #: view:ir.module.module:0
@@ -3178,7 +3209,7 @@ msgstr "Dati Dimostrativi"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "English (UK)"
-msgstr ""
+msgstr "Inglese (Regno Unito)"
 
 #. module: base
 #: model:res.country,name:base.aq
@@ -3203,7 +3234,7 @@ msgstr "Web"
 #. module: base
 #: selection:module.lang.install,init,lang:0
 msgid "English (CA)"
-msgstr ""
+msgstr "Inglese (Canada)"
 
 #. module: base
 #: field:res.partner.event,planned_revenue:0
@@ -3237,7 +3268,7 @@ msgstr "Ruolo"
 #. module: base
 #: help:res.country.state,code:0
 msgid "The state code in three chars.\n"
-msgstr ""
+msgstr "Il codice dello stato in 3 caratteri\n"
 
 #. module: base
 #: model:res.country,name:base.sj
