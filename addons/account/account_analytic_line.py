@@ -37,7 +37,7 @@ class account_analytic_line(osv.osv):
             cmp_cur_id=rec.company_id.currency_id.id
             aa_cur_id=rec.account_id.currency_id.id
             # Always provide the amount in currency
-            if cmp_cur_id <> aa_cur_id:
+            if cmp_cur_id != aa_cur_id:
                 cur_obj = self.pool.get('res.currency')
                 ctx = {}
                 if rec.date and rec.amount:

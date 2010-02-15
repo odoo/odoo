@@ -664,7 +664,6 @@ class stock_picking(osv.osv):
             pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)            
             amount_unit=move_line.product_id.price_get(pricetype.field, context)[move_line.product_id.id] 
             return amount_unit
-            # return move_line.product_id.standard_price
         else:
             return move_line.product_id.list_price
 

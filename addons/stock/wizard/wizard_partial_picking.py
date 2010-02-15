@@ -61,7 +61,7 @@ def _get_moves(self, cr, uid, data, context):
         if m.state in ('done', 'cancel'):
             continue
         quantity = m.product_qty
-        if m.state<>'assigned':
+        if m.state!='assigned':
             quantity = 0
 
         _moves_arch_lst.append('<field name="move%s" />' % (m.id,))
@@ -161,7 +161,7 @@ def _do_split(self, cr, uid, data, context):
                         'move_lines' : [],
                         'state':'draft',
                     })
-        if data['form']['move%s' % move.id] <> 0:
+        if data['form']['move%s' % move.id] != 0:
             new_obj = move_obj.copy(cr, uid, move.id,
                 {
                     'product_qty' : data['form']['move%s' % move.id],

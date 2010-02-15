@@ -43,9 +43,9 @@ class account_analytic_account(osv.osv):
             if id not in ids2:
                 continue
             for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
-                if child <> id:
+                if child != id:
                     res.setdefault(id, 0.0)
-                    if  currency[child]<>currency[id]:
+                    if  currency[child]!=currency[id]:
                         res[id] += res_currency.compute(cr, uid, currency[child], currency[id], res.get(child, 0.0), context=context)
                     else:
                         res[id] += res.get(child, 0.0)
@@ -152,7 +152,7 @@ class account_analytic_account(osv.osv):
             if id not in ids2:
                 continue
             for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
-                if child <> id:
+                if child != id:
                     res.setdefault(id, 0.0)
                     res[id] += res.get(child, 0.0)
         return dict([(i, res[i]) for i in ids])

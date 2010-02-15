@@ -55,7 +55,7 @@ def _get_moves(self, cr, uid, data, context):
 
     for move in move_lines:
         quantity = move.product_qty
-        if move.state <> 'assigned':
+        if move.state != 'assigned':
             quantity = 0
 
         _moves_arch_lst.append('<field name="move%s" />' % (move.id,))
@@ -136,7 +136,7 @@ def _do_split(self, cr, uid, data, context):
                 else:
                     # Get the standard price
                     amount_unit=product.price_get(pricetype.field, context)[product.id]
-                    new_std_price = ((product.amount_unit * product.qty_available)\
+                    new_std_price = ((amount_unit * product.qty_available)\
                         + (new_price * qty))/(product.qty_available + qty)
 
                 product_obj.write(cr, uid, [product.id],
@@ -144,7 +144,7 @@ def _do_split(self, cr, uid, data, context):
                 move_obj.write(cr, uid, move.id, {'price_unit': new_price})        
 
     for move in too_few:        
-        if data['form']['move%s' % move.id] <> 0:
+        if data['form']['move%s' % move.id] != 0:
             new_move = move_obj.copy(cr, uid, move.id,
                 {
                     'product_qty' : data['form']['move%s' % move.id],

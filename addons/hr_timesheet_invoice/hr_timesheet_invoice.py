@@ -52,15 +52,9 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    # def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
-    #     result=super(account_analytic_account, self)._get_account_currency(cr, uid, ids, field_name, arg, context)
-    #     for rec in self.browse(cr, uid, ids, context):
-    #         result[rec.id] = rec.pricelist_id and (rec.pricelist_id.currency_id.id,rec.pricelist_id.currency_id.code) or result[rec.id]
-    #     return result
 
     _inherit = "account.analytic.account"
     _columns = {
-        # 'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency', store=True),
         'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist'),
         'amount_max': fields.float('Max. Invoice Price'),
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',

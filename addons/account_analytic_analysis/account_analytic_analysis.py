@@ -81,18 +81,6 @@ class account_analytic_account(osv.osv):
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
 
-            # Expense amount and purchase invoice
-            #acc_set = ",".join(map(str, ids2))
-            #cr.execute ("select account_analytic_line.account_id, sum(amount) \
-            #        from account_analytic_line \
-            #        join account_analytic_journal \
-            #            on account_analytic_line.journal_id = account_analytic_journal.id \
-            #        where account_analytic_line.account_id IN (%s) \
-            #            and account_analytic_journal.type = 'purchase' \
-            #        GROUP BY account_analytic_line.account_id;"%acc_set)
-            #for account_id, sum in cr.fetchall():
-            #    res2[account_id] = round(sum,2)
-        
         for obj_id in ids:
             res.setdefault(obj_id, 0.0)
             res2.setdefault(obj_id, 0.0)
@@ -171,74 +159,8 @@ class account_analytic_account(osv.osv):
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
         return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
-
+ 
     # TODO Take care of pricelist and purchase !
-    # def _ca_theorical_calc(self, cr, uid, ids, name, arg, context={}):
-    #     res = {}
-    #     res2 = {}
-    #     date = time.strftime('%Y-%m-%d')
-    #     ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-    #     # Take care of pricelist unit_price on all hours
-    #     if ids2:
-    #         acc_set = ",".join(map(str, ids2))
-    #         cr.execute("""select account_analytic_line.account_id as account_id, \
-    #                     COALESCE(sum((account_analytic_line.unit_amount * pt.list_price) \
-    #                         - (account_analytic_line.unit_amount * pt.list_price \
-    #                             * hr.factor)),0.0) as somme,\
-    #                     account_analytic_line.unit_amount as qty,
-    #                     a.pricelist_id as pricelist,
-    #                     account_analytic_line.product_id as product,
-    #                     a.partner_id as partner_id
-    #                 from account_analytic_line \
-    #                 left join account_analytic_journal \
-    #                     on (account_analytic_line.journal_id = account_analytic_journal.id) \
-    #                 join product_product pp \
-    #                     on (account_analytic_line.product_id = pp.id) \
-    #                 join product_template pt \
-    #                     on (pp.product_tmpl_id = pt.id) \
-    #                 join account_analytic_account a \
-    #                     on (a.id=account_analytic_line.account_id) \
-    #                 join hr_timesheet_invoice_factor hr \
-    #                     on (hr.id=a.to_invoice) \
-    #             where account_analytic_line.account_id IN (%s) \
-    #                 and a.to_invoice IS NOT NULL \
-    #                 and account_analytic_journal.type in ('purchase','general')
-    #             GROUP BY account_analytic_line.account_id,"""%acc_set)
-    #         # Compute unit amount with pricelist for given qty and product
-    #         for account_id, sum, qty, pricelist,product, partner_id in cr.fetchall():
-    #             # If no product, no pricelist or no partner_id, no need to compute
-    #             if not pricelist or not product or not partner_id:
-    #                 res2[account_id] = 0,0
-    #             else:
-    #                 unit_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-    #                         product, qty or 1.0, partner_id, {
-    #                             'date': date,
-    #                             })[pricelist]
-    #                 if unit_price is False:
-    #                     warning = {
-    #                         'title': 'No valid pricelist line found !',
-    #                         'message':
-    #                             "Couldn't find a pricelist line matching this product and quantity.\n"
-    #                             "You have to change either the product, the quantity or the pricelist."
-    #                         }
-    #                 else:
-    #                     res2[account_id] = round(unit_price,2)
-    # 
-    #     for obj_id in ids:
-    #         res.setdefault(obj_id, 0.0)
-    #         res2.setdefault(obj_id, 0.0)
-    #         for child_id in self.search(cr, uid,
-    #                 [('parent_id', 'child_of', [obj_id])]):
-    #             if child_id != obj_id:
-    #                 res[obj_id] += res.get(child_id, 0.0)
-    #                 res[obj_id] += res2.get(child_id, 0.0)
-    # 
-    #     # sum both result on account_id
-    #     for id in ids:
-    #         res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
-    #     return res
-
-            
     def _ca_theorical_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         res2 = {}
@@ -352,7 +274,7 @@ class account_analytic_account(osv.osv):
     def _remaining_hours_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         for account in self.browse(cr, uid, ids):
-            if account.quantity_max <> 0:
+            if account.quantity_max != 0:
                 res[account.id] = account.quantity_max - account.hours_quantity
             else:
                 res[account.id]=0.0
@@ -386,7 +308,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids):
             if account.ca_invoiced == 0:
                 res[account.id]=0.0
-            elif account.total_cost <> 0.0:
+            elif account.total_cost != 0.0:
                 res[account.id] = -(account.real_margin / account.total_cost) * 100
             else:
                 res[account.id] = 0.0
@@ -397,7 +319,7 @@ class account_analytic_account(osv.osv):
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         for account in self.browse(cr, uid, ids):
-            if account.amount_max <> 0:
+            if account.amount_max != 0:
                 res[account.id] = account.amount_max - account.ca_invoiced
             else:
                 res[account.id]=0.0
