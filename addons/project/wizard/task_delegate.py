@@ -67,7 +67,6 @@ class wizard_delegate(wizard.interface):
             'remaining_hours': data['form']['planned_hours_me'],
             'planned_hours': data['form']['planned_hours_me'] + (task.effective_hours or 0.0),
             'name': newname,
-            'child_ids': [(6, 0, [new_task_id])]
         })
         if data['form']['state']=='pending':
             task_obj.do_pending(cr, uid, [data['id']])
@@ -106,7 +105,3 @@ class wizard_delegate(wizard.interface):
         }
     }
 wizard_delegate('project.task.delegate')
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
