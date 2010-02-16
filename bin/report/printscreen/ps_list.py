@@ -78,7 +78,7 @@ class report_printscreen_list(report_int):
                 rows_new.append(element[0])
             rows = rows_new
         if context.get('group_by',False):
-            fields_order.remove(context['group_by'])
+            if context['group_by'] in fields_order: fields_order.remove(context['group_by'])
             fields_order.insert(0, context['group_by'])
             re =  model.read_group(cr, uid, [('id','in',ids)], fields_order, context.get('group_by',False),0,None,context)
             rows=[]
@@ -87,9 +87,7 @@ class report_printscreen_list(report_int):
                     if f not in r:
                         r.update({f:False})
                     if result['fields'][f]['type']=='many2one' and r[f]:
-                        r.update({f:(r['__domain'][0][2],r[r['__domain'][0][0]])})
-                    if result['fields'][f]['type'] == 'date' and r[f]:
-                        r[f] = ''
+                        r.update({f:(r['__domain'][0][2],r[r['__domain'][0][0]])})                    
                 r['__group']=True
                 rows.append(r)
                 _ids = model.search(cr, uid, r['__domain'])
@@ -183,21 +181,27 @@ class report_printscreen_list(report_int):
                     float_flag = 1
 
                 if fields[f]['type'] == 'date' and line[f]:
-                    format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
-                    d1 = datetime.strptime(line[f],'%Y-%m-%d')
-                    new_d1 = d1.strftime(format)
+                    new_d1 = line[f]
+                    if not line.get('__group'):
+                        format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
+                        d1 = datetime.strptime(line[f],'%Y-%m-%d')
+                        new_d1 = d1.strftime(format)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'time' and line[f]:
-                    format = str(locale.nl_langinfo(locale.T_FMT))
-                    d1 = datetime.strptime(line[f], '%H:%M:%S')
-                    new_d1 = d1.strftime(format)
+                    new_d1 = line[f]
+                    if not line.get('__group'):
+                        format = str(locale.nl_langinfo(locale.T_FMT))
+                        d1 = datetime.strptime(line[f], '%H:%M:%S')
+                        new_d1 = d1.strftime(format)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'datetime' and line[f]:
-                    format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
-                    d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
-                    new_d1 = d1.strftime(format)
+                    new_d1 = line[f]
+                    if not line.get('__group'):
+                        format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
+                        d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
+                        new_d1 = d1.strftime(format)
                     line[f] = new_d1
                 if line.get('__group'):
                     col = etree.SubElement(node_line, 'col', para='group', tree='no')
