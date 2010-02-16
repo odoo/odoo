@@ -343,6 +343,7 @@ class report_sxw(report_rml, preprocess.report):
                 [('report_name', '=', self.name[7:])], context=context)
         if report_xml_ids:
             report_xml = ir_obj.browse(cr, uid, report_xml_ids[0], context=context)
+            netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING, 'Header attribute defined in .py is depreciated for registered report!')
         else:
             title = ''
             rml = tools.file_open(self.tmpl, subdir=None).read()
