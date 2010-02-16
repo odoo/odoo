@@ -78,16 +78,15 @@ class report_printscreen_list(report_int):
                 rows_new.append(element[0])
             rows = rows_new
         if context.get('group_by',False):
-            if context['group_by'] in fields_order: fields_order.remove(context['group_by'])
-            fields_order.insert(0, context['group_by'])
+            if context['group_by'] in fields_order:
+                fields_order.remove(context['group_by'])
+                fields_order.insert(0, context['group_by'])
             re =  model.read_group(cr, uid, [('id','in',ids)], fields_order, context.get('group_by',False),0,None,context)
             rows=[]
             for r in re:
                 for f in fields_order:
                     if f not in r:
                         r.update({f:False})
-                    if result['fields'][f]['type']=='many2one' and r[f]:
-                        r.update({f:(r['__domain'][0][2],r[r['__domain'][0][0]])})                    
                 r['__group']=True
                 rows.append(r)
                 _ids = model.search(cr, uid, r['__domain'])
@@ -154,26 +153,24 @@ class report_printscreen_list(report_int):
         count = len(fields_order)
         for i in range(0,count):
             tsum.append(0)
-
         for line in results:
             node_line = etree.SubElement(lines, 'row')
             count = -1
             for f in fields_order:
                 float_flag = 0
                 count += 1
-
                 if fields[f]['type']=='many2one' and line[f]:
-                    line[f]= line[f][1]
-
+                    if not line.get('__group'):
+                        line[f]= line[f][1]
+                    else:
+                        line[f]= line[f]
                 if fields[f]['type']=='selection' and line[f]:
                     for key, value in fields[f]['selection']:
                         if key == line[f]:
                             line[f] = value
                             break
-
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+tools.ustr(len(line[f])) + ' )'
-
                 if fields[f]['type'] == 'float' and line[f]:
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
                     prec ='%.' + str(precision) +'f'
