@@ -38,18 +38,27 @@
                 <group colspan="4" col="6">
                     <field name="name" string="Title" colspan="2"/>                    
                   	<field name="project_id" required="True"/>  
-                  	<field name="task_id"/>
-                   </group>
-                   <group colspan="4" col="5">
-                         <label string="" colspan="2"/>
-<!--                         <button string="Convert To Feature Requests"-->
-<!--                         	name="convert_to_feature"-->
-<!--                         	icon="gtk-convert" type="object" />-->
-                          <button string="Convert To Task"
+                    <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.project.bug')]"/>
+                    <group col="3" colspan="2">
+                      	<field name="task_id"/>
+                        <button string="Convert To Task"
                          	name="%(wizard_crm_bug_task_set)d"
                          	icon="gtk-index" type="action"
                          	attrs="{'invisible':[('task_id','!=',False)]}" />
+                    </group>
+                    
                    </group>
+                   <!-- <group colspan="4" col="5">
+                         <label string="" colspan="2"/>
+                          <button string="Convert To Feature Request"
+                         	name="convert_to_feature"
+                         	icon="gtk-convert" type="object" attrs="{'invisible':[('categ_id','=',ref('bug_categ'))]}"/>
+                          <button string="Convert To Bug"
+                         	name="convert_to_bug"
+                         	icon="gtk-convert" type="object" attrs="{'invisible':[('categ_id','=',ref('feature_request_categ'))]}"/>
+                         
+                          
+                   </group> -->
                 
                 <notebook colspan="4">
                 <page string="General">
@@ -82,7 +91,7 @@
                         <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                     </group>
                 </page>
-                <page string="History">
+                <page string="History" groups="base.group_extended">
                     <field name="id" select="1"/>
                     <field name="active" />
                     <separator colspan="4" string="Dates"/>
@@ -106,7 +115,7 @@
                         </form>
                     </field>
                 </page>
-                <page string="Emails">
+                <page string="Emails" groups="base.group_extended">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
                    </group>
@@ -146,8 +155,7 @@
                 <field name="id"/>
                 <field name="name" string="Title"/>
                 <field name="partner_id"/>
-                <field name="priority" string="Severity"/>
-                <field name="categ_id"/>
+                <field name="priority" string="Severity"/>                
                 <field name="stage_id" string="Resolution"/>
                 <field name="type_id" string="Version"/>
                 <field name="user_id"/>
