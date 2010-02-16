@@ -405,7 +405,7 @@ request was delegated to"),
         'state':  lambda *x: 'needs-action', 
     }
     
-    response_re = response_re = re.compile("Are you coming\?.*\n*.*(YES|NO|MAYBE).*", re.UNICODE)
+    response_re = re.compile("Are you coming\?.*\n*.*(YES|NO|MAYBE).*", re.UNICODE)
     
     def msg_new(self, cr, uid, msg):        
         return False

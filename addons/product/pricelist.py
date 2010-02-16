@@ -269,7 +269,7 @@ class product_pricelist_version(osv.osv):
     _description = "Pricelist Version"
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Price List',
-            required=True, select=True),
+            required=True, select=True, ondelete='cascade'),
         'name': fields.char('Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active',
             help="When a version is duplicated it is set to non active, so that the " \
@@ -354,10 +354,10 @@ class product_pricelist_item(osv.osv):
 
     _columns = {
         'name': fields.char('Rule Name', size=64, help="Explicit rule name for this pricelist line."),
-        'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Sets a template if this rule only apply to a template of product. Keep empty for all products"),
-        'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Sets a product if this rule only apply to one product. Keep empty for all products"),
-        'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Sets a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"),
+        'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Set a template if this rule only apply to a template of product. Keep empty for all products"),
+        'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Set a product if this rule only apply to one product. Keep empty for all products"),
+        'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Set a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"),
 
         'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only applies if the partner buys/sells more than this quantity."),
         'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of pricelist items."),

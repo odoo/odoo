@@ -65,6 +65,13 @@ def _pay_and_reconcile(self, cr, uid, data, context):
         currency_id = journal.currency.id
         # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
         context.update({'amount_currency':form['amount'],'currency_id':currency_id})
+    
+    if invoice.company_id.currency_id.id<>invoice.currency_id.id:
+        ctx = {'date':data['form']['date']}
+        amount = cur_obj.compute(cr, uid, invoice.currency_id.id, invoice.company_id.currency_id.id, amount, context=ctx)
+        currency_id = invoice.currency_id.id
+        # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
+        context.update({'amount_currency':form['amount'],'currency_id':currency_id})
         
     # Take the choosen date
     if form.has_key('comment'):
@@ -91,7 +98,13 @@ def _wo_check(self, cr, uid, data, context):
     #    => Ask to a write-off of the difference. This could happen even if both amount are equal,
     #    because if the currency rate
     # Get the amount in company currency for the invoice (according to move lines)
-    inv_amount_company_currency=invoice.move_id.amount
+    inv_amount_company_currency = 0
+    for aml in invoice.move_id.line_id:
+        if aml.account_id.id == invoice.account_id.id or aml.account_id.type in ('receivable', 'payable'):
+            inv_amount_company_currency += aml.debit
+            inv_amount_company_currency -= aml.credit
+    inv_amount_company_currency = abs(inv_amount_company_currency)
+
     # Get the current amount paid in company currency
     if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
         ctx = {'date':data['form']['date']}

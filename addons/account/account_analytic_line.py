@@ -91,7 +91,7 @@ class account_analytic_line(osv.osv):
                     'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
                 },
                 help="The amount expressed in the related account currency if not equal to the company one."),
-        'ref': fields.char('Reference', size=32),
+        'ref': fields.char('Ref.', size=64),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),

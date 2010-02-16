@@ -54,6 +54,21 @@ class report_creator(osv.osv):
     #
     # Should request only used fields
     #
+    def export_data(self, cr, uid, ids, fields_to_export, context=None):
+        data_l = self.read(cr, uid, ids, ['sql_query'], context)
+        final_datas =[]
+        for i in data_l:
+            datas = []
+            for key,value in i.items():
+                if key not in fields_to_export:
+                    continue
+                if isinstance(value,tuple):
+                    datas.append(str(value[1]))
+                else:
+                    datas.append(str(value))
+            final_datas += [datas]
+        return {'datas':final_datas}
+        
     def fields_get(self, cr, user, fields=None, context=None):
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).fields_get(cr, user, fields, context)
