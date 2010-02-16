@@ -14,8 +14,9 @@
 
 	<xsl:template name="stylesheet">
 		<paraStyle name="title" fontName="Helvetica-Bold" fontSize="22" alignment="center"/>
-
+		<paraStyle name="test" alignment="left" leftIndent="10.0"/>
         <paraStyle name="float_right" alignment="right"/>
+        <paraStyle name="tbl_heading" alignment="center"/>
 		<blockTableStyle id="products">
 			<!--<blockBackground colorName="grey" start="0,0" stop="-1,0"/> -->
 			<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
@@ -56,7 +57,7 @@
 		<tr>
 		<xsl:for-each select="field">
 			<td>
-			<para><font fontName="Helvetica-Bold" fontSize="9">
+			<para style="tbl_heading"><font fontName="Helvetica-Bold" fontSize="9">
 			<xsl:value-of select="."/></font>
 			</para>
 			</td>
@@ -80,7 +81,7 @@
 				<xsl:when test="@para='yes'">
 					<xsl:choose>
 						<xsl:when test="@tree='yes'">
-							<para>
+							<para style="test">
 								<xsl:attribute name="leftIndent"><xsl:value-of select="@space"/></xsl:attribute>
 								<font fontName="Helvetica" fontSize="9">
 								<xsl:value-of select="."/>
@@ -94,7 +95,7 @@
                        </xsl:when>
 
 						<xsl:otherwise>
-							<para>
+							<para style="test">
 								<font fontName="Helvetica" fontSize="9">
 								<xsl:value-of select="."/>
 								</font>
