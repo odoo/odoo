@@ -80,7 +80,7 @@ class report_printscreen_list(report_int):
         if context.get('group_by',False):
             fields_order.remove(context['group_by'])
             fields_order.insert(0, context['group_by'])
-            re =  model.read_group(cr, uid, [], fields_order, context.get('group_by',False),0,None,context)
+            re =  model.read_group(cr, uid, [('id','in',ids)], fields_order, context.get('group_by',False),0,None,context)
             rows=[]
             for r in re:
                 for f in fields_order:
