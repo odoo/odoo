@@ -64,9 +64,10 @@ class account_invoice(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         company_id = context.get('company_id', user.company_id.id)
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
+        refund_journal = {'out_invoice': False, 'in_invoice': False, 'out_refund': True, 'in_refund': True}
         journal_obj = self.pool.get('account.journal')
         res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'sale')),
-                                            ('company_id', '=', company_id)],
+                                            ('company_id', '=', company_id),('refund_journal', '=', refund_journal.get(type_inv, False))],
                                                 limit=1)
         if res:
             return res[0]
@@ -855,7 +856,7 @@ class account_invoice(osv.osv):
 
     def action_cancel(self, cr, uid, ids, *args):
         account_move_obj = self.pool.get('account.move')
-        invoices = self.read(cr, uid, ids, ['move_id'])
+        invoices = self.read(cr, uid, ids, ['move_id', 'payment_ids'])
         for i in invoices:
             if i['move_id']:
                 account_move_obj.button_cancel(cr, uid, [i['move_id'][0]])
@@ -863,6 +864,8 @@ class account_invoice(osv.osv):
                 # Note that the corresponding move_lines and move_reconciles
                 # will be automatically deleted too
                 account_move_obj.unlink(cr, uid, [i['move_id'][0]])
+            if i['payment_ids']:
+                self.pool.get('account.move.line').write(cr, uid, i['payment_ids'], {'reconcile_partial_id': False})
         self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})
         self._log_event(cr, uid, ids,-1.0, 'Cancel Invoice')
         return True
@@ -1231,13 +1234,13 @@ class account_invoice_line(osv.osv):
             taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid,a).tax_ids or False)
             tax_id = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
         if type in ('in_invoice', 'in_refund'):
-            to_update = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
+            to_update = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit or res.standard_price, qty, address_invoice_id, product, partner_id, context=context)
             result.update(to_update)
         else:
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
 
         if not name:
-            result['name'] = res.name
+            result['name'] = res.partner_ref
 
         domain = {}
         result['uos_id'] = uom or res.uom_id.id or False

@@ -77,7 +77,10 @@ class account_payment_term_line(osv.osv):
     _columns = {
         'name': fields.char('Line Name', size=32, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
-        'value': fields.selection([('procent', 'Percent'), ('balance', 'Balance'), ('fixed', 'Fixed Amount')], 'Value', required=True, help="""Example: 14 days 2%, 30 days net
+        'value': fields.selection([('procent', 'Percent'),
+                                   ('balance', 'Balance'),
+                                   ('fixed', 'Fixed Amount')], 'Value',
+                                   required=True, help="""Example: 14 days 2%, 30 days net
 1. Line 1: percent 0.02 14 days
 2. Line 2: balance 30 days"""),
 
@@ -204,43 +207,50 @@ class account_account(osv.osv):
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
         if ids2:
-            query = self.pool.get('account.move.line')._query_get(cr, uid,
-                    context=context)
+            aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+
+            wheres = [""]
+            if query:
+                wheres.append(query.strip())
+            if aml_query:
+                wheres.append(aml_query.strip())
+            query = " AND ".join(wheres)
+
             cr.execute("SELECT l.account_id as id, " +\
                     ' , '.join(map(lambda x: mapping[x], field_names)) +
                     "FROM " \
                         "account_move_line l " \
                     "WHERE " \
                         "l.account_id =ANY(%s) " \
-                        "AND " + query + " " \
-                    "GROUP BY l.account_id",(ids2,))
+                        + query +
+                    " GROUP BY l.account_id",(ids2,))
 
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
 
-        #for the asked accounts, get from the dictionnary 'accounts' the value of it
+
+        # consolidate accounts with direct children
+        brs = list(self.browse(cr, uid, ids2, context=context))
+        sums = {}
+        while brs:
+            current = brs[0]
+            can_compute = True
+            for child in current.child_id:
+                if child.id not in sums:
+                    can_compute = False
+                    try:
+                        brs.insert(0, brs.pop(brs.index(child)))
+                    except ValueError:
+                        brs.insert(0, child)
+            if can_compute:
+                brs.pop(0)
+                for fn in field_names:
+                    sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
+                    if current.child_id:
+                        sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
         res = {}
         for id in ids:
-            res[id] = self._get_account_values(cr, uid, id, accounts, field_names, context)
-        return res
-
-    def _get_account_values(self, cr, uid, id, accounts, field_names, context={}):
-        res = {}.fromkeys(field_names, 0.0)
-        browse_rec = self.browse(cr, uid, id)
-        if browse_rec.type == 'consolidation':
-            ids2 = self.read(cr, uid, [browse_rec.id], ['child_consol_ids'], context)[0]['child_consol_ids']
-            for t in self.search(cr, uid, [('parent_id', 'child_of', [browse_rec.id])]):
-                if t not in ids2 and t != browse_rec.id:
-                    ids2.append(t)
-            for i in ids2:
-                tmp = self._get_account_values(cr, uid, i, accounts, field_names, context)
-                for a in field_names:
-                    res[a] += tmp[a]
-        else:
-            ids2 = self.search(cr, uid, [('parent_id', 'child_of', [browse_rec.id])])
-            for i in ids2:
-                for a in field_names:
-                    res[a] += accounts.get(i, {}).get(a, 0.0)
+            res[id] = sums[id]
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
@@ -259,7 +269,8 @@ class account_account(osv.osv):
 
             if record.child_consol_ids:
                 for acc in record.child_consol_ids:
-                    result[record.id].append(acc.id)
+                    if acc.id not in result[record.id]:
+                        result[record.id].append(acc.id)
 
         return result
 
@@ -1488,8 +1499,8 @@ class account_tax(osv.osv):
                 exec tax.python_compute_inv in localdict
                 amount = localdict['result']
             elif tax.type=='balance':
-                data['amount'] = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
-                data['balance'] = cur_price_unit
+                amount = cur_price_unit - reduce(lambda x,y: y.get('amount',0.0)+x, res, 0.0)
+#                data['balance'] = cur_price_unit
 
 
             if tax.include_base_amount:

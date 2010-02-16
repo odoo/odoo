@@ -62,38 +62,12 @@ class account_account(osv.osv):
         'type1':fields.selection([('dr','Debit'),('cr','Credit'),('none','None')], 'Dr/Cr',store=True),
     }
     
-    def compute_total(self, cr, uid, ids, yr_st_date, yr_end_date, st_date, end_date, field_names, context={}, query=''):
-        #compute the balance/debit/credit accordingly to the value of field_name for the given account ids
-        mapping = {
-            'credit': "COALESCE(SUM(l.credit), 0) as credit ",
-            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance ",
-            'debit': "COALESCE(SUM(l.debit), 0) as debit ",
-        }
-        #get all the necessary accounts
-        ids2 = self._get_children_and_consol(cr, uid, ids, context)
-        acc_set = ",".join(map(str, ids2))
-        #compute for each account the balance/debit/credit from the move lines
+    def compute_total(self, cr, uid, ids, yr_st_date, yr_end_date, st_date, end_date, field_names, context={}):
         if not (st_date >= yr_st_date and end_date <= yr_end_date):
             return {}
-        accounts = {}
-        if ids2:
-            query = self.pool.get('account.move.line')._query_get(cr, uid,
-                    context=context)
-            cr.execute("SELECT l.account_id as id, "  \
-                    +  ' , '.join(map(lambda x: mapping[x], field_names.keys() ))  + \
-                    "FROM account_move_line l " \
-                    "WHERE l.account_id IN ("+ acc_set +") " \
-                        "AND " + query + " " \
-                        " AND l.date >= "+"'"+ st_date +"'"+" AND l.date <= "+"'"+ end_date +""+"'"" " \
-                    "GROUP BY l.account_id ")
-            for res in cr.dictfetchall():
-                accounts[res['id']] = res
-        #for the asked accounts, get from the dictionnary 'accounts' the value of it
-        res = {}
-        for id in ids:
-            res[id] = self._get_account_values(cr, uid, id, accounts, field_names, context)
-        return res
-
+        query = "l.date >= '%s' AND l.date <= '%s'" (st_date, end_date)
+        return self.__compute(cr, uid, ids, field_names, context=context, query=query)
+        
     def create(self, cr, uid, vals, context={}):
         name=self.search(cr,uid,[('name','ilike',vals['name']),('company_id','=',vals['name'])])
         if name:

@@ -61,13 +61,14 @@ def _compute_tasks(cr, uid, task_list, date_begin):
             res = pooler.get_pool(cr.dbname).get('resource.calendar').interval_get(cr, uid, task.project_id.resource_calendar_id.id, date_start, task.remaining_hours)
             for (d1,d2) in res:
                 tasks[task.id].append((d1, d2, task.name, task.user_id.login))
-            date_close = tasks[task.id][-1][1]
+            date_close = tasks[task.id] and tasks[task.id][-1][1] or False
 
             # Store result
-            users[task.user_id.id] = date_close
-            sequences.append((task.sequence, date_close))
-            if date_close>last_date:
-                last_date=date_close
+            if date_close:
+                users[task.user_id.id] = date_close
+                sequences.append((task.sequence, date_close))
+                if date_close>last_date:
+                    last_date=date_close
     return tasks, last_date
 
 def _compute_project(cr, uid, project, date_begin):

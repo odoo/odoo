@@ -1190,10 +1190,17 @@ class stock_move(osv.osv):
 
         return {'value': result}
 
-    def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False):
+    def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False, address_id=False):
         if not prod_id:
             return {}
-        product = self.pool.get('product.product').browse(cr, uid, [prod_id])[0]
+        lang = False
+        if address_id:
+            addr_rec = self.pool.get('res.partner.address').browse(cr, uid, address_id)
+            if addr_rec:
+                lang = addr_rec.partner_id and addr_rec.partner_id.lang or False
+        ctx = {'lang': lang}
+
+        product = self.pool.get('product.product').browse(cr, uid, [prod_id], context=ctx)[0]
         uos_id  = product.uos_id and product.uos_id.id or False
         result = {
             'name': product.partner_ref,

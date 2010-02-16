@@ -302,20 +302,34 @@ class sale_order(osv.osv):
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
         wf_service = netsvc.LocalService("workflow")
         for inv_id in ids:
+            # Deleting the existing instance of workflow for SO
+            wf_service.trg_delete(uid, 'sale.order', inv_id, cr)
             wf_service.trg_create(uid, 'sale.order', inv_id, cr)
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'partner_order_id': False, 'payment_term': False, 'fiscal_position': False}}
+
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery', 'invoice', 'contact'])
         part = self.pool.get('res.partner').browse(cr, uid, part)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         fiscal_position = part.property_account_position and part.property_account_position.id or False
-        val = {'partner_invoice_id': addr['invoice'], 'partner_order_id': addr['contact'], 'partner_shipping_id': addr['delivery'], 'payment_term': payment_term, 'fiscal_position': fiscal_position}
+        dedicated_salesman = part.user_id and part.user_id.id or uid
+
+        val = {
+            'partner_invoice_id': addr['invoice'],
+            'partner_order_id': addr['contact'],
+            'partner_shipping_id': addr['delivery'],
+            'payment_term': payment_term,
+            'fiscal_position': fiscal_position,
+            'user_id': dedicated_salesman,
+        }
+
         if pricelist:
             val['pricelist_id'] = pricelist
+
         return {'value': val}
 
     def shipping_policy_change(self, cr, uid, ids, policy, context={}):
@@ -749,28 +763,28 @@ class sale_order_line(osv.osv):
     _name = 'sale.order.line'
     _description = 'Sale Order line'
     _columns = {
-        'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True),
-        'name': fields.char('Description', size=256, required=True, select=True),
+        'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Description', size=256, required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
-        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer"),
+        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer", readonly=True, states={'draft':[('readonly',False)]}),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'procurement_id': fields.many2one('mrp.procurement', 'Requisition'),
-        'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
+        'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy'])), readonly=True, states={'draft':[('readonly',False)]}),
         'price_net': fields.function(_amount_line_net, method=True, string='Net Price', digits=(16, int(config['price_accuracy']))),
-        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
-        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes'),
-        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Requisition Method', required=True),
-        'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties'),
+        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits=(16, int(config['price_accuracy']))),
+        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly',False)]}),
+        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Requisition Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft':[('readonly',False)]}),
         'address_allotment_id': fields.many2one('res.partner.address', 'Allotment Partner'),
-        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
-        'product_uos_qty': fields.float('Quantity (UoS)'),
+        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'product_uos_qty': fields.float('Quantity (UoS)', readonly=True, states={'draft':[('readonly',False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
-        'discount': fields.float('Discount (%)', digits=(16, 2)),
+        'discount': fields.float('Discount (%)', digits=(16, 2), readonly=True, states={'draft':[('readonly',False)]}),
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
         'notes': fields.text('Notes', translate=True),
         'th_weight': fields.float('Weight'),
