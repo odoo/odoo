@@ -70,6 +70,13 @@ class crm_project_bug(osv.osv):
        if user.context_project_id:
            return user.context_project_id
        return False    
+   
+    def convert_to_feature(self, cr, uid, ids, context=None):
+        categ_obj = self.pool.get('crm.case.categ')
+        categ_id = categ_obj.search(cr, uid, [('name', 'ilike', 'feature%')])
+        for id in ids:
+           self.write(cr, uid, id, {'categ_id': categ_id and categ_id[0] or False})
+        return True
 
     _defaults = {
           'project_id':_get_project,          

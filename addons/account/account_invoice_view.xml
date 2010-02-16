@@ -198,7 +198,7 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection" groups="base.group_multi_company"/>
+                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                             <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             <newline/>
                             <field name="payment_term" widget="selection"/>
@@ -289,7 +289,7 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line)" widget="selection"  groups="base.group_multi_company"/>
+                            <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection"  groups="base.group_multi_company"/>
                             <field name="fiscal_position" groups="base.group_extended,base.group_user" widget="selection"/>
                             <newline/>
                             <field name="date_due" select="1"/>
@@ -337,9 +337,9 @@
                         <field name="origin" select='1'/>
  					</group>                
                     <group expand="context.get('report',False)" string="Group By..." colspan="4" col="10">
-                        <filter string="By Partner" icon="terp-account" domain="[]" context="{'group_by':'partner_id'}"/>
-						<filter string="By State" icon="terp-account" domain="[]"  context="{'group_by':'state'}"/>
-						<filter string="By Date Invoice" icon="terp-account" domain="[]" context="{'group_by':'date_invoice'}"/>
+                        <filter string="Partner" icon="terp-account" domain="[]" context="{'group_by':'partner_id'}"/>
+						<filter string="State" icon="terp-account" domain="[]"  context="{'group_by':'state'}"/>
+						<filter string="Date Invoice" icon="terp-account" domain="[]" context="{'group_by':'date_invoice'}"/>
                   	   </group>   
                </search>
             </field>

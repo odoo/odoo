@@ -419,7 +419,7 @@ class account_invoice(osv.osv):
         return result
 
     def onchange_currency_id(self, cr, uid, ids, curr_id, company_id):
-        if curr_id:
+        if curr_id and company_id:
             currency = self.pool.get('res.currency').browse(cr, uid, curr_id)
             if currency.company_id.id != company_id:
                 raise osv.except_osv(_('Configration Error !'),
@@ -451,7 +451,7 @@ class account_invoice(osv.osv):
     def onchange_partner_bank(self, cursor, user, ids, partner_bank_id):
         return {'value': {}}
 
-    def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line):
+    def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):
         val={}
         dom={}
         if company_id and part_id and type:
@@ -504,6 +504,21 @@ class account_invoice(osv.osv):
         else:
             journal_ids=self.pool.get('account.journal').search(cr,uid,[])
             dom={'journal_id':  [('id','in',journal_ids)]}
+        
+        if currency_id and company_id:
+            currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
+            if currency.company_id.id != company_id:
+                val['currency_id'] = False
+            else:
+                val['currency_id'] = currency.id
+                
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id)
+            if company.currency_id.company_id.id != company_id:
+                val['currency_id'] = False         
+            else:
+                val['currency_id'] = company.currency_id.id
+            
         return {'value' : val, 'domain': dom }
 
     # go from canceled state to draft state
