@@ -1941,7 +1941,7 @@ class Task(object):
 
         func.task_func = instrumented # will be used in the gui
         self._function = instrumented
-        self.name = func.func_name
+        self.name = name
         self.up = parent
         self.children = []
         self._sources = {} # all tasks, I am linked to
@@ -2548,7 +2548,6 @@ class Task(object):
     #@+node:Setting methods
     #@+node:_set_attrib
     def _set_attrib(self, name, value):
-
         if value is _NEVER_USED_: return
 
         try:
@@ -2564,11 +2563,11 @@ class Task(object):
                 #@            << add child task >>
                 #@+node:<< add child task >>
                 try:
-                    task = self.__dict__[name]
+                    task = self.__dict__[value.func_name]
                 except KeyError:
-                    task = Task(value, name, self, len(self.children) + 1)
+                    task = Task(value, value.func_name, self, len(self.children) + 1)
                     self.children.append(task)
-                    setattr(self, task.name, task)
+                    setattr(self, value.func_name, task)
                 return
                 #@nonl
                 #@-node:<< add child task >>
@@ -3698,7 +3697,6 @@ class AdjustedProject(_AllocationPoject):
 
         for t in balancing_list:
             src = base.get_task(t.path)
-
             if src.end <= now and src.complete == 100:
                 #@            << copy the attribs of complete tasks >>
                 #@+node:<< copy the attribs of complete tasks >>
