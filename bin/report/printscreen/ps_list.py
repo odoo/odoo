@@ -211,14 +211,14 @@ class report_printscreen_list(report_int):
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
                        col.set('tree','float')
-                    if f != 'id' and temp[count] == 1:
+                    if not line.get('__group') and f != 'id' and temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
                 else:
                      col.text = '/'
 
         node_line = etree.SubElement(lines, 'row')
         for f in range(0,count+1):
-            col = etree.SubElement(node_line, 'col', para='yes', tree='no')
+            col = etree.SubElement(node_line, 'col', para='group', tree='no')
             if tsum[f] != None:
                if tsum[f] >= 0.01 :
                    prec = '%.' +  str(tools.config['price_accuracy'])  + 'f'
