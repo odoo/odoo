@@ -72,8 +72,9 @@
 	                    <field name="priority" string="Severity"/>
 	                    <field name="user_id" />
 	                    <label string="Resolution: " align="1.0"/>
-	                    <group colspan="1" col="2">
+	                    <group colspan="1" col="3">
 	                        <field name="stage_id" select="1" nolabel="1"/>
+	                        <button icon="gtk-go-back" string="" name="stage_previous" type="object"/>
 	                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
 	                    </group>
                     </group>
@@ -157,6 +158,12 @@
                 <field name="partner_id"/>
                 <field name="priority" string="Severity"/>                
                 <field name="stage_id" string="Resolution"/>
+                <button icon="gtk-go-back" string=""
+                	name="stage_previous" type="object"
+                	states="open,draft,pending,done,cancel" />
+                <button icon="gtk-go-forward" string=""
+                	name="stage_next" type="object"
+                	states="open,draft,pending,done,cancel" />
                 <field name="type_id" string="Version"/>
                 <field name="user_id"/>
                 <field name="state"/>
