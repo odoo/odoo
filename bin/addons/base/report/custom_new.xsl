@@ -16,7 +16,7 @@
 		<paraStyle name="title" fontName="Helvetica-Bold" fontSize="22" alignment="center"/>
 		<paraStyle name="test" alignment="left" leftIndent="10.0"/>
         <paraStyle name="float_right" alignment="right"/>
-        <paraStyle name="tbl_heading" alignment="center"/>
+        <paraStyle name="tbl_heading" alignment="left"/>
 		<blockTableStyle id="products">
 			<!--<blockBackground colorName="grey" start="0,0" stop="-1,0"/> -->
 			<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
