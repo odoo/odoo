@@ -25,12 +25,17 @@ import os
 import base64
 import tools
 import mx.DateTime
+import datetime
 
-from tools.translate import _
-from osv import fields 
-from osv import osv 
+from datetime import datetime
+from datetime import timedelta
+from osv import fields
 from osv import orm
+from osv import osv
 from osv.orm import except_orm
+from tools.translate import _
+
+
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -270,6 +275,7 @@ class crm_case(osv.osv):
         'email_from': _get_default_email,
         'state': lambda *a: 'draft',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_deadline': lambda *a:(datetime.today() + timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': _get_section,
     }
     _order = 'date_deadline desc, date desc,id desc'
