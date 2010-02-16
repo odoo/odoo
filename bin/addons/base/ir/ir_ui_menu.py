@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from osv.orm import browse_null, browse_record
 import re
 import tools
 
@@ -169,8 +168,8 @@ class ir_ui_menu(osv.osv):
             ('res_id', '=', id),
             ])
         for iv in ir_values_obj.browse(cr, uid, ids):
-            new_id = ir_values_obj.copy(cr, uid, iv.id,
-                    default={'res_id': res}, context=context)
+            ir_values_obj.copy(cr, uid, iv.id, default={'res_id': res},
+                               context=context)
         return res
 
     def _action(self, cursor, user, ids, name, arg, context=None):
@@ -243,6 +242,7 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),
                 ('ir.actions.url', 'ir.actions.url'),
+                ('ir.actions.server', 'ir.actions.server'),
             ]),
     }
     _defaults = {

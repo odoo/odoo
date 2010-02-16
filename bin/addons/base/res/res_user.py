@@ -42,11 +42,12 @@ class groups(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the group must be unique !')
     ]
+
     def copy(self, cr, uid, id, default=None, context={}):
         group_name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': group_name +' (copy)'})
         return super(groups, self).copy(cr, uid, id, default, context)
-
+    
     def write(self, cr, uid, ids, vals, context=None):
         if 'name' in vals:
             if vals['name'].startswith('-'):
@@ -54,7 +55,6 @@ class groups(osv.osv):
                         _('The name of the group can not start with "-"'))
         res = super(groups, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 
@@ -265,7 +265,6 @@ class users(osv.osv):
         res = super(users, self).write(cr, uid, ids, values, *args, **argv)
         self.company_get.clear_cache(cr.dbname)
         # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         return res
 

@@ -49,15 +49,24 @@ import sys
 import time
 import traceback
 import types
-from lxml import etree
 
 import fields
 import netsvc
 import tools
-from tools.config import config
 from tools.translate import _
 
-regex_order = re.compile('^([a-z0-9_]+( *desc| *asc)?( *, *|))+$', re.I)
+import copy
+import sys
+
+try:
+    from lxml import etree
+except ImportError:
+    sys.stderr.write("ERROR: Import lxml module\n")
+    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
+
+from tools.config import config
+
+regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
 def last_day_of_current_month():
     today = datetime.date.today()
@@ -209,6 +218,7 @@ class browse_record(object):
             for data in datas:
                 if len(str(data['id']).split('-')) > 1:
                     data['id'] = int(str(data['id']).split('-')[0])
+                new_data = {}
                 for n, f in ffields:
                     if f._type in ('many2one', 'one2one'):
                         if data[n]:
@@ -219,14 +229,25 @@ class browse_record(object):
                             else:
                                 ids2 = data[n]
                             if ids2:
-                                data[n] = browse_record(self._cr, self._uid, ids2, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                                # FIXME: this happen when a _inherits object
+                                #        overwrite a field of it parent. Need
+                                #        testing to be sure we got the right
+                                #        object and not the parent one.
+                                if not isinstance(ids2, browse_record):
+                                    new_data[n] = browse_record(self._cr,
+                                        self._uid, ids2, obj, self._cache,
+                                        context=self._context,
+                                        list_class=self._list_class,
+                                        fields_process=self._fields_process)
                             else:
-                                data[n] = browse_null()
+                                new_data[n] = browse_null()
                         else:
-                            data[n] = browse_null()
+                            new_data[n] = browse_null()
                     elif f._type in ('one2many', 'many2many') and len(data[n]):
-                        data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
-                self._data[data['id']].update(data)
+                        new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
+                    else:
+                        new_data[n] = data[n]
+                self._data[data['id']].update(new_data)                        
         if not name in self._data[self._id]:
             #how did this happen?
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
@@ -386,6 +407,7 @@ class orm_template(object):
                 'readonly':(f.readonly and 1) or 0,
                 'required':(f.required and 1) or 0,
                 'selectable' : (f.selectable and 1) or 0,
+                'relation_field': (f._type=='one2many' and isinstance(f,fields.one2many)) and f._fields_id or '',
             }
             # When its a custom field,it does not contain f.select
             if context.get('field_state','base') == 'manual':
@@ -401,13 +423,13 @@ class orm_template(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relation,view_load,state,select_level
+                    relation,view_load,state,select_level,relation_field
                 ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
                      vals['relation'], bool(vals['view_load']), 'base',
-                    vals['select_level']
+                    vals['select_level'],vals['relation_field']
                 ))
                 if 'module' in context:
                     name1 = 'field_' + self._table + '_' + k
@@ -424,12 +446,12 @@ class orm_template(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s
+                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'],
                                 vals['relation'], bool(vals['view_load']),
-                                vals['select_level'], bool(vals['readonly']),bool(vals['required']),bool(vals['selectable']),vals['model'], vals['name']
+                                vals['select_level'], bool(vals['readonly']),bool(vals['required']),bool(vals['selectable']),vals['relation_field'],vals['model'], vals['name']
                             ))
                         continue
         cr.commit()
@@ -883,6 +905,8 @@ class orm_template(object):
                 if isinstance(e, osv.orm.except_orm ):
                     msg = _('Insertion Failed! ' + e[1])
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
+                #Raising Uncaught exception
+                raise
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
@@ -1997,14 +2021,24 @@ class orm(orm_template):
 
             # iterate on the "object columns"
             todo_update_store = []
+            update_custom_fields = context.get('update_custom_fields', False)
             for k in self._columns:
                 if k in ('id', 'write_uid', 'write_date', 'create_uid', 'create_date'):
                     continue
                     #raise _('Can not define a column %s. Reserved keyword !') % (k,)
+                #Not Updating Custom fields
+                if k.startswith('x_') and not update_custom_fields:
+                    continue
                 f = self._columns[k]
 
                 if isinstance(f, fields.one2many):
                     cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname=%s", (f._obj,))
+                    
+                    if self.pool.get(f._obj):
+                        if f._fields_id not in self.pool.get(f._obj)._columns.keys():
+                            if not self.pool.get(f._obj)._inherits or (f._fields_id not in self.pool.get(f._obj)._inherit_fields.keys()):
+                                raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id,f._obj,))
+                    
                     if cr.fetchone():
                         cr.execute("SELECT count(1) as c FROM pg_class c,pg_attribute a WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid", (f._obj, f._fields_id))
                         res = cr.fetchone()[0]
@@ -2098,7 +2132,7 @@ class orm(orm_template):
                         if isinstance(f, fields.function) and not f.store and\
                                 not getattr(f, 'nodrop', False):
                             logger.notifyChannel('orm', netsvc.LOG_INFO, 'column %s (%s) in table %s removed: converted to a function !\n' % (k, f.string, self._table))
-                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s"'% (self._table, k))
+                            cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE'% (self._table, k))
                             cr.commit()
                             f_obj_type = None
                         else:
@@ -2367,7 +2401,7 @@ class orm(orm_template):
                 fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
                 if fld_def._type in ('many2one', 'one2one'):
                     obj = self.pool.get(fld_def._obj)
-                    if not obj.search(cr, uid, [('id', '=', field_value)]):
+                    if not obj.search(cr, uid, [('id', '=', field_value or False)]):
                         continue
                 if fld_def._type in ('many2many'):
                     obj = self.pool.get(fld_def._obj)
@@ -2394,7 +2428,7 @@ class orm(orm_template):
                     field_value = field_value2
                 value[field] = field_value
         for key in context or {}:
-            if key.startswith('default_'):
+            if key.startswith('default_') and (key[8:] in fields_list):
                 value[key[8:]] = context[key]
         return value
 
@@ -2529,6 +2563,8 @@ class orm(orm_template):
                 del r['id']
 
             for record in res:
+                if not record[col]:# if the record is deleted from _inherits table?
+                    continue
                 record.update(res3[record[col]])
                 if col not in fields_to_read:
                     del record[col]

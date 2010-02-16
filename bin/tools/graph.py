@@ -763,16 +763,20 @@ if __name__=='__main__':
     import ImageDraw
     img = Image.new("RGB", (800, 600), "#ffffff")
     draw = ImageDraw.Draw(img)
-
-    for name,node in g.result.items():
+    
+    result = g.result_get()
+    node_res = {}
+    for node in nodes:
+        node_res[node] = result[node]
+    
+    for name,node in node_res.items():
+            
         draw.arc( (int(node['y']-radius), int(node['x']-radius),int(node['y']+radius), int(node['x']+radius) ), 0, 360, (128,128,128))
         draw.text( (int(node['y']),  int(node['x'])), name,  (128,128,128))
 
 
-    for nodefrom in g.transitions:
-        for nodeto in g.transitions[nodefrom]:
-            draw.line( (int(g.result[nodefrom]['y']), int(g.result[nodefrom]['x']),int(g.result[nodeto]['y']),int(g.result[nodeto]['x'])),(128,128,128) )
-
+    for t in transitions:
+        draw.line( (int(node_res[t[0]]['y']), int(node_res[t[0]]['x']),int(node_res[t[1]]['y']),int(node_res[t[1]]['x'])),(128,128,128) )
     img.save("graph.png", "PNG")
 
 

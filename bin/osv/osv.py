@@ -28,17 +28,15 @@ import netsvc
 import pooler
 import copy
 import sys
+import traceback
 
 from psycopg2 import IntegrityError
-from netsvc import Logger, LOG_ERROR
-from tools.misc import UpdateableDict
+from tools.func import wraps
 
-from tools.translate import _
 
 module_list = []
 module_class_list = {}
 class_pool = {}
-
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -48,7 +46,6 @@ class except_osv(Exception):
         self.args = (exc_type, name)
 
 
-from tools.func import wraps
 class osv_pool(netsvc.Service):
    
     def check(f):
@@ -59,19 +56,20 @@ class osv_pool(netsvc.Service):
                     raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
+                if inst.name == 'AccessError':
+                    tb_s = "AccessError\n" + "".join(traceback.format_exception(*sys.exc_info()))
+                    self.logger.notifyChannel('web-services', netsvc.LOG_DEBUG, tb_s)
                 self.abortResponse(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
                 self.abortResponse(1, inst.name, inst.exc_type, inst.value)
             except IntegrityError, inst:
                 for key in self._sql_error.keys():
                     if key in inst[0]:
-                        self.abortResponse(1, _('Constraint Error'), 'warning', _(self._sql_error[key]))
+                        self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
                 self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
             except Exception, e:
-                import traceback, sys
                 tb_s = "".join(traceback.format_exception(*sys.exc_info()))
-                logger = Logger()
-                logger.notifyChannel('web-services', LOG_ERROR, tb_s)
+                self.logger.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
                 raise
 
         return wrapper
@@ -86,6 +84,7 @@ class osv_pool(netsvc.Service):
         self._store_function = {}
         self._init = True
         self._init_parent = {}
+        self.logger = netsvc.Logger()
         netsvc.Service.__init__(self, 'object_proxy', audience='')
         self.exportMethod(self.obj_list)
         self.exportMethod(self.exec_workflow)
