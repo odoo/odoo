@@ -92,7 +92,7 @@
                                <xsl:value-of select="."/>
                                </font></para>
                        </xsl:when>
-						
+
 						<xsl:otherwise>
 							<para>
 								<font fontName="Helvetica" fontSize="9">
@@ -101,6 +101,32 @@
 							</para>
 						</xsl:otherwise>
 					</xsl:choose>
+				</xsl:when>
+				<xsl:when test="@para='group'">
+					<xsl:choose>
+						<xsl:when test="@tree='yes'">
+							<para>
+								<xsl:attribute name="leftIndent"><xsl:value-of select="@space"/></xsl:attribute>
+								<font fontName="Helvetica-bold" fontSize="9">
+								<xsl:value-of select="."/>
+								</font>
+							</para>
+						</xsl:when>
+                       <xsl:when test="@tree='float'">
+                           <para style="float_right"><font fontName="Helvetica-bold" fontSize="9">
+                               <xsl:value-of select="."/>
+                               </font></para>
+                       </xsl:when>
+
+						<xsl:otherwise>
+							<para>
+								<font fontName="Helvetica-bold" fontSize="9">
+								<xsl:value-of select="."/>
+								</font>
+							</para>
+						</xsl:otherwise>
+					</xsl:choose>
+
 				</xsl:when>
 				<xsl:otherwise>
 					<xpre>
