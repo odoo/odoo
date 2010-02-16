@@ -1486,7 +1486,6 @@ class orm_template(object):
                     'client_action_relate', [(self._name, False)], False,
                     context)
             resprint = map(clean, resprint)
-            print "resprintresprint",resprint
             resaction = map(clean, resaction)
             resaction = filter(lambda x: not x.get('multi', False), resaction)
             resprint = filter(lambda x: not x.get('multi', False), resprint)

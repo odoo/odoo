@@ -996,7 +996,7 @@
             <field name="arch" type="xml">
                 <tree string="Menu" editable="top">
                     <field name="sequence"/>
-                    <field icon="icon" name="complete_name"/>
+                    <field icon="icon" name="complete_name" string="Menu"/>
                 </tree>
             </field>
         </record>
@@ -1007,8 +1007,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Menu">
-                    <field name="complete_name"/>
-                    <field name="name" select="1"/>
+                    <field name="complete_name" string="Menu"/>
+                    <field name="name" select="1" string="Root Menu"/>
                     <field name="sequence"/>
                     <field colspan="4" name="parent_id" select="1"/>
                     <field name="action"/>
