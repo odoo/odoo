@@ -76,7 +76,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales orders">
-                    <field name="date_order"/>
+                    <field name="date_order" string="Order date"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
                     <field name="partner_shipping_id"/>
@@ -100,7 +100,7 @@
                         <field name="client_order_ref" select="2"/>
                         <field name="shipped" select="2"/>
                         <field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2" widget="selection"/>
-                        <field name="date_order" select="1"/>
+                        <field name="date_order" select="1" string="Order date" />
                         <field name="invoiced" select="2"/>
                     </group>
                     <notebook colspan="4">
@@ -242,7 +242,7 @@
                         <field name="user_id" select="1" widget="selection">
                             <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Sale Orders" default="1"/>
                         </field>
-                        <field name="date_order" select="1"/>
+                        <field name="date_order" select="1" string="Order date" />
 					</group>
 					<group expand="1" string="Group By..." colspan="4" col="8">
 						<filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
