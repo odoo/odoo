@@ -82,10 +82,10 @@ class account_analytic_balance(report_sxw.rml_parse):
                     sum(aal.amount) AS balance, sum(aal.unit_amount) AS quantity \
                 FROM account_analytic_line AS aal, account_account AS aa \
                 WHERE (aal.general_account_id=aa.id) \
-                    AND (aal.account_id in (" + ','.join(map(str, ids)) + "))\
+                    AND (aal.account_id in %s)\
                     AND (date>=%s) AND (date<=%s) AND aa.active \
                 GROUP BY aal.general_account_id, aa.name, aa.code, aal.code \
-                ORDER BY aal.code", (date1, date2))
+                ORDER BY aal.code", (tuple(ids), date1, date2))
         res = self.cr.dictfetchall()
         
         for r in res:
@@ -111,19 +111,19 @@ class account_analytic_balance(report_sxw.rml_parse):
         
         if option == "credit" :
             self.cr.execute("SELECT -sum(amount) FROM account_analytic_line \
-                    WHERE account_id in ("+ ','.join(map(str, ids)) +") \
+                    WHERE account_id in %s \
                         AND date>=%s AND date<=%s AND amount<0",
-                    (date1, date2))
+                    (tuple(ids),date1, date2))
         elif option == "debit" :
             self.cr.execute("SELECT sum(amount) FROM account_analytic_line \
-                    WHERE account_id in ("+ ','.join(map(str, ids)) +") \
+                    WHERE account_id in %s \
                         AND date>=%s AND date<=%s AND amount>0",
-                    (date1, date2))
+                    (tuple(ids), date1, date2))
         elif option == "quantity" :
             self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line \
-                WHERE account_id in ("+ ','.join(map(str, ids)) +") \
+                WHERE account_id in %s \
                     AND date>=%s AND date<=%s",
-                (date1, date2))
+                (tuple(ids), date1, date2))
         return self.cr.fetchone()[0] or 0.0
         
 
@@ -180,19 +180,19 @@ class account_analytic_balance(report_sxw.rml_parse):
 
         if option == "debit" :
             self.cr.execute("SELECT sum(amount) FROM account_analytic_line \
-                    WHERE account_id IN ("+','.join(map(str, ids2))+") \
+                    WHERE account_id IN %s \
                         AND date>=%s AND date<=%s AND amount>0",
-                    (date1, date2))
+                    (tuple(ids2), date1, date2))
         elif option == "credit" :
             self.cr.execute("SELECT -sum(amount) FROM account_analytic_line \
-                    WHERE account_id IN ("+','.join(map(str, ids2))+") \
+                    WHERE account_id IN %s \
                         AND date>=%s AND date<=%s AND amount<0",
-                    (date1, date2))
+                    (tuple(ids2), date1, date2))
         elif option == "quantity" :
             self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line \
-                    WHERE account_id IN ("+','.join(map(str, ids2))+") \
+                    WHERE account_id IN %s \
                         AND date>=%s AND date<=%s",
-                    (date1, date2))
+                    (tuple(ids2), date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     
