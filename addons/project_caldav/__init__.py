@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,22 +15,10 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-{
-    "name" : "Caldav task management", 
-    "version" : "1.0", 
-    "author" : "Tiny", 
-    "category" : "Generic Modules/Others", 
-    "description": """ Synchronize between Project task and Caldav Vtodo.""", 
-    "depends" : ["project", "base_calendar"], 
-    "init_xml" : ["project_calendar_data.xml"], 
-    "demo_xml" : [], 
-    "update_xml" : ["project_calendar_view.xml", 
-                                "project_calendar_wizard.xml"], 
-    "active": False, 
-    "website": "http://www.openerp.com", 
-    "installable": True, 
-}
+import project_caldav
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

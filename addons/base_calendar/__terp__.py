@@ -24,7 +24,7 @@
     "name" : "Basic Calendar Functionality", 
     "version" : "1.0", 
     "depends" : [
-                    "caldav", 
+                    "base", 
                 ], 
      'description': """
  Full featured calendar system that support:

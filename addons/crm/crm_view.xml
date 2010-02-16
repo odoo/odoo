@@ -129,48 +129,7 @@
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
 <!--        <menuitem action="crm_case_section_act_tree" id="menu_crm_case_section_act_tree" parent="next_id_52"/>-->
-
-
-
-        <!-- Case rules -->
-        <record id="view_base_action_rule_line_form1" model="ir.ui.view">
-            <field name="name">base.action.rule.line.form.inherit</field>
-            <field name="model">base.action.rule.line</field>
-            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_line_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-	            <field name="trg_priority_to" position="after">
-	            	<separator colspan="4" string="Condition on Communication History"/>
-	            	<field name="regex_history"/>
-	            	<field name="trg_max_history"/>
-	            </field>
-	        </field>
-       </record>
-       
-       <record id="view_base_action_rule_line_form2" model="ir.ui.view">
-            <field name="name">base.action.rule.line.form2.inherit</field>
-            <field name="model">base.action.rule.line</field>
-            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_line_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-	            <field name="regex_name" position="after">
-	            	<field name="trg_section_id" select="1" widget="selection"/>
-	                <field name="trg_categ_id"/>
-	            </field>
-	        </field>
-       </record>
-       
-       <record id="view_base_action_rule_line_form3" model="ir.ui.view">
-            <field name="name">base.action.rule.line.form3.inherit</field>
-            <field name="model">base.action.rule.line</field>
-            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_line_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-	            <field name="act_state" position="after">
-	            	<field name="act_section_id"/>
-	            </field>
-	        </field>
-       </record>
+        
         
        <record id="view_crm_email_add_cc_wizard" model="ir.ui.view">
             <field name="name">Add CC</field>

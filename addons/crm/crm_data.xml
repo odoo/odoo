@@ -59,6 +59,17 @@
         <record id="event_type_case_cancel" model="res.partner.event.type">
             <field eval="False" name="active"/>
         </record>
-      
+        
+        <record id="ir_cron_crm_action" model="ir.cron">
+            <field name="name">Check cases rules</field>
+            <field name="interval_number">4</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'crm.case'" name="model"/>
+            <field eval="'_check'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>      
+                
     </data>
 </openerp>

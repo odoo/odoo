@@ -27,10 +27,9 @@
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': ['base_action_rule_data.xml'],
+    'init_xml': [],
     'update_xml': [
-        'base_action_rule_view.xml',
-        'base_action_rule_wizard.xml',
+        'base_action_rule_view.xml',        
         'security/ir.model.access.csv',
     ],
     'demo_xml': [],

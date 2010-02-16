@@ -34,7 +34,8 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            cr.execute("select account_analytic_line.account_id, COALESCE(sum(amount),0.0) \
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("select account_analytic_line.account_id, COALESCE(sum(amount_currency),0.0) \
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id  \
@@ -43,15 +44,8 @@ class account_analytic_account(osv.osv):
                     group by account_analytic_line.account_id" ,(ids2,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
-        for obj_id in ids:
-            res.setdefault(obj_id, 0.0)
-            for child_id in self.search(cr, uid,
-                    [('parent_id', 'child_of', [obj_id])]):
-                if child_id != obj_id:
-                    res[obj_id] += res.get(child_id, 0.0)
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
-        return res
+                
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
 
     def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
@@ -59,6 +53,10 @@ class account_analytic_account(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
             # Amount uninvoiced hours to invoice at sale price
+            # Warning
+            # This computation doesn't take care of pricelist !
+            # Just consider list_price
+            acc_set = ",".join(map(str, ids2))
             cr.execute("""SELECT account_analytic_account.id, \
                         COALESCE(sum (product_template.list_price * \
                             account_analytic_line.unit_amount * \
@@ -83,17 +81,6 @@ class account_analytic_account(osv.osv):
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
 
-            # Expense amount and purchase invoice
-            #acc_set = ",".join(map(str, ids2))
-            #cr.execute ("select account_analytic_line.account_id, sum(amount) \
-            #        from account_analytic_line \
-            #        join account_analytic_journal \
-            #            on account_analytic_line.journal_id = account_analytic_journal.id \
-            #        where account_analytic_line.account_id IN (%s) \
-            #            and account_analytic_journal.type = 'purchase' \
-            #        GROUP BY account_analytic_line.account_id;"%acc_set)
-            #for account_id, sum in cr.fetchall():
-            #    res2[account_id] = round(sum,2)
         for obj_id in ids:
             res.setdefault(obj_id, 0.0)
             res2.setdefault(obj_id, 0.0)
@@ -160,7 +147,9 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         if ids2:
-            cr.execute("""select account_analytic_line.account_id,COALESCE(sum(amount),0.0) \
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("""select account_analytic_line.account_id,COALESCE(sum(amount_currency),0.0) \
+
                     from account_analytic_line \
                     join account_analytic_journal \
                         on account_analytic_line.journal_id = account_analytic_journal.id \
@@ -169,20 +158,16 @@ class account_analytic_account(osv.osv):
                     GROUP BY account_analytic_line.account_id""",(ids2,))
             for account_id, sum in cr.fetchall():
                 res[account_id] = round(sum,2)
-        for obj_id in ids:
-            res.setdefault(obj_id, 0.0)
-            for child_id in self.search(cr, uid,
-                    [('parent_id', 'child_of', [obj_id])]):
-                if child_id != obj_id:
-                    res[obj_id] += res.get(child_id, 0.0)
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
-        return res
-
+        return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
+ 
+    # TODO Take care of pricelist and purchase !
     def _ca_theorical_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         res2 = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        # Warning
+        # This computation doesn't take care of pricelist !
+        # Just consider list_price
         if ids2:
             cr.execute("""select account_analytic_line.account_id as account_id, \
                         COALESCE(sum((account_analytic_line.unit_amount * pt.list_price) \
@@ -205,7 +190,7 @@ class account_analytic_account(osv.osv):
                 GROUP BY account_analytic_line.account_id""",(ids2,))
             for account_id, sum in cr.fetchall():
                 res2[account_id] = round(sum,2)
-
+                
         for obj_id in ids:
             res.setdefault(obj_id, 0.0)
             res2.setdefault(obj_id, 0.0)
@@ -214,7 +199,7 @@ class account_analytic_account(osv.osv):
                 if child_id != obj_id:
                     res[obj_id] += res.get(child_id, 0.0)
                     res[obj_id] += res2.get(child_id, 0.0)
-
+        
         # sum both result on account_id
         for id in ids:
             res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
@@ -289,7 +274,7 @@ class account_analytic_account(osv.osv):
     def _remaining_hours_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         for account in self.browse(cr, uid, ids):
-            if account.quantity_max <> 0:
+            if account.quantity_max != 0:
                 res[account.id] = account.quantity_max - account.hours_quantity
             else:
                 res[account.id]=0.0
@@ -323,7 +308,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids):
             if account.ca_invoiced == 0:
                 res[account.id]=0.0
-            elif account.total_cost <> 0.0:
+            elif account.total_cost != 0.0:
                 res[account.id] = -(account.real_margin / account.total_cost) * 100
             else:
                 res[account.id] = 0.0
@@ -334,7 +319,7 @@ class account_analytic_account(osv.osv):
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         for account in self.browse(cr, uid, ids):
-            if account.amount_max <> 0:
+            if account.amount_max != 0:
                 res[account.id] = account.amount_max - account.ca_invoiced
             else:
                 res[account.id]=0.0

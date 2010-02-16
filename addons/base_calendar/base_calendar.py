@@ -18,11 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-from caldav import caldav
-from datetime import datetime, timedelta
 from datetime import datetime, timedelta
 from dateutil import parser
+from dateutil import rrule
 from osv import fields, osv
 from service import web_services
 from tools.translate import _
@@ -37,6 +35,17 @@ months = {
         1:"January", 2:"February", 3:"March", 4:"April", \
         5:"May", 6:"June", 7:"July", 8:"August", 9:"September", \
         10:"October", 11:"November", 12:"December"}
+
+def get_recurrent_dates(rrulestring, exdate, startdate=None):
+    if not startdate:
+        startdate = datetime.now()
+    rset1 = rrule.rrulestr(rrulestring, dtstart=startdate, forceset=True)
+
+    for date in exdate:
+        datetime_obj = todate(date)
+        rset1._exdate.append(datetime_obj)
+    re_dates = map(lambda x:x.strftime('%Y-%m-%d %H:%M:%S'), rset1._iter())
+    return re_dates
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
     if base_calendar_id and isinstance(base_calendar_id, (str, unicode)):
@@ -643,9 +652,10 @@ or contains the text to be used for display"""),
                 request_id = request_obj.create(cr, uid, value)
                 request_ids = [request_id]
                 for attendee in alarm.attendee_ids:
-                    value['act_to'] = attendee.user_id.id
-                    request_id = request_obj.create(cr, uid, value)
-                    request_ids.append(request_id)
+                    if attendee.user_id:
+                        value['act_to'] = attendee.user_id.id
+                        request_id = request_obj.create(cr, uid, value)
+                        request_ids.append(request_id)
                 request_obj.request_send(cr, uid, request_ids)
 
             if alarm.action == 'email':
@@ -761,39 +771,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         timezone = cr.fetchone()[0]
         if timezone:
             value.update({'vtimezone': timezone.lower()})
-        return {'value': value}
-
-    def export_cal(self, cr, uid, ids, context={}):
-        ids = map(lambda x: base_calendar_id2real_id(x), ids)
-        event_data = self.read(cr, uid, ids)
-        event_obj = self.pool.get('basic.calendar.event')
-        ical = event_obj.export_cal(cr, uid, event_data, context={'model': self._name})
-        return ical.serialize()
-
-    def import_cal(self, cr, uid, data, data_id=None, context={}):
-        event_obj = self.pool.get('basic.calendar.event')
-        vals = event_obj.import_cal(cr, uid, data, context=context)
-        return self.check_import(cr, uid, vals, context=context)
-    
-    def check_import(self, cr, uid, vals, context={}):
-        ids = []
-        for val in vals:
-            exists, r_id = caldav.uid2openobjectid(cr, val['id'], \
-                                    self._name, val.get('recurrent_id'))
-            if val.has_key('create_date'): val.pop('create_date')
-            val['base_calendar_url'] = context.get('url') or ''
-            val.pop('id')
-            if exists and r_id:
-                val.update({'recurrent_uid': exists})
-                self.write(cr, uid, [r_id], val)
-                ids.append(r_id)
-            elif exists:
-                self.write(cr, uid, [exists], val)
-                ids.append(exists)
-            else:
-                event_id = self.create(cr, uid, val)
-                ids.append(event_id)
-        return ids
+        return {'value': value}    
         
     def modify_this(self, cr, uid, ids, defaults, context=None, *args):
         datas = self.read(cr, uid, ids[0], context=context)
@@ -839,8 +817,7 @@ rule or repeating pattern for anexception to a recurrence set"),
                     result.append(idval)
                     count += 1
                 else:
-                    exdate = data['exdate'] and data['exdate'].split(',') or []
-                    event_obj = self.pool.get('basic.calendar.event')
+                    exdate = data['exdate'] and data['exdate'].split(',') or []                    
                     rrule_str = data['rrule']
                     new_rrule_str = []
                     rrule_until_date = False
@@ -864,7 +841,7 @@ rule or repeating pattern for anexception to a recurrence set"),
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
                     start_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
-                    rdates = event_obj.get_recurrent_dates(str(new_rrule_str), exdate, start_date)
+                    rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date)
                     for rdate in rdates:
                         r_date = datetime.strptime(rdate, "%Y-%m-%d %H:%M:%S")
                         if start_date and r_date < start_date:
@@ -1014,52 +991,7 @@ class calendar_todo(osv.osv):
     
     __attribute__ = {}
     
-    def import_cal(self, cr, uid, data, data_id=None, context={}):
-        todo_obj = self.pool.get('basic.calendar.todo')
-        vals = todo_obj.import_cal(cr, uid, data, context=context)
-        return self.check_import(cr, uid, vals, context=context)
     
-    def check_import(self, cr, uid, vals, context={}):
-        ids = []
-        for val in vals:
-            obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
-            if not val.has_key('planned_hours'):
-                # 'Computes duration' in days
-                plan = 0.0
-                if val.get('date') and  val.get('date_deadline'):
-                    start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
-                    end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
-                    diff = end - start
-                    plan = (diff.seconds/float(86400) + diff.days) * obj_tm.factor
-                val['planned_hours'] = plan
-            else:
-                # Converts timedelta into hours
-                hours = (val['planned_hours'].seconds / float(3600)) + \
-                                        (val['planned_hours'].days * 24)
-                val['planned_hours'] = hours
-            exists, r_id = caldav.uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
-            val.pop('id')
-            if exists:
-                self.write(cr, uid, [exists], val)
-                ids.append(exists)
-            else:
-                task_id = self.create(cr, uid, val)
-                ids.append(task_id)
-        return ids
-        
-    def export_cal(self, cr, uid, ids, context={}):
-        task_datas = self.read(cr, uid, ids, [], context ={'read': True})
-        tasks = []
-        for task in task_datas:
-            if task.get('planned_hours', None) and task.get('date_deadline', None):
-                task.pop('planned_hours')
-            tasks.append(task)
-        todo_obj = self.pool.get('basic.calendar.todo')
-        ical = todo_obj.export_cal(cr, uid, tasks, context={'model': self._name})
-        calendar_val = ical.serialize()
-        calendar_val = calendar_val.replace('"', '').strip()
-        return calendar_val
-
 calendar_todo()
  
 class ir_attachment(osv.osv):

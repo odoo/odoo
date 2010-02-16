@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <form string="Gateway History">
                     <field name="name"/>
+                    <field name="create_date"/>
                     <field name="gateway_id"/>
                     <field name="model_id"/>
                     <field name="res_id"/>
@@ -24,6 +25,7 @@
             <field name="arch" type="xml">
                 <tree string="Gateway History">
                     <field name="name" select="1"/>
+                    <field name="create_date"/>
                     <field name="model_id"/>
                     <field name="res_id"/>
                     <field name="gateway_id"/>

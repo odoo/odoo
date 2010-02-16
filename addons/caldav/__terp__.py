@@ -21,18 +21,13 @@
 
 
 {
-    "name" : "Basic Calendar Functionality", 
+    "name" : "Share Calendar using Caldav", 
     "version" : "1.0", 
     "depends" : [
                     "base", 
                 ], 
      'description': """
- Contains basic functionality for caldav system like:
-  - Maintenance of basic objects needed for caldav calendar
-      * Event(Meeting)
-      * Todo(Task)
-      * Reminder
-      * Attendee
+ Contains basic functionality for caldav system like:  
   - Availabilities of synchronisation using WebDAV
 """, 
     "author" : "Tiny", 

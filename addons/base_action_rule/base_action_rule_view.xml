@@ -12,15 +12,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Action Rule">
-                	<field name="name" select="1"/>
-                	<field name="max_level" select="1"/>
-                	<field name="rule_lines" colspan="4" />
-                	<newline/>
-                	<group col="4" colspan="4">
-	               		<field name="state" select="1"/>
-	               		<button name="button_activate_rule" states="deactivate" string="Activate" icon="gtk-execute" type="object"/>
-	               		<button name="button_deactivate_rule" states="activate" string="De-activate" icon="gtk-execute" type="object"/>
-                	</group>
+                	<field name="name"/>
+                    <field name="active"/>
+                	<field name="max_level" />
+                    <separator colspan="4" string="Rule lines"/>
+                	<field name="rule_lines" colspan="4" nolabel="1"/>                	
                 </form>
             </field>
    		</record>
@@ -30,11 +26,9 @@
             <field name="model">base.action.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Action Rule" colors="red:state=='activate'">
+                <tree string="Action Rule">
                 	<field name="name"/>
-                	<field name="max_level"/>
-                	<field name="rule_lines"/>
-                	<field name="state"/>
+                	<field name="max_level"/>                	
                 </tree>
             </field>
    		</record>
@@ -60,16 +54,16 @@
                     <field name="name" select="1"/>
                     <field name="active" select="2"/>
                     <notebook colspan="4">
-                        <page string="Conditions">
-                            <separator colspan="4" string="Conditions on States"/>
-                            <field name="trg_state_from" select="2"/>
-                            <field name="trg_state_to" select="2"/>
+                        <page string="Conditions">                            
                             <separator colspan="4" string="Conditions on Model Fields"/>
                             <field name="regex_name" string="Regex on Model Name" colspan="2"/>
                             <field name="trg_user_id" select="2"/>
                             <separator colspan="4" string="Conditions on Model Partner"/>
                             <field name="trg_partner_id"/>
                             <field name="trg_partner_categ_id"/>
+                            <separator colspan="4" string="Conditions on States"/>
+                            <field name="trg_state_from" select="2"/>
+                            <field name="trg_state_to" select="2"/>
                             <separator colspan="4" string="Conditions on Priority Range"/>
                             <field name="trg_priority_from"/>
                             <field name="trg_priority_to"/>
@@ -85,10 +79,10 @@
                         </page>
                         <page string="Actions">
                             <separator colspan="4" string="Fields to Change"/>
+                            <field name="act_user_id"/>  
                             <field name="act_state"/>
-                            <field name="act_user_id"/>
-                            <field name="act_priority"/>
-                            <separator colspan="4" string="E-Mail Reminders (includes the content of the case)"/>
+                            <field name="act_priority"/>                          
+                            <separator colspan="4" string="E-Mail Reminders (includes the content of the object)"/>
                             <field name="act_remind_partner"/>
                             <field name="act_remind_attach"/>
                             <field name="act_remind_user"/>
@@ -101,22 +95,20 @@
                         </page>
                         <page string="E-Mail Actions">
                             <separator colspan="4" string="Template of Email to Send"/>
-                            <field name="act_mail_to_user"/>
-                            <field name="act_mail_to_partner"/>
+                            <field name="act_mail_to_user"/>                            
                             <field name="act_mail_to_watchers"/>
                             <field colspan="4" name="act_mail_to_email"/>
                             <field colspan="4" name="act_mail_body" attrs="{'required':[('act_remind_user','=',True)]}"/>
                             <separator colspan="4" string="Special Keywords to Be Used in The Body"/>
-                            <label align="0.0" string="%%(case_id)s = Case ID" colspan="2"/>
-                            <label align="0.0" string="%%(case_subject)s = Case subject" colspan="2"/>
-                            <label align="0.0" string="%%(case_description)s = Case description" colspan="2"/>
-                            <label align="0.0" string="%%(case_date)s = Creation date" colspan="2"/>
-                            <label align="0.0" string="%%(email_from)s = Partner email" colspan="2"/>
+                            <label align="0.0" string="%%(object_id)s = Object ID" colspan="2"/>
+                            <label align="0.0" string="%%(object_subject)s = Object subject" colspan="2"/>
+                            <label align="0.0" string="%%(object_description)s = Object description" colspan="2"/>
+                            <label align="0.0" string="%%(object_date)s = Creation date" colspan="2"/>                            
                             <label align="0.0" string="%%(partner)s = Partner name" colspan="2"/>
                             <label align="0.0" string="%%(partner_email)s = Partner email" colspan="2"/>
-                            <label align="0.0" string="%%(case_user)s = Responsible name" colspan="2"/>
-                            <label align="0.0" string="%%(case_user_email)s = Responsible email" colspan="2"/>
-                            <label align="0.0" string="%%(case_user_phone)s = Responsible phone" colspan="2"/>
+                            <label align="0.0" string="%%(object_user)s = Responsible name" colspan="2"/>
+                            <label align="0.0" string="%%(object_user_email)s = Responsible email" colspan="2"/>
+                            <label align="0.0" string="%%(object_user_phone)s = Responsible phone" colspan="2"/>
                             <label align="0.0" string="%% = The &apos;%%&apos; Character" colspan="2"/>
                         </page>
                     </notebook>
@@ -133,55 +125,6 @@
                     <field name="active"/>
                 </tree>
             </field>
-        </record>
-        <record id="base_action_rule_line_act" model="ir.actions.act_window">
-            <field name="name">Action Rule Lines</field>
-            <field name="res_model">base.action.rule.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_base_action_rule_line_tree"/>
-        </record>
-        <menuitem action="base_action_rule_line_act" id="menu_base_action_rule_line_form" parent="menu_base_action_rule"/>
-        
-        <!-- 
-			Action Rule History 
-		-->
-   		<record id="view_base_action_rule_history_form" model="ir.ui.view">
-   			<field name="name">base.action.rule.history.form</field>
-            <field name="model">base.action.rule.history</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Action Rule History">
-                	<field name="name" select="1"/>
-                	<field name="res_id" select="1"/>
-                	<field name="date_action_last"/>
-                	<field name="date_action_next"/>
-                </form>
-            </field>
-   		</record>
-   		
-   		<record id="view_base_action_rule_history_tree" model="ir.ui.view">
-   			<field name="name">base.action.rule.history.tree</field>
-            <field name="model">base.action.rule.history</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Action Rule History">
-                	<field name="name" select="1"/>
-                	<field name="res_id" select="1"/>
-                	<field name="date_action_last"/>
-                	<field name="date_action_next"/>
-                </tree>
-            </field>
-   		</record>
-   		
-   		<record id="base_action_rule_history_act" model="ir.actions.act_window">
-            <field name="name">Action Rule History</field>
-            <field name="res_model">base.action.rule.history</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_base_action_rule_history_tree"/>
-        </record>
-        <menuitem id="menu_base_action_rule_history_form" parent="menu_base_action_rule" action="base_action_rule_history_act"/>
-        
+        </record>      
     </data>
 </openerp>
