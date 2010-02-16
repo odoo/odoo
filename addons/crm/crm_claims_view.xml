@@ -36,9 +36,8 @@
                 <field name="id"/>
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="date" string="Date"/>
+                <field name="date" string="Claims Date"/>
                 <field name="categ_id" string="Type" select="1"/>
-                <field name="probability"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -68,11 +67,10 @@
 	                    <field name="partner_mobile"/>
 	                    <field name="email_from"/>
 	                </group>
-                    <separator colspan="4" string="Status and Categarization"/>
+                    <separator colspan="4" string="Status and Categorization"/>
                     <group colspan="4" col="6">
                     	<field name="user_id" string="Responsible" select="2"/>
                     	<field name="section_id" widget="selection"/>
-                    	<field name="probability"/>
                     	<label string="Stage: " align="1.0"/>
                     	<group colspan="1" col="2">
 	                        <field name="stage_id" select="1" nolabel="1"/>
@@ -209,14 +207,18 @@
                        <field name="partner_id" select="1"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
-					<field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
-							<filter icon="terp-crm"
-                               domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section"
+                   <field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
+                       <filter icon="terp-crm"
+                           domain="[('section_id','=',context.get('section_id',False))]"
+                           help="My section"
                            />
-                 </field>
+                   </field>
+                   <group expand="1" string="Group By..." colspan="4" col="20">
+                       <filter string="Deadline" icon="terp-crm" domain="[]" context="{'group_by':'date_deadline'}"/>                        
+                       <filter string="Closure" icon="terp-crm" domain="[]"  context="{'group_by':'date_closed'}"/>
+                   </group>
                </search>
-            </field>
+           </field>
         </record>
      </data>
 </openerp>

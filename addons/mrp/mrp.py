@@ -783,7 +783,7 @@ class mrp_procurement(osv.osv):
     _description = "Procurement"
     _order = 'priority,date_planned'
     _columns = {
-        'name': fields.char('Name', size=64, required=True, help='Requisition name.'),
+        'name': fields.char('Reason', size=64, required=True, help='Requisition name.'),
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Requisition.\n"
             "This is automatically completed by Open ERP."),
