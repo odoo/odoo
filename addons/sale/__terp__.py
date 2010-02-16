@@ -54,7 +54,6 @@
         'sale_wizard.xml',
         'sale_view.xml',
         'sale_report.xml',
-        'sale_wizard.xml',
         'stock_view.xml',
         'process/sale_process.xml',
     ],
