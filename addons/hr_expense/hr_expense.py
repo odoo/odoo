@@ -69,6 +69,7 @@ class hr_expense_expense(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'department_id':fields.many2one('hr.department','Department'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Waiting confirmation'),
@@ -85,6 +86,7 @@ class hr_expense_expense(osv.osv):
         'employee_id' : _employee_get,
         'user_id' : lambda cr,uid,id,c={}: id,
         'currency_id': _get_currency,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     def expense_confirm(self, cr, uid, ids, *args):
         #for exp in self.browse(cr, uid, ids):
