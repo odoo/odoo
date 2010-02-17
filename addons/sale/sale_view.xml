@@ -81,7 +81,8 @@
                     <field name="partner_shipping_id"/>
                     <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
-                    <field name="amount_untaxed"/>
+                    <field name="amount_untaxed" sum="Untaxed amount"/>
+					<field name="amount_total" sum="Total amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -179,9 +180,9 @@
                             </field>
                             <newline/>
                             <group col="7" colspan="4">
-                                <field name="amount_untaxed" sum="Untaxed amount"/>
+                                <field name="amount_untaxed"/>
                                 <field name="amount_tax"/>
-                                <field name="amount_total" sum="Total amount"/>
+                                <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object"/>
                             </group>
                             <group col="13" colspan="4">
