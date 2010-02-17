@@ -125,7 +125,6 @@ class report_custom(report_int):
             legend = legend.T()
         )
 
-        #import pydb; pydb.debugger()
         for k, d in responsible_data.iteritems():
             fill = fill_style.Plain(bgcolor=color.T(r=random.random(), g=random.random(), b=random.random()))
             tick = tick_mark.Square(size=6, fill_style=fill)
