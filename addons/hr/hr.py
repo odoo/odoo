@@ -85,6 +85,7 @@ class hr_employee(osv.osv):
         'category_id' : fields.many2one('hr.employee.category', 'Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id','Subordinates'),
         'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
+        'coach_id':fields.many2one('res.users','Coach'),
     }
     _defaults = {
         'active' : lambda *a: True,

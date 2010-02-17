@@ -68,7 +68,7 @@ class hr_expense_expense(osv.osv):
         'amount': fields.function(_amount, method=True, string='Total Amount'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-
+        'department_id':fields.many2one('hr.department','Department'),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Waiting confirmation'),
@@ -215,12 +215,12 @@ class hr_expense_line(osv.osv):
         if product_id:
             product=self.pool.get('product.product').browse(cr,uid,product_id, context=context)
             v['name']=product.name
-            
+
             # Compute based on pricetype of employee company
             pricetype_id = self.pool.get('hr.employee').browse(cr,uid,employee_id).user_id.company_id.property_valuation_price_type.id
             pricetype=self.pool.get('product.price.type').browse(cr,uid,pricetype_id)
             amount_unit=product.price_get(pricetype.field, context)[product.id]
-            
+
             v['unit_amount']=amount_unit
             if not uom_id:
                 v['uom_id']=product.uom_id.id

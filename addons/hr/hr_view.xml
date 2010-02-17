@@ -64,7 +64,7 @@
                             <group col="4" colspan="2">
                                 <separator string="Job Information" colspan="4"/>
                                 <field name="parent_id" select="1" colspan="4"/>
-
+								<field name="coach_id" select="1" colspan="4"/>
                                 <field name="category_id" colspan="4" widget="selection"/>
                             </group>
                         </page>
@@ -91,6 +91,20 @@
                 </tree>
             </field>
         </record>
+        <record id="view_employee_filter" model="ir.ui.view">
+	        <field name="name">Employees</field>
+	        <field name="model">hr.employee</field>
+	        <field name="type">search</field>
+	        <field name="arch" type="xml">
+	            <search string="Employees">
+	            	<group col='5' colspan='4'>
+	            		<filter icon="terp-sale" string="My" domain="[('user_id','=',uid)]"/>
+	            		<field name="name"/>
+	            		<field name="parent_id" widget="selection"/>
+	            	</group>
+	            </search>
+	         </field>
+         </record>
         <record id="open_view_employee_tree" model="ir.actions.act_window">
             <field name="name">Employees Structure</field>
             <field name="res_model">hr.employee</field>
@@ -98,6 +112,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_employee_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
+            <field name="search_view_id" ref="view_employee_filter"/>
         </record>
 
         <record id="open_view_employee_list" model="ir.actions.act_window">
@@ -106,6 +121,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_employee_filter"/>
         </record>
       <!--  <menuitem
             id="menu_open_view_employee_list"
@@ -124,6 +140,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
+            <field name="search_view_id" ref="view_employee_filter"/>
         </record>
         <!--<menuitem
             action="open_view_employee_list_my"
@@ -159,11 +176,11 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem 
-                action="action_hr_marital_status" 
-                id="hr_menu_marital_status" 
+        <menuitem
+                action="action_hr_marital_status"
+                id="hr_menu_marital_status"
                 parent="hr.menu_view_employee_category_configuration_form" sequence="3"/>
-                
+
         <!--
         =======================
         Employee architecture
