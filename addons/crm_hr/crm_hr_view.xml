@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    
+
     # ------------------------------------------------------
     # Job Categories
     # ------------------------------------------------------
@@ -10,20 +10,20 @@
         <field name="name">Job Categories</field>
         <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>     
+        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
        	<field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-		<field name="context">{'object_id':'crm.job'}</field>            
+		<field name="context">{'object_id':'crm.job'}</field>
     </record>
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
 	 # Stage
-	 # ------------------------------------------------------ 
+	 # ------------------------------------------------------
 	    <record id="crm_job_stage_act" model="ir.actions.act_window">
 	        <field name="name">Job Stages</field>
 	        <field name="res_model">crm.case.stage</field>
 	        <field name="view_type">form</field>
 	        <field name="view_id"  ref="crm.crm_case_stage_tree"/>
        		<field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-			<field name="context">{'object_id':'crm.job'}</field>    	        
+			<field name="context">{'object_id':'crm.job'}</field>
 	    </record>
 	  <menuitem action="crm_job_stage_act" id="menu_crm_job_stage_act" parent="crm.menu_crm_case_stage"/>
     # ------------------------------------------------------
@@ -38,6 +38,7 @@
             <tree string="Jobs - Recruitment Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name" string="Description"/>
+                <field name="department_id"/>
                 <field name="partner_name" string="Name"/>
                 <field name="email_from" string="Candidate Email"/>
                 <field name="partner_phone" string="Candidate Phone"/>
@@ -48,9 +49,9 @@
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                 <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
- 				<button name="case_close" string="Hired" states="open,draft,pending" type="object" icon="terp-partner"/>                
+ 				<button name="case_close" string="Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
                 <button name="case_cancel" string="Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                
+
             </tree>
         </field>
     </record>
@@ -77,7 +78,7 @@
                     <field name="phonecall_id" select="1"/>
                 	<button string="Schedule a Phone Call"
                         name="%(wizard_crm_job_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}"/>
-   				                                          
+					<field name="department_id" />
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
@@ -199,7 +200,7 @@
                 <field name="state" group="True"/>
             </graph>
         </field>
-    </record>    
+    </record>
 
     <record id="view_crm_case_jobs_filter" model="ir.ui.view">
             <field name="name">CRM - Jobs Requests Search</field>
@@ -242,8 +243,8 @@
  						<filter icon="terp-crm"
                                domain="[('section_id','=',context.get('section_id',False))]"
                                help="My section"
-                           />					
-					</field>                         
+                           />
+					</field>
                </search>
             </field>
         </record>

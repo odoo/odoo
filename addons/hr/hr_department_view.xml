@@ -75,6 +75,22 @@
        <menuitem action="open_module_tree_department" id="menu_department_def" parent="hr.menu_department_tree"/>
        <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="menu_hr_human_resources"/>
 
+		<record model="ir.ui.view" id="view_users_form_inherit">
+            <field name="name">res.users.form</field>
+            <field name="type">form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Departements Informations">
+                        <separator string="Managers" colspan="4"/>
+                        <field name="parent_id" nolabel="1" colspan="4"/>
+                        <separator string="Subordinates" colspan="4"/>
+                        <field name="child_ids" nolabel="1" colspan="4"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
 		<!--<record model="ir.ui.view" id="view_department_form_simple_modif_inherited1">
             <field name="name">view.department.form.hr.inherited1</field>
             <field name="model">res.users</field>

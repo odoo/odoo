@@ -49,6 +49,7 @@
                             <field name="employee_id" select="1" required="1"/>
                             <field name="number_of_days_temp"/>
                             <field name="manager_id"/>
+                            <field name="department_id"/>
                             <field name="notes" colspan="4"/>
                             <newline/>
                             <field name="state" select="1" colspan="2"/>
@@ -76,6 +77,7 @@
                     <field name="name" select="1"/>
                     <field name="holiday_status_id" select="1" />
                     <field name="employee_id" select="1" required="1"/>
+                    <field name="department_id"/>
                     <field name="number_of_days_temp"/>
                     <notebook colspan="4">
                         <page string="General">
@@ -107,6 +109,7 @@
                     <field name="name" select="1"/>
                     <field name="holiday_status_id" select="1"/>
                     <field name="employee_id" select="1" />
+                    <field name="department_id"/>
                     <field name="type"/>
                     <field name="date_from" select="1" on_change="onchange_date_from(date_to, date_from)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
                     <field name="date_to" select="1" on_change="onchange_date_to(date_from, date_to)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
@@ -138,6 +141,7 @@
                 <tree string="Leaves">
                     <field name="name"/>
                     <field name="employee_id"/>
+                    <field name="department_id"/>
                     <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
                     <field name="date_from"/>
                     <field name="date_to"/>

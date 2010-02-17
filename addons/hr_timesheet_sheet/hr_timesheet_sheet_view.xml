@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Timesheets">
                     <field name="user_id"/>
+                    <field name="department_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="name"/>
@@ -27,6 +28,7 @@
             <field name="arch" type="xml">
                 <tree string="Timesheets" editable="top">
                     <field name="user_id"/>
+                    <field name="department_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="name"/>
@@ -107,6 +109,7 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="department_id"/>
                     <notebook colspan="4">
                         <page string="Daily View">
                             <group col="6" colspan="4">
