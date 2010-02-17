@@ -106,11 +106,13 @@ def _process_text(self, txt):
         sps = _regex.split(txt)
         while sps:
             # This is a simple text to translate
-            result += self.localcontext.get('translate', lambda x:x)(sps.pop(0))
+            result += tools.ustr(self.localcontext.get('translate', lambda x:x)(sps.pop(0)))
             if sps:
                 try:
                     expr = sps.pop(0)
                     txt = eval(expr,self.localcontext)
+                    if txt and (isinstance(txt, unicode) or isinstance(txt, str)):
+                        txt = tools.ustr(self.localcontext.get('translate', lambda x:x)(txt))
                 except Exception,e:
                     tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                     netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR,'report :\n%s\n%s\nexpr: %s' % (tb_s, str(e),expr.encode('utf-8')))
@@ -118,7 +120,7 @@ def _process_text(self, txt):
                     txt2 = str2xml(txt)
                     result += tools.ustr(txt2)
                 elif (txt is not None) and (txt is not False):
-                    result += str(txt)
+                    result += tools.ustr(txt)
         return result
 
 def text_get(node):

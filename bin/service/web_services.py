@@ -23,7 +23,6 @@ import base64
 import logging
 import os
 import security
-import string
 import thread
 import threading
 import time
@@ -38,6 +37,8 @@ import release
 import sql_db
 import tools
 import locale
+from cStringIO import StringIO
+
 logging.basicConfig()
 
 class db(netsvc.ExportService):
@@ -68,6 +69,14 @@ class db(netsvc.ExportService):
     
     def new_dispatch(self,method,auth,params):
         pass
+    def _create_empty_database(self, name):
+        db = sql_db.db_connect('template1')
+        cr = db.cursor()
+        try:
+            cr.autocommit(True) # avoid transaction block
+            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "template0" """ % name)
+        finally:
+            cr.close()
 
     def exp_create(self, db_name, demo, lang, user_password='admin'):
         self.id_protect.acquire()
@@ -77,24 +86,13 @@ class db(netsvc.ExportService):
 
         self.actions[id] = {'clean': False}
 
-        db = sql_db.db_connect('template1')
-        db.lock()
-        try:
-            cr = db.cursor()
-            try:
-                cr.autocommit(True) # avoid transaction block
-                cr.execute('CREATE DATABASE "%s" ENCODING \'unicode\'' % db_name)
-            finally:
-                cr.close()
-        finally:
-            db.release()
+        self._create_empty_database(db_name)
 
         class DBInitialize(object):
             def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
                 cr = None
                 try:
                     serv.actions[id]['progress'] = 0
-                    clean = False
                     cr = sql_db.db_connect(db_name).cursor()
                     tools.init_db(cr)
                     cr.commit()
@@ -122,7 +120,6 @@ class db(netsvc.ExportService):
                 except Exception, e:
                     serv.actions[id]['clean'] = False
                     serv.actions[id]['exception'] = e
-                    from cStringIO import StringIO
                     import traceback
                     e_str = StringIO()
                     traceback.print_exc(file=e_str)
@@ -149,11 +146,11 @@ class db(netsvc.ExportService):
             clean = self.actions[id]['clean']
             if clean:
                 users = self.actions[id]['users']
-                del self.actions[id]
+                self.actions.pop(id)
                 return (1.0, users)
             else:
                 e = self.actions[id]['exception']
-                del self.actions[id]
+                self.actions.pop(id)
                 raise Exception, e
 
     def exp_drop(self, db_name):
@@ -161,24 +158,20 @@ class db(netsvc.ExportService):
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
-        db.lock()
+        cr = db.cursor()
+        cr.autocommit(True) # avoid transaction block
         try:
-            cr = db.cursor()
-            cr.autocommit(True) # avoid transaction block
             try:
-                try:
-                    cr.execute('DROP DATABASE "%s"' % db_name)
-                except Exception, e:
-                    logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                            'DROP DB: %s failed:\n%s' % (db_name, e))
-                    raise Exception("Couldn't drop database %s: %s" % (db_name, e))
-                else:
-                    logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                        'DROP DB: %s' % (db_name))
-            finally:
-                cr.close()
+                cr.execute('DROP DATABASE "%s"' % db_name)
+            except Exception, e:
+                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
+                        'DROP DB: %s failed:\n%s' % (db_name, e))
+                raise Exception("Couldn't drop database %s: %s" % (db_name, e))
+            else:
+                logger.notifyChannel("web-services", netsvc.LOG_INFO,
+                    'DROP DB: %s' % (db_name))
         finally:
-            db.release()
+            cr.close()
         return True
 
     def _set_pg_psw_env_var(self):
@@ -229,17 +222,7 @@ class db(netsvc.ExportService):
                     'RESTORE DB: %s already exists' % (db_name,))
             raise Exception, "Database already exists"
 
-        db = sql_db.db_connect('template1')
-        db.lock()
-        try:
-            cr = db.cursor()
-            cr.autocommit(True) # avoid transaction block
-            try:
-                cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "template0" """ % db_name)
-            finally:
-                cr.close()
-        finally:
-            db.release()
+        self._create_empty_database(db_name)
 
         cmd = ['pg_restore', '--no-owner']
         if tools.config['db_user']:
@@ -277,27 +260,23 @@ class db(netsvc.ExportService):
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
-        db.lock()
+        cr = db.cursor()
         try:
-            cr = db.cursor()
             try:
-                try:
-                    cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
-                except Exception, e:
-                    logger.notifyChannel("web-services", netsvc.LOG_ERROR,
-                            'RENAME DB: %s -> %s failed:\n%s' % (old_name, new_name, e))
-                    raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
-                else:
-                    fs = os.path.join(tools.config['root_path'], 'filestore')
-                    if os.path.exists(os.path.join(fs, old_name)):
-                        os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
+                cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
+            except Exception, e:
+                logger.notifyChannel("web-services", netsvc.LOG_ERROR,
+                        'RENAME DB: %s -> %s failed:\n%s' % (old_name, new_name, e))
+                raise Exception("Couldn't rename database %s to %s: %s" % (old_name, new_name, e))
+            else:
+                fs = os.path.join(tools.config['root_path'], 'filestore')
+                if os.path.exists(os.path.join(fs, old_name)):
+                    os.rename(os.path.join(fs, old_name), os.path.join(fs, new_name))
 
-                    logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                        'RENAME DB: %s -> %s' % (old_name, new_name))
-            finally:
-                cr.close()
+                logger.notifyChannel("web-services", netsvc.LOG_INFO,
+                    'RENAME DB: %s -> %s' % (old_name, new_name))
         finally:
-            db.release()
+            cr.close()
         return True
 
     def exp_db_exist(self, db_name):
@@ -309,30 +288,26 @@ class db(netsvc.ExportService):
             raise Exception('AccessDenied')
 
         db = sql_db.db_connect('template1')
-        db.lock()
+        cr = db.cursor()
         try:
-            cr = db.cursor()
             try:
-                try:
-                    db_user = tools.config["db_user"]
-                    if not db_user and os.name == 'posix':
-                        import pwd
-                        db_user = pwd.getpwuid(os.getuid())[0]
-                    if not db_user:
-                        cr.execute("select decode(usename, 'escape') from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
-                        res = cr.fetchone()
-                        db_user = res and str(res[0])
-                    if db_user:
-                        cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres') order by datname", (db_user,))
-                    else:
-                        cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
-                    res = [str(name) for (name,) in cr.fetchall()]
-                except:
-                    res = []
-            finally:
-                cr.close()
+                db_user = tools.config["db_user"]
+                if not db_user and os.name == 'posix':
+                    import pwd
+                    db_user = pwd.getpwuid(os.getuid())[0]
+                if not db_user:
+                    cr.execute("select decode(usename, 'escape') from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
+                    res = cr.fetchone()
+                    db_user = res and str(res[0])
+                if db_user:
+                    cr.execute("select decode(datname, 'escape') from pg_database where datdba=(select usesysid from pg_user where usename=%s) and datname not in ('template0', 'template1', 'postgres') order by datname", (db_user,))
+                else:
+                    cr.execute("select decode(datname, 'escape') from pg_database where datname not in('template0', 'template1','postgres') order by datname")
+                res = [str(name) for (name,) in cr.fetchall()]
+            except:
+                res = []
         finally:
-            db.release()
+            cr.close()
         res.sort()
         return res
 
@@ -365,7 +340,7 @@ class db(netsvc.ExportService):
                 self.abortResponse(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
                 self.abortResponse(1, inst.name, inst.exc_type, inst.value)
-            except Exception, e:
+            except Exception:
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
                 l.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
@@ -523,7 +498,7 @@ GNU Public Licence.
                         l.notifyChannel('migration', netsvc.LOG_ERROR, 'unable to read the module %s' % (module,))
                         raise
 
-                    zip_contents = cStringIO.StringIO(base64_decoded)
+                    zip_contents = StringIO(base64_decoded)
                     zip_contents.seek(0)
                     try:
                         try:
@@ -575,7 +550,6 @@ GNU Public Licence.
                     %(platform.release(), platform.version(), platform.architecture()[0],
                       os_lang, platform.python_version(),release.version)
         return environment
-    
 
     def exp_login_message(self):
         return tools.config.get('login_message', False)
@@ -590,6 +564,8 @@ GNU Public Licence.
         res = "OpenERP server: %d threads\n" % threading.active_count()
         res += netsvc.Server.allStats()
         return res
+    def check_connectivity(self):
+        return bool(sql_db.db_connect('template1'))
 
 common()
 

@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-import wizard
 import tools
 import base64
 import cStringIO
-import csv
 import pooler
 from osv import fields,osv
 from tools.translate import _
+from tools.misc import get_iso_codes
 
 class wizard_export_lang(osv.osv_memory):
 
@@ -35,7 +34,6 @@ class wizard_export_lang(osv.osv_memory):
         ids=lang_obj.search(cr, uid, ['&', ('active', '=', True), ('translatable', '=', True),])
         langs=lang_obj.browse(cr, uid, ids)
         return [(lang.code, lang.name) for lang in langs]
-    
 
     def act_cancel(self, cr, uid, ids, context=None):
         #self.unlink(cr, uid, ids, context)
@@ -62,7 +60,9 @@ class wizard_export_lang(osv.osv_memory):
         filename = _('new')
         if not this.lang and len(mods) == 1:
             filename = mods[0]
-        this.name = "%s.%s" % (this.lang or filename, this.format)
+        if this.lang:
+            filename = get_iso_codes(this.lang)
+        this.name = "%s.%s" % (filename, this.format)
         out=base64.encodestring(buf.getvalue())
         buf.close()
         return self.write(cr, uid, ids, {'state':'get', 'data':out, 'advice':this.advice, 'name':this.name}, context=context)

@@ -90,7 +90,7 @@ class res_company(osv.osv):
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        if context and context.has_key('prefence_company') and context['prefence_company']:
+        if context and context.has_key('user_prefence') and context['user_prefence']:
             cmp_ids = []
             data_user = self.pool.get('res.users').browse(cr, user, [user], context=context)
             map(lambda x: cmp_ids.append(x.id), data_user[0].company_ids)
@@ -161,7 +161,6 @@ class res_company(osv.osv):
     def write(self, cr, *args, **argv):
         self.cache_restart(cr)
         # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
         return super(res_company, self).write(cr, *args, **argv)
 
     def _get_euro(self, cr, uid, context={}):
