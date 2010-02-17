@@ -96,10 +96,11 @@ roles()
 
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [])
+    ids = obj.search(cr, uid, [('translatable','=',True)])
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
     res = [(r['code'], r['name']) for r in res]
     return res
+
 def _tz_get(self,cr,uid, context={}):
     return [(x, x) for x in pytz.all_timezones]
 
