@@ -166,11 +166,11 @@ class res_users(osv.osv):
     }
 res_users()
 
-class department(osv.osv):
-    _inherit = 'res.users'
-    _description = "Users"
-    _columns = {
-        'context_department_id': fields.many2one('hr.department', 'Departments'),
-    }
-department()
+#class department(osv.osv):
+#    _inherit = 'res.users'
+#    _description = "Users"
+#    _columns = {
+#        'context_department_id': fields.many2one('hr.department', 'Departments'),
+#    }
+#department()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
