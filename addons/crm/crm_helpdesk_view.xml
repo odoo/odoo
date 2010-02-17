@@ -124,9 +124,9 @@
         <field name="arch" type="xml">
             <tree string="Helpdesk Support Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
-                <field name="name" />
+                <field name="name" string="Query Description" />
                 <field name="partner_id" string="Partner"/>
-                <field name="create_date"/>
+                <field name="date" string="Date"/>
                 <field name="date_deadline"/>
                 <field name="user_id"/>
                 <field name="state"/>
@@ -174,7 +174,7 @@
                 </group>
                 <separator orientation="vertical"/>
                 <group col="6" colspan="2">
-                    <field name="name" select='1' string="Subject"/>
+                    <field name="name" select='1' string="Query"/>
                     <field name="user_id" select="1" widget="selection">
                         <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Helpdesk Requests" default="1"/>
                     </field>
