@@ -777,7 +777,7 @@
                        <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" default="1" help="Procurement Orders in draft or open state."/>
                        <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement Orders with exceptions"/>
                        <filter icon="terp-mrp" string="Late"
-                       	domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                       	domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
                        	help="Procurement started late" />
                        <separator orientation="vertical"/>
                        <field name="name"/>
