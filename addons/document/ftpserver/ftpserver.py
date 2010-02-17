@@ -2558,6 +2558,7 @@ class FTPHandler(asynchat.async_chat):
                 why = "%s is not retrievable" %line
                 self.log('FAIL SIZE "%s". %s.' %(line, why))
                 self.respond("550 %s." %why)
+                self.fs.close_cr(datacr)
                 return
             size = self.run_as_current_user(self.fs.getsize, path)
         except OSError, err:
