@@ -8,9 +8,6 @@
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="6"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="2"/>
 
-        =============================
-        Inventory Line
-        =============================
         <record id="stock_inventory_line_tree" model="ir.ui.view">
             <field name="name">stock.inventory.line.tree</field>
             <field name="model">stock.inventory.line</field>
@@ -41,9 +38,6 @@
             </field>
         </record>
 
-        =============================
-        Inventory
-        =============================
         <record id="view_inventory_tree" model="ir.ui.view">
             <field name="name">stock.inventory.tree</field>
             <field name="model">stock.inventory</field>
@@ -118,10 +112,6 @@
             <field name="domain">[('state','=','draft')]</field>
             <field name="filter" eval="True"/>
         </record>
-
-        =============================
-        Lot
-        =============================
 
         <record id="view_tracking_form" model="ir.ui.view">
             <field name="name">stock.tracking.form</field>
@@ -347,11 +337,6 @@
             <field eval="True" name="object"/>
         </record>
 
-
-
-        =============================
-        Location
-        =============================
         <record id="view_location_form" model="ir.ui.view">
             <field name="name">stock.location.form</field>
             <field name="model">stock.location</field>
@@ -430,9 +415,6 @@
         </record>
 <!--        <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_root"/>-->
 
-        =============================
-        Warehouse
-        =============================
         <record id="view_warehouse" model="ir.ui.view">
             <field name="name">stock.warehouse</field>
             <field name="model">stock.warehouse</field>
@@ -472,9 +454,6 @@
         </record>
         <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_stock_configuration"/>
 
-        ==============================
-        Wizard to Fill From Unreceived Products
-        ===============================
         <record id="stock_picking_move_wizard_form" model="ir.ui.view">
             <field name="name">stock.picking.move.wizard.form</field>
             <field name="model">stock.picking.move.wizard</field>
@@ -504,9 +483,6 @@
         </record>
 
 
-        =============================
-        Picking
-        =============================
     	<record id="view_stock_split_production_lots" model="ir.ui.view">
             <field name="name">Split Production Lots</field>
             <field name="model">stock.split.production.lots</field>
@@ -664,19 +640,15 @@
                         <field name="location_dest_id" select="1"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                   </group>
+                    </group>
                     <group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
-						<filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
-					</group>
-              </search>
+                        <filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
+                    </group>
+                </search>
             </field>
         </record>
-
-        #
-        # Delivery Orders
-        #
 
         <record id="view_picking_delivery_tree" model="ir.ui.view">
             <field name="name">stock.picking.delivery.tree</field>
@@ -790,13 +762,13 @@
                         <field name="address_id" select="1"/>
                         <field name="name" select="1"/>
                         <field name="origin" select="1"/>
-                   </group>
+                    </group>
                     <group expand="context.get('report',False)" string="Group By..." colspan="4" col="10">
                         <filter string="Partner" icon="terp-stock" domain="[]"  context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
-						<filter string="Order Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
-					</group>
-              </search>
+                        <filter string="Order Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -995,15 +967,17 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
+                <tree colors="grey:state in ('cancel', 'done');black:state in ('confirmed', 'assigned');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="origin"/>
                     <field name="address_id"/>
                     <field name="backorder_id"/>
+                    <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="invoice_state"/>
                     <field name="state"/>
+                    <button name="%(partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-ok"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                 </tree>
             </field>
         </record>
@@ -1014,13 +988,14 @@
             <field name="arch" type="xml">
                 <form string="Input Picking List">
                     <group colspan="4" col="6">
-                        <field name="address_id" on_change="onchange_partner_in(address_id)" select="2" context="{'contact_display':'partner'}"/>
-                        <field name="type"/>
-                        <field name="origin" select="2"/>
-                        <field name="invoice_state" select="2" string="Invoice Control"/>
                         <field name="name" readonly="1" select="1"/>
-                        <field name="min_date" select="2" readonly="1"/>
+                        <field name="address_id" on_change="onchange_partner_in(address_id)" select="2" context="{'contact_display':'partner'}"/>
+                        <field name="origin" select="2"/>
                         <field name="backorder_id" select="2" readonly="1"/>
+                        <field name="date"/>
+                        <field name="min_date" select="2" readonly="1"/>
+                        <field name="invoice_state" select="2" string="Invoice Control"/>
+                        <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
@@ -1075,7 +1050,7 @@
                             </field>
                             <group col="7" colspan="4">
                                 <label colspan="5"/>
-                                <button name="%(act_stock_picking_move_wizard)d" string="Unreceived Products" type="action" states="draft,confirmed,assigned" icon="gtk-redo"/>
+                                <button name="%(act_stock_picking_move_wizard)d" string="Unreceived Products" type="action" states="draft" icon="gtk-redo"/>
                             </group>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
@@ -1095,25 +1070,26 @@
             </field>
         </record>
 
-		<record id="view_picking_in_search" model="ir.ui.view">
+        <record id="view_picking_in_search" model="ir.ui.view">
             <field name="name">stock.picking.in.search</field>
             <field name="model">stock.picking</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Input Picking List">
-                	<group col="8" colspan="4">
-                        <filter icon="terp-stock" string="To Process" domain="[('state','=','assigned')]" help="Assigned Incoming Orders"/>
-                        <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Incoming Orders"/>
+                    <group col="8" colspan="4">
+                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Incoming Orders" default="1" />
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-stock" string="Back Order" domain="[('backorder_id', '!=', False)]" help="Has Back Order" />
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                        <field name="company_id" select="1" widget="selection"/>
-                   </group>
-                    <group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company" />
+                    </group>
+                    <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
-						<filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
-					</group>
+                        <filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -1182,14 +1158,6 @@
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
 		<menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="2"/>
-        =============================
-        Move Tracking
-        =============================
-
-
-        =============================
-        Move
-        =============================
 
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>

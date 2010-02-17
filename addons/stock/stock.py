@@ -451,7 +451,7 @@ class stock_picking(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True),
-        'origin': fields.char('Source document', size=64, help="Reference of the document that produced this picking."),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking."),
         'backorder_id': fields.many2one('stock.picking', 'Back Order', help="If the picking is splitted then the picking id in available state of move for this picking is stored in Backorder."),
         'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the picking without removing it."),
@@ -476,7 +476,7 @@ class stock_picking(osv.osv):
             \n* The \'Waiting\' state is used in MTO moves when a movement is waiting for another one.'),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Planned Date', select=1, help="Planned date for Picking. Default it takes current date"),
-        'date': fields.datetime('Date Order', help="Date of Order"),
+        'date': fields.datetime('Order Date', help="Date of Order"),
         'date_done': fields.datetime('Date Done', help="Date of completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Planned Date', select=2),
@@ -1090,7 +1090,7 @@ class stock_move(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
         'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"),
-        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Source document"),
+        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
     }
     _constraints = [
