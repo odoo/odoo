@@ -85,7 +85,7 @@ class make_invoice(wizard.interface):
                     'state' : [('end', 'Cancel'),('invoice', 'Create invoices') ]}
         },
         'invoice' : {
-            'actions' : [_makeInvoices],
+            'actions' : [],
             'result' : {'type' : 'action',
                     'action' : _makeInvoices,
                     'state' : 'end'}
