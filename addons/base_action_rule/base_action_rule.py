@@ -61,7 +61,7 @@ class base_action_rule(osv.osv):
             'partner': hasattr(obj, 'partner_id') and (obj.partner_id and obj.partner_id.name) or '/',
             'partner_email': hasattr(obj, 'partner_address_id') and (obj.partner_address_id and obj.partner_address_id.email) or '/',
         }
-        return format_body(body % data)
+        return self.format_body(body % data)
 
     def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from',False), context={}):
         body = self.format_mail(obj, body)
