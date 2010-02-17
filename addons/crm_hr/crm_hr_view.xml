@@ -32,7 +32,7 @@
 
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">CRM - Jobs Requests Tree</field>
-        <field name="model">crm.job</field>
+        <field name="model">crm.applicant</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Jobs - Recruitment Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
@@ -58,7 +58,7 @@
 
     <record model="ir.ui.view" id="crm_case_form_view_job">
         <field name="name">CRM - Jobs Requests Form</field>
-        <field name="model">crm.job</field>
+        <field name="model">crm.applicant</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Jobs - Recruitment Form">
@@ -66,38 +66,31 @@
                     <field name="name" string="Description" colspan="2"/>
                     <field name="section_id" colspan="1" widget="selection"/>
                     <field name="user_id" string="Responsible" select="2"/>
+                    <button string="Schedule a Phone Call"
+                        name="%(wizard_crm_job_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}"/>
                     <newline/>
                         <label string="Stage: " align="1.0"/>
                         <group colspan="1" col="2">
                             <field name="stage_id" select="1" nolabel="1"/>
                             <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
-                    <field name="date" string="Next Interview"/>
-                    <field name="duration" widget="float_time"/>
+                        <field name="partner_name" string="Candidate Name"/>
+                        <field name="partner_phone"/>
                     <button name="%(wizard_crm_job_meeting_set)d" string="Schedule Meeting" icon="terp-crm" type="action"/>
-                    <field name="phonecall_id" select="1"/>
-                	<button string="Schedule a Phone Call"
-                        name="%(wizard_crm_job_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}"/>
 					<field name="department_id" />
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
-                        <field name="partner_name" string="Candidate Name"/>
-                        <field name="partner_name2" string="Candidate Name2"/>
-                        <newline/>
-                        <field name="partner_phone"/>
                         <field name="partner_mobile"/>
-                        <field name="email_from" string="Candidate Email"/>
+                        <field name="email_from" string="Candidate Email" widget="email"/>
                         <newline/>
-                        <group colspan="2" col="3">
-                         <field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
-                          <button string="Convert to Partner"
+                        <field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
+                        <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+						<button string="Convert to Partner"
                               icon="terp-partner" name="%(wizard_crm_job_partner_create)d"
                               type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
                           />
-                        </group>
-                        <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
-                        <newline/>
+						<newline/>
                         <separator colspan="4" string="Contract Data"/>
                         <field name="probability" string="Availability (weeks)"/>
                         <newline/>
@@ -177,7 +170,7 @@
 
     <record model="ir.ui.view" id="crm_case_calendar_view_job">
         <field name="name">CRM - Jobs Requests Calendar</field>
-        <field name="model">crm.job</field>
+        <field name="model">crm.applicant</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -191,7 +184,7 @@
 
     <record model="ir.ui.view" id="crm_case_graph_view_job">
         <field name="name">CRM - Jobs Requests Graph</field>
-        <field name="model">crm.job</field>
+        <field name="model">crm.applicant</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
               <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
@@ -239,11 +232,11 @@
                    		<field name="email_from" select='1' string="Email"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
-					<field name="section_id" select="1" widget="selection" string="Section">
- 						<filter icon="terp-crm"
-                               domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section"
-                           />
+					<field name="department_id" select="1" widget="selection" string="Department">
+<!-- 						<filter icon="terp-crm"-->
+<!--                               domain="[('section_id','=',context.get('section_id',False))]"-->
+<!--                               help="My section"-->
+<!--                           />-->
 					</field>
                </search>
             </field>

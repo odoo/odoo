@@ -6,8 +6,8 @@
 	-->
 
         <record id="view_crm_job_user_tree" model="ir.ui.view">
-            <field name="name">report.crm.job.user.tree</field>
-            <field name="model">report.crm.job.user</field>
+            <field name="name">report.crm.applicant.user.tree</field>
+            <field name="model">report.crm.applicant.user</field>
             <field name="inherit_id" ref="report_crm.view_crm_case_user_tree"/>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -21,8 +21,8 @@
             </field>
         </record>
         <record id="view_crm_job_user_form" model="ir.ui.view">
-            <field name="name">report.crm.job.user.form</field>
-            <field name="model">report.crm.job.user</field>
+            <field name="name">report.crm.applicant.user.form</field>
+            <field name="model">report.crm.applicant.user</field>
             <field name="inherit_id" ref="report_crm.view_crm_case_user_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -37,8 +37,8 @@
         </record>
 
         <record id="view_crm_job_user_graph" model="ir.ui.view">
-            <field name="name">report.crm.job.user.graph</field>
-            <field name="model">report.crm.job.user</field>
+            <field name="name">report.crm.applicant.user.graph</field>
+            <field name="model">report.crm.applicant.user</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="jobs by User and Section" type="bar">
@@ -50,8 +50,8 @@
         </record>
 
         <record id="view_crm_job_user_filter" model="ir.ui.view">
-            <field name="name">report.crm.job.user.select</field>
-            <field name="model">report.crm.job.user</field>
+            <field name="name">report.crm.applicant.user.select</field>
+            <field name="model">report.crm.applicant.user</field>
             <field name="inherit_id" ref="report_crm.view_crm_case_user_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -62,7 +62,7 @@
 
         <record id="action_report_crm_job_user_tree" model="ir.actions.act_window">
             <field name="name">Jobs by User and Section</field>
-            <field name="res_model">report.crm.job.user</field>
+            <field name="res_model">report.crm.applicant.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_crm_job_user_graph"/>
@@ -79,8 +79,8 @@
         <!-- # jobs by section and category of case -->
 
         <record id="view_crm_job_categ_tree" model="ir.ui.view">
-            <field name="name">report.crm.job.categ.tree</field>
-            <field name="model">report.crm.job.categ</field>
+            <field name="name">report.crm.applicant.categ.tree</field>
+            <field name="model">report.crm.applicant.categ</field>
             <field name="inherit_id" ref="report_crm.view_crm_case_categ_tree"/>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -94,8 +94,8 @@
             </field>
         </record>
         <record id="view_crm_job_categ_form" model="ir.ui.view">
-            <field name="name">report.crm.job.categ.form</field>
-            <field name="model">report.crm.job.categ</field>
+            <field name="name">report.crm.applicant.categ.form</field>
+            <field name="model">report.crm.applicant.categ</field>
             <field name="inherit_id" ref="report_crm.view_crm_case_categ_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -110,8 +110,8 @@
         </record>
 
 		<record id="view_crm_job_categ_graph" model="ir.ui.view">
-            <field name="name">report.crm.job.categ.graph</field>
-            <field name="model">report.crm.job.categ</field>
+            <field name="name">report.crm.applicant.categ.graph</field>
+            <field name="model">report.crm.applicant.categ</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="jobs by Section and Categories" type="bar">
@@ -123,8 +123,8 @@
         </record>
 
 		<record id="view_crm_job_categ_filter" model="ir.ui.view">
-            <field name="name">report.crm.job.categ.select</field>
-            <field name="model">report.crm.job.categ</field>
+            <field name="name">report.crm.applicant.categ.select</field>
+            <field name="model">report.crm.applicant.categ</field>
 			<field name="inherit_id" ref="report_crm.view_crm_case_categ_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -135,7 +135,7 @@
 
         <record id="action_report_crm_job_categ_tree" model="ir.actions.act_window">
             <field name="name">Jobs by Categories and Section</field>
-            <field name="res_model">report.crm.job.categ</field>
+            <field name="res_model">report.crm.applicant.categ</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_crm_job_categ_graph"/>
@@ -146,8 +146,8 @@
         <!-- jobs by Section  -->
 
         <record id="view_report_crm_job_section_tree" model="ir.ui.view">
-            <field name="name">report.crm.job.section.tree</field>
-            <field name="model">report.crm.job.section</field>
+            <field name="name">report.crm.applicant.section.tree</field>
+            <field name="model">report.crm.applicant.section</field>
             <field name="inherit_id" ref="report_crm.view_report_crm_case_section_tree"/>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -161,8 +161,8 @@
         </record>
 
         <record id="view_report_crm_job_section_graph" model="ir.ui.view">
-            <field name="name">report.crm.job.section.graph</field>
-            <field name="model">report.crm.job.section</field>
+            <field name="name">report.crm.applicant.section.graph</field>
+            <field name="model">report.crm.applicant.section</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="jobs by Section" type="bar">
@@ -173,8 +173,8 @@
         </record>
 
 		<record id="view_report_crm_job_section_filter" model="ir.ui.view">
-            <field name="name">report.crm.job.section.select</field>
-            <field name="model">report.crm.job.section</field>
+            <field name="name">report.crm.applicant.section.select</field>
+            <field name="model">report.crm.applicant.section</field>
             <field name="inherit_id" ref="report_crm.view_report_crm_case_section_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -185,7 +185,7 @@
 
         <record id="action_report_crm_job_section_tree" model="ir.actions.act_window">
             <field name="name">Jobs by Section</field>
-            <field name="res_model">report.crm.job.section</field>
+            <field name="res_model">report.crm.applicant.section</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_report_crm_job_section_graph"/>

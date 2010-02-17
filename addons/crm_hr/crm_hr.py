@@ -22,15 +22,15 @@
 from osv import fields,osv,orm
 from crm import crm
 
-class crm_job(osv.osv):
-    _name = "crm.job"
-    _description = "Job Cases"
+class crm_applicant(osv.osv):
+    _name = "crm.applicant"
+    _description = "Applicant Cases"
     _order = "id desc"
     _inherit ='crm.case'
     _columns = {
             'date_closed': fields.datetime('Closed', readonly=True),
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.job')]"),
+            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
             'probability': fields.float('Probability (%)'),
@@ -38,8 +38,8 @@ class crm_job(osv.osv):
             'partner_name2': fields.char('Employee Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
             'partner_mobile': fields.char('Mobile', size=32),
-            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.job')]"),
-            'type_id': fields.many2one('crm.case.resource.type', 'Type Name', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.job')]"),
+            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
+            'type_id': fields.many2one('crm.case.resource.type', 'Type Name', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
             'duration': fields.float('Duration'),
             'case_id': fields.many2one('crm.case', 'Related Case'),
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
@@ -53,4 +53,4 @@ class crm_job(osv.osv):
             'department_id':fields.many2one('hr.department','Department'),
     }
 
-crm_job()
+crm_applicant()

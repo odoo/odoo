@@ -8,13 +8,13 @@
     <record model="crm.case.categ" id="categ_job1">
         <field name="name">Salesman</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-		<field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+		<field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
 
     <record model="crm.case.categ" id="categ_job2">
         <field name="name">Junior Developer</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
 
         <!--    Resource(type_id)        -->
@@ -22,17 +22,17 @@
     <record model="crm.case.resource.type" id="type_job1">
         <field name="name">Graduate</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
     <record model="crm.case.resource.type" id="type_job2">
         <field name="name">Licenced</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
     <record model="crm.case.resource.type" id="type_job3">
         <field name="name"> > Bac +5</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
 
          <!--    STAGE(stage_id)    -->
@@ -40,17 +40,17 @@
     <record model="crm.case.stage" id="stage_job1">
         <field name="name">Initial Jobs Demand</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
     <record model="crm.case.stage" id="stage_job2">
         <field name="name">First Interview</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
     <record model="crm.case.stage" id="stage_job3">
         <field name="name">Second Interview</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
     <record model="crm.case.stage" id="stage_job4">
         <field name="name">Contract Proposed</field>
@@ -60,17 +60,17 @@
     <record model="crm.case.stage" id="stage_job5">
         <field name="name">Contract Signed</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
     <record model="crm.case.stage" id="stage_job6">
         <field name="name">Refused by Employee</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
     <record model="crm.case.stage" id="stage_job7">
         <field name="name">Refused by Company</field>
         <field name="section_id" ref="crm.section_sales_department"/>
-        <field name="object_id" search="[('model','=','crm.job')]" model="ir.model"/>
+        <field name="object_id" search="[('model','=','crm.applicant')]" model="ir.model"/>
     </record>
 </data>
 
