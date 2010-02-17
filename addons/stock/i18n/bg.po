@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 12:31+0000\n"
-"Last-Translator: lem0na <nickyk@gmx.net>\n"
+"PO-Revision-Date: 2010-02-16 19:03+0000\n"
+"Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-02-17 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -44,13 +44,13 @@ msgstr "terp-account"
 #. module: stock
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Невалидно име на модел при задаването на действие."
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
 #: model:ir.ui.menu,name:stock.menu_stock_root
 msgid "Inventory Management"
-msgstr ""
+msgstr "Управление на инвентар"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -70,7 +70,7 @@ msgstr "STOCK_MEDIA_FORWARD"
 #. module: stock
 #: rml:lot.location:0
 msgid "Total :"
-msgstr ""
+msgstr "Общо :"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -81,7 +81,7 @@ msgstr "STOCK_ZOOM_100"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "UoM"
-msgstr ""
+msgstr "Мерни единици"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.return_picking
@@ -109,7 +109,7 @@ msgstr "Списък за опаковане"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Amount"
-msgstr ""
+msgstr "Количество"
 
 #. module: stock
 #: view:stock.picking:0
@@ -126,7 +126,7 @@ msgstr "Пристигащи продукти"
 #: field:stock.picking,name:0
 #: field:stock.tracking,serial:0
 msgid "Reference"
-msgstr "Отпратка"
+msgstr "Препратка"
 
 #. module: stock
 #: wizard_field:stock.invoice_onshipping,init,group:0
@@ -147,7 +147,7 @@ msgstr "Изискване при получване да се използва 
 #: field:stock.move,move_history_ids:0
 #: field:stock.move,move_history_ids2:0
 msgid "Move History"
-msgstr "История на движение"
+msgstr "Хронология на движение"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -184,7 +184,7 @@ msgstr "Състояние"
 #. module: stock
 #: field:stock.location,stock_real_value:0
 msgid "Real Stock Value"
-msgstr ""
+msgstr "Реална складова стойност"
 
 #. module: stock
 #: view:stock.move:0
@@ -236,7 +236,7 @@ msgstr "terp-hr"
 #. module: stock
 #: field:stock.location,usage:0
 msgid "Location Type"
-msgstr ""
+msgstr "Вид местонахождение"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -284,7 +284,7 @@ msgstr "Ред(източник)"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Grand Total:"
-msgstr ""
+msgstr "Общ сбор"
 
 #. module: stock
 #: view:stock.location:0
@@ -617,7 +617,7 @@ msgstr "Местонахождение на продукция"
 #. module: stock
 #: field:stock.move,tracking_id:0
 msgid "Tracking Lot"
-msgstr ""
+msgstr "Проследяващ код на партида"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -660,6 +660,11 @@ msgid "Expected Shipping Date"
 msgstr "Очаквана дата за транспортиране"
 
 #. module: stock
+#: rml:stock.picking.list:0
+msgid "Shipping Address :"
+msgstr "Адрес за доставка :"
+
+#. module: stock
 #: view:stock.tracking:0
 msgid "Tracking/Serial"
 msgstr "Транспортен/сериен"
@@ -684,6 +689,8 @@ msgstr "Местонахождение на партньор"
 msgid ""
 "Tracking lot is the code that will be put on the logistical unit/pallet"
 msgstr ""
+"Проследяващ код на партида е кодът, който ще бъде поставен върху "
+"транспортната единица/палет"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -723,7 +730,7 @@ msgstr "От"
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "weight"
-msgstr ""
+msgstr "тегло"
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -757,7 +764,7 @@ msgstr "Чакащи"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree7
 #: model:ir.ui.menu,name:stock.menu_picking_waiting
 msgid "Available Packing"
-msgstr ""
+msgstr "Налична опаковка"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -783,7 +790,7 @@ msgstr "Основни ИР доставчици"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all
 msgid "Location Content (With children)"
-msgstr ""
+msgstr "Съдържание на местонахождение (с подчинени)"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -810,7 +817,7 @@ msgstr "STOCK_CONNECT"
 #: model:ir.ui.menu,name:stock.menu_action_picking_all
 #: wizard_field:stock.picking.make,init,pickings:0
 msgid "Packing"
-msgstr ""
+msgstr "Опаковка"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -832,7 +839,7 @@ msgstr "STOCK_OK"
 #: model:ir.actions.act_window,name:stock.action_picking_tree9
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree9
 msgid "New Internal Packing"
-msgstr ""
+msgstr "Ново вътрешно пакетиране"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -936,7 +943,7 @@ msgstr "STOCK_GO_BACK"
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "За фактуриране"
 
 #. module: stock
 #: view:product.product:0
@@ -1159,7 +1166,7 @@ msgstr "Въвеждане на списък за пакетиране"
 #: model:ir.model,name:stock.model_stock_picking
 #: field:stock.move,picking_id:0
 msgid "Packing List"
-msgstr ""
+msgstr "Съдържание на опаковката"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1215,7 +1222,7 @@ msgstr "Липси на наличност"
 #. module: stock
 #: field:stock.production.lot,ref:0
 msgid "Internal Ref"
-msgstr ""
+msgstr "Вътрешна препратка"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1274,7 +1281,7 @@ msgstr "Редове на движение"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Value"
-msgstr ""
+msgstr "Стойност"
 
 #. module: stock
 #: field:stock.picking,type:0
@@ -1370,7 +1377,7 @@ msgstr "Състояние на фактура"
 #. module: stock
 #: rml:lot.location:0
 msgid "Units"
-msgstr ""
+msgstr "Единици"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1404,6 +1411,21 @@ msgid ""
 "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
 "    "
 msgstr ""
+"Модулът за управление на инвентар на OpenERP може да управлява многобройни "
+"складове, многобройни и структурирани местонахождения в склад.\n"
+"Благодарение на управлението с двойно вписване, контролирането на инвентара "
+"е и мощно и гъвкаво:\n"
+"*Хронология и планиране на движения\n"
+"*Различни методи за инвентар (FIFO, LIFO, ...)\n"
+"*Оценяване на склад (стандартни или средни цени, ...)\n"
+"* Robustness faced with Inventory differences\n"
+"*Автоматични правила за предварителни поръчки (складови наличности, JIT, "
+"...)\n"
+"*Поддръжка на баркодове\n"
+"*Светкавично откриване на грешки благодарение на управлението с двойно "
+"вписване\n"
+"*Проследимост (вертикална, производствени партиди, серийни номера, ...)\n"
+"    "
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -1447,7 +1469,7 @@ msgstr "STOCK_DELETE"
 #. module: stock
 #: model:account.journal,name:stock.stock_journal
 msgid "Stock Journal"
-msgstr ""
+msgstr "Складов дневник"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1467,7 +1489,7 @@ msgstr "Снабдаване"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
 msgid "Maxtor Suppliers"
-msgstr ""
+msgstr "Доставчици на Макстор"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1488,7 +1510,7 @@ msgstr "terp-mrp"
 #: model:ir.actions.act_window,name:stock.action_picking_tree3_delivery
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree3_delivery
 msgid "Future Delivery Orders"
-msgstr ""
+msgstr "Бъдещи поръчки за доставка"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1546,7 +1568,7 @@ msgstr "Създаване на фактури"
 #. module: stock
 #: field:stock.production.lot.revision,date:0
 msgid "Revision Date"
-msgstr ""
+msgstr "Дата на ревизия"
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -1567,7 +1589,7 @@ msgstr "Коливество (мер.ед)"
 #: model:ir.actions.act_window,name:stock.action_picking_tree5
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree5
 msgid "Packing to Process"
-msgstr ""
+msgstr "Пакетиране за изпълнение"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1625,7 +1647,7 @@ msgstr "Международни термини"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Total:"
-msgstr ""
+msgstr "Общо:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1655,7 +1677,7 @@ msgstr "До"
 #. module: stock
 #: field:stock.production.lot.revision,name:0
 msgid "Revision Name"
-msgstr ""
+msgstr "Име на ревизия"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1787,7 +1809,7 @@ msgstr "Продукт мер. ед."
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Variants"
-msgstr ""
+msgstr "Варианти"
 
 #. module: stock
 #: field:stock.location,posx:0
@@ -1972,7 +1994,7 @@ msgstr "Доставяне на стоки"
 #. module: stock
 #: view:stock.location:0
 msgid "Stock Location"
-msgstr ""
+msgstr "Местонахождение на склад"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2048,12 +2070,12 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirm (Do Not Process Now)"
-msgstr ""
+msgstr "Потвърди (не изпълнявай сега)"
 
 #. module: stock
 #: field:stock.tracking,move_ids:0
 msgid "Moves Tracked"
-msgstr ""
+msgstr "Следени движения"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
@@ -2104,7 +2126,7 @@ msgstr "Автоматично движение"
 #. module: stock
 #: field:stock.location,stock_virtual_value:0
 msgid "Virtual Stock Value"
-msgstr ""
+msgstr "Виртуална складова стойност"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -2166,7 +2188,7 @@ msgstr "STOCK_JUSTIFY_CENTER"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree3
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree8
 msgid "Confirmed Packing Waiting Availability"
-msgstr ""
+msgstr "Потвърдени опаковки чакащи наличност"
 
 #. module: stock
 #: field:stock.location,posy:0
@@ -2211,7 +2233,7 @@ msgstr "Разделяне на две"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
 msgid "Future Stock Moves"
-msgstr ""
+msgstr "Бъдещи складови движения"
 
 #. module: stock
 #: help:product.template,property_stock_procurement:0
@@ -2264,6 +2286,8 @@ msgid ""
 "Scheduled date for the movement of the products or real date if the move is "
 "done."
 msgstr ""
+"Планирана дата за придвижване на продукти, или реална дата, ако "
+"придвижването е извършено."
 
 #. module: stock
 #: view:stock.picking:0
@@ -2365,7 +2389,7 @@ msgstr "Клиент"
 #: model:ir.actions.act_window,name:stock.action_location_tree_3
 #: model:ir.ui.menu,name:stock.menu_action_location_tree_3
 msgid "Locations' Values"
-msgstr ""
+msgstr "Стойности на местонахождение"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output
