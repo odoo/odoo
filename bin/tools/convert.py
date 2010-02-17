@@ -250,7 +250,15 @@ form: module.record_id""" % (xml_id,)
         if ids:
             self.pool.get(d_model).unlink(cr, self.uid, ids)
             self.pool.get('ir.model.data')._unlink(cr, self.uid, d_model, ids, direct=True)
-
+    
+    def _remove_ir_values(self, cr, name, value, model):
+        ir_value_ids = self.pool.get('ir.values').search(cr, self.uid, [('name','=',name),('value','=',value),('model','=',model)])
+        if ir_value_ids:
+            self.pool.get('ir.values').unlink(cr, self.uid, ir_value_ids)
+            self.pool.get('ir.model.data')._unlink(cr, self.uid, 'ir.values', ir_value_ids, direct=True)
+        
+        return True
+     
     def _tag_report(self, cr, rec, data_node=None):
         res = {}
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
@@ -260,13 +268,13 @@ form: module.record_id""" % (xml_id,)
             if rec.get(field):
                 res[dest] = rec.get(field).encode('utf8')
         if rec.get('auto'):
-            res['auto'] = eval(rec.get('auto'))
+            res['auto'] = eval(rec.get('auto','False'))
         if rec.get('sxw'):
             sxw_content = misc.file_open(rec.get('sxw')).read()
             res['report_sxw_content'] = sxw_content
         if rec.get('header'):
-            res['header'] = eval(rec.get('header'))
-        res['multi'] = rec.get('multi') and eval(rec.get('multi',''))
+            res['header'] = eval(rec.get('header','False'))
+        res['multi'] = rec.get('multi') and eval(rec.get('multi','False'))
         xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
 
@@ -286,12 +294,16 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 
-        if not rec.get('menu') or eval(rec.get('menu','')):
+        if not rec.get('menu') or eval(rec.get('menu','False')):
             keyword = str(rec.get('keyword', 'client_print_multi'))
             keys = [('action',keyword),('res_model',res['model'])]
             value = 'ir.actions.report.xml,'+str(id)
             replace = rec.get('replace', True)
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
+        elif self.mode=='update' and eval(rec.get('menu','False'))==False:
+            # Special check for report having attribute menu=False on update
+            value = 'ir.actions.report.xml,'+str(id)
+            self._remove_ir_values(cr, res['name'], value, res['model'])
         return False
 
     def _tag_function(self, cr, rec, data_node=None):
@@ -308,7 +320,7 @@ form: module.record_id""" % (xml_id,)
         name = rec.get("name",'').encode('utf8')
         xml_id = rec.get('id','').encode('utf8')
         self._test_xml_id(xml_id)
-        multi = rec.get('multi','') and eval(rec.get('multi',''))
+        multi = rec.get('multi','') and eval(rec.get('multi','False'))
         res = {'name': string, 'wiz_name': name, 'multi': multi, 'model': model}
 
         if rec.get('groups'):
@@ -327,13 +339,17 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         # ir_set
-        if (not rec.get('menu') or eval(rec.get('menu',''))) and id:
+        if (not rec.get('menu') or eval(rec.get('menu','False'))) and id:
             keyword = str(rec.get('keyword','') or 'client_action_multi')
             keys = [('action',keyword),('res_model',model)]
             value = 'ir.actions.wizard,'+str(id)
             replace = rec.get("replace",'') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
-
+        elif self.mode=='update' and (rec.get('menu') and eval(rec.get('menu','False'))==False):
+            # Special check for wizard having attribute menu=False on update
+            value = 'ir.actions.wizard,'+str(id)
+            self._remove_ir_values(cr, string, value, model)
+        
     def _tag_url(self, cr, rec, data_node=None):
         url = rec.get("string",'').encode('utf8')
         target = rec.get("target",'').encode('utf8')
@@ -346,12 +362,16 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
         # ir_set
-        if (not rec.get('menu') or eval(rec.get('menu',''))) and id:
+        if (not rec.get('menu') or eval(rec.get('menu','False'))) and id:
             keyword = str(rec.get('keyword','') or 'client_action_multi')
             keys = [('action',keyword)]
             value = 'ir.actions.url,'+str(id)
             replace = rec.get("replace",'') or True
             self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, url, ["ir.actions.url"], value, replace=replace, isobject=True, xml_id=xml_id)
+        elif self.mode=='update' and (rec.get('menu') and eval(rec.get('menu','False'))==False):
+            # Special check for URL having attribute menu=False on update
+            value = 'ir.actions.url,'+str(id)
+            self._remove_ir_values(cr, url, value, "ir.actions.url")
 
     def _tag_act_window(self, cr, rec, data_node=None):
         name = rec.get('name','').encode('utf-8')
