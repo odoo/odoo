@@ -46,6 +46,7 @@ class crm_claim(osv.osv):
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.claim')]"),
+        'probability': fields.float('Probability (%)'),     
     }
     
     _defaults = {
