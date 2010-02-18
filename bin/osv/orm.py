@@ -2138,8 +2138,13 @@ class orm(orm_template):
                     for i in range(len(field_value)):
                         field_value2.append({})
                         for field2 in field_value[i]:
-                            if obj._columns[field2]._type in ('many2one', 'one2one'):
+                            if field2 in obj._columns.keys() and obj._columns[field2]._type in ('many2one', 'one2one'):
                                 obj2 = self.pool.get(obj._columns[field2]._obj)
+                                if not obj2.search(cr, uid,
+                                        [('id', '=', field_value[i][field2])]):
+                                    continue
+                            elif field2 in obj._inherit_fields.keys() and obj._inherit_fields[field2][2]._type in ('many2one', 'one2one'):
+                                obj2 = self.pool.get(obj._inherit_fields[field2][2]._obj)
                                 if not obj2.search(cr, uid,
                                         [('id', '=', field_value[i][field2])]):
                                     continue
