@@ -138,6 +138,7 @@ class view(osv.osv):
         transitions = []
         start = []
         tres = {}
+        signal = {}
         no_ancester = []
 
         _Model_Obj = self.pool.get(model)
@@ -170,8 +171,12 @@ class view(osv.osv):
                     no_ancester.append(a['id'])
             for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
                 transitions.append((a['id'], t[des_node][0]))
-                tres[t['id']] = (a['id'], t[des_node][0])
-
+                tres[str(t['id'])] = (a['id'],t[des_node][0])
+                if t['signal']:
+                    signal[str(t['id'])] = t['signal']
+                else:
+                    signal[str(t['id'])] = t['condition']
+                
         g  = graph(nodes, transitions, no_ancester)
         g.process(start)
         g.scale(*scale)
@@ -180,7 +185,7 @@ class view(osv.osv):
         for node in nodes_name:
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
-        return {'nodes': results, 'transitions': tres}
+        return {'nodes': results, 'transitions': tres, 'signal' : signal}
 view()
 
 class view_sc(osv.osv):
