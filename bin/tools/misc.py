@@ -701,6 +701,22 @@ class cache(object):
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
+def get_encodings():
+    yield 'utf8'
+    from locale import getpreferredencoding
+    prefenc = getpreferredencoding()
+    if prefenc:
+        yield prefenc
+
+        prefenc = {
+            'latin1': 'latin9',
+            'iso-8859-1': 'iso8859-15',
+            'cp1252': '1252',
+        }.get(prefenc.lower())
+        if prefenc:
+            yield prefenc
+
+
 def ustr(value):
     """This method is similar to the builtin `str` method, except
     it will return Unicode string.
@@ -710,29 +726,25 @@ def ustr(value):
     @rtype: unicode
     @return: unicode string
     """
+    orig = value
+    if isinstance(value, Exception):
+        return exception_to_unicode(value)
 
     if isinstance(value, unicode):
         return value
 
-    if hasattr(value, '__unicode__'):
+    try:
         return unicode(value)
-
-    if not isinstance(value, str):
-        value = str(value)
-
-    try: # first try utf-8
-        return unicode(value, 'utf-8')
     except:
         pass
 
-    try: # then extened iso-8858
-        return unicode(value, 'iso-8859-15')
-    except:
-        pass
+    for ln in get_encodings():
+        try:
+            return unicode(value, ln)
+        except:
+            pass
+    raise UnicodeError('unable de to convert %r' % (orig,))
 
-    # else use default system locale
-    from locale import getlocale
-    return unicode(value, getlocale()[1])
 
 def exception_to_unicode(e):
     if hasattr(e, 'message'):
