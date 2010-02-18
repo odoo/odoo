@@ -25,8 +25,7 @@ import ir
 from osv import fields,osv
 import netsvc
 import pooler
-import string
-import time,copy
+import time
 from tools.translate import _
 
 class audittrail_rule(osv.osv):
@@ -313,14 +312,14 @@ class audittrail_objects_proxy(objects_proxy):
     def execute(self, db, uid, passwd, object, method, *args):
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
-        cr.autocommit(True)
-        obj=pool.get(object)
-        logged_uids = []
-        object_name=obj._name
-       
-        fct_src = super(audittrail_objects_proxy, self).execute
-        
-        def my_fct(db, uid, passwd, object, method, *args):
+        try:
+            cr.autocommit(True)
+            obj = pool.get(object)
+            logged_uids = []
+            object_name = obj._name
+
+            fct_src = super(audittrail_objects_proxy, self).execute
+
             field = method
             rule = False
             obj_ids= pool.get('ir.model').search(cr, uid,[('model','=',object_name)])
@@ -343,9 +342,9 @@ class audittrail_objects_proxy(objects_proxy):
                         if getattr(thisrule, 'log_'+field):
                             return self.log_fct(db, uid, passwd, object, method, fct_src, *args)
                 return fct_src(db, uid, passwd, object, method, *args)
-        res = my_fct(db, uid, passwd, object, method, *args)
-        cr.close()
-        return res
+        finally:
+            cr.close()
+            pass
 
 audittrail_objects_proxy()
 
