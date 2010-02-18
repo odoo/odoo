@@ -216,7 +216,7 @@ class wizard_compute_tasks(wizard.interface):
                     project_pool.write(cr,uid,[project_id],{'date':e_date})
                 else:
                     user_id = user_pool.search(cr,uid,[('name','=',t.booked_resource[0].__name__)])
-                    task_pool.write(cr,uid,[task_obj[loop_no-1].id],{'date_start':s_date,'date_deadline':e_date,'user_id':user_id[0]})
+                    task_pool.write(cr,uid,[task_obj[loop_no-1].id],{'date_start':s_date.strftime('%Y-%m-%d %H:%M:%S'),'date_deadline':e_date.strftime('%Y-%m-%d %H:%M:%S'),'user_id':user_id[0]})
                 loop_no +=1
 
         return {}
