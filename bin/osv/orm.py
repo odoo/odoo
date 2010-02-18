@@ -1983,6 +1983,8 @@ class orm(orm_template):
             cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (self._table,))
             create = not bool(cr.fetchone())
 
+        cr.commit()     # start a new transaction
+
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
             cr.execute("SELECT conname FROM pg_constraint where conname=%s", (conname,))
@@ -1992,6 +1994,7 @@ class orm(orm_template):
                     cr.commit()
                 except:
                     logger.notifyChannel('orm', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\nALTER table %s ADD CONSTRAINT %s_%s %s' % (con, self._table, self._table, self._table, key, con,))
+                    cr.rollback()
 
         if create:
             if hasattr(self, "_sql"):
@@ -2002,6 +2005,7 @@ class orm(orm_template):
                         cr.commit()
         if store_compute:
             self._parent_store_compute(cr)
+            cr.commit()
         return todo_end
 
     def __init__(self, cr):
