@@ -175,7 +175,6 @@ class wizard_compute_phases(wizard.interface):
 
         def phase_schedule(cr,uid,phase,start_date,avg_hour = 0.0):
            if phase:
-
                 #    To get resources and the duration for the phase
                 resources_list = resource_list(cr,uid,phase)
                 if not avg_hour:
@@ -211,9 +210,8 @@ class wizard_compute_phases(wizard.interface):
                     end_date = e_date
 
                 #    Writing the dates back
-                phase_pool.write(cr,uid,[phase.id],{'date_start':start_date,'date_end':end_date})
+                phase_pool.write(cr,uid,[phase.id],{'date_start':start_date.strftime('%Y-%m-%d %H:%M:%S'),'date_end':end_date.strftime('%Y-%m-%d %H:%M:%S')})
                 date_start = end_date
-
                 #    Recursive calling the next phases till all the phases are scheduled
                 for phase in phase.next_phase_ids:
                    phase_schedule(cr,uid,phase,date_start)

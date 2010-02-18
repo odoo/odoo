@@ -36,50 +36,30 @@ class resource_calendar(osv.osv):
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', c)
     }
-    def interval_min_get(self, cr, uid, id, dt_from, hours , resource=0):
-        dt_leave = []
+    def interval_min_get(self, cr, uid, id, dt_from, hours):
         if not id:
             return [(dt_from-mx.DateTime.RelativeDateTime(hours=int(hours)*3), dt_from)]
-        if resource:
-            resource_leave_ids = self.pool.get('resource.calendar.leaves').search(cr,uid,[('resource_id','=',resource)])
-            if resource_leave_ids:
-                res_leaves = self.pool.get('resource.calendar.leaves').read(cr,uid,resource_leave_ids,['date_from','date_to'])
-                for i in range(len(res_leaves)):
-                    dtf = mx.DateTime.strptime(res_leaves[i]['date_from'],'%Y-%m-%d %H:%M:%S')
-                    dtt = mx.DateTime.strptime(res_leaves[i]['date_to'],'%Y-%m-%d %H:%M:%S')
-                    leave_days = ((dtt - dtf).days) + 1
-                    for x in range(int(leave_days)):
-                        dt_leave.append((dtf + mx.DateTime.RelativeDateTime(days=x)).strftime('%Y-%m-%d'))
-                    dt_leave.sort()
         todo = hours
         cycle = 0
         result = []
         maxrecur = 100
         current_hour = dt_from.hour
         while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week,id))
+            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from desc", (dt_from.day_of_week,id))
             for (hour_from,hour_to) in cr.fetchall():
-                    if (hour_to>current_hour) and (todo>0):
-                        m = max(hour_from, current_hour)
-                        if (hour_to-m)>todo:
-                            hour_to = m+todo
-                        d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
-                        d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
-                        dt1 = d1.strftime('%Y-%m-%d')
-                        dt2 = d2.strftime('%Y-%m-%d')
-                        for i in range(len(dt_leave)):
-                            if dt1 == dt_leave[i]:
-                                dt_from += mx.DateTime.RelativeDateTime(days=1)
-                                d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
-                                d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
-                                dt1 = d1.strftime('%Y-%m-%d')
-                                dt2 = d2.strftime('%Y-%m-%d')
-                        result.append((d1, d2))
-                        current_hour = hour_to
-                        todo -= (hour_to - m)
-            dt_from += mx.DateTime.RelativeDateTime(days=1)
-            current_hour = 0
+                if (hour_from<current_hour) and (todo>0):
+                    m = min(hour_to, current_hour)
+                    if (m-hour_from)>todo:
+                        hour_from = m-todo
+                    d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_from)),int((hour_from%1) * 60))
+                    d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
+                    result.append((d1, d2))
+                    current_hour = hour_from
+                    todo -= (m-hour_from)
+            dt_from -= mx.DateTime.RelativeDateTime(days=1)
+            current_hour = 24
             maxrecur -= 1
+        result.reverse()
         return result
 
     def interval_get(self, cr, uid, id, dt_from, hours, resource=0, byday=True):

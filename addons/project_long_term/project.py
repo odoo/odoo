@@ -20,17 +20,17 @@
 ##############################################################################
 
 from lxml import etree
-from mx import DateTime
-from mx.DateTime import now
+import mx.DateTime
 import time
 from tools.translate import _
-
 from osv import fields, osv
-from tools.translate import _
+
 
 class project_phase(osv.osv):
     _name = "project.phase"
     _description = "Project Phase"
+
+
 
     def _check_recursion(self,cr,uid,ids):
          obj_self = self.browse(cr, uid, ids[0])
@@ -72,6 +72,7 @@ class project_phase(osv.osv):
              next_ids = next_phase_ids
          return True
 
+
     _columns = {
         'name': fields.char("Phase Name", size=64, required=True),
         'date_start': fields.datetime('Starting Date'),
@@ -95,6 +96,94 @@ class project_phase(osv.osv):
     _constraints = [
         (_check_recursion,'Error ! Loops In Phases Not Allowed',['next_phase_ids','previous_phase_ids'])
     ]
+
+    def timeformat_convert(self,cr, uid, time_string, context={}):
+        # To Convert input time string:: 8.5 to output time string 8:30
+        split_list = str(time_string).split('.')
+        hour_part = split_list[0]
+        mins_part = split_list[1]
+        round_mins  = int(round(float(mins_part) * 60,-2))
+        converted_string = hour_part + ':' + str(round_mins)[0:2]
+        return converted_string
+
+    def compute_hours(self,cr,uid,calendar_id,context = None):
+        #  To compute average hours of the working calendar
+
+        resource_week_pool = self.pool.get('resource.calendar.week')
+        week_ids = resource_week_pool.search(cr,uid,[('calendar_id','=',calendar_id)])
+        week_obj = resource_week_pool.read(cr,uid,week_ids,['dayofweek','hour_from','hour_to'])
+        hours = []
+        hr = 0
+        wk_days = []
+        for week in week_obj:
+            if week['dayofweek'] not in wk_days:
+                wk_days.append(week['dayofweek'])
+            hour_from_str = self.timeformat_convert(cr,uid,week['hour_from'])
+            hour_to_str = self.timeformat_convert(cr,uid,week['hour_to'])
+            hours.append(week['hour_from'])
+            hours.append(week['hour_to'])
+
+        for hour in range(len(hours)):
+                if hour%2 ==0:
+                    hr += float(hours[hour+1]) - float(hours[hour])
+        return hr/len(wk_days)
+
+    def constraint_date_start(self,cr,uid,phase,date_end,context=None):
+       # Recursive call for all previous phases if change in date_start < older time
+
+       resource_cal_pool = self.pool.get('resource.calendar')
+       calendar_id = phase.project_id.resource_calendar_id.id
+       avg_hours = self.compute_hours(cr,uid,calendar_id)
+       hours = phase.duration * avg_hours
+       work_time = resource_cal_pool.interval_min_get(cr, uid, calendar_id or False, date_end, hours or 0.0)
+       dt_start = work_time[0][0].strftime('%Y-%m-%d %H:%M:%S')
+       self.write(cr,uid,[phase.id],{'date_start':dt_start,'date_end':date_end.strftime('%Y-%m-%d %H:%M:%S')})
+
+    def constraint_date_end(self,cr,uid,phase,date_start,context=None):
+       # Recursive call for all next phases if change in date_ebd > older time
+
+       resource_cal_pool = self.pool.get('resource.calendar')
+       calendar_id = phase.project_id.resource_calendar_id.id
+       avg_hours = self.compute_hours(cr,uid,calendar_id)
+       hours = phase.duration * avg_hours
+       work_time = resource_cal_pool.interval_get(cr, uid, calendar_id or False, date_start, hours or 0.0)
+       dt_end = work_time[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+       self.write(cr,uid,[phase.id],{'date_start':date_start.strftime('%Y-%m-%d %H:%M:%S'),'date_end':dt_end})
+
+    def write(self, cr, uid, ids, vals,context=None):
+        phase = self.browse(cr,uid,ids[0])
+        resource_cal_pool = self.pool.get('resource.calendar')
+        calendar_id = phase.project_id.resource_calendar_id.id
+        avg_hours = self.compute_hours(cr,uid,calendar_id)
+
+        if not context:
+            context = {}
+# write method changes the date_start and date_end
+#for previous and next phases respectively based on valid condition
+
+        if vals.get('date_start'):
+            if vals['date_start'] < phase.date_start:
+                dt_start = mx.DateTime.strptime(vals['date_start'],'%Y-%m-%d %H:%M:%S')
+                hrs = phase.duration * avg_hours
+                work_times = resource_cal_pool.interval_get(cr, uid, calendar_id or False, dt_start, hrs or 0.0)
+                vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+                super(project_phase, self).write(cr, uid, ids, vals, context=context)
+
+                for prv_phase in phase.previous_phase_ids:
+                   self.constraint_date_start(cr,uid,prv_phase,dt_start)
+
+        if vals.get('date_end'):
+            if vals['date_end'] > phase.date_end:
+                dt_end = mx.DateTime.strptime(vals['date_end'],'%Y-%m-%d %H:%M:%S')
+                hrs = phase.duration * avg_hours
+                work_times = resource_cal_pool.interval_min_get(cr, uid, calendar_id or False, dt_end, hrs or 0.0)
+                vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
+                super(project_phase, self).write(cr, uid, ids, vals, context=context)
+
+                for next_phase in phase.next_phase_ids:
+                   self.constraint_date_end(cr,uid,next_phase,dt_end)
+        return super(project_phase, self).write(cr, uid, ids, vals, context=context)
+
 project_phase()
 
 class project_resource_allocation(osv.osv):
