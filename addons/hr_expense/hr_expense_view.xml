@@ -153,6 +153,11 @@
                             domain="[('user_id','=',uid)]"/>
                       </field>
                       <field name="state" select="1"/>
+                      <field name="department_id" widget="selection">
+                      	<filter icon="terp-crm"
+								domain="[('user_id', '=', uid)]"
+								help="My"/>
+						</field>
                  </group>
                  </search>
             </field>

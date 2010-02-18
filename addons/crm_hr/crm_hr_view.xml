@@ -80,11 +80,12 @@
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
+                    	<separator colspan="4" string="Communications"/>
+                    	<field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
+                        <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+                        <newline/>
                         <field name="partner_mobile"/>
                         <field name="email_from" string="Candidate Email" widget="email"/>
-                        <newline/>
-                        <field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
-                        <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
 						<button string="Convert to Partner"
                               icon="terp-partner" name="%(wizard_crm_job_partner_create)d"
                               type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
