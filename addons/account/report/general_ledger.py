@@ -123,14 +123,15 @@ class general_ledger(rml_parse.rml_parse):
             periods = form['periods'][0][2]
             if not periods:
                 sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = """ + str(form['fiscalyear'])   + """
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = %s
                     """
+                sqlargs = (form['fiscalyear'],)
             else:
-                periods_id = ','.join(map(str, periods))
                 sql = """
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in ( """ + periods_id   + """)
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id in %s
                     """
-            self.cr.execute(sql)
+                sqlargs = (tuple(periods),)
+            self.cr.execute(sql, sqlargs)
             res = self.cr.dictfetchall()
             borne_min = res[0]['start_date']
             borne_max = res[0]['stop_date']
