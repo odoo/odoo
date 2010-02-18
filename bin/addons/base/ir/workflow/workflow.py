@@ -44,6 +44,25 @@ class workflow(osv.osv):
         wf_service.clear_cache(cr, user)
         return super(workflow, self).write(cr, user, ids, vals, context=context)
 
+    def get_active_workitems(self, cr, uid, res, res_id, context={}):
+        
+        cr.execute('select * from wkf where osv=%s limit 1',(res,))
+        wkfinfo = cr.dictfetchone()
+        workitems = []
+        
+        if wkfinfo:
+            cr.execute('SELECT id FROM wkf_instance \
+                            WHERE res_id=%s AND wkf_id=%s \
+                            ORDER BY state LIMIT 1',
+                            (res_id, wkfinfo['id']))
+            inst_id = cr.fetchone()
+         
+            cr.execute('select act_id,count(*) from wkf_workitem where inst_id=%s group by act_id', (inst_id,))
+            workitems = dict(cr.fetchall())        
+         
+        return {'wkf': wkfinfo, 'workitems':  workitems}
+
+
     #
     # scale =  (vertical-distance, horizontal-distance, min-node-width(optional), min-node-height(optional), margin(default=20))
     #
