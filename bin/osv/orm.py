@@ -976,7 +976,7 @@ class orm_template(object):
                             and getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
 
-                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US', self._columns[f].string)
                 if res_trans:
                     res[f]['string'] = res_trans
                 help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
@@ -1450,7 +1450,8 @@ class orm_template(object):
         for lang in langs:
             for field in vals:
                 if field in self._columns:
-                    self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field])
+                    src = self._columns[field].string
+                    self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field], src)
         for table in self._inherits:
             cols = intersect(self._inherit_fields.keys(), vals)
             if cols:
