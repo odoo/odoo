@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
-    <menuitem icon="terp-hr" id="menu_hr" name="Human Resources"/>
+    <menuitem icon="terp-hr" id="base.menu_hr" name="Human Resources"/>
 
     ######################## JOB OPPORTUNITIES (menu) ###########################
      <record model="ir.actions.act_window" id="crm_case_categ0_act_job">
@@ -39,16 +39,16 @@
     <!--<menuitem
         name="Jobs - Hiring Process"
         id="menu_crm_case_job_req_main"
-        parent="menu_hr"/>-->
+        parent="base.menu_hr"/>-->
      <menuitem
         name="Recruitment"
-        id="menu_crm_case_job_req_main"
-        parent="menu_hr"/>
+        id="base.menu_crm_case_job_req_main"
+        parent="base.menu_hr"/>
 
  <!--
         ALL JOBS REQUESTS
     -->
-    <menuitem name="Applicants" parent="menu_crm_case_job_req_main" id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job"/>
+    <menuitem name="Applicants" parent="base.menu_crm_case_job_req_main" id="menu_crm_case_categ0_act_job" action="crm_case_categ0_act_job" sequence="1"/>
 
 </data>
 </openerp>
