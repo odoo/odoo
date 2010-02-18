@@ -558,10 +558,14 @@ def trans_generate(lang, modules, dbname=None):
 
     # parse source code for _() calls
     def get_module_from_path(path):
-        relative_addons_path = tools.config['addons_path'][len(tools.config['root_path'])+1:]
-        if path.startswith(relative_addons_path) and (os.path.dirname(path) != relative_addons_path):
-            path = path[len(relative_addons_path)+1:]
-            return path.split(os.path.sep)[0]
+        path_dir = os.path.dirname(path[1:])
+        if path_dir:
+            if os.path.exists(os.path.join(tools.config['addons_path'],path[1:])):
+                return path.split(os.path.sep)[1]
+            else:
+                root_addons = os.path.join(tools.config['root_path'], 'addons')
+                if os.path.exists(os.path.join(root_addons,path[1:])):
+                    return path.split(os.path.sep)[1]
         return 'base'   # files that are not in a module are considered as being in 'base' module
 
     modobj = pool.get('ir.module.module')
@@ -569,13 +573,13 @@ def trans_generate(lang, modules, dbname=None):
     installed_modules = map(lambda m: m['name'], modobj.read(cr, uid, installed_modids, ['name']))
     
     root_path = os.path.join(tools.config['root_path'], 'addons')
-
+    
     if root_path in tools.config['addons_path'] :
         path_list = [root_path]
     else :
         path_list = [root_path,tools.config['addons_path']]
 
-    for path in path_list: 
+    for path in path_list:
         for root, dirs, files in tools.osutil.walksymlinks(path):
             for fname in fnmatch.filter(files, '*.py'):
                 fabsolutepath = join(root, fname)
