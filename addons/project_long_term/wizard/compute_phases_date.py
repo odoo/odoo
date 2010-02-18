@@ -195,7 +195,6 @@ class wizard_compute_phases(wizard.interface):
                         resource = reduce(operator.or_,resources_list)
 
                 project = BalancedProject(Project)
-                print 'Project Phase Start & End:::',project.phase.name,project.phase.booked_resource,project.phase.start.to_datetime(),project.phase.end.to_datetime()
                 s_date = project.phase.start.to_datetime()
                 e_date = project.phase.end.to_datetime()
 
