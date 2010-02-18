@@ -561,11 +561,13 @@
             <field name="arch" type="xml">
                 <form string="Picking list">
                     <group colspan="4" col="6">
-                        <field name="address_id" select="2" context="{'contact_display':'partner'}"/>
+                        <field name="name" select="1" readonly="1"/>
+                        <field name="address_id" select="1" context="{'contact_display' : 'partner'}"/>
+                        <field name="origin" select="2"/>
+                        <field name="backorder_id" select="2" readonly="1"/>
+                        <field name="date" />
+                        <field name="min_date" select="1"/>
                         <field name="type"/>
-                        <field name="name" readonly="1"/>
-                        <field name="date"/>
-                        <field name="min_date" select="2"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
