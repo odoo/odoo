@@ -23,10 +23,7 @@
 import time
 import netsvc
 from osv import fields, osv
-import ir
 import pooler
-import mx.DateTime
-from mx.DateTime import RelativeDateTime
 from tools import config
 from tools.translate import _
 
@@ -1039,8 +1036,8 @@ class account_invoice_line(osv.osv):
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
 
-        lang=part.lang
-        context.update({'lang': lang})
+        if part.lang:
+            context.update({'lang': part.lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
