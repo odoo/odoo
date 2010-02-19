@@ -1493,61 +1493,46 @@ class stock_move(osv.osv):
         return super(stock_move, self).unlink(
             cr, uid, ids, context=context)
 
-    def _track_lines(self, cr, uid, ids, data, context=None):
-        move_obj = self.pool.get('stock.move').browse(cr, uid, ids)
+    def _track_lines(self, cr, uid, ids, lines, context=None):
         prodlot_obj = self.pool.get('stock.production.lot')
-        ir_sequence_obj = self.pool.get('ir.sequence')
-    
-        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-        if not sequence:
-            raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
-        if data['tracking_prefix']:
-            sequence=data['tracking_prefix']+'/'+(sequence or '')
-    
         move = self.browse(cr, uid, [ids])[0]
-
-        quantity=data['quantity']
-        if quantity <= 0 or move.product_qty == 0:
-            return {}
-        uos_qty=quantity/move.product_qty*move.product_uos_qty
-    
-        quantity_rest = move.product_qty%quantity
-        uos_qty_rest = quantity_rest/move.product_qty*move.product_uos_qty
-    
-        update_val = {
-            'product_qty': quantity,
-            'product_uos_qty': uos_qty,
-        }
+        move_qty = move.product_qty
+        quantity_rest = move.product_qty
         new_move = []
-        for idx in range(int(move.product_qty//quantity)):
-            if idx:
-                current_move = self.copy(cr, uid, move.id, {'state': move.state})
-                new_move.append(current_move)
-            else:
-                current_move = move.id
-            new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx}, {'product_id': move.product_id.id})
-            update_val['prodlot_id'] = new_prodlot
-            self.write(cr, uid, [current_move], update_val)
-        
+        for line in lines:
+            quantity = line['quantity']
+            sequence = line['tracking_num']
+            if quantity <= 0 or move_qty == 0:
+                continue
+            quantity_rest -= quantity
+            uos_qty = quantity / move_qty * move.product_uos_qty
+            uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
+            default_val = {
+                'product_qty': quantity,
+                'product_uos_qty': uos_qty,
+                'state': move.state
+            }
+            current_move = self.copy(cr, uid, move.id, default_val)
+            new_move.append(current_move)
+            new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence,
+                                                 'ref': '%d'%int(move_qty//quantity)}, 
+                                                 {'product_id': move.product_id.id})
+            self.write(cr, uid, [current_move], {'prodlot_id': new_prodlot})
+            
         if quantity_rest > 0:
-            idx = int(move.product_qty//quantity)
-            update_val['product_qty']=quantity_rest
-            update_val['product_uos_qty']=uos_qty_rest
-            if idx:
-                current_move = self.copy(cr, uid, move.id, {'state': move.state})
-                new_move.append(current_move)
-            else:
-                current_move = move.id
-            new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx}, {'product_id': move.product_id.id})
-            update_val['prodlot_id'] = new_prodlot
-            self.write(cr, uid, [current_move], update_val)
+            new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence + '/', 'ref': '%d' % int(move_qty//quantity)}, {'product_id': move.product_id.id})
+            update_val= {'prodlot_id': new_prodlot, 
+                                    'product_qty': quantity_rest, 
+                                    'product_uos_qty': uos_qty_rest
+                                    }
+            self.write(cr, uid, [move.id], update_val)
         return new_move
 
-    def split_moves(self, cr, uid, ids, datas, context=None):
+    def consume_moves(self, cr, uid, ids, product_qty, location_id, context=None):
         new_move = None
         if not context:
             context = {}
-        qty = datas['product_qty']
+        qty = product_qty
         if qty <= 0:
             raise wizard.except_wizard(_('Warning!'), _('Please provide Proper Quantity !'))
         
@@ -1563,7 +1548,7 @@ class stock_move(osv.osv):
             vals = {
                 'product_qty' : qty, 
                 'product_uos_qty': qty, 
-                'location_id': datas['location_id'],
+                'location_id': location_id
                 }
             track = move.product_id.track_production
             self.write(cr, uid, move.id, vals)
@@ -1579,9 +1564,9 @@ class stock_move(osv.osv):
             new_move = self.copy(cr, uid, move.id, default=defaults)
         return new_move
 
-    def scrap_moves(self, cr, uid, ids, datas, context=None):
+    def scrap_moves(self, cr, uid, ids, product_qty, location_id, context=None):
         new_move = None
-        qty = datas['product_qty']
+        qty = product_qty
         if qty <= 0:
             raise wizard.except_wizard(_('Warning!'), _('Please provide Proper Quantity !'))
         
@@ -1598,7 +1583,7 @@ class stock_move(osv.osv):
             vals = {
                         'product_qty': qty, 
                         'state': move.state, 
-                        'location_dest_id': datas['location_id']
+                        'location_dest_id': location_id
                         }
             self.write(cr, uid, ids, vals)
     

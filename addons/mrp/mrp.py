@@ -1354,10 +1354,10 @@ class StockMove(osv.osv):
             for new in new_move:
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new)]})
                 move_obj.action_done(cr, uid, [new])
-        return new_move
+        return {}
     
-    def split_moves(self, cr, uid, ids, datas, context=None):
-        new_move = super(StockMove, self).split_moves(cr, uid, ids, datas, context=context)
+    def consume_moves(self, cr, uid, ids, product_qty, location_id, context=None):
+        new_move = super(StockMove, self).consume_moves(cr, uid, ids, product_qty, location_id, context=context)
         if new_move:
             production_obj = self.pool.get('mrp.production')
             move_obj = self.pool.get('stock.move')
@@ -1366,8 +1366,8 @@ class StockMove(osv.osv):
             production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
         return {}
     
-    def scrap_moves(self, cr, uid, ids, datas, context=None):
-        new_move = super(StockMove, self).scrap_moves(cr, uid, ids, datas, context=context)
+    def scrap_moves(self, cr, uid, ids, product_qty, location_id, context=None):
+        new_move = super(StockMove, self).scrap_moves(cr, uid, ids, product_qty, location_id, context=context)
         if new_move:
             production_obj = self.pool.get('mrp.production')
             move_obj = self.pool.get('stock.move')

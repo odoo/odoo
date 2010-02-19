@@ -80,10 +80,12 @@ class stock_move_consume(osv.osv_memory):
                  'location_id': _get_location_id
                  }
 
-    def move_consume(self, cr, uid, ids, context={}):
+    def do_move_consume(self, cr, uid, ids, context={}):
         datas = self.read(cr, uid, ids)[0]
         move_obj = self.pool.get('stock.move')
-        move_obj.split_moves(cr, uid, context['active_id'], datas, context=context)
+        move_obj.consume_moves(cr, uid, context['active_id'], 
+                         datas['product_qty'], datas['location_id'], 
+                         context=context)
         return {}
 
 stock_move_consume()
@@ -101,7 +103,50 @@ class stock_move_scrap(osv.osv_memory):
     def move_scrap(self, cr, uid, ids, context={}):
         datas = self.read(cr, uid, ids)[0]
         move_obj = self.pool.get('stock.move')
-        move_obj.scrap_moves(cr, uid, context['active_id'], datas, context=context)
+        move_obj.scrap_moves(cr, uid, context['active_id'], 
+                         datas['product_qty'], datas['location_id'], 
+                         context=context)
         return {}
 
 stock_move_scrap()
+
+
+class spilt_in_lot(osv.osv_memory):
+    _name = "spilt.in.lot"
+    _description = "Split in lots"
+    
+    _columns = {
+        'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
+        'line_ids': fields.one2many('track.lines', 'lot_id', 'Lots Number')
+              }
+    
+    def _get_product_id(self, cr, uid, context):
+        move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
+        return move.product_id.id
+    
+    _defaults = {
+                 'product_id': _get_product_id, 
+                 }
+    
+    def split_lot(self, cr, uid, ids, context=None):
+        datas = self.read(cr, uid, ids)[0]
+        lines = []
+        for line in self.pool.get('track.lines').browse(cr, uid, datas.get('line_ids', [])):
+            lines.append({'tracking_num': line.name, 'quantity': line.quantity})
+        move_obj = self.pool.get('stock.move')
+        move_obj._track_lines(cr, uid, context['active_id'], lines, context=context)
+        return {}
+
+spilt_in_lot()
+
+class track_lines(osv.osv_memory):
+    _name = "track.lines"
+    _description = "Track lines"
+    
+    _columns = {
+        'name': fields.char('Tracking serial', size=64), 
+        'quantity': fields.integer('Quantity'), 
+        'lot_id': fields.many2one('spilt.in.lot', 'Lot')
+              }
+
+track_lines()
