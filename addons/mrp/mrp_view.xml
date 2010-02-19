@@ -438,6 +438,7 @@
                 </graph>
             </field>
         </record>
+
         <wizard
             string="Change Product Qty."
             model="mrp.production"
@@ -445,54 +446,102 @@
             id="mrp.wizard_change_production_qty"
             keyword="client_action_multi"
             multi="True"/>
-
+	
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
-                    <group colspan="4" col="7">
-                        <field name="name" select="1"/>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1" string="Reference"/>
                         <field name="date_planned" select="1"/>
                         <field name="origin" select="1"/>
-                        <newline/>
-                        <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
+                        <field name="product_id" on_change="product_id_change(product_id)" select="1"/>                        
                         <field name="product_qty"/>
-                        <field name="product_uom"/>
-                        <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production" icon="gtk-ok"/>
-                        <field name="product_uos_qty" groups="product.group_uos"/>
-                        <field name="product_uos" groups="product.group_uos"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                        <group colspan="2" col="3">
+                            <field name="product_uom"/>
+                            <!-- TODO Fix change qty accroding to move_lines and move_lines2 -->
+<!--                            <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production" icon="gtk-ok"/>-->
+                        </group>
+                        <label string="" colspan="2"/>                          
+                        <field name="product_uos_qty" groups="product.group_uos"/>                        
+                        <group colspan="2" col="3" groups="product.group_uos">
+                            <field name="product_uos"/>
+                            <label string=""/> 
+                        </group>                        
                     </group>
 
                     <notebook colspan="4">
                         <page string="Consumed Products">
-                            <field name="location_src_id" select="2" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
-                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
                             <field name="routing_id" groups="base.group_extended" select="1"/>
-                            <newline/>
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
-                                <tree string="Moves">
-                                    <field name="product_id" select="1"/>
-                                    <field name="product_qty" select="1"/>
-                                    <field name="product_uom" select="1" string="UOM"/>
-                                    <field name="prodlot_id" select="1"/>
-                                    <field name="product_packaging" domain="[('product_id','=',product_id)]"/>
-                                    <field name="picking_id"/>
-                                    <field name="location_id" select="1"/>
-                                    <field name="location_dest_id" select="1"/>
-                                    <field name="date" select="1"/>
-                                    <field name="date_planned" select="1" string="Date"/>
+                            <field name="location_src_id" select="2" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
+                            <separator string="" colspan="4"/>
 
-                                </tree>
+                            <field colspan="2" name="move_lines" nolabel="1" widget="one2many_list"
+                            	mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
+                            	<tree string="Products to Consume">
+                            		<field name="product_id" />
+                            		<field name="product_qty" />
+                            		<field name="product_uom" />
+                            		<field name="state" invisible="1" />
+                            		<button
+                            			name="%(stock.move_consume)d"
+                            			string=">" type="action"
+                            			icon="gtk-go-forward" context="{'consume': True}"
+                            			states="draft,waiting,confirmed,assigned"/>
+                            		<button name="%(stock.move_scrap)d"
+                            			string="D" type="action"
+                            			icon="gtk-justify-fill" context="{'scrap': True}"
+                            			states="draft,waiting,confirmed,assigned" />
+                            	</tree>
+                            	<form string="Products to Consume">
+                            		<field name="product_id" />
+                            		<field name="product_qty" />
+                            		<field name="product_uom" />
+                            	</form>
                             </field>
+
+                            <field colspan="2" name="move_lines2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
+                           			widget="one2many_list" mode="tree,form" height="275">
+                           		<tree string="Consumed Products" editable="bottom">
+                           			<field name="product_id" readonly="1"/>
+                           			<field name="product_qty" readonly="1"/>
+                           			<field name="product_uom" readonly="1" />
+                           			<field name="state" invisible="1" />
+                           			<field name="location_id" readonly="1"/>
+                           			<field name="prodlot_id" />                           			
+<!--                           			<button-->
+<!--                           				name="%(stock.track_line)d"-->
+<!--                           				string="Split in production lots"-->
+<!--                           				type="action" icon="gtk-justify-fill"-->
+<!--                           				states="done,cancel" />-->
+                           			<button
+                           				name="%(mrp.split_in_lots)d"
+                           				string="Split in production lots"
+                           				type="action" icon="gtk-justify-fill"
+                           				states="done,cancel" />
+                           			<button
+                           				name="%(stock.move_scrap)d"
+                           				string="D" type="action"
+                           				icon="gtk-convert"
+                           				states="done,cancel" />
+                           		</tree>
+                           		<form string="Consumed Products">
+                           			<field name="product_id" />
+                           			<field name="product_qty" />
+                           			<field name="product_uom" />
+                           		</form>
+                           	</field>						
+
                             <group col="9" colspan="4">
                                 <field name="state" select="2"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="gtk-execute"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
-                                <button name="button_produce" states="ready" string="Start Production" icon="gtk-media-play"/>
+<!--                                <button name="action_start" states="ready" string="Mark as Start" icon="gtk-media-play" type="object"/>-->
+                                <button name="button_produce" states="ready" string="Produce" icon="gtk-execute"/>
                                 <button name="button_produce_done" states="in_production" string="Production done" icon="gtk-ok"/>
                                 <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
                                 <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-cancel"/>
@@ -503,7 +552,51 @@
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Finished Products">
-                            <field colspan="4" name="move_created_ids" nolabel="1"/>
+                            <field colspan="2" name="move_created_ids" nolabel="1" widget="one2many_list"
+                            	mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
+                            	<tree string="Products to Consume">
+                            		<field name="product_id" />
+                            		<field name="product_qty" />
+                            		<field name="product_uom" />
+                            		<field name="state" invisible="1" />
+                            		<button
+                            			name="%(stock.move_consume)d"
+                            			string=">" type="action"
+                            			icon="gtk-go-forward"
+                            			states="draft,waiting,confirmed,assigned"/>
+                            		<button name="%(stock.move_scrap)d"
+                            			string="D" type="action"
+                            			icon="gtk-justify-fill" context="{'scrap': True}"
+                            			states="draft,waiting,confirmed,assigned" />
+                            	</tree>
+                            	<form string="Products to Consume">
+                            		<field name="product_id" />
+                            		<field name="product_qty" />
+                            		<field name="product_uom" />
+                            	</form>
+                            </field>
+
+                            <field colspan="2" name="move_created_ids2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
+                           			widget="one2many_list" mode="tree,form" height="275">
+                           		<tree string="Consumed Products" editable="bottom">
+                           			<field name="product_id" readonly="1"/>
+                           			<field name="product_qty" readonly="1"/>
+                           			<field name="product_uom" readonly="1" />
+                           			<field name="state" invisible="1" />
+                           			<field name="location_id" readonly="1"/>
+                           			<field name="prodlot_id" />                           			
+                           			<button name="%(stock.track_line)d" 
+                                            string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
+                           			<button name="%(stock.move_scrap)d"
+                           				string="D" type="action" icon="gtk-go-forward" 
+                           				states="done,cancel" />
+                           		</tree>
+                           		<form string="Consumed Products">
+                           			<field name="product_id" />
+                           			<field name="product_qty" />
+                           			<field name="product_uom" />
+                           		</form>
+                           	</field>
                         </page>
                         <page string="Work Orders">
                             <field colspan="4" name="workcenter_lines" nolabel="1">
@@ -525,6 +618,7 @@
 
                         </page>
                         <page string="Extra Information">
+                            <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <field name="priority" groups="base.group_extended"/>
                             <newline/>
                             <field name="date_start" select="2"/>

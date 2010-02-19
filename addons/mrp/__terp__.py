@@ -60,6 +60,7 @@
         'security/ir.model.access.csv',
         'mrp_workflow.xml',
         'mrp_data.xml',
+        'wizard/wizard_split_in_lots.xml', 
         'mrp_view.xml',
         'mrp_wizard.xml',
         'mrp_report.xml',

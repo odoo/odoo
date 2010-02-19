@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
+from mx import DateTime
 from osv import fields
 from osv import osv
+from tools.translate import _
 import ir
-
 import netsvc
 import time
-from mx import DateTime
-from tools.translate import _
 
 #----------------------------------------------------------
 # Work Centers
@@ -334,6 +333,45 @@ def rounding(f, r):
         return f
     return round(f / r) * r
 
+class many2many_domain(fields.many2many):
+    def set(self, cr, obj, id, name, values, user=None, context=None):
+        if not values:
+            return
+        return super(many2many_domain, self).set(cr, obj, id, name, values, user=user,
+                context=context)
+
+    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+        if not context:
+            context = {}
+        res = {}
+        move_obj = obj.pool.get('stock.move')
+        for prod in obj.browse(cr, user, ids, context=context):
+            cr.execute("SELECT move_id from mrp_production_move_ids where\
+                production_id=%s" % (prod.id))
+            m_ids = map(lambda x: x[0], cr.fetchall())
+            final = move_obj.search(cr, user, self._domain + [('id', 'in', tuple(m_ids))])
+            res[prod.id] = final
+        return res
+
+class one2many_domain(fields.one2many):
+    def set(self, cr, obj, id, field, values, user=None, context=None):
+        if not values:
+            return
+        return super(one2many_domain, self).set(cr, obj, id, field, values, 
+                                            user=user, context=context)
+
+    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+        if not context:
+            context = {}
+        res = {}
+        move_obj = obj.pool.get('stock.move')
+        for prod in obj.browse(cr, user, ids, context=context):
+            cr.execute("SELECT id from stock_move where production_id=%s" % (prod.id))
+            m_ids = map(lambda x: x[0], cr.fetchall())
+            final = move_obj.search(cr, user, self._domain + [('id', 'in', tuple(m_ids))])
+            res[prod.id] = final
+        return res
+
 class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Production'
@@ -420,9 +458,10 @@ class mrp_production(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True,
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
-        'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products Consummed'),
-
-        'move_created_ids': fields.one2many('stock.move', 'production_id', 'Moves Created'),
+        'move_lines': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consumme', domain=[('state','not in', ('done', 'cancel'))]),
+        'move_lines2': many2many_domain('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consummed Products', domain=[('state','in', ('done', 'cancel'))]),
+        'move_created_ids': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','not in', ('done', 'cancel'))]),
+        'move_created_ids2': one2many_domain('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))]),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
         'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
@@ -541,6 +580,10 @@ class mrp_production(osv.osv):
                 self.pool.get('stock.move').write(cr, uid, [production.move_prod_id.id],
                         {'location_id':production.location_dest_id.id})
         return True
+    
+    def action_start(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state':'in_production'})
+        return True
 
     #TODO Review materials in function in_prod and prod_end.
     def action_production_end(self, cr, uid, ids):
@@ -562,7 +605,7 @@ class mrp_production(osv.osv):
             self.pool.get('stock.move').check_assign(cr, uid, new_moves)
             self.pool.get('stock.move').action_done(cr, uid, new_moves)
             self._costs_generate(cr, uid, production)
-#        self.pool.get('stock.move').action_done(cr, uid, move_ids)
+        self.pool.get('stock.move').action_done(cr, uid, move_ids)
         self.write(cr,  uid, ids, {'state': 'done'})
         return True
 
@@ -606,7 +649,7 @@ class mrp_production(osv.osv):
             if not production.date_start:
                 self.write(cr, uid, [production.id],
                         {'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
-        self.pool.get('stock.move').action_done(cr, uid, move_ids)
+#        self.pool.get('stock.move').action_done(cr, uid, move_ids)
         self.write(cr, uid, ids, {'state': 'in_production'})
         return True
 
@@ -1299,6 +1342,40 @@ class StockMove(osv.osv):
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', m, 'button_wait_done', cr)
         return True
+    
+    def _track_lines(self, cr, uid, ids, data, context=None):
+        production_ids = []
+        new_move = super(StockMove, self)._track_lines(cr, uid, ids, data, context=context)
+        if new_move:
+            production_obj = self.pool.get('mrp.production')
+            move_obj = self.pool.get('stock.move')
+            move = move_obj.browse(cr, uid, ids)
+            production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
+            for new in new_move:
+                production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new)]})
+                move_obj.action_done(cr, uid, [new])
+        return new_move
+    
+    def split_moves(self, cr, uid, ids, datas, context=None):
+        new_move = super(StockMove, self).split_moves(cr, uid, ids, datas, context=context)
+        if new_move:
+            production_obj = self.pool.get('mrp.production')
+            move_obj = self.pool.get('stock.move')
+            move = move_obj.browse(cr, uid, ids)
+            production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
+            production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
+        return {}
+    
+    def scrap_moves(self, cr, uid, ids, datas, context=None):
+        new_move = super(StockMove, self).scrap_moves(cr, uid, ids, datas, context=context)
+        if new_move:
+            production_obj = self.pool.get('mrp.production')
+            move_obj = self.pool.get('stock.move')
+            move = move_obj.browse(cr, uid, ids)
+            production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
+            production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
+        return {}
+
 StockMove()
 
 
