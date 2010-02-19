@@ -168,11 +168,13 @@ class module(osv.osv):
         ], string='State', readonly=True),
         'demo': fields.boolean('Demo data'),
         'license': fields.selection([
-                ('GPL-2', 'GPL-2'),
+                ('GPL-2', 'GPL Version 2'),
                 ('GPL-2 or any later version', 'GPL-2 or later version'),
-                ('GPL-3', 'GPL-3'),
+                ('GPL-3', 'GPL Version 3'),
                 ('GPL-3 or any later version', 'GPL-3 or later version'),
-                ('Other proprietary', 'Other proprietary')
+                ('AGPL-3', 'Affero GPL-3'),
+                ('Other OSI approved licence', 'Other OSI Approved Licence'),
+                ('Other proprietary', 'Other Proprietary')
             ], string='License', readonly=True),
         'menus_by_module': fields.function(_get_views, method=True, string='Menus', type='text', multi="meta", store=True),
         'reports_by_module': fields.function(_get_views, method=True, string='Reports', type='text', multi="meta", store=True),
@@ -183,7 +185,7 @@ class module(osv.osv):
     _defaults = {
         'state': lambda *a: 'uninstalled',
         'demo': lambda *a: False,
-        'license': lambda *a: 'GPL-2',
+        'license': lambda *a: 'AGPL-3',
     }
     _order = 'name'
 
