@@ -61,15 +61,13 @@ def leaves_resource(cr,uid,id):
         resource_leaves_pool = pool.get('resource.calendar.leaves')
         resource_leave_ids = resource_leaves_pool.search(cr,uid,[('resource_id','=',id)])
         leaves = []
-        if resource_leave_ids:
-            res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
-            for leave in range(len(res_leaves)):
-                    dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
-                    dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
-                    no = dt_end - dt_start
-                    leave_days = no.days + 1
-            [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(leave_days))]
-            leaves.sort()
+        res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
+        for leave in range(len(res_leaves)):
+                dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
+                dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
+                no = dt_end - dt_start
+                [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
+                leaves.sort()
         return leaves
 
 def resource_list(cr,uid,obj):
@@ -162,14 +160,12 @@ class wizard_compute_phases(wizard.interface):
 
 #     If project working calendar has any leaves
             resource_leave_ids = resource_leaves_pool.search(cr,uid,[('calendar_id','=',calendar_id)])
-            if resource_leave_ids:
-                res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
-                for leave in range(len(res_leaves)):
-                    dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
-                    dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
-                    no = dt_end - dt_start
-                    leave_days = no.days + 1
-                [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(leave_days))]
+            res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
+            for leave in range(len(res_leaves)):
+                dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
+                dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
+                no = dt_end - dt_start
+                [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
                 leaves.sort()
 
 
@@ -184,7 +180,7 @@ class wizard_compute_phases(wizard.interface):
                 #    Creating a new project for each phase
                 def Project():
                     start = start_date
-
+                    minimum_time_unit = 1
                     #    If project has working calendar else the default one would be considered
                     if wktime_cal:
                         working_days = wktime_cal

@@ -265,7 +265,7 @@ class task(osv.osv):
                 if resource_id:
                     resource_obj = self.pool.get('resource.resource').browse(cr,uid,resource_id)[0]
                     hrs = planned/(occupation_rate * resource_obj.time_efficiency)
-                    work_times = self.pool.get('resource.calendar').interval_get(cr, uid, resource_obj.calendar_id.id or False, dt_start, hrs or 0.0, resource_obj.id)
+                    work_times = self.pool.get('resource.calendar').interval_get(cr, uid, resource_obj.calendar_id.id or False, dt_start, hrs or 0.0, resource_obj)
                 else:
                     hrs = planned / occupation_rate
                     work_times = self.pool.get('resource.calendar').interval_get(cr, uid, res.project_id.resource_calendar_id .id or False, dt_start, hrs or 0.0)

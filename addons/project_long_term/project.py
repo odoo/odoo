@@ -140,7 +140,7 @@ class project_phase(osv.osv):
        self.write(cr,uid,[phase.id],{'date_start':dt_start,'date_end':date_end.strftime('%Y-%m-%d %H:%M:%S')})
 
     def constraint_date_end(self,cr,uid,phase,date_start,context=None):
-       # Recursive call for all next phases if change in date_ebd > older time
+       # Recursive call for all next phases if change in date_end > older time
 
        resource_cal_pool = self.pool.get('resource.calendar')
        calendar_id = phase.project_id.resource_calendar_id.id
@@ -191,7 +191,6 @@ class project_resource_allocation(osv.osv):
     _description = 'Project Resource Allocation'
     _rec_name = 'resource_id'
     _columns = {
-#        'name': fields.char('Name',size = 64),
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', required=True),
         'useability': fields.float('Useability', help="Useability of this ressource for this project phase in percentage (=50%)"),
