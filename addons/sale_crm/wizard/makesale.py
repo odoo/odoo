@@ -107,8 +107,13 @@ class make_sale(wizard.interface):
                 'partner_shipping_id': partner_addr['delivery'],
                 'order_policy': 'manual',
                 'date_order': now(),
-                'fiscal_position': fpos
+                'fiscal_position': fpos,
             }
+
+            if partner_id:
+                partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                vals['user_id'] = partner.user_id and partner.user_id.id or uid
+
             if data['form']['analytic_account']:
                 vals['project_id'] = data['form']['analytic_account']
             new_id = sale_obj.create(cr, uid, vals)

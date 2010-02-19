@@ -45,9 +45,10 @@
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_address_id" string="Contact"/>
                 <field name="opportunity_id"/>
-                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                <button string="Opportunity" 
+                    name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
-                        name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
+                    name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
             </tree>
         </field>
     </record>
@@ -64,9 +65,10 @@
                 <field name="partner_address_id" string="Contact"/>
                 <group col="2">
                 <field name="opportunity_id"/>
-                <button string="Opportunity" name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                <button string="Opportunity" 
+                    name="%(wizard_crm_phonecall_opportunity_set)d"  type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
-                        name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
+                    name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
                 </group>
             </tree>
         </field>
@@ -77,64 +79,60 @@
         <field name="model">crm.phonecall</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-        	<form string="Phone Call">
-        		<group colspan="4" col="4">
-        			<field name="name" string="Subject" />
-        			<field name="date" string="Planned Date" />
-        			<field name="partner_phone" />
-        			<field name="duration" />
-        			<newline />
-        			<group col="7" colspan="4">
-        				<label string="" colspan="2" />
-        				<button string="Schedule a Meeting"
-        					name="%(wizard_crm_phonecall_meeting_set)d" icon="gtk-redo"
-        					type="action" />
-        				<button string="Convert to Opportunity"
-        					name="%(wizard_crm_phonecall_opportunity_set)d"
-        					icon="gtk-index" type="action"
-        					attrs="{'invisible':[('opportunity_id','!=',False)]}" />
-        				<button string="Convert to Partner"
-        					icon="terp-crm"
-        					name="%(wizard_crm_phonecall_partner_create)d"
-        					type="action"
-        					attrs="{'invisible':[('partner_id','!=',False)]}" />
-        			</group>
-        			<group colspan="4" col="4">
-        				<notebook colspan="4">
-        					<page string="General">
-        						<separator colspan="4" string="Communication" />
-        						<field name="partner_id" />
-        						<field name="partner_address_id" string="Contact" />
-        						<field name="partner_mobile" />
-        						<separator colspan="4" string="Status and Categarization" />
-        						<group colspan="4" col="6">
-	        						<field name="user_id" string="Assigned to" select="2" />
-	        						<field name="section_id" colspan="1" widget="selection" />
-	        						<field name="opportunity_id"
-	        							on_change="onchange_case_id(case_id, name, partner_id)"
-	        							context="{'default_name':name,'default_section_id':section_id,'default_user_id':user_id,'default_duration':duration,
-                           					'default_partner_id':partner_id,'default_partner_address_id':partner_address_id,'default_partner_phone':partner_phone,
-	                          				'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}" />
-	        						<field name="som" />
-	        						<field name="priority" />
-	        						<field name="active" string="Reminder" />
-	        					</group>
-	        					<separator string="Description" colspan="4" />
-	        					<field name="description" nolabel="1" colspan="4" />
-        						<separator colspan="4" />
-        						<group col="8" colspan="4">
-        							<field name="state" select="1" />
-        							<button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-			                        <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-			                        <button name="case_pending" string="Not Held" states="open" type="object" icon="gtk-undo"/>
-			                        <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-			                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
-        						</group>
-        					</page>
-        				</notebook>
-        			</group>
-        		</group>
-        	</form>
+            <form string="Phone Call">
+                <group colspan="4" col="8">
+                    <group colspan="7" col="4">
+                        <field name="name" string="Subject" />
+                        <field name="date" string="Planned Date" />
+                        <field name="partner_phone" />
+                        <field name="duration" />
+                    </group>
+                    <group col="1" colspan="1">
+                        <button string="Schedule a Meeting"
+                            name="%(wizard_crm_phonecall_meeting_set)d" icon="gtk-redo"
+                            type="action" />
+                        <button string="Convert to Opportunity"
+                            name="%(wizard_crm_phonecall_opportunity_set)d"
+                            icon="gtk-index" type="action"
+                            attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                    </group>
+                </group>
+                <separator colspan="4" string="Communication" />
+                <field name="partner_id" />
+                <button string="Convert to Partner"
+                    colspan="2"
+                    icon="terp-crm"
+                    name="%(wizard_crm_phonecall_partner_create)d"
+                    type="action"
+                    attrs="{'invisible':[('partner_id','!=',False)]}" />
+                <newline />
+                <field name="partner_address_id" string="Contact" />
+                <field name="partner_mobile" />
+                <separator colspan="4" string="Status and Categorization" />
+                <group colspan="4" col="6">
+                    <field name="user_id" string="Assigned to" select="2" />
+                    <field name="section_id" colspan="1" widget="selection" />
+                    <field name="opportunity_id"
+                        on_change="onchange_case_id(case_id, name, partner_id)"
+                        context="{'default_name':name,'default_section_id':section_id,'default_user_id':user_id,'default_duration':duration,
+                        'default_partner_id':partner_id,'default_partner_address_id':partner_address_id,'default_partner_phone':partner_phone,
+                        'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}" />
+                    <field name="som" />
+                    <field name="priority" />
+                    <field name="active" string="Reminder" />
+                </group>
+                <separator string="Description" colspan="4" />
+                <field name="description" nolabel="1" colspan="4" />
+                <separator colspan="4" />
+                <group col="8" colspan="4">
+                    <field name="state" select="1" />
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                    <button name="case_pending" string="Not Held" states="open" type="object" icon="gtk-undo"/>
+                    <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                </group>
+            </form>
         </field>
     </record>
 

@@ -84,13 +84,13 @@ def set_field_operator(self,field_name,field_type,search_operator,search_value):
                 field_search[2] = "("+','.join([str(x) for x in search_value])+")"
             else:
                 field_search[1] = 'ilike'
-                field_search[2] = "'%"+str(search_value)+"%'"
+                field_search[2] = "'%%"+str(search_value)+"%%'"
         elif search_operator == 'not in':
             if field_type=='many2one':
                 field_search[2] = "("+','.join([str(x) for x in search_value])+")"
             else:
                 field_search[1] = 'not ilike'
-                field_search[2] = "'%"+str(search_value)+"%'"
+                field_search[2] = "'%%"+str(search_value)+"%%'"
         elif search_operator == '^':
             if field_type in char_type:
                 field_search[1]='~'

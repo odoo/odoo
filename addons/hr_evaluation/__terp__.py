@@ -25,7 +25,7 @@
     "author" : "Tiny",
     "category" : "Generic Modules/Human Resources",
     "website" : "http://www.openerp.com",
-    "depends" : ["hr",'crm_hr'],
+    "depends" : ["hr",'crm_hr','survey'],
     "description": "Ability to create employees evaluation.",
     "init_xml" : [],
     "demo_xml" : ["hr_evaluation_demo.xml"],

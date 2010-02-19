@@ -62,7 +62,6 @@ your own accounts.
             <field name="name">Main Receivable</field>
             <field name="code">x 40000</field>
             <field name="type">receivable</field>
-            <field name="user_type" ref="account.account_type_asset"/>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="True" name="reconcile"/>
@@ -78,7 +77,6 @@ your own chart of account.
             <field name="name">Main Payable</field>
             <field name="code">x 440000</field>
             <field name="type">payable</field>
-            <field name="user_type" ref="account.account_type_liability"/>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="True" name="reconcile"/>
@@ -94,7 +92,6 @@ your own chart of account.
             <field name="name">Petty Cash</field>
             <field name="code">x 570000</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account.account_type_cash_moves"/>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="user_type" ref="account_type_cash_moves"/>
@@ -109,7 +106,6 @@ your own chart of account.
             <field name="name">Products Purchase</field>
             <field name="code">x 600000</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account.account_type_expense"/>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="user_type" ref="account_type_expense"/>
@@ -124,7 +120,6 @@ your own chart of account.
             <field name="name">Products Sales</field>
             <field name="code">x 701000</field>
             <field name="type">other</field>
-            <field name="user_type" ref="account.account_type_income"/>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="user_type" ref="account_type_income"/>
             <field name="company_id" ref="base.main_company"/>

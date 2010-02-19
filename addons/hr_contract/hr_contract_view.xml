@@ -15,18 +15,6 @@
         </record>
 
 
-        <record id="hr_hr_employee_marital_status_form" model="ir.ui.view">
-            <field name="name">hr.hr.employee.marital.status</field>
-            <field name="model">hr.employee.marital.status</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Marital Status">
-                    <field colspan="4" name="name" nolabel="1" select="1"/>
-                    <field colspan="4" name="description" nolabel="1"/>
-                </form>
-            </field>
-        </record>
-
         <record id="hr_contract_wage_type_view_form" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.view.form</field>
             <field name="model">hr.contract.wage.type</field>
@@ -118,7 +106,6 @@
                         <field name="medic_exam" select="1"/>
                         <field name="audiens_num"/>
                         <field name="place_of_birth"/>
-                        <field name="marital_status"/>
                         <field name="children"/>
                     </page>
                 </notebook>
@@ -136,18 +123,6 @@
                 </form>
             </field>
         </record>
-
-        <record id="action_hr_marital_status" model="ir.actions.act_window">
-            <field name="name">Marital Status</field>
-            <field name="res_model">hr.employee.marital.status</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem 
-                action="action_hr_marital_status" 
-                id="hr_menu_marital_status" 
-                parent="hr.menu_view_employee_category_configuration_form" sequence="3"/>
 
         <record id="hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>

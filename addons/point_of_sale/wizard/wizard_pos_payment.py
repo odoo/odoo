@@ -25,6 +25,7 @@ import netsvc
 import wizard
 import time
 from decimal import Decimal
+from tools.translate import _
 
 
 def _get_journal(self, cr, uid, context):

@@ -714,6 +714,8 @@ class pos_order(osv.osv):
                     'product_id': line.product_id.id,
                     'quantity': line.qty,
                 }
+                inv_name = self.pool.get('product.product').name_get(cr, uid, [line.product_id.id], context=context)[0][1]
+                
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                                                                line.product_id.id,
                                                                line.product_id.uom_id.id,
@@ -721,6 +723,7 @@ class pos_order(osv.osv):
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['account_id'] = acc
+                inv_line['name'] = inv_name
 
                 inv_line['invoice_line_tax_id'] = ('invoice_line_tax_id' in inv_line)\
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []

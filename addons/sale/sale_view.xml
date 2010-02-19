@@ -45,7 +45,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
         </record>
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="60"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="70"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -76,7 +76,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales orders">
-                    <field name="date_order"/>
+                    <field name="date_order" string="Order date"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
                     <field name="partner_shipping_id"/>
@@ -100,7 +100,7 @@
                         <field name="client_order_ref" select="2"/>
                         <field name="shipped" select="2"/>
                         <field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2" widget="selection"/>
-                        <field name="date_order" select="1"/>
+                        <field name="date_order" select="1" string="Order date" />
                         <field name="invoiced" select="2"/>
                     </group>
                     <notebook colspan="4">
@@ -232,22 +232,24 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <group col='10' colspan='4'>
+                    <group col='11' colspan='4'>
                         <filter icon="terp-sale" string="Quotations" domain="[('state','=','draft')]"/>
                         <filter icon="terp-sale" string="Running" domain="[('state','in',('manual','progress'))]"/>
+                        <filter icon="terp-sale" string="Sales To Invoice" domain="[('state','=','manual')]"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="partner_id" select="1"/>
                         <field name="user_id" select="1" widget="selection">
                             <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Sale Orders" default="1"/>
                         </field>
-                        <field name="date_order" select="1"/>
-                    </group>
-                    <group expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="By Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="By Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
-                    </group>
+                        <field name="date_order" select="1" string="Order date" />
+					</group>
+					<group expand="1" string="Group By..." colspan="4" col="8">
+						<filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
+					</group>                       
+
                </search>
             </field>
         </record>
@@ -269,17 +271,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('shipping_except','invoice_except'))]</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_sales_order_filter"/>
-        </record>
-
-        <record id="action_order_tree3" model="ir.actions.act_window">
-            <field name="name">Sales To Invoice</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','=','manual')]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
@@ -336,7 +327,6 @@
                 <tree string="Sales order lines">
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
-                    <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="UoM"/>
@@ -377,7 +367,7 @@
                             <separator colspan="4" string="States"/>
                             <field name="state" select="2"/>
                             <group col="2" colspan="2">
-                                <button name="button_done" states="confirmed,exception" string="Done" type="object" icon="gtk-no"/>
+                                <button name="button_done" states="confirmed,exception" string="Done" type="object" icon="gtk-jump-to"/>
                                 <button name="button_cancel" states="confirmed,exception" string="Cancel" type="object" icon="gtk-cancel" />
                             </group>
                         </page>
@@ -411,11 +401,11 @@
                             <filter icon="terp-sale" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
                             <filter icon="terp-sale" domain="[('salesman_id','child_of',[uid])]" help="My Departments Sale Order Lines"/>
                         </field>
-                    <group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
-                        <filter string="By Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="By Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
-                        <filter string="By State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
-                    </group>
+					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+						<filter string="Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
+					</group>                                                
 
                     </group>
                 </search>
@@ -447,7 +437,6 @@
         <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product"/>
 
         <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="6"/>
-        <menuitem action="action_order_tree3" id="menu_invoicing_sales_order" parent="menu_invoiced" sequence="1"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2"/>
         <!-- configartion view -->
 

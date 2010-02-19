@@ -473,7 +473,21 @@
                             <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
                             <field name="routing_id" groups="base.group_extended" select="1"/>
                             <newline/>
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"/>
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                                <tree string="Moves">
+                                    <field name="product_id" select="1"/>
+                                    <field name="product_qty" select="1"/>
+                                    <field name="product_uom" select="1" string="UOM"/>
+                                    <field name="prodlot_id" select="1"/>
+                                    <field name="product_packaging" domain="[('product_id','=',product_id)]"/>
+                                    <field name="picking_id"/>
+                                    <field name="location_id" select="1"/>
+                                    <field name="location_dest_id" select="1"/>
+                                    <field name="date" select="1"/>
+                                    <field name="date_planned" select="1" string="Date"/>
+
+                                </tree>
+                            </field>
                             <group col="9" colspan="4">
                                 <field name="state" select="2"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="gtk-execute"/>
@@ -531,20 +545,29 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Production">
-                   <group col='8' colspan='4'>
-                       <filter icon="terp-mrp" string="Ready" domain="[('state','=','ready')]" help="Manufacturing Orders which are ready to produce"/>
-                       <filter icon="terp-mrp" string="In Production" domain="[('state','=','in_production')]" help="Manufacturing Orders which are in production"/>
+                   <group col='9' colspan='4'>
+                       <filter icon="terp-mrp" string="Ready"
+                       	domain="[('state','=','ready')]"
+                       	help="Manufacturing Orders which are ready to produce" />
+                       <filter icon="terp-mrp" string="In Production"
+                       	domain="[('state','=','in_production')]"
+                       	help="Manufacturing Orders which are in production" />
+                       <filter icon="terp-mrp" string="Late"
+                       	domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                       	help="Production started late" />
+
                        <separator orientation="vertical"/>
                        <field name="name" select='1'/>
                        <field name="product_id" select='1'/>
                        <field name="routing_id" select='1'/>
                        <field name="origin" select='1'/>
                     </group>
-					<group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
-                        <filter string="By Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="By State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
-					</group>
+                    <group expand="1" string="Group By" colspan="4" col="8">
+                        <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Routing" icon="terp-mrp" domain="[]" context="{'group_by':'routing_id'}"/>
+                    </group>
                </search>
             </field>
         </record>
@@ -666,8 +689,8 @@
         </record>
 
         <!--
-    	Procurement
-    -->
+        Procurement
+        -->
 
         <record id="mrp_procurement_tree_view" model="ir.ui.view">
             <field name="name">mrp.procurement.tree</field>
@@ -675,8 +698,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Procurement Lines" colors="red:state=='draft';black:state=='running';green:state=='confirmed';gray:state in ['done','cancel']">
+                    <field name="date_planned" widget="date"/>
                     <field name="origin"/>
-                    <field name="date_planned" widget="date"/>                    
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" string="UOM"/>
@@ -753,6 +776,9 @@
                     <group col='10' colspan='4'>
                        <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" default="1" help="Procurement Orders in draft or open state."/>
                        <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement Orders with exceptions"/>
+                       <filter icon="terp-mrp" string="Late"
+                       	domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
+                       	help="Procurement started late" />
                        <separator orientation="vertical"/>
                        <field name="name"/>
                        <field name="origin"/> 
@@ -760,10 +786,10 @@
                        <field name="date_planned" widget="date"/>
                        <field name="state" />
                     </group>
-					<group expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="By Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="By Procurement Reason" icon="terp-mrp" domain="[]" context="{'group_by':'name'}"/>
-                        <filter string="By Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+                    <group expand="1" string="Group By" colspan="4" col="8">
+                        <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Reason" icon="terp-mrp" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
 					</group>
                 </search>
             </field>

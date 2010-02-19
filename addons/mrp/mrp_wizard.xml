@@ -4,7 +4,6 @@
         <wizard id="wiz_mrp_proc0" model="mrp.procurement" string="Compute Schedulers" name="mrp.procurement.compute.all"/>
         <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="menu_mrp_root" sequence="4"/>   
         <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" type="wizard" sequence="90"/>
-        <wizard id="wiz_mrp_proc1" model="mrp.procurement" string="Compute Requisitions Only" name="mrp.procurement.compute"/>
         <!--
           <menuitem action="wiz_mrp_proc1" id="menu_wiz_mrp_proc1" parent="mrp.mrp_Sched_all" type="wizard"/>
         -->
@@ -25,19 +24,19 @@
             <field eval="True" name="object"/>
         </record>
 
-    <wizard
-        string="Requisition Request"
-        model="product.product"
-        name="product.product.procurement"
-        keyword="client_action_multi"
-        id="product_procurement_wizard"/>
+        <wizard
+            string="Requisition Request"
+            model="product.product"
+            name="product.product.procurement"
+            keyword="client_action_multi"
+            id="product_procurement_wizard"/>
 
-    <wizard
-        id="stock.track_line"
-        model="stock.move"
-        multi="True"
-        name="mrp.stock.move.track"
-        string="Track line"/>
+        <wizard
+            id="stock.track_line"
+            model="stock.move"
+            multi="True"
+            name="mrp.stock.move.track"
+            string="Track line"/>
 
     </data>
 </openerp>

@@ -25,12 +25,17 @@ import os
 import base64
 import tools
 import mx.DateTime
+import datetime
 
-from tools.translate import _
-from osv import fields 
-from osv import osv 
+from datetime import datetime
+from datetime import timedelta
+from osv import fields
 from osv import orm
+from osv import osv
 from osv.orm import except_orm
+from tools.translate import _
+
+
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -270,6 +275,7 @@ class crm_case(osv.osv):
         'email_from': _get_default_email,
         'state': lambda *a: 'draft',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_deadline': lambda *a:(datetime.today() + timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': _get_section,
     }
     _order = 'date_deadline desc, date desc,id desc'
@@ -282,16 +288,7 @@ class crm_case(osv.osv):
         return super(crm_case, self).unlink(cr, uid, ids, context)
 
     def stage_next(self, cr, uid, ids, context={}):
-        ok = False
-        sid = self.pool.get('crm.case.stage').search(cr, uid, [('object_id.model', '=', self._name)], context=context)
-        s = {}
-        previous = {}
-        for stage in self.pool.get('crm.case.stage').browse(cr, uid, sid, context=context):
-            section = stage.section_id.id or False
-            s.setdefault(section, {})
-            s[section][previous.get(section, False)] = stage.id
-            previous[section] = stage.id
-
+        s = self.get_stage_dict(cr, uid, ids, context=context)
         for case in self.browse(cr, uid, ids, context):
             section = (case.section_id.id or False)
             if section in s:
@@ -300,7 +297,29 @@ class crm_case(osv.osv):
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
 
         return True
-
+    
+    def get_stage_dict(self, cr, uid, ids, context={}):
+        sid = self.pool.get('crm.case.stage').search(cr, uid, [('object_id.model', '=', self._name)], context=context)
+        s = {}
+        previous = {}
+        for stage in self.pool.get('crm.case.stage').browse(cr, uid, sid, context=context):
+            section = stage.section_id.id or False
+            s.setdefault(section, {})
+            s[section][previous.get(section, False)] = stage.id
+            previous[section] = stage.id
+        return s
+    
+    def stage_previous(self, cr, uid, ids, context={}):
+        s = self.get_stage_dict(cr, uid, ids, context=context)
+        for case in self.browse(cr, uid, ids, context):
+            section = (case.section_id.id or False)
+            if section in s:
+                st = case.stage_id.id  or False
+                s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
+                if st in s[section]:
+                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
+        return True
+    
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}

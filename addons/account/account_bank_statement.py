@@ -107,7 +107,7 @@ class account_bank_statement(osv.osv):
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True, states={'confirm': [('readonly', True)]}),
         'date': fields.date('Date', required=True,
             states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
@@ -290,7 +290,14 @@ class account_bank_statement(osv.osv):
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
                     if abs(move.reconcile_amount-move.amount)<0.0001:
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
+
+                        writeoff_acc_id = False
+                        #There should only be one write-off account!
+                        for entry in move.reconcile_id.line_new_ids:
+                            writeoff_acc_id = entry.account_id.id
+                            break
+
+                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
                     #except:
@@ -339,6 +346,17 @@ class account_bank_statement(osv.osv):
                 context=context)[0]
         return {'value': {'balance_start': balance_start, 'currency': currency}}
 
+    def unlink(self, cr, uid, ids, context=None):
+        stat = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for t in stat:
+            if t['state'] in ('draft'):
+                unlink_ids.append(t['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete bank statement which are already confirmed !'))
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return True
+    
 account_bank_statement()
 
 

@@ -55,7 +55,8 @@
                             <group col="2" colspan="2">
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="address_home_id" colspan="2"/>
-                                <field name="address_id" colspan="2"/>
+                                <field name="partner_id" invisible="1" />
+                                <field name="address_id" colspan="2" domain="[('partner_id', '=', partner_id)]"/>
                                 <field name="work_phone"/>
                                 <field name="work_email" widget="email" />
                                 <field name="work_location"/>
@@ -135,6 +136,35 @@
             id="menu_open_view_employee_list_my"
             parent="menu_hr_human_resources"/>
 
+        <!--
+        =======================
+        Employee marital status
+        =======================
+        -->
+        <record id="hr_hr_employee_marital_status_form" model="ir.ui.view">
+            <field name="name">hr.hr.employee.marital.status</field>
+            <field name="model">hr.employee.marital.status</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Marital Status">
+                    <field colspan="4" name="name" nolabel="1" select="1"/>
+                    <field colspan="4" name="description" nolabel="1"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_hr_marital_status" model="ir.actions.act_window">
+            <field name="name">Marital Status</field>
+            <field name="res_model">hr.employee.marital.status</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem 
+                action="action_hr_marital_status" 
+                id="hr_menu_marital_status" 
+                parent="hr.menu_view_employee_category_configuration_form" sequence="3"/>
+                
         <!--
         =======================
         Employee architecture
