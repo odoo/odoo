@@ -153,6 +153,7 @@ class hr_holidays(osv.osv):
         'allocation_type': fields.selection([('employee','Employee Request'),('company','Company Allocation')], 'Allocation Type', required=True, readonly=True, states={'draft':[('readonly',False)]}, help='This field is only for informative purposes, to depict if the leave request/allocation comes from an employee or from the company'),
         'parent_id': fields.many2one('hr.holidays', 'Parent'),
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
+        'holiday_user_id' : fields.many2one('res.users', 'User'),
     }
 
     _defaults = {

@@ -32,13 +32,14 @@
         <field name="model">crm.claim</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Claims"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+            <tree string="Claims" colors="blue:state=='open';red:(date_deadline&lt;=current_date)">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="date" string="Date"/>
+                <field name="date" string="Claim Date"/>
+                 <field name="date_deadline" string="Deadline"/>
+                 <field name="date_closed" string="Closure Date"/>
                 <field name="categ_id" string="Type" select="1"/>
-                <field name="probability"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -53,11 +54,11 @@
                 <group colspan="4" col="4">
                     <field name="name"/>
                     <field name="date" string="Date of Claim"/>
-                    <field name="planned_cost" string="Claim Cost"/>
+                    <field name="date_deadline" string="Deadline"/>
                 </group>
                 <group colspan="4" col="4">
                 <notebook>
-                <page string="Claims Info">
+                <page string="Claim Info">
                 	<separator colspan="4" string="Communication"/>
                 	<group colspan="4" col="4">
                 		<field name="partner_id" string="Partner"
@@ -68,11 +69,10 @@
 	                    <field name="partner_mobile"/>
 	                    <field name="email_from"/>
 	                </group>
-                    <separator colspan="4" string="Status and Categarization"/>
+                    <separator colspan="4" string="Status and Categorization"/>
                     <group colspan="4" col="6">
                     	<field name="user_id" string="Responsible" select="2"/>
                     	<field name="section_id" widget="selection"/>
-                    	<field name="probability"/>
                     	<label string="Stage: " align="1.0"/>
                     	<group colspan="1" col="2">
 	                        <field name="stage_id" select="1" nolabel="1"/>
@@ -110,8 +110,6 @@
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
-                    <field name="date_action_last"/>
-                    <field name="date_action_next"/>
                     <field name="log_ids" nolabel="1" colspan="4">
                         <form string="Actions">
                             <separator string="Action Information" colspan="4"/>
@@ -211,14 +209,18 @@
                        <field name="partner_id" select="1"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
-					<field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
-							<filter icon="terp-crm"
-                               domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section"
+                   <field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
+                       <filter icon="terp-crm"
+                           domain="[('section_id','=',context.get('section_id',False))]"
+                           help="My section"
                            />
-                 </field>
+                   </field>
+                   <group expand="1" string="Group By..." colspan="4" col="20">
+                       <filter string="Deadline" icon="terp-crm" domain="[]" context="{'group_by':'date_deadline'}"/>
+                       <filter string="Closure" icon="terp-crm" domain="[]"  context="{'group_by':'date_closed'}"/>
+                   </group>
                </search>
-            </field>
+           </field>
         </record>
      </data>
 </openerp>

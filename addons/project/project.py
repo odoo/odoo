@@ -49,13 +49,14 @@ class project(osv.osv):
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
-        if user==1:
+        if user == 1:
                 return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
                                                        context=context, count=count)
         if context and context.has_key('user_prefence') and context['user_prefence']:
                 cr.execute("""SELECT project.id FROM project_project project
                            LEFT JOIN account_analytic_account account ON account.id = project.category_id
-                           WHERE (account.user_id = %s)"""%(user))
+                           LEFT JOIN project_user_rel rel ON rel.project_id = project.category_id
+                           WHERE (account.user_id = %s or rel.uid = %s)"""%(user, user))
                 res = cr.fetchall()
                 return [(r[0]) for r in res]
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
@@ -299,7 +300,7 @@ class task(osv.osv):
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
-        'type': fields.many2one('project.task.type', 'Stage', readonly=True),
+        'type': fields.many2one('project.task.type', 'Stage'),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
@@ -309,7 +310,7 @@ class task(osv.osv):
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade',
             help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
-        'child_ids': fields.many2many('project.task', 'project_task_child_rel', 'task_id', 'child_id', 'Delegated Tasks'),
+        'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
         'occupation_rate': fields.float('Occupation Rate', help='The occupation rate fields indicates how much of his time a user is working on a task. A 100% occupation rate means the user works full time on the tasks. The ending date of a task is computed like this: Starting Date + Duration / Occupation Rate.'),
         'planned_hours': fields.float('Planned Hours', required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
@@ -595,6 +596,7 @@ config_compute_remaining()
 class message(osv.osv):
     _name = "project.message"
     _description = "Message"
+
     _columns = {
         'subject': fields.char('Subject', size=128, required="True"),
         'description': fields.text('Description'),
@@ -602,6 +604,7 @@ class message(osv.osv):
         'date': fields.date('Date'),
         'user_id': fields.many2one('res.users', 'User', required="True"),
         }
+
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
             return int(context['project_id'])
@@ -612,20 +615,6 @@ class message(osv.osv):
         'project_id':_default_project}
 
 message()
-
-def _project_get(self, cr, uid, context={}):
-    if uid==1:
-        ids = self.pool.get('project.project').search(cr, uid, [])
-        res = self.pool.get('project.project').read(cr, uid, ids, ['id','name'], context)
-        res = [(str(r['id']),r['name']) for r in res]
-    else:
-        cr.execute("""SELECT project.id,account.name FROM project_project project
-                   LEFT JOIN account_analytic_account account ON account.id = project.category_id
-                   WHERE (account.user_id = %s)"""%(uid))
-        res = cr.fetchall()
-        print res
-        res = [(str(r[0]),r[1]) for r in res]
-    return res
 
 class users(osv.osv):
     _inherit = 'res.users'

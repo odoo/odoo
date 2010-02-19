@@ -116,10 +116,11 @@ class mail_gateway(osv.osv):
             msg_id =  msg_txt['Message-ID']
             res_id = self.msg_parse(cr, uid, gateway_id, msg_txt)            
         except Exception, e:
-            note = "Error in Parsing Mail: %s " %(str(e))
-            if mailgateway:
-                netsvc.Logger().notifyChannel('Emailgate: Parsing mail:%s' % (mailgateway.name or
-                         '%s (%s)'%(mailgateway.server_id.login, mailgateway.server_id.name)), netsvc.LOG_ERROR, str(e))
+            import traceback
+            note = "Error in Parsing Mail: %s " %(str(e))            
+            netsvc.Logger().notifyChannel('Emailgate: Parsing mail:%s' % (mailgateway and (mailgateway.name or
+                     '%s (%s)'%(mailgateway.server_id.login, mailgateway.server_id.name))) or ''
+                     , netsvc.LOG_ERROR, traceback.format_exc())
 
         mail_history_obj.create(cr, uid, {'name': msg_id, 'res_id': res_id, 'gateway_id': mailgateway.id, 'note': note})
         return res_id,  note
@@ -181,9 +182,11 @@ class mail_gateway(osv.osv):
                     imap_server.logout()
 
             except Exception, e:
-                 log_messages.append("Error in Fetching Mail: %s " %(str(e)))
-                 if mailgate_server:
-                     netsvc.Logger().notifyChannel('Emailgate: Fetching mail:[%d]%s' % (mailgate_server.id, mailgate_server.name), netsvc.LOG_ERROR, str(e))
+                 import traceback
+                 log_messages.append("Error in Fetching Mail: %s " %(str(e)))                 
+                 netsvc.Logger().notifyChannel('Emailgate: Fetching mail:[%d]%s' % 
+                    (mailgate_server and mailgate_server.id or 0, mailgate_server and mailgate_server.name or ''),
+                     netsvc.LOG_ERROR, traceback.format_exc())
 
             log_messages.append("-"*25)
             log_messages.append("Total Read Mail: %d\n\n" %(len(new_messages)))
@@ -305,7 +308,7 @@ class mail_gateway(osv.osv):
         res_model = self.pool.get(res_model)        
         return res_model.msg_update(cr, uid, res_id, msg, data=data, default_act='pending')        
 
-    def msg_send(self, msg, reply_to, emails, priority=None, res_id=False):        
+    def msg_send(self, msg, reply_to, emails, priority=None, res_id=False):         
         if not emails:
             return False                
         msg_to = [emails[0]]
@@ -390,6 +393,7 @@ class mail_gateway_history(osv.osv):
         'gateway_id': fields.many2one('mail.gateway',"Mail Gateway", required=True),
         'model_id':fields.related('gateway_id', 'object_id', type='many2one', relation='ir.model', string='Model'), 
         'note': fields.text('Notes'),
+        'create_date': fields.datetime('Created Date'),
     }
     _order = 'id desc'
 mail_gateway_history()

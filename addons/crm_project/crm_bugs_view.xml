@@ -38,28 +38,46 @@
                 <group colspan="4" col="6">
                     <field name="name" string="Title" colspan="2"/>                    
                   	<field name="project_id" required="True"/>  
-                    <field name="categ_id"  on_change="onchange_categ_id(categ_id)" widget="selection" required="1" domain="[('object_id.model', '=', 'crm.project.bug')]"/>
-                    <field name="user_id" />
-                    <label string="Resolution: " align="1.0"/>
-                    <group colspan="1" col="2">
-                        <field name="stage_id" select="1" nolabel="1"/>
-                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                    <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.project.bug')]"/>
+                    <group col="3" colspan="2">
+                      	<field name="task_id"/>
+                        <button string="Convert To Task"
+                         	name="%(wizard_crm_bug_task_set)d"
+                         	icon="gtk-index" type="action"
+                         	attrs="{'invisible':[('task_id','!=',False)]}" />
                     </group>
-                    <label string="Related Task: " align="1.0"/>
-                    <group colspan="1" col="2">
-                        <field name="task_id"  nolabel="1"/>
-                        <button string="Convert To Task" name="%(wizard_crm_bug_task_set)d" icon="gtk-index" type="action"  attrs="{'invisible':[('task_id','!=',False)]}"/>
-                    </group>                                     
                     
-                </group>
+                   </group>
+                   <!-- <group colspan="4" col="5">
+                         <label string="" colspan="2"/>
+                          <button string="Convert To Feature Request"
+                         	name="convert_to_feature"
+                         	icon="gtk-convert" type="object" attrs="{'invisible':[('categ_id','=',ref('bug_categ'))]}"/>
+                          <button string="Convert To Bug"
+                         	name="convert_to_bug"
+                         	icon="gtk-convert" type="object" attrs="{'invisible':[('categ_id','=',ref('feature_request_categ'))]}"/>
+                         
+                          
+                   </group> -->
+                
                 <notebook colspan="4">
                 <page string="General">
+                	<separator colspan="4" string="Communication"/>
                     <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
                     <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
                     <field name="email_from" colspan="2"/>                    
-                    <separator colspan="4"/>
-                    <field name="type_id" string="Version"/>                    
-                    <field name="priority" string="Severity"/>
+                    <separator colspan="4" string="Status and Categorization"/>
+                    <group colspan="4" col="6">
+	                    <field name="type_id" string="Version"/>                    
+	                    <field name="priority" string="Severity"/>
+	                    <field name="user_id" />
+	                    <label string="Resolution: " align="1.0"/>
+	                    <group colspan="1" col="3">
+	                        <field name="stage_id" select="1" nolabel="1"/>
+	                        <button icon="gtk-go-back" string="" name="stage_previous" type="object"/>
+	                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+	                    </group>
+                    </group>
                     <newline/>
                     <separator string= "Description" colspan="4"/>
                     <field name="description" nolabel="1" colspan="4"/>
@@ -74,14 +92,12 @@
                         <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                     </group>
                 </page>
-                <page string="History">
+                <page string="History" groups="base.group_extended">
                     <field name="id" select="1"/>
                     <field name="active" />
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
-                    <field name="date_action_last"/>
-                    <field name="date_action_next"/>
                     <separator colspan="4" string="Estimates"/>
                     <field name="planned_revenue"/>
                     <field name="planned_cost"/>
@@ -100,7 +116,7 @@
                         </form>
                     </field>
                 </page>
-                <page string="Emails">
+                <page string="Emails" groups="base.group_extended">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
                    </group>
@@ -140,9 +156,14 @@
                 <field name="id"/>
                 <field name="name" string="Title"/>
                 <field name="partner_id"/>
-                <field name="priority" string="Severity"/>
-                <field name="categ_id"/>
+                <field name="priority" string="Severity"/>                
                 <field name="stage_id" string="Resolution"/>
+                <button icon="gtk-go-back" string=""
+                	name="stage_previous" type="object"
+                	states="open,draft,pending,done,cancel" />
+                <button icon="gtk-go-forward" string=""
+                	name="stage_next" type="object"
+                	states="open,draft,pending,done,cancel" />
                 <field name="type_id" string="Version"/>
                 <field name="user_id"/>
                 <field name="state"/>

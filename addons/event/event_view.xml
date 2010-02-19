@@ -45,7 +45,7 @@
 			<field name="domain" eval="[('parent_id','=',False)]" />
 			<field name="view_type">tree</field>
 		</record>
-		<!--<menuitem name="Events by Categories" id="menu_action_event_categories" action="action_event_categories" parent="menu_event_main"/>-->
+		<menuitem name="Events by Categories" id="menu_action_event_categories" action="action_event_categories" parent="menu_event_main"/>
 
 
 	<!-- Events Organisation/CONFIGURATION/EVENTS  -->
@@ -216,8 +216,6 @@
 						<separator colspan="4" string="Dates"/>
 						<field name="create_date"/>
 						<field name="date_closed"/>
-						<field name="date_action_last"/>
-						<field name="date_action_next"/>
 						<separator colspan="4" string="References"/>
 						<field name="ref" colspan="4"/>
 						<field name="ref2" colspan="4"/>

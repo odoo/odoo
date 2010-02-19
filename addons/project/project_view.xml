@@ -102,13 +102,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Project">
-                   <group col='8' colspan='4'>
-                           <filter icon="terp-project" string="My Projects" domain="[('user_id', '=', uid)]" help="My Projects"/>
-                           <filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
-                           <separator orientation="vertical"/>
-                           <field name="name" string="Project Name" select='1'/>
-                           <field name="partner_id" string="Partner" select='1'/>
-                           <field name="state" select="1"/>
+                   <group col='15' colspan='4'>
+                       <filter icon="terp-project" string="Open" domain="[('state', '=', 'open')]" help="Open Projects" default="1"/>
+                       <filter icon="terp-project" string="Pending" domain="[('state', '=', 'pending')]" help="Pending Projects"/>
+                       <separator orientation="vertical"/>
+                       <filter icon="terp-project" string="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
+                       <filter icon="terp-project" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member." default="1"/>
+                       <separator orientation="vertical"/>
+                       <filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
+                       <separator orientation="vertical"/>
+                       <field name="name" string="Project Name"/>
+                       <field name="user_id" string="Project Manager"/>
+                       <field name="partner_id" string="Partner"/>
+                       <field name="state"/>
                    </group>
                </search>
             </field>
@@ -220,7 +226,7 @@
                 <form string="Task edition">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
-                        <field name="project_id" required="1" select="1"/>
+                        <field name="project_id" required="1" select="1" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                         <field name="total_hours" widget="float_time"/>
                         <field name="date_deadline" select="2"/>
                         <field name="user_id" select="1"/>
@@ -267,7 +273,7 @@
                             <separator string="Parent Tasks" colspan="4"/>
                             <field colspan="4" height="150" name="parent_ids" nolabel="1"/>
                             <separator string="Delegated tasks" colspan="4"/>
-                            <field colspan="4" height="150" name="child_ids" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                            <field colspan="4" height="150" name="child_ids" nolabel="1">
                                 <tree string="Delegated tasks">
                                     <field name="name"/>
                                     <field name="user_id"/>
@@ -317,10 +323,11 @@
                 <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
                     <field name="sequence" invisible="1"/>
                     <field name="name"/>
-                    <field name="project_id" icon="gtk-indent"/>
+                    <field name="planned_hours" widget="float_time" on_change="onchange_planned(planned_hours)" invisible="not context.get('set_visible',False)"/>
+                    <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                     <field name="user_id"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
-                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours"  invisible="context.get('set_visible',False)"/>
+                    <field name="remaining_hours" widget="float_time" sum="Remaining Hours" invisible="context.get('set_visible',False)"/>
                     <field name="date_deadline" invisible="context.get('set_visible',False)"/>
                     <field name="type" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
                     <field name="date_start" invisible="1"/>
@@ -334,9 +341,9 @@
                         help="Change Type"/>
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
                     <field name="state" invisible="context.get('set_visible',False)"/>
-                    <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
+                    <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
                     <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-execute" help="For changing to delegate state"/>
-                    <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action" icon="gtk-jump-to" help="For changing to done state"/>
+                    <button name="%(wizard_close_task)d" states="draft,pending,open" string="Done" type="action" icon="gtk-jump-to" help="For changing to done state"/>
                     <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
                 </tree>
             </field>
@@ -405,10 +412,10 @@
                         </field>
                     </group>
                     <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="By Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="By Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="By Stage" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
-                        <filter string="By State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Stage" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Deadline" icon="terp-project" domain="[]" context="{'group_by':'date_deadline'}"/>
                         <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>

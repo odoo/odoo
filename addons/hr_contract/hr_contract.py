@@ -23,15 +23,6 @@
 from osv import fields, osv
 import time
 
-class hr_employee_marital_status(osv.osv):
-    _name = "hr.employee.marital.status"
-    _description = "Employee Marital Status"
-    _columns = {
-        'name' : fields.char('Marital Status', size=30, required=True),
-        'description' : fields.text('Status Description'),
-    }
-hr_employee_marital_status()
-
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
@@ -41,7 +32,6 @@ class hr_employee(osv.osv):
         'medic_exam' : fields.date('Medical examination date'),
         'audiens_num' : fields.char('AUDIENS Number', size=30),
         'place_of_birth' : fields.char('Place of Birth', size=30),
-        'marital_status' : fields.many2one('hr.employee.marital.status', 'Marital Status'),
         'children' : fields.integer('Number of children'),
         'contract_ids' : fields.one2many('hr.contract', 'employee_id', 'Contracts'),
     }

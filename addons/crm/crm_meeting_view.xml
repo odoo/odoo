@@ -24,47 +24,79 @@
         <field name="model">crm.meeting</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Meetings Form">            	
+            <form string="Meetings">            	
             	<group col="6" colspan="4">
                     <field name="name" select="1" string="Summary"
-            			colspan="4" />
-                    <field name="location" />
+            			colspan="4" />   
+                    <field name="categ_id" widget="selection" string="Meeting Type" domain="[('object_id.model', '=', 'crm.meeting')]"/>                 
             		<field name="date" string="Start Date" required="1" />
             		<field name="duration" widget="float_time" />
             		<field name="date_deadline" string="End Date" required="1" />
-            		
-            		<field name="categ_id"/>
+                    <field name="location" />
                     <field name="alarm_id" string="Reminder" widget="selection" />
-            		<group colspan="2" col="3" attrs="{'readonly':[('recurrent_uid','!=',False)]}">
+                    <group colspan="2" col="4" >
                             <field name="rrule_type" string="Recurrency"
                             	on_change="onchange_rrule_type(rrule_type)"
-                            	colspan="1" />
+                            	colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
                             <button string="Custom"
-            					name="%(caldav.action_calendar_custom_rrule_wizard)d"
+            					name="%(base_calendar.action_calendar_custom_rrule_wizard)d"
             					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}"
-                                attrs="{'readonly': [('rrule_type','!=','custom')]}"
+                                attrs="{'invisible': [('rrule_type','!=','custom')]}"
                                 />
+                            <button string="Edit" help="Edit only this Occurrency Meeting" attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
+                			name="%(wizard_edit_this_event)d" icon="gtk-save"
+                			type="action" context="{'model' : 'crm.meeting', 'date': date, 'date_deadline': date_deadline}" />
                     </group>
-
+                        
             	</group>
             	<notebook colspan="4">
-            		<page string="Description">
+            		<page string="Meeting">
+            		<separator colspan="4" string="Communication"/>
+                        <field name="partner_id" string="Partner"
+                        	on_change="onchange_partner_id(partner_id)" />
+                        <field name="partner_address_id"
+                        	string="Contact"
+                        	on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                        <field name="email_from"/>
+            		<separator colspan="4" string="Status and Categorization"/>
+                        <group colspan="4" col="6">
+                            <field name="priority"/>
+							 <field name="user_id" on_change="onchange_user_id(user_id)"/>
+	                        <field name="section_id" widget="selection" />
+                            <newline/>
+                            <field name="show_as" string="Show time as"/>            			
+                			<field name="class" string="Privacy"/>
+                            <field name="vtimezone"/>
+                			<field name="recurrent_id" invisible="1" />
+                			<field name="recurrent_uid" invisible="1" />
+                			<field name="rrule" invisible="1" />            	
+	                    </group>
             			<separator string="Description" colspan="4" />
             			<field name="description" nolabel="1" colspan="4" />
+                        <separator colspan="4"/>
+                        <group col="8" colspan="4">
+                            <field name="state" select="2"/>
+                            <button name="case_close" string="Done" states="open,draft,pending" type="object"  icon="gtk-close"/>
+                            <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
+                            <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
+                            <button name="case_pending" string="Pending" states="draft,open" type="object"  icon="gtk-media-pause"/>
+                            <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"  icon="gtk-go-up"/>
+                            <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
+                        </group>
             		</page>
-            		<page string="Attendee Detail">
+                    <page string="Invitation Detail">
             			<button string="Invite People"
-            				name="%(caldav.action_view_calendar_invite_attendee_wizard)d"
+            				name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
             				icon="terp-partner" type="action"
             				context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
             			<field name="attendee_ids" colspan="4"
             				nolabel="1" widget="one2many" mode="tree,form">
-            				<tree string="Atendee details" editable="top">
+            				<tree string="Invitation details" editable="top">
             					<field name="email" />
             					<field name="role" select="1" />
             					<field name="state" />
             				</tree>
-            				<form string="Atendee details">
+            				<form string="Invitation details">
             					<notebook colspan="4">
             						<page string="Details">
             							<field name="email" />
@@ -82,26 +114,10 @@
             					</notebook>
             				</form>
             			</field>
-            		</page>
-            		<page string="Other Information">
-            			<field name="priority"/>
-            			<field name="show_as"/>            			
-            			<field name="class"/>
-            			<field name="user_id" on_change="onchange_user_id(user_id)"/>
-                        <field name="section_id" widget="selection"
-            			/>
-            			<field name="vtimezone"/>
-            			<field name="recurrent_id" invisible="1" />
-            			<field name="recurrent_uid" invisible="1" />
-            			<field name="rrule" invisible="1" />
-            		</page>
+        		    </page>            		
             	</notebook>
-            	<group col="3" colspan="4" attrs="{'invisible':[('rrule_type','in', ('none', False))]}">
-            		<label string="" />
-            		<button string="Modify this Occurrence"
-            			name="%(base_calendar.wizard_edit_this_event)d" icon="gtk-save"
-            			type="action" context="{'model' : 'crm.meeting', 'date': date, 'date_deadline': date_deadline}" />
-            	</group>
+    
+                            	
             </form>
         </field>
     </record>
@@ -111,18 +127,16 @@
         <field name="model">crm.meeting</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Meetings Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+            <tree string="Meetings"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id" widget="char"/>
-                <field name="name" string="Title"/>
-                <field name="date" string="Meeting Date"/>
+                <field name="name" string="Subject"/>
+                <field name="partner_id" string="Partner"/>               
                 <field name="section_id" />
-                <field name="priority"/>
+                <field name="date" string="Meeting Date"/>                
                 <field name="categ_id"/>
+                <field name="priority"/>
                 <field name="user_id"/>
-                <field name="state"/>
-                <button name="case_open" string="Confirm Meeting" states="draft,cancel,pending" type="object" icon="terp-crm"/>
-                <button name="case_cancel" string="Cancel Meeting" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                <button name="case_reset" string="Reset to Unconfirmed" states="done,open,cancel" type="object" icon="gtk-convert"/>
+                <field name="state"/>                
             </tree>
         </field>
     </record>
@@ -177,5 +191,29 @@
                 </search>
         	</field>
     	</record>
+
+        <record id="attendee_form_view_inherit" model="ir.ui.view">
+                <field name="name">calendar.attendee.form.inherit</field>
+                <field name="model">calendar.attendee</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_form_view"/>                
+                <field name="arch" type="xml">
+                    <field name="language" position="after">
+                        <field name="categ_id" string="Event Type"/>
+                    </field>
+                </field>
+        </record>
+
+        <record id="attendee_tree_view_inherit" model="ir.ui.view">
+                <field name="name">calendar.attendee.tree.inherit</field>
+                <field name="model">calendar.attendee</field>
+                <field name="type">tree</field>
+                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_tree_view"/>                
+                <field name="arch" type="xml">
+                    <field name="role" position="after">
+                        <field name="categ_id" string="Event Type"/>
+                    </field>
+                </field>
+        </record>
 	</data>
 </openerp>

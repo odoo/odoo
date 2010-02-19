@@ -152,7 +152,7 @@ class account_voucher(osv.osv):
         balance=account.balance
         return {'value':{'amount':balance}}
 
-    def onchange_journal(self, cr, uid, ids, journal_id,type):
+    def onchange_journal(self, cr, uid, ids, journal_id, type):
         if not journal_id:
             return {'value':{'account_id':False}}
         journal = self.pool.get('account.journal')
@@ -171,8 +171,11 @@ class account_voucher(osv.osv):
         total=0
         for i in obj[0].payment_ids:
             total+=i.amount
-        self.write(cr,uid,ids,{'amount':total})
-        self.write(cr, uid, ids, {'state':'proforma'})
+        if total!=0:
+            self.write(cr,uid,ids,{'amount':total})
+            self.write(cr, uid, ids, {'state':'proforma'})
+        else:
+            raise osv.except_osv('Invalid action !', 'You can not post to Pro-Forma a voucher with Total amount = 0')
         return True
 
     def proforma_voucher(self, cr, uid, ids, context={}):
@@ -197,7 +200,7 @@ class account_voucher(osv.osv):
             if t['state'] in ('draft', 'cancel'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv('Invalid action !', 'Cannot delete invoice(s) which are already opened or paid !')
+                raise osv.except_osv('Invalid action !', 'Cannot delete Voucher(s) which are already opened or paid !')
         osv.osv.unlink(self, cr, uid, unlink_ids)
         return True
 
@@ -402,7 +405,6 @@ class account_voucher(osv.osv):
     def _convert_ref(self, cr, uid, ref):
         return (ref or '').replace('/','')
 
-
     def action_number(self, cr, uid, ids, *args):
         cr.execute('SELECT id, type, number, move_id, reference ' \
                 'FROM account_voucher ' \
@@ -427,8 +429,6 @@ class account_voucher(osv.osv):
                             'AND account_analytic_line.move_id = account_move_line.id',
                             (ref, move_id))
         return True
-
-
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
@@ -481,7 +481,7 @@ class account_voucher(osv.osv):
 
 account_voucher()
 
-class VoucherLine(osv.osv):
+class account_voucher_line(osv.osv):
     _name = 'account.voucher.line'
     _description = 'Voucher Line'
     _columns = {
@@ -694,7 +694,7 @@ class VoucherLine(osv.osv):
             'ref' : line.ref
         }
 
-VoucherLine()
+account_voucher_line()
 
 
 

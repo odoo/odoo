@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-02-09 23:39+0000\n"
+"PO-Revision-Date: 2010-02-10 09:31+0000\n"
 "Last-Translator: adnan <adnankraljic@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-02-10 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-02-12 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -24,7 +24,7 @@ msgstr "Račun izdat&Plaćeno"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 msgid "Supplier Invoice pre-generated on receptions for control"
-msgstr ""
+msgstr "Račun dobavljača pregenirisan prilikom primke - kontrole"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -34,7 +34,7 @@ msgstr "Odredište"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Picking"
-msgstr ""
+msgstr "Iz zaprimanja"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -263,6 +263,8 @@ msgid ""
 "Manual: no invoice will be pre-generated. The accountant will have to encode "
 "manually."
 msgstr ""
+"Iz naloga: draft računa će biti pregenerisan na osnovu nabavnog naloga. "
+"Odgovorna osoba samo mora validirati račun radi kontrole."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
@@ -452,6 +454,8 @@ msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
 msgstr ""
+"Ovo je proračunato kao najbliži predviđeni datuma isporuke koji se nalazi u "
+"svim nabavnim nalozima."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -487,7 +491,7 @@ msgstr "Potvrdi nabavni nalog"
 #: help:purchase.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this purchase"
-msgstr ""
+msgstr "Ovo je lista pakiranja koja je generisana za kupovinu."
 
 #. module: purchase
 #: model:ir.module.module,shortdesc:purchase.module_meta_information
@@ -560,7 +564,7 @@ msgstr "Račun pakiranja"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
 msgid "Creates invoice from packin list"
-msgstr ""
+msgstr "Kreiraj račun na osnovu liste isporuke."
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -580,7 +584,7 @@ msgstr "Datum"
 #. module: purchase
 #: help:purchase.order,origin:0
 msgid "Reference of the document that generated this purchase order request."
-msgstr ""
+msgstr "Referenca dokumenta koja generira ovaj zahtjev za narudžbenicu."
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -635,7 +639,7 @@ msgstr "Ukupno :"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "When purchase order is approved , it creates its packing list."
-msgstr ""
+msgstr "Odobrenje nabavnog naloga generiše kreiranje liste pakiranja."
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -735,7 +739,7 @@ msgstr "Zahtjev za ponudu"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Out Packing"
-msgstr ""
+msgstr "Bez pakiranja"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
@@ -776,7 +780,7 @@ msgstr "Opis"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "Product recept invoice"
-msgstr ""
+msgstr "Primka proizvoda na osnovu računa"
 
 #. module: purchase
 #: rml:purchase.quotation:0
@@ -812,7 +816,7 @@ msgstr "Nabavni nalog je potvrđen od strane korisnika."
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "Purchase Invoice"
-msgstr ""
+msgstr "Faktura nabavke"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -832,7 +836,7 @@ msgstr "Ukupni iznos"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Date Ordered"
-msgstr "Datum naruđbe"
+msgstr "Datum nabavnog naloga"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -863,7 +867,7 @@ msgstr "Odobrena nabavka"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
 msgid "From Packing list, Create invoice."
-msgstr ""
+msgstr "Iz liste pakovanja kreiraj račun"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0

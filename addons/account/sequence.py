@@ -30,6 +30,11 @@ class ir_sequence_fiscalyear(osv.osv):
         "sequence_main_id": fields.many2one("ir.sequence", 'Main Sequence', required=True, ondelete='cascade'),
         "fiscalyear_id": fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, ondelete='cascade')
     }
+
+    _sql_constraints = [
+        ('main_id', 'CHECK (sequence_main_id != sequence_id)',  'Main Sequence must be different from current !'),
+    ]
+
 ir_sequence_fiscalyear()
 
 class ir_sequence(osv.osv):

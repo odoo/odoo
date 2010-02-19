@@ -917,6 +917,7 @@ class abstracted_fs:
             if 'unique' in facts:
                 unique = "unique=%x%x;" %(st.st_dev, st.st_ino)
             path=_to_decode(file.path)
+            path = path and path.split('/')[-1] or None
             yield "%s%s%s%s%s%s%s%s%s %s\r\n" %(type, size, perm, modify, create,
                                                 mode, uid, gid, unique, path)
 

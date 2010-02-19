@@ -134,6 +134,25 @@ send_form_fields = {
     }
 }
 
+rml_form_arch = '''<?xml version="1.0"?>
+<form string="Save As" colspan="4">
+    <field name="file_rml"/>
+</form>
+'''
+
+rml_form_fields = {
+       'file_rml': {
+        'string': 'Save As',
+        'type': 'binary',
+    } 
+}
+
+save_rml_arch = '''<?xml version="1.0"?>
+<form string="File saved">
+    <separator string="File saved" colspan="4"/>
+    <label string="Your .rml file is saved and report has been modified."/>
+</form>'''
+
 def _get_default(obj, cursor, user, data, context):
     return {}
 
@@ -148,11 +167,12 @@ class base_report_designer_modify(wizard.interface):
         pool = pooler.get_pool(cr.dbname)
         sxwval = StringIO.StringIO(base64.decodestring(data['form']['file_sxw']))
         fp = tools.file_open('normalized_oo2rml.xsl',subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        newrmlcontent = str(tiny_sxw2rml.sxw2rml(sxwval, xsl=fp.read()))
         report = pool.get('ir.actions.report.xml').write(cr, uid, [data['form']['report_id']], {
             'report_sxw_content': base64.decodestring(data['form']['file_sxw']),
-            'report_rml_content': str(tiny_sxw2rml.sxw2rml(sxwval, xsl=fp.read()))
+            'report_rml_content': newrmlcontent
         })
-        return {}
+        return {'file_rml': base64.encodestring(newrmlcontent)}
 
     def _get_report(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -207,16 +227,38 @@ class base_report_designer_modify(wizard.interface):
                 'fields': send_form_fields,
                 'state': [
                     ('end','Close'),
-                    ('send_form_result', 'Update the report'),
+                    ('save_rml_to', 'Update the report'),
                 ]
             }
         },
-        'send_form_result': {
+        'save_rml_to': {
             'actions': [_upload_report],
+            'result': {
+                    'type': 'form',
+                    'arch': rml_form_arch,
+                    'fields': rml_form_fields,
+                    'state': [
+                            ('save_rml', 'Save rml'),
+                            ('send_form_result','Skip'),
+                        ]
+            }
+        },
+        'send_form_result': {
+            'actions': [],
             'result': {
                 'type': 'form',
                 'arch': send_form_result_arch,
                 'fields': send_form_result_fields,
+                'state': [
+                    ('end','Close'),
+                ]
+            }
+        },
+        'save_rml': {
+            'actions': [],
+            'result': {
+                'type': 'form',
+                'arch': save_rml_arch, 'fields': {},
                 'state': [
                     ('end','Close'),
                 ]

@@ -73,8 +73,8 @@
                             <newline/>
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <form string="Expense Lines">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, uom_id)" select="2"/>
-                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id)" select="2"/>
+                                    <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" select="2"/>
+                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" select="2"/>
                                     <field name="name" select="1"/>
                                     <field name="date_value" select="1"/>
                                     <field name="unit_quantity" select="2"/>
@@ -118,46 +118,62 @@
             <field name="model">hr.expense.expense</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Expense">
-                       <group col='6' colspan='4'>
-                           <filter icon="gtk-execute" string="My Expense" domain="[('user_id','=',uid)]" separator="1" help="Expenses Related to Current User"/>
-                          <field name="state" select="1">
-                              <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Expense"/>
-                              <filter icon="terp-hr" domain="[('state','=','accepted')]" help="Accepted Expense"/>
-                              <filter icon="terp-hr" domain="[('state','=','invoiced')]" help="Invoiced Expense"/>
-                          </field>
-                          <separator orientation="vertical"/>
-                          <field name="name" select='1'/>
-                          <field name="user_id" select="1" widget="selection"/>
-                      </group>
+                <search string="Expense">
+                <group col="20" colspan="4">
+                      <filter
+                        icon="terp-hr"
+                        domain="[('state','=','draft')]"
+                        string="Draft"
+                        help="Draft Expense"/>
+                      <filter
+                        icon="terp-hr"
+                        domain="[('state','=','confirm')]"
+                        string="To Validate"
+                        help="Confirmed Expense"/>
+                      <filter
+                        icon="terp-hr"
+                        domain="[('state','=','accepted')]"
+                        string="To Pay"
+                        help="Expenses to Invoice"/>
+                      <separator orientation="vertical"/>
+                      <field name="name" select='1'/>
+                      <field name="user_id" select="1" widget="selection">
+                          <filter
+                            icon="gtk-execute"
+                            help="My Expenses"
+                            default="1"
+                            domain="[('user_id','=',uid)]"/>
+                      </field>
+                      <field name="state" select="1"/>
+                 </group>
                  </search>
             </field>
         </record>
 
         <record id="expense_all" model="ir.actions.act_window">
-            <field name="name">All expenses</field>
+            <field name="name">Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
 
         <menuitem id="next_id_49" name="Expenses" sequence="6"
-        	parent="hr.menu_hr_root"/>
+           parent="hr.menu_hr_root"/>
 
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses"
-        	parent="next_id_49" groups="hr.group_hr_manager"/>
+           parent="next_id_49" groups="hr.group_hr_manager"/>
 
         <record id="view_product_hr_expense_form" model="ir.ui.view">
-			<field name="name">product.product.expense.form</field>
-			<field name="model">product.product</field>
-			<field name="inherit_id" ref="product.product_normal_form_view"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field groups="base.group_extended" name="rental" position="after">
-					<field name="hr_expense_ok"/>
-				</field>
-			</field>
-		</record>
+         <field name="name">product.product.expense.form</field>
+         <field name="model">product.product</field>
+         <field name="inherit_id" ref="product.product_normal_form_view"/>
+         <field name="type">form</field>
+         <field name="arch" type="xml">
+            <field groups="base.group_extended" name="rental" position="after">
+               <field name="hr_expense_ok"/>
+            </field>
+         </field>
+      </record>
 
     </data>
 </openerp>

@@ -216,6 +216,13 @@ class purchase_order(osv.osv):
                 unlink_ids.append(s['id'])
             else:
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
+
+        # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support 
+        # automatically sending subflow.delete upon deletion
+        wf_service = netsvc.LocalService("workflow")
+        for id in unlink_ids:
+            wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
+
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
     def button_dummy(self, cr, uid, ids, context={}):
@@ -294,6 +301,8 @@ class purchase_order(osv.osv):
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
         wf_service = netsvc.LocalService("workflow")
         for p_id in ids:
+            # Deleting the existing instance of workflow for PO
+            wf_service.trg_delete(uid, 'purchase.order', p_id, cr)            
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
         return True
 

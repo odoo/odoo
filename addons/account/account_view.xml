@@ -146,12 +146,26 @@
             </field>
         </record>
 
-
+		<record id="view_account_search" model="ir.ui.view">
+            <field name="name">account.account.search</field>
+            <field name="model">account.account</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Accounts">
+                    <field name="code" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="user_type" select="1"/>
+                    <field name="type" select="1"/>
+                </search>
+            </field>
+        </record>
+        
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">List of Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="search_view_id" ref="view_account_search"/>
         </record>
         <menuitem id="account_account_menu" name="Financial Accounts" parent="account.menu_finance_accounting"/>
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>

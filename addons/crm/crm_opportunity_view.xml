@@ -63,7 +63,7 @@
                     <field name="email_from" colspan="2" string="Email"/>
                     <field name="partner_phone" colspan="2"/>
 
-                    <separator colspan="4" string="Status and Categarization"/>
+                    <separator colspan="4" string="Status and Categorization"/>
                     <group colspan="4" col="6">
                         <field name="user_id" select="2" string="Responsible"/>                        
                         <field name="stage_id" select="1" string="Sales Stage" required="1" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>                        
@@ -99,8 +99,6 @@
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
-                    <field name="date_action_last"/>
-                    <field name="date_action_next"/>
                     <separator colspan="4" string="References"/>
                     <field name="ref" colspan="4"/>
                     <field name="ref2" colspan="4"/>
@@ -224,10 +222,10 @@
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="4">
-                        <filter string="By Stage" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>                        
-                        <filter string="By Partner" icon="terp-crm" domain="[]"  context="{'group_by':'partner_id'}"/>
-                        <filter string="By Responsible" icon="terp-crm" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="By Create Date" icon="terp-crm" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Stage" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>                        
+                        <filter string="Partner" icon="terp-crm" domain="[]"  context="{'group_by':'partner_id'}"/>
+                        <filter string="Responsible" icon="terp-crm" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Create Date" icon="terp-crm" domain="[]" context="{'group_by':'date'}"/>
                         
                 </group>
            </search>

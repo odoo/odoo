@@ -56,6 +56,7 @@ class project_work(osv.osv):
         res['product_id'] = emp.product_id.id
         res['journal_id'] = emp.journal_id.id
         res['general_account_id'] = a
+        res['product_uom_id'] = emp.product_id.uom_id.id
         return res
         
     def create(self, cr, uid, vals, *args, **kwargs):
@@ -76,9 +77,14 @@ class project_work(osv.osv):
         vals_line['general_account_id'] = result['general_account_id']
         vals_line['journal_id'] = result['journal_id']
         vals_line['amount'] = 00.0
+        vals_line['product_uom_id'] = result['product_uom_id']
         timeline_id = obj.create(cr, uid, vals_line, {})
-
-        vals_line['amount'] = (-1) * vals['hours']* ( obj.browse(cr,uid,timeline_id).product_id.standard_price or 0.0)
+        
+        # Compute based on pricetype
+        amount_unit=obj.on_change_unit_amount(cr, uid, line_id, 
+            vals_line['product_id'], vals_line['unit_amount'], unit, context)
+            
+        vals_line['amount'] = (-1) * vals['hours']* (unit_amount or 0.0)
         obj.write(cr, uid,[timeline_id], vals_line, {})
         vals['hr_analytic_timesheet_id'] = timeline_id
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
@@ -100,11 +106,17 @@ class project_work(osv.osv):
                 vals_line['product_id'] = result['product_id']
                 vals_line['general_account_id'] = result['general_account_id']
                 vals_line['journal_id'] = result['journal_id']
+                vals_line['product_uom_id'] = result['product_uom_id']
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
                 vals_line['unit_amount'] = vals['hours']
-                vals_line['amount'] = (-1) * vals['hours'] * (obj.browse(cr,uid,line_id).product_id.standard_price or 0.0)
+                
+                # Compute based on pricetype
+                amount_unit=obj.on_change_unit_amount(cr, uid, line_id, 
+                    vals_line['product_id'], vals_line['unit_amount'], unit, context)
+                
+                vals_line['amount'] = (-1) * vals['hours'] * (amount_unit or 0.0)
             obj.write(cr, uid, [line_id], vals_line, {})
 
         return super(project_work,self).write(cr, uid, ids, vals, context)

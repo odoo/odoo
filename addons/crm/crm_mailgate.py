@@ -36,7 +36,7 @@ class crm_cases(osv.osv):
     _name = "crm.case"
     _inherit = "crm.case"
 
-    def msg_new(self, cr, uid, msg):        
+    def msg_new(self, cr, uid, msg):                
         mailgate_obj = self.pool.get('mail.gateway')
         msg_body = mailgate_obj.msg_body_get(msg)
         data = {   
@@ -54,7 +54,11 @@ class crm_cases(osv.osv):
         self._history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])
         return res
     
-    def msg_update(self, cr, uid, ids, msg, data={}, default_act='pending'):         
+    def msg_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
+        if isinstance(ids, (str, int, long)):
+            select = [ids]
+        else:
+            select = ids        
         mailgate_obj = self.pool.get('mail.gateway')
         msg_actions, body_data = mailgate_obj.msg_act_get(msg)           
         data.update({
@@ -65,26 +69,24 @@ class crm_cases(osv.osv):
             if msg_actions['state'] in ['draft','close','cancel','open','pending']:
                 act = 'case_' + msg_actions['state']
         
-        for k1,k2 in [('cost','planned_cost'),('revenue','planned_revenue'),('probability','probability')]:
-            try:
+        for k1,k2 in [('cost','planned_cost'),('revenue','planned_revenue'),('probability','probability')]:            
+            if k1 in msg_actions:
                 data[k2] = float(msg_actions[k1])
-            except:
-                pass
 
         if 'priority' in msg_actions:
             if msg_actions['priority'] in ('1','2','3','4','5'):
                 data['priority'] = msg_actions['priority']
 
         if 'partner' in msg_actions:
-            data['email_from'] = msg_actions['partner'][:128]
+            data['email_from'] = msg_actions['partner'][:128]        
 
-        res = self.write(cr, uid, ids, data)
-        cases = self.browse(cr, uid, [res])       
+        res = self.write(cr, uid, select, data)
+        cases = self.browse(cr, uid, select)       
         self._history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])        
-        getattr(self,act)(cr, uid, ids)
+        getattr(self,act)(cr, uid, select)
         return res
 
-    def emails_get(self, cr, uid, ids, context={}):                
+    def emails_get(self, cr, uid, ids, context={}):         
         res = []
         if isinstance(ids, (str, int, long)):
             select = [ids]
@@ -94,7 +96,7 @@ class crm_cases(osv.osv):
             user_email = (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or False
             res += [(user_email, case.email_from, case.email_cc, case.priority)]
         if isinstance(ids, (str, int, long)):
-            return len(res) and res[0] or False
+            return len(res) and res[0] or False        
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):

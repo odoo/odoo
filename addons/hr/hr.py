@@ -52,6 +52,15 @@ class hr_employee_category(osv.osv):
 
 hr_employee_category()
 
+class hr_employee_marital_status(osv.osv):
+    _name = "hr.employee.marital.status"
+    _description = "Employee Marital Status"
+    _columns = {
+        'name' : fields.char('Marital Status', size=30, required=True),
+        'description' : fields.text('Status Description'),
+    }
+hr_employee_marital_status()
+
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
@@ -63,12 +72,14 @@ class hr_employee(osv.osv):
         'sinid': fields.char('SIN No', size=32),
         'otherid': fields.char('Other ID', size=32),
         'gender': fields.selection([('',''),('male','Male'),('female','Female')], 'Gender'),
-        'marital': fields.selection([('married','Married'),('unmarried','Unmarried'),('divorced','Divorced'),('other','Other')],'Marital Status', size=32),
+        'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
+
+        'partner_id' : fields.related('company_id', 'partner_id', type='many2one', relation='res.partner', readonly=True),
 
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
         'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone'),
-        'work_email': fields.related('address_id', 'email', type='char', string='Work E-mail'),
+        'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail'),
         'work_location': fields.char('Office Location', size=32),
 
         'notes': fields.text('Notes'),

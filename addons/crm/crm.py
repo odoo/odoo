@@ -25,12 +25,17 @@ import os
 import base64
 import tools
 import mx.DateTime
+import datetime
 
-from tools.translate import _
-from osv import fields 
-from osv import osv 
+from datetime import datetime
+from datetime import timedelta
+from osv import fields
 from osv import orm
+from osv import osv
 from osv.orm import except_orm
+from tools.translate import _
+
+
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -163,108 +168,6 @@ class crm_case_stage(osv.osv):
     
 crm_case_stage()
 
-
-class crm_case_rule(osv.osv):
-    _name = "crm.case.rule"
-    _description = "Case Rule"
-    _columns = {
-        'name': fields.char('Rule Name',size=64, required=True),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case rule without removing it."),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case rules."),
-
-        'trg_state_from': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case State', size=16),
-        'trg_state_to': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Button Pressed', size=16),
-
-        'trg_date_type':  fields.selection([
-            ('none','None'),
-            ('create','Creation Date'),
-            ('action_last','Last Action Date'),
-            ('deadline','Deadline'),
-            ('date','Date'),
-            ], 'Trigger Date', size=16),
-        'trg_date_range': fields.integer('Delay after trigger date',help="Delay After Trigger Date, specifies you can put a negative number " \
-                                                             "if you need a delay before the trigger date, like sending a reminder 15 minutes before a meeting."),
-        'trg_date_range_type': fields.selection([('minutes', 'Minutes'),('hour','Hours'),('day','Days'),('month','Months')], 'Delay type'),
-
-        'trg_section_id': fields.many2one('crm.case.section', 'Section'),
-    
-#        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
-        'trg_user_id':  fields.many2one('res.users', 'Responsible'),
-
-        'trg_partner_id': fields.many2one('res.partner', 'Partner'),
-        'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
-
-        'trg_priority_from': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Minimum Priority'),
-        'trg_priority_to': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Maximim Priority'),
-        'trg_max_history': fields.integer('Maximum Communication History'),
-
-        'act_method': fields.char('Call Object Method', size=64),
-        'act_state': fields.selection([('','')]+AVAILABLE_STATES, 'Set state to', size=16),
-        'act_section_id': fields.many2one('crm.case.section', 'Set section to'),
-        'act_user_id': fields.many2one('res.users', 'Set responsible to'),
-        'act_priority': fields.selection([('','')] + AVAILABLE_PRIORITIES, 'Set priority to'),
-        'act_email_cc': fields.char('Add watchers (Cc)', size=250, help="These people will receive a copy of the future communication between partner and users by email"),
-
-        'act_remind_partner': fields.boolean('Remind Partner', help="Check this if you want the rule to send a reminder by email to the partner."),
-        'act_remind_user': fields.boolean('Remind responsible', help="Check this if you want the rule to send a reminder by email to the user."),
-        'act_remind_attach': fields.boolean('Remind with attachment', help="Check this if you want that all documents attached to the case be attached to the reminder email sent."),
-
-        'act_mail_to_user': fields.boolean('Mail to responsible',help="Check this if you want the rule to send an email to the responsible person."),
-        'act_mail_to_partner': fields.boolean('Mail to partner',help="Check this if you want the rule to send an email to the partner."),
-        'act_mail_to_watchers': fields.boolean('Mail to watchers (CC)',help="Check this if you want the rule to mark CC(mail to any other person defined in actions)."),
-        'act_mail_to_email': fields.char('Mail to these emails', size=128,help="Email-id of the persons whom mail is to be sent"),
-        'act_mail_body': fields.text('Mail body',help="Content of mail"),
-        'regex_name' : fields.char('Regular Expression on Case Name', size=128),
-        'regex_history' : fields.char('Regular Expression on Case History', size=128),
-        'server_action_id' : fields.many2one('ir.actions.server','Server Action',help="Describes the action name." \
-                                                    "eg:on which object which ation to be taken on basis of which condition"),
-    }
-    _defaults = {
-        'active': lambda *a: 1,
-        'trg_date_type': lambda *a: 'none',
-        'trg_date_range_type': lambda *a: 'day',
-        'act_mail_to_user': lambda *a: 0,
-        'act_remind_partner': lambda *a: 0,
-        'act_remind_user': lambda *a: 0,
-        'act_mail_to_partner': lambda *a: 0,
-        'act_mail_to_watchers': lambda *a: 0,
-    }
-    _order = 'sequence'
-
-    def _check(self, cr, uid, ids=False, context={}):
-        '''
-        Function called by the scheduler to process cases for date actions
-        Only works on not done and cancelled cases
-        '''
-        cr.execute('select * from crm_case \
-                where (date_action_last<%s or date_action_last is null) \
-                and (date_action_next<=%s or date_action_next is null) \
-                and state not in (\'cancel\',\'done\')',
-                (time.strftime("%Y-%m-%d %H:%M:%S"),
-                    time.strftime('%Y-%m-%d %H:%M:%S')))
-        ids2 = map(lambda x: x[0], cr.fetchall() or [])
-        case_obj = self.pool.get('crm.case')
-        cases = case_obj.browse(cr, uid, ids2, context)
-        return case_obj._action(cr, uid, cases, False, context=context)
-
-
-    def _check_mail(self, cr, uid, ids, context=None):
-        caseobj = self.pool.get('crm.case')
-        emptycase = orm.browse_null()
-        for rule in self.browse(cr, uid, ids):
-            if rule.act_mail_body:
-                try:
-                    caseobj.format_mail(emptycase, rule.act_mail_body)
-                except (ValueError, KeyError, TypeError):
-                    return False
-        return True
-
-    _constraints = [
-        (_check_mail, 'Error: The mail is not well formated', ['act_mail_body']),
-    ]
-
-crm_case_rule()
-
 def _links_get(self, cr, uid, context={}):
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [])
@@ -335,9 +238,6 @@ class crm_case(osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-
-        'date_action_last': fields.datetime('Last Action', readonly=1),
-        'date_action_next': fields.datetime('Next Action', readonly=1),
         'company_id': fields.many2one('res.company','Company'),
     }
     def _get_default_partner_address(self, cr, uid, context):
@@ -365,7 +265,7 @@ class crm_case(osv.osv):
 
     def _get_section(self, cr, uid, context):
        user = self.pool.get('res.users').browse(cr, uid, uid,context=context)
-       return user.context_section_id
+       return user.context_section_id.id or False
 
     _defaults = {
         'active': lambda *a: 1,
@@ -375,6 +275,7 @@ class crm_case(osv.osv):
         'email_from': _get_default_email,
         'state': lambda *a: 'draft',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_deadline': lambda *a:(datetime.today() + timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': _get_section,
     }
     _order = 'date_deadline desc, date desc,id desc'
@@ -387,16 +288,7 @@ class crm_case(osv.osv):
         return super(crm_case, self).unlink(cr, uid, ids, context)
 
     def stage_next(self, cr, uid, ids, context={}):
-        ok = False
-        sid = self.pool.get('crm.case.stage').search(cr, uid, [('object_id.model', '=', self._name)], context=context)
-        s = {}
-        previous = {}
-        for stage in self.pool.get('crm.case.stage').browse(cr, uid, sid, context=context):
-            section = stage.section_id.id or False
-            s.setdefault(section, {})
-            s[section][previous.get(section, False)] = stage.id
-            previous[section] = stage.id
-
+        s = self.get_stage_dict(cr, uid, ids, context=context)
         for case in self.browse(cr, uid, ids, context):
             section = (case.section_id.id or False)
             if section in s:
@@ -405,7 +297,29 @@ class crm_case(osv.osv):
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
 
         return True
-
+    
+    def get_stage_dict(self, cr, uid, ids, context={}):
+        sid = self.pool.get('crm.case.stage').search(cr, uid, [('object_id.model', '=', self._name)], context=context)
+        s = {}
+        previous = {}
+        for stage in self.pool.get('crm.case.stage').browse(cr, uid, sid, context=context):
+            section = stage.section_id.id or False
+            s.setdefault(section, {})
+            s[section][previous.get(section, False)] = stage.id
+            previous[section] = stage.id
+        return s
+    
+    def stage_previous(self, cr, uid, ids, context={}):
+        s = self.get_stage_dict(cr, uid, ids, context=context)
+        for case in self.browse(cr, uid, ids, context):
+            section = (case.section_id.id or False)
+            if section in s:
+                st = case.stage_id.id  or False
+                s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
+                if st in s[section]:
+                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
+        return True
+    
     def onchange_categ_id(self, cr, uid, ids, categ, context={}):
         if not categ:
             return {'value':{}}
@@ -427,166 +341,8 @@ class crm_case(osv.osv):
                 value['email_from'] = case.email_from
         return {'value': value}
 
-    def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
-        if not scrit:
-            scrit = []
-        action_ids = self.pool.get('crm.case.rule').search(cr, uid, scrit)
-        level = MAX_LEVEL
-        while len(action_ids) and level:
-            newactions = []
-            actions = self.pool.get('crm.case.rule').browse(cr, uid, action_ids, context)
-            for case in cases:
-                for action in actions:
-                    ok = True
-                    ok = ok and (not action.trg_state_from or action.trg_state_from==case.state)
-                    ok = ok and (not action.trg_state_to or action.trg_state_to==state_to)
-                    ok = ok and (not action.trg_section_id or action.trg_section_id.id==case.section_id.id)
-                    ok = ok and (not action.trg_categ_id or action.trg_categ_id.id==case.categ_id.id)
-                    ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==case.user_id.id)
-                    ok = ok and (not action.trg_partner_id.id or action.trg_partner_id.id==case.partner_id.id)
-                    ok = ok and (not action.trg_max_history or action.trg_max_history<=(len(case.history_line)+1))
-                    ok = ok and (
-                        not action.trg_partner_categ_id.id or
-                        (
-                            case.partner_id.id and
-                            (action.trg_partner_categ_id.id in map(lambda x: x.id, case.partner_id.category_id or []))
-                        )
-                    )
-                    ok = ok and (not action.trg_priority_from or action.trg_priority_from>=case.priority)
-                    ok = ok and (not action.trg_priority_to or action.trg_priority_to<=case.priority)
-
-                    reg_name = action.regex_name
-                    result_name = True
-                    if reg_name:
-                        ptrn = re.compile(str(reg_name))
-                        _result = ptrn.search(str(case.name))
-                        if not _result:
-                            result_name = False
-                    regex_n = not reg_name or result_name
-                    ok = ok and regex_n
-
-                    reg_history = action.regex_history
-                    result_history = True
-                    if reg_history:
-                        ptrn = re.compile(str(reg_history))
-                        if case.history_line:
-                            _result = ptrn.search(str(case.history_line[0].description))
-                            if not _result:
-                                result_history = False
-                    regex_h = not reg_history or result_history
-                    ok = ok and regex_h
-
-                    if not ok:
-                        continue
-
-                    base = False
-                    if action.trg_date_type=='create':
-                        base = mx.DateTime.strptime(case.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                    elif action.trg_date_type=='action_last':
-                        if case.date_action_last:
-                            base = mx.DateTime.strptime(case.date_action_last, '%Y-%m-%d %H:%M:%S')
-                        else:
-                            base = mx.DateTime.strptime(case.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                    elif action.trg_date_type=='deadline' and case.date_deadline:
-                        base = mx.DateTime.strptime(case.date_deadline, '%Y-%m-%d %H:%M:%S')
-                    elif action.trg_date_type=='date' and case.date:
-                        base = mx.DateTime.strptime(case.date, '%Y-%m-%d %H:%M:%S')
-                    if base:
-                        fnct = {
-                            'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval),
-                            'day': lambda interval: mx.DateTime.RelativeDateTime(days=interval),
-                            'hour': lambda interval: mx.DateTime.RelativeDateTime(hours=interval),
-                            'month': lambda interval: mx.DateTime.RelativeDateTime(months=interval),
-                        }
-                        d = base + fnct[action.trg_date_range_type](action.trg_date_range)
-                        dt = d.strftime('%Y-%m-%d %H:%M:%S')
-                        ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and \
-                                ((not case.date_action_next) or \
-                                (dt >= case.date_action_next and \
-                                case.date_action_last < case.date_action_next))
-                        if not ok:
-                            if not case.date_action_next or dt < case.date_action_next:
-                                case.date_action_next = dt
-                                self.write(cr, uid, [case.id], {'date_action_next': dt}, context)
-
-                    else:
-                        ok = action.trg_date_type=='none'
-
-                    if ok:
-                        if action.server_action_id:
-                            context.update({'active_id':case.id,'active_ids':[case.id]})
-                            self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
-                        write = {}
-                        if action.act_state:
-                            case.state = action.act_state
-                            write['state'] = action.act_state
-                        if action.act_section_id:
-                            case.section_id = action.act_section_id
-                            write['section_id'] = action.act_section_id.id
-                        if action.act_user_id:
-                            case.user_id = action.act_user_id
-                            write['user_id'] = action.act_user_id.id
-                        if action.act_priority:
-                            case.priority = action.act_priority
-                            write['priority'] = action.act_priority
-                        if action.act_email_cc:
-                            if '@' in (case.email_cc or ''):
-                                emails = case.email_cc.split(",")
-                                if  action.act_email_cc not in emails:# and '<'+str(action.act_email_cc)+">" not in emails:
-                                    write['email_cc'] = case.email_cc+','+action.act_email_cc
-                            else:
-                                write['email_cc'] = action.act_email_cc
-                        write['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
-                        self.write(cr, uid, [case.id], write, context)
-                        caseobj = self.pool.get('crm.case')
-                        if action.act_remind_user:
-                            caseobj.remind_user(cr, uid, [case.id], context, attach=action.act_remind_attach)
-                        if action.act_remind_partner:
-                            caseobj.remind_partner(cr, uid, [case.id], context, attach=action.act_remind_attach)
-                        if action.act_method:
-                            getattr(caseobj, 'act_method')(cr, uid, [case.id], action, context)
-                        emails = []
-                        if action.act_mail_to_user:
-                            if case.user_id and case.user_id.address_id:
-                                emails.append(case.user_id.address_id.email)
-                        if action.act_mail_to_partner:
-                            emails.append(case.email_from)
-                        if action.act_mail_to_watchers:
-                            emails += (action.act_email_cc or '').split(',')
-                        if action.act_mail_to_email:
-                            emails += (action.act_mail_to_email or '').split(',')
-                        emails = filter(None, emails)
-                        if len(emails) and action.act_mail_body:
-                            emails = list(set(emails))
-                            self.email_send(cr, uid, case, emails, action.act_mail_body)
-                        break
-            action_ids = newactions
-            level -= 1
-        return True
-
-    def format_body(self, body):
-        return body and tools.ustr(body.encode('ascii', 'replace')) or ''
-
-    def format_mail(self, case, body):
-        data = {
-            'case_id': case.id,
-            'case_subject': case.name,
-            'case_date': case.date,
-            'case_description': case.description,
-
-            'case_user': (case.user_id and case.user_id.name) or '/',
-            'case_user_email': (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or '/',
-            'case_user_phone': (case.user_id and case.user_id.address_id and case.user_id.address_id.phone) or '/',
-
-            'email_from': case.email_from,
-            'partner': (case.partner_id and case.partner_id.name) or '/',
-            'partner_email': (case.partner_address_id and case.partner_address_id.email) or '/',
-        }
-        return self.format_body(body % data)
-
-
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
-        model_obj = self.pool.get('ir.model')        
+        model_obj = self.pool.get('ir.model')          
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model','=',case._name)])            
             data = {
@@ -614,50 +370,6 @@ class crm_case(osv.osv):
         cases[0].state # to fill the browse record cache
         self._action(cr,uid, cases, 'draft')
         return res
-
-    def remind_partner(self, cr, uid, ids, context={}, attach=False):
-        return self.remind_user(cr, uid, ids, context, attach,
-                destination=False)
-
-    def remind_user(self, cr, uid, ids, context={}, attach=False, 
-            destination=True):
-        for case in self.browse(cr, uid, ids):
-            if not case.section_id.reply_to:
-                raise osv.except_osv(_('Error!'), ("Reply To is not specified in Section"))
-            if not case.email_from:
-                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
-            if case.section_id.reply_to and case.email_from:
-                src = case.email_from
-                dest = case.section_id.reply_to
-                body = case.email_last or case.description
-                if not destination:
-                    src, dest = dest, src
-                    if case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature or '')
-                dest = [dest]
-
-                attach_to_send = None
-
-                if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'crm.case'), ('res_id', '=', case.id)])
-                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
-                    attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
-
-                # Send an email
-                flag = tools.email_send(
-                    src,
-                    dest,
-                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
-                    self.format_body(body),
-                    reply_to=case.section_id.reply_to,
-                    openobject_id=str(case.id),
-                    attach=attach_to_send
-                )
-                if flag:
-                    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
-                else:
-                    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
-        return True
 
     def add_reply(self, cursor, user, ids, context=None):
         for case in self.browse(cursor, user, ids, context=context):
@@ -757,7 +469,7 @@ class crm_case(osv.osv):
             self.write(cr, uid, ids, data)
         cases = self.browse(cr, uid, ids)
         self.__history(cr, uid, cases, _('Escalate'))
-        self._action(cr, uid, cases, 'escalate')
+        self._action(cr,uid, cases, 'escalate')        
         return True
 
 
@@ -794,8 +506,9 @@ class crm_case(osv.osv):
         cases[0].state # to fill the browse record cache
         self.__history(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state':'draft', 'active':True})
-        self._action(cr, uid, cases, 'draft')
-        return True
+        self._action(cr,uid, cases, 'draft')
+        return True   
+
 crm_case()
 
 
@@ -893,13 +606,6 @@ class crm_email_add_cc_wizard(osv.osv_memory):
 
 crm_email_add_cc_wizard()
 
-def _section_get(self, cr, uid, context={}):
-    obj = self.pool.get('crm.case.section')
-    ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['id','name'], context)
-    res = [(str(r['id']),r['name']) for r in res]
-    return res
-
 class users(osv.osv):
     _inherit = 'res.users'
     _description = "Users"
@@ -907,6 +613,3 @@ class users(osv.osv):
         'context_section_id': fields.many2one('crm.case.section', 'Sales Section'),
     }
 users()
-
-
-

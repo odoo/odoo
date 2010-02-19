@@ -110,11 +110,15 @@ class stock_location(osv.osv):
         cr.execute('select distinct product_id from stock_move where (location_id=%s) or (location_dest_id=%s)', (id, id))
         result = cr.dictfetchall()
         if result:
+            # Choose the right filed standard_price to read
+            # Take the user company
+            price_type_id=self.pool.get('res.users').browse(cr,uid,uid).company_id.property_valuation_price_type.id
+            pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)
             for r in result:
                 c = (context or {}).copy()
                 c['location'] = id
-                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read, 'standard_price'], context=c)
-                final_value += (product[field_to_read] * product['standard_price'])
+                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read, pricetype.field], context=c)
+                final_value += (product[field_to_read] * product[pricetype.field])
         return final_value
 
     def _product_value(self, cr, uid, ids, field_names, arg, context={}):
@@ -211,6 +215,10 @@ class stock_location(osv.osv):
         if context is None:
             context = {}
         product_obj = self.pool.get('product.product')
+        # Take the user company and pricetype
+        price_type_id=self.pool.get('res.users').browse(cr,uid,uid).company_id.property_valuation_price_type.id
+        pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)
+        
         if not product_ids:
             product_ids = product_obj.search(cr, uid, [])
 
@@ -241,10 +249,16 @@ class stock_location(osv.osv):
                         continue
                     product = products_by_id[product_id]
                     quantity_total += qty[product_id]
-                    price = qty[product_id] * product.standard_price
+                    
+                    # Compute based on pricetype
+                    # Choose the right filed standard_price to read
+                    amount_unit=product.price_get(pricetype.field, context)[product.id] 
+                    price = qty[product_id] * amount_unit
+                    # price = qty[product_id] * product.standard_price
+
                     total_price += price
                     result['product'].append({
-                        'price': product.standard_price,
+                        'price': amount_unit,
                         'prod_name': product.name,
                         'code': product.default_code, # used by lot_overview_all report!
                         'variants': product.variants or '',
@@ -437,7 +451,7 @@ class stock_picking(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True),
-        'origin': fields.char('Source document', size=64, help="Reference of the document that produced this picking."),
+        'origin': fields.char('Origin', size=64, help="Reference of the document that produced this picking."),
         'backorder_id': fields.many2one('stock.picking', 'Back Order', help="If the picking is splitted then the picking id in available state of move for this picking is stored in Backorder."),
         'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal'), ('delivery', 'Delivery')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the picking without removing it."),
@@ -462,7 +476,7 @@ class stock_picking(osv.osv):
             \n* The \'Waiting\' state is used in MTO moves when a movement is waiting for another one.'),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Planned Date', select=1, help="Planned date for Picking. Default it takes current date"),
-        'date': fields.datetime('Date Order', help="Date of Order"),
+        'date': fields.datetime('Order Date', help="Date of Order"),
         'date_done': fields.datetime('Date Done', help="Date of completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Planned Date', select=2),
@@ -645,7 +659,11 @@ class stock_picking(osv.osv):
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         '''Return the price unit for the move line'''
         if type in ('in_invoice', 'in_refund'):
-            return move_line.product_id.standard_price
+            # Take the user company and pricetype
+            price_type_id=self.pool.get('res.users').browse(cr,users,users).company_id.property_valuation_price_type.id
+            pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)            
+            amount_unit=move_line.product_id.price_get(pricetype.field, context)[move_line.product_id.id] 
+            return amount_unit
         else:
             return move_line.product_id.list_price
 
@@ -1072,7 +1090,7 @@ class stock_move(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
         'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"),
-        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Source document"),
+        'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
     }
     _constraints = [
@@ -1172,10 +1190,17 @@ class stock_move(osv.osv):
 
         return {'value': result}
 
-    def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False):
+    def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False, loc_dest_id=False, address_id=False):
         if not prod_id:
             return {}
-        product = self.pool.get('product.product').browse(cr, uid, [prod_id])[0]
+        lang = False
+        if address_id:
+            addr_rec = self.pool.get('res.partner.address').browse(cr, uid, address_id)
+            if addr_rec:
+                lang = addr_rec.partner_id and addr_rec.partner_id.lang or False
+        ctx = {'lang': lang}
+
+        product = self.pool.get('product.product').browse(cr, uid, [prod_id], context=ctx)[0]
         uos_id  = product.uos_id and product.uos_id.id or False
         result = {
             'name': product.partner_ref,
@@ -1408,13 +1433,19 @@ class stock_move(osv.osv):
                     ref = move.picking_id and move.picking_id.name or False
                     product_uom_obj = self.pool.get('product.uom')
                     default_uom = move.product_id.uom_id.id
+                    date = time.strftime('%Y-%m-%d')
                     q = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
                     if move.product_id.cost_method == 'average' and move.price_unit:
                         amount = q * move.price_unit
+                    # Base computation on valuation price type
                     else:
-                        amount = q * move.product_id.standard_price
-
-                    date = time.strftime('%Y-%m-%d')
+                        company_id=move.company_id.id
+                        
+                        pricetype=self.pool.get('product.price.type').browse(cr,uid,move.company_id.property_valuation_price_type.id)
+                        amount_unit=move.product_id.price_get(pricetype.field, context)[move.product_id.id]
+                        amount=amount_unit * q or 1.0
+                        # amount = q * move.product_id.standard_price
+                    
                     partner_id = False
                     if move.picking_id:
                         partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
@@ -1492,7 +1523,8 @@ class stock_inventory(osv.osv):
             move_line = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                price = line.product_id.standard_price or 0.0
+                
+                # price = line.product_id.standard_price or 0.0
                 amount = self.pool.get('stock.location')._product_get(cr, uid, line.location_id.id, [pid], {'uom': line.product_uom.id})[pid]
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
