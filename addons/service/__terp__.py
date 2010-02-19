@@ -19,6 +19,18 @@
 #
 ##############################################################################
 
-import wizard
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+{
+    'name': 'Service company profile',
+    'version': '1.0',
+    'category': 'Profile',
+    'description': """Profile for service companies""",
+    'author': 'Tiny',
+    'depends': ['hr', 'project', 'board_project', 'account_analytic_analysis'],
+    'update_xml': ['security/ir.model.access.csv', 'service_installer.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '0030405502077',
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
