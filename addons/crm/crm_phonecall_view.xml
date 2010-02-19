@@ -16,18 +16,6 @@
     </record>
 
    <menuitem action="crm_phonecall_categ_action" id="menu_crm_case_phonecall-act" parent="crm.menu_crm_case_categ"/>
-    # ------------------------------------------------------
-    # Phonecall Stage
-    # ------------------------------------------------------
-        <record id="crm_phonecall_stage_act" model="ir.actions.act_window">
-            <field name="name">Phonecall Stages</field>
-            <field name="res_model">crm.case.stage</field>
-            <field name="view_type">form</field>
-             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
-            <field name="context">{'object_id':'crm.phonecall'}</field>
-        </record>
-      <menuitem action="crm_phonecall_stage_act" id="menu_crm_phonecall_stage_act" parent="crm.menu_crm_case_stage"/>
 
     # ------------------------------------------------------
     # Phone Calls
@@ -89,19 +77,20 @@
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 </group>
                 <group col="3" colspan="2">
-                    <separator colspan="4" string="Contacts" />
+                    <separator colspan="3" string="Contacts" />
                     <field name="partner_id" />
                     <button string="Convert to Partner"
-                        colspan="2"
                         icon="terp-crm"
                         name="%(wizard_crm_phonecall_partner_create)d"
                         type="action"
                         attrs="{'invisible':[('partner_id','!=',False)]}" />
+                    <newline/>
                     <field name="partner_address_id" string="Contact" />
+                    <newline/>
                     <field name="partner_mobile" />
                 </group>
                 <group col="2" colspan="2">
-                    <separator colspan="4" string="Categorization" />
+                    <separator colspan="2" string="Categorization" />
                     <field name="priority"/>
                     <field name="opportunity_id"
                         on_change="onchange_case_id(case_id, name, partner_id)"
@@ -170,7 +159,6 @@
                </field>
                <newline/>
                <group expand="1" string="Group By..." colspan="4">
-                   <filter string="Stage" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>
                    <filter string="Partner" icon="terp-crm" domain="[]"  context="{'group_by':'partner_id'}"/>
                    <filter string="Responsible" icon="terp-crm" domain="[]" context="{'group_by':'user_id'}"/>
                    <separator orientation="vertical"/>
