@@ -6,10 +6,15 @@
             name="Reporting"
             parent="hr.menu_hr_root"
             sequence="40" />
+     <menuitem
+            id="menu_hr_reporting_holidays"
+            name="Holidays"
+            parent="hr.menu_hr_reporting"
+            sequence="3" />
 	<wizard string="Print Summary of Holidays"
 		  name="hr.holidays.summary"
 		  id="holidays_summary"/>
-	<menuitem name="Print Summary of Holidays" parent="hr.menu_hr_reporting"
+	<menuitem name="Print Summary of Holidays" parent="menu_hr_reporting_holidays"
 		 action="holidays_summary"
 		 type="wizard"
 		 id="menu_holidays_summary" sequence="20"/>

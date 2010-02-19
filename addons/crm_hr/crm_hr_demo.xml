@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <openerp>
 <data noupdate="1">
-	<!-- 
-		((((((((((( Demo Cases ))))))))))) 
+	<!--
+		((((((((((( Demo Cases )))))))))))
 	-->
 
 	<!--For Jobs Requests-->
-	<record id="crm_case_salesman0" model="crm.job">
+	<record id="crm_case_salesman0" model="crm.applicant">
 		<field eval="time.strftime('%Y-%m-01 10:35:50')" name="date"/>
 		<field eval="time.strftime('%Y-%m-03')" name="date_deadline"/>
 		<field name="type_id" ref="crm_hr.type_job1"/>
@@ -25,7 +25,7 @@
 		<field eval="&quot;Salesman&quot;" name="name"/>
 		<field eval="&quot;1236547890&quot;" name="partner_phone"/>
 	</record>
-	<record id="crm_case_traineemca0" model="crm.job">
+	<record id="crm_case_traineemca0" model="crm.applicant">
 		<field model="res.partner.canal" name="canal_id" search="[('name','=','E-mail')]"/>
 		<field name="partner_address_id" ref="base.res_partner_address_14"/>
 		<field name="som" ref="base.som_fury"/>
@@ -47,7 +47,7 @@
 		<field eval="time.strftime('%Y-%m-15')" name="date_deadline"/>
 		<field eval="&quot;6633225&quot;" name="partner_phone"/>
 	</record>
-	<record id="crm_case_fresher0" model="crm.job">
+	<record id="crm_case_fresher0" model="crm.applicant">
 		<field model="res.partner.canal" name="canal_id" search="[('name','=','direct')]"/>
 		<field name="som" ref="base.som_happy"/>
 		<field eval="time.strftime('%Y-%m-15 16:10:00')" name="date"/>
@@ -67,7 +67,7 @@
 		<field eval="&quot;Fresher&quot;" name="name"/>
 		<field eval="&quot;999666735&quot;" name="partner_phone"/>
 	</record>
-	<record id="crm_case_yrsexperienceinphp0" model="crm.job">
+	<record id="crm_case_yrsexperienceinphp0" model="crm.applicant">
 		<field eval="time.strftime('%Y-%m-25 16:25:52')" name="date"/>
 		<field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
 		<field name="categ_id" ref="crm_hr.categ_job2"/>
@@ -84,7 +84,7 @@
 		<field name="stage_id" ref="crm_hr.stage_job6"/>
 		<field eval="&quot;More than 5 yrs Experience in PHP&quot;" name="name"/>
 	</record>
-	<record id="crm_case_marketingjob0" model="crm.job">
+	<record id="crm_case_marketingjob0" model="crm.applicant">
 		<field eval="time.strftime('%Y-%m-26 17:15:32')" name="date"/>
 		<field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
 		<field name="type_id" ref="crm_hr.type_job2"/>
@@ -103,7 +103,7 @@
 		<field eval="&quot;Marketing Job&quot;" name="name"/>
 		<field eval="&quot;33968745&quot;" name="partner_phone"/>
 	</record>
-	<record id="crm_case_financejob0" model="crm.job">
+	<record id="crm_case_financejob0" model="crm.applicant">
 		<field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
 		<field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
 		<field name="type_id" ref="crm_hr.type_job2"/>
@@ -121,8 +121,8 @@
 		<field name="stage_id" ref="crm_hr.stage_job5"/>
 		<field eval="&quot;Finance Job&quot;" name="name"/>
 		<field eval="&quot;33968745&quot;" name="partner_phone"/>
-	</record>	
-	<record id="crm_case_traineemca1" model="crm.job">
+	</record>
+	<record id="crm_case_traineemca1" model="crm.applicant">
 		<field model="res.partner.canal" name="canal_id" search="[('name','=','E-mail')]"/>
 		<field name="partner_address_id" ref="base.res_partner_address_14"/>
 		<field name="som" ref="base.som_fury"/>
@@ -144,6 +144,6 @@
 		<field eval="time.strftime('%Y-%m-15')" name="date_deadline"/>
 		<field eval="&quot;6630125&quot;" name="partner_phone"/>
 	</record>
-	
+
 </data>
 </openerp>

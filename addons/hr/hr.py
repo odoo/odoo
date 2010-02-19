@@ -61,6 +61,33 @@ class hr_employee_marital_status(osv.osv):
     }
 hr_employee_marital_status()
 
+class crm_job(osv.osv):
+
+    def _no_of_employee(self, cr, uid, ids, name,args,context=None):
+        res = {}
+        for emp in self.browse(cr, uid, ids):
+            res[emp.id] = str(len(emp.employee_ids))
+        return res
+
+    _name = "crm.job"
+    _description = "Job Information"
+    _columns = {
+        'name': fields.char('Name', size=128, required=True, select=True),
+        'ref': fields.char('Code', size=64),
+        'expected_employees':fields.integer('Expected Employees'),
+        'no_of_employee': fields.function(_no_of_employee, method=True, string='No of Employee', type='char'),
+        'employee_ids':fields.one2many('hr.employee', 'job_id','Employees'),
+        'description': fields.text('Job Description'),
+        'requirements':fields.text('Requirements'),
+        'department_id':fields.many2one('hr.department','Department')
+
+        }
+    _defaults = {
+        'expected_employees': lambda *a: 1,
+        }
+
+crm_job()
+
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
@@ -87,6 +114,9 @@ class hr_employee(osv.osv):
         'category_id' : fields.many2one('hr.employee.category', 'Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id','Subordinates'),
         'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
+        'coach_id':fields.many2one('res.users','Coach'),
+        'job_id':fields.many2one('crm.job', 'Job'),
+
     }
     _defaults = {
         'active' : lambda *a: True,
@@ -107,4 +137,6 @@ class hr_employee(osv.osv):
     ]
 
 hr_employee()
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
