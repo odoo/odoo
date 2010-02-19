@@ -245,6 +245,7 @@ class act_window(osv.osv):
             'act_id', 'gid', 'Groups'),
         'search_view_id': fields.many2one('ir.ui.view', 'Search View Ref.'),
         'filter': fields.boolean('Filter'),
+        'auto_search':fields.boolean('Auto Search'),
         'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
         'menus': fields.char('Menus', size=4096)
@@ -257,6 +258,7 @@ class act_window(osv.osv):
         'limit': lambda *a: 80,
         'target': lambda *a: 'current',
         'auto_refresh': lambda *a: 0,
+        'auto_search':lambda *a: True
     }
 act_window()
 
