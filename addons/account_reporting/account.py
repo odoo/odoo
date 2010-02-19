@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -84,7 +84,7 @@ class account_report_bs(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of account reporting for balance sheet."),
         'code': fields.char('Code', size=64, required=True),
         'account_id': fields.many2many('account.account', 'account_report_rel', 'report_id', 'account_id', 'Accounts'),
         'note': fields.text('Note'),
@@ -103,7 +103,7 @@ class account_report_bs(osv.osv):
         'font_style': lambda *a :'',
     }
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:

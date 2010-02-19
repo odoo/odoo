@@ -17,15 +17,17 @@
                                 name="%(event.action_event_registration)d"
                                 colspan="4"/>
                             <action
-                                string="My tasks"
-                                name="%(project.action_view_task5_prog)d"
+                                string="My Tasks"
+                                name="%(project.action_view_task)d"
                                 colspan="4"
                                 height="200"
-                                width="510"/>
+                                width="510"
+                                domain="[('user_id', '=', uid),('state','in',('open','draft'))]"/>
                             <action
                                 string="Unpaid Invoices"
-                                name="%(account.action_invoice_tree7)d"
-                                colspan="4"/>
+                                name="%(account.action_invoice_tree)d"
+                                colspan="4"
+                                domain="[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_invoice')]"/>
                         </child1>
 
                         <child2>
@@ -33,7 +35,7 @@
                                 string="New members"
                                 name="%(membership.action_report_partner_member_year_tree)d"
                                 view_mode="graph,tree" colspan="4"/>
-                            <action 
+                            <action
                                 string="Registrations by Events"
                                 name="%(event.action_event_type_registration)d"
                                 view_mode="graph,tree"
@@ -51,9 +53,10 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_associations_manager_form"/>
         </record>
-
+		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+		<menuitem id="board_associations" name="Associations" parent="base.dashboard" />
         <menuitem
-            name="Associations" parent="board.dashboard_menu"
+            name="Associations" parent="board_associations"
             action="open_board_associations_manager"
             sequence="1"
             id="menu_board_associations_manager"

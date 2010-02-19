@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -72,7 +72,7 @@ _followup_wizard_all_form = """<?xml version="1.0"?>
             <label string="%(company_name)s: User's Company name" colspan="2"/>
             <label string="%(company_currency)s: User's Company Currency" colspan="2"/>
             <label string="%(heading)s: Move line header" colspan="2"/>
-            <label string="%(line)s: Account Move lines" colspan="2"/>
+            <label string="%(line)s: Ledger Posting lines" colspan="2"/>
         </page>
     </notebook>
 </form>"""
@@ -125,12 +125,13 @@ class followup_all_print(wizard.interface):
     def _update_partners(self, cr, uid, data, context):
         to_update = data['form']['to_update']
         for id in to_update.keys():
-            cr.execute(
-                "UPDATE account_move_line "\
-                "SET followup_line_id=%s, followup_date=%s "\
-                "WHERE id=%s",
-                (to_update[id],
-                data['form']['date'], int(id),))
+            if to_update[id]['partner_id'] in data['form']['partner_ids'][0][2]:
+                cr.execute(
+                    "UPDATE account_move_line "\
+                    "SET followup_line_id=%s, followup_date=%s "\
+                    "WHERE id=%s",
+                    (to_update[id]['level'],
+                    data['form']['date'], int(id),))
         return {}
 
     def _sendmail(self ,cr, uid, data, context):
@@ -168,7 +169,7 @@ class followup_all_print(wizard.interface):
                     cxt = context.copy()
                     cxt['lang'] = partner.lang
                     body = pool.get('res.users').browse(cr, uid, uid, context=cxt).company_id.follow_up_msg
-                    
+
                 total_amt = followup_data.debit - followup_data.credit
                 move_line = ''
                 subtotal_due = 0.0
@@ -263,14 +264,14 @@ class followup_all_print(wizard.interface):
                 if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                     if partner_id not in partner_list:
                         partner_list.append(partner_id)
-                    to_update[str(id)] = fups[followup_line_id][1]
+                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
             elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                 if partner_id not in partner_list:
                     partner_list.append(partner_id)
-                to_update[str(id)] = fups[followup_line_id][1]
+                to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
         
         message = pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
-        
+
         return {'partner_ids': partner_list, 'to_update': to_update, 'email_body':message}
 
     def _get_screen1_values(self, cr, uid, data, context):

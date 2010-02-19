@@ -42,7 +42,7 @@ class WikiGroup(osv.osv):
     _columns={
        'name':fields.char('Wiki Group', size=256, select=True, required=True),
        'page_ids':fields.one2many('wiki.wiki', 'group_id', 'Pages'),
-       'notes':fields.text("Description", select=True),
+       'notes':fields.text("Description"),
        'create_date':fields.datetime("Created Date", select=True),
        'template': fields.text('Wiki Template'),
        'section': fields.boolean("Make Section ?"),
@@ -71,14 +71,14 @@ class Wiki(osv.osv):
     _columns={
         'name':fields.char('Title', size=256, select=True, required=True),
         'write_uid':fields.many2one('res.users',"Last Author"),
-        'text_area':fields.text("Content", select=True),
+        'text_area':fields.text("Content"),
         'create_uid':fields.many2one('res.users','Author', select=True),
         'create_date':fields.datetime("Created on", select=True),
         'write_date':fields.datetime("Modification Date", select=True),
         'tags':fields.char('Tags', size=1024),
         'history_id':fields.one2many('wiki.wiki.history','wiki_id','History Lines'),
         'minor_edit':fields.boolean('Minor edit', select=True),
-        'summary':fields.char('Summary',size=256, select=True),
+        'summary':fields.char('Summary',size=256),
         'section': fields.char('Sequence', size=32, help="Use page section code like 1.2.1"),
         'group_id':fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
         'toc':fields.boolean('Table of Contents'),
@@ -148,7 +148,7 @@ class History(osv.osv):
     _order = 'id DESC'
     _columns={
       'create_date':fields.datetime("Date",select=True),
-      'text_area':fields.text("Text area",select=True),
+      'text_area':fields.text("Text area"),
       'minor_edit':fields.boolean('This is a major edit ?',select=True),
       'summary':fields.char('Summary',size=256, select=True),
       'write_uid':fields.many2one('res.users',"Modify By", select=True),

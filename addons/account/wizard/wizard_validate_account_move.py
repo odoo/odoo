@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -72,7 +72,7 @@ def _validate_move_lines(self, cr, uid, data, context={}):
             move_ids.append(line.move_id.id)
     move_ids = list(set(move_ids))
     if not move_ids:
-        raise wizard.except_wizard(_('Warning'), _('Selected Move lines does not have any account move enties in draft state'))
+        raise wizard.except_wizard(_('Warning'), _('Selected Entry Lines does not have any account move enties in draft state'))
     res = move_obj.button_validate(cr, uid, move_ids, context)
     return {}
 

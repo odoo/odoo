@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -55,9 +55,8 @@ class report_custom(report_int):
         minbenef = 999999999999999999999
         maxbenef = 0
 
-        cr.execute('select probability, planned_revenue, planned_cost, user_id, res_users.name as name from crm_case left join res_users on (crm_case.user_id=res_users.id) where crm_case.id in ('+','.join(map(str, ids))+') order by user_id')
+        cr.execute('select probability, planned_revenue, planned_cost, user_id, res_users.name as name from crm_case left join res_users on (crm_case.user_id=res_users.id) where crm_case.id =ANY(%s) order by user_id',(ids,))
         res = cr.dictfetchall()
-
         for row in res:
             proba = row['probability'] or 0 / 100.0
             cost = row['planned_cost'] or 0

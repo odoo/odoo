@@ -82,9 +82,12 @@
         </record>
 
         <menuitem name="Membership" id="menu_membership" icon="terp-crm"/>
+        <menuitem name="Members" parent="menu_membership"
+            id="menu_member"
+            sequence="1"/>
         <menuitem name="Configuration" parent="menu_membership"
             id="menu_conf"
-            sequence="1"/>
+            sequence="3"/>
         <menuitem name="Membership products" parent="menu_conf"
             id="menu_membership_products"
             action="action_membership_products"/>
@@ -103,15 +106,33 @@
                     <field name="membership_start"/>
                     <field name="membership_stop"/>
                     <field name="membership_state"/>
+                    <field name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')]}"/>
                 </tree>
             </field>
         </record>
-
+        <record id="view_res_partner_member_filter" model="ir.ui.view">
+		    <field name="name">res.partner.select</field>
+		    <field name="model">res.partner</field>
+		    <field name="type">search</field>
+		    <field name="arch" type="xml">
+		        <field name="category_id" position="after">
+		        	<field name="membership_state" select="1">
+			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'paid')]" help="Paid Members"/>
+			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'free')]" help="Free Members"/>
+			        	<filter icon="terp-partner" domain="[('associate_member', '!=', False), ('membership_state', '!=', 'none')]" help="Associated Members"/>
+			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'invoiced')]" help="Invoiced Members"/>
+			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'waiting')]" help="Future Members"/>
+			        	<filter icon="terp-partner" domain="[('membership_state', '=', 'old')]" help="Old Members"/>
+					</field>
+		       </field>
+		    </field>
+	    </record>
 
         <record model="ir.actions.act_window" id="action_membership_members">
             <field name="name">Current members</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[('membership_state','&lt;&gt;','none'),('membership_state','&lt;&gt;','canceled'),('membership_state','&lt;&gt;','old'),('membership_state','&lt;&gt;','waiting')]</field>
+        	<field name="search_view_id" ref="view_res_partner_member_filter"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
@@ -127,183 +148,10 @@
             <field name="act_window_id" ref="action_membership_members"/>
         </record>
 
-        <menuitem name="Current members" parent="menu_membership"
+        <menuitem name="Current members" parent="menu_member"
             id="menu_members"
             sequence="2"
             action="action_membership_members"/>
-        <!-- MEMBERSHIP/MEMBERS/PAID MEMBERS  -->
-
-        <record model="ir.actions.act_window" id="action_membership_members_paid">
-            <field name="name">Paid members</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('membership_state', '=', 'paid')]</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_paid_view_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="membership_members_tree"/>
-            <field name="act_window_id" ref="action_membership_members_paid"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_paid_view_form">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="act_window_id" ref="action_membership_members_paid"/>
-        </record>
-
-        <menuitem name="Paid members" parent="menu_members"
-            id="menu_members_paid"
-            action="action_membership_members_paid"/>
-
-
-        <!-- MEMBERSHIP/MEMBERS/FREE MEMBERS  -->
-
-        <record model="ir.actions.act_window" id="action_membership_members_free">
-            <field name="name">Free members</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('membership_state', '=', 'free')]</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_free_view_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="membership_members_tree"/>
-            <field name="act_window_id" ref="action_membership_members_free"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_free_view_form">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="act_window_id" ref="action_membership_members_free"/>
-        </record>
-
-        <menuitem name="Free members" parent="menu_members"
-            id="menu_members_free"
-            action="action_membership_members_free"/>
-
-
-
-
-        <!-- MEMBERSHIP/MEMBERS/ASSOCIATED MEMBERS  -->
-        <record model="ir.ui.view" id="membership_members_associated_tree">
-            <field name="name">associate members</field>
-            <field name="model">res.partner</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Members">
-                    <field name="name"/>
-                    <field name="membership_start"/>
-                    <field name="membership_stop"/>
-                    <field name="membership_state"/>
-                    <field name="associate_member"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_membership_members_associated">
-            <field name="name">Associated members</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('associate_member', '!=', False), ('membership_state', '!=', 'none')]</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_associated_view_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="membership_members_associated_tree"/>
-            <field name="act_window_id" ref="action_membership_members_associated"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_associated_view_form">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="act_window_id" ref="action_membership_members_associated"/>
-        </record>
-
-        <menuitem name="Associated members" parent="menu_members"
-            id="menu_members_associated"
-            action="action_membership_members_associated"/>
-
-
-        <!-- MEMBERSHIP/MEMBERS/INVOICED MEMBERS  -->
-
-        <record model="ir.actions.act_window" id="action_membership_members_invoiced">
-            <field name="name">Invoiced members</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('membership_state', '=', 'invoiced')]</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_invoiced_view_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="membership_members_tree"/>
-            <field name="act_window_id" ref="action_membership_members_invoiced"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_invoiced_view_form">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="act_window_id" ref="action_membership_members_invoiced"/>
-        </record>
-
-        <menuitem name="Invoiced members" parent="menu_members"
-            id="menu_members_invoiced"
-            action="action_membership_members_invoiced"/>
-
-
-        <!-- MEMBERSHIP/MEMBERS/FUTURE MEMBERS  -->
-
-        <record model="ir.actions.act_window" id="action_membership_members_waiting">
-            <field name="name">Future members</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('membership_state', '=', 'waiting')]</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_waiting_view_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="membership_members_tree"/>
-            <field name="act_window_id" ref="action_membership_members_waiting"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_waiting_view_form">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="act_window_id" ref="action_membership_members_waiting"/>
-        </record>
-
-        <menuitem name="Future members (invoice not confirmed)" parent="menu_membership"
-            id="menu_members_waiting"
-            sequence="3"
-            action="action_membership_members_waiting"/>
-
-        <!-- MEMBERSHIP/MEMBERS/OLD MEMBERS  -->
-
-        <record model="ir.actions.act_window" id="action_membership_members_old">
-            <field name="name">Old members</field>
-            <field name="res_model">res.partner</field>
-            <field name="domain">[('membership_state', '=', 'old')]</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_old_view_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="membership_members_tree"/>
-            <field name="act_window_id" ref="action_membership_members_old"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_membership_members_old_view_form">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="act_window_id" ref="action_membership_members_old"/>
-        </record>
-
-        <menuitem name="Old members" parent="menu_membership"
-            id="menu_members_old"
-            sequence="4"
-            action="action_membership_members_old"/>
-
-
 
         <!-- PARTNERS -->
 
@@ -362,7 +210,7 @@
 
         <!-- MEMBERSHIP/REPORTING -->
         <menuitem name="Reporting" parent="menu_membership"
-            sequence="5"
+            sequence="2"
             id="menu_reporting"/>
 
         <!-- REPORTING/MEMBERSHIP BY YEAR  -->

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,15 +26,15 @@
     'category': 'Board/CRM',
     'description': """
 This module implements a dashboard for CRM that includes:
-    * My Prospects (list)
-    * Prospects by Stage (graph)
+    * My Leads (list)
+    * Leads by Stage (graph)
     * My Meetings (list)
     * Sales Pipeline by Stage (graph)
     * My Cases (list)
     * Jobs Tracking (graph)
     """,
     'author': 'Tiny',
-    'depends': ['board', 'crm_configuration'],
+    'depends': ['board', 'crm', 'report_crm'],
     'update_xml': ['board_crm_statistical_view.xml', 'board_crm_view.xml'],
     'demo_xml': ['board_crm_demo.xml'],
     'installable': True,

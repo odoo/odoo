@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 10:53+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2009-12-31 12:43+0000\n"
+"Last-Translator: Albert Cervera i Areny <albert@nan-tic.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-18 04:34+0000\n"
+"X-Launchpad-Export-Date: 2010-01-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -174,6 +174,11 @@ msgid ""
 "works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
 "    "
 msgstr ""
+"Mòdul de gestió de projectes que permet fer un seguiment de projectes multi-"
+"nivell, les tasques,\n"
+"treballs sobre les tasques, ... És capaç de visualitzar la planificació, "
+"ordenar tasques, ...\n"
+"    "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_prog
@@ -235,7 +240,7 @@ msgstr "Projecte"
 #. module: project
 #: view:project.task:0
 msgid "Start Task"
-msgstr "Tasca inicial"
+msgstr "Inicia tasca"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_draft
@@ -296,7 +301,7 @@ msgstr ""
 #. module: project
 #: help:project.task.delegate,init,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user."
-msgstr ""
+msgstr "Incloure la descripció de la tasca en la tasca de l'usuari."
 
 #. module: project
 #: field:project.project,category_id:0
@@ -335,7 +340,7 @@ msgstr "Empresa"
 #: field:project.task,planned_hours:0
 #: wizard_field:project.task.delegate,init,planned_hours:0
 msgid "Planned Hours"
-msgstr "Hores planejades"
+msgstr "Hores estimades"
 
 #. module: project
 #: view:project.project:0
@@ -449,7 +454,7 @@ msgstr "Tipus de tasca de projecte"
 #. module: project
 #: field:project.project,planned_hours:0
 msgid "Planned Time"
-msgstr "Temps previst"
+msgstr "Temps estimat"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
@@ -572,7 +577,7 @@ msgstr "﻿XML invàlid per a la definició de la vista!"
 #: model:ir.ui.menu,name:project.menu_main
 #: view:res.company:0
 msgid "Project Management"
-msgstr "Gestió de projectes"
+msgstr "Projectes"
 
 #. module: project
 #: field:project.project,effective_hours:0
@@ -632,7 +637,7 @@ msgstr "Estat: %(state)s"
 #. module: project
 #: view:project.task:0
 msgid "Planned"
-msgstr "Planificat"
+msgstr "Estimat"
 
 #. module: project
 #: help:project.project,total_hours:0
@@ -699,7 +704,7 @@ msgstr "Pendent"
 #. module: project
 #: field:project.task,state:0
 msgid "Status"
-msgstr "Posició"
+msgstr "Estat"
 
 #. module: project
 #: help:project.task.delegate,init,state:0
@@ -779,7 +784,7 @@ msgstr "Mesos"
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
 msgid "When task is completed, it will come into the done state."
-msgstr "Quan una tasca és completada, es converteix en estat realitzada."
+msgstr "Quan es completa una tasca, canvia a l'estat Realitzada."
 
 #. module: project
 #: field:project.task.work,date:0
@@ -855,12 +860,14 @@ msgid ""
 "If you have [?] in the project name, it means there are no analytic account "
 "linked to this project."
 msgstr ""
+"Si teniu [?] en el nom del projecte, significa que no hi ha compte analític "
+"vinculat a aquest projecte."
 
 #. module: project
 #: help:project.project,planned_hours:0
 msgid "Sum of planned hours of all tasks related to this project."
 msgstr ""
-"Suma de les hores previstes de totes les tasques relacionades amb aquest "
+"Suma de les hores estimades de totes les tasques relacionades amb aquest "
 "projecte."
 
 #. module: project
@@ -901,6 +908,10 @@ msgid ""
 "projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
+"Enllaceu aquest projecte a un compte analític si necessita la gestió "
+"financera dels projectes. Us permet connectar els projectes amb "
+"pressupostos, planificació, anàlisi de costos i ingressos, temps dedicat en "
+"els projectes, etc."
 
 #. module: project
 #: view:project.project:0
@@ -1040,6 +1051,8 @@ msgid ""
 "If you have [?] in the name, it means there are no analytic account linked "
 "to project."
 msgstr ""
+"Si teniu [?] en el nom, significa que no hi ha compte analític vinculat al "
+"projecte."
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_delegate_task
@@ -1144,7 +1157,7 @@ msgstr "Assigna a"
 #. module: project
 #: field:project.task.work,name:0
 msgid "Work summary"
-msgstr "Resumen del treball"
+msgstr "Resum del treball"
 
 #. module: project
 #: view:project.project:0

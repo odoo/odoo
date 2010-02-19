@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -68,7 +68,7 @@ def _sign_in(self, cr, uid, data, context):
     service = netsvc.LocalService('object_proxy')
     emp_id = data['form']['emp_id']
     if 'last_time' in data['form'] :
-        if data['form']['last_time'] > time.strftime('%Y-%m-%d'):
+        if data['form']['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):
             raise wizard.except_wizard(_('UserError'), _('The sign-out date must be in the past'))
             return {'success': False}
         service.execute(cr.dbname, uid, 'hr.attendance', 'create', {
@@ -77,7 +77,7 @@ def _sign_in(self, cr, uid, data, context):
             'employee_id': emp_id
         })
     try:
-        success = service.execute(cr.dbname, uid, 'hr.employee', 'sign_in', [emp_id])
+        success = service.execute(cr.dbname, uid, 'hr.employee', 'attendance_action_change', [emp_id], 'sign_in')
     except:
         raise wizard.except_wizard(_('UserError'), _('A sign-in must be right after a sign-out !'))
     return {'success': success}
@@ -86,12 +86,12 @@ def _sign_out(self, cr, uid, data, context):
     service = netsvc.LocalService('object_proxy')
     emp_id = data['form']['emp_id']
     if 'last_time' in data['form'] :
-        if data['form']['last_time'] > time.strftime('%Y-%m-%d'):
+        if data['form']['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):
             raise wizard.except_wizard(_('UserError'), _('The Sign-in date must be in the past'))
             return {'success': False}
         service.execute(cr.dbname, uid, 'hr.attendance', 'create', {'name':data['form']['last_time'], 'action':'sign_in',  'employee_id':emp_id})
     try:
-        success = service.execute(cr.dbname, uid, 'hr.employee', 'sign_out', [emp_id])
+        success = service.execute(cr.dbname, uid, 'hr.employee', 'attendance_action_change', [emp_id], 'sign_out')
     except:
         raise wizard.except_wizard(_('UserError'), _('A sign-out must be right after a sign-in !'))
 
@@ -99,7 +99,7 @@ def _sign_out(self, cr, uid, data, context):
 
 so_ask_form ='''<?xml version="1.0"?> 
 <form string="Sign in / Sign out">
-    <separator string="You did not signed out the last time. Please enter the date and time you signed out." colspan="4" />
+    <separator string="You did not sign out the last time. Please enter the date and time you signed out." colspan="4" />
     <field name="name" readonly="True" />
     <field name="last_time" />
 </form>'''
@@ -122,7 +122,7 @@ def _si_check(self, cr, uid, data, context):
 
 si_ask_form ='''<?xml version="1.0"?> 
 <form string="Sign in / Sign out">
-    <separator string="You did not signed in the last time. Please enter the date and time you signed in." colspan="4" />
+    <separator string="You did not sign in the last time. Please enter the date and time you signed in." colspan="4" />
     <field name="name" readonly="True" />
     <field name="last_time" />
 </form>'''
@@ -132,14 +132,22 @@ si_ask_fields = {
     'last_time' : {'string' : "Your last sign in", 'type' : 'datetime', 'required' : True},
 }
 
+so_wo_si_form = '''<?xml version="1.0"?>
+<form string="Warning">
+    <label string="Sign-Out Entry must follow Sign-In." colspan="4" />
+</form>'''
+
 def _so_check(self, cr, uid, data, context):
     states = {True : 'so', False: 'so_ask_si'}
     service = netsvc.LocalService('object_proxy')
     emp_id = data['form']['emp_id']
-    att_id = service.execute(cr.dbname, uid, 'hr.attendance', 'search', [('employee_id', '=', emp_id)], limit=1, order='name desc')
+    att_id = service.execute(cr.dbname, uid, 'hr.attendance', 'search', [('employee_id', '=', emp_id),('action','!=','action')], limit=1, order='name desc')
     last_att = service.execute(cr.dbname, uid, 'hr.attendance', 'read', att_id)
     if last_att:
         last_att = last_att[0]
+
+    if not att_id and not last_att:
+        return 'so_wo_si'
     cond = last_att and last_att['action'] == 'sign_in'
     return states[cond]
 
@@ -173,6 +181,10 @@ class wiz_si_so(wizard.interface):
                 'actions' : [_sign_out],
                 'result' : {'type' : 'state', 'state':'end'}
             },
+            'so_wo_si' : {
+                'actions' : [],
+                'result' : {'type' : 'form', 'arch' : so_wo_si_form, 'fields' : {}, 'state' : [('end', 'Ok')] }
+            },            
     }
 wiz_si_so('hr.si_so')
 

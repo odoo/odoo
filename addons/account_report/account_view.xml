@@ -41,7 +41,7 @@
                             <label align="1.0" string="Operators:"/>
                             <label align="0.0" string="+ - * / ( )"/>
                             <label colspan="4" string="Example: (balance(['6','45'],-1) - credit(['7'])) / report('RPT1')"/>
-                            <label colspan="4" string="Note: The second arguement 'fiscalyear' and 'period' are optional arguements.If the value is -1,previous fiscalyear or period is considered."/>
+                            <label colspan="4" string="Note: The second argument 'fiscalyear' and 'period' are optional arguments.If the value is -1,previous fiscalyear or period is considered."/>
                             <separator colspan="4" string="Return value for status"/>
                             <group col="2" colspan="2">
                                 <label align="1.0" string="&lt; Badness Indicator Limit:"/>
@@ -91,15 +91,7 @@
             <field name="view_id" ref="view_account_report_tree_simple"/>
         </record>
 
-        <menuitem action="action_account_report_tree" id="menu_action_account_report_tree_define" parent="account.menu_finance_configuration"/>
-
-        <record id="action_account_report_form" model="ir.actions.act_window">
-            <field name="name">New Reporting Item Formula</field>
-            <field name="res_model">account.report.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
-        <menuitem action="action_account_report_form" id="menu_action_account_report_form" parent="account_report.menu_action_account_report_tree_define"/>
+        <menuitem action="action_account_report_tree" id="menu_action_account_report_tree_define" parent="account.menu_finance_configuration" sequence="20"/>
 
         <record id="view_account_report_tree" model="ir.ui.view">
             <field name="name">account.report.report.tree</field>
@@ -124,7 +116,7 @@
             <field name="view_id" ref="view_account_report_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="action_account_report_tree_view" id="menu_action_account_report_tree_view" parent="account.menu_finance_reporting"/>
+        <menuitem action="action_account_report_tree_view" id="menu_action_account_report_tree_view" parent="account.menu_finance_generic_reporting" sequence="5"/>
 
 
         <record id="action_account_report_tree_view_fiscal" model="ir.actions.act_window">

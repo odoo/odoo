@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -73,16 +73,12 @@ class product_product(osv.osv):
         else:
             location_ids= location_ids
 
-        states_str = ','.join(map(lambda s: "'%s'" % s, states))
-
         uoms_o = {}
         product2uom = {}
         for product in self.browse(cr, uid, ids, context=context):
             product2uom[product.id] = product.uom_id.id
             uoms_o[product.uom_id.id] = product.uom_id
 
-        prod_ids_str = ','.join(map(str, ids))
-        location_ids_str = ','.join(map(str, location_ids))
         results = []
         results2 = []
 
@@ -101,11 +97,11 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id not in ('+location_ids_str+') '\
-                'and location_dest_id in ('+location_ids_str+') '\
-                'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom'
+                'where location_id <> ANY(%s)'\
+                'and location_dest_id =ANY(%s)'\
+                'and product_id =ANY(%s)'\
+                'and state in %s' + (date_str and 'and '+date_str+' ' or '') +''\
+                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
             )
             results = cr.fetchall()
         if 'out' in what:
@@ -113,11 +109,11 @@ class product_product(osv.osv):
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id in ('+location_ids_str+') '\
-                'and location_dest_id not in ('+location_ids_str+') '\
-                'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom'
+                'where location_id = ANY(%s)'\
+                'and location_dest_id <> ANY(%s) '\
+                'and product_id =ANY(%s)'\
+                'and state in %s' + (date_str and 'and '+date_str+' ' or '') + ''\
+                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
             )
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')
@@ -163,50 +159,52 @@ class product_product(osv.osv):
 
     _columns = {
         'qty_available': fields.function(_product_available, method=True, type='float', string='Real Stock', help="Current quantities of products in selected locations or all internal if none have been selected.", multi='qty_available'),
-        'virtual_available': fields.function(_product_available, method=True, type='float', string='Virtual Stock', help="Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming.", multi='qty_available'),
+        'virtual_available': fields.function(_product_available, method=True, type='float', string='Virtual Stock', help="Future stock for this product according to the selected locations or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming.", multi='qty_available'),
         'incoming_qty': fields.function(_product_available, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available'),
         'outgoing_qty': fields.function(_product_available, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available'),
-        'track_production': fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
-        'track_incoming': fields.boolean('Track Incomming Lots', help="Force to use a Production Lot during receptions"),
-        'track_outgoing': fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),
+        'track_production': fields.boolean('Track Production Lots' , help="Forces to use a Production Lot during production order"),
+        'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to use a tracking lot during receptions"),
+        'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to use a tracking lot during deliveries"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one', domain=[('usage','=','internal')]),
     }
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if context == None:
+            context = {}
         if ('location' in context) and context['location']:
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
             fields=res.get('fields',{})
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Receptions')
+                        res['fields']['virtual_available']['string'] = _('Future Receptions')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Received Qty')
 
                 if location_info.usage == 'internal':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Stock')
+                        res['fields']['virtual_available']['string'] = _('Future Stock')
 
                 if location_info.usage == 'customer':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Deliveries')
+                        res['fields']['virtual_available']['string'] = _('Future Deliveries')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Delivered Qty')
 
                 if location_info.usage == 'inventory':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur P&L')
+                        res['fields']['virtual_available']['string'] = _('Future P&L')
                     res['fields']['qty_available']['string'] = _('P&L Qty')
 
                 if location_info.usage == 'procurement':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Qty')
+                        res['fields']['virtual_available']['string'] = _('Future Qty')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Unplanned Qty')
 
                 if location_info.usage == 'production':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Productions')
+                        res['fields']['virtual_available']['string'] = _('Future Productions')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
 
@@ -222,11 +220,11 @@ class product_template(osv.osv):
             'stock.location',
             type='many2one',
             relation='stock.location',
-            string="Procurement Location",
+            string="Requisition Location",
             method=True,
             view_load=True,
             domain=[('usage','like','procurement')],
-            help="For the current product (template), this stock location will be used, instead of the default one, as the source location for stock moves generated by procurements"),
+            help="For the current product, this stock location will be used, instead of the default one, as the source location for stock moves generated by procurements"),
         'property_stock_production': fields.property(
             'stock.location',
             type='many2one',
@@ -235,7 +233,7 @@ class product_template(osv.osv):
             method=True,
             view_load=True,
             domain=[('usage','like','production')],
-            help="For the current product (template), this stock location will be used, instead of the default one, as the source location for stock moves generated by production orders"),
+            help="For the current product, this stock location will be used, instead of the default one, as the source location for stock moves generated by production orders"),
         'property_stock_inventory': fields.property(
             'stock.location',
             type='many2one',
@@ -244,7 +242,7 @@ class product_template(osv.osv):
             method=True,
             view_load=True,
             domain=[('usage','like','inventory')],
-            help="For the current product (template), this stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory"),
+            help="For the current product, this stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory"),
         'property_stock_account_input': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', method=True, view_load=True,

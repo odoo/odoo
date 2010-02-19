@@ -2,13 +2,13 @@
 <openerp>
     <data>
         <!-- Production -->
-        
+
         <record id="wkf_prod" model="workflow">
             <field name="name">mrp.production.basic</field>
             <field name="osv">mrp.production</field>
             <field name="on_create">True</field>
         </record>
-        
+
         <record id="prod_act_draft" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="flow_start">True</field>
@@ -53,7 +53,7 @@
             <field name="kind">function</field>
             <field name="action">action_cancel()</field>
         </record>
-        
+
         <record id="prod_trans_draft_ready" model="workflow.transition">
             <field name="act_from" ref="prod_act_draft"/>
             <field name="act_to" ref="prod_act_ready"/>
@@ -112,15 +112,15 @@
             <field name="act_to" ref="prod_act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        
+
         <!-- Procurement -->
-        
+
         <record id="wkf" model="workflow">
             <field name="name">mrp.procurement.basic</field>
             <field name="osv">mrp.procurement</field>
             <field name="on_create">True</field>
         </record>
-        
+
         <record id="act_draft" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="flow_start">True</field>
@@ -203,7 +203,7 @@
             <field name="kind">function</field>
             <field name="action">action_done()</field>
         </record>
-        
+
         <record id="trans_draft_confirm" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_confirm"/>
@@ -322,13 +322,13 @@
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">subflow.cancel</field>
         </record>
-        
+
         <record id="trans_produce_make_done" model="workflow.transition">
             <field name="act_from" ref="act_produce"/>
             <field name="act_to" ref="act_make_done"/>
             <field name="signal">subflow.done</field>
         </record>
-        
+
         <record id="trans_produce_service_make_done" model="workflow.transition">
             <field name="act_from" ref="act_produce_service"/>
             <field name="act_to" ref="act_make_done"/>

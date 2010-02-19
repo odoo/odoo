@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -32,7 +32,7 @@ invoice_form = """<?xml version="1.0"?>
     <newline/>
     <field name="type"/>
     <newline/>
-    <field name="invoice_date" />    
+    <field name="invoice_date" />
 </form>
 """
 
@@ -53,8 +53,9 @@ invoice_fields = {
         'selection': [],
         'required': True
     },
-    'invoice_date': {'string': 'Invoiced date', 'type':'date' }    
+    'invoice_date': {'string': 'Invoiced date', 'type':'date' }
 }
+
 
 def _get_type(obj, cr, uid, data, context):
     picking_obj = pooler.get_pool(cr.dbname).get('stock.picking')
@@ -63,7 +64,7 @@ def _get_type(obj, cr, uid, data, context):
     if pick.invoice_state == 'invoiced':
         raise wizard.except_wizard(_('UserError'), _('Invoice is already created.'))
     if pick.invoice_state == 'none':
-        raise wizard.except_wizard(_('UserError'), _('Invoice cannot be created from Packing.'))
+        raise wizard.except_wizard(_('UserError'), _('Invoice cannot be created from Picking.'))
 
     if pick.move_lines:
         usage = pick.move_lines[0].location_id.usage
@@ -85,7 +86,7 @@ def _get_type(obj, cr, uid, data, context):
             ('out_refund', 'Customer Refund'),
             ('in_refund', 'Supplier Refund'),
             ]
-                    
+
     if pick.type == 'out' and usage == 'supplier':
         type = 'in_refund'
     elif pick.type == 'out' and usage == 'customer':
@@ -120,13 +121,13 @@ def _create_invoice(obj, cr, uid, data, context):
         raise  wizard.except_wizard(_('Error'), _('Invoice is not created'))
 
     if type == 'out_invoice':
-        xml_id = 'action_invoice_tree5'
+        xml_id = 'action_invoice_tree1'
     elif type == 'in_invoice':
-        xml_id = 'action_invoice_tree8'
+        xml_id = 'action_invoice_tree2'
     elif type == 'out_refund':
-        xml_id = 'action_invoice_tree10'
+        xml_id = 'action_invoice_tree3'
     else:
-        xml_id = 'action_invoice_tree12'
+        xml_id = 'action_invoice_tree4'
 
     result = mod_obj._get_id(cr, uid, 'account', xml_id)
     id = mod_obj.read(cr, uid, result, ['res_id'])

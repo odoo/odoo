@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -29,7 +29,7 @@ class hr_employee(osv.osv):
     _name = "hr.employee"
     _inherit = "hr.employee"
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product'),
+        'product_id': fields.many2one('product.product', 'Product', help="Specifies employee's designation as a product with type 'service'."),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal')
     }
 hr_employee()
@@ -57,7 +57,9 @@ class hr_analytic_timesheet(osv.osv):
         res = {}
 #        if prod_id and unit_amount:
         if prod_id:
-            res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount,unit, context)
+            # find company
+            company_id=self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context)
+            res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount,company_id,unit, context)
         return res
 
     def _getEmployeeProduct(self, cr, uid, context):

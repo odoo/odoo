@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+          <menuitem
+            id="hr.menu_hr_reporting"
+            name="Reporting"
+            parent="hr.menu_hr_root"
+            sequence="40" />
+
         <!-- Tasks by projects and users -->
         
+
         <record id="view_task_project_form" model="ir.ui.view">
             <field name="name">report.project.task.form</field>
             <field name="model">report.task.user.pipeline.open</field>
@@ -11,7 +17,7 @@
             <field name="arch" type="xml">
                 <form string="Tasks by User">
                     <field name="user_id" select="1"/>
-                    <field name="company_id" select="1" widget="selection"/>
+                    <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                     <field name="task_nbr" select="2"/>
                     <field name="task_hrs" select="2"/>
                     <field name="task_progress" select="2"/>
@@ -19,7 +25,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_task_project_graph" model="ir.ui.view">
             <field name="name">report.project.task.graph</field>
             <field name="model">report.task.user.pipeline.open</field>
@@ -31,15 +37,17 @@
                 </graph>
             </field>
         </record>
-        
+
         <record id="view_task_project_tree" model="ir.ui.view">
             <field name="name">report.project.task.tree</field>
             <field name="model">report.task.user.pipeline.open</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Tasks by User">
+                	<field name="name" select="1"/>
+	                <field name="month" select="1"/>
                     <field name="user_id"/>
-                    <field name="company_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="task_nbr"/>
                     <field name="task_hrs"/>
                     <field name="task_progress"/>
@@ -47,19 +55,38 @@
                 </tree>
             </field>
         </record>
-        
+
+        <record id="view_report_task_user_pipeline_open_search" model="ir.ui.view">
+            <field name="name">report.task.user.pipeline.open.search</field>
+            <field name="model">report.task.user.pipeline.open</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="Tasks by User">
+            		<group col="10" colspan="4">
+	            		<filter icon="terp-project" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
+	            		<filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
+	            		<separator orientation="vertical"/>
+	            		<field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="user_id" select="1"/>
+	                </group>
+            	</search>
+            </field>
+        </record>
+
         <record id="action_project_task" model="ir.actions.act_window">
             <field name="name">Tasks by User</field>
             <field name="res_model">report.task.user.pipeline.open</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="domain">[]</field>
+            <field name="search_view_id" ref="view_report_task_user_pipeline_open_search"/>
         </record>
-        <menuitem id="next_id_57" name="Reporting" parent="project.menu_main" sequence="50"/>
-        <menuitem id="next_id_58" name="All Months" parent="next_id_57"/><menuitem action="action_project_task" id="menu_project_task_user_tree" parent="next_id_58"/>
-        
+        <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
+        <menuitem action="action_project_task" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
+
         <!-- Closed Task in Random Acitivities dashboard -->
-        
+
         <record id="view_task_closed_board_tree" model="ir.ui.view">
             <field name="name">report.closed.task.tree</field>
             <field name="model">report.closed.task</field>
@@ -81,7 +108,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_closed_task_board" model="ir.actions.act_window">
             <field name="name">Task Closed Within Past 15 Days</field>
             <field name="res_model">report.closed.task</field>
@@ -89,9 +116,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_task_closed_board_tree"/>
         </record>
-        
+
         <!-- Report for Users' Timesheet and Task Hours per Month -->
-		
+
 		<record id="view_report_timesheet_task_user_tree" model="ir.ui.view">
             <field name="name">report.timesheet.task.user.tree</field>
             <field name="model">report.timesheet.task.user</field>
@@ -105,14 +132,14 @@
                 </tree>
             </field>
         </record>
-         
+
         <record id="action_report_timesheet_task_user" model="ir.actions.act_window">
             <field name="name">Timesheet / Task Hours Per Month</field>
             <field name="res_model">report.timesheet.task.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
         </record>
-        <menuitem id="menu_timesheet_task_user" parent="hr.menu_hr_reporting" action="action_report_timesheet_task_user"/>    
-        
+        <menuitem id="menu_timesheet_task_user" parent="hr.menu_hr_reporting" action="action_report_timesheet_task_user"/>
+
     </data>
 </openerp>

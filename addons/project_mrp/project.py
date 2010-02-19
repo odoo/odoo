@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,7 +26,7 @@ class project_task(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
     _columns = {
-        'procurement_id': fields.many2one('mrp.procurement', 'Procurement', ondelete='set null')
+        'procurement_id': fields.many2one('mrp.procurement', 'Requisition', ondelete='set null')
     }
     def do_close(self, cr, uid, ids, *args):
         res = super(project_task, self).do_close(cr, uid, ids, *args)

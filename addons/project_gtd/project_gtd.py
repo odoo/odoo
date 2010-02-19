@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,12 +15,9 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from xml import dom
-from lxml import etree
 
 from mx import DateTime
 from mx.DateTime import now
@@ -29,20 +26,30 @@ import tools
 import netsvc
 from osv import fields, osv
 import ir
+from tools.translate import _
+
+import sys
+from tools.translate import _
+
+try:
+    from lxml import etree
+except ImportError:
+    sys.stderr.write("ERROR: Import lxml module\n")
+    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
 
 class project_gtd_context(osv.osv):
     _name = "project.gtd.context"
     _description = "Contexts"
     _columns = {
         'name': fields.char('Context', size=64, required=True, select=1),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of contexts."),
         'project_default_id': fields.many2one('project.project', 'Default Project', required=True),
     }
     _defaults = {
         'sequence': lambda *args: 1
     }
     _order = "sequence, name"
-    
+
 project_gtd_context()
 
 
@@ -51,10 +58,10 @@ class project_gtd_timebox(osv.osv):
     _order = "sequence"
     _columns = {
         'name': fields.char('Timebox', size=64, required=True, select=1),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of timebox."),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
     }
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(project_gtd_timebox,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if (res['type']=='form') and ('record_id' in context):
@@ -116,31 +123,31 @@ class project_task(osv.osv):
         'timebox_id': fields.many2one('project.gtd.timebox', "Timebox"),
         'context_id': fields.many2one('project.gtd.context', "Context"),
      }
-    
+
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         default['timebox_id']=False
         default['context_id']=False
         return super(project_task,self).copy_data(cr, uid, id, default, context)
-    
+
     def _get_context(self,cr, uid, ctx):
         ids = self.pool.get('project.gtd.context').search(cr, uid, [], context=ctx)
         return ids and ids[0] or False
     _defaults = {
         'context_id': _get_context
     }
-    
     def next_timebox(self, cr, uid, ids, *args):
         timebox_obj = self.pool.get('project.gtd.timebox')
         timebox_ids = timebox_obj.search(cr,uid,[])
+        if not timebox_ids: return True
         for task in self.browse(cr,uid,ids):
             timebox = task.timebox_id.id
-            if timebox and  timebox_ids.index(timebox) != len(timebox_ids)-1 :
+            if not timebox:
+                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[0]})
+            elif timebox_ids.index(timebox) != len(timebox_ids)-1:
                 index = timebox_ids.index(timebox)
-            else:
-                index = -1
-            self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index+1]})
+                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index+1]})
         return True
 
     def prev_timebox(self, cr, uid, ids, *args):
@@ -148,32 +155,34 @@ class project_task(osv.osv):
         timebox_ids = timebox_obj.search(cr,uid,[])
         for task in self.browse(cr,uid,ids):
             timebox = task.timebox_id.id
-            if timebox and  timebox_ids.index(timebox) != 0 :
-                index = timebox_ids.index(timebox)
-            else:
-                index = len(timebox_ids)
-            self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index - 1]})
+            if timebox:
+                if timebox_ids.index(timebox):
+                    index = timebox_ids.index(timebox)
+                    self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index - 1]})
+                else:
+                    self.write(cr, uid, task.id, {'timebox_id': False})
         return True
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(project_task,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         search_extended = False
         timebox_obj = self.pool.get('project.gtd.timebox')
         if res['type'] == 'search':
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
-            search_extended ='''<newline/><group col="%d">''' % (len(tt)+6,)
-            search_extended += '''<filter domain="[('timebox_id','=', 0)]" icon="gtk-new" string="Inbox"/>'''
+            search_extended ='''<newline/><group col="%d" expand="1" string="%s" groups="project_gtd.group_project_getting">''' % (len(tt)+7,_('Getting Things Done'))
+            search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="%s"/>''' % (_('Inbox'),)
+            search_extended += '''<filter domain="[]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="%s"/>''' % (_('All'),)
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
                 if time.icon:
                     icon = time.icon
                 else :
                     icon=""
-                search_extended += ''' <filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''"/>'''
+                search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'set_visible':True}"/>'''
             search_extended += '''
             <separator orientation="vertical"/>
-            <field name="context_id" select="1" widget="selection"/> 
-            <field name="priority" select="1"/>
+            <field name="context_id" select="1" widget="selection" />
+            <field name="priority" select="1" />
             </group>
             </search> '''
         if search_extended:
@@ -183,7 +192,7 @@ class project_task(osv.osv):
             context_id_info['context_id']['selection'] = attrs_sel
             res['fields'].update(context_id_info)
         return res
- 
+
     # Override read for using this method if context set !!!
     #_order = "((55-ascii(coalesce(priority,'2')))*2 +  coalesce((date_start::date-current_date)/2,8))"
 project_task()

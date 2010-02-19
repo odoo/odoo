@@ -36,7 +36,7 @@
             </field>
         </record>
 
-        <menuitem id="menu_main" name="Payment" parent="account.menu_finance"/>
+        <menuitem id="menu_main" name="Payment" parent="account.menu_finance" sequence="6"/>
 
         <record id="view_payment_type_form" model="ir.ui.view">
             <field name="name">payment.type.form</field>
@@ -50,6 +50,13 @@
                     <field colspan="4" name="suitable_bank_types" select="1"/>
                 </form>
             </field>
+        </record>
+
+        <record id="action_payment_type_tree" model="ir.actions.act_window">
+            <field name="name">Payment Type</field>
+            <field name="res_model">payment.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
 
         <record id="view_payment_mode_tree" model="ir.ui.view">
@@ -83,7 +90,11 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="next_id_44" name="Payment" parent="account.menu_finance_configuration"/><menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="next_id_44"/>
+		<menuitem id="next_id_44" name="Payment" parent="account.menu_finance_configuration"/>
+
+        <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="next_id_44"/>
+
+        <menuitem action="action_payment_type_tree" id="menu_action_paymen_type" parent="next_id_44"/>
 
         <record id="view_payment_order_form" model="ir.ui.view">
             <field name="name">payment.order.form</field>
@@ -133,7 +144,7 @@
                                 </page>
                             </notebook>
                         </form>
-                        <tree string="Payment Line"> 
+                        <tree string="Payment Line">
                             <field name="ml_inv_ref" />
                             <field name="partner_id" select="1"/>
                             <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
@@ -190,9 +201,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
-            <field name="filter" eval="True"/>            
+            <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_payment_order_draft" id="menu_action_payment_order_draft" parent="account_payment.menu_action_payment_order_form" sequence="2" groups="base.group_useability_extended"/>
 
         <record id="action_payment_order_open" model="ir.actions.act_window">
             <field name="name">Payment Orders to Validate</field>
@@ -200,18 +210,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','open')]</field>
-            <field name="filter" eval="True"/>            
+            <field name="filter" eval="True"/>
         </record>
-        <menuitem action="action_payment_order_open" id="menu_action_payment_order_open" parent="account_payment.menu_action_payment_order_form" sequence="3" groups="base.group_useability_extended"/>
-
         <record id="action_payment_order_tree_new" model="ir.actions.act_window">
             <field name="name">New Payment Order</field>
             <field name="res_model">payment.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem action="action_payment_order_tree_new" id="menu_action_payment_order_form_new" parent="account_payment.menu_action_payment_order_form" sequence="1"/>
-
 
         <record id="view_payment_line_form" model="ir.ui.view">
             <field name="name">Payment Line</field>
@@ -263,7 +269,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Payment Line"> 
+                <tree string="Payment Line">
                     <field name="order_id"/>
                     <field name="ml_inv_ref" />
                     <field name="ml_maturity_date"/>

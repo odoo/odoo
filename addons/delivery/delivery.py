@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -50,7 +50,7 @@ class delivery_carrier(osv.osv):
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
         'price' : fields.function(get_price, method=True,string='Price'),
-        'active': fields.boolean('Active')
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the delivery carrier without removing it.")
     }
     _defaults = {
         'active': lambda *args:1
@@ -79,14 +79,14 @@ class delivery_grid(osv.osv):
     _description = "Delivery Grid"
     _columns = {
         'name': fields.char('Grid Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', size=64, required=True),
+        'sequence': fields.integer('Sequence', size=64, required=True, help="Gives the sequence order when displaying a list of delivery grid."),
         'carrier_id': fields.many2one('delivery.carrier', 'Carrier', required=True, ondelete='cascade'),
         'country_ids': fields.many2many('res.country', 'delivery_grid_country_rel', 'grid_id', 'country_id', 'Countries'),
         'state_ids': fields.many2many('res.country.state', 'delivery_grid_state_rel', 'grid_id', 'state_id', 'States'),
         'zip_from': fields.char('Start Zip', size=12),
         'zip_to': fields.char('To Zip', size=12),
         'line_ids': fields.one2many('delivery.grid.line', 'grid_id', 'Grid Line'),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the delivery grid without removing it."),
     }
     _defaults = {
         'active': lambda *a: 1,

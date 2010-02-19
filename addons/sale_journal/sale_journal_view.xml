@@ -30,8 +30,8 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-    
-    <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="sale.menu_shop_configuration" action="action_definition_journal_invoice_type"/>
+
+<!--    <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="sale.menu_shop_configuration" action="action_definition_journal_invoice_type"/>-->
 
     <record model="ir.ui.view" id="view_sale_journal_form">
         <field name="name">sale_journal.sale.journal.form</field>
@@ -91,44 +91,36 @@
             </tree>
         </field>
     </record>
+
+    <record model="ir.ui.view" id="view_sale_journal_search">
+        <field name="name">sale_journal.sale.journal.search</field>
+        <field name="model">sale_journal.sale.journal</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Sales by Journal">
+            	<group col="8" colspan="4">
+	            	<filter icon="terp-sale" string="My Sale Journals" domain="[('user_id','=',uid)]" help="My Sale Journals"/>
+	               	<filter icon="terp-sale" string="Open" domain="[('state','=','open')]" help="Open Sale Journals"/>
+	               	<separator orientation="vertical"/>
+	                <field name="name" select="1"/>
+	                <field name="code" select="1"/>
+	                <field name="user_id" select="1"/>
+	                <field name="date" select="1"/>
+				</group>
+            </search>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_definition_journal">
         <field name="res_model">sale_journal.sale.journal</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_sale_journal_search"/>
     </record>
-    
-    <menuitem name="Sales Journals" id="menu_definition_journal" parent="sale.menu_shop_configuration" action="action_definition_journal"/>
 
-    <record model="ir.actions.act_window" id="action_definition_journal_tree">
-        <field name="res_model">sale_journal.sale.journal</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[]</field>
-    </record>
-    
-    <menuitem name="Sales by Journal" id="menu_definition_journal_sales" parent="sale.menu_sale_root" action="action_definition_journal_tree"/>
-
-    <record model="ir.actions.act_window" id="action_definition_journal_tree_my">
-        <field name="name">My open journals</field>
-        <field name="res_model">sale_journal.sale.journal</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
-        <field name="filter" eval="True"/>        
-    </record>
-    
-    <menuitem name="My Open Journals" id="menu_definition_journal_sales_my_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_my" groups="base.group_useability_extended"/>
-
-    <record model="ir.actions.act_window" id="action_definition_journal_tree_all">
-        <field name="name">Open journals</field>
-        <field name="res_model">sale_journal.sale.journal</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','=','open')]</field>
-        <field name="filter" eval="True"/>        
-    </record>
-    
-    <menuitem name="All Open Journals" id="menu_definition_journal_sales_all_open" parent="menu_definition_journal_sales" action="action_definition_journal_tree_all" groups="base.group_useability_extended"/>
+<!--    <menuitem name="Sales Journals" id="menu_definition_journal" parent="sale.menu_shop_configuration" action="action_definition_journal"/>-->
+	<menuitem id="menu_sale_journal" name="Journal" parent="base.menu_base_config" sequence="60" />
+	<menuitem name="Sales Journals" id="menu_definition_journal" parent="menu_sale_journal" action="action_definition_journal"/>
 
     <record model="ir.ui.view" id="sale_journal_sale_order">
         <field name="name">sale.order.journal.view.form</field>
@@ -304,28 +296,35 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_sale_sale_stats_open_menu_month">
-        <field name="name">Sales by journal (this month)</field>
-        <field name="res_model">sale_journal.sale.stats</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+    <record model="ir.ui.view" id="view_sale_journal_sale_stats_search">
+        <field name="name">sale_journal.sale.stats.search</field>
+        <field name="model">sale_journal.sale.stats</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Sales by Journal">
+            	<group col="8" colspan="4">
+	            	<filter icon="terp-sale" string="This Year" domain="[('name','!=','')]" help="Sale journal in this year"/>
+	               	<filter icon="terp-sale" string="This Month" domain="[('name','=',time.strftime('%%Y-%%m-01'))]" help="Sale journal in this month"/>
+	               	<separator orientation="vertical"/>
+	                <field name="name" select="1"/>
+	                <field name="state" select="1"/>
+	                <field name="journal_id" select="1"/>
+				</group>
+            </search>
+        </field>
     </record>
-    
-    <menuitem name="Reporting" id="menu_definition_report_sales" parent="sale.menu_sale_root"/>
-    <menuitem name="This Month" id="menu_definition_report_sales_this_month" parent="menu_definition_report_sales"/>
-    <menuitem name="Sales by Journal" id="menu_sale_sale_stats_open_menu" parent="menu_definition_report_sales_this_month" action="action_sale_sale_stats_open_menu_month"/>
 
     <record model="ir.actions.act_window" id="action_sale_sale_stats_open_menu_all">
+    	<field name="name">Sales by Journal</field>
         <field name="res_model">sale_journal.sale.stats</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_sale_journal_sale_stats_search"/>
     </record>
-    
-    <menuitem name="All Months" id="menu_definition_report_sales_all_month" parent="menu_definition_report_sales"/>
-    <menuitem name="Sales by Journal" id="menu_sale_sale_stats_open_all" parent="menu_definition_report_sales_all_month" action="action_sale_sale_stats_open_menu_all"/>
+
+	<menuitem name="Reporting" id="menu_definition_report_sales" parent="base.menu_base_partner" sequence="8"/>
+    <menuitem name="Sales by Journal" id="menu_sale_sale_stats_open_all" parent="menu_definition_report_sales" action="action_sale_sale_stats_open_menu_all"/>
 
     <act_window name="Monthly sales"
         domain="[('journal_id', '=', active_id)]"
@@ -333,25 +332,25 @@
         src_model="sale_journal.sale.journal"
         id="act_sale_journal_sale_journal_2_sale_journal_sale_stats"/>
 
-    <act_window name="Assigned packing"
+    <act_window name="Assigned picking"
         domain="[('journal_id', '=', active_id),('state', '=', 'assigned')]"
         res_model="stock.picking"
         src_model="sale_journal.picking.journal"
         id="act_sale_journal_picking_journal_2_stock_picking_assigned"/>
 
-    <act_window name="Confirmed packing"
+    <act_window name="Confirmed picking"
         domain="[('journal_id', '=', active_id),('state', '=', 'confirmed')]"
         res_model="stock.picking"
         src_model="sale_journal.picking.journal"
         id="act_sale_journal_picking_journal_2_stock_picking_confirmed"/>
 
-    <act_window name="Assigned packing"
+    <act_window name="Assigned picking"
         domain="[('sale_journal_id', '=', active_id),('state', '=', 'assigned')]"
         res_model="stock.picking"
         src_model="sale_journal.sale.journal"
         id="act_sale_journal_sale_journal_2_stock_picking_assigned"/>
 
-    <act_window name="Confirmed packing"
+    <act_window name="Confirmed picking"
         domain="[('sale_journal_id', '=', active_id),('state', '=', 'confirmed')]"
         res_model="stock.picking"
         src_model="sale_journal.sale.journal"

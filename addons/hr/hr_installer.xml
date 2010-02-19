@@ -1,0 +1,50 @@
+<openerp>
+  <data>
+    <record id="view_hr_installer" model="ir.ui.view">
+      <field name="name">hr.installer.view</field>
+      <field name="model">hr.installer</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="arch" type="xml">
+        <data>
+          <form position="attributes">
+            <attribute name="string">Human Resources Modules Installation</attribute>
+          </form>
+
+          <separator string="title" position="attributes">
+            <attribute name="string">Configure Human Resources"</attribute>
+          </separator>
+          <xpath expr="//label[@string='description']"
+                 position="attributes">
+            <attribute name="string">The base Human Resources addon will help you manage your employee roster, but your can enhance it even further by installing a few HR-related applications.</attribute>
+          </xpath>
+          <group colspan="8">
+            <separator string="Human Resources Management" colspan="4"/>
+            <field name="hr_holidays"/>
+            <field name="hr_expense"/>
+            <field name="crm_hr"/>
+            <field name="hr_timesheet_sheet"/>
+            <field name="hr_contract"/>
+            <field name="hr_evaluation"/>
+            <field name="hr_attendance"/>
+          </group>
+        </data>
+      </field>
+    </record>
+
+    <record id="action_hr_installer" model="ir.actions.act_window">
+      <field name="name">Human Resources Modules Installation</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">hr.installer</field>
+      <field name="view_id" ref="view_hr_installer"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="hr_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="action_hr_installer"/>
+      <field name="sequence">3</field>
+    </record>
+  </data>
+</openerp>

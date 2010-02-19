@@ -35,20 +35,20 @@
 		name="auction.pay.buy"
 		id="wizard_pay"/>
 
-		<wizard 
-			string="Gestion emporte" 
-			model="auction.dates" 
+		<wizard
+			string="Gestion emporte"
+			model="auction.dates"
 			name="auction.taken"
 			multi="1"
 			id="wizard_emporte"/>
-			
-	<menuitem name="Tools Bar Codes" 
+
+	<menuitem name="Tools Bar Codes"
 		id="auction_outils_menu"
-		parent="auction_menu_root"
+		parent="auction_menu_root" sequence="5"
 		/>
-		
-	<menuitem name="Deliveries Management" 
-		action="wizard_emporte" 
+
+	<menuitem name="Deliveries Management"
+		action="wizard_emporte"
 		type="wizard"
 		id="menu_wizard_emporte"
 		parent="auction_outils_menu"

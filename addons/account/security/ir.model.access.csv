@@ -34,7 +34,7 @@
 "access_account_bank_statement_line","account.bank.statement.line","model_account_bank_statement_line","account.group_account_user",1,1,1,1
 "access_account_analytic_line","account.analytic.line","model_account_analytic_line","account.group_account_user",1,1,1,1
 "access_report_hr_timesheet_invoice_journal","report.hr.timesheet.invoice.journal","model_report_hr_timesheet_invoice_journal","account.group_account_manager",1,0,0,0
-"access_account_analytic_account","account.analytic.account","model_account_analytic_account","base.group_user",1,0,0,0
+"access_account_analytic_account","account.analytic.account","analytic.model_account_analytic_account","base.group_user",1,0,0,0
 "access_account_analytic_journal","account.analytic.journal","model_account_analytic_journal","account.group_account_user",1,0,0,0
 "access_account_invoice_uinvoice","account.invoice","model_account_invoice","account.group_account_invoice",1,1,1,1
 "access_account_invoice_line_uinvoice","account.invoice.line","model_account_invoice_line","account.group_account_invoice",1,1,1,1
@@ -58,7 +58,7 @@
 "access_account_tax_code_manager","account.tax.code","model_account_tax_code","account.group_account_manager",1,1,1,1
 "access_account_tax_manager","account.tax","model_account_tax","account.group_account_manager",1,1,1,1
 "access_account_invoice_group_invoice","account.invoice group invoice","model_account_invoice","account.group_account_invoice",1,1,1,1
-"access_account_analytic_account_manager","account.analytic.account","model_account_analytic_account","account.group_account_manager",1,1,1,1
+"access_account_analytic_account_manager","account.analytic.account","analytic.model_account_analytic_account","account.group_account_manager",1,1,1,1
 "access_account_analytic_journal_manager","account.analytic.journal","model_account_analytic_journal","account.group_account_manager",1,1,1,1
 "access_account_fiscalyear","account.fiscalyear","model_account_fiscalyear","account.group_account_manager",1,1,1,1
 "access_account_fiscalyear_user","account.fiscalyear.user","model_account_fiscalyear","account.group_account_user",1,0,0,0
@@ -67,6 +67,8 @@
 "access_res_currency_rate_account_manager","res.currency.rate account manager","base.model_res_currency_rate","group_account_manager",1,1,1,1
 "access_account_config_wizard_account_manager","account.config.wizard account manager","model_account_config_wizard","group_account_manager",1,1,1,1
 "access_account_config_wizard_system_manager","account.config.wizard system manager","model_account_config_wizard","base.group_system",1,1,1,1
+"access_account_add_tmpl_wizard_account_manager","account.addtmpl.wizard account manager","model_account_addtmpl_wizard","group_account_manager",1,1,1,1
+"access_account_add_tmpl_wizard_system_manager","account.addtmpl.wizard system manager","model_account_addtmpl_wizard","base.group_system",1,1,1,1
 "access_account_invoice_user","account.invoice user","model_account_invoice","base.group_user",1,0,0,0
 "access_account_invoice_user","account.invoice.line user","model_account_invoice_line","base.group_user",1,0,0,0
 "access_account_invoice_user","account.invoice.tax user","model_account_invoice_tax","base.group_user",1,0,0,0
@@ -80,12 +82,8 @@
 "access_account_fiscal_position","account.fiscal.position all","model_account_fiscal_position","base.group_user",1,0,0,0
 "access_account_fiscal_position_tax","account.fiscal.position.tax all","model_account_fiscal_position_tax","base.group_user",1,0,0,0
 "access_account_fiscal_position_account","account.fiscal.position all","model_account_fiscal_position_account","base.group_user",1,0,0,0
-"access_fiscalyear_seq","fiscalyear.seq","model_fiscalyear_seq","account.group_account_invoice",1,1,1,1
 "access_account_fiscal_position_template","account.fiscal.position.template","model_account_fiscal_position_template","account.group_account_manager",1,1,1,1
 "access_account_fiscal_position_tax_template","account.fiscal.position.tax.template","model_account_fiscal_position_tax_template","account.group_account_manager",1,1,1,1
 "access_account_fiscal_position_account_template","account.fiscal.position.account.template","model_account_fiscal_position_account_template","account.group_account_manager",1,1,1,1
 "access_account_sequence_fiscal_year","account.sequence.fiscalyear","model_account_sequence_fiscalyear","account.group_account_user",1,1,1,1
 "access_account_sequence_fiscal_year_user","account.sequence.fiscalyear user","model_account_sequence_fiscalyear","base.group_user",1,0,0,0
-"access_wizard_company_setup_manager","wizard.company.setup manager","model_wizard_company_setup","account.group_account_manager",1,1,1,1
-"access_wizard_company_setup","wizard.company.setup","model_wizard_company_setup","account.group_account_user",1,0,0,0
-"access_wizard_company_setup_user","wizard.company.setup user","model_wizard_company_setup","base.group_user",1,0,0,0

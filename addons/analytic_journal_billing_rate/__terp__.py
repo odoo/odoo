@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Analytic Journal Billing Rate',
+    'name': 'Analytic Journal Billing Rate, Define the default invoicing rate for a specific journal',
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """

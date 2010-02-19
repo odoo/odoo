@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 from tools.translate import _
+import tools
 
 #
 # Check if it works with UoM ???
@@ -37,6 +38,7 @@ class stock_report_prodlots(osv.osv):
     }
     
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'stock_report_prodlots')
         cr.execute("""
             create or replace view stock_report_prodlots as (
                 select max(id) as id,

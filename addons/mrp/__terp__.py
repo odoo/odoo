@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -54,9 +54,6 @@
     * Print a production order
     * Stock forecasts
     """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['stock', 'hr', 'purchase', 'product', 'process'],
     'init_xml': [],
     'update_xml': [
         'security/mrp_security.xml',
@@ -69,7 +66,8 @@
         'company_view.xml',
         'process/stockable_product_process.xml',
         'process/service_product_process.xml',
-        'process/procurement_process.xml'
+        'process/procurement_process.xml',
+        'mrp_installer.xml',
     ],
     'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
     'installable': True,

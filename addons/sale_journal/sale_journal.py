@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -28,7 +28,7 @@ class sale_journal_invoice_type(osv.osv):
     _description = 'Invoice Types'
     _columns = {
         'name': fields.char('Invoice Type', size=64, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the invoice type without removing it."),
         'note': fields.text('Note'),
         'invoicing_method': fields.selection([('simple','Non grouped'),('grouped','Grouped')], 'Invoicing method', required=True),
     }
@@ -90,7 +90,7 @@ sale_journal()
 
 class picking_journal(osv.osv):
     _name = 'sale_journal.picking.journal'
-    _description = 'Packing Journal'
+    _description = 'Picking Journal'
     _columns = {
         'name': fields.char('Journal', size=64, required=True),
         'code': fields.char('Code', size=16, required=True),

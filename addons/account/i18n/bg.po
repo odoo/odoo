@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 10:13+0000\n"
-"Last-Translator: Boris <boris.ivanov@obseg.com>\n"
+"PO-Revision-Date: 2009-12-17 23:18+0000\n"
+"Last-Translator: Sianna <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-18 04:36+0000\n"
+"X-Launchpad-Export-Date: 2009-12-19 04:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -24,7 +24,7 @@ msgstr "Вътрешно име"
 #. module: account
 #: view:account.tax.code:0
 msgid "Account Tax Code"
-msgstr "Код на сметка за данъци"
+msgstr "Код на данъчна сметка"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree9
@@ -40,12 +40,12 @@ msgstr "Кодиране на записи"
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
 msgid "Specify The Message for the Overdue Payment Report."
-msgstr ""
+msgstr "Определи съобщението за доклад на просрочените плащания."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement from draft"
-msgstr ""
+msgstr "Потвърждаване на отчет от проект(чернова)"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_asset
@@ -73,11 +73,13 @@ msgid ""
 "This account will be used to value incoming stock for the current product "
 "category"
 msgstr ""
+"Тази сметка ще се използва за оценка на постъпващата стока за текущата "
+"продуктова категория"
 
 #. module: account
 #: help:account.invoice,period_id:0
 msgid "Keep empty to use the period of the validation(invoice) date."
-msgstr ""
+msgstr "Остава празно за да се използва потвърдената дата (на фактурата)."
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,reconcile:0
@@ -87,7 +89,7 @@ msgstr "Резултат от изравняване"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr "Неизравнени записи"
+msgstr "Несъгласувани стойности"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -99,18 +101,18 @@ msgstr "Основен код"
 #. module: account
 #: view:account.account:0
 msgid "Account Statistics"
-msgstr ""
+msgstr "Статистики за сметка"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_vat_declaration
 #: model:ir.ui.menu,name:account.menu_wizard_vat_declaration
 msgid "Print Taxes Report"
-msgstr "Печат на справка за данъци"
+msgstr "Отпечатване на справка за данъци"
 
 #. module: account
 #: field:account.account,parent_id:0
 msgid "Parent"
-msgstr "Родител"
+msgstr "Основна"
 
 #. module: account
 #: selection:account.move,type:0
@@ -120,7 +122,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice,residual:0
 msgid "Residual"
-msgstr ""
+msgstr "Остатък"
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -128,18 +130,18 @@ msgstr ""
 #: field:account.tax.template,base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Base Code Sign"
-msgstr "Знак на базовия код"
+msgstr "Означение на основния код"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr "Връщане приравняване на записи"
+msgstr "Несъгласувани записи"
 
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr ""
+msgstr "Грешка ! Продължителността на периода(те) е(са) невалиден(и). "
 
 #. module: account
 #: view:account.bank.statement.reconcile:0
@@ -168,16 +170,19 @@ msgid ""
 "positive, it gives the day of the next month. Set 0 for net days (otherwise "
 "it's based on the beginning of the month)."
 msgstr ""
+"Ден от месеца, изберете -1 за последния ден от текущия месец. Ако е "
+"положително, показва деня от следващия месец. Изберете 0 за календарни дни "
+"(в противен случай като стойност(начало) ще бъде прието началото на месеца)"
 
 #. module: account
 #: view:account.move:0
 msgid "Total Credit"
-msgstr ""
+msgstr "Общо кредит"
 
 #. module: account
 #: field:account.config.wizard,charts:0
 msgid "Charts of Account"
-msgstr ""
+msgstr "Графики на сметка"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_move_line_select
@@ -222,7 +227,7 @@ msgstr "Стар пробен баланс"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurrent Entries"
-msgstr ""
+msgstr "Повтарящи се записи"
 
 #. module: account
 #: field:account.analytic.line,amount:0
@@ -257,7 +262,7 @@ msgstr ""
 #. module: account
 #: rml:account.tax.code.entries:0
 msgid "Accounting Entries-"
-msgstr ""
+msgstr "Счетоводни записи-"
 
 #. module: account
 #: help:account.journal,view_id:0
@@ -267,6 +272,10 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
+"Дава изглед използван за запис или разглеждане на записи от този дневник. "
+"Изгледа задава на Open ERP кои полета ще бъдат видими, задължителни или само "
+"за четене и в какъв ред. Може да създадете собствен изглед за по-бързо "
+"набиране във всеки дневник."
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -277,6 +286,11 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"Ако използвате условия за разплащане, датата за плащане ще се изчисли "
+"автоматично при създаване на записите на сметката. Ако запазите условията за "
+"плащане и датата на плащане празна, това означава директно плащане(веднага). "
+"Условията за плащане може да изчислят няколко дати(частични плащания), "
+"например 50% сега и 50% след месец."
 
 #. module: account
 #: selection:account.tax,type:0
@@ -310,7 +324,7 @@ msgstr "Произход"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr ""
+msgstr "Смяна на име"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -325,7 +339,7 @@ msgstr "Пресмятане на абонамент"
 #. module: account
 #: rml:account.central.journal:0
 msgid "Account Num."
-msgstr ""
+msgstr "Номер на сметка"
 
 #. module: account
 #: rml:account.analytic.account.analytic.check:0

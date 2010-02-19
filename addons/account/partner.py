@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -90,20 +90,20 @@ class res_partner(osv.osv):
     _description = 'Partner'
     def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(("""select
+        cr.execute("""select
                 l.partner_id, a.type, sum(l.debit-l.credit)
             from
                 account_move_line l
             left join
                 account_account a on (l.account_id=a.id)
             where
-                a.type in ('receivable','payable') and
-                l.partner_id in (%s) and
+                a.type =ANY(%s) and
+                l.partner_id =ANY(%s) and
                 l.reconcile_id is null and
-                """ % (','.join(map(str, ids)),))+query+"""
+                """+query+"""
             group by
                 l.partner_id, a.type
-            """)
+            """,(['receivable','payable'],ids,))
         tinvert = {
             'credit': 'receivable',
             'debit': 'payable'
@@ -117,7 +117,7 @@ class res_partner(osv.osv):
             res[pid][maps[type]] = (type=='receivable') and val or -val
         return res
 
-    def _credit_search(self, cr, uid, obj, name, args):
+    def _credit_search(self, cr, uid, obj, name, args, context):
         if not len(args):
             return []
         where = ' and '.join(map(lambda x: '(sum(debit-credit)'+x[1]+str(x[2])+')',args))
@@ -128,7 +128,7 @@ class res_partner(osv.osv):
             return [('id','=','0')]
         return [('id','in',map(lambda x:x[0], res))]
 
-    def _debit_search(self, cr, uid, obj, name, args):
+    def _debit_search(self, cr, uid, obj, name, args, context):
         if not len(args):
             return []
         query = self.pool.get('account.move.line')._query_get(cr, uid, context={})
@@ -171,7 +171,7 @@ class res_partner(osv.osv):
             string="Fiscal Position",
             method=True,
             view_load=True,
-            help="The fiscal position will determine taxes and the accounts used for the the partner.",
+            help="The fiscal position will determine taxes and the accounts used for the partner.",
         ),
         'property_payment_term': fields.property(
             'account.payment.term',

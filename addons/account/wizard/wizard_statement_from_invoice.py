@@ -41,7 +41,7 @@ FIELDS = {
 
 START_FIELD = {
     'date': {'string': 'Date payment', 'type': 'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'journal_id': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'domain': '[("type","in",["sale","purchase","cash"])]', 'help': 'This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals.'},
+    'journal_id': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'domain': '[("type","in",["sale","purchase","cash"])]', 'help': 'This field allows you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals.'},
 }
 
 START_FORM = '''<?xml version="1.0"?>
@@ -58,15 +58,35 @@ def _search_invoices(obj, cr, uid, data, context):
     journal_obj = pool.get('account.journal')
 
     statement = statement_obj.browse(cr, uid, data['id'], context=context)
+    args_move_line = []
+    repeated_move_line_ids = []
+    # Creating a group that is unique for importing move lines(move lines, once imported into statement lines, should not appear again)
+    for st_line in statement.line_ids:
+        args_move_line = []
+        args_move_line.append(('name','=', st_line.name))
+        args_move_line.append(('ref','=',st_line.ref))
+        if st_line.partner_id:
+            args_move_line.append(('partner_id','=',st_line.partner_id.id))
+        args_move_line.append(('account_id','=',st_line.account_id.id))
+        
+        move_line_id = line_obj.search(cr, uid, args_move_line,context=context)
+        if move_line_id:
+            repeated_move_line_ids += move_line_id
+        
     journal_ids = data['form']['journal_id'][0][2]
 
     if journal_ids == []:
         journal_ids = journal_obj.search(cr, uid, [('type', 'in', ('sale','cash','purchase'))], context=context)
-
-    line_ids = line_obj.search(cr, uid, [
+    
+    args = [
         ('reconcile_id', '=', False),
         ('journal_id', 'in', journal_ids),
-        ('account_id.reconcile', '=', True)],
+        ('account_id.reconcile', '=', True)]
+    
+    if repeated_move_line_ids:
+        args.append(('id','not in',repeated_move_line_ids))
+           
+    line_ids = line_obj.search(cr, uid, args,
         #order='date DESC, id DESC', #doesn't work
         context=context)
         

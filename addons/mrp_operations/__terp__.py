@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,18 +21,18 @@
 
 
 {
-    'name': 'Workcenter Production start end workflow',
+    'name': 'Work Center Production start end workflow',
     'version': '1.0',
     'category': 'Generic Modules/Production',
     'description': """
      This module adds state, date_start,date_stop in production order operation lines
-     (in the "Workcenters" tab)
+     (in the "Work Centers" tab)
      State: draft, confirm, done, cancel
      When finishing/confirming,cancelling production orders set all state lines to the according state
      Create menus:
          Production Management > All Operations
          Production Management > All Operations > Operations To Do (state="confirm")
-     Which is a view on "Workcenters" lines in production order,
+     Which is a view on "Work Centers" lines in production order,
      editable tree
 
     Add buttons in the form view of production order under workcenter tab:

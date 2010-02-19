@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="workflow" id="wkf_schema">
+        <field name="name">olap.schema</field>
+        <field name="osv">olap.schema</field>
+        <field name="on_create">True</field>
+        </record>
+    
+        <record model="workflow.activity" id="act_none">
+            <field name="wkf_id" ref="wkf_schema"/>
+            <field name="flow_start">True</field>
+            <field name="name">none</field>
+        </record>
+        
+        <record model="workflow.activity" id="act_dbconnect">
+            <field name="wkf_id" ref="wkf_schema"/>
+            <field name="name">dbconnect</field>
+            <field name="kind">function</field>
+            <field name="action">action_dbconnect()</field>
+        </record>
+        
+        <record model="workflow.activity" id="act_dbload">
+            <field name="wkf_id" ref="wkf_schema"/>
+            <field name="name">dbload</field>
+            <field name="kind">function</field>
+            <field name="action">action_dbload()</field>
+        </record>
+        
+        <record model="workflow.activity" id="act_dbconfigure">
+            <field name="wkf_id" ref="wkf_schema"/>
+            <field name="name">dbconfigure</field>
+            <field name="kind">function</field>
+            <field name="action">action_dbconfigure()</field>
+        </record>
+        
+        <record model="workflow.activity" id="act_dbready">
+            <field name="wkf_id" ref="wkf_schema"/>
+            <field name="flow_stop">True</field>
+            <field name="name">dbready</field>
+            <field name="kind">function</field>
+            <field name="action">action_dbready()</field>           
+        </record>
+<!--        
+        <record model="workflow.activity" id="act_dbdone">
+            <field name="wkf_id" ref="wkf_schema"/>
+            <field name="flow_stop">True</field>
+            <field name="name">db_done</field>
+            <field name="kind">function</field>
+            <field name="action">action_done()</field>
+        </record>
+--> 
+
+        
+        <record model="workflow.transition" id="trans_none_dbconnect">
+            <field name="act_from" ref="act_none"/>
+            <field name="act_to" ref="act_dbconnect"/>
+            <field name="signal">dbconnect</field>
+        </record>
+
+        <record model="workflow.transition" id="trans_dbconnect_dbload">
+            <field name="act_from" ref="act_dbconnect"/>
+            <field name="act_to" ref="act_dbload"/>
+            <field name="signal">dbload</field>
+        </record>
+
+        <record model="workflow.transition" id="trans_dbload_dbconfigure">
+            <field name="act_from" ref="act_dbload"/>
+            <field name="act_to" ref="act_dbconfigure"/>
+            <field name="signal">dbconfigure</field>
+        </record>
+        
+        <record model="workflow.transition" id="trans_dbconfigure_dbready">
+            <field name="act_from" ref="act_dbconfigure"/>
+            <field name="act_to" ref="act_dbready"/>
+            <field name="signal">dbready</field>
+        </record>
+<!--
+        <record model="workflow.transition" id="trans_dbready_done">
+            <field name="act_from" ref="act_dbready"/>
+            <field name="act_to" ref="act_dbdone"/>
+            <field name="signal">dbdone</field>
+        </record>
+-->
+
+    </data>
+</openerp>

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 10:30+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2009-12-31 12:42+0000\n"
+"Last-Translator: Albert Cervera i Areny <albert@nan-tic.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-18 04:41+0000\n"
+"X-Launchpad-Export-Date: 2010-01-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -57,6 +57,8 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
+"Si no disposeu de suficients existències per enviar-ho tot d'una vegada, "
+"accepteu enviaments parcials o no?"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -273,7 +275,7 @@ msgstr "Les meves comandes de venda en procés"
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Quantitat (UdV)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -481,12 +483,12 @@ msgstr "﻿XML invàlid per a la definició de la vista!"
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Packing"
-msgstr ""
+msgstr "Albarà relacionat"
 
 #. module: sale
 #: field:sale.shop,payment_account_id:0
 msgid "Payment Accounts"
-msgstr ""
+msgstr "Comptes de pagament"
 
 #. module: sale
 #: constraint:product.template:0
@@ -496,7 +498,7 @@ msgstr "Error: La UdV ha d'estar en una categoria diferent que la UdM"
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Ref"
-msgstr ""
+msgstr "Ref. Client"
 
 #. module: sale
 #: view:sale.order:0
@@ -598,7 +600,7 @@ msgstr "Empaquetament"
 #: model:ir.module.module,shortdesc:sale.module_meta_information
 #: model:ir.ui.menu,name:sale.menu_sale_root
 msgid "Sales Management"
-msgstr "Gestió de vendes"
+msgstr "Vendes"
 
 #. module: sale
 #: field:sale.order.line,order_id:0
@@ -947,6 +949,12 @@ msgid ""
 "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
 "for the scheduler to run on the date 'Date Ordered'."
 msgstr ""
+"Indica l'estat del pressupost o comanda de venda. L'estat d'excepció "
+"s'estableix automàticament quan una cancel·lació es produeix en la validació "
+"de la factura (Excepció de factura) o en el processament de l'albarà "
+"(Excepció d'enviament). L'estat 'Esperant planificació' s'estableix quan es "
+"confirma la factura però s'espera que el planificador processi la comanda en "
+"la data 'Data de la comanda'."
 
 #. module: sale
 #: view:sale.order:0
@@ -957,7 +965,7 @@ msgstr "UdM"
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "Número paquets"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
@@ -971,7 +979,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "En procés"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,init:0
@@ -1108,7 +1116,7 @@ msgstr "Cancel·la assignació"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice from the Packing"
-msgstr ""
+msgstr "Factura des de l'albarà"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
@@ -1172,12 +1180,12 @@ msgstr "Data ordenada"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "UdV del producte"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "Manual en procés"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
@@ -1230,7 +1238,7 @@ msgstr "Factures relacionades"
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "Nom botiga"
 
 #. module: sale
 #: field:sale.order,payment_term:0
@@ -1283,7 +1291,7 @@ msgstr "Enviada"
 #. module: sale
 #: view:sale.shop:0
 msgid "Accounting"
-msgstr ""
+msgstr "Comptabilitat"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0

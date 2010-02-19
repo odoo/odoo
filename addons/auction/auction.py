@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -75,7 +75,8 @@ class auction_dates(osv.osv):
         'acc_income': fields.many2one('account.account', 'Income Account', required=True),
         'acc_expense': fields.many2one('account.account', 'Expense Account', required=True),
         'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication',store=True),
-        'state': fields.selection((('draft','Draft'),('closed','Closed')),'Status',select=1, readonly=True),
+        'state': fields.selection((('draft','Draft'),('closed','Closed')),'State',select=1, readonly=True,
+                                  help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
 
     }
@@ -94,12 +95,12 @@ class auction_dates(osv.osv):
         RETURN: True
         """
         # objects vendus mais non factures
-        cr.execute('select count(*) as c from auction_lots where auction_id in ('+','.join(map(str, ids))+') and state=%s and obj_price>0', ('draft',))
+        cr.execute('select count(*) as c from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
         nbr = cr.fetchone()[0]
         ach_uids = {}
-        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str, ids))+') and state=%s and obj_price>0', ('draft',))
+        cr.execute('select id from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
         r=self.pool.get('auction.lots').lots_invoice(cr, uid, [x[0] for x in cr.fetchall()],{},None)
-        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str, ids))+') and obj_price>0')
+        cr.execute('select id from auction_lots where auction_id =ANY(%s) and obj_price>0',(ids,))
         ids2 = [x[0] for x in cr.fetchall()]
     #   for auction in auction_ids:
         c=self.pool.get('auction.lots').seller_trans_create(cr, uid, ids2,{})
@@ -112,7 +113,7 @@ auction_dates()
 # Deposits
 #----------------------------------------------------------
 def _inv_uniq(cr, ids):
-    cr.execute('select name from auction_deposit where id in ('+','.join(map(lambda x: str(x), ids))+')')
+    cr.execute('select name from auction_deposit where id =ANY(%s)',(ids,))
     for datas in cr.fetchall():
         cr.execute('select count(*) from auction_deposit where name=%s', (datas[0],))
         if cr.fetchone()[0]>1:
@@ -169,7 +170,7 @@ class auction_lot_category(osv.osv):
     _columns = {
         'name': fields.char('Category Name', required=True, size=64),
         'priority': fields.float('Priority'),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the auction lot category without removing it."),
         'aie_categ' : fields.selection([('41',"Unclassifieds"),
             ('2',"Antiques"),
             ('42',"Antique/African Arts"),
@@ -228,7 +229,7 @@ def _type_get(self, cr, uid,ids):
 # Lots
 #----------------------------------------------------------
 def _inv_constraint(cr, ids):
-    cr.execute('select id, bord_vnd_id, lot_num from auction_lots where id in ('+','.join(map(lambda x: str(x), ids))+')')
+    cr.execute('select id, bord_vnd_id, lot_num from auction_lots where id =ANY(%s)', (ids,))
     for datas in cr.fetchall():
         cr.execute('select count(*) from auction_lots where bord_vnd_id=%s and lot_num=%s', (datas[1],datas[2]))
         if cr.fetchone()[0]>1:
@@ -442,7 +443,16 @@ class auction_lots(osv.osv):
 #       'paid_vnd':fields.function(_is_paid_vnd,string='Seller Paid',method=True,type='boolean',store=True),
         'paid_vnd':fields.boolean('Seller Paid'),
         'paid_ach':fields.function(_is_paid_ach,string='Buyer invoice reconciled',method=True, type='boolean',store=True),
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('sold','Sold'),('taken_away','Taken away')),'Status', required=True, readonly=True),
+        'state': fields.selection((
+            ('draft','Draft'),
+            ('unsold','Unsold'),
+            ('paid','Paid'),
+            ('sold','Sold'),
+            ('taken_away','Taken away')),'State', required=True, readonly=True,
+            help=' * The \'Draft\' state is used when a object is encoding as a new object. \
+                \n* The \'Unsold\' state is used when object does not sold for long time, user can also set it as draft state after unsold. \
+                \n* The \'Paid\' state is used when user pay for the object \
+                \n* The \'Sold\' state is used when user buy the object.'),
         'buyer_price': fields.function(_buyerprice, method=True, string='Buyer price',store=True),
         'seller_price': fields.function(_sellerprice, method=True, string='Seller price',store=True),
         'gross_revenue':fields.function(_grossprice, method=True, string='Gross revenue',store=True),
@@ -989,7 +999,7 @@ class report_seller_auction(osv.osv):
         'avg_price':fields.float('Avg adjudication',readonly=True),
         'avg_estimation':fields.float('Avg estimation',readonly=True),
         'date': fields.date('Create Date',  required=True, select=1),
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('sold','Sold')),'Status',readonly=True, select=1)
+        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('sold','Sold')),'State',readonly=True, select=1)
     }
 
     def init(self, cr):
@@ -1199,7 +1209,7 @@ class report_auction_adjudication(osv.osv):
     _auto = False
     _columns = {
             'name': fields.many2one('auction.dates','Auction date',readonly=True,select=1),
-            'state': fields.selection((('draft','Draft'),('close','Closed')),'Status', select=1),
+            'state': fields.selection((('draft','Draft'),('close','Closed')),'State', select=1),
             'adj_total': fields.float('Total Adjudication'),
             'date': fields.date('Date', readonly=True,select=1),
             'user_id':fields.many2one('res.users', 'User',select=1)
@@ -1235,7 +1245,7 @@ class report_attendance(osv.osv):
     #_rec_name='date'
     _columns = {
         'name': fields.date('Date', readonly=True,select=1),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', select=1, readonly=True),
+        'employee_id' : fields.many2one('hr.employee', "Employee's Name", select=1, readonly=True),
         'total_attendance': fields.float('Total', readonly=True),
 }
     def init(self, cr):
@@ -1305,7 +1315,7 @@ class report_object_encoded(osv.osv):
     _description = "Object encoded"
     _auto = False
     _columns = {
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('invoiced','Invoiced')),'Status', required=True,select=1),
+        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('invoiced','Invoiced')),'State', required=True,select=1),
         'user_id':fields.many2one('res.users', 'User', select=1),
         'estimation': fields.float('Estimation',select=2),
         'date': fields.date('Create Date',  required=True),
@@ -1375,7 +1385,7 @@ class report_unclassified_objects(osv.osv):
         'obj_num': fields.integer('Catalog Number'),
         'obj_price': fields.float('Adjudication price'),
         'lot_num': fields.integer('List Number', required=True, select=1 ),
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('sold','Sold')),'Status', required=True, readonly=True),
+        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('sold','Sold')),'State', required=True, readonly=True),
         'obj_comm': fields.boolean('Commission'),
         'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True),
         'ach_login': fields.char('Buyer Username',size=64),

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,16 +15,16 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
 {
-    "name" : "Stock Management",
+    "name" : "Inventory Management",
     "version" : "1.1",
     "author" : "Tiny",
-    "description" : """OpenERP Stock Management module can manage multi-warehouses, multi and structured stock locations.
+    "description" : """OpenERP Inventory Management module can manage multi-warehouses, multi and structured stock locations.
 Thanks to the double entry management, the inventory controlling is powerful and flexible:
 * Moves history and planning,
 * Different inventory methods (FIFO, LIFO, ...)
@@ -41,13 +41,13 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "init_xml" : [],
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [
-        "stock_workflow.xml", 
-        "stock_data.xml", 
+        "stock_workflow.xml",
+        "stock_data.xml",
         "stock_incoterms.xml",
-        "stock_wizard.xml", 
-        "stock_view.xml", 
-        "stock_report.xml", 
-        "stock_sequence.xml", 
+        "stock_wizard.xml",
+        "stock_view.xml",
+        "stock_report.xml",
+        "stock_sequence.xml",
         "product_data.xml",
         "product_view.xml",
         "partner_view.xml",

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <record id="view_workcenter_load_tree" model="ir.ui.view">
             <field name="name">report.workcenter.load.tree</field>
             <field name="model">report.workcenter.load</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Workcenters load">
+                <tree string="Work Ccenters load">
                     <field name="name" select="1"/>
                     <field name="workcenter_id" select="1"/>
                     <field name="cycle"/>
@@ -15,13 +15,13 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_workcenter_load_graph" model="ir.ui.view">
             <field name="name">report.workcenter.load.graph</field>
             <field name="model">report.workcenter.load</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Workcenter load" type="bar">
+                <graph string="Work Center load" type="bar">
                     <field name="name"/>
                     <field name="cycle" operator="+"/>
                     <field name="hour" operator="+"/>
@@ -29,14 +29,14 @@
                 </graph>
             </field>
         </record>
-        
-        
+
+
         <record id="view_workcenter_load_form" model="ir.ui.view">
             <field name="name">report.workcenter.load.form</field>
             <field name="model">report.workcenter.load</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Workcenter load" type="bar">
+                <form string="Work Center load" type="bar">
                     <field name="name" select="1"/>
                     <field name="workcenter_id" select="1"/>
                     <field name="cycle"/>
@@ -45,15 +45,16 @@
             </field>
         </record>
         <record id="action_report_workcenter_load_tree" model="ir.actions.act_window">
-            <field name="name">Workcenter Loads</field>
+            <field name="name">Work Center Loads</field>
             <field name="res_model">report.workcenter.load</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
         </record>
-        <menuitem id="next_id_77" name="Reporting" parent="mrp.menu_mrp_root"/><menuitem action="action_report_workcenter_load_tree" id="menu_report_workcenter_load" parent="next_id_77"/>
-        
+        <menuitem id="next_id_77" name="Reporting" parent="mrp.menu_mrp_root" sequence="49"/>
+        <menuitem action="action_report_workcenter_load_tree" id="menu_report_workcenter_load" parent="next_id_77"/>
+
         <!-- stock.move compared to internal location src/dest -->
-        
+
         <record id="view_report_in_out_picking_tree" model="ir.ui.view">
             <field name="name">report.mrp.inout.tree</field>
             <field name="model">report.mrp.inout</field>
@@ -65,7 +66,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_report_in_out_picking_form" model="ir.ui.view">
             <field name="name">report.mrp.inout.form</field>
             <field name="model">report.mrp.inout</field>
@@ -77,8 +78,8 @@
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record id="view_report_in_out_picking_graph" model="ir.ui.view">
             <field name="name">report.mrp.inout.graph</field>
             <field name="model">report.mrp.inout</field>
@@ -90,7 +91,7 @@
                 </graph>
             </field>
         </record>
-        
+
         <record id="action_report_in_out_picking_tree" model="ir.actions.act_window">
             <field name="name">Weekly Stock Value Variation</field>
             <field name="res_model">report.mrp.inout</field>
@@ -98,8 +99,8 @@
             <field name="view_mode">graph,tree</field>
         </record>
         <menuitem action="action_report_in_out_picking_tree" id="menu_report_in_out_picking" parent="report_mrp.next_id_77"/>
-        
-        
-        
+
+
+
     </data>
 </openerp>

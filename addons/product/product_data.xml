@@ -73,7 +73,6 @@ parameter) will see those record just disappear.
         
         
         
-        
         <!--
 	Price list type
 	-->
@@ -81,6 +80,7 @@ parameter) will see those record just disappear.
             <field name="name">Sale Pricelist</field>
             <field name="key">sale</field>
         </record>
+ 
         
         <!--
 	Price list
@@ -107,5 +107,12 @@ parameter) will see those record just disappear.
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
             <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
         </record>
+        
+        <record forcecreate="True" id="property_valuation_price_type" model="ir.property">
+            <field name="name">property_valuation_price_type</field>
+            <field name="fields_id" search="[('model','=','res.company'),('name','=','property_valuation_price_type')]"/>
+            <field eval="'product.price.type,'+str(ref('standard_price'))" name="value"/>
+        </record>
+        
     </data>
 </openerp>

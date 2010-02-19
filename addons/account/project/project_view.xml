@@ -8,7 +8,7 @@
             <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:date and (date&lt;=current_date)" string="Analytic account">
+                <tree colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
                     <field name="code"/>
                     <field name="complete_name"/>
                     <field name="quantity"/>
@@ -18,13 +18,32 @@
             </field>
         </record>
 
+        <record id="view_account_analytic_account_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<search string="Analytic Account">
+            		<group col="8" colspan="4">
+	            		<filter icon="gtk-execute" string="My Accounts" domain="[('user_id','=',uid)]" help="My Analytic Accounts"/>
+	            		<filter icon="gtk-execute" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
+	            		<filter icon="gtk-execute" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+						<field name="code" select="1"/>
+						<field name="partner_id" select="1"/>
+            		</group>
+            	</search>
+            </field>
+        </record>
+
         <record id="view_account_analytic_account_tree" model="ir.ui.view">
             <field name="name">account.analytic.account.tree</field>
             <field name="model">account.analytic.account</field>
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="True" colors="red:date and (date&lt;=current_date)" string="Analytic account">
+                <tree toolbar="True" colors="red:(date&lt;=current_date);black:(date&gt;current_date)" string="Analytic account">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date"/>
@@ -50,14 +69,15 @@
                         <field name="parent_id" on_change="on_change_parent(parent_id)"/>
                         <field name="company_id" select="2" widget="selection"/>
                         <field name="type" select="2"/>
+                        <field name="company_currency_id" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
-                            <field name="partner_id"/>
+                            <field name="partner_id" select="1"/>
                             <newline/>
                             <field name="date_start"/>
                             <field name="date" select="2"/>
-                            <field name="active" select="2"/>
+
                             <newline/>
                             <field name="quantity_max"/>
                             <field name="user_id"/>
@@ -77,10 +97,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph,form</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
+            <field name="search_view_id" ref="account.view_account_analytic_account_search"/>
         </record>
         <!--<menuitem id="menu_analytic_account" name="Analytic Accounts" parent="account.menu_analytic_accounting"/>-->
         <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="account.menu_analytic_accounting"/>
-	
+
 		<record id="act_account_renew_view" model="ir.actions.act_window">
             <field name="name">Accounts to Renew</field>
             <field name="type">ir.actions.act_window</field>
@@ -88,7 +109,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('date','&lt;',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
-            <field name="filter" eval="True"/>            
+            <field name="filter" eval="True"/>
         </record>
 
         <record id="action_account_analytic_account_tree2" model="ir.actions.act_window">
@@ -105,20 +126,12 @@
             id="account_analytic_def_chart"
             parent="account_analytic_def_account"/>
 <!--        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>-->
-	
+
 		<wizard id="wizard_analytic_account_chart" menu="False" model="account.analytic.account" name="account.analytic.account.chart" string="Analytic Chart of Accounts"/>
         <menuitem icon="STOCK_INDENT" action="wizard_analytic_account_chart" id="menu_action_analytic_account_tree2" parent="account.menu_finance_charts" type="wizard"/>
-        
-        <record id="analytic_account_form" model="ir.actions.act_window">
-            <field name="name">New Analytic Account</field>
-            <field name="res_model">account.analytic.account</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree,graph</field>
-            <field eval="view_account_analytic_account_form" name="view_id"/>
-        </record>
-        <menuitem action="analytic_account_form" id="account_analytic_form" parent="account.account_analytic_def_account"/>
 
-        <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_reporting"/><menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart_balance" parent="next_id_40"/>
+        <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_generic_reporting" sequence="4"/>
+        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart_balance" parent="next_id_40"/>
 
         <record id="view_account_analytic_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
@@ -135,6 +148,9 @@
                     <field name="move_id" select="2"/>
                     <field name="unit_amount" select="2"/>
                     <field name="ref" select="2"/>
+                    <field name="currency_id" select="2"/>
+                    <field name="amount_currency" select="2"/>
+                    <field name="company_id" select="2"/>
                     <newline/>
                     <field name="product_id" select="2"/>
                     <field name="product_uom_id" select="2"/>
@@ -147,16 +163,19 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="top" string="Analytic Entries">
-                    <field name="date"/>
+                    <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="name"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total quantity"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" sum="Total quantity"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
-                    <field invisible="True" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                    <field invisible="True" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="amount" sum="Total amount"/>
                     <field name="general_account_id"/>
                     <field name="journal_id"/>
                     <field name="ref"/>
+                    <field name="currency_id" />
+                    <field name="amount_currency" />
+                    <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                 </tree>
             </field>
         </record>
@@ -183,7 +202,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
         </record>
-        <wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Entries Encoding by Line"/>
+        <wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Making Entries by Line"/>
         <menuitem id="next_id_41" name="Analytic Entries" parent="account.menu_finance_entries"/>
         <menuitem type="wizard" icon="STOCK_JUSTIFY_FILL" action="action_account_analytic_line" id="account_entries_analytic_entries" parent="next_id_41"/>
 
@@ -213,13 +232,16 @@
                 <form string="Project line">
                     <field name="name"/>
                     <field name="account_id"/>
-                    <field name="date"/>
+                    <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field name="journal_id"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                     <field invisible="True" name="general_account_id"/>
                     <field name="amount"/>
+                    <field name="currency_id" />
+                    <field name="amount_currency" />
+                    <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
                 </form>
             </field>
         </record>
@@ -258,6 +280,7 @@
                     <field name="code" select="1"/>
                     <field name="type" select="2"/>
                     <field name="active" select="2"/>
+                    <field name="company_id" widget="selection"/>
                 </form>
             </field>
         </record>
@@ -333,6 +356,7 @@
             <field name="arch" type="xml">
                 <tree string="Analytic Entries Stats">
                     <field name="name"/>
+                    <field name="month"/>
                     <field name="account_id"/>
                     <field name="journal_id"/>
                     <field name="quantity"/>
@@ -349,10 +373,29 @@
             <field name="arch" type="xml">
                 <graph string="Analytic Entries Stats" type="bar">
                     <field name="name"/>
+                    <field name="month"/>
                     <field name="cost" operator="+"/>
                     <field name="revenue" operator="+"/>
                     <field group="True" name="journal_id"/>
                 </graph>
+            </field>
+        </record>
+
+        <record id="report_hr_timesheet_invoice_journal_search" model="ir.ui.view">
+            <field name="name">report.hr.timesheet.invoice.journal.search</field>
+            <field name="model">report.hr.timesheet.invoice.journal</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Analytic Entries Stats">
+                	<group col="8" colspan="4">
+	                	<filter icon="terp-sale" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Sale journal in this year"/>
+		               	<filter icon="terp-sale" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Sale journal in this month"/>
+		               	<separator orientation="vertical"/>
+	                    <field name="name" select="1"/>
+	               		<field name="month" select="1"/>
+	                    <field name="account_id" select="1"/>
+					</group>
+                </search>
             </field>
         </record>
 
@@ -361,20 +404,11 @@
             <field name="res_model">report.hr.timesheet.invoice.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="report_hr_timesheet_invoice_journal_search"/>
         </record>
-        <menuitem id="next_id_42" name="All Months" parent="account.next_id_40"/><menuitem action="report_account_analytic_journal_tree" id="report_account_analytic_journal_print" parent="next_id_42"/>
-
-        <record id="report_account_analytic_journal_tree_month" model="ir.actions.act_window">
-            <field name="name">Account cost and revenue by journal (This Month)</field>
-            <field name="res_model">report.hr.timesheet.invoice.journal</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-        </record>
-        <menuitem id="next_id_43" name="This Month" parent="account.next_id_40"/><menuitem action="report_account_analytic_journal_tree_month" id="report_account_analytic_journal_print_month" parent="next_id_43"/>
+        <menuitem action="report_account_analytic_journal_tree" id="report_account_analytic_journal_print" parent="account.next_id_40"/>
 
         <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal" name="All Analytic Entries" res_model="account.analytic.line" src_model="account.analytic.account" view_mode="tree,form" view_type="form"/>
-
 
         <act_window domain="[('account_id', '=', active_id)]" id="act_acc_analytic_acc_2_report_hr_timesheet_invoice_journal" name="Costs &amp; Revenues" res_model="report.hr.timesheet.invoice.journal" src_model="account.analytic.account" view_mode="graph,tree,form" view_type="form"/>
 

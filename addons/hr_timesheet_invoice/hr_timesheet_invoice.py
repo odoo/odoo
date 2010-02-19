@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -28,7 +28,7 @@ class hr_timesheet_invoice_factor(osv.osv):
     _description = "Invoice rate"
     _columns = {
         'name': fields.char('Internal name', size=128, required=True),
-        'customer_name': fields.char('Visible name', size=128),
+        'customer_name': fields.char('Name', size=128),
         'factor': fields.float('Discount (%)', required=True),
     }
     _defaults = {
@@ -52,6 +52,7 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
+
     _inherit = "account.analytic.account"
     _columns = {
         'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist'),
@@ -59,7 +60,7 @@ class account_analytic_account(osv.osv):
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor','Reinvoice Costs',
-            help="Check this field if you plan to automatically generate invoices based " \
+            help="Fill this field if you plan to automatically generate invoices based " \
             "on the costs in this analytic account: timesheets, expenses, ..." \
             "You can configure an automatic invoice rate on analytic accounts."),
     }
@@ -72,27 +73,27 @@ account_analytic_account()
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
-        'invoice_id': fields.many2one('account.invoice', 'Invoice'),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoicing'),
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),                
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing'),
     }
 
     def unlink(self, cursor, user, ids, context=None):
-        self._check(cursor, user, ids)
         return super(account_analytic_line,self).unlink(cursor, user, ids,
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        self._check(cr, uid, ids)
+        self._check_inv(cr, uid, ids,vals)
         return super(account_analytic_line,self).write(cr, uid, ids, vals,
                 context=context)
 
-    def _check(self, cr, uid, ids):
+    def _check_inv(self, cr, uid, ids,vals):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
-        for line in self.browse(cr, uid, select):
-            if line.invoice_id:
-                raise osv.except_osv(_('Error !'),
+        if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
+            for line in self.browse(cr, uid, select):
+                if line.invoice_id:
+                    raise osv.except_osv(_('Error !'),
                         _('You can not modify an invoiced analytic line!'))
         return True
 

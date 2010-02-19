@@ -18,7 +18,26 @@
                 </tree>
             </field>
         </record>
-        
+
+        <!-- Editable current timesheet used  in dashboard-->
+        <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheets" editable="top">
+                    <field name="user_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="name"/>
+                    <field name="total_attendance" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="total_timesheet"/>
+                    <field name="total_difference" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="hr_timesheet_account_form" model="ir.ui.view">
             <field name="name">hr.timesheet.account.form</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
@@ -32,7 +51,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="hr_timesheet_account_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.account.tree</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
@@ -46,7 +65,7 @@
                 </tree>
             </field>
         </record>
-        
+<!--
         <record id="hr_timesheet_day_form" model="ir.ui.view">
             <field name="name">hr.timesheet.day.form</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
@@ -61,13 +80,13 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="hr_timesheet_day_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.day.tree</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1" string="Timesheet by Days">
+                <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Timesheet by Days">
                     <field name="sheet_id"/>
                     <field name="name"/>
                     <field name="total_timesheet" sum="Total Timesheet"/>
@@ -76,7 +95,7 @@
                 </tree>
             </field>
         </record>
-        
+-->
         <record id="hr_timesheet_sheet_form" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.form</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
@@ -87,7 +106,7 @@
                     <field name="user_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    
+                    <field name="company_id" select="1" groups="base.group_multi_company"/>
                     <notebook colspan="4">
                         <page string="Daily View">
                             <group col="6" colspan="4">
@@ -98,7 +117,7 @@
                                 <button name="date_today" string="Today" type="object" icon="gtk-home"/>
                                 <button icon="gtk-media-next" name="date_next" string="" type="object"/>
                             </group>
-                            
+
                             <field colspan="3" context="name=date_current,user_id=user_id" height="100" name="attendances_ids" nolabel="1" groups="hr_attendance.group_hr_attendance">
                                 <tree string="Attendances">
                                     <field name="name"/>
@@ -110,7 +129,7 @@
                                 <button name="sign_in" string="Sign In" type="object" icon="gtk-go-back"/>
                                 <button name="sign_out" string="Sign Out" type="object" icon="gtk-go-forward"/>
                             </group>
-                            
+
                             <field name="state_attendance" groups="hr_attendance.group_hr_attendance"/>
                             <field name="total_attendance_day" widget="float_time" groups="hr_attendance.group_hr_attendance"/>
                             <field colspan="4" context="date=date_current,user_id=user_id" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
@@ -146,7 +165,7 @@
                         </page>
                         <page string="By Day">
                             <field colspan="4" name="period_ids" nolabel="1">
-                                <tree colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1" string="Period">
+                                <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
                                     <field name="name"/>
                                     <field name="total_attendance" widget="float_time" groups="hr_attendance.group_hr_attendance"/>
                                     <field name="total_timesheet" widget="float_time"/>
@@ -162,8 +181,8 @@
                     <group col="4" colspan="2">
                         <button name="button_confirm" states="draft" string="Confirm" type="object" icon="gtk-execute"/>
                         <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert"/>
-                        <button name="cancel" states="confirm" string="Refuse" icon="gtk-stop"/>
-                        <button name="done" states="confirm" string="Accept" icon="gtk-apply"/>
+                        <button name="cancel" states="confirm" string="Refuse" type="workflow" icon="gtk-stop"/>
+                        <button name="done" states="confirm" string="Accept" type="workflow" icon="gtk-apply"/>
                     </group>
                 </form>
             </field>
@@ -175,125 +194,47 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                   <group col='6' colspan='4'>
-                       <field name="state">
+                   <group col="10" colspan="4">
+		                <filter icon="terp-partner" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheet"/>
+		                <filter icon="terp-crm" string="My departments timesheets"  domain="[('user_id', 'child_of', [uid])]" help="My Departments Timesheet"/>
+						<separator orientation="vertical"/>
+						<filter icon="terp-crm" string="Unvalidated" domain="[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Unvalidated Timesheets"/>
+                       	<separator orientation="vertical"/>
+                       	<field name="state">
                            <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
                            <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-                       </field>
-                       <field name="name" select='1'/>
-                       <field name="user_id" select="1" widget="selection">
-                           <filter icon="gtk-execute" domain="[('user_id','=',uid)]" help="My Timesheet"/>
-                           <filter icon="gtk-execute" domain="[('user_id', 'child_of', [uid])]" help="My Departments Timesheet"/>
-                       </field>                       
+						</field>
+						<field name="name" select="1"/>
+						<field name="user_id" select="1" widget="selection"/>
                    </group>
                </search>
             </field>
         </record>
-        
+
         <record id="act_hr_timesheet_sheet_form" model="ir.actions.act_window">
             <field name="name">Timesheets</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr_timesheet_sheet.sheet</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
+            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
-        <menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/>
-        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="next_id_60"
+        <!--Time Tracking menu in project Management-->
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+          <menuitem
+             id="base.menu_project_management_time_tracking"
+             name="Time Tracking"
+             parent="base.menu_main_pm" sequence="3"/>
+         <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
+             groups="hr.group_hr_manager" sequence="5"/>
+        <!--<menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/>-->
+        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
             groups="hr.group_hr_manager"/>
-        
-        <record id="act_hr_timesheet_sheet_form_my" model="ir.actions.act_window">
-            <field name="name">My timesheets</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
-        </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my" id="menu_act_hr_timesheet_sheet_form_my" parent="hr_timesheet_sheet.next_id_60" groups="base.group_useability_extended"/>
-        
-        <record id="act_hr_timesheet_sheet_form_my_confirm" model="ir.actions.act_window">
-            <field name="name">My timesheets to confirm</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('user_id','=',uid),('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-        </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my_confirm" id="menu_act_hr_timesheet_sheet_form_my_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my" groups="base.group_useability_extended"/>
 
-        <record id="act_hr_timesheet_sheet_form_my_department" model="ir.actions.act_window">
-            <field name="name">My Department's Timesheets</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('user_id', 'child_of', [uid])]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-        </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my_department" id="menu_act_hr_timesheet_sheet_form_my_department" parent="hr_timesheet_sheet.next_id_60" groups="base.group_useability_extended"/>
-
-        <record id="act_hr_timesheet_sheet_form_my_confirm_department" model="ir.actions.act_window">
-            <field name="name">My Department's Timesheets to Confirm</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-        </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my_confirm_department" id="menu_act_hr_timesheet_sheet_form_my_confirm_department" parent="menu_act_hr_timesheet_sheet_form_my_department" groups="base.group_useability_extended"/>
-
-        <record id="act_hr_timesheet_sheet_form_my_validate_department" model="ir.actions.act_window">
-            <field name="name">My Department's Timesheets to Validate</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('user_id', 'child_of', [uid]),('state','=','confirm'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-        </record>
-        <menuitem action="act_hr_timesheet_sheet_form_my_validate_department" id="menu_act_hr_timesheet_sheet_form_my_validate_department" parent="menu_act_hr_timesheet_sheet_form_my_department" groups="base.group_useability_extended"/>
-        
-        <wizard id="act_hr_timesheet_sheet_form_my_current" model="hr.employee" name="hr_timesheet_sheet.current.open" string="My Current Timesheet"/>
-
-        <menuitem action="act_hr_timesheet_sheet_form_my_current" icon="STOCK_NEW" id="menu_act_hr_timesheet_sheet_form_my_current" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my" type="wizard"/>
-        
-        <record id="act_hr_timesheet_sheet_form_all_confirm" model="ir.actions.act_window">
-            <field name="name">Timesheets To Confirm</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
-        </record>
-        <menuitem action="act_hr_timesheet_sheet_form_all_confirm" id="menu_act_hr_timesheet_sheet_form_all_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form" groups="base.group_useability_extended"/>
-        
-        <record id="act_hr_timesheet_sheet_form_all_valid" model="ir.actions.act_window">
-            <field name="name">Timesheets To Validate</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('state','=','confirm')]</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
-        </record>
-        <menuitem action="act_hr_timesheet_sheet_form_all_valid" id="menu_act_hr_timesheet_sheet_form_all_valid" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form" groups="base.group_useability_extended"/>
-        
         <!--
             Company inheritancy
         -->
-        
+
         <record id="hr_timesheet_sheet_company" model="ir.ui.view">
             <field name="name">res.company.sheet</field>
             <field name="model">res.company</field>
@@ -308,11 +249,11 @@
                 </page>
             </field>
         </record>
-        
+
         <!--
             hr.analytic.timesheet inheritancy
         -->
-        
+
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
@@ -327,7 +268,7 @@
         <!--
             hr.attendance inheritancy
         -->
-        
+
         <record id="view_attendance_form" model="ir.ui.view">
             <field name="name">hr.attendance.form</field>
             <field name="model">hr.attendance</field>
@@ -350,15 +291,15 @@
                 </field>
             </field>
         </record>
-        
+
         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_day" name="Timesheet by Account" res_model="hr_timesheet_sheet.sheet.account" src_model="hr_timesheet_sheet.sheet"/>
-        <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_account" name="Timesheet by Day" res_model="hr_timesheet_sheet.sheet.day" src_model="hr_timesheet_sheet.sheet"/>
-        
-        
+<!--         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_account" name="Timesheet by Day" res_model="hr_timesheet_sheet.sheet.day" src_model="hr_timesheet_sheet.sheet"/>  -->
+
+
         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet" name="Timesheet Lines" res_model="hr.analytic.timesheet" src_model="hr_timesheet_sheet.sheet"/>
-        
+
         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_2_hr_attendance" name="Attendances" res_model="hr.attendance" src_model="hr_timesheet_sheet.sheet"/>
-        
+
         <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.tree.simplified</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
@@ -375,17 +316,6 @@
                 </tree>
             </field>
         </record>
-        
-        <record id="act_hr_timesheet_sheet_unvalidate" model="ir.actions.act_window">
-            <field name="name">Unvalidated Timesheets</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="domain">[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%Y-%m-%d'))]</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="hr_timesheet_sheet_tree_simplified"/>
-            <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>            
-        </record>
-        
-        <menuitem action="act_hr_timesheet_sheet_unvalidate" id="menu_hr_timesheet_sheet_unvalidate" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form" groups="base.group_useability_extended"/>
+
     </data>
 </openerp>

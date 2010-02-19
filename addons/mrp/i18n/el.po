@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 12:41+0000\n"
-"Last-Translator: Panagiotis Kranidiotis <kranidiotis@vatica.org>\n"
+"PO-Revision-Date: 2009-12-17 19:14+0000\n"
+"Last-Translator: Andreas Porevopoulos <Unknown>\n"
 "Language-Team: l10n_chart_gr <l10n_chart_gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-17 04:52+0000\n"
+"X-Launchpad-Export-Date: 2009-12-18 04:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -48,7 +48,7 @@ msgstr "Σχεδίαση Πηγών Βιομηχανικής Παραγωγής 
 #. module: mrp
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
 
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
@@ -371,7 +371,7 @@ msgstr "Δαιδικασία Τροφοδοσίας"
 #. module: mrp
 #: field:mrp.production,date_planned_date:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Προγραμματισμένη Ημερομηνία"
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
@@ -1017,7 +1017,7 @@ msgstr "Αρ. ωρών"
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Notes"
-msgstr ""
+msgstr "Σημειώσεις"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1136,6 +1136,8 @@ msgstr "Προς Αποθήκευση"
 #: model:process.transition,note:mrp.process_transition_servicemto0
 msgid "If product type is service and procure method is Make to order"
 msgstr ""
+"Αν ο τύπος του είδους είναι Υπηρεσία και μέθοδος προμήθειας είναι Προς "
+"Παραγγελία"
 
 #. module: mrp
 #: field:res.company,schedule_range:0
@@ -1156,7 +1158,7 @@ msgstr "Προμήθειες"
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.product_procurement_wizard
 msgid "Procurement Request"
-msgstr ""
+msgstr "Αίτηση Προμήθειας"
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_price
@@ -1409,6 +1411,8 @@ msgstr "Παραγόμενα Προϊόντα"
 #: model:process.transition,note:mrp.process_transition_stockproduct0
 msgid "Product type is Stockable and procure method is make to stock"
 msgstr ""
+"Ο τύπος του είδους είναι αποθηκεύσιμο και η μέθοδος προμήθειας είναι Προς "
+"Αποθήκευση"
 
 #. module: mrp
 #: help:mrp.bom,date_start:0
@@ -1497,11 +1501,13 @@ msgstr "numeric indices"
 #: model:process.transition,note:mrp.process_transition_servicerfq0
 msgid "If Procure method is Make to order and supply method is buy"
 msgstr ""
+"Aν η μέθοδος προμήθειας είναι Προς Παραγγελία και η μέθοδος απόκτησης είναι "
+"Αγορά"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurestockableproduct0
 msgid "if Product type is Stockable in procurement order"
-msgstr ""
+msgstr "Αν ο τύπος προϊόντος είναι Αποθηκεύσιμο σε εντολή προμήθειας"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
@@ -1593,7 +1599,7 @@ msgstr "Υπολογισμός Προμηθειών Μόνο"
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Qty"
-msgstr ""
+msgstr "Πόσοτητα σε ΜοΠ του Προϊόντος"
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -1666,7 +1672,7 @@ msgstr "Στρογγυλοποίηση Προϊόντος"
 #. module: mrp
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr ""
+msgstr "Εντολή εργασίας"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1767,7 +1773,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
-msgstr ""
+msgstr "Σε αναμονή υλικών"
 
 #. module: mrp
 #: model:process.process,name:mrp.process_process_stockableproductprocess0
@@ -1856,7 +1862,7 @@ msgstr "Κατάσταση Υλικών"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procureserviceproduct0
 msgid "In procurement order, if product type is service"
-msgstr ""
+msgstr "Σε εντολή προμήθειας, αν ο τύπος του είδους είναι υπηρεσία"
 
 #. module: mrp
 #: selection:mrp.procurement,procure_method:0
@@ -1980,7 +1986,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,date_planned_end:0
 msgid "Scheduled End"
-msgstr ""
+msgstr "Προγραμματισμένη Λήξη"
 
 #. module: mrp
 #: selection:mrp.bom,method:0

@@ -9,14 +9,14 @@
     <record id="group_crm_user" model="res.groups">
         <field name="name">CRM / User</field>
     </record>
+<!---->
+<!--    <record model='ir.ui.menu' id='menu_crm'>-->
+<!--        <field name="groups_id" eval="[(6,0,[ref('group_crm_manager'),ref('group_crm_user')])]"/>-->
+<!--    </record>-->
 
-    <record model='ir.ui.menu' id='menu_crm'>
-        <field name="groups_id" eval="[(6,0,[ref('group_crm_manager'),ref('group_crm_user')])]"/>
-    </record>
+<!--    <record model='ir.ui.menu' id='menu_crm_configuration'>-->
+<!--        <field name="groups_id" eval="[(6,0,[ref('group_crm_manager')])]"/>-->
+<!--    </record>-->
 
-    <record model='ir.ui.menu' id='menu_crm_configuration'>
-        <field name="groups_id" eval="[(6,0,[ref('group_crm_manager')])]"/>
-    </record>
-
-</data>
+    </data>
 </openerp>

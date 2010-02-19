@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -87,7 +87,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
             revenue = 0.0
             if lines[id].amount < 0 and lines[id].product_id and lines[id].product_uom_id and lines[id].account_id.pricelist_id:
                 ctx = {'uom': lines[id].product_uom_id.id}
-                price = price_obj.price_get(self.cr, self.uid, [lines[id].pricelist_id.id], lines[id].product_id.id, lines[id].unit_amount, ctx)[lines[id].pricelist_id.id]
+                price = price_obj.price_get(self.cr, self.uid, [lines[id].account_id.pricelist_id.id], lines[id].product_id.id, lines[id].unit_amount, ctx)[lines[id].account_id.pricelist_id.id]
                 revenue = round(price * lines[id].unit_amount, 2)
             r['revenue'] = revenue
             self.sum_revenue[account_id] += revenue
@@ -112,7 +112,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         return self.cr.fetchone()[0] or 0.0
 
     def _account_sum_balance(self, account_id, date1, date2):
-        debit = self._account_sum_debit(account_id, date1, date2) 
+        debit = self._account_sum_debit(account_id, date1, date2)
         credit = self._account_sum_credit(account_id, date1, date2)
         return (debit-credit)
 
@@ -130,7 +130,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         ids = map(lambda x: x.id, accounts)
         if not len(ids):
             return 0.0
-        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount>0", (date1, date2))
+        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount>0", (ids,date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, accounts, date1, date2):
@@ -138,7 +138,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         if not len(ids):
             return 0.0
         ids = map(lambda x: x.id, accounts)
-        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount<0", (date1, date2))
+        self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount<0", (ids, date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_balance(self, accounts, date1, date2):
@@ -151,7 +151,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         if not len(ids):
             return 0.0
         ids = map(lambda x: x.id, accounts)
-        self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s", (date1, date2))
+        self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s", (ids,date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_revenue(self, accounts):

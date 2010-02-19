@@ -67,7 +67,7 @@
 
         <!-- Aged partner balance -->
         <wizard id="wizard_aged_trial_balance" menu="False" model="res.partner" name="account.aged.trial.balance" string="Aged Partner Balance"/>
-        <menuitem id="next_id_22" name="Partner Accounts" parent="menu_finance_reporting"/>
+        <menuitem id="next_id_22" name="Partner Accounts" parent="menu_finance_generic_reporting" sequence="1"/>
         <menuitem icon="STOCK_PRINT" action="wizard_aged_trial_balance" id="menu_aged_trial_balance" parent="next_id_22" type="wizard"/>
 
         <!-- report-related wizards -->
@@ -85,10 +85,10 @@
 
 
         <!-- account.move validate -->
-        <wizard id="wizard_validate_account_moves" menu="False" model="account.move" name="account.move.validate" string="Validate Account Moves"/>
+        <wizard id="wizard_validate_account_moves" menu="False" model="account.move" name="account.move.validate" string="Validate Ledger Postings"/>
         <menuitem action="wizard_validate_account_moves" id="menu_validate_account_moves" parent="account.menu_finance_periodical_processing" type="wizard"/>
 
-        <wizard id="wizard_validate_account_moves_line" menu="True" model="account.move.line" name="account.move_line.validate" string="Validate Account Moves"/>
+        <wizard id="wizard_validate_account_moves_line" menu="True" model="account.move.line" name="account.move_line.validate" string="Validate Ledger Postings"/>
 
 		<!-- Use Models -->
         <wizard string="Create Entries From Models" model="account.model" name="account_use_models" menu="False" id="wizard_account_use_model"/>
@@ -115,5 +115,6 @@
         <wizard id="wizard_general_journal" menu="False" model="account.journal.period" name="account.general.journal.report" string="Print General Journal" />
 		<menuitem icon="STOCK_PRINT" action="wizard_general_journal" id="menu_general_journal" parent="account.menu_generic_report" type="wizard" />
 
+        <wizard id="wizard_invoice_currency_change" model="account.invoice" name="account.invoice.currency_change" string="Change Currency" groups="base.group_user"/>
     </data>
 </openerp>

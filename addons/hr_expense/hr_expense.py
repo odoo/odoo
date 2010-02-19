@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -38,8 +38,7 @@ class hr_expense_expense(osv.osv):
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context)
 
     def _amount(self, cr, uid, ids, field_name, arg, context):
-        id_set = ",".join(map(str, ids))
-        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
+        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id =ANY(%s) GROUP BY s.id ",(ids,))
         res = dict(cr.fetchall())
         return res
 
@@ -58,12 +57,12 @@ class hr_expense_expense(osv.osv):
         'ref': fields.char('Reference', size=32),
         'date': fields.date('Date'),
         'journal_id': fields.many2one('account.journal', 'Force Journal'),
-        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
+        'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date_confirm': fields.date('Date Confirmed'),
         'date_valid': fields.date('Date Validated'),
         'user_valid': fields.many2one('res.users', 'Validation User'),
-        'account_move_id': fields.many2one('account.move', 'Account Move'),
+        'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
         'amount': fields.function(_amount, method=True, string='Total Amount'),
@@ -77,7 +76,8 @@ class hr_expense_expense(osv.osv):
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed'),
             ('cancelled', 'Cancelled')],
-            'State', readonly=True),
+            'State', readonly=True, help='When the expense request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
+            \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
     }
     _defaults = {
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
@@ -126,7 +126,7 @@ class hr_expense_expense(osv.osv):
                     acc = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
                     if not acc:
                         raise osv.except_osv(_('Error !'), _('Please configure Default Expanse account for Product purchase, `property_account_expense_categ`'))
-                    
+
                 lines.append((0, False, {
                     'name': l.name,
                     'account_id': acc,
@@ -173,11 +173,11 @@ hr_expense_expense()
 
 class product_product(osv.osv):
     _inherit = "product.product"
-    
+
     _columns = {
-                'hr_expense_ok': fields.boolean('Can be Expensed', help="Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."),
+                'hr_expense_ok': fields.boolean('Can be Expensed', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
     }
-    
+
 product_product()
 
 
@@ -187,8 +187,7 @@ class hr_expense_line(osv.osv):
     def _amount(self, cr, uid, ids, field_name, arg, context):
         if not len(ids):
             return {}
-        id_set = ",".join(map(str, ids))
-        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id IN ("+id_set+") GROUP BY l.id ")
+        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id =ANY(%s) GROUP BY l.id ",(ids,))
         res = dict(cr.fetchall())
         return res
 
@@ -204,19 +203,25 @@ class hr_expense_line(osv.osv):
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),
-        'sequence' : fields.integer('Sequence'),
+        'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of expense lines."),
     }
     _defaults = {
         'unit_quantity': lambda *a: 1,
         'date_value' : lambda *a: time.strftime('%Y-%m-%d'),
     }
     _order = "sequence"
-    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, context={}):
+    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context={}):
         v={}
         if product_id:
             product=self.pool.get('product.product').browse(cr,uid,product_id, context=context)
             v['name']=product.name
-            v['unit_amount']=product.standard_price
+            
+            # Compute based on pricetype of employee company
+            pricetype_id = self.pool.get('hr.employee').browse(cr,uid,employee_id).user_id.company_id.property_valuation_price_type.id
+            pricetype=self.pool.get('product.price.type').browse(cr,uid,pricetype_id)
+            amount_unit=product.price_get(pricetype.field, context)[product.id]
+            
+            v['unit_amount']=amount_unit
             if not uom_id:
                 v['uom_id']=product.uom_id.id
         return {'value':v}

@@ -58,8 +58,6 @@
 	<record model="workflow.transition" id="trans_draft_paid">
 	  <field name="act_from" ref="act_draft"/>
 	  <field name="act_to" ref="act_paid"/>
-	  <field name="trigger_model">pos.payment</field>
-	  <field name="trigger_expr_id">payment_get()</field>
 	  <field name="condition">test_paid()</field>
 	  <field name="signal">paid</field>
 	</record>
@@ -68,7 +66,7 @@
 		<field name="act_from" ref="act_paid"/>
 		<field name="act_to" ref="act_done"/>
 		<field name="signal">done</field>
-		<field name="role_id" ref="role_pos"/>
+	<!--	<field name="role_id" ref="role_pos"/-->
 	</record>
 
 	<record model="workflow.transition" id="trans_paid_invoice">

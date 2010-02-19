@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -91,7 +91,7 @@ def _sign_in_result(self, cr, uid, data, context):
     emp_id = data['form']['emp_id']
     from osv.osv import except_osv
     try:
-        success = emp_obj.sign_in(cr, uid, [emp_id], dt=data['form']['date'] or False)
+        success = emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data['form']['date'] or False)
     except except_osv, e:
         raise wizard.except_wizard(e.name, e.value)
     return {}
@@ -118,14 +118,14 @@ def _write(self, cr, uid, data, emp_id, context):
 def _sign_out_result_end(self, cr, uid, data, context):
     emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
     emp_id = data['form']['emp_id']
-    emp_obj.sign_out(cr, uid, [emp_id], dt=data['form']['date'])
+    emp_obj.attendance_action_change(cr, uid, [emp_id], type='sign_out',dt=data['form']['date'])
     _write(self, cr, uid, data, emp_id, context)
     return {}
 
 def _sign_out_result(self, cr, uid, data, context):
     emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
     emp_id = data['form']['emp_id']
-    emp_obj.sign_change(cr, uid, [emp_id], dt=data['form']['date'])
+    emp_obj.attendance_action_change(cr, uid, [emp_id], type='action',dt=data['form']['date'])
     _write(self, cr, uid, data, emp_id, context)
     return {}
 

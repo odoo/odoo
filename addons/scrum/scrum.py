@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -98,7 +98,7 @@ class scrum_sprint(osv.osv):
         'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'Status', required=True),
+        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'State', required=True),
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -119,7 +119,7 @@ class scrum_product_backlog(osv.osv):
     _name = 'scrum.product.backlog'
     _description = 'Product Backlog'
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
         if not context:
@@ -159,14 +159,14 @@ class scrum_product_backlog(osv.osv):
     _columns = {
         'name' : fields.char('Feature', size=64, required=True),
         'note' : fields.text('Note'),
-        'active' : fields.boolean('Active'),
+        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product backlog without removing it."),
         'project_id': fields.many2one('scrum.project', 'Scrum Project', required=True, domain=[('scrum','=',1)]),
         'user_id': fields.many2one('res.users', 'User'),
         'sprint_id': fields.many2one('scrum.sprint', 'Sprint'),
-        'sequence' : fields.integer('Sequence'),
+        'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Priority'),
         'tasks_id': fields.one2many('scrum.task', 'product_backlog_id', 'Tasks Details'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'Status', required=True),
+        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'State', required=True),
         'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours')

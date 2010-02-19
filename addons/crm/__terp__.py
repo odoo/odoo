@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,7 +26,7 @@
     'category': 'Generic Modules/CRM & SRM',
     'description': """The generic Open ERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
-prospects, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
+leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
 
@@ -41,21 +41,66 @@ appropriate staff, and making sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
-between mails and Open ERP.""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': ['crm_data.xml'],
+between mails and Open ERP.""", 
+    'author': 'Tiny', 
+    'website': 'http://www.openerp.com', 
+    'depends': ['base', 'base_action_rule',                         
+                        'process', 
+                        'mail_gateway', 
+                        'base_calendar',
+                    ], 
+    'init_xml': ['crm_data.xml', 
+                'crm_meeting_data.xml', 
+                 'crm_claims_data.xml', 
+                 'crm_fund_data.xml', 
+                 'crm_helpdesk_data.xml', 
+                 'crm_lead_data.xml', 
+                 'crm_meeting_data.xml', 
+                 'crm_opportunity_data.xml', 
+                 'crm_phonecall_data.xml', 
+    ], 
+
     'update_xml': [
-        'crm_wizard.xml',
-        'crm_view.xml',
-        'crm_report.xml',        
-        'security/crm_security.xml',
-        'security/ir.model.access.csv'
+        'crm_wizard.xml', 
+        'crm_view.xml', 
+        'crm_action_rule_view.xml', 
+        'crm_lead_wizard.xml', 
+        'crm_lead_view.xml', 
+        'crm_lead_menu.xml', 
+        'crm_meeting_wizard.xml', 
+        'crm_meeting_view.xml', 
+        'crm_meeting_menu.xml', 
+        'crm_phonecall_wizard.xml', 
+        'crm_phonecall_view.xml', 
+        'crm_phonecall_menu.xml',         
+        'crm_opportunity_wizard.xml', 
+        'crm_opportunity_view.xml', 
+        'crm_opportunity_menu.xml', 
+        'crm_fund_view.xml', 
+        'crm_fund_menu.xml', 
+        'crm_claims_view.xml', 
+        'crm_claims_menu.xml', 
+
+#        'crm_report_view.xml', 
+        'crm_helpdesk_view.xml',
+        'crm_helpdesk_menu.xml', 
+        #'crm_report.xml', 
+        'security/crm_security.xml', 
+        'security/ir.model.access.csv', 
+
+        'process/crm_configuration_process.xml'
     ],
-    'demo_xml': ['crm_demo.xml'],
-    'installable': True,
-    'active': False,
-    'certificate': '0079056041421',
+    'demo_xml': [
+        'crm_demo.xml', 
+        'crm_claims_demo.xml', 
+        'crm_fund_demo.xml', 
+        'crm_helpdesk_demo.xml', 
+        'crm_lead_demo.xml', 
+        'crm_meeting_demo.xml', 
+        'crm_opportunity_demo.xml', 
+        'crm_phonecall_demo.xml'], 
+    'installable': True, 
+    'active': False, 
+    'certificate': '0079056041421', 
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

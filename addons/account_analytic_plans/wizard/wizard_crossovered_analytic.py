@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -38,7 +38,7 @@ fields = {
     'date1': {'string':'Start Date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
     'date2': {'string':'End Date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
     'journal_ids': {'string':'Analytic Journal', 'type':'many2many', 'relation':'account.analytic.journal'},
-    'ref' :{'string':'Analytic Account Ref.', 'type':'many2one', 'relation':'account.analytic.account','required':True},
+    'ref' :{'string':'Analytic Account Reference', 'type':'many2one', 'relation':'account.analytic.account','required':True},
     'empty_line': {'string':'Dont show empty lines', 'type':'boolean', 'default': lambda *a:False},
 }
 

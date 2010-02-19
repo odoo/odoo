@@ -1,22 +1,23 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem name="Document Management" icon="terp-stock" id="menu_document2"/>
-        <menuitem name="Wiki Configuration" id="menu_document_configuration" parent="menu_document2"/>
-        <menuitem parent="menu_document2" name="Wiki" id="menu_document"/>
+       <menuitem name="Knowledge Management" icon="terp-stock" id="base.menu_document" sequence="4"/>
+        <menuitem name="Configuration" id="base.menu_document_configuration" parent="base.menu_document" sequence="50"/>
+        <menuitem name="Wiki" id="menu_wiki_configuration" parent="base.menu_document_configuration" sequence="2"/>
+        <menuitem id="base.menu_document2" name="Collaborative Content" parent="base.menu_document"/>
 
         <wizard
             id="wizard_group_menu_create"
             string="Create Menu"
             menu="True"
             name="wiki.create.menu"/>
-            
+
         <wizard
             id="wizard_open_page"
             string="Open Page"
             menu="True"
             name="wiki.wiki.page.open"/>
-            
+
         <record model="ir.ui.view" id="wiki_group_tree">
             <field name="name">wiki.groups.tree</field>
             <field name="model">wiki.groups</field>
@@ -63,21 +64,24 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem
+     <!--   <menuitem
             parent="menu_document_configuration"
+            id="menu_action_wiki_groups"
+            action="action_wiki_groups"/>-->
+      <menuitem name="Wiki Groups"
+            parent="menu_wiki_configuration"
             id="menu_action_wiki_groups"
             action="action_wiki_groups"/>
 
         <record model="ir.actions.act_window" id="action_wiki_groups_browse">
             <field name="name">Wikis</field>
             <field name="res_model">wiki.groups</field>
-            <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
         </record>
-        <menuitem
+       <!-- <menuitem
             parent="menu_document"
             id="menu_action_wiki_groups_browse"
-            action="action_wiki_groups_browse"/>
+            action="action_wiki_groups_browse"/>-->
 
         <record id="view_wiki_tree_childs" model="ir.ui.view">
             <field name="name">wiki.wiki.tree.childs</field>
@@ -122,7 +126,7 @@
                         <field name="name" select="1" colspan="6"/>
                         <field name="group_id" select="1" on_change="onchange_group_id(group_id, text_area)"/>
                         <field name="section" select="2" invisible="not context.get('section',False)"/>
-                        <field name="parent_id"/>                        
+                        <field name="parent_id"/>
                     </group>
                     <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
                     <separator colspan="4" string="Modifications"/>
@@ -137,30 +141,35 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="action_wiki">
-            <field name="name">Search a Pages</field>
-            <field name="res_model">wiki.wiki</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_wiki_tree"/>
-            <field name="context">{'section':'1'}</field>
+		<record id="view_wiki_filter" model="ir.ui.view">
+            <field name="name">wiki.wiki.search</field>
+            <field name="model">wiki.wiki</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Wiki">
+                    <group col='8' colspan='4'>
+                        <filter icon="gtk-execute" string="My" domain="[('create_uid','=',uid)]" help="My Pages"/>
+                        <separator orientation="vertical"/>
+                        <field name="name" select="1"/>
+                        <field name="group_id" select="1"/>
+                        <field name="text_area" select="1"/>
+                        <field name="review" select="1"/>
+                    </group>
+                </search>
+            </field>
         </record>
-        <menuitem parent="menu_document" id="menu_action_wiki_wiki" string="Search a Page" action="action_wiki"/>
 
-        <!-- My Pages-->
-        <record model="ir.actions.act_window" id="action_wiki_mypages">
-            <field name="name">My Pages</field>
+        <record model="ir.actions.act_window" id="action_wiki">
+            <field name="name">Search Pages</field>
             <field name="res_model">wiki.wiki</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
             <field name="context">{'section':'1'}</field>
-            <field name="domain">[('create_uid','=',uid)]</field>
-            <field name="filter" eval="True"/>
+            <field name="search_view_id" ref="view_wiki_filter"/>
         </record>
-        <menuitem parent="menu_action_wiki_wiki" id="menu_action_wiki_mypages" string="My Pages" 
-        action="action_wiki_mypages" groups="base.group_useability_extended"/>
-        
+        <menuitem parent="base.menu_document2" id="menu_action_wiki_wiki" name="Wiki Pages" action="action_wiki"/>
+
         <!--  Pages Waiting Review -->
         <record model="ir.actions.act_window" id="action_wiki_review">
             <field name="name">Pages Waiting Review</field>
@@ -172,9 +181,7 @@
             <field name="domain">[('review','=',True)]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem parent="menu_action_wiki_wiki" id="menu_action_wiki_review" string="Pages Waiting Review" 
-        action="action_wiki_review" groups="base.group_useability_extended"/>
-        
+
         <record model="ir.ui.view" id="view_wiki_history_tree">
             <field name="name">wiki.wiki.history.tree</field>
             <field name="model">wiki.wiki.history</field>
@@ -188,7 +195,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="wiki_history_form">
             <field name="name">wiki.wiki.history.form</field>
             <field name="model">wiki.wiki.history</field>
@@ -210,10 +217,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem
+       <!-- <menuitem
             parent="menu_document_configuration"
             id="menu_action_history"
-            action="action_history"/>
+            action="action_history"/>-->
 
         <act_window domain="[('wiki_id', '=', active_id)]"
             id="act_wiki_wiki_history"
@@ -240,7 +247,7 @@
             <field eval="'ir.actions.wizard,%d'%wizard_open_page" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
+
         <!--record id="ir_open_account_account" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
             <field eval="'wiki.groups'" name="model"/>

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-09 14:41+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-01-14 09:09+0000\n"
+"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-17 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-01-15 04:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -25,7 +25,7 @@ msgstr "Écritures non réconciliées"
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr "Annuler lettrage d'un compte"
+msgstr "Dé-lettrer les écritures"
 
 #. module: account
 #: wizard_view:account.aged.trial.balance,init:0
@@ -67,11 +67,6 @@ msgstr "Imprimer le journal"
 #: wizard_field:account.fiscalyear.close,init,fy2_id:0
 msgid "New Fiscal Year"
 msgstr "Nouvel exercice fiscal"
-
-#. module: account
-#: wizard_field:account.open_closed_fiscalyear,init,fyear_id:0
-msgid "Fiscal Year to Open"
-msgstr "Exercice fiscal à ouvrir"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree
@@ -130,12 +125,6 @@ msgstr "Écriture standard"
 #: help:wizard.multi.charts.accounts,code_digits:0
 msgid "No. of Digits to use for account code"
 msgstr "Nombre de chiffres dans les numéros des comptes"
-
-#. module: account
-#: model:ir.actions.wizard,name:account.wizard_fiscalyear_close_state
-#: model:ir.ui.menu,name:account.menu_wizard_fy_close_state
-msgid "Close a Fiscal Year"
-msgstr "Clôturer un exercice fiscal"
 
 #. module: account
 #: field:account.invoice,move_id:0
@@ -500,7 +489,7 @@ msgstr "Saisie des écritures"
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
 msgid "Specify The Message for the Overdue Payment Report."
-msgstr ""
+msgstr "Indiquez le message pour les rapports de paiement en retard."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -764,7 +753,7 @@ msgstr "Origine"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr ""
+msgstr "Nom de la transaction"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -875,7 +864,7 @@ msgstr "Négatif"
 #. module: account
 #: rml:account.partner.balance:0
 msgid "(Account/Partner) Name"
-msgstr ""
+msgstr "Nom (Compte/Partenaire)"
 
 #. module: account
 #: selection:account.move,type:0
@@ -921,7 +910,7 @@ msgstr "Rapprochement bancaire"
 #. module: account
 #: rml:account.invoice:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Rem.(%)"
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -1346,6 +1335,11 @@ msgstr ""
 "uniquement les taxes des comptes (ou des produits) du même groupe."
 
 #. module: account
+#: wizard_field:account.open_closed_fiscalyear,init,fyear_id:0
+msgid "Fiscal Year to Open"
+msgstr "Exercice fiscal à ouvrir"
+
+#. module: account
 #: view:account.config.wizard:0
 msgid "Select Chart of Accounts"
 msgstr "Sélectionner un plan de compte"
@@ -1528,7 +1522,7 @@ msgstr "Prix unitaire"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Period from :"
-msgstr ""
+msgstr "Période de :"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -1688,6 +1682,12 @@ msgid "Model"
 msgstr "Modèle"
 
 #. module: account
+#: model:ir.actions.wizard,name:account.wizard_fiscalyear_close_state
+#: model:ir.ui.menu,name:account.menu_wizard_fy_close_state
+msgid "Close a Fiscal Year"
+msgstr "Clôturer un exercice fiscal"
+
+#. module: account
 #: field:account.journal,centralisation:0
 msgid "Centralised counterpart"
 msgstr "Centralisation"
@@ -1695,7 +1695,7 @@ msgstr "Centralisation"
 #. module: account
 #: view:wizard.company.setup:0
 msgid "Message"
-msgstr ""
+msgstr "Messages"
 
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaymentorder0
@@ -1857,7 +1857,7 @@ msgstr "Clôturer l'état"
 #. module: account
 #: model:ir.model,name:account.model_wizard_company_setup
 msgid "wizard.company.setup"
-msgstr ""
+msgstr "wizard.company.setup"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_account_line_extended_form
@@ -2169,7 +2169,7 @@ msgstr "Comptable"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "to :"
-msgstr ""
+msgstr "à :"
 
 #. module: account
 #: wizard_field:account.move.line.reconcile,init_full,debit:0
@@ -2274,7 +2274,7 @@ msgstr "Pas de filtre"
 #. module: account
 #: field:account.payment.term.line,days:0
 msgid "Number of Days"
-msgstr "Nombre de jour"
+msgstr "Nombre de jours"
 
 #. module: account
 #: help:account.invoice,reference:0
@@ -2429,7 +2429,7 @@ msgstr "Processus de la facture client"
 #. module: account
 #: rml:account.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr ""
+msgstr "Remarque position fiscale :"
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,period_id:0
@@ -2503,7 +2503,7 @@ msgstr "Ecriture analytique"
 #: view:res.company:0
 #: field:res.company,overdue_msg:0
 msgid "Overdue Payments Message"
-msgstr ""
+msgstr "Message pour les paiements en retard"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_tax_code_tree
@@ -2977,7 +2977,7 @@ msgstr "Capitaux propres"
 #. module: account
 #: field:wizard.company.setup,overdue_msg:0
 msgid "Overdue Payment Message"
-msgstr ""
+msgstr "Message pour paiement en retard"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
@@ -4112,7 +4112,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_wizard_company_setup_form
 #: view:wizard.company.setup:0
 msgid "Overdue Payment Report Message"
-msgstr ""
+msgstr "Message pour rapport de paiement en retard"
 
 #. module: account
 #: selection:account.tax,tax_group:0
@@ -4432,7 +4432,7 @@ msgstr "Facture"
 #: wizard_button:account.open_closed_fiscalyear,init,open:0
 #: wizard_button:account_use_models,create,open_move:0
 msgid "Open"
-msgstr "Ouvrir"
+msgstr "Ouverte"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_29
@@ -4698,7 +4698,7 @@ msgstr "Confirmez-vous l'ouverture de cette facture ?"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 msgid "Partner Other Ledger"
-msgstr ""
+msgstr "Journal des tiers"
 
 #. module: account
 #: view:res.partner:0

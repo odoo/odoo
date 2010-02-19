@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,22 +26,24 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["product", "account", "hr", "process"],
+    "depends" : ["product", "analytic", "hr", "process", "mail_gateway"],
     "description": """Project management module that track multi-level projects, tasks,
 works done on tasks, eso. It is able to render planning, order tasks, eso.
     """,
     "init_xml" : [],
-    "demo_xml" : ["project_demo.xml"],
     "update_xml": [
         "security/project_security.xml",
         "security/ir.model.access.csv",
-        "project_data.xml", 
-        "project_wizard.xml", 
-        "project_view.xml", 
-        "project_report.xml", 
-        "process/task_process.xml"
+        "project_data.xml",
+        "project_wizard.xml",
+        "project_view.xml",
+        "project_report.xml",
+        "process/task_process.xml",
+        "project_installer.xml",
     ],
-    'demo_xml': ['project_demo.xml'],
+    'demo_xml': [
+        'project_demo.xml'
+    ],
     'installable': True,
     'active': False,
     'certificate': '0075116868317',

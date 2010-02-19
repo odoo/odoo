@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -32,13 +32,19 @@ class subscription_document(osv.osv):
     _description = "Subscription document"
     _columns = {
         'name': fields.char('Name', size=60, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the subscription document without removing it."),
         'model': fields.many2one('ir.model', 'Object', required=True),
         'field_ids': fields.one2many('subscription.document.fields', 'document_id', 'Fields')
     }
     _defaults = {
         'active' : lambda *a: True,
     }
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'model' in vals:
+            raise osv.except_osv(_('Error !'),_('You cannot modify the Object linked to the Document Type!\nCreate another Document instead !'))
+        return super(subscription_document, self).write(cr, uid, ids, vals, context=context)
+    
 subscription_document()
 
 class subscription_document_fields(osv.osv):
@@ -62,7 +68,7 @@ class subscription_subscription(osv.osv):
     _description = "Subscription"
     _columns = {
         'name': fields.char('Name', size=60, required=True),
-        'active': fields.boolean('Active'),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the subscription without removing it."),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'notes': fields.text('Notes'),
         'user_id': fields.many2one('res.users', 'User', required=True),
@@ -70,7 +76,7 @@ class subscription_subscription(osv.osv):
         'interval_type': fields.selection([('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'exec_init': fields.integer('Number of documents'),
         'date_init': fields.datetime('First Date'),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status'),
+        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State'),
         'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
         'doc_lines': fields.one2many('subscription.subscription.history', 'subscription_id', 'Documents created', readonly=True),
         'cron_id': fields.many2one('ir.cron', 'Cron Job')

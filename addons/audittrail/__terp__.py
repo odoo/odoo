@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -28,7 +28,7 @@
     Subscribe Rules for read, write, create and delete on objects and check logs""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'account', 'purchase', 'mrp'],
+    'depends': ['base'],
     'init_xml': [],
     'update_xml': [
         'audittrail_view.xml',

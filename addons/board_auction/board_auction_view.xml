@@ -19,7 +19,8 @@
 								height="200"
 								width="510"/>
 							<action string="My Latest Deposits"
-								name="%(auction.action_report_latest_doposit_tree)d"
+								name="%(auction.action_report_latest_doposit_manager_tree)d"
+								domain="[('create_uid','=',uid)]"
 								/>
 							<action string="Objects statistics"
 								name="%(auction.action_report_object_encoded_member_tree)d"
@@ -35,9 +36,10 @@
 								colspan="4"/>
 
 							<action
-								string="My objects By Day"
-								name="%(auction.action_report_auction_object_date_tree_my)d"
-								view_mode="graph,tree" colspan="4"/>
+								string="My Objects By Day"
+								name="%(auction.action_report_auction_object_date_tree)d"
+								view_mode="graph,tree" colspan="4"
+								domain="[('user_id','=',uid),('month','=',time.strftime('%%Y-%%m-01'))]"/>
 						<action
 								string="Estimations/Adjudication"
 								name="%(auction.action_report_auction_estimation_adj_category_member_tree)d"
@@ -56,12 +58,13 @@
 			<field name="usage">menu</field>
 			<field name="view_id" ref="board_auction_manager_form"/>
 		</record>
-
+		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+		<menuitem name="Auction Member" id="board_menu_auction_member" parent="base.dashboard" />
 		<menuitem
-			name="Dashboards/Auction/Auction Member"
+			name="Auction Member"
 			action="open_board_auction"
 			sequence="1"
-			id="menu_board_auction"/>
+			id="menu_board_auction" parent="board_menu_auction_member" />
 
 </data>
 </openerp>

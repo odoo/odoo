@@ -25,6 +25,7 @@
             <field name="arch" type="xml">
                 <tree string="Files">
                     <field name="name" select="1"/>
+                    <field name="month" select="1"/>
                     <field name="file_title"/>
                     <field name="user" select="1"/>
                     <field name="directory" select="1"/>
@@ -34,50 +35,41 @@
             </field>
         </record>
 
-
-        <record model="ir.actions.act_window" id="action_view_my_document_tree">
-            <field name="name">My files (This months)</field>
-            <field name="res_model">report.document.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('user_id','=',uid),('name','=',time.strftime('%Y-%m-01'))]</field>
+		<record id="view_report_document_user_search" model="ir.ui.view">
+            <field name="name">report.document.user.search</field>
+            <field name="model">report.document.user</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="All users files">
+                	<group col="12" colspan="4">
+                		<filter icon="terp-stock" string="My" domain="[('user','=',uid)]" help="My Files"/>
+                        <separator orientation="vertical"/>
+						<filter icon="terp-stock" string="This Year" domain="[('name','=',time.localtime()[0])]" help="All Months Files"/>
+						<filter icon="terp-stock" string="This Month" domain="[('month','=',time.localtime()[1])]" help="This Months Files"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+						<field name="month" select="1"/>
+						<field name="file_title" select="1"/>
+	                    <field name="user" select="1"/>
+	                    <field name="directory" select="1"/>
+	           		</group>
+               </search>
+            </field>
         </record>
-        
-        <menuitem name="Document Management" id="menu_action_view_my_document"/>
-        <menuitem name="Reporting" id="menu_action_view_my_document_report" parent="menu_action_view_my_document"/>
-        <menuitem name="This Month" id="menu_action_view_my_document_report_this" parent="menu_action_view_my_document_report"/>
-        <menuitem name="My files" id="menu_action_view_my_document_report_this_myfile" parent="menu_action_view_my_document_report_this" action="action_view_my_document_tree"/>
 
-        <record model="ir.actions.act_window" id="action_view_my_document_tree1">
-            <field name="name">My files (All months)</field>
-            <field name="res_model">report.document.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-        </record>
-        
-        <menuitem name="All Months" id="menu_action_view_my_document_report_all" parent="menu_action_view_my_document_report"/>
-        <menuitem name="My files" id="menu_action_view_my_document_report_all_myfile" parent="menu_action_view_my_document_report_all" action="action_view_my_document_tree1"/>
-
-        <record model="ir.actions.act_window" id="action_view_all_document_tree">
-            <field name="name">All Users files (This month)</field>
-            <field name="res_model">report.document.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-        </record>
-        
-        <menuitem name="All Users files" id="menu_action_view_my_document_report_this_userfile" parent="menu_action_view_my_document_report_this" action="action_view_all_document_tree"/>
+     <!--   <menuitem name="Document Management" id="menu_action_view_my_document"/>
+        <menuitem name="Reporting" id="menu_action_view_my_document_report" parent="menu_action_view_my_document"/>-->
 
         <record model="ir.actions.act_window" id="action_view_all_document_tree1">
-            <field name="name">All Users files (All months)</field>
+            <field name="name">All Users files</field>
             <field name="res_model">report.document.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_report_document_user_search"/>
         </record>
-        
-        <menuitem name="All Users files" id="menu_action_view_my_document_report_all_userfile" parent="menu_action_view_my_document_report_all" action="action_view_all_document_tree1"/>
-        
+
+      <!--  <menuitem name="All Users files" id="menu_action_view_my_document_report_all_userfile" parent="menu_action_view_my_document_report" action="action_view_all_document_tree1"/>-->
+
 <!--        -->
         <record model="ir.ui.view" id="view_document_wall_form">
             <field name="name">report.document.wall.form</field>
@@ -107,15 +99,15 @@
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_view_wall">
             <field name="name">Wall of Shame</field>
             <field name="res_model">report.document.wall</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-                
-        <menuitem name="Wall of Shame" id="menu_action_view_my_document_report_shame" parent="menu_action_view_my_document_report" action="action_view_wall"/>
+
+        <!--<menuitem name="Wall of Shame" id="menu_action_view_my_document_report_shame" parent="menu_action_view_my_document_report" action="action_view_wall"/>-->
 
 <!--***************************************************************************************-->
 
@@ -131,7 +123,7 @@
                 </graph>
             </field>
         </record>
-        
+
 <!--        <record model="ir.ui.view" id="view_document_by_resourcetype_tree">-->
 <!--            <field name="name">report.document.resource.tree.view</field>-->
 <!--            <field name="model">report.document.user</field>-->
@@ -151,7 +143,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
         </record>
-        
+
 <!--***************************************************************************************-->
 
     <record model="ir.ui.view" id="view_size_month">
@@ -165,7 +157,7 @@
                 </graph>
             </field>
         </record>
-        
+
     <record model="ir.ui.view" id="view_size_month_tree">
             <field name="name">report.document.user.tree</field>
             <field name="model">report.document.file</field>
@@ -183,11 +175,11 @@
             <field name="view_id" ref="view_size_month"></field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-        </record>    
-        
+        </record>
+
 <!--***************************************************************************************-->
 
-    
+
     <record model="ir.ui.view" id="view_files_by_month_graph">
             <field name="name">report.file.month.graph</field>
             <field name="model">report.document.user</field>
@@ -198,32 +190,33 @@
                     <field name="nbr" operator="+"/>
 <!--                    <field name="name" operator="+"/>-->
 <!--                    <field name="file_size" operator="+"/>-->
-                    
+
                 </graph>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_files_by_month_tree">
             <field name="name">report.file.month.tree</field>
             <field name="model">report.document.user</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Files by Month">
-                    <field name="name" />
+                    <field name="name"/>
+                    <field name="month"/>
                     <field name="nbr"/>
                 </tree>
             </field>
         </record>
-        
-            <record model="ir.actions.act_window" id="action_view_files_by_month_graph">
+
+        <record model="ir.actions.act_window" id="action_view_files_by_month_graph">
             <field name="name">Files by Month</field>
             <field name="res_model">report.document.user</field>
             <field name="view_id" ref="view_files_by_month_graph"></field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
         </record>
-        
-                
+
+
 <!--***************************************************************************************-->
 
     <record model="ir.ui.view" id="view_user_graph">
@@ -237,7 +230,7 @@
                 </graph>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_view_user_graph">
             <field name="name">Files By Users</field>
             <field name="res_model">report.document.user</field>
@@ -245,8 +238,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
         </record>
-        
-            
+
+
 <!--***************************************************************************************-->
 
         <record model="ir.ui.view" id="view_files_by_partner_graph">
@@ -261,7 +254,7 @@
                 </graph>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_files_by_partner_tree">
             <field name="name">view.files.partner.tree</field>
             <field name="model">report.files.partner</field>
@@ -269,11 +262,27 @@
             <field name="arch" type="xml">
                 <tree string="Files per Month">
                     <field name="name"/>
+                    <field name="month"/>
                     <field name="partner"/>
                     <field name="nbr"/>
                 </tree>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="view_files_by_partner_form">
+            <field name="name">view.files.partner.form</field>
+            <field name="model">report.files.partner</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <tree string="Files per Month">
+                    <field name="name" select="1"/>
+                    <field name="month" select="1"/>
+                    <field name="partner"/>
+                    <field name="nbr"/>
+                </tree>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_view_files_by_partner">
             <field name="name">Files Per Partner</field>
             <field name="res_model">report.files.partner</field>

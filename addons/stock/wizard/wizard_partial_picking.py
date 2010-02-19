@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,13 +27,14 @@ import pooler
 import wizard
 from osv import osv
 import tools
+from tools.translate import _
 
 _moves_arch = UpdateableStr()
 _moves_fields = UpdateableDict()
 
 _moves_arch_end = '''<?xml version="1.0"?>
-<form string="Packing result">
-    <label string="The packing has been successfully made !" colspan="4"/>
+<form string="Picking result">
+    <label string="The picking has been successfully made !" colspan="4"/>
     <field name="back_order_notification" colspan="4" nolabel="1"/>
 </form>'''
 _moves_fields_end = {
@@ -54,16 +55,18 @@ def _get_moves(self, cr, uid, data, context):
     res = {}
 
     _moves_fields.clear()
-    _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make packing">']
+    _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make picking">']
 
     for m in pick.move_lines:
+        if m.state in ('done', 'cancel'):
+            continue
         quantity = m.product_qty
-        if m.state<>'assigned':
+        if m.state!='assigned':
             quantity = 0
 
         _moves_arch_lst.append('<field name="move%s" />' % (m.id,))
         _moves_fields['move%s' % m.id] = {
-                'string': '%s - %s' % (_to_xml(m.product_id.code or '/'), _to_xml(m.product_id.name)),
+                'string': _to_xml(m.name),
                 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
 
         if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
@@ -130,7 +133,7 @@ def _do_split(self, cr, uid, data, context):
             currency = data['form']['currency%s' % move.id]
 
             qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
-
+            pricetype=pool.get('product.price.type').browse(cr,uid,user.company_id.property_valuation_price_type.id)
             if (qty > 0):
                 new_price = currency_obj.compute(cr, uid, currency,
                         user.company_id.currency_id.id, price)
@@ -139,11 +142,14 @@ def _do_split(self, cr, uid, data, context):
                 if product.qty_available<=0:
                     new_std_price = new_price
                 else:
-                    new_std_price = ((product.standard_price * product.qty_available)\
+                    # Get the standard price
+                    amount_unit=product.price_get(pricetype.field, context)[product.id]
+                    new_std_price = ((amount_unit * product.qty_available)\
                         + (new_price * qty))/(product.qty_available + qty)
-
+                        
+                # Write the field according to price type field
                 product_obj.write(cr, uid, [product.id],
-                        {'standard_price': new_std_price})
+                        {pricetype.field: new_std_price})
                 move_obj.write(cr, uid, [move.id], {'price_unit': new_price})
 
     for move in too_few:
@@ -155,7 +161,7 @@ def _do_split(self, cr, uid, data, context):
                         'move_lines' : [],
                         'state':'draft',
                     })
-        if data['form']['move%s' % move.id] <> 0:
+        if data['form']['move%s' % move.id] != 0:
             new_obj = move_obj.copy(cr, uid, move.id,
                 {
                     'product_qty' : data['form']['move%s' % move.id],
@@ -208,7 +214,7 @@ def _do_split(self, cr, uid, data, context):
 
 def _get_default(self, cr, uid, data, context):
     if data['form']['back_order']:
-        data['form']['back_order_notification'] = _('Back Order %s Assigned to this Packing.') % (tools.ustr(data['form']['back_order']),)
+        data['form']['back_order_notification'] = _('Back Order %s Assigned to this Picking.') % (tools.ustr(data['form']['back_order']),)
     return data['form']
 
 class partial_picking(wizard.interface):

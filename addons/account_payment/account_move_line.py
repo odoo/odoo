@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -42,11 +42,11 @@ class account_move_line(osv.osv):
                         WHERE move_line_id = ml.id
                         AND po.state != 'cancel') as amount
                     FROM account_move_line ml
-                    WHERE id in (%s)""" % (",".join(map(str,map(int, ids)))))
+                    WHERE id =ANY(%s)""" ,(ids,))
         r=dict(cr.fetchall())
         return r
 
-    def _to_pay_search(self, cr, uid, obj, name, args):
+    def _to_pay_search(self, cr, uid, obj, name, args, context):
         if not len(args):
             return []
         line_obj = self.pool.get('account.move.line')
@@ -77,7 +77,7 @@ class account_move_line(osv.osv):
 
     def line2bank(self, cr, uid, ids, payment_type=None, context=None):
         """
-        Try to return for each account move line a corresponding bank
+        Try to return for each Ledger Posting line a corresponding bank
         account according to the payment type.  This work using one of
         the bank of the partner defined on the invoice eventually
         associated to the line.

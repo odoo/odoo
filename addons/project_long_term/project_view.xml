@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_project_resource_allocation_form" model="ir.ui.view">
+            <field name="name">project.resource.allocation.form</field>
+            <field name="model">project.resource.allocation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Project Resource Allocation">
+                    <field name="resource_id" select="1"/>
+                    <field name="phase_id"/>
+                    <field name="useability"/>
+                </form>
+            </field>
+        </record>
+        <record id="view_project_resource_allocation_list" model="ir.ui.view">
+            <field name="name">project.resource.allocation.list</field>
+            <field name="model">project.resource.allocation</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="5"/>
+            <field name="arch" type="xml">
+                <tree string="Project Resource Allocation">
+                    <field name="resource_id"/>
+                    <field name="phase_id"/>
+                    <field name="useability"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_project_phase_form" model="ir.ui.view">
+            <field name="name">project.phase.form</field>
+            <field name="model">project.phase</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Project Phase">
+                    <group colspan="6" col="6">
+                        <field name="name" select="1"/>
+                        <field name="project_id"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="constraint_date_start"/>
+                        <field name="constraint_date_end"/>
+                        <field name="duration"/>
+                        <field name="product_uom"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Task Detail">
+                            <separator colspan="4" string="Project's Tasks"/>
+                            <field colspan="4" name="task_ids" nolabel="1"/>
+                        </page>
+                        <page string="Resource Allocation Detail">
+                            <separator colspan="4" string="Resource Allocation"/>
+                            <field colspan="4" name="resource_ids" nolabel="1"/>
+                        </page>
+                        <page string="Other Info">
+                           <separator colspan="4" string="Next Phases"/>
+                           <field colspan="4" name="next_phase_ids" nolabel="1"/>
+                           <separator colspan="4" string="Previous Phases"/>
+                           <field colspan="4" name="previous_phase_ids" nolabel="1"/>
+                        </page>
+                    </notebook>
+                    <newline/>
+                </form>
+            </field>
+        </record>
+        <record id="view_project_phase_list" model="ir.ui.view">
+            <field name="name">project.phase.list</field>
+            <field name="model">project.phase</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="5"/>
+            <field name="arch" type="xml">
+                <tree string="Project Phases">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="duration"/>
+                    <field name="product_uom"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="act_project_phase" model="ir.actions.act_window">
+            <field name="name">Project phases</field>
+            <field name="res_model">project.phase</field>
+            <field name="view_type">form</field>
+        </record>
+
+        <act_window
+        id="project_phase_task_list"
+        name="Related Tasks"
+        res_model="project.task"
+        src_model="project.phase"
+        view_mode="tree,form"
+        domain="[('phase_id','=',active_id)]"/>        
+
+        <menuitem action="act_project_phase" id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
+
+
+    </data>
+</openerp>

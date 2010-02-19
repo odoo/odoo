@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -122,7 +122,7 @@ class account_analytic_plan_instance(osv.osv):
             res.append((inst.id, name))
         return res
 
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         args= args or []
         if name:
             ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context or {})
@@ -253,12 +253,12 @@ class account_invoice_line(osv.osv):
             vals['analytics_id'] = vals['analytics_id'][0]
         return super(account_invoice_line, self).create(cr, uid, vals, context)
 
-    def move_line_get_item(self, cr, uid, line, context={}):
+    def move_line_get_item(self, cr, uid, line, context=None):
         res= super(account_invoice_line,self).move_line_get_item(cr, uid, line, context={})
         res ['analytics_id']=line.analytics_id and line.analytics_id.id or False
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context={}):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
         res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context)
         if rec and rec.analytics_id:
@@ -373,5 +373,26 @@ class analytic_default(osv.osv):
         'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
 analytic_default()
+
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+
+    # Method overridden to set the analytic account by default on criterion match
+    def invoice_line_create(self, cr, uid, ids, context={}):
+        create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
+        if ids:
+            sale_line_obj = self.browse(cr, uid, ids[0], context)
+            pool_inv_line = self.pool.get('account.invoice.line')
+
+            for line in pool_inv_line.browse(cr, uid, create_ids, context):
+                rec = self.pool.get('account.analytic.default').account_get(cr, uid, line.product_id.id, sale_line_obj.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
+
+                if rec:
+                    pool_inv_line.write(cr, uid, [line.id], {'analytics_id':rec.analytics_id.id}, context=context)
+                    cr.commit()
+        return create_ids
+
+sale_order_line()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,21 +1,22 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    GNU General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,8 +36,23 @@ Main features :
 
     """,
     'author': 'Tiny',
-    'depends': ['sale', 'purchase', 'account', 'account_tax_include'],
-    'init_xml': [],
+    'depends': ['sale', 'delivery','report_mrp'],
+#    'depends': ['sale', 'purchase', 'account', 'account_tax_include','board','mrp','board_manufacturing','delivery','profile_manufacturing','account','multi_company'],
+    'init_xml': [
+        'security/point_of_sale_security.xml',
+        'security/ir.model.access.csv',
+        'pos_report.xml',
+        'pos_wizard.xml',
+        'pos_view.xml',
+        'pos_sequence.xml',
+        'posrule_data.xml',
+        'pos_data.xml',
+        'pos_workflow.xml',
+        'statement_view.xml',
+        'statement_report.xml',
+        'statement_data.xml',
+        'statement_wizard.xml'
+    ],
     'update_xml': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
@@ -44,11 +60,11 @@ Main features :
         'pos_wizard.xml',
         'pos_view.xml',
         'pos_sequence.xml',
+        'posrule_data.xml',
         'pos_data.xml',
         'pos_workflow.xml'
     ],
-    'demo_xml': [],
+    'demo_xml': ['pos_demo.xml','singer_statement_demo.xml','multi_company_stock_data.xml'],
     'installable': True,
-    'certificate': '0048272150909',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

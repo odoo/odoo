@@ -9,5 +9,28 @@
         <field name="name">Purchase / User</field>
     </record>
 
+
+    <record model="ir.rule.group" id="purchase_order_comp_rule_group">
+        <field name="name">Purchase Order multi-company</field>
+        <field name="model_id" ref="model_purchase_order"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="purchase_order_comp_rule">
+        <field name="field_id" search="[('model','=','purchase.order'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="purchase_order_comp_rule_group"/>
+        <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record model="ir.rule.group" id="purchase_order_line_comp_rule_group">
+        <field name="name">Purchase Order Line multi-company</field>
+        <field name="model_id" ref="model_purchase_order_line"/>
+        <field name="global" eval="True"/>
+    </record>
+    <record model="ir.rule" id="purchase_order_line_comp_rule">
+        <field name="field_id" search="[('model','=','purchase.order.line'),('name','=','company_id')]" model="ir.model.fields"/>
+        <field name="rule_group" ref="purchase_order_line_comp_rule_group"/>
+        <field name="domain_force">['|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 </data>
 </openerp>

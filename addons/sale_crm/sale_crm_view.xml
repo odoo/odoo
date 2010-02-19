@@ -4,16 +4,43 @@
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
         <field name="name">CRM - Opportunities - Quote Inherit</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.opportunity</field>
         <field name="type">form</field>
-        <field name="inherit_id" ref="crm_configuration.crm_case_form_view_oppor"/>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
-            <field name="user_id" position="after">
-                <button string="Convert to Quote" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/>
-            </field>
+            <xpath expr="/form[@string='Opportunities']/group/group/button[@string='Schedule Call']" position="after">
+                <button string="Quotation" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/> 
+            </xpath>           
         </field>
     </record>
 
+    <record model="ir.ui.view" id="sale_view_inherit123">
+        <field name="name">sale.order.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/notebook/page[@string='Other data']/field[@name='company_id']" position="after">
+                <field name="section_id" widget='selection'/>
+            </xpath>
+        </field>
+    </record>
+
+	<record id="view_sales_order_filter_inherit" model="ir.ui.view">
+        <field name="name">sale.order.list.select</field>
+        <field name="model">sale.order</field>
+        <field name="type">search</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+        	<field name="date_order" position="after">
+        		<field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
+					<filter icon="terp-crm"
+                            domain="[('section_id','=',context.get('section_id',False))]"
+                            help="My section"/>
+			    </field>
+        	</field>
+	    </field>
+	</record>
 </data>
 </openerp>
 

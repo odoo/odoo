@@ -1,11 +1,11 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-    
-    <!--    
+
+    <!--
         Process Node
     -->
-    
+
     	<record id="process_node_procuretasktask0" model="process.node">
             <field name="menu_id" ref="project.menu_action_view_task"/>
             <field name="model_id" ref="project.model_project_task"/>
@@ -17,7 +17,7 @@
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-    
+
         <record id="process_node_saleordertask0" model="process.node">
             <field name="menu_id" ref="sale.menu_sale_order"/>
             <field name="model_id" ref="sale.model_sale_order"/>
@@ -29,7 +29,7 @@
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="1" name="flow_start"/>
         </record>
-    
+
         <record id="process_node_mrptask0" model="process.node">
             <field name="menu_id" ref="project.menu_action_view_task"/>
             <field name="model_id" ref="project.model_project_task"/>
@@ -41,19 +41,19 @@
             <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
             <field eval="0" name="flow_start"/>
         </record>
-        
-    <!--    
+
+    <!--
         Process Transition
     -->
-    
+
     	<record id="process_transition_procuretask0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
-            <field eval="&quot;&quot;&quot;Procure Task&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;	Requisition Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;if product type is 'service' then it creates the task.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_procuretasktask0"/>
             <field model="process.node" name="source_node_id" ref="sale.process_node_saleprocurement0"/>
         </record>
-    
+
         <record id="process_transition_createtask0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Task&quot;&quot;&quot;" name="name"/>
@@ -61,19 +61,19 @@
             <field model="process.node" name="target_node_id" ref="project.process_node_drafttask0"/>
             <field model="process.node" name="source_node_id" ref="process_node_saleordertask0"/>
         </record>
-        
+
         <record id="process_transition_ordertask0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Order Task&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;If procure method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;If Requisition method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_mrptask0"/>
             <field model="process.node" name="source_node_id" ref="mrp.process_node_serviceonorder0"/>
         </record>
-        
-        <!--    
+
+        <!--
         	Process Action
     	-->
-        
+
 <!--        <record id="process_transition_action_orderconfirmtask0" model="process.transition.action">-->
 <!--            <field eval="&quot;&quot;&quot;action_confirm&quot;&quot;&quot;" name="action"/>-->
 <!--            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>-->
@@ -91,9 +91,9 @@
 <!--        <record id="process_transition_action_taskrunprocurement0" model="process.transition.action">-->
 <!--            <field eval="&quot;&quot;&quot;write({'state':'exception'})&quot;&quot;&quot;" name="action"/>-->
 <!--            <field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>-->
-<!--            <field eval="&quot;&quot;&quot;Run Procurement&quot;&quot;&quot;" name="name"/>-->
+<!--            <field eval="&quot;&quot;&quot;Run Requisition&quot;&quot;&quot;" name="name"/>-->
 <!--            <field name="transition_id" ref="process_transition_ordertask0"/>-->
 <!--        </record>-->
-        
+
     </data>
 </openerp>

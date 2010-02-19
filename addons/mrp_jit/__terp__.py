@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -25,15 +25,23 @@
     'version': '1.0',
     'category': 'Generic Modules/Production',
     'description': """
-    This module allows Just In Time computation of all procurement.
+    This module allows Just In Time computation of procurement orders.
 
-    If you install this module, you will not have to run the schedulers anymore.
-    Each document is computed in real time. Note that this module can slow down your
-    system a little bit.
-
+    If you install this module, you will not have to run the procurement scheduler
+    manually anymore, or wait for it to execute.
+    Each procurement order (resulting from a sale order, for instance) will be computed 
+    when confirmed, without waiting for the procurement scheduler to run.
+    
+    Warning: this does not take into account minimum stock rules (order points), which still 
+    require to run the appropriate scheduler, or wait for it to run nightly.
+     
+    Note that the procurement computation can be resource-intensive, so you may 
+    want to be careful with this, depending on your mrp configuration and system 
+    usage.
     It may also increase your stock size because products are reserved as soon
-    as possible. In that case, you can not use priorities any more on the different
-    picking.
+    as possible. In that case, you can not use priorities any more.
+    
+    
     """,
     'author': 'Tiny',
     'depends': ['mrp', 'sale'],

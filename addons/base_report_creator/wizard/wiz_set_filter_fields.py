@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,6 +22,7 @@
 import wizard
 import netsvc
 import pooler
+import tools
 
 relation_type=['one2many','many2one','many2many']
 char_type = ['char','text','selection']
@@ -83,13 +84,13 @@ def set_field_operator(self,field_name,field_type,search_operator,search_value):
                 field_search[2] = "("+','.join([str(x) for x in search_value])+")"
             else:
                 field_search[1] = 'ilike'
-                field_search[2] = "'%"+str(search_value)+"%'"
+                field_search[2] = "'%%"+str(search_value)+"%%'"
         elif search_operator == 'not in':
             if field_type=='many2one':
                 field_search[2] = "("+','.join([str(x) for x in search_value])+")"
             else:
                 field_search[1] = 'not ilike'
-                field_search[2] = "'%"+str(search_value)+"%'"
+                field_search[2] = "'%%"+str(search_value)+"%%'"
         elif search_operator == '^':
             if field_type in char_type:
                 field_search[1]='~'
@@ -121,7 +122,7 @@ def _set_filter_value(self, cr, uid, data, context):
     model_pool = pooler.get_pool(cr.dbname).get(model_name)
     table_name = model_pool._table
     model_name = model_pool._description
-    
+
     if field_type:
         if field_type == 'boolean':
             if value_data == 1:
@@ -138,12 +139,12 @@ def _set_filter_value(self, cr, uid, data, context):
             fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data)
         if fields_list:
             create_dict = {
-                           'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + str(fields_list[2]) + " ",
-                           'expression':' '.join(map(str,fields_list)),
+                           'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + tools.ustr(fields_list[2]) + " ",
+                           'expression':' '.join(map(tools.ustr,fields_list)),
                            'report_id':data['id'],
                            'condition' : form_data['condition']
                            }
-            pooler.get_pool(cr.dbname).get('base_report_creator.report.filter').create(cr,uid,create_dict)
+            pooler.get_pool(cr.dbname).get('base_report_creator.report.filter').create(cr,uid,create_dict,context)
         #end if field_type == 'many2many' and value_data and len(value_data):
 #       pooler.get_pool(cr.dbname).get('custom.report.filter').create(cr,uid,form_data)
     #end if field_type:

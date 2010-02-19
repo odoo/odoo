@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,12 +24,12 @@ from osv import fields,osv
 
 class report_workcenter_load(osv.osv):
     _name="report.workcenter.load"
-    _description="Workcenter Load"
+    _description="Work Center Load"
     _auto = False
     _log_access = False
     _columns = {
         'name': fields.char('Week', size=64, required=True),
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', required=True),
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'cycle': fields.float('Nbr of cycle'),
         'hour': fields.float('Nbr of hour'),
     }

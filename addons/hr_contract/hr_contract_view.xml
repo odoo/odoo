@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <record id="hr_contract_wage_type_period_view_form" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.period.view.form</field>
             <field name="model">hr.contract.wage.type.period</field>
@@ -13,20 +13,8 @@
                 </form>
             </field>
         </record>
-        
-        
-        <record id="hr_hr_employee_marital_status_form" model="ir.ui.view">
-            <field name="name">hr.hr.employee.marital.status</field>
-            <field name="model">hr.employee.marital.status</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Marital Status">
-                    <field colspan="4" name="name" nolabel="1" select="1"/>
-                    <field colspan="4" name="description" nolabel="1"/>
-                </form>
-            </field>
-        </record>
-        
+
+
         <record id="hr_contract_wage_type_view_form" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.view.form</field>
             <field name="model">hr.contract.wage.type</field>
@@ -41,7 +29,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="hr_contract_wage_type_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.view.tree</field>
             <field name="model">hr.contract.wage.type</field>
@@ -60,16 +48,22 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
-        <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_configuration"/><menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56"/>
-        
+
+        <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_configuration" sequence="5"/>
+
+        <menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56"/>
+
         <record id="action_hr_contract_wage_type_period" model="ir.actions.act_window">
             <field name="name">Wage period</field>
             <field name="res_model">hr.contract.wage.type.period</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_hr_contract_wage_type_period" id="hr_menu_contract_wage_type_period" parent="hr_contract.next_id_56"/>
-        
-        
+        <menuitem 
+                action="action_hr_contract_wage_type_period" 
+                id="hr_menu_contract_wage_type_period" 
+                parent="hr_contract.next_id_56"/>
+
+
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
             <field name="model">hr.employee</field>
@@ -87,7 +81,7 @@
                                 <field name="wage_type_id"/>
                                 <field name="wage"/>
                             </tree>
-                            
+
                             <form string="Contract">
                                 <separator colspan="4" string="Generalities"/>
                                 <field colspan="4" name="name" select="1"/>
@@ -97,11 +91,11 @@
                                 <field name="working_hours_per_day_id"/>
                                 <field name="date_start" select="1"/>
                                 <field name="date_end" select="1"/>
-                                
+
                                 <separator colspan="4" string="Salary"/>
                                 <field name="wage_type_id"/>
                                 <field name="wage"/>
-                                
+
                                 <separator colspan="4" string="Notes"/>
                                 <field colspan="4" name="notes" nolabel="1"/>
                             </form>
@@ -112,13 +106,12 @@
                         <field name="medic_exam" select="1"/>
                         <field name="audiens_num"/>
                         <field name="place_of_birth"/>
-                        <field name="marital_status"/>
                         <field name="children"/>
                     </page>
                 </notebook>
             </field>
         </record>
-        
+
         <record id="hr_contract_type_view_form" model="ir.ui.view">
             <field name="name">hr.contract.type.view.form</field>
             <field name="model">hr.contract.type</field>
@@ -130,16 +123,7 @@
                 </form>
             </field>
         </record>
-        
-        <record id="action_hr_marital_status" model="ir.actions.act_window">
-            <field name="name">Marital Status</field>
-            <field name="res_model">hr.employee.marital.status</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        
-        <menuitem action="action_hr_marital_status" id="hr_menu_marital_status" parent="hr.menu_hr_configuration"/>
-        
+
         <record id="hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
             <field name="model">hr.contract</field>
@@ -151,13 +135,13 @@
                     <field name="employee_id" select="1"/>
                     <field name="function"/>
                     <newline/>
-                    
+
                     <separator colspan="4" string="Contract Duration"/>
                     <field name="date_start" select="1"/>
                     <field name="date_end" select="1"/>
                     <field name="working_hours_per_day_id"/>
                     <newline/>
-                    
+
                     <separator colspan="4" string="Remuneration"/>
                     <field name="wage_type_id"/>
                     <field name="wage"/>
@@ -166,7 +150,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="hr_contract_type_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.type.view.tree</field>
             <field name="model">hr.contract.type</field>
@@ -177,7 +161,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="hr_contract_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.view.tree</field>
             <field name="model">hr.contract</field>
@@ -195,7 +179,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_hr_contract" model="ir.actions.act_window">
             <field name="name">Contract</field>
             <field name="res_model">hr.contract</field>
@@ -203,9 +187,11 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
-        
-        <menuitem name="Contract" id="menu_hr_contract" parent="hr.menu_hr_root"/>
-        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="menu_hr_contract"/>
-        
+
+
+     <!--   <menuitem name="Contract" id="menu_hr_contract" parent="hr.menu_hr_human_resources"/>-->
+     <!--   <menuitem action="action_hr_contract" id="hr_menu_contract" parent="menu_hr_contract"/>-->
+     <menuitem  id="hr_menu_contract_main" parent="hr.menu_hr_root" name="Contracts" sequence="3"/>
+      <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr_menu_contract_main" name="Contracts"/>
     </data>
 </openerp>

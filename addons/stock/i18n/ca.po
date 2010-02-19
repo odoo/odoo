@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 10:43+0000\n"
-"Last-Translator: Raimon Esteve <resteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2009-12-31 12:47+0000\n"
+"Last-Translator: Albert Cervera i Areny <albert@nan-tic.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-11-18 04:34+0000\n"
+"X-Launchpad-Export-Date: 2010-01-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -49,8 +49,8 @@ msgstr "Nom de model no vàlid en la definició de l'acció."
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
 #: model:ir.ui.menu,name:stock.menu_stock_root
-msgid "Stock Management"
-msgstr "Gestió d'estocs"
+msgid "Inventory Management"
+msgstr "Magatzem i logística"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -81,7 +81,7 @@ msgstr "STOCK_ZOOM_100"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "UoM"
-msgstr ""
+msgstr "UdM"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.return_picking
@@ -109,7 +109,7 @@ msgstr "Albarà"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Amount"
-msgstr ""
+msgstr "Import"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1273,7 +1273,7 @@ msgstr "Línies de moviments"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Value"
-msgstr ""
+msgstr "Valor"
 
 #. module: stock
 #: field:stock.picking,type:0
@@ -1389,7 +1389,7 @@ msgstr "Previsió de futur estoc"
 #. module: stock
 #: model:ir.module.module,description:stock.module_meta_information
 msgid ""
-"OpenERP Stock Management module can manage multi-warehouses, multi and "
+"OpenERP Inventory Management module can manage multi-warehouses, multi and "
 "structured stock locations.\n"
 "Thanks to the double entry management, the inventory controlling is powerful "
 "and flexible:\n"
@@ -1403,19 +1403,6 @@ msgid ""
 "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
 "    "
 msgstr ""
-"El mòdul de gestió d'estocs d'OpenERP pot gestionar multi-magatzems i multi-"
-"ubicacions jeràrquiques d'estoc.\n"
-"Gràcies a la gestió de partida doble, el control d'inventari és potent i "
-"flexible:\n"
-"* Historial de moviments i planificació,\n"
-"* Mètodes d'inventari diferents (FIFO, LIFO ...)\n"
-"* Valoració d'existències (estàndard o preu mig ...)\n"
-"* Robustesa davant les diferències d'inventari\n"
-"* Regles automàtiques de proveïment (nivell d'estoc mínim, JIT ...)\n"
-"* Suport a codi de barres\n"
-"* Detecció ràpida d'errors a través de sistema de partida doble\n"
-"* Traçabilitat (cap amunt/avall, lots de producció, número de sèrie ...)\n"
-"    "
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -1500,7 +1487,7 @@ msgstr "terp-mrp"
 #: model:ir.actions.act_window,name:stock.action_picking_tree3_delivery
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree3_delivery
 msgid "Future Delivery Orders"
-msgstr ""
+msgstr "Ordres de lliurament futures"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1799,7 +1786,7 @@ msgstr "UdM producte"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Variants"
-msgstr ""
+msgstr "Variant"
 
 #. module: stock
 #: field:stock.location,posx:0
@@ -2416,3 +2403,35 @@ msgstr "Estat de moviments"
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
 msgstr "Ubicacions físiques"
+
+#~ msgid "Stock Management"
+#~ msgstr "Gestió d'estocs"
+
+#~ msgid ""
+#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
+#~ "structured stock locations.\n"
+#~ "Thanks to the double entry management, the inventory controlling is powerful "
+#~ "and flexible:\n"
+#~ "* Moves history and planning,\n"
+#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
+#~ "* Stock valuation (standard or average price, ...)\n"
+#~ "* Robustness faced with Inventory differences\n"
+#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
+#~ "* Bar code supported\n"
+#~ "* Rapid detection of mistakes through double entry system\n"
+#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+#~ "    "
+#~ msgstr ""
+#~ "El mòdul de gestió d'estocs d'OpenERP pot gestionar multi-magatzems i multi-"
+#~ "ubicacions jeràrquiques d'estoc.\n"
+#~ "Gràcies a la gestió de partida doble, el control d'inventari és potent i "
+#~ "flexible:\n"
+#~ "* Historial de moviments i planificació,\n"
+#~ "* Mètodes d'inventari diferents (FIFO, LIFO ...)\n"
+#~ "* Valoració d'existències (estàndard o preu mig ...)\n"
+#~ "* Robustesa davant les diferències d'inventari\n"
+#~ "* Regles automàtiques de proveïment (nivell d'estoc mínim, JIT ...)\n"
+#~ "* Suport a codi de barres\n"
+#~ "* Detecció ràpida d'errors a través de sistema de partida doble\n"
+#~ "* Traçabilitat (cap amunt/avall, lots de producció, número de sèrie ...)\n"
+#~ "    "

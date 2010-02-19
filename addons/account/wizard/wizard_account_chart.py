@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -35,7 +35,7 @@ class wizard_account_chart(wizard.interface):
                 'string': 'Fiscal year',
                 'type': 'many2one',
                 'relation': 'account.fiscalyear',
-                'help': 'Keep empty for all open fiscal year',
+                'help': 'Keep empty for all open fiscal years',
         },
             'target_move': {
                 'string': 'Target Moves',

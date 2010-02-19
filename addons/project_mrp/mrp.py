@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv, orm
+import tools
 
 class mrp_procurement(osv.osv):
     _name = "mrp.procurement"
@@ -37,10 +38,18 @@ class mrp_procurement(osv.osv):
                 l = line
                 if line.order_id.project_id:
                     content+="\n\n"+line.order_id.project_id.complete_name
-
+            
+            # Creating a project for task.Project is created from Procurement.
+            proj_name = tools.ustr(procurement.name)
+            proj_exist_id = self.pool.get('project.project').search(cr, uid, [('name','=',proj_name)], context=context)
+            if  not proj_exist_id:
+                project_id = self.pool.get('project.project').create(cr, uid, {'name':proj_name})
+            else:
+                project_id = proj_exist_id[0]
+                
             self.write(cr, uid, [procurement.id], {'state':'running'})
             task_id = self.pool.get('project.task').create(cr, uid, {
-                'name': (procurement.origin or procurement.product_id.name) +': '+(procurement.name or ''),
+                'name': '%s:%s' %(procurement.product_id.name or procurement.origin, procurement.name or ''),
                 'date_deadline': procurement.date_planned,
                 'planned_hours': procurement.product_qty,
                 'remaining_hours': procurement.product_qty,
@@ -50,8 +59,10 @@ class mrp_procurement(osv.osv):
                 'description': content,
                 'date_deadline': procurement.date_planned,
                 'state': 'draft',
-                'partner_id': l and l.order_id.partner_id.id or False
-            })
+                'partner_id': l and l.order_id.partner_id.id or False,
+                'company_id': procurement.company_id.id,
+                'project_id': project_id,
+            },context=context)
         return task_id
 mrp_procurement()
 

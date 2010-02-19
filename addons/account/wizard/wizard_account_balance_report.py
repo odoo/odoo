@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -102,7 +102,7 @@ class wizard_report(wizard.interface):
 #        else :
 #           data['form']['fiscalyear'] = 1
         return data['form']
-    
+
     def _check_path(self, cr, uid, data, context):
         if data['model'] == 'account.account':
            return 'checktype'
@@ -111,8 +111,8 @@ class wizard_report(wizard.interface):
 
     def _check_date(self, cr, uid, data, context):
         sql = """
-            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where '%s' between f.date_start and f.date_stop """%(data['form']['date_from'])
-        cr.execute(sql)
+            SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
+        cr.execute(sql,(data['form']['date_from'],))
         res = cr.dictfetchall()
         if res:
             if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):

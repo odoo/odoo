@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,9 +21,9 @@
 
 
 {
-    "name" : "Accounting and financial management",
+    "name" : "Accounting and Financial Management",
     "version" : "1.1",
-    "depends" : ["product", "base", "process"],
+    "depends" : ["product", "analytic", "process"],
     "author" : "Tiny",
     "description": """Financial and accounting module that covers:
     General accounting
@@ -58,13 +58,14 @@
         'process/supplier_invoice_process.xml',
         'sequence_view.xml',
         'company_view.xml',
+        'account_installer.xml',
     ],
     'demo_xml': [
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
-        'account_unit_test.xml'
+        'account_unit_test.xml',
     ],
     'installable': True,
     'active': False,

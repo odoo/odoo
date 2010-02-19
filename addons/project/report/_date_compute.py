@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -58,21 +58,22 @@ def _compute_tasks(cr, uid, task_list, date_begin):
 
             # Compute the closing date of the task
             tasks[task.id] = []
-            res = pooler.get_pool(cr.dbname).get('hr.timesheet.group').interval_get(cr, uid, task.project_id.timesheet_id.id, date_start, task.remaining_hours)
+            res = pooler.get_pool(cr.dbname).get('resource.calendar').interval_get(cr, uid, task.project_id.resource_calendar_id.id, date_start, task.remaining_hours)
             for (d1,d2) in res:
                 tasks[task.id].append((d1, d2, task.name, task.user_id.login))
-            date_close = tasks[task.id][-1][1]
+            date_close = tasks[task.id] and tasks[task.id][-1][1] or False
 
             # Store result
-            users[task.user_id.id] = date_close
-            sequences.append((task.sequence, date_close))
-            if date_close>last_date:
-                last_date=date_close
+            if date_close:
+                users[task.user_id.id] = date_close
+                sequences.append((task.sequence, date_close))
+                if date_close>last_date:
+                    last_date=date_close
     return tasks, last_date
 
 def _compute_project(cr, uid, project, date_begin):
     tasks, last_date = _compute_tasks(cr, uid, project.tasks, date_begin)
-    for proj in project.child_id:
+    for proj in project.child_ids:
         d0 = DateTime.strptime(proj.date_start,'%Y-%m-%d')
         if d0 > last_date:
             last_date = d0

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	<!--
+	Project Bug by user and section
+	-->
+
+        <record id="view_crm_project_bug_user_tree" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.user.tree</field>
+            <field name="model">report.crm.project.bug.user</field>
+            <field name="inherit_id" ref="report_crm.view_crm_case_user_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="nbr" position="after">
+                	<field name="delay_close"/>
+                    <field name="amount_revenue"/>
+                    <field name="amount_costs"/>
+                    <field name="amount_revenue_prob"/>
+                    <field name="probability"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_crm_project_bug_user_form" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.user.form</field>
+            <field name="model">report.crm.project.bug.user</field>
+            <field name="inherit_id" ref="report_crm.view_crm_case_user_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="nbr" position="after">
+                	<field name="delay_close"/>
+                    <field name="amount_revenue"/>
+                    <field name="amount_costs"/>
+                    <field name="amount_revenue_prob"/>
+                    <field name="probability"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_crm_project_bug_user_graph" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.user.graph</field>
+            <field name="model">report.crm.project.bug.user</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Project Bug by User and Section" type="bar">
+                    <field name="state"/>
+                    <field name="nbr" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_crm_project_bug_user_filter" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.user.select</field>
+            <field name="model">report.crm.project.bug.user</field>
+            <field name="inherit_id" ref="report_crm.view_crm_case_user_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+               </field>
+            </field>
+        </record>
+
+        <record id="action_report_crm_project_bug_user_tree" model="ir.actions.act_window">
+            <field name="name">Project Bug by User and Section</field>
+            <field name="res_model">report.crm.project.bug.user</field>
+            <field name="view_type">form</field>
+  			<field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="view_crm_project_bug_user_graph"/>
+            <field name="search_view_id" ref="view_crm_project_bug_user_filter"/>
+        </record>
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+        <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
+        <menuitem name="Project Bug" id="menu_crm_project_bug_tree" parent="base.menu_project_report" sequence="1"/>
+        <menuitem action="action_report_crm_project_bug_user_tree" id="menu_crm_project_bug_user_tree" parent="menu_crm_project_bug_tree"/>
+
+        <!-- # Project Bug by section and category of case -->
+
+        <record id="view_crm_project_bug_categ_tree" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.categ.tree</field>
+            <field name="model">report.crm.project.bug.categ</field>
+            <field name="inherit_id" ref="report_crm.view_crm_case_categ_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="nbr" position="after">
+                    <field name="delay_close"/>
+                    <field name="amount_revenue"/>
+                    <field name="amount_costs"/>
+                    <field name="amount_revenue_prob"/>
+                    <field name="probability"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_crm_project_bug_categ_form" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.categ.form</field>
+            <field name="model">report.crm.project.bug.categ</field>
+            <field name="inherit_id" ref="report_crm.view_crm_case_categ_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="nbr" position="after">
+                    <field name="delay_close"/>
+                    <field name="amount_revenue"/>
+                    <field name="amount_costs"/>
+                    <field name="amount_revenue_prob"/>
+                    <field name="probability"/>
+                </field>
+            </field>
+        </record>
+
+		<record id="view_crm_project_bug_categ_graph" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.categ.graph</field>
+            <field name="model">report.crm.project.bug.categ</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="project_bugs by Section and Categories" type="bar">
+                    <field name="state"/>
+                    <field name="nbr" operator="+"/>
+                    <field group="True" name="categ_id"/>
+                </graph>
+            </field>
+        </record>
+
+		<record id="view_crm_project_bug_categ_filter" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.categ.select</field>
+            <field name="model">report.crm.project.bug.categ</field>
+			<field name="inherit_id" ref="report_crm.view_crm_case_categ_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                </field>
+            </field>
+        </record>
+
+        <record id="action_report_crm_project_bug_categ_tree" model="ir.actions.act_window">
+            <field name="name">Project Bugs by Categories and Section</field>
+            <field name="res_model">report.crm.project.bug.categ</field>
+            <field name="view_type">form</field>
+  			<field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="view_crm_project_bug_categ_graph"/>
+            <field name="search_view_id" ref="view_crm_project_bug_categ_filter"/>
+        </record>
+        <menuitem action="action_report_crm_project_bug_categ_tree" id="menu_crm_project_bug_categ_tree" parent="menu_crm_project_bug_tree"/>
+
+       <!-- Project Bug by Section  -->
+
+        <record id="view_report_crm_project_bug_section_tree" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.section.tree</field>
+            <field name="model">report.crm.project.bug.section</field>
+            <field name="inherit_id" ref="report_crm.view_report_crm_case_section_tree"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="nbr_cases" position="after">
+	                <field name="avg_answers"/>
+	                <field name="perc_done" select="2"/>
+                    <field name="perc_cancel" select="2"/>
+                    <field name="delay_close"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_report_crm_project_bug_section_graph" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.section.graph</field>
+            <field name="model">report.crm.project.bug.section</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="project_bugs by Section" type="bar">
+                    <field name="name"/>
+                    <field name="nbr_cases" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+		<record id="view_report_crm_project_bug_section_filter" model="ir.ui.view">
+            <field name="name">report.crm.project.bug.section.select</field>
+            <field name="model">report.crm.project.bug.section</field>
+            <field name="inherit_id" ref="report_crm.view_report_crm_case_section_filter"/>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="nbr_cases" position="before">
+                </field>
+            </field>
+        </record>
+
+        <record id="action_report_crm_project_bug_section_tree" model="ir.actions.act_window">
+            <field name="name">Project Bugs by Section</field>
+            <field name="res_model">report.crm.project.bug.section</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="view_report_crm_project_bug_section_graph"/>
+            <field name="search_view_id" ref="view_report_crm_project_bug_section_filter"/>
+        </record>
+        <menuitem action="action_report_crm_project_bug_section_tree" id="menu_crm_project_bug_section_tree" parent="menu_crm_project_bug_tree"/>
+  </data>
+</openerp>

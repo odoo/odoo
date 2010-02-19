@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -40,10 +40,10 @@
     
     "update_xml" : [
         "voucher_sequence.xml",
-        "account_view.xml",
         "account_report.xml",
-        "voucher_wizard.xml",
         "voucher_view.xml",
+        "voucher_wizard.xml",
+        "account_view.xml",
     ],
     'certificate': '0037580727101',
     "active": False,

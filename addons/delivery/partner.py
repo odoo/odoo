@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,12 +26,12 @@ class res_partner(osv.osv):
     _columns = {
         'property_delivery_carrier': fields.property(
           'delivery.carrier',
-          type='many2one', 
-          relation='delivery.carrier', 
-          string="Delivery Method", 
+          type='many2one',
+          relation='delivery.carrier',
+          string="Delivery Method",
           method=True,
           view_load=True,
-          help="This delivery method will be used when invoicing from packing."),
+          help="This delivery method will be used when invoicing from picking."),
     }
 res_partner()
 

@@ -5,13 +5,13 @@
 	<!--
 		Process
 	-->
-	
+
 		<record id="process_process_basecontactprocess0" model="process.process">
-			<field eval="&quot;&quot;&quot;Base Contact Process&quot;&quot;&quot;" name="name"/>
+			<field eval="&quot;&quot;&quot;Base Contact&quot;&quot;&quot;" name="name"/>
 			<field eval="1" name="active"/>
 			<field name="model_id" ref="base_contact.model_res_partner_contact"/>
 		</record>
-		
+
 	<!--
 		Process node
 	-->
@@ -37,7 +37,7 @@
 		</record>
 
 		<record id="process_node_function0" model="process.node">
-			<field name="menu_id" ref="base_contact.menu_action_res_partner_job"/>
+<!--			<field name="menu_id" ref="base_contact.menu_action_res_partner_job"/>-->
 			<field name="model_id" ref="base_contact.model_res_partner_job"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Jobs at a same partner address.&quot;&quot;&quot;" name="note"/>
@@ -55,7 +55,7 @@
 			<field name="process_id" ref="process_process_basecontactprocess0"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 	<!--
 		Process Transition
 	-->
@@ -86,6 +86,6 @@
 			<field model="process.node" name="target_node_id" ref="process_node_addresses0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_partners0"/>
 		</record>
-		
+
 	</data>
 </openerp>

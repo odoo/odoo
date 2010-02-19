@@ -12,7 +12,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="view_country_form" model="ir.ui.view">
             <field name="name">res.country.form</field>
             <field name="model">res.country</field>
@@ -23,7 +23,7 @@
                 </field>
             </field>
         </record>
-        
+
         <!-- Product -->
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form</field>
@@ -35,7 +35,7 @@
                 </field>
             </field>
         </record>
-        
+
         <!-- Intrastat code -->
         <record id="view_report_intrastat_code_tree" model="ir.ui.view">
             <field name="name">report.intrastat.code.tree</field>
@@ -66,18 +66,19 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
-        <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code" parent="product.menu_config_product"/>
-        
-        
+
+        <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code" parent="base.menu_product"/>
+
+
         <record id="view_report_intrastat_tree" model="ir.ui.view">
             <field name="name">report.intrastat.view</field>
             <field name="model">report.intrastat</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Intrastat Data">
-                    <field name="name"/>
-                    <field name="code"/>    
+                    <field name="name" />
+	                <field name="month"/>
+                    <field name="code"/>
                     <field name="ref"/>
                     <field name="intrastat_id"/>
                     <field name="weight"/>
@@ -88,28 +89,36 @@
                 </tree>
             </field>
         </record>
-        
-        <record id="action_report_intrastat_tree" model="ir.actions.act_window">
-            <field name="name">Intrastat (this month)</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">report.intrastat</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('name','=',time.strftime('%b.%Y'))]</field>
+
+        <record id="view_report_intrastat_search" model="ir.ui.view">
+            <field name="name">report.intrastat.search</field>
+            <field name="model">report.intrastat</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Intrastat Data">
+                	<group col="10" colspan="4">
+                		<filter string="This Year" icon="terp-stock" domain="[('name','=',time.localtime()[0])]"/>
+						<filter string="This Month" icon="terp-stock" domain="[('month','=',time.localtime()[1])]"/>
+						<separator orientation="vertical"/>
+	                    <field name="name" select="1"/>
+	                    <field name="month" select="1"/>
+	                    <field name="code" select="1"/>
+	                    <field name="intrastat_id" select="1"/>
+	                    <field name="type" select="1"/>
+					</group>
+                </search>
+            </field>
         </record>
-        
-		<menuitem id="next_id_89" name="This Month" parent="stock.next_id_61"/>
-		<menuitem action="action_report_intrastat_tree" id="menu_report_intrastat" parent="next_id_89"/>
-        
+
         <record id="action_report_intrastat_tree_all" model="ir.actions.act_window">
             <field name="name">Intrastat</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">report.intrastat</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_report_intrastat_search"/>
         </record>
-        
-		<menuitem id="next_id_90" name="All Months" parent="stock.next_id_61"/>
-		<menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" parent="next_id_90"/>
+
+		<menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" parent="stock.next_id_61"/>
     </data>
 </openerp>

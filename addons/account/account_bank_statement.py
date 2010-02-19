@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -107,7 +107,7 @@ class account_bank_statement(osv.osv):
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True, states={'confirm': [('readonly', True)]}),
         'date': fields.date('Date', required=True,
             states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
@@ -126,7 +126,9 @@ class account_bank_statement(osv.osv):
             'Entry lines', states={'confirm':[('readonly',True)]}),
         'state': fields.selection([('draft', 'Draft'),('confirm', 'Confirmed')],
             'State', required=True,
-            states={'confirm': [('readonly', True)]}, readonly="1"),
+            states={'confirm': [('readonly', True)]}, readonly="1",
+            help='When new statement is created the state will be \'Draft\'. \
+            \n* And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
         'currency': fields.function(_currency, method=True, string='Currency',
             type='many2one', relation='res.currency'),
     }
@@ -141,7 +143,7 @@ class account_bank_statement(osv.osv):
         'period_id': _get_period,
     }
 
-    def button_confirm(self, cr, uid, ids, context=None):
+    def button_confirm(self, cr, uid, ids, context={}):
         done = []
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
@@ -163,7 +165,7 @@ class account_bank_statement(osv.osv):
                         _('The expected balance (%.2f) is different than the computed one. (%.2f)') % (st.balance_end_real, st.balance_end))
             if (not st.journal_id.default_credit_account_id) \
                     or (not st.journal_id.default_debit_account_id):
-                raise osv.except_osv(_('Configration Error !'),
+                raise osv.except_osv(_('Configuration Error !'),
                         _('Please verify that an account is defined in the journal.'))
 
             for line in st.move_line_ids:
@@ -174,9 +176,11 @@ class account_bank_statement(osv.osv):
             # In line we get reconcile_id on bank.ste.rec.
             # in bank stat.rec we get line_new_ids on bank.stat.rec.line
             for move in st.line_ids:
+                context.update({'date':move.date})
                 move_id = account_move_obj.create(cr, uid, {
                     'journal_id': st.journal_id.id,
                     'period_id': st.period_id.id,
+                    'date': move.date,
                 }, context=context)
                 account_bank_statement_line_obj.write(cr, uid, [move.id], {
                     'move_ids': [(4,move_id, False)]
@@ -211,7 +215,7 @@ class account_bank_statement(osv.osv):
                     'period_id': st.period_id.id,
                     'currency_id': st.currency.id,
                 }
-                
+
                 amount = res_currency_obj.compute(cr, uid, st.currency.id,
                         company_currency_id, move.amount, context=context,
                         account=acc_cur)
@@ -247,7 +251,7 @@ class account_bank_statement(osv.osv):
                             'statement_id': st.id,
                             'journal_id': st.journal_id.id,
                             'period_id': st.period_id.id,
-                            'analytic_account_id':newline.analytic_id and newline.analytic_id.id or False,                            
+                            'analytic_account_id':newline.analytic_id and newline.analytic_id.id or False,
 
                         }, context=context)
 
@@ -280,13 +284,20 @@ class account_bank_statement(osv.osv):
                         context=context):
                     if line.state <> 'valid':
                         raise osv.except_osv(_('Error !'),
-                                _('Account move line "%s" is not valid') % line.name)
+                                _('Ledger Posting line "%s" is not valid') % line.name)
 
                 if move.reconcile_id and move.reconcile_id.line_ids:
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
                     if abs(move.reconcile_amount-move.amount)<0.0001:
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
+
+                        writeoff_acc_id = False
+                        #There should only be one write-off account!
+                        for entry in move.reconcile_id.line_new_ids:
+                            writeoff_acc_id = entry.account_id.id
+                            break
+
+                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
                     #except:
@@ -335,6 +346,17 @@ class account_bank_statement(osv.osv):
                 context=context)[0]
         return {'value': {'balance_start': balance_start, 'currency': currency}}
 
+    def unlink(self, cr, uid, ids, context=None):
+        stat = self.read(cr, uid, ids, ['state'])
+        unlink_ids = []
+        for t in stat:
+            if t['state'] in ('draft'):
+                unlink_ids.append(t['id'])
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete bank statement which are already confirmed !'))
+        osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+        return True
+    
 account_bank_statement()
 
 
@@ -499,7 +521,7 @@ class account_bank_statement_reconcile_line(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', required=True),
         'line_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile'),
         'amount': fields.float('Amount', required=True),
-        'analytic_id': fields.many2one('account.analytic.account',"Analytic Account")        
+        'analytic_id': fields.many2one('account.analytic.account',"Analytic Account")
     }
     _defaults = {
         'name': lambda *a: 'Write-Off',
@@ -576,23 +598,23 @@ class account_bank_statement_line(osv.osv):
         'account_id': fields.many2one('account.account','Account',
             required=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement',
-            select=True, required=True),
+            select=True, required=True, ondelete='cascade'),
         'reconcile_id': fields.many2one('account.bank.statement.reconcile',
             'Reconcile', states={'confirm':[('readonly',True)]}),
         'move_ids': fields.many2many('account.move',
             'account_bank_statement_line_move_rel', 'move_id','statement_id',
             'Moves'),
-        'ref': fields.char('Ref.', size=32),
+        'ref': fields.char('Reference', size=32),
         'note': fields.text('Notes'),
         'reconcile_amount': fields.function(_reconcile_amount,
             string='Amount reconciled', method=True, type='float'),
-        'sequence': fields.integer('Sequence'),            
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement line."),
     }
     _defaults = {
         'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'type': lambda *a: 'general',
-        'sequence': lambda *a: 10,        
+        'sequence': lambda *a: 10,
     }
 
 account_bank_statement_line()

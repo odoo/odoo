@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -159,7 +159,7 @@ class account_invoice_line(osv.osv):
                 ('line','Separator Line'),
                 ('break','Page Break'),]
             ,'Type', select=True, required=True),
-        'sequence': fields.integer('Sequence Number'),
+        'sequence': fields.integer('Sequence Number', help="Gives the sequence order when displaying a list of invoice lines."),
         'functional_field': fields.function(_fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='char', fnct_search=None, obj=None, method=True, store=False, string="Source Account"),
     }
 

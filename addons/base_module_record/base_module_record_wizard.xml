@@ -21,5 +21,18 @@
             action="wizard_base_module_record_objects"
             id="menu_wizard_base_module_record_objects"/>
 
+        <wizard
+            id="wizard_base_module_record_data"
+            string="Export Customizations As Data File"
+            model="ir.module.module"
+            multi="True"
+            name="base_module_record.module_record_data"/>
+        <menuitem
+            parent="menu_wizard_base_mod_rec"
+            name="Export Customizations As Data File"
+            type="wizard"
+            action="wizard_base_module_record_data"
+            id="menu_wizard_base_module_record_data"/>
+
     </data>
 </openerp>

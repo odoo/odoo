@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,6 +21,7 @@
 
 import stock_traceability
 import wizard_partial_picking
+import wizard_partial_move
 import wizard_picking_make
 import wizard_replacement
 import wizard_return
@@ -30,6 +31,7 @@ import wizard_ups
 import wizard_invoice_onshipping
 import wizard_location_product
 import wizard_inventory
+import wizard_split_inventory_lots
 import inventory_merge_zero
 import inventory_merge
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

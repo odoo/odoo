@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -46,12 +46,12 @@ class account_move_line(osv.osv):
 
         if context.get('date_from', False) and context.get('date_to', False):
             where_move_lines_by_date = " AND " +obj+".move_id in ( select id from account_move  where date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
-            
+
         if state:
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
-        
-                
+
+
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
             return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
@@ -103,9 +103,10 @@ class account_move_line(osv.osv):
 
             total_new=0.00
             for i in context['lines']:
-                total_new +=(i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
-                for item in i[2]:
-                        data[item]=i[2][item]
+                if i[2]:
+                    total_new +=(i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
+                    for item in i[2]:
+                            data[item]=i[2][item]
             if context['journal']:
                 journal_obj=self.pool.get('account.journal').browse(cr,uid,context['journal'])
                 if journal_obj.type == 'purchase':
@@ -257,7 +258,7 @@ class account_move_line(osv.osv):
         cursor.execute('SELECT l.id, i.id ' \
                 'FROM account_move_line l, account_invoice i ' \
                 'WHERE l.move_id = i.move_id ' \
-                    'AND l.id in (' + ','.join([str(x) for x in ids]) + ')')
+                    'AND l.id =ANY(%s)',(ids,))
         invoice_ids = []
         for line_id, invoice_id in cursor.fetchall():
             res[line_id] = invoice_id
@@ -292,8 +293,8 @@ class account_move_line(osv.osv):
         if not len(res):
             return [('id', '=', '0')]
         return [('id', 'in', [x[0] for x in res])]
-    
-    def _invoice_search(self, cursor, user, obj, name, args):
+
+    def _invoice_search(self, cursor, user, obj, name, args, context):
         if not len(args):
             return []
         invoice_obj = self.pool.get('account.invoice')
@@ -348,7 +349,7 @@ class account_move_line(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
+        'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports."),
         'product_uom_id': fields.many2one('product.uom', 'UoM'),
         'product_id': fields.many2one('product.product', 'Product'),
         'debit': fields.float('Debit', digits=(16,int(tools.config['price_accuracy']))),
@@ -356,7 +357,7 @@ class account_move_line(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
         'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", states={'valid':[('readonly',True)]}, help="The move of this entry line.", select=2),
 
-        'ref': fields.char('Ref.', size=32),
+        'ref': fields.char('Ref.', size=64),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
@@ -367,7 +368,7 @@ class account_move_line(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark the entry line as a litigation with the associated partner"),
 
-        'partner_id': fields.many2one('res.partner', 'Partner Ref.'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
         'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable entries. You can put the limit date for the payment of this entry line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
             store={
@@ -377,16 +378,18 @@ class account_move_line(osv.osv):
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
         'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
-        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'Status', readonly=True),
-        'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or tax code account."),
-        'tax_amount': fields.float('Tax/Base Amount', digits=(16,int(tools.config['price_accuracy'])), select=True, help="If the Tax account is tax code account, this field will contain the taxed amount.If the tax account is base tax code,\
-                    this field will contain the basic amount(without tax)."),
+        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True,
+                                  help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
+        'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or a tax code account."),
+        'tax_amount': fields.float('Tax/Base Amount', digits=(16,int(tools.config['price_accuracy'])), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
+                    "this field will contain the basic amount(without tax)."),
         'invoice': fields.function(_invoice, method=True, string='Invoice',
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
 #TODO: remove this
         'amount_taxed':fields.float("Taxed Amount",digits=(16,int(tools.config['price_accuracy']))),
+        'company_id': fields.related('account_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
 
     }
 
@@ -421,6 +424,7 @@ class account_move_line(osv.osv):
         'currency_id': _get_currency,
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
     }
     _order = "date desc,id desc"
     _sql_constraints = [
@@ -549,8 +553,6 @@ class account_move_line(osv.osv):
         return True
 
     def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
-        id_set = ','.join(map(str, ids))
-        
         lines = self.browse(cr, uid, ids, context=context)
         unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
         credit = debit = 0.0
@@ -575,10 +577,10 @@ class account_move_line(osv.osv):
 
         cr.execute('SELECT account_id, reconcile_id \
                 FROM account_move_line \
-                WHERE id IN ('+id_set+') \
-                GROUP BY account_id,reconcile_id')
+                WHERE id =ANY(%s) \
+                GROUP BY account_id,reconcile_id',(ids,))
         r = cr.fetchall()
-#TODO: move this check to a constraint in the account_move_reconcile object
+        #TODO: move this check to a constraint in the account_move_reconcile object
         if (len(r) != 1) and not context.get('fy_closing', False):
             raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
         if not unrec_lines:
@@ -826,7 +828,7 @@ class account_move_line(osv.osv):
                 if res:
                     if res[1] != 'draft':
                         raise osv.except_osv(_('UserError'),
-                                _('The account move (%s) for centralisation ' \
+                                _('The Ledger Posting (%s) for centralisation ' \
                                         'has been confirmed!') % res[2])
                     vals['move_id'] = res[0]
 

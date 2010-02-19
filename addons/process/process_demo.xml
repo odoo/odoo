@@ -52,7 +52,7 @@
         </record>
 
         <record id="node_packing" model="process.node">
-            <field name="name">Packing List</field>
+            <field name="name">Picking List</field>
             <field name="note">The workers pack the requested items</field>
             <field name="model_id" model="ir.model" search="[('name', '=', 'Packing list')]"></field>
             <field name="menu_id" model="ir.ui.menu" search="[('name', '=', 'Packing to Process')]"></field>
@@ -69,7 +69,7 @@
             <field name="kind">state</field>
             <field name="model_states"></field>
             <field name="process_id" ref="sales_workflow"/>
-        </record>  
+        </record>
 
         <record id="node_invoice_on_delivery" model="process.node">
             <field name="name">Invoice</field>
@@ -79,7 +79,7 @@
             <field name="kind">subflow</field>
             <field name="model_states"></field>
             <field name="process_id" ref="sales_workflow"/>
-        </record>  
+        </record>
 
         <!-- Node conditions (Gray nodes) -->
 
@@ -106,7 +106,7 @@
         </record>
 
         <record id="transition_packing" model="process.transition">
-            <field name="name">Packing</field>
+            <field name="name">Picking</field>
             <field name="source_node_id" ref="node_sale_order"></field>
             <field name="target_node_id" ref="node_packing"></field>
         </record>

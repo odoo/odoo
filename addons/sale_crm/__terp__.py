@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,23 +25,24 @@
     'version': '1.0',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
-This module adds a shortcut on one or several cases in the CRM.
+This module adds a shortcut on one or several opportunity cases in the CRM.
 This shortcut allows you to generate a sale order based on the selected case.
 If different cases are open (a list), it generates one sale order by
 case.
 The case is then closed and linked to the generated sale order.
 
-It also add a shortcut on one or several partners.
-This shortcut allows you to generate a CRM case for the partners.
-
 We suggest you to install this module if you installed both the sale and the
-crm_configuration modules.
+crm modules.
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['sale', 'crm_configuration'],
+    'depends': ['sale', 'crm'],
     'init_xml': [],
-    'update_xml': ['sale_crm_wizard.xml', 'sale_crm_view.xml', 'process/sale_crm_process.xml'],
+    'update_xml': ['sale_crm_wizard.xml',
+                   'sale_crm_view.xml',
+                   'process/sale_crm_process.xml',
+                   'security/sale_crm_security.xml',
+                   ],
     'demo_xml': [],
     'installable': True,
     'active': False,

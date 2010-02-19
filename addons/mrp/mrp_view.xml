@@ -3,12 +3,18 @@
     <data>
 
         <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager"/>
+            groups="group_mrp_user,group_mrp_manager" sequence="3"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
+		<menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="menu_mrp_root" sequence="1"/>
 
+        <menuitem name="Control" id="menu_mrp_control" parent="menu_mrp_root"  sequence="3" />
+     	<menuitem name="Master Data"
+                  id="menu_mrp_bom"
+                  parent="menu_mrp_root"
+                  sequence="5" />
         <!--
-    Property / Property Group
-    -->
+        Property / Property Group
+        -->
 
         <record id="mrp_property_group_form_view" model="ir.ui.view">
             <field name="name">mrp.property.group.form</field>
@@ -33,16 +39,8 @@
             id="menu_mrp_configuration"
             name="Configuration"
             parent="menu_mrp_root"
-            groups="group_mrp_manager"/>
-        <menuitem
-            id="menu_mrp_property_group_action_prop"
-            name="Properties"
-            parent="menu_mrp_configuration"
-            groups="base.group_extended"/>
-        <menuitem
-            action="mrp_property_group_action"
-            id="menu_mrp_property_group_action"
-            parent="menu_mrp_property_group_action_prop"/>
+            groups="group_mrp_manager"
+            sequence="50" />
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
             <field name="name">mrp.property.tree</field>
@@ -78,21 +76,31 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+        <menuitem name="Properties"
+            id="menu_mrp_property"
+            parent="menu_mrp_configuration"
+            groups="base.group_extended"
+            sequence="20" />
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
-            parent="menu_mrp_property_group_action_prop"/>
+            parent="menu_mrp_property"
+            groups="base.group_extended" />
+        <menuitem
+            action="mrp_property_group_action"
+            id="menu_mrp_property_group_action"
+            parent="menu_mrp_property"/>
 
         <!--
-    Workcenters
-    -->
+        Work Centers
+        -->
 
         <record id="mrp_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.workcenter.tree</field>
             <field name="model">mrp.workcenter</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Workcenter">
+                <tree string="Work Center">
                     <field name="code"/>
                     <field name="name"/>
                 </tree>
@@ -103,16 +111,17 @@
             <field name="model">mrp.workcenter</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Workcenter">
+                <form string="Work Center">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="active" select="2"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Workcenter">
-                            <field name="type"/>
-                            <field name="timesheet_id"/>
+                        <page string="Work Center">
+                            <field name="resource_type"/>
+                            <field name="calendar_id"/>
                             <separator colspan="4" string="Description"/>
                             <field colspan="4" name="note" nolabel="1"/>
                             <separator colspan="4" string="Capacity Information"/>
@@ -138,24 +147,23 @@
             </field>
         </record>
         <record id="mrp_workcenter_action" model="ir.actions.act_window">
-            <field name="name">Workcenters</field>
+            <field name="name">Work Centers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.workcenter</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
         </record>
-        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="menu_mrp_configuration"/>
 
         <!--
-    Routings
-    -->
+        Routings
+        -->
 
         <record id="mrp_routing_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.tree</field>
             <field name="model">mrp.routing.workcenter</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Routing Workcenters">
+                <tree string="Routing Work Centers">
                     <field name="sequence"/>
                     <field name="workcenter_id" select="1"/>
                     <field name="cycle_nbr"/>
@@ -169,7 +177,7 @@
             <field name="model">mrp.routing.workcenter</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Routing Workcenters">
+                <form string="Routing Work Centers">
                     <separator colspan="4" string="General Information"/>
                     <field colspan="4" name="name" select="1"/>
                     <field name="sequence" select="1"/>
@@ -194,7 +202,7 @@
                     <field name="location_id"/>
                     <separator colspan="4" string="Description"/>
                     <field colspan="4" name="note" nolabel="1"/>
-                    <separator colspan="4" string="Workcenter Operations"/>
+                    <separator colspan="4" string="Work Center Operations"/>
                     <field colspan="4" name="workcenter_lines" nolabel="1" widget="one2many_list"/>
                 </form>
             </field>
@@ -218,11 +226,14 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
         </record>
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="menu_mrp_configuration"/>
+ <!--       <menuitem name="Routings" id="menu_mrp_routing_and_workcenters" parent="mrp.menu_mrp_bom" groups="base.group_extended"
+                  sequence="100" />-->
+        <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="40" />
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_bom" groups="base.group_extended" sequence="30"/>
 
         <!--
-    Bill of Materials
-    -->
+          Bill of Materials
+        -->
 
         <record id="mrp_bom_form_view" model="ir.ui.view">
             <field name="name">mrp.bom.form</field>
@@ -230,12 +241,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material">
-                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                    <group colspan="4" col="6">
+                      <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                      <field name="name" select="1"/>
+                      <field name="code" select="1"/>
+                      <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                    </group>
                     <newline/>
                     <field name="product_uom"/>
                     <field name="product_qty"/>
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
                     <newline/>
                     <field name="product_uos" groups="product.group_uos"/>
                     <field name="product_uos_qty" groups="product.group_uos"/>
@@ -285,42 +299,35 @@
             </field>
         </record>
         <record id="mrp_bom_form_action" model="ir.actions.act_window">
-            <field name="name">Bill of Materials</field>
+            <field name="name">Master Bill of Materials</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','=',False)]</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
         </record>
-        <menuitem action="mrp_bom_form_action" id="menu_mrp_bom_form_action" parent="menu_mrp_configuration"/>
-
-        <record id="mrp_bom_tree_action" model="ir.actions.act_window">
-            <field name="name">Bill of Material Structure</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.bom</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('bom_id','=',False)]</field>
-            <field name="view_id" ref="mrp_bom_tree_view"/>
-        </record>
-        <menuitem action="mrp_bom_tree_action" id="menu_bom_tree" parent="menu_mrp_bom_form_action"/>
-        <record id="mrp_bom_form_action_new" model="ir.actions.act_window">
-            <field name="name">New Bill of Materials</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.bom</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="domain">[('bom_id','=',False)]</field>
-        </record>
-        <menuitem action="mrp_bom_form_action_new" id="menu_mrp_bom_form_action_new" parent="menu_mrp_bom_form_action"/>
-
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
-            <field name="name">Bill of Materials Components</field>
+            <field name="name">Bill of Material Components</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','!=',False)]</field>
         </record>
-        <menuitem action="mrp_bom_form_action2" id="menu_mrp_bom_form_action2" parent="menu_mrp_configuration"/>
+
+        <!-- BOM menus -->
+
+  <!--      <menuitem name="Bill of Materials"
+                  id="menu_mrp_bom"
+                  parent="menu_mrp_bom"
+                  sequence="50" />-->
+        <menuitem action="mrp_bom_form_action"
+                  id="menu_mrp_bom_form_action"
+                  parent="menu_mrp_bom"
+                  sequence="10"/>
+        <menuitem action="mrp_bom_form_action2"
+                  id="menu_mrp_bom_form_action2"
+                  parent="menu_mrp_bom"
+                  sequence="20"/>
 
         <record id="action2" model="ir.actions.act_window">
             <field name="name">Bill of Materials Structure</field>
@@ -375,7 +382,7 @@
             <field name="model">mrp.production</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:date_planned&lt;current_date and state not in ('done','cancel')" string="Production orders">
+                <tree colors="red:date_planned&lt;current_date and state not in ('done','cancel');black:date_planned&gt;=current_date and state in ('done','cancel') " string="Manufacturing Orders">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty"/>
@@ -395,7 +402,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="routing_id" date_start="date_planned" string="Production Orders">
+                <calendar color="routing_id" date_start="date_planned" string="Manufacturing Orders">
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
@@ -424,7 +431,7 @@
             <field name="model">mrp.production</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Production orders" type="bar">
+                <graph string="Manufacturing Orders" type="bar">
                     <field name="date_planned_date"/>
                     <field name="hour_total" operator="+"/>
                     <field name="cycle_total" operator="+"/>
@@ -444,7 +451,7 @@
             <field name="model">mrp.production</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Production orders">
+                <form string="Manufacturing Orders">
                     <group colspan="4" col="7">
                         <field name="name" select="1"/>
                         <field name="date_planned" select="1"/>
@@ -454,10 +461,9 @@
                         <field name="product_qty"/>
                         <field name="product_uom"/>
                         <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production" icon="gtk-ok"/>
-                        <newline/>
-                        <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
 
                     <notebook colspan="4">
@@ -467,7 +473,21 @@
                             <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
                             <field name="routing_id" groups="base.group_extended" select="1"/>
                             <newline/>
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"/>
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                                <tree string="Moves">
+                                    <field name="product_id" select="1"/>
+                                    <field name="product_qty" select="1"/>
+                                    <field name="product_uom" select="1" string="UOM"/>
+                                    <field name="prodlot_id" select="1"/>
+                                    <field name="product_packaging" domain="[('product_id','=',product_id)]"/>
+                                    <field name="picking_id"/>
+                                    <field name="location_id" select="1"/>
+                                    <field name="location_dest_id" select="1"/>
+                                    <field name="date" select="1"/>
+                                    <field name="date_planned" select="1" string="Date"/>
+
+                                </tree>
+                            </field>
                             <group col="9" colspan="4">
                                 <field name="state" select="2"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="gtk-execute"/>
@@ -487,14 +507,14 @@
                         </page>
                         <page string="Work Orders">
                             <field colspan="4" name="workcenter_lines" nolabel="1">
-                                <form string="Production Workcenters">
+                                <form string="Production Work Centers">
                                     <field colspan="4" name="name" select="1"/>
                                     <field colspan="4" name="workcenter_id" select="1"/>
                                     <field name="sequence"/>
                                     <field name="cycle"/>
                                     <field name="hour"/>
                                 </form>
-                                <tree string="Production Workcenters">
+                                <tree string="Production Work Centers">
                                     <field name="sequence"/>
                                     <field name="name"/>
                                     <field name="workcenter_id"/>
@@ -518,93 +538,92 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_mrp_production_filter" model="ir.ui.view">
             <field name="name">mrp.production.select</field>
             <field name="model">mrp.production</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Production">
-                   <group col='8' colspan='4'>
-                       <filter icon="terp-mrp" string="Ready" domain="[('state','=','ready')]" help="Production orders which are ready to produce"/>
-                       <filter icon="terp-mrp" string="In Production" domain="[('state','=','in_production')]" help="Production orders which are in production"/>
+                   <group col='9' colspan='4'>
+                       <filter icon="terp-mrp" string="Ready"
+                       	domain="[('state','=','ready')]"
+                       	help="Manufacturing Orders which are ready to produce" />
+                       <filter icon="terp-mrp" string="In Production"
+                       	domain="[('state','=','in_production')]"
+                       	help="Manufacturing Orders which are in production" />
+                       <filter icon="terp-mrp" string="Late"
+                       	domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                       	help="Production started late" />
+
                        <separator orientation="vertical"/>
                        <field name="name" select='1'/>
-					   <field name="product_id" select='1'/>
-					   <field name="routing_id" select='1'/>	
+                       <field name="product_id" select='1'/>
+                       <field name="routing_id" select='1'/>
                        <field name="origin" select='1'/>
-					</group>
+                    </group>
+                    <group expand="1" string="Group By" colspan="4" col="8">
+                        <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
+                        <filter string="Routing" icon="terp-mrp" domain="[]" context="{'group_by':'routing_id'}"/>
+                    </group>
                </search>
             </field>
         </record>
-        
+
         <record id="mrp_production_action" model="ir.actions.act_window">
-            <field name="name">Production Orders</field>
+            <field name="name">Manufacturing Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
-            <field name="search_view_id" ref="view_mrp_production_filter"/>            
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" sequence="1"/>
 
         <record id="mrp_production_action2_gantt" model="ir.actions.act_window">
-            <field name="name">Production Orders Planning</field>
+            <field name="name">Manufacturing Orders Planning</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
         </record>
-        <menuitem
-            action="mrp_production_action2_gantt"
-            id="menu_production_orders_start_gantt"
-            parent="menu_mrp_production_action"
-            sequence="20" icon="terp-calendar"/>
 
         <record id="mrp_production_action2" model="ir.actions.act_window">
-            <field name="name">Production Orders To Start</field>
+            <field name="name">Manufacturing Orders To Start</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','ready')]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_mrp_production_filter"/>            
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action" groups="base.group_useability_extended" />
+
         <record id="mrp_production_action3" model="ir.actions.act_window">
-            <field name="name">Production Orders in Progress</field>
+            <field name="name">Manufacturing Orders in Progress</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','in_production')]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_mrp_production_filter"/>            
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action" groups="base.group_useability_extended"/>
+
         <record id="mrp_production_action4" model="ir.actions.act_window">
-            <field name="name">Production Orders Waiting Products</field>
+            <field name="name">Manufacturing Orders Waiting Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="domain">[('state','=','confirmed')]</field>
             <field name="filter" eval="True"/>
-            <field name="search_view_id" ref="view_mrp_production_filter"/>            
+            <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
-        <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action" groups="base.group_useability_extended"/>
-
-         <record id="mrp_production_new" model="ir.actions.act_window">
-            <field name="name">New Production Order</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.production</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree,calendar,graph,gantt</field>
-        </record>
-        <menuitem action="mrp_production_new" id="menu_production_orders_new" parent="mrp.menu_mrp_production_action"/>
 
         <record id="mrp_production_lot_form_view" model="ir.ui.view">
             <field name="name">mrp.production.lot.line.form</field>
@@ -670,24 +689,22 @@
         </record>
 
         <!--
-    Procurement
-    -->
+        Procurement
+        -->
 
         <record id="mrp_procurement_tree_view" model="ir.ui.view">
             <field name="name">mrp.procurement.tree</field>
             <field name="model">mrp.procurement</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines">
-                    <field name="name"/>
+                <tree string="Procurement Lines" colors="red:state=='draft';black:state=='running';green:state=='confirmed';gray:state in ['done','cancel']">
+                    <field name="date_planned" widget="date"/>
+                    <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" string="UOM"/>
-                    <field name="date_planned"/>
                     <field name="procure_method"/>
-                    <field name="origin"/>
                     <field name="state"/>
-                    <field name="message"/>
                 </tree>
             </field>
         </record>
@@ -701,10 +718,11 @@
                         <separator colspan="2" string="References"/>
                         <field name="name" select="1" string="Procurement Reason"/>
                         <field name="origin" select="2"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Planification"/>
-                        <field name="date_planned" select="1"/>
+                        <field name="date_planned" select="1" widget="date"/>
                         <field name="procure_method" select="2"/>
                         <field name="priority" groups="base.group_extended"/>
                     </group>
@@ -725,9 +743,8 @@
                         <group col="7" colspan="2">
                             <button name="button_confirm" states="draft" string="Confirm" icon="gtk-apply"/>
                             <button name="button_restart" states="exception" string="Retry" icon="gtk-convert"/>
-                            <button name="button_cancel" states="exception,waiting" string="Cancel" icon="gtk-cancel"/>
-                            <button name="button_check" states="confirmed" string="Run procurement" icon="gtk-media-play"/>
-                            <button name="button_cancel" states="draft,running" string="Cancel" icon="gtk-cancel"/>
+                            <button name="button_cancel" states="draft,exception,waiting" string="Cancel" icon="gtk-cancel"/>
+                            <button name="button_check" states="confirmed" string="Run 	Procurement" icon="gtk-media-play"/>
                         </group>
                     </page>
                     <page string="Extra Information">
@@ -737,8 +754,10 @@
                         <field name="date_close" select="2"/>
                         <field name="close_move" groups="base.group_extended"/>
                         <field name="purchase_id"/>
-                        <separator colspan="4" string="Properties"/>
-                        <field colspan="4" name="property_ids" nolabel="1" groups="base.group_extended"/>
+                        <group colspan="4"  groups="base.group_extended">
+                            <separator colspan="4" string="Properties" />
+                            <field colspan="4" name="property_ids" nolabel="1"/>
+                        </group>
                     </page>
                     <page string="Notes">
                         <separator colspan="4" string="Note" />
@@ -754,15 +773,25 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
-                   	<group col='8' colspan='4'>
-                       <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement orders with exceptions"/>
+                    <group col='10' colspan='4'>
+                       <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" default="1" help="Procurement Orders in draft or open state."/>
+                       <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement Orders with exceptions"/>
+                       <filter icon="terp-mrp" string="Late"
+                       	domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
+                       	help="Procurement started late" />
                        <separator orientation="vertical"/>
-                       <field name="name" select='1'/>
-					   <field name="product_id" select='1'/>
-					   <field name="date_planned" select='1'/>	
-                       <field name="state" select='1'/>
+                       <field name="name"/>
+                       <field name="origin"/> 
+                       <field name="product_id" />
+                       <field name="date_planned" widget="date"/>
+                       <field name="state" />
+                    </group>
+                    <group expand="1" string="Group By" colspan="4" col="8">
+                        <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Reason" icon="terp-mrp" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Scheduled Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
 					</group>
-				</search>
+                </search>
             </field>
         </record>
         <record id="mrp_procurement_action" model="ir.actions.act_window">
@@ -773,30 +802,38 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
-        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root" groups="base.group_extended" />
+        <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_manufacturing"
+                  sequence="2" />
 
         <record id="mrp_procurement_action3" model="ir.actions.act_window">
-            <field name="name">Unscheduled procurements</field>
+            <field name="name">Requisitions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','confirmed')]</field>
+            <field name="search_view_id" ref="view_mrp_procurement_filter"/>
+            <field name="domain">[]</field> 
+            <field name="context">{}</field>            
         </record>
-        <menuitem action="mrp_procurement_action3" id="menu_mrp_procurement_action3" parent="mrp.menu_mrp_procurement_action" groups="base.group_useability_extended"/>
+
+      <menuitem action="mrp_procurement_action3" id="menu_procurement_requisitions" parent="purchase.menu_procurement_management"
+                  name="Requisitions" sequence="5" />	
+
+
 
         <record id="mrp_procurement_action5" model="ir.actions.act_window">
-            <field name="name">Exceptions Procurements</field>
+            <field name="name">Procurement Exceptions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
         </record>
-        <menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_action5" parent="menu_mrp_reordering" groups="base.group_useability_extended"/>
 
+		<menuitem action="mrp_procurement_action5" id="menu_mrp_procurement_exception_action" parent="mrp.menu_mrp_control"
+                  sequence="1" />
         <record id="mrp_procurement_action4" model="ir.actions.act_window">
-            <field name="name">Exceptions Procurements to Fix</field>
+            <field name="name">Procurement Exceptions to Fix</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
@@ -804,7 +841,6 @@
             <field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
             <field name="filter" eval="True"/>
         </record>
-        <menuitem action="mrp_procurement_action4" id="menu_mrp_procurement_action4" parent="mrp.menu_mrp_procurement_action5" groups="base.group_useability_extended"/>
 
         <record id="mrp_procurement_action11" model="ir.actions.act_window">
             <field name="name">Temporary Procurement Exceptions</field>
@@ -814,16 +850,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
         </record>
-        <menuitem action="mrp_procurement_action11" id="menu_mrp_procurement_action11" parent="mrp.menu_mrp_procurement_action5" groups="base.group_useability_extended"/>
-
-         <record id="mrp_procurement_new" model="ir.actions.act_window">
-            <field name="name">New Procurement</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
-        <menuitem action="mrp_procurement_new" id="menu_mrp_procurement_new" parent="mrp.menu_mrp_procurement_action"/>
 
         <!-- Order Point -->
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">
@@ -851,6 +877,7 @@
                     <field name="active" select="1"/>
                     <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" select="1" widget="selection"/>
                     <field name="location_id" select="2"/>
+                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <field name="product_id" on_change="onchange_product_id(product_id)" select="1"/>
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>
@@ -874,7 +901,7 @@
         <!-- add product_uom to context to be the default value when adding new orderpoints -->
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id}"
-            domain="[('product_id', '=', active_id)]" 
+            domain="[('product_id', '=', active_id)]"
             id="act_product_product_2_stock_warehouse_orderpoint"
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"
