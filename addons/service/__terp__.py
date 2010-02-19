@@ -27,7 +27,7 @@
     'description': """Profile for service companies""",
     'author': 'Tiny',
     'depends': ['hr', 'project', 'board_project', 'account_analytic_analysis'],
-    'update_xml': ['security/ir.model.access.csv', 'profile_service.xml'],
+    'update_xml': ['security/ir.model.access.csv', 'service_installer.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
