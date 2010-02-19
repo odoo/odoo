@@ -83,6 +83,7 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Departements Informations">
+                        <field name="context_department_id" completion="1" widget="selection" string="Department"/>
                         <separator string="Managers" colspan="4"/>
                         <field name="parent_id" nolabel="1" colspan="4"/>
                         <separator string="Subordinates" colspan="4"/>
@@ -91,7 +92,7 @@
                 </notebook>
             </field>
         </record>
-		<!--<record model="ir.ui.view" id="view_department_form_simple_modif_inherited1">
+		<record model="ir.ui.view" id="view_department_form_simple_modif_inherited1">
             <field name="name">view.department.form.hr.inherited1</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form_simple_modif" />
@@ -102,18 +103,5 @@
                 </page>
             </field>
         </record>
-
-        <record id="view_department_form_simple_modif_inherited2" model="ir.ui.view">
-                <field name="name">view.department.form.hr.inherited2</field>
-                <field name="model">res.users</field>
-                <field name="type">form</field>
-                <field name="inherit_id" ref="base.view_users_form"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="password" position="after">
-                    <field name="context_department_id" completion="1" widget="selection"/>
-                    </field>
-                </field>
-        </record>
-    --></data>
+        </data>
 </openerp>
