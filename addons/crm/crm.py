@@ -227,12 +227,14 @@ class crm_case(osv.osv):
             string='Latest E-Mail', type='text'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
-        'date': fields.datetime('Date'),
-        'create_date': fields.datetime('Created' ,readonly=True),
-        'date_deadline': fields.datetime('Deadline'),
+        'create_date': fields.datetime('Creation Date' ,readonly=True),
+        'write_date': fields.datetime('Update Date' ,readonly=True),
+        'partner_phone': fields.char('Phone', size=32),
+        'date_deadline': fields.date('Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'history_line': fields.function(_get_log_ids, method=True, type='one2many', multi="history_line", relation="crm.case.history", string="Communication"),
         'log_ids': fields.function(_get_log_ids, method=True, type='one2many', multi="log_ids", relation="crm.case.log", string="Logs History"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
@@ -274,7 +276,6 @@ class crm_case(osv.osv):
         'partner_address_id': _get_default_partner_address,
         'email_from': _get_default_email,
         'state': lambda *a: 'draft',
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_deadline': lambda *a:(datetime.today() + timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': _get_section,
     }
@@ -430,6 +431,7 @@ class crm_case(osv.osv):
         if not part:
             return {'value':{'partner_address_id': False, 
                             'email_from': False,
+                            'partner_phone': False,
                             'partner_name2': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
@@ -442,6 +444,7 @@ class crm_case(osv.osv):
             return {'value': {'email_from': False, 'partner_name2': False}}
         address= self.pool.get('res.partner.address').browse(cr, uid, add)
         data['email_from'] = address.email
+        data['partner_phone'] = address.phone or ''
         data['partner_name2'] = address.name or ''
         return {'value': data}
 

@@ -78,8 +78,7 @@ class phonecall2opportunity(wizard.interface):
         for case in case_obj.browse(cr, uid, data['ids']):
             if not case.partner_id:
                 return 'create_partner'
-        return {'name': case.name, 'probability': case.probability or 20.0,
-                'planned_revenue':case.planned_revenue, 'partner_id':case.partner_id.id}
+        return {'name': case.name, 'partner_id':case.partner_id.id}
 
     def _selectChoice(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -115,7 +114,6 @@ class phonecall2opportunity(wizard.interface):
                 'section_id': phonecall.section_id.id,
                 'description': phonecall.description,         
                 'phonecall_id': phonecall.id,
-                'date': phonecall.date,
                 'priority': phonecall.priority    
             })
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
@@ -209,7 +207,6 @@ class phonecall2meeting(wizard.interface):
         for phonecall in phonecall_case_obj.browse(cr, uid, data['ids']):
             new_meeting_id = meeting_case_obj.create(cr, uid, {
                 'name': phonecall.name,
-                'date': phonecall.date,
                 'section_id' : phonecall.section_id and phonecall.section_id.id or False,
                 'duration': phonecall.duration,
                 'description':phonecall.description,

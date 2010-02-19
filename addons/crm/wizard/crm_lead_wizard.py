@@ -116,7 +116,6 @@ class lead2opportunity(wizard.interface):
                 'date_deadline': lead.date_deadline,
                 'partner_address_id':lead.partner_address_id.id, 
                 'priority': lead.priority,
-                'date': lead.date,
                 'partner_phone': lead.partner_phone,
                 'canal_id': lead.canal_id,
                 'som': lead.som,
