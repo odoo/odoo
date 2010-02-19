@@ -40,7 +40,7 @@ from psycopg2 import Binary
 import warnings
 
 import tools
-
+from tools.translate import _
 
 def _symbol_set(symb):
     if symb == None or symb == False:

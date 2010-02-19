@@ -37,6 +37,7 @@ from pychart import *
 import misc
 import cStringIO
 from lxml import etree
+from tools.translate import _
 
 class external_pdf(render.render):
     def __init__(self, pdf):
