@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -40,7 +40,7 @@ class job2phonecall(wizard.interface):
                     <newline />
                     <field name='note' colspan="4"/>
                     <newline />
-                    <field name='section_id' />    
+                    <field name='section_id' />
                     <field name='category_id'/>
                 </form>"""
 
@@ -50,29 +50,30 @@ class job2phonecall(wizard.interface):
         'note' : {'string' : 'Goals', 'type' : 'text'},
         'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.case.categ', 'required' : True},
         'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'crm.case.section'},
-        
+
     }
-    def _default_values(self, cr, uid, data, context):        
-        case_obj = pooler.get_pool(cr.dbname).get('crm.job')        
-        categ_id=pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])            
-        case = case_obj.browse(cr, uid, data['id'])        
+    def _default_values(self, cr, uid, data, context):
+
+        case_obj = pooler.get_pool(cr.dbname).get('crm.applicant')
+        categ_id=pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])
+        case = case_obj.browse(cr, uid, data['id'])
         return {
                 'user_id' : case.user_id and case.user_id.id,
-                'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id, 
-                'section_id' : case.section_id and case.section_id.id or False,               
+                'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id,
+                'section_id' : case.section_id and case.section_id.id or False,
                 'note' : case.description
                }
 
     def _doIt(self, cr, uid, data, context):
         form = data['form']
         pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data') 
+        mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
         phonecall_case_obj = pool.get('crm.phonecall')
-        job_case_obj = pool.get('crm.job') 
+        job_case_obj = pool.get('crm.applicant')
         # Select the view
-        
+
         data_obj = pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
         id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
@@ -80,7 +81,7 @@ class job2phonecall(wizard.interface):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        
+
         for job in job_case_obj.browse(cr, uid, data['ids']):
             #TODO : Take other info from job
             new_phonecall_id = phonecall_case_obj.create(cr, uid, {
@@ -88,7 +89,7 @@ class job2phonecall(wizard.interface):
                         'user_id' : form['user_id'],
                         'categ_id' : form['category_id'],
                         'description' : form['note'],
-                        'date' : form['deadline'], 
+                        'date' : form['deadline'],
                         'section_id' : form['section_id'],
                         'description':job.description,
                         'partner_id':job.partner_id.id,
@@ -105,7 +106,7 @@ class job2phonecall(wizard.interface):
             job_case_obj.write(cr, uid, [job.id], vals)
             job_case_obj.case_cancel(cr, uid, [job.id])
             phonecall_case_obj.case_open(cr, uid, [new_phonecall_id])
-        value = {            
+        value = {
             'name': _('Phone Call'),
             'view_type': 'form',
             'view_mode': 'tree,form',
@@ -129,14 +130,14 @@ class job2phonecall(wizard.interface):
         }
     }
 
-job2phonecall('crm.job.reschedule_phone_call')
+job2phonecall('crm.applicant.reschedule_phone_call')
 
 class job2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        job_case_obj = pool.get('crm.job')
-        meeting_case_obj = pool.get('crm.meeting')        
+        job_case_obj = pool.get('crm.applicant')
+        meeting_case_obj = pool.get('crm.meeting')
         for job in job_case_obj.browse(cr, uid, data['ids']):
             new_meeting_id = meeting_case_obj.create(cr, uid, {
                 'name': job.name,
@@ -147,8 +148,8 @@ class job2meeting(wizard.interface):
             vals = {}
             job_case_obj.write(cr, uid, [job.id], vals)
             job_case_obj.case_cancel(cr, uid, [job.id])
-            meeting_case_obj.case_open(cr, uid, [new_meeting_id]) 
-                      
+            meeting_case_obj.case_open(cr, uid, [new_meeting_id])
+
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
@@ -161,7 +162,7 @@ class job2meeting(wizard.interface):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        return {            
+        return {
             'name': _('Meetings'),
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
@@ -183,7 +184,7 @@ class job2meeting(wizard.interface):
         }
     }
 
-job2meeting('crm.job.meeting_set')
+job2meeting('crm.applicant.meeting_set')
 
 
 class partner_create(wizard.interface):
@@ -201,7 +202,7 @@ class partner_create(wizard.interface):
 
     def _selectPartner(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        case_obj = pool.get('crm.job')
+        case_obj = pool.get('crm.applicant')
         for case in case_obj.browse(cr, uid, data['ids']):
             if case.partner_id:
                 raise wizard.except_wizard(_('Warning !'),
@@ -210,10 +211,10 @@ class partner_create(wizard.interface):
 
     def _makeOrder(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data') 
+        mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        case_obj = pool.get('crm.job')
+        case_obj = pool.get('crm.applicant')
         partner_obj = pool.get('res.partner')
         contact_obj = pool.get('res.partner.address')
         for case in case_obj.browse(cr, uid, data['ids']):
@@ -250,7 +251,7 @@ class partner_create(wizard.interface):
             'res_id': int(partner_id),
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id'] 
+            'search_view_id': res['res_id']
         }
         return value
 
@@ -266,7 +267,7 @@ class partner_create(wizard.interface):
         }
     }
 
-partner_create('crm.job.partner_create')
+partner_create('crm.applicant.partner_create')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

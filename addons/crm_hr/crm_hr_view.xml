@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    
+
     # ------------------------------------------------------
     # Job Categories
     # ------------------------------------------------------
 
     <record id="crm_job_categ_action" model="ir.actions.act_window">
-        <field name="name">Job Categories</field>
+        <field name="name">Applicant Categories</field>
         <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>     
-       	<field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-		<field name="context">{'object_id':'crm.job'}</field>            
+        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+       	<field name="domain">[('object_id.model', '=', 'crm.applicant')]</field>
+		<field name="context">{'object_id':'crm.applicant'}</field>
     </record>
-    # ------------------------------------------------------ 
+    # ------------------------------------------------------
 	 # Stage
-	 # ------------------------------------------------------ 
+	 # ------------------------------------------------------
 	    <record id="crm_job_stage_act" model="ir.actions.act_window">
-	        <field name="name">Job Stages</field>
+	        <field name="name">Applicant Stages</field>
 	        <field name="res_model">crm.case.stage</field>
 	        <field name="view_type">form</field>
 	        <field name="view_id"  ref="crm.crm_case_stage_tree"/>
-       		<field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-			<field name="context">{'object_id':'crm.job'}</field>    	        
+       		<field name="domain">[('object_id.model', '=', 'crm.applicant')]</field>
+			<field name="context">{'object_id':'crm.applicant'}</field>
 	    </record>
 	  <menuitem action="crm_job_stage_act" id="menu_crm_job_stage_act" parent="crm.menu_crm_case_stage"/>
     # ------------------------------------------------------
@@ -31,13 +31,14 @@
     # ------------------------------------------------------
 
     <record model="ir.ui.view" id="crm_case_tree_view_job">
-        <field name="name">CRM - Jobs Requests Tree</field>
-        <field name="model">crm.job</field>
+        <field name="name">Jobs - Recruitment Tree</field>
+        <field name="model">crm.applicant</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Jobs - Recruitment Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
                 <field name="name" string="Description"/>
+                <field name="department_id"/>
                 <field name="partner_name" string="Name"/>
                 <field name="email_from" string="Candidate Email"/>
                 <field name="partner_phone" string="Candidate Phone"/>
@@ -48,55 +49,48 @@
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                 <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
- 				<button name="case_close" string="Hired" states="open,draft,pending" type="object" icon="terp-partner"/>                
+ 				<button name="case_close" string="Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
                 <button name="case_cancel" string="Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                
+
             </tree>
         </field>
     </record>
 
     <record model="ir.ui.view" id="crm_case_form_view_job">
-        <field name="name">CRM - Jobs Requests Form</field>
-        <field name="model">crm.job</field>
+        <field name="name">Jobs - Recruitment Form</field>
+        <field name="model">crm.applicant</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Jobs - Recruitment Form">
                 <group colspan="4" col="7">
                     <field name="name" string="Description" colspan="2"/>
-                    <field name="section_id" colspan="1" widget="selection"/>
+                    <field name="department_id" widget="selection"/>
                     <field name="user_id" string="Responsible" select="2"/>
+                    <button string="Schedule a Phone Call"
+                        name="%(wizard_crm_job_reschedule_phone_call)d" icon="gtk-redo" type="action"/>
                     <newline/>
                         <label string="Stage: " align="1.0"/>
                         <group colspan="1" col="2">
                             <field name="stage_id" select="1" nolabel="1"/>
                             <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
-                    <field name="date" string="Next Interview"/>
-                    <field name="duration" widget="float_time"/>
+                        <field name="partner_name" string="Candidate Name"/>
+                        <field name="partner_phone"/>
                     <button name="%(wizard_crm_job_meeting_set)d" string="Schedule Meeting" icon="terp-crm" type="action"/>
-                    <field name="phonecall_id" select="1"/>
-                	<button string="Schedule a Phone Call"
-                        name="%(wizard_crm_job_reschedule_phone_call)d" icon="gtk-redo" type="action"  attrs="{'invisible':[('phonecall_id','!=',False)]}"/>
-   				                                          
                 </group>
                 <notebook colspan="4">
                     <page string="Job Info">
-                        <field name="partner_name" string="Candidate Name"/>
-                        <field name="partner_name2" string="Candidate Name2"/>
+                    	<separator colspan="4" string="Communications"/>
+                    	<field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
+                        <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
                         <newline/>
-                        <field name="partner_phone"/>
                         <field name="partner_mobile"/>
-                        <field name="email_from" string="Candidate Email"/>
-                        <newline/>
-                        <group colspan="2" col="3">
-                         <field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
-                          <button string="Convert to Partner"
+                        <field name="email_from" string="Candidate Email" widget="email"/>
+						<button string="Convert to Partner"
                               icon="terp-partner" name="%(wizard_crm_job_partner_create)d"
                               type="action" attrs="{'invisible':[('partner_id','!=',False)]}"
                           />
-                        </group>
-                        <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
-                        <newline/>
+						<newline/>
                         <separator colspan="4" string="Contract Data"/>
                         <field name="probability" string="Availability (weeks)"/>
                         <newline/>
@@ -120,7 +114,7 @@
                    <page string="Internal Notes">
                        <field name="description" nolabel="1" colspan="4"/>
                    </page>
-                   <page string="History">
+                   <page string="History" groups="base.group_extended">
                        <field name="id" select="1"/>
                        <field name="active"/>
                        <field name="canal_id"/>
@@ -174,23 +168,10 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="crm_case_calendar_view_job">
-        <field name="name">CRM - Jobs Requests Calendar</field>
-        <field name="model">crm.job</field>
-        <field name="type">calendar</field>
-        <field name="priority" eval="2"/>
-        <field name="arch" type="xml">
-            <calendar string="Meeting With Candidates" date_start="date" color="user_id" date_delay="duration">
-                <field name="name"/>
-                <field name="partner_name"/>
-                <field name="partner_name2"/>
-            </calendar>
-        </field>
-    </record>
 
     <record model="ir.ui.view" id="crm_case_graph_view_job">
-        <field name="name">CRM - Jobs Requests Graph</field>
-        <field name="model">crm.job</field>
+        <field name="name">Jobs - Recruitment Graph</field>
+        <field name="model">crm.applicant</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
               <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
@@ -199,11 +180,11 @@
                 <field name="state" group="True"/>
             </graph>
         </field>
-    </record>    
+    </record>
 
     <record id="view_crm_case_jobs_filter" model="ir.ui.view">
-            <field name="name">CRM - Jobs Requests Search</field>
-            <field name="model">crm.job</field>
+            <field name="name">Jobs - Recruitment Search</field>
+            <field name="model">crm.applicant</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Jobs">
@@ -238,12 +219,12 @@
                    		<field name="email_from" select='1' string="Email"/>
                        <field name="user_id" select="1" widget="selection"/>
                    </group>
-					<field name="section_id" select="1" widget="selection" string="Section">
+					<field name="department_id" select="1" widget="selection" string="Department">
  						<filter icon="terp-crm"
-                               domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section"
-                           />					
-					</field>                         
+                              domain="[('department_id','=',context.get('department_id',False))]"
+                               help="My Department"/>
+
+					</field>
                </search>
             </field>
         </record>

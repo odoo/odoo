@@ -8,6 +8,7 @@
             <field name="arch" type="xml">
                 <tree string="Timesheets">
                     <field name="user_id"/>
+                    <field name="department_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="name"/>
@@ -27,6 +28,7 @@
             <field name="arch" type="xml">
                 <tree string="Timesheets" editable="top">
                     <field name="user_id"/>
+                    <field name="department_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="name"/>
@@ -107,6 +109,7 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="department_id"/>
                     <notebook colspan="4">
                         <page string="Daily View">
                             <group col="6" colspan="4">
@@ -194,10 +197,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                   <group col="10" colspan="4">
-		                <filter icon="terp-partner" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheet"/>
-		                <filter icon="terp-crm" string="My departments timesheets"  domain="[('user_id', 'child_of', [uid])]" help="My Departments Timesheet"/>
-						<separator orientation="vertical"/>
+                   <group col="10" colspan="4">		                						
 						<filter icon="terp-crm" string="Unvalidated" domain="[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Unvalidated Timesheets"/>
                        	<separator orientation="vertical"/>
                        	<field name="state">
@@ -205,7 +205,14 @@
                            <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
 						</field>
 						<field name="name" select="1"/>
-						<field name="user_id" select="1" widget="selection"/>
+						<field name="user_id" select="1" widget="selection">
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Timesheet"/>
+                        </field>
+						<field name="department_id" widget="selection">
+							<filter icon="terp-crm"
+								domain="[('department_id','=',context.get('department_id',False))]"
+								help="My Departments Timesheet"/>
+						</field>
                    </group>
                </search>
             </field>
