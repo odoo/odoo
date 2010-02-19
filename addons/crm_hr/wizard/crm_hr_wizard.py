@@ -53,7 +53,8 @@ class job2phonecall(wizard.interface):
 
     }
     def _default_values(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.job')
+
+        case_obj = pooler.get_pool(cr.dbname).get('crm.applicant')
         categ_id=pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])
         case = case_obj.browse(cr, uid, data['id'])
         return {
@@ -70,7 +71,7 @@ class job2phonecall(wizard.interface):
         result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
         phonecall_case_obj = pool.get('crm.phonecall')
-        job_case_obj = pool.get('crm.job')
+        job_case_obj = pool.get('crm.applicant')
         # Select the view
 
         data_obj = pool.get('ir.model.data')
@@ -135,7 +136,7 @@ class job2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        job_case_obj = pool.get('crm.job')
+        job_case_obj = pool.get('crm.applicant')
         meeting_case_obj = pool.get('crm.meeting')
         for job in job_case_obj.browse(cr, uid, data['ids']):
             new_meeting_id = meeting_case_obj.create(cr, uid, {
@@ -201,7 +202,7 @@ class partner_create(wizard.interface):
 
     def _selectPartner(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        case_obj = pool.get('crm.job')
+        case_obj = pool.get('crm.applicant')
         for case in case_obj.browse(cr, uid, data['ids']):
             if case.partner_id:
                 raise wizard.except_wizard(_('Warning !'),
@@ -213,7 +214,7 @@ class partner_create(wizard.interface):
         mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        case_obj = pool.get('crm.job')
+        case_obj = pool.get('crm.applicant')
         partner_obj = pool.get('res.partner')
         contact_obj = pool.get('res.partner.address')
         for case in case_obj.browse(cr, uid, data['ids']):
