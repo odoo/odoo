@@ -172,8 +172,10 @@ class product_product(osv.osv):
         'track_outgoing' : fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),
     }
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
+        if not context:
+            context = {}
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
-        if ('location' in context) and context['location']:
+        if context.get('location', False):
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
             fields=res.get('fields',{})
             if fields:
