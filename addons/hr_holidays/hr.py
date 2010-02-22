@@ -146,7 +146,7 @@ class hr_holidays(osv.osv):
                         
     def _check_date(self, cr, uid, ids):
         if ids:
-            cr.execute('select number_of_days from hr_holidays where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select number_of_days from hr_holidays where id in %s', (tuple(ids),))
             res =  cr.fetchall()
             if res and res[0][0] < 0:
                 return False
