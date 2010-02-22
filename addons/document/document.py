@@ -302,7 +302,8 @@ class document_directory(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from document_directory where id in ('+','.join(map(str,ids))+')')
+            cr.execute('SELECT DISTINCT parent_id FROM document_directory '\
+                       'WHERE id in %s', (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -524,7 +525,8 @@ class document_file(osv.osv):
 
     def _data_get(self, cr, uid, ids, name, arg, context):
         result = {}
-        cr.execute('select id,store_fname,link from ir_attachment where id in ('+','.join(map(str,ids))+')')
+        cr.execute('SELECT id, store_fname, link FROM ir_attachment '\
+                   'WHERE id IN %s', (tuple(ids),))
         for id,r,l in cr.fetchall():
             try:
                 value = file(os.path.join(self._get_filestore(cr), r), 'rb').read()
