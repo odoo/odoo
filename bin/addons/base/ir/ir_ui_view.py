@@ -150,6 +150,10 @@ class view_sc(osv.osv):
         'resource': lambda *a: 'ir.ui.menu',
         'user_id': lambda obj, cr, uid, context: uid,
     }
+    _sql_constraints = [
+        ('shortcut_unique', 'unique(res_id, user_id)', 'Shortcut for this menu already exists!'),
+    ]
+        
 view_sc()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
