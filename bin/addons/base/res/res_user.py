@@ -229,8 +229,9 @@ class users(osv.osv):
     def _get_company(self,cr, uid, context={}, uid2=False):
         if not uid2:
             uid2 = uid
-        user = self.pool.get('res.users').browse(cr, uid, uid2, context)
-        return user.company_id.id
+        user = self.pool.get('res.users').read(cr, uid, uid2, ['company_id'], context)
+        company_id = user.get('company_id', False)
+        return company_id and company_id[0] or False
 
     def _get_menu(self,cr, uid, context={}):
         ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')])
