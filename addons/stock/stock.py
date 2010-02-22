@@ -20,11 +20,12 @@
 ##############################################################################
 
 from mx import DateTime
-import time
-import netsvc
 from osv import fields, osv
 from tools import config
 from tools.translate import _
+import math
+import netsvc
+import time
 import tools
 
 
@@ -1495,32 +1496,48 @@ class stock_move(osv.osv):
 
     def _track_lines(self, cr, uid, ids, lines, context=None):
         prodlot_obj = self.pool.get('stock.production.lot')
+        ir_sequence_obj = self.pool.get('ir.sequence')
+        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+        if not sequence:
+            raise osv.except_osv(_('Error!'), _('No production sequence defined'))
+
         move = self.browse(cr, uid, [ids])[0]
         move_qty = move.product_qty
         quantity_rest = move.product_qty
+        uos_qty_rest = move.product_uos_qty
         new_move = []
+        cnt = 0
+
         for line in lines:
             quantity = line['quantity']
-            sequence = line['tracking_num']
+            sequence = (line['tracking_num'] and line['tracking_num'] + '/' \
+                            + sequence) or sequence
+
             if quantity <= 0 or move_qty == 0:
                 continue
             quantity_rest -= quantity
             uos_qty = quantity / move_qty * move.product_uos_qty
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
+            if quantity_rest <= 0:
+                quantity_rest = quantity
+                break
             default_val = {
-                'product_qty': quantity,
-                'product_uos_qty': uos_qty,
+                'product_qty': quantity, 
+                'product_uos_qty': uos_qty, 
                 'state': move.state
             }
             current_move = self.copy(cr, uid, move.id, default_val)
             new_move.append(current_move)
-            new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence,
-                                                 'ref': '%d'%int(move_qty//quantity)}, 
-                                                 {'product_id': move.product_id.id})
+            new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 
+                                         'ref': '%d' % (cnt)}, 
+                                         {'product_id': move.product_id.id})
             self.write(cr, uid, [current_move], {'prodlot_id': new_prodlot})
-            
+            cnt += 1
+
         if quantity_rest > 0:
-            new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence + '/', 'ref': '%d' % int(move_qty//quantity)}, {'product_id': move.product_id.id})
+            new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 
+                                            'ref': '%d' % (cnt)}, 
+                                            {'product_id': move.product_id.id})
             update_val= {'prodlot_id': new_prodlot, 
                                     'product_qty': quantity_rest, 
                                     'product_uos_qty': uos_qty_rest
@@ -1534,7 +1551,7 @@ class stock_move(osv.osv):
             context = {}
         qty = product_qty
         if qty <= 0:
-            raise wizard.except_wizard(_('Warning!'), _('Please provide Proper Quantity !'))
+            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
         
         move = self.browse(cr, uid, ids, context=context)
         move_qty = move.product_qty
@@ -1553,10 +1570,10 @@ class stock_move(osv.osv):
             track = move.product_id.track_production
             self.write(cr, uid, move.id, vals)
             if track:
-                data = {'tracking_prefix': '', 'quantity': 1}
-                newmoves = self._track_lines(cr, uid, ids, data, context=None)
+                data = [{'tracking_num': '', 'quantity': 1}]
+                newmoves = self._track_lines(cr, uid, ids, data*int(math.floor(qty)), context=None)
             self.action_done(cr, uid, [move.id])
-        
+
         if rest:
             defaults = {'product_qty': rest, 
                                 'product_uos_qty': rest, 
@@ -1568,7 +1585,7 @@ class stock_move(osv.osv):
         new_move = None
         qty = product_qty
         if qty <= 0:
-            raise wizard.except_wizard(_('Warning!'), _('Please provide Proper Quantity !'))
+            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
         
         move = self.browse(cr, uid, ids, context=context)
         location = move.location_dest_id.id

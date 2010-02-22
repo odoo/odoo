@@ -21,9 +21,6 @@
 
 from osv import fields, osv
 from tools.translate import _
-import re
-import time
-import tools
 
 class stock_move_track(osv.osv_memory):
     _name = "stock.move.track"
