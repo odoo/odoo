@@ -43,6 +43,8 @@ def _get_qty(self,cr,uid, data, state):
     prod = prod_obj.browse(cr, uid,data['ids'])[0]
     form1_fields['product_qty']['default']=prod.product_qty
     return {}
+
+
 def _get_states(self, cr, uid, data, context):
     prod_obj = pooler.get_pool(cr.dbname).get('mrp.production')
     prod = prod_obj.browse(cr, uid,data['ids'])[0]

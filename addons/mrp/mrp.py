@@ -641,6 +641,21 @@ class mrp_production(osv.osv):
                     } )
         return amount
 
+    def action_in_production_my(self, cr, uid, ids, qty=None):
+        print 'action_in_production', ids, qty
+        move_obj = self.pool.get('stock.move')
+        move_ids = []
+        for production in self.browse(cr, uid, ids):
+            move_ids = map(lambda x: x.id, production.move_lines + production.move_lines2)
+            if not production.date_start:
+                self.write(cr, uid, [production.id],
+                        {'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
+        print 'MMMMMMMMMMMMMMMMMMMMMMMM', move_ids
+        for move in move_obj.browse(cr, uid, move_ids):
+            move_obj.consume_moves(cr, uid, move.id, qty, move.location_id.id)
+
+#        self.write(cr, uid, ids, {'state': 'in_production'})
+        return True
     def action_in_production(self, cr, uid, ids):
         move_ids = []
         for production in self.browse(cr, uid, ids):

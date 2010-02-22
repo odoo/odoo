@@ -439,14 +439,6 @@
             </field>
         </record>
 
-        <wizard
-            string="Change Product Qty."
-            model="mrp.production"
-            name="change_production_qty"
-            id="mrp.wizard_change_production_qty"
-            keyword="client_action_multi"
-            multi="True"/>
-	
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
@@ -462,7 +454,11 @@
                         <group colspan="2" col="3">
                             <field name="product_uom"/>
                             <!-- TODO Fix change qty accroding to move_lines and move_lines2 -->
-<!--                            <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production" icon="gtk-ok"/>-->
+                            <button type="action"
+                            	name="%(mrp.wizard_change_production_qty)d"
+                            	string="Change Qty"
+                            	states="ready,confirmed,in_production"
+                            	icon="gtk-ok" />
                         </group>
                         <label string="" colspan="2"/>                          
                         <field name="product_uos_qty" groups="product.group_uos"/>                        
@@ -537,6 +533,7 @@
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
 <!--                                <button name="action_start" states="ready" string="Mark as Start" icon="gtk-media-play" type="object"/>-->
                                 <button name="button_produce" states="ready" string="Produce" icon="gtk-execute"/>
+<!--								<button name="%(move_produce)d" states="ready" string="Produce" icon="gtk-execute" type="action"/>-->
                                 <button name="button_produce_done" states="in_production" string="Production done" icon="gtk-ok"/>
                                 <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
                                 <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-cancel"/>
