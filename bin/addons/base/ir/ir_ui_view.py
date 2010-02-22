@@ -132,18 +132,18 @@ class view(osv.osv):
 
         return super(view, self).write(cr, uid, ids, vals, context)
 
-    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, scale,context={}):
-        nodes= []
-        nodes_name = []
-        transitions = []
-        start = []
-        tres = {}
-        signal = {}
-        no_ancester = []
+    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,signal,scale,context={}):
+        nodes=[]
+        nodes_name=[]
+        transitions=[]
+        start=[]
+        tres={}
+        sig={}
+        no_ancester=[]
 
-        _Model_Obj = self.pool.get(model)
-        _Node_Obj = self.pool.get(node_obj)
-        _Arrow_Obj = self.pool.get(conn_obj)
+        _Model_Obj=self.pool.get(model)
+        _Node_Obj=self.pool.get(node_obj)
+        _Arrow_Obj=self.pool.get(conn_obj)
 
         for model_key,model_value in _Model_Obj._columns.items():
                 if model_value._type=='one2many':
@@ -172,10 +172,9 @@ class view(osv.osv):
             for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
                 transitions.append((a['id'], t[des_node][0]))
                 tres[str(t['id'])] = (a['id'],t[des_node][0])
-                if t['signal']:
-                    signal[str(t['id'])] = t['signal']
-                else:
-                    signal[str(t['id'])] = t['condition']
+                if t.has_key(str(signal)) and str(t[signal])=='False':
+                    t[signal]=' '
+                sig[str(t['id'])] = (a['id'],t.get(signal,' '))
         g  = graph(nodes, transitions, no_ancester)
         g.process(start)
         g.scale(*scale)
@@ -184,7 +183,7 @@ class view(osv.osv):
         for node in nodes_name:
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
-        return {'nodes': results, 'transitions': tres, 'signal' : signal}
+        return {'nodes': results, 'transitions': tres, 'signal' : sig}
 view()
 
 class view_sc(osv.osv):

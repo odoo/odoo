@@ -32,7 +32,7 @@
 
     <rng:define name="diagram">
         <rng:element name="diagram">
-            <rng:optional><rng:attribute name="string"/></rng:optional>            
+            <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="node"/>
@@ -41,7 +41,7 @@
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
-    
+
     <rng:define name="node">
         <rng:element name="node">
             <rng:attribute name="object"/>
@@ -49,25 +49,26 @@
             <rng:optional><rng:attribute name="bgcolor"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
-                    <rng:ref name="field"/>                    
+                    <rng:ref name="field"/>
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
-    
+
     <rng:define name="arrow">
         <rng:element name="arrow">
             <rng:attribute name="object" />
             <rng:attribute name="source" />
-            <rng:attribute name="destination" />           
+            <rng:attribute name="destination" />
+            <rng:optional><rng:attribute name="signal"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
-                    <rng:ref name="field"/>                    
+                    <rng:ref name="field"/>
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
-    
+
     <rng:define name="tree">
         <rng:element name="tree">
             <rng:optional><rng:attribute name="string"/></rng:optional>
