@@ -175,7 +175,7 @@ class product_product(osv.osv):
         if not context:
             context = {}
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
-        if context.get('location', False):
+        if context.get('location'):
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
             fields=res.get('fields',{})
             if fields:
