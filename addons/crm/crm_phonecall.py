@@ -31,18 +31,14 @@ class crm_phonecall(osv.osv):
         'duration': fields.float('Duration'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.phonecall')]"),
         'partner_phone': fields.char('Phone', size=32),
+        'partner_contact': fields.related('partner_address_id', 'name', type="char", string="Contact", size=128),
         'partner_mobile': fields.char('Mobile', size=32),
-        'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
-                                                                   "the partner mentality in relation to our services.The scale has" \
-                                                                   "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
                                                                 " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
-        'probability': fields.float('Probability (%)'),
-        'planned_revenue': fields.float('Planned Revenue'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),        
+        'date': fields.datetime('Date'),
+        'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),
     }
-    
 crm_phonecall()
 
