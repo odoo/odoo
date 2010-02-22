@@ -282,8 +282,11 @@ class expression(object):
                         c = context.copy()
                         c['active_test'] = False
                         res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)
-                        right = map(lambda x: x[0], res_ids)
-                        self.__exp[i] = (left, 'in', right)
+                        if not res_ids:
+                            self.__exp[i] = ('id','=',0)
+                        else:
+                            right = map(lambda x: x[0], res_ids)
+                            self.__exp[i] = (left, 'in', right)
             else:
                 # other field type
                 # add the time part to datetime field when it's not there:
