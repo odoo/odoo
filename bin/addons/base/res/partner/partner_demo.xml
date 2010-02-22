@@ -271,6 +271,26 @@
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_agrolait"/>
         </record>
+        <record id="res_partner_address_8delivery" model="res.partner.address">
+            <field name="city">Wavre</field>
+            <field name="name">Paul Lelitre</field>
+            <field name="zip">5478</field>
+            <field name="title">M.</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">71 rue de Chimay</field>
+            <field name="type">delivery</field>
+            <field name="partner_id" ref="res_partner_agrolait"/>
+        </record>
+        <record id="res_partner_address_8invoice" model="res.partner.address">
+            <field name="city">Wavre</field>
+            <field name="name">Serge Lelitre</field>
+            <field name="zip">5478</field>
+            <field name="title">M.</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">69 rue de Chimay</field>
+            <field name="type">invoice</field>
+            <field name="partner_id" ref="res_partner_agrolait"/>
+        </record>
         <record id="res_partner_address_9" model="res.partner.address">
             <field name="city">Paris</field>
             <field name="name">Arthur Grosbonnet</field>
