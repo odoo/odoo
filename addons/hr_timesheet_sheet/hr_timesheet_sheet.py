@@ -104,7 +104,7 @@ class hr_timesheet_sheet(osv.osv):
                 LEFT JOIN hr_timesheet_sheet_sheet_day AS day \
                     ON (sheet.id = day.sheet_id \
                         AND day.name = sheet.date_current) \
-                WHERE sheet.id in (' + ','.join([str(x) for x in ids]) + ')')
+                WHERE sheet.id in %s', (tuple(ids),))
         return dict(cr.fetchall())
 
     def _total(self, cr, uid, ids, name, args, context):
@@ -112,8 +112,8 @@ class hr_timesheet_sheet(osv.osv):
                 FROM hr_timesheet_sheet_sheet s \
                     LEFT JOIN hr_timesheet_sheet_sheet_day d \
                         ON (s.id = d.sheet_id) \
-                WHERE s.id in ('+ ','.join(map(str, ids)) + ') \
-                GROUP BY s.id')
+                WHERE s.id in %s \
+                GROUP BY s.id', (tuple(ids),))
         return dict(cr.fetchall())
 
     def _state_attendance(self, cr, uid, ids, name, args, context):
@@ -330,8 +330,8 @@ class hr_timesheet_line(osv.osv):
                         ON (s.date_to >= al.date \
                             AND s.date_from <= al.date \
                             AND s.user_id = al.user_id) \
-                WHERE l.id in (' + ','.join([str(x) for x in ids]) + ') \
-                GROUP BY l.id')
+                WHERE l.id in %s \
+                GROUP BY l.id', (tuple(ids),))
         res = dict(cursor.fetchall())
         sheet_names = {}
         for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
@@ -448,8 +448,8 @@ class hr_attendance(osv.osv):
                         ON (s.date_to >= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
                             AND s.date_from <= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
                             AND s.user_id = e.user_id) \
-                WHERE a.id in (" + ",".join([str(x) for x in ids]) + ") \
-                GROUP BY a.id")
+                WHERE a.id in %s \
+                GROUP BY a.id", (tuple(ids),))
         res = dict(cursor.fetchall())
         sheet_names = {}
         for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
