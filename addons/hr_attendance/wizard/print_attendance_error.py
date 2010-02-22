@@ -43,9 +43,12 @@ _date_fields = {
 def _check_data(self, cr, uid, data, *args):
     date_from = data['form']['init_date']
     date_to = data['form']['end_date']
-    emp_ids = (','.join([str(x) for x in data['ids']]))
-                  
-    cr.execute("select id from hr_attendance where employee_id in (%s) and to_char(name,'YYYY-mm-dd')<='%s' and to_char(name,'YYYY-mm-dd')>='%s' and action in ('%s','%s') order by name" %(emp_ids, date_to, date_from, 'sign_in', 'sign_out'))
+    cr.execute("SELECT id FROM hr_attendance "\
+               "WHERE employee_id IN %s "\
+               "AND to_char(name,'YYYY-mm-dd')<=%s "\
+               "and to_char(name,'YYYY-mm-dd')>=%s "\
+               "and action in (%s, %s) order by name",
+               (tuple(data['ids']), date_to, date_from, 'sign_in', 'sign_out'))
     attendance_ids = [x[0] for x in cr.fetchall()]
     if not attendance_ids:
         raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))    
