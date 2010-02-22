@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 12:01+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-02-22 14:40:06+0000\n"
+"PO-Revision-Date: 2010-02-22 14:40:06+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: auction
 #: field:report.deposit.border,total_marge:0
@@ -34,7 +33,6 @@ msgstr "Definir como rascunho"
 #. module: auction
 #: field:auction.deposit,partner_id:0
 #: view:auction.lots:0
-#: xsl:report.auction.seller.list:0
 #: field:report.deposit.border,seller:0
 #: field:report.seller.auction,seller:0
 #: field:report.seller.auction2,seller:0
@@ -44,7 +42,7 @@ msgstr "Vendedor"
 #. module: auction
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo invalido na definição da acção"
+msgstr "Nome de modelo inválido na definição da acção"
 
 #. module: auction
 #: selection:auction.lots.send.aie,date_ask,numerotation:0
@@ -83,11 +81,6 @@ msgstr "Nº de objectos"
 #: model:ir.ui.menu,name:auction.menu_action_bids_form
 msgid "Bids line"
 msgstr "Linha das ofertas"
-
-#. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Deposit Form"
-msgstr "Formulário do depósito"
 
 #. module: auction
 #: rml:auction.bids:0
@@ -158,11 +151,6 @@ msgid "Mark as taken away"
 msgstr "Marcar como tomado"
 
 #. module: auction
-#: xsl:report.auction.seller.list:0
-msgid "Inv."
-msgstr "Inv."
-
-#. module: auction
 #: field:auction.deposit.cost,amount:0
 msgid "Amount"
 msgstr "Montante"
@@ -174,19 +162,9 @@ msgid "Deposit border"
 msgstr "Limite do deposito"
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "VAT"
-msgstr "VAT"
-
-#. module: auction
 #: view:auction.lots:0
 msgid "Statements"
 msgstr "Indicações"
-
-#. module: auction
-#: xsl:flagey.huissier:0
-msgid "Adjudication"
-msgstr "Adjudicação"
 
 #. module: auction
 #: field:auction.dates,account_analytic_id:0
@@ -287,7 +265,7 @@ msgstr "Datas"
 #. module: auction
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erro: UOS deve estar em uma categoria diferente do que o UOM"
+msgstr "Erro: UdV deve estar numa categoria diferente da UdC"
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -487,8 +465,8 @@ msgid "Object Description"
 msgstr ""
 
 #. module: auction
-#: selection:auction.deposit,method:0
-msgid "Contact the Seller"
+#: field:auction.lots,artist2_id:0
+msgid "Artist/Author 2"
 msgstr ""
 
 #. module: auction
@@ -645,11 +623,6 @@ msgid "# of Encoded obj."
 msgstr "Nº de objectos codificados"
 
 #. module: auction
-#: xsl:report.auction.vnd_bordereau:0
-msgid "List N."
-msgstr ""
-
-#. module: auction
 #: field:report.deposit.border,moy_est:0
 msgid "Avg. Est"
 msgstr ""
@@ -666,8 +639,7 @@ msgstr "Erro: Código ean inválido"
 
 #. module: auction
 #: model:ir.module.module,description:auction.module_meta_information
-msgid ""
-"This module provides functionality to \n"
+msgid "This module provides functionality to \n"
 "     manage artists, articles, sellers, buyers and auction.\n"
 "     Manage bids, track of sold, paid and unpaid objects.\n"
 "     Delivery Management. \n"
@@ -769,16 +741,6 @@ msgid "Created by"
 msgstr "Criado por"
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Buyer form"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Estimate"
-msgstr "Estimar"
-
-#. module: auction
 #: rml:auction.total.rml:0
 msgid "# of buyers:"
 msgstr "Nº de compradores:"
@@ -786,11 +748,6 @@ msgstr "Nº de compradores:"
 #. module: auction
 #: field:auction.lots,costs:0
 msgid "Indirect costs"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Cat"
 msgstr ""
 
 #. module: auction
@@ -867,9 +824,9 @@ msgid "Bordereau de dépôt"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Document type"
-msgstr "Tipo de documento"
+#: selection:auction.lot.category,aie_categ:0
+msgid "Cont. Art/Arts"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_estimation_adj_category
@@ -895,12 +852,6 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.wizard,name:auction.wizard_emporte
 msgid "Gestion emporte"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Cat. N."
 msgstr ""
 
 #. module: auction
@@ -994,7 +945,6 @@ msgid "Antique/Carpet and textilles"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.seller.list:0
 #: field:report.object.encoded.manager,adj:0
 msgid "Adj."
 msgstr ""
@@ -1003,7 +953,6 @@ msgstr ""
 #: field:auction.lot.history,name:0
 #: field:report.attendance,name:0
 #: field:report.auction.adjudication,date:0
-#: xsl:report.auction.deposit:0
 #: field:report.auction.estimation.adj.category,date:0
 msgid "Date"
 msgstr "Data"
@@ -1086,9 +1035,7 @@ msgid "Aie Category"
 msgstr ""
 
 #. module: auction
-#: xsl:flagey.huissier:0
 #: rml:report.auction.buyer.result:0
-#: xsl:report.auction.deposit:0
 msgid "Num"
 msgstr "Num"
 
@@ -1120,19 +1067,15 @@ msgid "Biography"
 msgstr "Biografia"
 
 #. module: auction
-#: field:auction.lots,lot_local:0
-msgid "Location"
-msgstr "Localização"
-
-#. module: auction
 #: wizard_view:auction.payer.sel,init:0
 msgid "Check payment for seller"
 msgstr ""
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.view_report_object_by_auction
-msgid "Detailed lots"
-msgstr ""
+#: wizard_button:auction.pay.buy,init,pay:0
+#: wizard_button:auction.payer.sel,init,pay2:0
+msgid "Pay"
+msgstr "Pagar"
 
 #. module: auction
 #: field:report.object.encoded.manager,obj_margin:0
@@ -1186,20 +1129,9 @@ msgid "Seller's Revenues"
 msgstr ""
 
 #. module: auction
-#: xsl:flagey.huissier:0
-msgid "Price"
-msgstr "Preço"
-
-#. module: auction
 #: rml:bids.phones.details:0
 msgid "-"
 msgstr "-"
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Subtotal:"
-msgstr "Sub total:"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1231,11 +1163,6 @@ msgstr ""
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view1
 msgid "Buyer's Summary"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Customer Reference"
 msgstr ""
 
 #. module: auction
@@ -1280,7 +1207,6 @@ msgstr "Iniciar sessão"
 
 #. module: auction
 #: rml:buyer.list:0
-#: xsl:report.auction.seller.list:0
 msgid "To pay"
 msgstr ""
 
@@ -1367,17 +1293,6 @@ msgstr ""
 #. module: auction
 #: view:auction.lots:0
 msgid "Payment's history"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Document"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid ", TEL:"
 msgstr ""
 
 #. module: auction
@@ -1492,10 +1407,9 @@ msgid "Cont. Art/Jewelry"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Inventory"
-msgstr ""
+#: field:auction.lots,lot_local:0
+msgid "Location"
+msgstr "Localização"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_dates_next
@@ -1504,7 +1418,6 @@ msgstr ""
 
 #. module: auction
 #: rml:buyer.list:0
-#: xsl:report.auction.seller.list:0
 msgid "#"
 msgstr ""
 
@@ -1604,14 +1517,13 @@ msgstr ""
 
 #. module: auction
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erro: O  UOM por defeito e o UOM de compra devem estar na mesma categoria."
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Erro: A UdM pré-defenida e a UdM de compra devem ser da mesma categoria."
 
 #. module: auction
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Lot"
+#: selection:auction.dates,state:0
+#: selection:report.auction.adjudication,state:0
+msgid "Closed"
 msgstr ""
 
 #. module: auction
@@ -1636,7 +1548,6 @@ msgstr ""
 
 #. module: auction
 #: selection:auction.lots,state:0
-#: xsl:report.auction.ach_bordereau:0
 #: selection:report.object.encoded,state:0
 #: selection:report.unclassified.objects,state:0
 msgid "Paid"
@@ -1654,10 +1565,9 @@ msgid "Antique/Argenterie"
 msgstr ""
 
 #. module: auction
-#: wizard_button:auction.pay.buy,init,pay:0
-#: wizard_button:auction.payer.sel,init,pay2:0
-msgid "Pay"
-msgstr "Pagar"
+#: model:ir.actions.act_window,name:auction.view_report_object_by_auction
+msgid "Detailed lots"
+msgstr ""
 
 #. module: auction
 #: field:auction.lot.category,active:0
@@ -1676,9 +1586,6 @@ msgstr ""
 
 #. module: auction
 #: rml:buyer.list:0
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.seller.list:0
-#: xsl:report.auction.vnd_bordereau:0
 msgid "Total:"
 msgstr ""
 
@@ -1693,11 +1600,6 @@ msgid "Objects per Day"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Document Number"
-msgstr ""
-
-#. module: auction
 #: view:report.object.encoded:0
 #: view:report.object.encoded.manager:0
 msgid "Objects statistics"
@@ -1706,11 +1608,6 @@ msgstr ""
 #. module: auction
 #: wizard_button:auction.lots.numerotate,search,set_number:0
 msgid "Numerotate"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Buyer, Price"
 msgstr ""
 
 #. module: auction
@@ -1746,10 +1643,8 @@ msgstr ""
 
 #. module: auction
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
 
 #. module: auction
 #: field:auction.deposit,transfer:0
@@ -1763,8 +1658,8 @@ msgid "Total adjudication"
 msgstr ""
 
 #. module: auction
-#: field:auction.lots,artist2_id:0
-msgid "Artist/Author 2"
+#: selection:auction.deposit,method:0
+msgid "Contact the Seller"
 msgstr ""
 
 #. module: auction
@@ -1824,11 +1719,6 @@ msgid "Antique/Porcelain, Ceramics, Glassmaking, ..."
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Plate Number:"
-msgstr ""
-
-#. module: auction
 #: view:auction.deposit:0
 #: field:auction.deposit,lot_id:0
 #: model:ir.ui.menu,name:auction.auction_objects_menu
@@ -1856,8 +1746,6 @@ msgstr ""
 #: view:auction.lots:0
 #: rml:auction.total.rml:0
 #: model:ir.ui.menu,name:auction.auction_report_auction_menu
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.deposit:0
 msgid "Auction"
 msgstr ""
 
@@ -1939,7 +1827,6 @@ msgstr ""
 
 #. module: auction
 #: field:report.attendance,total_attendance:0
-#: xsl:report.auction.ach_bordereau:0
 msgid "Total"
 msgstr ""
 
@@ -2029,8 +1916,7 @@ msgstr ""
 
 #. module: auction
 #: wizard_view:auction.lots.auction_move,init:0
-msgid ""
-"Warning, this will erase the object adjudication price and its buyer !"
+msgid "Warning, this will erase the object adjudication price and its buyer !"
 msgstr ""
 
 #. module: auction
@@ -2044,13 +1930,8 @@ msgid "Bid information"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "TEL:"
-msgstr ""
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
-msgid "Objects to sell"
+#: field:auction.dates,acc_income:0
+msgid "Income Account"
 msgstr ""
 
 #. module: auction
@@ -2059,12 +1940,6 @@ msgstr ""
 #: field:report.object.encoded.manager,net_revenue:0
 #: field:report.seller.auction2,net_revenue:0
 msgid "Net revenue"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.deposit:0
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Limit"
 msgstr ""
 
 #. module: auction
@@ -2129,12 +2004,6 @@ msgid "Gross Margin (%)"
 msgstr ""
 
 #. module: auction
-#: selection:auction.dates,state:0
-#: selection:report.auction.adjudication,state:0
-msgid "Closed"
-msgstr ""
-
-#. module: auction
 #: field:auction.lots,obj_comm:0
 #: field:report.unclassified.objects,obj_comm:0
 msgid "Commission"
@@ -2153,17 +2022,6 @@ msgstr "O IVA não parece estar correcto."
 #. module: auction
 #: field:report.attendance,employee_id:0
 msgid "Employee"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Adj.(EUR)"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Est."
 msgstr ""
 
 #. module: auction
@@ -2245,11 +2103,6 @@ msgid "Antique/Collectible & art objects"
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "BID:"
-msgstr ""
-
-#. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting
 #: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting2
 #: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting_all1
@@ -2269,7 +2122,7 @@ msgstr ""
 #. module: auction
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Erro! Não pode criar membros associados recursivamente."
 
 #. module: auction
 #: selection:auction.dates,state:0
@@ -2287,16 +2140,6 @@ msgid "........."
 msgstr ""
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Buyer Cost:"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "NET"
-msgstr ""
-
-#. module: auction
 #: rml:report.auction.buyer.result:0
 msgid "Adj"
 msgstr ""
@@ -2310,16 +2153,6 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Furnitures"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Customer Contact"
-msgstr ""
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Inv, Name"
 msgstr ""
 
 #. module: auction
@@ -2467,17 +2300,7 @@ msgstr ""
 #: view:auction.lots:0
 #: wizard_field:auction.lots.numerotate,search,obj_desc:0
 #: rml:bids.phones.details:0
-#: xsl:flagey.huissier:0
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.deposit:0
-#: xsl:report.auction.lots.list.landscape:0
-#: xsl:report.auction.vnd_bordereau:0
 msgid "Description"
-msgstr ""
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Arts"
 msgstr ""
 
 #. module: auction
@@ -2488,13 +2311,8 @@ msgid "Adjudication price"
 msgstr ""
 
 #. module: auction
-#: field:auction.dates,acc_income:0
-msgid "Income Account"
-msgstr ""
-
-#. module: auction
-#: xsl:flagey.huissier:0
-msgid "Ref."
+#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
+msgid "Objects to sell"
 msgstr ""
 
 #. module: auction
@@ -2605,7 +2423,3 @@ msgstr ""
 msgid "Auction history"
 msgstr ""
 
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Orders"
-msgstr ""

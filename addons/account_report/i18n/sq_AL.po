@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:23:46+0000\n"
-"PO-Revision-Date: 2009-08-28 15:23:46+0000\n"
+"POT-Creation-Date: 2010-02-22 14:24:11+0000\n"
+"PO-Revision-Date: 2010-02-22 14:24:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,6 +65,12 @@ msgstr ""
 #. module: account_report
 #: rml:print.indicators:0
 msgid "Tabular Summary"
+msgstr ""
+
+#. module: account_report
+#: code:addons/account_report/wizard/wizard_print_indicators.py:0
+#, python-format
+msgid "Please select maximum 8 records to fit the page-width."
 msgstr ""
 
 #. module: account_report
@@ -177,6 +183,12 @@ msgid "Good"
 msgstr ""
 
 #. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: account_report
 #: view:account.report.history:0
 msgid "Account Report History"
 msgstr ""
@@ -209,6 +221,11 @@ msgstr ""
 #. module: account_report
 #: wizard_view:print.indicators,init:0
 msgid "Select the criteria based on which Indicators will be printed."
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "report('REPORT_CODE')"
 msgstr ""
 
 #. module: account_report
@@ -284,8 +301,13 @@ msgid "Expression :"
 msgstr ""
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "report('REPORT_CODE')"
+#: rml:print.indicators:0
+msgid "COL 2"
+msgstr ""
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "COL 1"
 msgstr ""
 
 #. module: account_report
@@ -449,6 +471,12 @@ msgid "Select Criteria"
 msgstr ""
 
 #. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
+msgstr ""
+
+#. module: account_report
 #: view:account.report.report:0
 msgid "tax_code(['ACCOUNT_TAX_CODE',],period)"
 msgstr ""
@@ -464,6 +492,12 @@ msgstr ""
 #: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_define
 #: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view
 msgid "Custom reporting"
+msgstr ""
+
+#. module: account_report
+#: code:addons/account_report/wizard/wizard_print_indicators.py:0
+#, python-format
+msgid "User Error!"
 msgstr ""
 
 #. module: account_report

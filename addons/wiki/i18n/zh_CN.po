@@ -4,28 +4,26 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 12:05+0000\n"
+"POT-Creation-Date: 2010-02-22 14:27:47+0000\n"
+"PO-Revision-Date: 2010-02-22 14:27:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
 msgid "wizard.wiki.history.show_diff"
-msgstr ""
+msgstr "wizard.wiki.history.show_diff"
 
 #. module: wiki
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”起头且不能包含任何特殊字符！"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_groups_link
@@ -38,7 +36,9 @@ msgid "Author"
 msgstr "作者"
 
 #. module: wiki
+#: code:addons/wiki/wizard/open_page.py:0
 #: model:ir.actions.wizard,name:wiki.wizard_open_page
+#, python-format
 msgid "Open Page"
 msgstr "打开维基页"
 
@@ -88,7 +88,7 @@ msgstr "维基设置"
 #. module: wiki
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "操作定义中使用了无效的模式名称。"
+msgstr "在行动定义中的模式名称无效"
 
 #. module: wiki
 #: field:wiki.groups,name:0
@@ -169,7 +169,7 @@ msgstr "文档管理"
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
 msgid "Date"
-msgstr "时间"
+msgstr "日期"
 
 #. module: wiki
 #: wizard_view:wiki.make.index,init:0
@@ -179,7 +179,7 @@ msgstr "想要为选定的页面创建索引吗？ "
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Configuration"
-msgstr "配置"
+msgstr "设置"
 
 #. module: wiki
 #: field:wiki.groups,home:0
@@ -196,7 +196,7 @@ msgstr "您因该选定最少一个或最多两个历史差异！"
 #. module: wiki
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效的 XML 视图结构"
+msgstr "无效XML视图结构!"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
@@ -250,7 +250,7 @@ msgstr "全部页面历史记录"
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki
 msgid "wiki.wiki"
-msgstr ""
+msgstr "wiki.wiki"
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
@@ -292,7 +292,7 @@ msgstr "维基"
 #. module: wiki
 #: field:wiki.wiki,write_date:0
 msgid "Modification Date"
-msgstr "修改时间"
+msgstr "修改日期"
 
 #. module: wiki
 #: model:ir.actions.wizard,name:wiki.wizard_make_index
@@ -359,3 +359,4 @@ msgstr "差异"
 #: field:wiki.wiki,review:0
 msgid "Need Review"
 msgstr "需要复审"
+

@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:49+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-02-22 14:30:01+0000\n"
+"PO-Revision-Date: 2010-02-22 14:30:01+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
@@ -24,8 +23,7 @@ msgstr ""
 
 #. module: hr_attendance
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: hr_attendance
@@ -40,15 +38,12 @@ msgstr "Přihlásit / Odhlásit"
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:0
 #, python-format
-msgid ""
-"You tried to sign with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
+msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 msgstr ""
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A positive delay means that the employee worked less than recorded."
+msgid "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
 
 #. module: hr_attendance
@@ -64,9 +59,7 @@ msgstr ""
 #. module: hr_attendance
 #: wizard_view:hr.si_so,init:0
 msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr ""
-"Teď jste schopni se přihlašovat/odhlašovat(You are now ready to sign in or "
-"out of the attendance follow up)"
+msgstr "Teď jste schopni se přihlašovat/odhlašovat(You are now ready to sign in or out of the attendance follow up)"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -99,9 +92,14 @@ msgid "Print Attendance Error Report"
 msgstr ""
 
 #. module: hr_attendance
+#: wizard_view:hr.si_so,si_ask_so:0
+msgid "You did not sign out the last time. Please enter the date and time you signed out."
+msgstr ""
+
+#. module: hr_attendance
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Špatný název modelu v definici akce"
 
 #. module: hr_attendance
 #: model:ir.actions.wizard,name:hr_attendance.print_week
@@ -112,6 +110,11 @@ msgstr ""
 #: field:hr.attendance,employee_id:0
 msgid "Employee"
 msgstr ""
+
+#. module: hr_attendance
+#: wizard_field:hr.si_so,si_ask_so,last_time:0
+msgid "Your last sign out"
+msgstr "Naposledy jste se přihlásil(Your last sign out)"
 
 #. module: hr_attendance
 #: wizard_view:hr.attendance.print_week,init:0
@@ -133,14 +136,6 @@ msgstr ""
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Total period:"
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to sign out with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
 msgstr ""
 
 #. module: hr_attendance
@@ -223,11 +218,10 @@ msgid "July"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,si_ask_so:0
-msgid ""
-"You did not signed out the last time. Please enter the date and time you "
-"signed out."
-msgstr "Minule jste se neodhlásil. Prosím zadejte datum a čas odhlášení"
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -261,9 +255,9 @@ msgid "October"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,si_ask_so,last_time:0
-msgid "Your last sign out"
-msgstr "Naposledy jste se přihlásil(Your last sign out)"
+#: wizard_button:hr.si_so,so_wo_si,end:0
+msgid "Ok"
+msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
@@ -311,6 +305,11 @@ msgstr "Současný stav(Current state)"
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "January"
+msgstr ""
+
+#. module: hr_attendance
+#: wizard_view:hr.si_so,so_wo_si:0
+msgid "Sign-Out Entry must follow Sign-In."
 msgstr ""
 
 #. module: hr_attendance
@@ -392,11 +391,10 @@ msgid "No records found for your selection!"
 msgstr ""
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,so_ask_si:0
-msgid ""
-"You did not signed in the last time. Please enter the date and time you "
-"signed in."
-msgstr "Minule jste se neodhlásil. Prosím zadejte datum a čas odhlášení"
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
@@ -430,8 +428,14 @@ msgstr ""
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:0
+#: wizard_view:hr.si_so,so_wo_si:0
 #, python-format
 msgid "Warning"
+msgstr ""
+
+#. module: hr_attendance
+#: wizard_view:hr.si_so,so_ask_si:0
+msgid "You did not sign in the last time. Please enter the date and time you signed in."
 msgstr ""
 
 #. module: hr_attendance
@@ -455,14 +459,6 @@ msgid "Operation"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to sign in with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-
-#. module: hr_attendance
 #: wizard_field:hr.si_so,so_ask_si,last_time:0
 msgid "Your last sign in"
 msgstr "Naposledy jste se přihlásil"
@@ -472,3 +468,4 @@ msgstr "Naposledy jste se přihlásil"
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
 msgstr ""
+

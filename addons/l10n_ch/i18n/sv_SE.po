@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:54+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-02-22 14:44:56+0000\n"
+"PO-Revision-Date: 2010-02-22 14:44:56+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
@@ -23,7 +22,7 @@ msgstr ""
 
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
-msgid "-"
+msgid "Canceled Invoice"
 msgstr ""
 
 #. module: l10n_ch
@@ -43,6 +42,12 @@ msgid "No bank account for the company."
 msgstr ""
 
 #. module: l10n_ch
+#: rml:l10n_ch.bvr:0
+#: rml:l10n_ch.invoice.bvr:0
+msgid "1.3cm 25.5cm 7cm 25.5cm"
+msgstr ""
+
+#. module: l10n_ch
 #: code:addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "Record found after total record!"
@@ -57,7 +62,7 @@ msgstr ""
 #: rml:l10n_ch.bvr:0
 #: rml:l10n_ch.invoice.bvr:0
 msgid "Mail:"
-msgstr ""
+msgstr "E-post:"
 
 #. module: l10n_ch
 #: model:ir.actions.wizard,name:l10n_ch.wizard_bvr_import
@@ -68,7 +73,7 @@ msgstr ""
 #. module: l10n_ch
 #: rml:l10n_ch.bvr:0
 msgid "Thanks,"
-msgstr ""
+msgstr "Tack,"
 
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
@@ -78,6 +83,31 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.actions.report.xml,name:l10n_ch.account_invoice_bvr
 msgid "BVR A4 Sheet"
+msgstr ""
+
+#. module: l10n_ch
+#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_bvbank
+#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_bvpost
+#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_bvrbank
+#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_bvrpost
+#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_iban
+msgid "bank"
+msgstr "bank"
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide a BVR number\n'\n"
+"                    'for the bank account: %s' \\n"
+"                    'on line: %s"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No IBAN defined \n' \\n"
+"                        'for the bank account: %s\n' + \\n"
+"                        'on line: %s"
 msgstr ""
 
 #. module: l10n_ch
@@ -107,12 +137,23 @@ msgid "Amount"
 msgstr ""
 
 #. module: l10n_ch
-#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_bvbank
-#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_bvpost
-#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_bvrbank
-#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_bvrpost
-#: model:res.partner.bank.type.field,name:l10n_ch.bank_field_iban
-msgid "bank"
+#: rml:l10n_ch.invoice.bvr:0
+msgid "end of core"
+msgstr ""
+
+#. module: l10n_ch
+#: rml:l10n_ch.bvr:0
+#: rml:l10n_ch.invoice.bvr:0
+msgid "Width: 2.3inch, 5.9inch 		Height: 4*1/6 inch"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No bank name defined\n' \\n"
+"                    'for the bank account: %s\n' \\n"
+"                    'on the partner: %s\n' \\n"
+"                    'on line: %s"
 msgstr ""
 
 #. module: l10n_ch
@@ -129,7 +170,7 @@ msgstr ""
 #. module: l10n_ch
 #: wizard_button:account.dta_create,init,end:0
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
@@ -139,6 +180,15 @@ msgstr ""
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
 msgid "Tax"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide ' \\n"
+"                        'a Clearing Number\n' \\n"
+"                        'for the partner bank: %s\n' \\n"
+"                        'on line %s"
 msgstr ""
 
 #. module: l10n_ch
@@ -164,13 +214,14 @@ msgid "Clearing number"
 msgstr ""
 
 #. module: l10n_ch
-#: model:res.partner.bank.type,name:l10n_ch.bvbank
-msgid "DTA-BVBANK"
+#: rml:l10n_ch.bvr:0
+#: rml:l10n_ch.invoice.bvr:0
+msgid "Exact value: y=17.6mm"
 msgstr ""
 
 #. module: l10n_ch
-#: rml:l10n_ch.bvr:0
-msgid "', reference:"
+#: model:res.partner.bank.type,name:l10n_ch.bvbank
+msgid "DTA-BVBANK"
 msgstr ""
 
 #. module: l10n_ch
@@ -191,7 +242,7 @@ msgstr ""
 #. module: l10n_ch
 #: view:account.journal.todo:0
 msgid "Next"
-msgstr ""
+msgstr "Nästa"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/dta_wizard.py:0
@@ -205,14 +256,41 @@ msgid "Supplier Invoice"
 msgstr ""
 
 #. module: l10n_ch
+#: code:addons/l10n_ch/wizard/wizard_bvr.py:0
+#, python-format
+msgid "Your bank BVR number should be of the form 0X-XXX-X!\n' \\n"
+"                            'Please check your company ' \\n"
+"                            'information for the invoice:\n%s"
+msgstr ""
+
+#. module: l10n_ch
 #: constraint:res.partner:0
 msgid "The VAT doesn't seem to be correct."
+msgstr ""
+
+#. module: l10n_ch
+#: rml:l10n_ch.bvr:0
+#: rml:l10n_ch.invoice.bvr:0
+msgid "1.3cm 27.7cm 20cm 27.7cm"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide the bank city '\n"
+"                        'or the bic code for the partner bank: \n %d\n' + \\n"
+"                        'on line: %s"
 msgstr ""
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/dta_wizard.py:0
 #, python-format
 msgid "You must provide a Clearing Number for your bank account."
+msgstr ""
+
+#. module: l10n_ch
+#: field:res.partner.bank,printAccount:0
+msgid "Print Account Number on BVR"
 msgstr ""
 
 #. module: l10n_ch
@@ -230,7 +308,7 @@ msgstr ""
 #: rml:l10n_ch.bvr:0
 #: rml:l10n_ch.invoice.bvr:0
 msgid "+"
-msgstr ""
+msgstr "+"
 
 #. module: l10n_ch
 #: model:ir.actions.act_window,name:l10n_ch.action_config_journal
@@ -241,6 +319,11 @@ msgstr ""
 #: code:addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "The properties account payable account receivable"
+msgstr ""
+
+#. module: l10n_ch
+#: rml:l10n_ch.invoice.bvr:0
+msgid "- Page:"
 msgstr ""
 
 #. module: l10n_ch
@@ -298,13 +381,13 @@ msgid "No payment mode or payment type code invalid."
 msgstr ""
 
 #. module: l10n_ch
-#: model:ir.actions.wizard,name:l10n_ch.wizard_invoice_bvr_check_report
-msgid "Invoices BVR"
+#: rml:l10n_ch.invoice.bvr:0
+msgid "Contact :"
 msgstr ""
 
 #. module: l10n_ch
-#: rml:l10n_ch.bvr:0
-msgid "Invoice -"
+#: model:ir.actions.wizard,name:l10n_ch.wizard_invoice_bvr_check_report
+msgid "Invoices BVR"
 msgstr ""
 
 #. module: l10n_ch
@@ -319,6 +402,19 @@ msgid "Import BVR"
 msgstr ""
 
 #. module: l10n_ch
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide ' \\n"
+"                        'a valid BVR reference number \n' \\n"
+"                        'for the line: %s"
+msgstr ""
+
+#. module: l10n_ch
+#: rml:l10n_ch.invoice.bvr:0
+msgid "end of header"
+msgstr ""
+
+#. module: l10n_ch
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
 msgstr ""
@@ -326,19 +422,28 @@ msgstr ""
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/wizard_bvr.py:0
 #, python-format
-msgid ""
-"No bank specified on invoice:\n"
-"%s"
+msgid "No bank specified on invoice:\n%s"
 msgstr ""
 
 #. module: l10n_ch
 #: wizard_button:l10n_ch.bvr_import,init,import:0
 msgid "Import"
-msgstr ""
+msgstr "Importera"
 
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
 msgid "PRO-FORMA"
+msgstr ""
+
+#. module: l10n_ch
+#: field:res.partner.bank,printBank:0
+msgid "Print Bank on BVR"
+msgstr ""
+
+#. module: l10n_ch
+#: rml:l10n_ch.bvr:0
+#: rml:l10n_ch.invoice.bvr:0
+msgid "You Logo - Change X,Y,Width and Height"
 msgstr ""
 
 #. module: l10n_ch
@@ -350,12 +455,12 @@ msgstr ""
 #: rml:l10n_ch.bvr:0
 #: rml:l10n_ch.invoice.bvr:0
 msgid "Phone:"
-msgstr ""
+msgstr "Telefon:"
 
 #. module: l10n_ch
 #: rml:l10n_ch.bvr:0
 msgid "."
-msgstr ""
+msgstr "."
 
 #. module: l10n_ch
 #: field:res.company,bvr_delta_horz:0
@@ -370,7 +475,7 @@ msgstr ""
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
 msgid ":"
-msgstr ""
+msgstr ":"
 
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
@@ -381,13 +486,7 @@ msgstr ""
 #: rml:l10n_ch.bvr:0
 #: rml:l10n_ch.invoice.bvr:0
 msgid ">"
-msgstr ""
-
-#. module: l10n_ch
-#: rml:l10n_ch.bvr:0
-#: rml:l10n_ch.invoice.bvr:0
-msgid "TVA:"
-msgstr ""
+msgstr ">"
 
 #. module: l10n_ch
 #: model:res.partner.bank.type,name:l10n_ch.bank_dta
@@ -431,7 +530,7 @@ msgstr ""
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
 msgid "Quantity"
-msgstr ""
+msgstr "Kvantitet"
 
 #. module: l10n_ch
 #: field:res.partner.bank,dta_code:0
@@ -442,6 +541,14 @@ msgstr ""
 #: model:res.partner.title,name:l10n_ch.res_c_partner_title_mlle
 #: model:res.partner.title,name:l10n_ch.res_partner_title_mlle
 msgid "Mademoiselle"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/wizard/wizard_bvr.py:0
+#, python-format
+msgid "Your bank BVR adherent number must contain exactly seven' \\n"
+"                            'digits!\nPlease check your company ' \\n"
+"                            'information for the invoice:\n%s"
 msgstr ""
 
 #. module: l10n_ch
@@ -462,6 +569,15 @@ msgstr ""
 #. module: l10n_ch
 #: view:account.journal.todo:0
 msgid "The accounts linked to the account journals"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide ' \\n"
+"                            'a bank number \n' \\n"
+"                            'for the partner bank: %s\n' \\n"
+"                            'on line: %s"
 msgstr ""
 
 #. module: l10n_ch
@@ -488,7 +604,7 @@ msgstr ""
 #: view:account.journal.todo:0
 #: wizard_button:l10n_ch.bvr_import,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: l10n_ch
 #: model:res.partner.bank.type.field,name:l10n_ch.post_field_bvpost
@@ -497,10 +613,8 @@ msgstr ""
 
 #. module: l10n_ch
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: l10n_ch
 #: field:account.journal.todo,default_credit_account_id:0
@@ -518,6 +632,15 @@ msgid "(incl. taxes):"
 msgstr ""
 
 #. module: l10n_ch
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "You must provide ' \\n"
+"                        'a post number \n' \\n"
+"                        'for the partner bank: %s\n' \\n"
+"                        'on line: %s"
+msgstr ""
+
+#. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
 msgid "Taxes:"
 msgstr ""
@@ -531,27 +654,22 @@ msgstr ""
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. module: l10n_ch
 #: rml:l10n_ch.invoice.bvr:0
 msgid "Price"
-msgstr ""
-
-#. module: l10n_ch
-#: rml:l10n_ch.invoice.bvr:0
-msgid "Canceled Invoice"
-msgstr ""
-
-#. module: l10n_ch
-#: wizard_field:l10n_ch.bvr_import,init,file:0
-msgid "BVR file"
-msgstr ""
+msgstr "Pris"
 
 #. module: l10n_ch
 #: rml:l10n_ch.bvr:0
 #: rml:l10n_ch.invoice.bvr:0
-msgid "1cm 25.7cm 7cm 25.7cm"
+msgid "-"
+msgstr "-"
+
+#. module: l10n_ch
+#: wizard_field:l10n_ch.bvr_import,init,file:0
+msgid "BVR file"
 msgstr ""
 
 #. module: l10n_ch
@@ -590,10 +708,14 @@ msgid "BVR Vert. Delta (mm)"
 msgstr ""
 
 #. module: l10n_ch
+#: rml:l10n_ch.invoice.bvr:0
+msgid "Total"
+msgstr ""
+
+#. module: l10n_ch
 #: model:ir.actions.todo,note:l10n_ch.action_config_journal_todo
-msgid ""
-"Set accounts on financial journals defined by\n"
-"\t\t\tCamptocamp l10n_ch module"
+msgid "Set accounts on financial journals defined by\n"
+"			Camptocamp l10n_ch module"
 msgstr ""
 
 #. module: l10n_ch
@@ -602,9 +724,10 @@ msgid "horiz. delta in mm 1.2 will print the bvz 1.2mm lefter"
 msgstr ""
 
 #. module: l10n_ch
-#: rml:l10n_ch.bvr:0
-#: rml:l10n_ch.invoice.bvr:0
-msgid "1cm 27.7cm 20cm 27.7cm"
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No bank account defined\n' \\n"
+"                    'on line: %s"
 msgstr ""
 
 #. module: l10n_ch
@@ -619,6 +742,11 @@ msgid "Supplier Refund"
 msgstr ""
 
 #. module: l10n_ch
-#: rml:l10n_ch.invoice.bvr:0
-msgid "Total"
+#: code:addons/l10n_ch/wizard/dta_wizard.py:0
+#, python-format
+msgid "No bank defined\n' \\n"
+"                    'for the bank account: %s\n' \\n"
+"                    'on the partner: %s\n' \\n"
+"                    'on line: %s"
 msgstr ""
+

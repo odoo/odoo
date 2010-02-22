@@ -1,21 +1,19 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* point_of_sale
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-11-23 08:46+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-02-22 14:33:02+0000\n"
+"PO-Revision-Date: 2010-02-22 14:33:02+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -92,6 +90,18 @@ msgid "No Pricelist !"
 msgstr ""
 
 #. module: point_of_sale
+#: help:pos.order,user_id:0
+msgid "This is the logged in user (not necessarily the salesman)."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "You have to select a pricelist in the sale form !\n' \\n"
+"                'Please set one before choosing a product."
+msgstr ""
+
+#. module: point_of_sale
 #: wizard_view:pos.sale.get,init:0
 msgid "Select an Open Sale Order"
 msgstr "Valitse avoin myyntitilaus"
@@ -121,6 +131,12 @@ msgstr "Myynnin yksityiskohdat"
 #: rml:pos.invoice:0
 msgid "Base"
 msgstr "Perus"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "No Default Credit Account !"
+msgstr ""
 
 #. module: point_of_sale
 #: wizard_view:pos.scan_product,init:0
@@ -183,15 +199,18 @@ msgid "Sale line"
 msgstr "Myyntirivi"
 
 #. module: point_of_sale
-#: rml:pos.lines:0
-msgid "No. Of Articles"
-msgstr "Kappaleiden määrä"
+#: rml:pos.invoice:0
+#: field:pos.payment,amount:0
+#: wizard_field:pos.payment,ask_pay,amount:0
+#: field:report.transaction.pos,amount:0
+msgid "Amount"
+msgstr "Määrä"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/report/pos_invoice.py:0
-#, python-format
-msgid "Please create an invoice for this sale."
-msgstr ""
+#: field:pos.config.journal,code:0
+#: rml:pos.details:0
+msgid "Code"
+msgstr "Koodi"
 
 #. module: point_of_sale
 #: field:pos.order,date_validity:0
@@ -200,9 +219,10 @@ msgid "Validity Date"
 msgstr "Kelpoisuus päivämäärä"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Operation N° :"
-msgstr ""
+#: view:pos.order:0
+#: field:pos.order,pickings:0
+msgid "Picking"
+msgstr "Keräily"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -224,6 +244,23 @@ msgstr "Viimeisin tulostekeräily"
 #: wizard_view:pos.config.journal,init:0
 msgid "Select default journals"
 msgstr "Valitse oletuslokit"
+
+#. module: point_of_sale
+#: rml:pos.details:0
+#: rml:pos.receipt:0
+msgid "Qty"
+msgstr "Määrä"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "You have to define a Default Debit Account for your Financial Journals!\n"
+msgstr ""
+
+#. module: point_of_sale
+#: field:pos.order,user_id:0
+msgid "Logged in User"
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -272,9 +309,9 @@ msgid "Date :"
 msgstr "Päivämäärä"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Disc :"
-msgstr ""
+#: view:pos.order:0
+msgid "Ma_ke Payment"
+msgstr "Suorita maksu"
 
 #. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_confirm
@@ -315,6 +352,12 @@ msgid "Sum of subtotals"
 msgstr "Välisummien summa"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Cannot delete an order line which is %s !"
+msgstr ""
+
+#. module: point_of_sale
 #: wizard_field:pos.payment,ask_pay,payment_date:0
 msgid "Payment date"
 msgstr "Maksu päivämäärä"
@@ -330,10 +373,9 @@ msgid "Order Lines"
 msgstr "Tilausrivit"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.receipt:0
-msgid "Qty"
-msgstr "Määrä"
+#: rml:pos.invoice:0
+msgid "Disc.(%)"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.module.module,shortdesc:point_of_sale.module_meta_information
@@ -343,13 +385,9 @@ msgstr "Myynnin ajankohta"
 #. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
 #: code:addons/point_of_sale/report/pos_invoice.py:0
+#: code:addons/point_of_sale/wizard/wizard_pos_payment.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "User :"
 msgstr ""
 
 #. module: point_of_sale
@@ -361,11 +399,6 @@ msgstr "Luomispäivämäärä"
 #: rml:pos.invoice:0
 msgid "PRO-FORMA"
 msgstr "Proforma"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Total :"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -381,6 +414,11 @@ msgstr "POS "
 #: model:ir.model,name:point_of_sale.model_pos_config_journal
 msgid "Point of Sale journal configuration."
 msgstr "Myynnin ajankohtalokin konfiguraatio."
+
+#. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "Total :"
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
@@ -415,6 +453,19 @@ msgid "Configuration"
 msgstr "Konfiguraatio"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Unable to create invoice (partner has no address)."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "There is no income '\\n"
+"                        'account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: point_of_sale
 #: rml:pos.invoice:0
 #: rml:pos.lines:0
 #: field:pos.order.line,price_unit:0
@@ -430,6 +481,12 @@ msgstr "Virheellinen XML näkymäarkkitehtuurille!"
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line_day
 msgid "POS Lines of the day"
 msgstr "Päivän POS -rivit"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "No Default Debit Account !"
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
@@ -458,9 +515,22 @@ msgid "Discount (%)"
 msgstr "Alennus (%)"
 
 #. module: point_of_sale
+#: rml:pos.invoice:0
+msgid "Fiscal Position Remark :"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_add_product
 msgid "Add products"
 msgstr "Lisää tuotteita"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "Couldn't find a pricelist line matching this product\" \\n"
+"                \" and quantity.\nYou have to change either the product,\" \\n"
+"                \" the quantity or the pricelist."
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order.line:0
@@ -471,6 +541,13 @@ msgstr "Loppumäärä"
 #: model:ir.ui.menu,name:point_of_sale.menu_action_pos_order_line
 msgid "POS Lines"
 msgstr "POS -rivit"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "There is no receivable account defined for this journal:'\\n"
+"                    ' \"%s\" (id:%d)"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -525,12 +602,14 @@ msgid "Wizard default journals"
 msgstr "Oletuslokien ohjattu toiminto"
 
 #. module: point_of_sale
-#: view:pos.order:0
-msgid "Ma_ke Payment"
-msgstr "Suorita maksu"
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Total of the day"
+msgstr "Päivän loppusumma"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/wizard/wizard_pos_payment.py:0
 #, python-format
 msgid "No order lines defined for this sale."
 msgstr ""
@@ -593,11 +672,6 @@ msgid "POS Order line"
 msgstr "Tilausrivi POS"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "."
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.actions.wizard,name:point_of_sale.pos_discount
 msgid "Discount"
 msgstr "Alennus"
@@ -637,9 +711,9 @@ msgid "_Add product"
 msgstr "_Lisää tuote"
 
 #. module: point_of_sale
-#: wizard_button:pos.discount,init,apply_discount:0
-msgid "Apply Discount"
-msgstr "Käytä alennusta"
+#: rml:pos.receipt:0
+msgid ":"
+msgstr ":"
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -663,10 +737,10 @@ msgid "Total:"
 msgstr "Yhteensä:"
 
 #. module: point_of_sale
-#: view:pos.order:0
-#: field:pos.order,pickings:0
-msgid "Picking"
-msgstr "Keräily"
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Summary"
+msgstr "Yhteenveto"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/wizard_get_sale.py:0
@@ -676,6 +750,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/wizard/wizard_pos_payment.py:0
 #, python-format
 msgid "Error"
 msgstr ""
@@ -710,10 +785,9 @@ msgid "Ma_ke payment"
 msgstr "Tee maksu"
 
 #. module: point_of_sale
-#: field:pos.config.journal,code:0
-#: rml:pos.details:0
-msgid "Code"
-msgstr "Koodi"
+#: wizard_button:pos.discount,init,apply_discount:0
+msgid "Apply Discount"
+msgstr "Käytä alennusta"
 
 #. module: point_of_sale
 #: field:pos.order,pricelist_id:0
@@ -799,6 +873,12 @@ msgid "Order lines"
 msgstr "Tilausrivit"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/pos.py:0
+#, python-format
+msgid "You have to define a Default Credit Account for your Financial Journals!\n"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order.line,order_id:0
 #: field:pos.payment,order_id:0
 msgid "Order Ref"
@@ -811,15 +891,8 @@ msgstr "Lisää maksu :"
 
 #. module: point_of_sale
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
-
-#. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Total of the day"
-msgstr "Päivän loppusumma"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment
@@ -836,6 +909,11 @@ msgstr "Loppualennus"
 #: field:pos.order,invoice_wanted:0
 msgid "Create Invoice"
 msgstr "Luo lasku"
+
+#. module: point_of_sale
+#: rml:pos.lines:0
+msgid "No. Of Articles"
+msgstr "Kappaleiden määrä"
 
 #. module: point_of_sale
 #: wizard_view:pos.refund_order,init:0
@@ -869,11 +947,6 @@ msgstr "Tuote"
 #: view:pos.order:0
 msgid "Invoicing"
 msgstr "Laskutus"
-
-#. module: point_of_sale
-#: rml:pos.receipt:0
-msgid ":"
-msgstr ":"
 
 #. module: point_of_sale
 #: field:pos.config.journal,journal_id:0
@@ -951,11 +1024,6 @@ msgid "Date Ordered"
 msgstr "Tilauspäivämäärä"
 
 #. module: point_of_sale
-#: rml:pos.receipt:0
-msgid "Ce bon est valide jusqu'au"
-msgstr ""
-
-#. module: point_of_sale
 #: view:pos.order:0
 msgid "Payments"
 msgstr "Maksut"
@@ -972,10 +1040,11 @@ msgid "UserError"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Summary"
-msgstr "Yhteenveto"
+#: code:addons/point_of_sale/report/pos_invoice.py:0
+#: code:addons/point_of_sale/wizard/wizard_pos_payment.py:0
+#, python-format
+msgid "Please create an invoice for this sale."
+msgstr ""
 
 #. module: point_of_sale
 #: field:pos.config.journal,name:0
@@ -1003,12 +1072,10 @@ msgid "Payment Term"
 msgstr "Maksuehto"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: field:pos.payment,amount:0
-#: wizard_field:pos.payment,ask_pay,amount:0
-#: field:report.transaction.pos,amount:0
-msgid "Amount"
-msgstr "Määrä"
+#: rml:pos.details:0
+#: rml:pos.details_summary:0
+msgid "Mode of Taxes"
+msgstr "Verotustavat"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1016,10 +1083,9 @@ msgid "Actions"
 msgstr "Toiminnot"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
-msgid "Mode of Taxes"
-msgstr "Verotustavat"
+#: help:pos.order,salesman_id:0
+msgid "This is the salesman actually making the order."
+msgstr ""
 
 #. module: point_of_sale
 #: rml:pos.details:0
@@ -1039,6 +1105,11 @@ msgid "Print Date"
 msgstr "Tulostuspäivämäärä"
 
 #. module: point_of_sale
+#: rml:pos.receipt:0
+msgid "OPERATION N° :"
+msgstr ""
+
+#. module: point_of_sale
 #: rml:pos.lines:0
 #: field:pos.order,amount_total:0
 msgid "Total"
@@ -1051,3 +1122,4 @@ msgstr "Yhteensä"
 #: rml:pos.receipt:0
 msgid "Price"
 msgstr "Hinta"
+

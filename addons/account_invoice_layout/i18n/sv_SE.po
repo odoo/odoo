@@ -4,40 +4,42 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 12:34+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-02-22 14:44:57+0000\n"
+"PO-Revision-Date: 2010-02-22 14:44:57+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Delsumma"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Invoice Date:"
+msgid "Note:"
 msgstr ""
 
 #. module: account_invoice_layout
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Cancelled Invoice"
 msgstr ""
-"Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 #: field:notify.message,name:0
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #. module: account_invoice_layout
 #: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
@@ -47,28 +49,27 @@ msgstr ""
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
-msgstr ""
+msgstr "Rabatt (%)"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Note"
-msgstr ""
+msgstr "Notering"
 
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,print:0
 msgid "Print"
-msgstr ""
+msgstr "Skriv ut"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
-msgid ""
-"This notification will appear at the bottom of the Invoices when printed."
+msgid "This notification will appear at the bottom of the Invoices when printed."
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Pris"
 
 #. module: account_invoice_layout
 #: constraint:ir.actions.act_window:0
@@ -82,18 +83,28 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
+msgid "VAT :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Document"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "PRO-FORMA"
 msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Fakturarader"
 
 #. module: account_invoice_layout
 #: view:account.invoice.line:0
 msgid "Seq."
-msgstr ""
+msgstr "Pos"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_finan_config_notify_message
@@ -101,14 +112,9 @@ msgid "Notification Message"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Description"
-msgstr ""
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Produkt"
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
@@ -118,22 +124,22 @@ msgstr ""
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Price"
-msgstr ""
+msgstr "Pris"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Canceled Invoice"
+msgid "Invoice Date"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Moms:"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
@@ -148,12 +154,12 @@ msgstr ""
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Base"
-msgstr ""
+msgstr "Bas"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
-msgstr ""
+#: selection:account.invoice.line,state:0
+msgid "Page Break"
+msgstr "Sidbrytning"
 
 #. module: account_invoice_layout
 #: field:notify.message,msg:0
@@ -167,7 +173,7 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Tel. :"
+msgid "Partner Ref."
 msgstr ""
 
 #. module: account_invoice_layout
@@ -176,104 +182,94 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Page Break"
+#: rml:account.invoice.layout:0
+msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Document:"
+msgid "Total:"
 msgstr ""
 
 #. module: account_invoice_layout
 #: wizard_view:wizard.notify_message,init:0
 msgid "Select Message"
-msgstr ""
+msgstr "Välj meddelande"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Messages"
-msgstr ""
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr ""
+msgstr "Meddelanden"
 
 #. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoices with Layout"
+msgstr "Fakturor med layout"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Description / Taxes"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Amount"
-msgstr ""
+msgstr "Belopp"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (excl. taxes):"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Taxes"
+msgid "Tel. :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Preliminär faktura"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,sequence:0
 msgid "Sequence Number"
-msgstr ""
+msgstr "Pos"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Quantity"
-msgstr ""
+msgstr "Antal"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Refund"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
-msgstr ""
+msgstr "Återbetalning"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
-msgstr ""
+msgstr "Skiljelinje"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Leverantörsfaktura"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Tax"
-msgstr ""
+msgstr "Moms"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "(incl. taxes):"
+msgid "Net Total:"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -283,14 +279,10 @@ msgstr ""
 #. module: account_invoice_layout
 #: wizard_field:wizard.notify_message,init,message:0
 msgid "Message"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
-msgstr ""
+msgstr "Meddelande"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr ""
+

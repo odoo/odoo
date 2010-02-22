@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:57+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-02-22 14:45:46+0000\n"
+"PO-Revision-Date: 2010-02-22 14:45:46+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -24,7 +23,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
 msgid "Expense Line"
-msgstr ""
+msgstr "Gider Kalemi"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reimbursement0
@@ -77,7 +76,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
 msgid "UoM"
-msgstr ""
+msgstr "Birim"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -93,7 +92,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "İptal Edildi"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -102,9 +101,7 @@ msgstr ""
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0
-msgid ""
-"Determine if the product can be visible in the list of product within a "
-"selection from an HR expense sheet line."
+msgid "Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."
 msgstr ""
 
 #. module: hr_expense
@@ -117,7 +114,7 @@ msgstr ""
 #: field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
-msgstr ""
+msgstr "Referans"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -138,7 +135,7 @@ msgstr ""
 #: view:hr.expense.expense:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_confirm0
 msgid "Confirm"
-msgstr ""
+msgstr "Doğrula"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_supplierinvoice0
@@ -148,15 +145,13 @@ msgstr ""
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:0
 #, python-format
-msgid ""
-"Please configure Default Expanse account for Product purchase, "
-"`property_account_expense_categ`"
+msgid "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
 msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Analiz Hesabı"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_supplierinvoice0
@@ -167,13 +162,13 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,state:0
 msgid "State"
-msgstr ""
+msgstr "Durum"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 #: field:hr.expense.expense,employee_id:0
 msgid "Employee"
-msgstr ""
+msgstr "Personel"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -239,27 +234,27 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
-#, python-format
-msgid "The employee must have a contact address"
-msgstr ""
-
-#. module: hr_expense
 #: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 msgid "Expense"
-msgstr ""
+msgstr "Gider"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
-msgstr ""
+msgstr "Gider Kalemleri"
 
 #. module: hr_expense
 #: field:hr.expense.expense,currency_id:0
 msgid "Currency"
+msgstr "Para Birimi"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a working address"
 msgstr ""
 
 #. module: hr_expense
@@ -270,7 +265,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Faturalandı"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -280,7 +275,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
 msgid "Note"
-msgstr ""
+msgstr "Not"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimbursereinvoice0
@@ -290,12 +285,11 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Taslak"
 
 #. module: hr_expense
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: hr_expense
@@ -311,7 +305,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Toplam Tutar"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_draftexpenses0
@@ -321,14 +315,14 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 #: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -348,7 +342,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
 msgid "Account Move"
-msgstr ""
+msgstr "Hesap Hareketi"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
@@ -387,7 +381,7 @@ msgstr ""
 #: field:hr.expense.expense,invoice_id:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -445,7 +439,7 @@ msgstr ""
 #: rml:hr.expense:0
 #: field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Birim Fiyat"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all_valid
@@ -456,12 +450,12 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: hr_expense
 #: field:hr.expense.line,description:0
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -472,7 +466,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,unit_quantity:0
 msgid "Quantities"
-msgstr ""
+msgstr "Miktarlar"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_refused0
@@ -482,7 +476,7 @@ msgstr ""
 #. module: hr_expense
 #: field:product.product,hr_expense_ok:0
 msgid "Can be Expensed"
-msgstr ""
+msgstr "Gider Olabilir"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -507,7 +501,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,name:0
 msgid "Short Description"
-msgstr ""
+msgstr "Kısa Açıklama"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveinvoice0
@@ -522,7 +516,7 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sıra No"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
@@ -538,9 +532,10 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,total_amount:0
 msgid "Total"
-msgstr ""
+msgstr "Toplam"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr ""
+
