@@ -28,9 +28,9 @@ def _get_answers(cr, uid, ids):
     query = """
     select distinct(answer)
     from profile_question_yes_rel
-    where profile in (%s)"""% ','.join([str(i) for i in ids ])
+    where profile in %s"""
 
-    cr.execute(query)
+    cr.execute(query, (tuple(ids),))
     ans_yes = [x[0] for x in cr.fetchall()]
 
     query = """
@@ -50,7 +50,8 @@ def _get_parents(cr, uid, ids):
      select distinct(parent_id)
      from crm_segmentation
      where parent_id is not null
-     and id in (%s)""" % ','.join([str(i) for i in ids ]))
+     and id in %s""",
+               (tuple(ids),))
 
     parent_ids = [x[0] for x in cr.fetchall()]
 
@@ -100,10 +101,10 @@ def _recompute_categ(self, cr, uid, pid, answers_ids):
         from crm_segmentation 
         where profiling_active = true''' 
     if ok != []:
-        query = query +''' and categ_id not in(%s)'''% ','.join([str(i) for i in ok ])
-    query = query + ''' order by id '''
+        query = query + ' and categ_id not in %s'
+    query = query + ' order by id '
 
-    cr.execute(query)
+    cr.execute(query, (tuple(ids),))
     segm_cat_ids = cr.fetchall()
 
     for (segm_id, cat_id) in segm_cat_ids:
