@@ -176,9 +176,11 @@ class product_pricelist(osv.osv):
                                     'you have defined cyclic categories ' \
                                     'of products!'))
             if categ_ids:
-                categ_where = '(categ_id IN (' + ','.join(categ_ids) + '))'
+                categ_where = '(categ_id IN %s)'
+                sqlargs = (tuple(categ_ids),)
             else:
                 categ_where = '(categ_id IS NULL)'
+                sqlargs = ()
 
             cr.execute(
                 'SELECT i.*, pl.currency_id '
@@ -191,7 +193,7 @@ class product_pricelist(osv.osv):
                     'AND (min_quantity IS NULL OR min_quantity <= %s) '
                     'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
                 'ORDER BY sequence LIMIT 1',
-                (tmpl_id, prod_id, plversion['id'], qty))
+                (tmpl_id, prod_id) + sqlargs + ( plversion['id'], qty))
             res = cr.dictfetchone()
             if res:
                 if res['base'] == -1:
@@ -215,10 +217,10 @@ class product_pricelist(osv.osv):
                     if sinfo:
                         cr.execute('SELECT * ' \
                                 'FROM pricelist_partnerinfo ' \
-                                'WHERE suppinfo_id IN (' + \
-                                    ','.join(map(str, sinfo)) + ') ' \
+                                'WHERE suppinfo_id IN %s ' \
                                     'AND min_quantity <= %s ' \
-                                'ORDER BY min_quantity DESC LIMIT 1', (qty,))
+                                'ORDER BY min_quantity DESC LIMIT 1',
+                                   (tuple(sinfo), qty))
                         res2 = cr.dictfetchone()
                         if res2:
                             price = res2['price']
