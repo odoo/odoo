@@ -169,7 +169,6 @@ class parter_vat_intra(wizard.interface):
                 start_date = fiscal_periods[3].date_start
                 end_date = fiscal_periods[3].date_stop
 
-        period = "to_date('" + str(start_date) + "','yyyy-mm-dd') and to_date('" + str(end_date) +"','yyyy-mm-dd')"
         record = {}
 
         for p_id in p_id_list:
@@ -185,26 +184,20 @@ class parter_vat_intra(wizard.interface):
             if not go_ahead:
                 continue
 
-            cr.execute('select sum(debit)-sum(credit) as amount from account_move_line l left join account_account a on (l.account_id=a.id) where a.type in ('"'receivable'"') and l.partner_id=%%s and l.date between %s' % (period,), (p_id,))
+            cr.execute('SELECT SUM(debit)-SUM(credit) AS amount '\
+                       'FROM account_move_line l '\
+                       'LEFT JOIN account_account a ON (l.account_id=a.id) '\
+                       'WHERE a.type IN ('"'receivable'"') '\
+                       'AND l.partner_id=%s '\
+                       'AND l.date BETWEEN to_date(%s, \'yyyy-mm-dd\') '\
+                       '               AND to_date(%s, \'yyyy-mm-dd\')',
+                       (p_id, start_date, end_date))
             res = cr.dictfetchall()
             list_partner.append(res[0]['amount'])
             list_partner.append('T') #partner.ref ...should be check
             list_partner.append(partner.vat)
             list_partner.append(country_code)
-            #...deprecated...
-#            addr = pool.get('res.partner').address_get(cr, uid, [partner.id], ['invoice'])
-#            if addr.get('invoice',False):
-#                ads = pool.get('res.partner.address').browse(cr,uid,[addr['invoice']])[0]
-#
-#                if ads.country_id:
-#                    code_country = ads.country_id.code
-#                    list_partner.append(code_country)
-#                else:
-#                    error_message.append('Data Insufficient! : '+ 'The Partner "'+partner.name + '"'' has no country associated with its Invoice address!')
-#            if len(list_partner)<4:
-#                list_partner.append('')
-#                error_message.append('Data Insufficient! : '+ 'The Partner "'+partner.name + '"'' has no Invoice address!')
-#            list_partner.append(code_country or 'not avail')
+
             record[p_id] = list_partner
 
         if len(error_message):
