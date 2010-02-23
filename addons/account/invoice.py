@@ -687,7 +687,7 @@ class account_invoice(osv.osv):
         return code
     
     def group_lines(self, cr, uid, iml, line, inv):
-        """Groups account move lines (and hence analytic lines) eventually if invoice line hashcodes are equal"""
+        """Merge account move lines (and hence analytic lines) if invoice line hashcodes are equals"""
         if inv.journal_id.group_invoice_lines:
             line2 = {}
             for x, y, l in line:
