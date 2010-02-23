@@ -42,7 +42,7 @@ def _do_create(self, cr, uid, data, context):
     id = mod_obj.read(cr, uid, result, ['res_id'])
     ids = []
     for backlog in backlogs:
-        task = pooler.get_pool(cr.dbname).get('scrum.task')
+        task = pooler.get_pool(cr.dbname).get('project.task')
         ids.append(task.create(cr, uid, {
             'product_backlog_id': backlog.id,
             'name': backlog.name,
@@ -58,7 +58,7 @@ def _do_create(self, cr, uid, data, context):
         'name': 'Open Backlog Tasks',
         'view_type': 'form',
         'view_mode': 'tree,form',
-        'res_model': 'scrum.task',
+        'res_model': 'project.task',
         'view_id': False,
         'type': 'ir.actions.act_window',
         'search_view_id': id['res_id']
