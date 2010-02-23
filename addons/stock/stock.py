@@ -1460,8 +1460,8 @@ class stock_move(osv.osv):
             uos_qty_rest = split_by_qty / move.product_qty * move.product_uos_qty
 
             update_val = {
-                'product_qty': split_by_qty,
-                'product_uos_qty': uos_qty,
+                'product_qty': split_by_qty, 
+                'product_uos_qty': uos_qty, 
             }                
             for idx in range(int(quantity//split_by_qty)):
                 if idx:        
@@ -1508,8 +1508,8 @@ class stock_move(osv.osv):
 
             default_val = {
                 'product_qty': quantity, 
-                'product_uos_qty': uos_qty,
-                'location_id' : location_id or move.location_id.id,
+                'product_uos_qty': uos_qty, 
+                'location_id': location_id or move.location_id.id, 
             }
             if move.product_id.track_production:
                 new_move = self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
@@ -1545,8 +1545,8 @@ class stock_move(osv.osv):
         
             default_val = {
                 'product_qty': quantity, 
-                'product_uos_qty': uos_qty,
-                'location_dest_id' : location_dest_id,
+                'product_uos_qty': uos_qty, 
+                'location_dest_id': location_dest_id, 
                 'state': move.state
             }
             current_move = self.copy(cr, uid, move.id, default_val)
