@@ -25,6 +25,12 @@ import pooler
 from tools import config
 import time
 
+states = {
+    'paid': ('paid',),
+    'open_paid': ('open','paid'),
+    'draft_open_paid': ('draft','open','paid')
+}
+
 class product_product(osv.osv):
     _inherit = "product.product"
 
@@ -43,21 +49,13 @@ class product_product(osv.osv):
             if 'invoice_state' in field_names:
                 res[val.id]['invoice_state']=invoice_state
 
-
-            invoice_types=[]
-            states=[]
-            if invoice_state=='paid':
-                states=['paid']
-            elif invoice_state=='open_paid':
-                states=['open','paid']
-            elif invoice_state=='draft_open_paid':
-                states=['draft','open','paid']
-
+            invoice_types=()
             if 'sale_avg_price' in field_names or 'sale_num_invoiced' in field_names or 'turnover' in field_names or 'sale_expected' in field_names:
-                invoice_types=['out_invoice','in_refund']
+                invoice_types=('out_invoice','in_refund')
             if 'purchase_avg_price' in field_names or 'purchase_num_invoiced' in field_names or 'total_cost' in field_names or 'normal_cost' in field_names:
-                invoice_types=['in_invoice','out_refund']
-            if len(invoice_types):
+                invoice_types=('in_invoice','out_refund')
+
+            if invoice_types:
                 sql="""
                 select
                     avg(l.price_unit) as avg_unit_price,
@@ -68,9 +66,10 @@ class product_product(osv.osv):
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
                 left join product_template product on (product.id=l.product_id)
-                where l.product_id = %s and i.state in ('%s') and i.type in ('%s') and i.date_invoice>='%s' and i.date_invoice<='%s'
-                """%(val.id,"','".join(states),"','".join(invoice_types),date_from,date_to)
-                cr.execute(sql)
+                where l.product_id = %s and i.state in %s and i.type in %s and i.date_invoice>=%s and i.date_invoice<=%s
+                """
+                cr.execute(sql, (val.id, states[invoice_state],
+                                 invoice_types, date_from, date_to))
                 result=cr.fetchall()[0]
                 if 'sale_avg_price' in field_names or 'sale_num_invoiced' in field_names or 'turnover' in field_names or 'sale_expected' in field_names:
                     res[val.id]['sale_avg_price']=result[0] and result[0] or 0.0
