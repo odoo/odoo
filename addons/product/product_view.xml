@@ -37,6 +37,7 @@
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
                     <field name="standard_price"/>
+                    <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="state"/>
                 </tree>
             </field>
