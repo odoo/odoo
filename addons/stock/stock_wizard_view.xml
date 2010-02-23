@@ -73,7 +73,7 @@
                 <form string="Scrap Move">
                 	<separator string="Scrap Products" colspan="4"/>
 				    <field name="product_id" colspan="4" readonly="1"/>
-				    <field name="location_id" colspan="4"/>
+				    <field name="location_id" colspan="4" string="Dest. Location" domain="[('usage','&lt;&gt;','view')]"/>
 				    <field name="product_qty" colspan="2"/>
 				    <field name="product_uom" nolabel="1" readonly="1"/>
                 	<newline/>
@@ -100,20 +100,22 @@
         
         <record id="view_split_in_lots" model="ir.ui.view">
 	            <field name="name">Split in lots</field>
-	            <field name="model">spilt.in.lot</field>
+	            <field name="model">stock.move.spilt</field>
 	            <field name="type">form</field>
 	            <field name="arch" type="xml">
 	                <form string="Split in lots">
-	                	<field name="product_id" colspan="4"/>
+	                	<field name="product_id" colspan="4" readonly="1"/>
 	                	<newline/>
 	                	<field name="line_ids" colspan="4" nolabel="1">
 	                		<tree string="Lots Number" editable="top">
 	                			<field name="name" string="Lots"/>
 	                			<field name="quantity" />
+                                <field name="use_exist" />
 	                		</tree>
 	                		<form string="Lots Number">
 	                			<field name="name" string="Lots"/>
 	                			<field name="quantity" />
+                                <field name="use_exist" />
 	                		</form>
 	                	</field>
 	                	<separator string="" colspan="4" />
@@ -129,11 +131,11 @@
 	        <record id="track_line" model="ir.actions.act_window">
 	            <field name="name">Split in lots</field>
 	            <field name="type">ir.actions.act_window</field>
-	            <field name="res_model">spilt.in.lot</field>
+	            <field name="res_model">stock.move.spilt</field>
 	            <field name="view_type">form</field>
 	            <field name="view_mode">form</field>
 	            <field name="target">new</field>
-	        </record>
+	        </record>          
 
 	</data>
 </openerp>	
