@@ -99,7 +99,7 @@
                             widget="selection"
                             default="context.get('project_id', False)"/>
                         <field name="sprint_id"/>
-                        <field name="user_id">
+                        <field name="user_id" widget="selection">
                             <filter default="1"
                                 icon="terp-project"
                                 string="My Features"
@@ -107,6 +107,13 @@
                                 help="My Backlogs"/>
                         </field>
                     </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                    
                 </search>
             </field>
         </record>
@@ -141,6 +148,8 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="planned_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
+                    <field name="date_stop" invisible="1"/>
+                    <field name="product_owner_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -191,14 +200,24 @@
                         <filter icon="terp-project" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="project_id"/>
-                        <field name="scrum_master_id">
+                        <field name="project_id" widget="selection"/>
+                        <field name="scrum_master_id" widget="selection">
                             <filter icon="gtk-execute" domain="[('scrum_master_id','=',uid)]"
                                 default="1"
                                 help="My Sprints"/>
                         </field>
                         <field name="date_start"/>
                     </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Masters" icon="terp-project" domain="[]"  context="{'group_by':'scrum_master_id'}"/>                        
+                        <filter string="Product owner" icon="terp-project" domain="[]" context="{'group_by':'product_owner_id'}"/>
+                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
+                        <filter string="Stop Date" icon="terp-project" domain="[]" context="{'group_by':'date_stop'}"/>
+                    </group>                    
                 </search>
             </field>
         </record>
@@ -257,11 +276,33 @@
                 </form>
             </field>
         </record>
+        
+        <record id="view_scrum_meeting_search" model="ir.ui.view">
+            <field name="name">scrum.meeting.search</field>
+            <field name="model">scrum.meeting</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Scrum Sprint">
+                    <group col="10" colspan="4">                
+	                    <field name="name"/>
+	                    <field name="sprint_id" widget="selection"/>
+	                    <field name="date"/>
+                    </group>                    
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="Sprint" icon="terp-project" domain="[]" context="{'group_by':'sprint_id'}"/>
+                        <filter string="Date" icon="terp-project" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
+                </search>                   
+            </field>
+        </record>
+        
         <record id="action_meeting_form" model="ir.actions.act_window">
             <field name="name">Scrum Meetings</field>
             <field name="res_model">scrum.meeting</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_scrum_meeting_form"/>
+            <field name="search_view_id" ref="view_scrum_meeting_search"/>
         </record>
         <menuitem sequence="30"
             action="action_meeting_form" id="menu_action_meeting_form" parent="menu_scrum"/>
