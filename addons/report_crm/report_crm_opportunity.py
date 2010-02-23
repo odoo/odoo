@@ -8,8 +8,7 @@ class report_crm_opportunity_user(osv.osv):
     _inherit = "report.crm.case.user"
     _columns = {
         'probability': fields.float('Avg. Probability', readonly=True),
-        'amount_revenue': fields.float('Est.Revenue', readonly=True),
-        'amount_costs': fields.float('Est.Cost', readonly=True),
+        'amount_revenue': fields.float('Est.Revenue', readonly=True),        
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
     }
@@ -25,8 +24,7 @@ class report_crm_opportunity_user(osv.osv):
                     c.user_id,
                     c.section_id,
                     count(*) as nbr,
-                    sum(planned_revenue) as amount_revenue,
-                    sum(planned_cost) as amount_costs,
+                    sum(planned_revenue) as amount_revenue,                    
                     sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
                     avg(probability)::decimal(16,2) as probability,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
@@ -43,8 +41,7 @@ class report_crm_opportunity_categ(osv.osv):
     _inherit = "report.crm.case.categ"
     _columns = {
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-        'amount_revenue': fields.float('Est.Revenue', readonly=True),
-        'amount_costs': fields.float('Est.Cost', readonly=True),
+        'amount_revenue': fields.float('Est.Revenue', readonly=True),        
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
         'probability': fields.float('Avg. Probability', readonly=True),
         'delay_close': fields.char('Delay Close', size=20, readonly=True),
@@ -62,8 +59,7 @@ class report_crm_opportunity_categ(osv.osv):
                     c.state,
                     c.section_id,
                     count(*) as nbr,
-                    sum(planned_revenue) as amount_revenue,
-                    sum(planned_cost) as amount_costs,
+                    sum(planned_revenue) as amount_revenue,                    
                     sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
                     avg(probability)::decimal(16,2) as probability,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close

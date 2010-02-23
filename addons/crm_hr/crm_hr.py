@@ -41,8 +41,7 @@ class crm_applicant(osv.osv):
             'partner_mobile': fields.char('Mobile', size=32),
             'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
             'type_id': fields.many2one('crm.case.resource.type', 'Type Name', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
-            'duration': fields.float('Duration'),
-            'case_id': fields.many2one('crm.case', 'Related Case'),
+            'duration': fields.float('Duration'),            
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
             'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
