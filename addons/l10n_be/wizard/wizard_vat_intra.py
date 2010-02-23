@@ -172,7 +172,6 @@ class parter_vat_intra(wizard.interface):
         record = {}
 
         for p_id in p_id_list:
-            list_partner = []
             partner = pool.get('res.partner').browse(cr, uid, p_id)
             go_ahead = False
             country_code = ''
@@ -193,12 +192,13 @@ class parter_vat_intra(wizard.interface):
                        '               AND to_date(%s, \'yyyy-mm-dd\')',
                        (p_id, start_date, end_date))
             res = cr.dictfetchall()
-            list_partner.append(res[0]['amount'])
-            list_partner.append('T') #partner.ref ...should be check
-            list_partner.append(partner.vat)
-            list_partner.append(country_code)
 
-            record[p_id] = list_partner
+            record[p_id] = (
+                res[0]['amount'],
+                'T', #partner.ref ...should be check
+                partner.vat,
+                country_code
+            )
 
         if len(error_message):
             data['form']['msg'] = 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
