@@ -955,23 +955,51 @@
                 </tree>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="warehouse_orderpoint_search">
+            <field name="name">stock.warehouse.orderpoint.search</field>
+            <field name="model">stock.warehouse.orderpoint</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Minimum Stock Rules Search">
+                    <field name="name" select="1" />
+                    <field name="warehouse_id" select="1" widget="selection"/>
+                    <field name="location_id" select="1" />
+                    <field name="company_id" select="1" widget="selection"/>
+                    <field name="product_id" select="1"/>
+                </search>
+            </field>
+        </record>
+        
         <record id="view_warehouse_orderpoint_form" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.form</field>
             <field name="model">stock.warehouse.orderpoint</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Minimum Stock Rules">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" select="1" widget="selection"/>
-                    <field name="location_id" select="2"/>
-                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                    <field name="product_id" on_change="onchange_product_id(product_id)" select="1"/>
-                    <field name="product_uom"/>
-                    <field name="product_min_qty"/>
-                    <field name="product_max_qty"/>
-                    <field name="qty_multiple"/>
-                    <field name="procurement_id" readonly="1"/>
+                    <group col="2" colspan="2">
+                        <separator string="General Information" colspan="2" />
+                        <field name="name" />
+                        <field name="product_id" on_change="onchange_product_id(product_id)" />
+                        <field name="product_uom"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Locations" colspan="2" />
+                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
+                        <field name="location_id"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Quantity Rules" colspan="2" />
+                        <field name="product_min_qty"/>
+                        <field name="product_max_qty"/>
+                        <field name="qty_multiple"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Misc" colspan="2" />
+                        <field name="procurement_id" readonly="1"/>
+                        <field name="active" />
+                    </group>
                 </form>
             </field>
         </record>
@@ -981,6 +1009,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
+            <field name="search_view_id" ref="warehouse_orderpoint_search" />
         </record>
         <menuitem action="action_orderpoint_form" id="menu_action_orderpoint_form" parent="menu_mrp_reordering"/>
 

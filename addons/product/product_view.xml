@@ -11,10 +11,18 @@
                    <filter string="Services" icon="terp-stock" domain="[('type','=','service')]"/>
                    <filter string="Stockable" icon="terp-stock" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
+                   <filter string="Can be sold" icon="terp-stock" domain="[('sale_ok','=',1)]"/>
+                   <filter string="Can be Purchased" icon="terp-stock" domain="[('purchase_ok', '=', 1)]" />
+                   <separator orientation="vertical"/>
                    <field name="default_code" select="1"/>
                    <field name="name" select="1"/>
                    <field name="categ_id" select="1" widget="selection"/>
                    <newline/>
+                   <!--
+                   <group col='8' colspan='4' expand='1' string='Group by...'>
+                       <filter string='Category' icon="terp-stock" domain="[]" context="{'group_by' : 'categ_id'}" />
+                   </group>
+                   -->
                    <group col='8' colspan='7' expand="1" string="Extended options...">
                        <field name="pricelist_id" select="1" widget="selection" context="{'pricelist': self}" />
                    </group>
@@ -28,9 +36,10 @@
             <field name="type">tree</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-            <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
+                <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
+                    <field name="categ_id" />
                     <field name="variants" groups="product.group_product_variant"/>
                     <field name="uom_id"/>
                     <field name="qty_available"/>
@@ -61,7 +70,7 @@
                         <field groups="base.group_extended" name="ean13" select="2"/>
                     </group>
                     <group colspan="1" col="2">
-                        <separator string="Product Type" colspan="2"/>
+                        <separator string="Product Characteristics" colspan="2"/>
                         <field name="sale_ok" select="2"/>
                         <field name="purchase_ok" select="2"/>
                         <field groups="base.group_extended" name="rental" select="2"/>

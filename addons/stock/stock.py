@@ -356,7 +356,7 @@ class stock_tracking(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the tracking lots without removing it."),
         'serial': fields.char('Reference', size=64),
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves Tracked'),
-        'date': fields.datetime('Date Created', required=True),
+        'date': fields.datetime('Created Date', required=True),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -993,7 +993,7 @@ class stock_move(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
 
-        'date': fields.datetime('Date Created'),
+        'date': fields.datetime('Created Date'),
         'date_planned': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
