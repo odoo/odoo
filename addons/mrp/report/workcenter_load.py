@@ -99,14 +99,13 @@ class report_custom(report_int):
     def create(self, cr, uid, ids, datas, context={}):
         assert len(ids), 'You should provide some ids!'
         colors = choice_colors(len(ids))
-        ids_str = ','.join(map(str, ids))
         cr.execute(
             "SELECT MAX(mrp_production.date_planned) AS stop,MIN(mrp_production.date_planned) AS start "\
             "FROM mrp_workcenter, mrp_production, mrp_production_workcenter_line "\
             "WHERE mrp_production_workcenter_line.production_id=mrp_production.id "\
             "AND mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id "\
             "AND mrp_production.state NOT IN ('cancel','done') "\
-            "AND mrp_workcenter.id IN (%s)" % ids_str)
+            "AND mrp_workcenter.id IN %s", (tuple(ids),))
         res = cr.dictfetchone()
         if not res['stop']:
             res['stop'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -137,8 +136,8 @@ class report_custom(report_int):
         # select workcenters
         cr.execute(
             "SELECT id, name FROM mrp_workcenter " \
-            "WHERE id in (%s) "\
-            "ORDER BY mrp_workcenter.id" % ids_str)
+            "WHERE id in %s "\
+            "ORDER BY mrp_workcenter.id", (tuple(ids),))
         workcenters = cr.dictfetchall()
 
         data = []
