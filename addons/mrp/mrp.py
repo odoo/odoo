@@ -795,7 +795,8 @@ class mrp_production(osv.osv):
     
     def _change_prod_qty(self, cr, uid, ids, new_qty, context={}):
         move_obj = self.pool.get('stock.move')
-
+        if new_qty <= 0.0:
+            return {}
         def change(product_id, product_qty, qty_vals, qty_vals_done, moves, 
                         moves_done, field):
             if not moves.get(product_id) and moves_done.get(product_id):
@@ -812,7 +813,7 @@ class mrp_production(osv.osv):
                 move_obj.unlink(cr, uid, moves[product_id])
             elif new_qty < 0:
                 avail_qty = move_obj.browse(cr, uid, moves_done[product_id][0]).product_qty
-                move_obj.unlink(cr, uid, moves[product_id][0])
+                move_obj.unlink(cr, uid, moves[product_id])
                 move_obj.write(cr, uid, moves_done[product_id][0], {'product_qty': avail_qty + new_qty})
             else:
                 move_obj.write(cr, uid, moves[product_id][0], {'product_qty': avail_qty + to_add})
