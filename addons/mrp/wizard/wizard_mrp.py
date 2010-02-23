@@ -100,14 +100,28 @@ class change_production_qty(osv.osv_memory):
             moves_done[move.product_id.id].append(move.id)
 
         for r in res[0]:
+            if not moves.get(r['product_id']) and moves_done.get(r['product_id']):
+                new_qty = (r['product_qty'] - qty_vals_done.get(r['product_id'], 0.0))
+                new_move = move_lines_obj.copy(cr, uid, moves_done.get(r['product_id']), default={'product_qty': new_qty})
+                prod_obj.write(cr, uid, prod.id, {'move_lines': [(4, new_move)]})
+                continue
             to_add = (r['product_qty'] - qty_vals_done.get(r['product_id'], 0.0)) - qty_vals.get(r['product_id'], 0.0)
             avail_qty = move_lines_obj.browse(cr, uid, moves[r['product_id']][0]).product_qty
-            move_lines_obj.write(cr, uid, moves[r['product_id']][0], {'product_qty': avail_qty + to_add})
-#    TODO
+            new_qty = avail_qty + to_add
+            if new_qty == 0:
+                move_lines_obj.write(cr, uid, moves[r['product_id']][0], {'state': 'draft'})
+                move_lines_obj.unlink(cr, uid, moves[r['product_id']])
+            elif new_qty < 0:
+                avail_qty = move_lines_obj.browse(cr, uid, moves_done[r['product_id']][0]).product_qty
+                move_lines_obj.unlink(cr, uid, moves[r['product_id']][0])
+                move_lines_obj.write(cr, uid, moves_done[r['product_id']][0], {'product_qty': avail_qty + new_qty})
+            else:
+                move_lines_obj.write(cr, uid, moves[r['product_id']][0], {'product_qty': avail_qty + to_add})
+
+#        TODO:For Finished Product lines
 #        product_lines_obj = self.pool.get('mrp.production.product.line')
 #        for m in prod.move_created_ids:
 #            move_lines_obj.write(cr, uid,m.id, {'product_qty' :  new_qty})
-
         return {}
     
 change_production_qty()

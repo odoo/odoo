@@ -25,4 +25,5 @@ import wizard
 import report
 import company
 import schedulers
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
