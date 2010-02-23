@@ -2,9 +2,9 @@
 <openerp>
     <data noupdate="1">
         
-        <!-- Resource: scrum.project -->
+        <!-- Resource: project.project -->
         
-        <record id="scrum_project_1" model="scrum.project">
+        <record id="scrum_project_1" model="project.project">
             <!-- FIXME !!! -->
             <field name="tasks">[24, 25, 28, 26, 27, 29, 30, 31, 32, 33, 34, 35, 37, 36, 38]</field>
             <field model="res.users" name="manager" search="[('login','=','demo')]"/>
@@ -24,10 +24,7 @@
             <field name="state">open</field>
         </record>
         
-        <!-- Resource: scrum.team -->
-        
-        
-        <!-- Resource: scrum.product.backlog -->
+        <!-- Resource: project.product.backlog -->
         
         <record id="scrum_product_backlog_0" model="scrum.product.backlog">
             <field name="priority">3</field>
@@ -79,111 +76,111 @@
             <field name="project_id" ref="scrum_project_1"/>
         </record>
         
-        <!-- Resource: scrum.task -->
+        <!-- Resource: project.task -->
         
-        <record id="scrum_task_3" model="scrum.task">
+        <record id="scrum_task_3" model="project.task">
             <field name="planned_hours">4.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Review all English Terms</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_3"/>
         </record>
-        <record id="scrum_task_4" model="scrum.task">
+        <record id="scrum_task_4" model="project.task">
             <field name="planned_hours">4.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Review all french terms</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_3"/>
         </record>
-        <record id="scrum_task_5" model="scrum.task">
+        <record id="scrum_task_5" model="project.task">
             <field name="planned_hours">24.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Analytic Accounting features</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
-        <record id="scrum_task_6" model="scrum.task">
+        <record id="scrum_task_6" model="project.task">
             <field name="planned_hours">6.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Test and improve automatic migration system</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_0"/>
         </record>
-        <record id="scrum_task_7" model="scrum.task">
+        <record id="scrum_task_7" model="project.task">
             <field name="planned_hours">24.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">General accounting features</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
-        <record id="scrum_task_8" model="scrum.task">
+        <record id="scrum_task_8" model="project.task">
             <field name="planned_hours">24.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Accounting Budgets</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
-        <record id="scrum_task_9" model="scrum.task">
+        <record id="scrum_task_9" model="project.task">
             <field name="planned_hours">24.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="description">Cash book, general ledger, accounts list, aged trial balance</field>
             <field name="name">Accounting Report General</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
-        <record id="scrum_task_10" model="scrum.task">
+        <record id="scrum_task_10" model="project.task">
             <field name="planned_hours">7.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Accounting Report Budget</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
-        <record id="scrum_task_11" model="scrum.task">
+        <record id="scrum_task_11" model="project.task">
             <field name="planned_hours">8.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Accounting Report Analytic</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_1"/>
         </record>
-        <record id="scrum_task_12" model="scrum.task">
+        <record id="scrum_task_12" model="project.task">
             <field name="planned_hours">4.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Bugfix - memory leak</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_4"/>
         </record>
-        <record id="scrum_task_13" model="scrum.task">
+        <record id="scrum_task_13" model="project.task">
             <field name="planned_hours">2.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Bugfix - Translations</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_4"/>
         </record>
-        <record id="scrum_task_14" model="scrum.task">
+        <record id="scrum_task_14" model="project.task">
             <field name="planned_hours">4.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Finish the automated plugin system</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_2"/>
         </record>
-        <record id="scrum_task_15" model="scrum.task">
+        <record id="scrum_task_15" model="project.task">
             <field name="planned_hours">4.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Reshape the complete menu structure</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_6"/>
         </record>
-        <record id="scrum_task_16" model="scrum.task">
+        <record id="scrum_task_16" model="project.task">
             <field name="planned_hours">5.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="name">Test 3.2.0 before releasing</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_5"/>
         </record>
-        <record id="scrum_task_17" model="scrum.task">
+        <record id="scrum_task_17" model="project.task">
             <field name="planned_hours">12.0</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
-            <field model="scrum.project" name="project_id" ref="scrum_project_1"/>
+            <field name="project_id" ref="scrum_project_1"/>
             <field name="description">default values, onchange, required, add on top or bottom and shortcuts (Ctrl S, Ctrl X, ...)</field>
             <field name="name">Editable trees</field>
             <field name="product_backlog_id" ref="scrum_product_backlog_7"/>

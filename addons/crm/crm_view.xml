@@ -59,7 +59,9 @@
                 <tree string="Stages">
                     <field name="sequence"/>
                     <field name="name"/>
+                    <field name="probability"/>
                     <field name="section_id"/>
+                    
                 </tree>
             </field>
         </record>
@@ -73,6 +75,7 @@
                     <field name="section_id" select="1" widget="selection"/>
                     <field name="object_id" invisible="1" />
                     <field name="sequence"/>
+                    <field name="probability"/>
                 </form>
             </field>
         </record>
@@ -92,8 +95,7 @@
                 <form string="Case Category">
                     <field name="name" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
-                    <field name="object_id"  invisible="1" />
-                    <field name="probability"/>
+                    <field name="object_id"  invisible="1" />                    
                 </form>
             </field>
         </record>
@@ -104,8 +106,7 @@
             <field name="arch" type="xml">
                 <tree string="Case Category">
                     <field name="name"/>
-                    <field name="section_id"/>
-                    <field name="probability"/>
+                    <field name="section_id"/>                    
                 </tree>
             </field>
         </record>

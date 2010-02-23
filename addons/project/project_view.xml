@@ -23,14 +23,22 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Administration">
-                            <field name="warn_manager"/>
-                            <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                            <field name="priority"/>
-                            <field name="resource_calendar_id"/>
-                            <field name="active" select="2"/>
-                            <newline/>
-                            <field name="planned_hours" widget="float_time"/>
-                            <field name="effective_hours" widget="float_time"/>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Scheduling"/>
+                                <field name="resource_calendar_id"/>
+                                <field name="priority"/>
+                                <field name="active" select="2"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Performance"/>
+                                <field name="planned_hours" widget="float_time"/>
+                                <field name="effective_hours" widget="float_time"/>
+                            </group>
+                            <group col="2" colspan="2" name="misc">
+                                <separator colspan="2" string="Miscelleanous"/>
+                                <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                                <field name="warn_manager"/>
+                            </group>
 
                             <newline/>
                             <separator colspan="4" string="Project's members"/>
@@ -411,6 +419,7 @@
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
                         <filter string="Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>

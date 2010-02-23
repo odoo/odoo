@@ -42,6 +42,7 @@ class crm_project_bug(osv.osv):
     _inherit = 'crm.case'
     _columns = {
         'date_closed': fields.datetime('Closed', readonly=True),
+        'date': fields.datetime('Date'),
         'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \

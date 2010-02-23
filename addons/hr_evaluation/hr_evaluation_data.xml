@@ -5,6 +5,8 @@
 			<field name="title">Employee Evaluation</field>
 			<field name="max_response_limit">20</field>
 			<field eval="[(6,0,[])]" name="users"/>
+			<field name="type" ref="survey.survey_type1"/>
+			<field name="responsible_id" ref="base.user_demo"/>
 		</record>
 	</data>
 	<data>
@@ -12,6 +14,8 @@
 			<field name="title">Employee Opinion</field>
 			<field name="max_response_limit">20</field>
 			<field eval="[(6,0,[])]" name="users"/>
+			<field name="type" ref="survey.survey_type1"/>
+			<field name="responsible_id" ref="base.user_root"/>
 		</record>
 	</data>
 	<data>

@@ -111,8 +111,7 @@ class crm_case_categ(osv.osv):
     _description = "Category of case"
 
     _columns = {
-        'name': fields.char('Case Category Name', size=64, required=True, translate=True),
-        'probability': fields.float('Probability (%)', required=True),
+        'name': fields.char('Case Category Name', size=64, required=True, translate=True),        
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
         'object_id': fields.many2one('ir.model','Object Name'),        
     }
@@ -120,8 +119,7 @@ class crm_case_categ(osv.osv):
         object_id = context and context.get('object_id', False) or False
         ids =self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
         return ids and ids[0] 
-    _defaults = {
-        'probability': lambda *args: 0.0,
+    _defaults = {        
         'object_id' : _find_object_id
     }
 #               
@@ -156,6 +154,7 @@ class crm_case_stage(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Case Section'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
         'object_id': fields.many2one('ir.model','Object Name'),
+        'probability': fields.float('Probability (%)', required=True),
     }
     def _find_object_id(self, cr, uid, context=None):
         object_id = context and context.get('object_id', False) or False
@@ -163,6 +162,7 @@ class crm_case_stage(osv.osv):
         return ids and ids[0]     
     _defaults = {
         'sequence': lambda *args: 1,
+        'probability': lambda *args: 0.0,
         'object_id' : _find_object_id
     }
     
@@ -319,13 +319,8 @@ class crm_case(osv.osv):
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
-        return True
+        return True  
     
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}
 
     def onchange_case_id(self, cr, uid, ids, case_id, name, partner_id, context={}):
         if not case_id:
