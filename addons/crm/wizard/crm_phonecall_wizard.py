@@ -202,21 +202,7 @@ class phonecall2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        phonecall_case_obj = pool.get('crm.phonecall')
-        meeting_case_obj = pool.get('crm.meeting')        
-        for phonecall in phonecall_case_obj.browse(cr, uid, data['ids']):
-            new_meeting_id = meeting_case_obj.create(cr, uid, {
-                'name': phonecall.name,
-                'section_id' : phonecall.section_id and phonecall.section_id.id or False,
-                'duration': phonecall.duration,
-                'description':phonecall.description,
-                'phonecall_id':phonecall.id
-                })
-            new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
-            vals = {}
-            phonecall_case_obj.write(cr, uid, [phonecall.id], vals)
-            phonecall_case_obj.case_cancel(cr, uid, [phonecall.id])
-            meeting_case_obj.case_open(cr, uid, [new_meeting_id])             
+        phonecall_case_obj = pool.get('crm.phonecall')                   
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])

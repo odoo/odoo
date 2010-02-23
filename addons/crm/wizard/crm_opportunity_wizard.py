@@ -135,21 +135,7 @@ class opportunity2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        opportunity_case_obj = pool.get('crm.opportunity')
-        meeting_case_obj = pool.get('crm.meeting')        
-        for opportunity in opportunity_case_obj.browse(cr, uid, data['ids']):
-            new_meeting_id = meeting_case_obj.create(cr, uid, {
-                'name': opportunity.name,
-                'date': time.strftime('%Y-%m-%d'),
-                'section_id' : opportunity.section_id and opportunity.section_id.id or False,
-                'date_deadline': opportunity.date_deadline,
-                'description':opportunity.description,
-                'opportunity_id':opportunity.id
-                })
-            new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
-            vals = {}
-            opportunity_case_obj.write(cr, uid, [opportunity.id], vals)            
-            meeting_case_obj.case_open(cr, uid, [new_meeting_id])        
+        opportunity_case_obj = pool.get('crm.opportunity')                
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
