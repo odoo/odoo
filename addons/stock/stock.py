@@ -1488,7 +1488,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [current_move], update_val)
         return new_move
 
-    def consume_moves(self, cr, uid, ids, quantity, location_id, context=None):
+    def consume_moves(self, cr, uid, ids, quantity, location_id=None, context=None):
         new_move = []
         if not context:
             context = {}        
@@ -1509,7 +1509,7 @@ class stock_move(osv.osv):
             default_val = {
                 'product_qty': quantity, 
                 'product_uos_qty': uos_qty,
-                'location_id' : location_id,                
+                'location_id' : location_id or move.location_id.id,
             }
             if move.product_id.track_production:
                 new_move = self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)

@@ -36,7 +36,10 @@ class stock_move_produce(osv.osv_memory):
     def _get_product_qty(self, cr, uid, context):
         prod = self.pool.get('mrp.production').browse(cr, uid, 
                                 context['active_id'], context=context)
-        return prod.product_qty
+        done = 0.0
+        for move in prod.move_created_ids2:
+                done += move.product_qty
+        return (prod.product_qty - done) or prod.product_qty
     
     _defaults = {
                  'product_qty': _get_product_qty, 

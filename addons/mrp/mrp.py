@@ -589,13 +589,17 @@ class mrp_production(osv.osv):
     def action_production_end(self, cr, uid, ids, qty=0.0, mode=None):
         move_ids = []
         finished = []
-        qty_rest = 0.0
         move_obj = self.pool.get('stock.move')
         for production in self.browse(cr, uid, ids):
+            done = 0.0
+            qty_rest = 0.0
+            for move in production.move_created_ids2:
+                done += move.product_qty
+            qty_operate = production.product_qty - done
             if qty > production.product_qty:
                 # Is it required??
                 raise osv.except_osv(_('Error'), _("Couldn't produce more quantity"))
-            elif qty == production.product_qty:
+            elif qty == qty_operate:
                 for res in production.move_lines:
                     for move in production.move_created_ids:
                         #XXX must use the orm
@@ -604,17 +608,13 @@ class mrp_production(osv.osv):
                                 (res.id, move.id))
                     move_ids.append(res.id)
                 finished += [x.id for x in production.move_created_ids]
-            elif qty < production.product_qty:
-                qty_rest = production.product_qty - qty
-#                Needs other field to store value of already consumed products
-#                self.write(cr,  uid, ids, {'product_qty': qty_rest})
+            elif qty < qty_operate:
+                qty_rest = qty_operate - qty
                 moves = map(lambda x: x.id, production.move_lines)
                 moves_created = map(lambda x: x.id, production.move_created_ids)
                 if mode == 'consume':
-                    temp = move_obj.consume_moves(cr, uid, moves, qty)
-                    temp1 = move_obj.consume_moves(cr, uid, moves_created, qty)
-                    move_ids += temp
-                    finished += temp1
+                    move_ids += move_obj.consume_moves(cr, uid, moves, qty)
+                    finished += move_obj.consume_moves(cr, uid, moves_created, qty)
                 elif mode == 'consume_produce':
                     for move in move_obj.browse(cr, uid, moves):
                         move_obj.write(cr, uid, move.id, {'product_qty': qty})
@@ -633,7 +633,7 @@ class mrp_production(osv.osv):
                         {'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
             move_obj.action_done(cr, uid, finished)
             move_obj.action_done(cr, uid, move_ids)
-            if mode == 'consume_produce' and not qty_rest and not finished:
+            if mode == 'consume_produce' and not qty_rest:
                 move_obj.check_assign(cr, uid, finished)
                 self._costs_generate(cr, uid, production)
                 self.write(cr,  uid, ids, {'state': 'done'})
