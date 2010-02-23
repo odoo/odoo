@@ -57,8 +57,7 @@
                     <separator colspan="4" string="Status and Categorization"/>
                     <group colspan="4" col="6">
                         <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                        <field name="categ_id"
-                            on_change="onchange_categ_id(categ_id)"
+                        <field name="categ_id"                            
                             string="Lead Source" widget="selection"
                             domain="[('object_id.model', '=', 'crm.opportunity')]" />
                         <field name="type_id" string="Campaign" select="1"/>

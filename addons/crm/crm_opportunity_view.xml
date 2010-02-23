@@ -41,7 +41,7 @@
             <form string="Opportunities">
                 <group colspan="4" col="7">
                     <field name="name" string="Opportunity"/>
-                    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
+                    <field name="stage_id" on_change="onchange_stage_id(stage_id)" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
                     <field name="user_id"/>
                     <button string="Schedule Meeting"
                         name="%(wizard_crm_opportunity_meeting_set)d" icon="gtk-redo" type="action" />
@@ -65,7 +65,7 @@
                         <field name="type_id" select="1" string="Campaign"/>
                         <field name="section_id" colspan="1" widget="selection"/>
                         <field name="priority" string="Priority"/>
-                        <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)" string="Source" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
+                        <field name="categ_id" select="1" string="Source" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
                     </group>
 
                     <separator colspan="4" string="Details"/>

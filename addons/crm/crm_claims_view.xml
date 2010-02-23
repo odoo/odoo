@@ -78,8 +78,7 @@
 	                        <field name="stage_id" select="1" nolabel="1"/>
 	                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
 	                    </group>
-                    	<field name="categ_id" select="1" widget="selection"
-                    		on_change="onchange_categ_id(categ_id)"
+                    	<field name="categ_id" select="1" widget="selection"                    		
                     		domain="[('object_id.model', '=', 'crm.claim')]" />
                     	<field name="type_id" string="Type of Action" select="1"
                     		domain="[('object_id.model', '=', 'crm.claim')]" />

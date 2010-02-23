@@ -81,7 +81,7 @@
                     	<field name="user_id" select="2" string="Responsible"/>
                         <field name="section_id" colspan="1" widget="selection"/>
                     	<field name="categ_id" select="1"
-                    		on_change="onchange_categ_id(categ_id)"  widget="selection"
+                    		widget="selection"
                     		domain="[('object_id.model', '=', 'crm.fundraising')]" />
                     	<field name="date"/>
 	                    <field name="duration"/>
