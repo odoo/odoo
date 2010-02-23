@@ -22,7 +22,6 @@
 
 from osv import fields, osv
 
-#from tools.misc import currency
 from _common import rounding
 import time
 from tools import config
@@ -91,8 +90,6 @@ class product_pricelist(osv.osv):
             res.append((type['key'],type['name']))
 
         return res
-#        cr.execute('select key,name from product_pricelist_type order by name')
-#        return cr.fetchall()
     _name = "product.pricelist"
     _description = "Pricelist"
     _columns = {
@@ -382,7 +379,4 @@ class product_pricelist_item(osv.osv):
         return {}
 product_pricelist_item()
 
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
