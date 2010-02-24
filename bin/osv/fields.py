@@ -307,13 +307,15 @@ class many2one(_column):
 
         # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
         from orm import except_orm
-        try:
-            names = dict(obj.name_get(cr, user, filter(None, res.values()), context))
-        except except_orm:
-            names = {}
-            iids = filter(None, res.values())
-            for iiid in iids:
-                names[iiid] = '// Access Denied //'
+        names = {}
+        for record in list(set(filter(None, res.values()))):
+            try:
+                record_name = dict(obj.name_get(cr, user, [record], context))
+            except except_orm:
+                record_name = {}
+                record_name[record] = '// Access Denied //'
+            names.update(record_name)        
+        
         for r in res.keys():
             if res[r] and res[r] in names:
                 res[r] = (res[r], names[res[r]])
@@ -731,15 +733,18 @@ class related(function):
                     field_detail = self._relations[i]
                     relation = field_detail['object']
                     if not t_data[self.arg[i]]:
+                        if self._type not in ('one2many', 'many2many'):
+                            t_id = t_data['id']
                         t_data = False
                         break
                     if field_detail['type'] in ('one2many', 'many2many'):
                         if self._type != "many2one":
-                            t_id=t_data.id
+                            t_id = t_data.id
                             t_data = t_data[self.arg[i]][0]
                     else:
-                        t_id=t_data['id']
+                        t_id = t_data['id']
                         t_data = t_data[self.arg[i]]
+
                 if t_id:
                     obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values}, context=context)
 

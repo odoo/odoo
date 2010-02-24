@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -35,7 +35,7 @@ TRANSLATION_TYPE = [
     ('help', 'Help'),
     ('code', 'Code'),
     ('constraint', 'Constraint'),
-    ('sql_constraint', 'SQL Constraint')    
+    ('sql_constraint', 'SQL Constraint')
 ]
 
 class ir_translation(osv.osv):
@@ -123,6 +123,8 @@ class ir_translation(osv.osv):
 
     @tools.cache(skiparg=3)
     def _get_source(self, cr, uid, name, tt, lang, source=None):
+        if not lang:
+            return ''
         if source:
             #if isinstance(source, unicode):
             #   source = source.encode('utf8')
@@ -143,7 +145,7 @@ class ir_translation(osv.osv):
         res = cr.fetchone()
         trad = res and res[0] or ''
         return trad
-        
+
     def create(self, cursor, user, vals, context=None):
         if not context:
             context = {}
@@ -151,7 +153,7 @@ class ir_translation(osv.osv):
         for trans_obj in self.read(cursor, user, [ids], ['name','type','res_id'], context=context):
             self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], lang=context.get('lang','en_US'))
             self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], context.get('lang','en_US'), [trans_obj['res_id']])
-        return ids    
+        return ids
 
     def write(self, cursor, user, ids, vals, context=None):
         if not context:
@@ -169,7 +171,7 @@ class ir_translation(osv.osv):
             self._get_source.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], lang=context.get('lang','en_US'))
             self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], context.get('lang','en_US'), [trans_obj['res_id']])
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
-        return result    
+        return result
 
 ir_translation()
 

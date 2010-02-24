@@ -245,6 +245,7 @@ class act_window(osv.osv):
             'act_id', 'gid', 'Groups'),
         'search_view_id': fields.many2one('ir.ui.view', 'Search View Ref.'),
         'filter': fields.boolean('Filter'),
+        'auto_search':fields.boolean('Auto Search'),
         'default_user_ids': fields.many2many('res.users', 'ir_act_window_user_rel', 'act_id', 'uid', 'Users'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
         'menus': fields.char('Menus', size=4096)
@@ -257,6 +258,7 @@ class act_window(osv.osv):
         'limit': lambda *a: 80,
         'target': lambda *a: 'current',
         'auto_refresh': lambda *a: 0,
+        'auto_search':lambda *a: True
     }
 act_window()
 
@@ -427,7 +429,6 @@ class actions_server(osv.osv):
         'sequence': lambda *a: 5,
         'code': lambda *a: """# You can use the following variables
 #    - object
-#    - object2
 #    - time
 #    - cr
 #    - uid
@@ -488,7 +489,7 @@ class actions_server(osv.osv):
             result = eval(exp, {'object':obj, 'context': context,'time':time})
             if result in (None, False):
                 return str("--------")
-            return str(result)
+            return tools.ustr(result)
 
         com = re.compile('(\[\[.+?\]\])')
         message = com.sub(merge, keystr)
@@ -534,7 +535,7 @@ class actions_server(osv.osv):
                     'ids': ids,
                     'cr': cr,
                     'uid': uid,
-                    'obj':obj
+                    'object':obj
                 }
                 exec action.code in localdict
                 if 'action' in localdict:
@@ -553,10 +554,10 @@ class actions_server(osv.osv):
                     continue
                 if not user:
                     raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
-
-                subject = self.merge_message(cr, uid, str(action.subject), action, context)
-                body = self.merge_message(cr, uid, str(action.message), action, context)
-
+                
+                subject = self.merge_message(cr, uid, action.subject, action, context)
+                body = self.merge_message(cr, uid, action.message, action, context)
+                
                 if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
@@ -573,14 +574,8 @@ class actions_server(osv.osv):
             if action.state == 'sms':
                 #TODO: set the user and password from the system
                 # for the sms gateway user / password
-                api_id = ''
-                text = action.sms
-                to = self.get_mobile(cr, uid, action, context)
-                #TODO: Apply message mearge with the field
-                if tools.sms_send(user, password, api_id, text, to) == True:
-                    logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
-                else:
-                    logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
+                # USE smsclient module from extra-addons
+                logger.notifyChannel('sms', netsvc.LOG_ERROR, 'SMS Facility has not been implemented yet. Use smsclient module!')
 
             if action.state == 'other':
                 res = []

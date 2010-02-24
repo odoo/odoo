@@ -42,24 +42,6 @@ class ir_rule_group(osv.osv):
         'global': lambda *a: True,
     }
 
-    def unlink(self, cr, uid, ids, context=None):
-        res = super(ir_rule_group, self).unlink(cr, uid, ids, context=context)
-        # Restart the cache on the domain_get method of ir.rule
-        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
-        return res
-
-    def create(self, cr, user, vals, context=None):
-        res = super(ir_rule_group, self).create(cr, user, vals, context=context)
-        # Restart the cache on the domain_get method of ir.rule
-        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
-        return res
-
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(ir_rule_group, self).write(cr, uid, ids, vals, context=context)
-        # Restart the cache on the domain_get method of ir.rule
-        self.pool.get('ir.rule').domain_get.clear_cache(cr.dbname)
-        return res
-
 ir_rule_group()
 
 

@@ -30,9 +30,12 @@ class ExceptionNoTb(Exception):
         self.args = (msg, '')
 
 def login(db, login, password):
+    print 'login'
     pool = pooler.get_pool(db)
     user_obj = pool.get('res.users')
-    return user_obj.login(db, login, password)
+    res = user_obj.login(db, login, password)
+    print 'login end'
+    return res
 
 def check_super(passwd):
     if passwd == tools.config['admin_passwd']:

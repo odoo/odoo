@@ -71,14 +71,28 @@ class report_printscreen_list(report_int):
         fields_order = self._parse_string(result['arch'])
         rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
         ids2 = [x['id'] for x in rows] # getting the ids from read result
-
         if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
             rows_new = []
             for id in datas['ids']:
                 element = [elem for elem in rows if elem['id']==id]
                 rows_new.append(element[0])
             rows = rows_new
-
+        if context.get('group_by',False):
+            if context['group_by'] in fields_order:
+                fields_order.remove(context['group_by'])
+                fields_order.insert(0, context['group_by'])
+            re =  model.read_group(cr, uid, [('id','in',ids)], fields_order, context.get('group_by',False),0,None,context)
+            rows=[]
+            for r in re:
+                for f in fields_order:
+                    if f not in r:
+                        r.update({f:False})
+                r['__group']=True
+                rows.append(r)
+                _ids = model.search(cr, uid, r['__domain'])
+                res=model.read(cr, uid, _ids, result['fields'].keys(), context)
+                for r in res:
+                    rows.append(r)
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
         return (self.obj.get(), 'pdf')
 
@@ -139,26 +153,24 @@ class report_printscreen_list(report_int):
         count = len(fields_order)
         for i in range(0,count):
             tsum.append(0)
-
         for line in results:
             node_line = etree.SubElement(lines, 'row')
             count = -1
             for f in fields_order:
                 float_flag = 0
                 count += 1
-
                 if fields[f]['type']=='many2one' and line[f]:
-                    line[f]= line[f][1]
-
+                    if not line.get('__group'):
+                        line[f]= line[f][1]
+                    else:
+                        line[f]= line[f]
                 if fields[f]['type']=='selection' and line[f]:
                     for key, value in fields[f]['selection']:
                         if key == line[f]:
                             line[f] = value
                             break
-
                 if fields[f]['type'] in ('one2many','many2many') and line[f]:
                     line[f] = '( '+tools.ustr(len(line[f])) + ' )'
-
                 if fields[f]['type'] == 'float' and line[f]:
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
                     prec ='%.' + str(precision) +'f'
@@ -166,36 +178,44 @@ class report_printscreen_list(report_int):
                     float_flag = 1
 
                 if fields[f]['type'] == 'date' and line[f]:
-                    format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
-                    d1 = datetime.strptime(line[f],'%Y-%m-%d')
-                    new_d1 = d1.strftime(format)
+                    new_d1 = line[f]
+                    if not line.get('__group'):
+                        format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))
+                        d1 = datetime.strptime(line[f],'%Y-%m-%d')
+                        new_d1 = d1.strftime(format)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'time' and line[f]:
-                    format = str(locale.nl_langinfo(locale.T_FMT))
-                    d1 = datetime.strptime(line[f], '%H:%M:%S')
-                    new_d1 = d1.strftime(format)
+                    new_d1 = line[f]
+                    if not line.get('__group'):
+                        format = str(locale.nl_langinfo(locale.T_FMT))
+                        d1 = datetime.strptime(line[f], '%H:%M:%S')
+                        new_d1 = d1.strftime(format)
                     line[f] = new_d1
 
                 if fields[f]['type'] == 'datetime' and line[f]:
-                    format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
-                    d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
-                    new_d1 = d1.strftime(format)
+                    new_d1 = line[f]
+                    if not line.get('__group'):
+                        format = str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'))+' '+str(locale.nl_langinfo(locale.T_FMT))
+                        d1 = datetime.strptime(line[f], '%Y-%m-%d %H:%M:%S')
+                        new_d1 = d1.strftime(format)
                     line[f] = new_d1
-
-                col = etree.SubElement(node_line, 'col', para='yes', tree='no')
+                if line.get('__group'):
+                    col = etree.SubElement(node_line, 'col', para='group', tree='no')
+                else:
+                    col = etree.SubElement(node_line, 'col', para='yes', tree='no')
                 if line[f] != None:
                     col.text = tools.ustr(line[f] or '')
                     if float_flag:
                        col.set('tree','float')
-                    if f != 'id' and temp[count] == 1:
+                    if not line.get('__group') and f != 'id' and temp[count] == 1:
                         tsum[count] = float(tsum[count])  + float(line[f]);
                 else:
                      col.text = '/'
 
         node_line = etree.SubElement(lines, 'row')
         for f in range(0,count+1):
-            col = etree.SubElement(node_line, 'col', para='yes', tree='no')
+            col = etree.SubElement(node_line, 'col', para='group', tree='no')
             if tsum[f] != None:
                if tsum[f] >= 0.01 :
                    prec = '%.' +  str(tools.config['price_accuracy'])  + 'f'
@@ -215,7 +235,6 @@ class report_printscreen_list(report_int):
             etree.parse(os.path.join(tools.config['root_path'],
                                      'addons/base/report/custom_new.xsl')))
         rml = etree.tostring(transform(new_doc))
-
         self.obj = render.rml(rml, title=self.title)
         self.obj.render()
         return True

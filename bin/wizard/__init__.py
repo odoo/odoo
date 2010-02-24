@@ -148,6 +148,10 @@ class interface(netsvc.Service):
                 res['arch'] = arch
                 res['state'] = button_list
 
+            elif result_def['type'] == 'choice':
+                next_state = result_def['next_state'](self, cr, uid, data, context)
+                return self.execute_cr(cr, uid, data, next_state, context)
+        
         except Exception, e:
             if isinstance(e, except_wizard) \
                 or isinstance(e, except_osv) \
@@ -162,9 +166,6 @@ class interface(netsvc.Service):
                         'Exception in call: ' + tb_s)
                 raise
 
-        if result_def['type'] == 'choice':
-            next_state = result_def['next_state'](self, cr, uid, data, context)
-            return self.execute_cr(cr, uid, data, next_state, context)
         return res
 
     def execute(self, db, uid, data, state='init', context=None):

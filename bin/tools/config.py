@@ -352,7 +352,6 @@ class configmanager(object):
         res = os.path.abspath(os.path.expanduser(value))
         if not os.path.exists(res):
             raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, value))
-        
         contains_addons = False
         for f in os.listdir(res):
             modpath = os.path.join(res, f)

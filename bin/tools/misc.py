@@ -439,7 +439,10 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     except (UnicodeEncodeError, UnicodeDecodeError):
         email_body = body
 
-    email_text = MIMEText(email_body, _subtype=subtype, _charset='utf-8')
+    try:
+        email_text = MIMEText(email_body.encode('utf8') or '',_subtype=subtype,_charset='utf-8')
+    except:
+        email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
 
     if attach: msg = MIMEMultipart()
     else: msg = email_text
@@ -747,14 +750,14 @@ class cache(object):
             if *args and **kwargs are both empty, clear all the keys related to this database
         """
         if not args and not kwargs:
-            keys_to_del = [key for key in self.cache if key[0][1] == dbname]
+            keys_to_del = [key for key in self.cache.keys() if key[0][1] == dbname]
         else:
             kwargs2 = self._unify_args(*args, **kwargs)
-            keys_to_del = [key for key, _ in self._generate_keys(dbname, kwargs2) if key in self.cache]
-
+            keys_to_del = [key for key, _ in self._generate_keys(dbname, kwargs2) if key in self.cache.keys()]
+        
         for key in keys_to_del:
-            del self.cache[key]
-
+            self.cache.pop(key)
+    
     @classmethod
     def clean_caches_for_db(cls, dbname):
         for c in cls.__caches:
@@ -775,9 +778,9 @@ class cache(object):
             if time.time()-int(self.timeout) > self.lasttime:
                 self.lasttime = time.time()
                 t = time.time()-int(self.timeout)
-                old_keys = [key for key in self.cache if self.cache[key][1] < t]
+                old_keys = [key for key in self.cache.keys() if self.cache[key][1] < t]
                 for key in old_keys:
-                    del self.cache[key]
+                    self.cache.pop(key)
 
             kwargs2 = self._unify_args(*args, **kwargs)
 
