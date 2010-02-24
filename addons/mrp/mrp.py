@@ -1382,38 +1382,16 @@ class StockMove(osv.osv):
         return True
     
     
-    def consume_moves(self, cr, uid, ids, product_qty, location_id, context=None):
+    def consume_moves(self, cr, uid, ids, product_qty, location_id=False, location_dest_id=False, consume=True, context=None):
         res = []
         production_obj = self.pool.get('mrp.production')
         for move in self.browse(cr, uid, ids):
-            new_moves = super(StockMove, self).consume_moves(cr, uid, [move.id], product_qty, location_id, context=context)
+            new_moves = super(StockMove, self).consume_moves(cr, uid, [move.id], product_qty, location_id, location_dest_id, consume, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for new_move in new_moves:
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)
-        return res
-
-    def split_lines(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, context=None):
-        res = []
-        production_obj = self.pool.get('mrp.production')
-        for move in self.browse(cr, uid, ids):
-            new_moves = super(StockMove, self).split_lines(cr, uid, [move.id], quantity, split_by_qty, prefix, context=context)
-            production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-            for new_move in new_moves:
-                production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
-                res.append(new_move)
-        return res
-    
-    def scrap_moves(self, cr, uid, ids, quantity, location_dest_id, context=None):
-        res = []
-        production_obj = self.pool.get('mrp.production')
-        for move in self.browse(cr, uid, ids):
-            new_moves = super(StockMove, self).scrap_moves(cr, uid, [move.id], quantity, location_dest_id, context=context)
-            production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-            for new_move in new_moves:
-                production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
-                res.append(new_move)
-        return res
+        return res  
 
 StockMove()
 
