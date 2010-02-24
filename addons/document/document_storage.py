@@ -34,6 +34,8 @@ import string
 import netsvc
 from content_index import cntIndex
 
+DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config.get('root_path'), 'filestore'))
+
 
 """ The algorithm of data storage
 
@@ -111,8 +113,7 @@ class document_storage(osv.osv):
     }
 
     def _get_rootpath(self, cr, uid, context=None):
-        from tools import config
-        return os.path.join(tools.config['root_path'], 'filestore', cr.dbname)
+        return os.path.join(DMS_ROOT_PATH, cr.dbname)
 
     _defaults = {
         'user_id': lambda self, cr, uid, ctx: uid,

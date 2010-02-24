@@ -36,12 +36,13 @@ import tools
 from tools.translate import _
 import nodes
 
+DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['root_path'], 'filestore'))
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
     _rec_name = 'datas_fname'
     def _get_filestore(self, cr):
-        return os.path.join(tools.config['root_path'], 'filestore', cr.dbname)
+        return os.path.join(DMS_ROOT_PATH, cr.dbname)
 
     def _data_get(self, cr, uid, ids, name, arg, context):
         fbrl = self.browse(cr, uid, ids, context=context)
