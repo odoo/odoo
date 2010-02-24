@@ -667,12 +667,12 @@ class account_invoice(osv.osv):
         will be grouped together if the journal has the 'group line' option. Of course a module
         can add fields to invoice lines that would need to be tested too before merging lines
         or not."""
-        code = str(invoice_line['account_id'])
-        code += '-'+str(invoice_line.get('tax_code_id',"False"))
-        code += '-'+str(invoice_line.get('product_id',"False"))
-        code += '-'+str(invoice_line.get('analytic_account_id',"False"))
-        code += '-'+str(invoice_line.get('date_maturity',"False"))
-        return code
+        return "%s-%s-%s-%s-%s"%(
+            invoice_line['account_id'],
+            invoice_line.get('tax_code_id',"False"),
+            invoice_line.get('product_id',"False"),
+            invoice_line.get('analytic_account_id',"False"),
+            invoice_line.get('date_maturity',"False"))
 
     def group_lines(self, cr, uid, iml, line, inv):
         """Merge account move lines (and hence analytic lines) if invoice line hashcodes are equals"""
