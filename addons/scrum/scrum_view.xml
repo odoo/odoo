@@ -43,6 +43,11 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="planned_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                    <button type="action" string="Convert to Task" name="%(wizard_scrum_backlog_task)d" states="draft,pending" icon="gtk-execute"/>
+                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
+                    <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
@@ -89,8 +94,9 @@
                         <filter default="1"
                             icon="terp-project"
                             string="Current"
-                            domain="[('state','in',('open','draft'))]"
-                            help="Open and Draft Backlogs"/>
+                            domain="[('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d'))]"
+                            help="Current Backlogs"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-project" string="Draft" domain="[('state','=','draft')]" help="Draft Backlogs"/>
                         <filter icon="terp-project" string="Open" domain="[('state','=','open')]" help="Open Backlogs"/>
                         <separator orientation="vertical"/>
@@ -148,8 +154,10 @@
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="planned_hours" sum="Planned hours" widget="float_time"/>
                     <field name="state"/>
-                    <field name="date_stop" invisible="1"/>
-                    <field name="product_owner_id" invisible="1"/>
+                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
+                    <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
+                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>
