@@ -630,8 +630,85 @@ class account_invoice(osv.osv):
             if res and res['value']:
                 self.write(cr, uid, [inv.id], res['value'])
         return True
+    
+    def check_tax_lines(self, cr, uid, inv, compute_taxes, ait_obj):
+        if not inv.tax_line:
+            for tax in compute_taxes.values():
+                ait_obj.create(cr, uid, tax)
+        else:
+            tax_key = []
+            for tax in inv.tax_line:
+                if tax.manual:
+                    continue
+                key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
+                tax_key.append(key)
+                if not key in compute_taxes:
+                    raise osv.except_osv(_('Warning !'), _('Global taxes defined, but are not in invoice lines !'))
+                base = compute_taxes[key]['base']
+                if abs(base - tax.base) > inv.company_id.currency_id.rounding:
+                    raise osv.except_osv(_('Warning !'), _('Tax base different !\nClick on compute to update tax base'))
+            for key in compute_taxes:
+                if not key in tax_key:
+                    raise osv.except_osv(_('Warning !'), _('Taxes missing !'))
+
+    def compute_invoice_totals(self, cr, uid, inv, company_currency, ref, invoice_move_lines):
+        total = 0
+        total_currency = 0
+        for i in invoice_move_lines:
+            if inv.currency_id.id != company_currency:
+                i['currency_id'] = inv.currency_id.id
+                i['amount_currency'] = i['price']
+                i['price'] = cur_obj.compute(cr, uid, inv.currency_id.id,
+                        company_currency, i['price'],
+                        context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
+            else:
+                i['amount_currency'] = False
+                i['currency_id'] = False
+            i['ref'] = ref
+            if inv.type in ('out_invoice','in_refund'):
+                total += i['price']
+                total_currency += i['amount_currency'] or i['price']
+                i['price'] = - i['price']
+            else:
+                total -= i['price']
+                total_currency -= i['amount_currency'] or i['price']
+        return total, total_currency, invoice_move_lines
+    
+    def inv_line_characteristic_hashcode(self, invoice, invoice_line):
+        """Overridable hashcode generation for invoice lines. Lines having the same hashcode
+        will be grouped together if the journal has the 'group line' option. Of course a module
+        can add fields to invoice lines that would need to be tested too before merging lines
+        or not."""
+        code = str(invoice_line['account_id'])
+        code += '-'+str(invoice_line.get('tax_code_id',"False"))
+        code += '-'+str(invoice_line.get('product_id',"False"))
+        code += '-'+str(invoice_line.get('analytic_account_id',"False"))
+        code += '-'+str(invoice_line.get('date_maturity',"False"))
+        return code
+    
+    def group_lines(self, cr, uid, iml, line, inv):
+        """Merge account move lines (and hence analytic lines) if invoice line hashcodes are equals"""
+        if inv.journal_id.group_invoice_lines:
+            line2 = {}
+            for x, y, l in line:
+                tmp = self.inv_line_characteristic_hashcode(inv, l)
+                
+                if tmp in line2:
+                    am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
+                    line2[tmp]['debit'] = (am > 0) and am or 0.0
+                    line2[tmp]['credit'] = (am < 0) and -am or 0.0
+                    line2[tmp]['tax_amount'] += l['tax_amount']
+                    line2[tmp]['analytic_lines'] += l['analytic_lines']
+                else:
+                    line2[tmp] = l
+            line = []
+            for key, val in line2.items():
+                line.append((0,0,val))
+        
+        return line
 
     def action_move_create(self, cr, uid, ids, *args):
+        """Creates invoice related analytics and financial move lines"""
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
         context = {}
@@ -650,24 +727,7 @@ class account_invoice(osv.osv):
 
             context.update({'lang': inv.partner_id.lang})
             compute_taxes = ait_obj.compute(cr, uid, inv.id, context=context)
-            if not inv.tax_line:
-                for tax in compute_taxes.values():
-                    ait_obj.create(cr, uid, tax)
-            else:
-                tax_key = []
-                for tax in inv.tax_line:
-                    if tax.manual:
-                        continue
-                    key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
-                    tax_key.append(key)
-                    if not key in compute_taxes:
-                        raise osv.except_osv(_('Warning !'), _('Global taxes defined, but are not in invoice lines !'))
-                    base = compute_taxes[key]['base']
-                    if abs(base - tax.base) > inv.company_id.currency_id.rounding:
-                        raise osv.except_osv(_('Warning !'), _('Tax base different !\nClick on compute to update tax base'))
-                for key in compute_taxes:
-                    if not key in tax_key:
-                        raise osv.except_osv(_('Warning !'), _('Taxes missing !'))
+            self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
             if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
                 raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
@@ -684,24 +744,7 @@ class account_invoice(osv.osv):
             # create one move line for the total and possibly adjust the other lines amount
             total = 0
             total_currency = 0
-            for i in iml:
-                if inv.currency_id.id != company_currency:
-                    i['currency_id'] = inv.currency_id.id
-                    i['amount_currency'] = i['price']
-                    i['price'] = cur_obj.compute(cr, uid, inv.currency_id.id,
-                            company_currency, i['price'],
-                            context={'date': inv.date_invoice or time.strftime('%Y-%m-%d')})
-                else:
-                    i['amount_currency'] = False
-                    i['currency_id'] = False
-                i['ref'] = ref
-                if inv.type in ('out_invoice','in_refund'):
-                    total += i['price']
-                    total_currency += i['amount_currency'] or i['price']
-                    i['price'] = - i['price']
-                else:
-                    total -= i['price']
-                    total_currency -= i['amount_currency'] or i['price']
+            total, total_currency, iml = self.compute_invoice_totals(cr, uid, inv, company_currency, ref, iml)
             acc_id = inv.account_id.id
 
             name = inv['name'] or '/'
@@ -756,26 +799,7 @@ class account_invoice(osv.osv):
 
             line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context={})) ,iml)
 
-            if inv.journal_id.group_invoice_lines:
-                line2 = {}
-                for x, y, l in line:
-                    tmp = str(l['account_id'])
-                    tmp += '-'+str(l.get('tax_code_id',"False"))
-                    tmp += '-'+str(l.get('product_id',"False"))
-                    tmp += '-'+str(l.get('analytic_account_id',"False"))
-                    tmp += '-'+str(l.get('date_maturity',"False"))
-
-                    if tmp in line2:
-                        am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
-                        line2[tmp]['debit'] = (am > 0) and am or 0.0
-                        line2[tmp]['credit'] = (am < 0) and -am or 0.0
-                        line2[tmp]['tax_amount'] += l['tax_amount']
-                        line2[tmp]['analytic_lines'] += l['analytic_lines']
-                    else:
-                        line2[tmp] = l
-                line = []
-                for key, val in line2.items():
-                    line.append((0,0,val))
+            line = self.group_lines(cr, uid, iml, line, inv)
 
             journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
