@@ -126,7 +126,6 @@ class product_product(osv.osv):
                 'group by product_id,product_uom',
                 (tuple(location_ids), tuple(location_ids), tuple(ids),
                  tuple(states)) + date_args)
-            )
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')
         uoms = map(lambda x: x[2], results) + map(lambda x: x[2], results2)
