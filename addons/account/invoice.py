@@ -29,18 +29,6 @@ from mx.DateTime import RelativeDateTime
 from tools import config
 from tools.translate import _
 
-#class fiscalyear_seq(osv.osv):
-#    _name = "fiscalyear.seq"
-#    _description = "Maintains Invoice sequences with Fiscal Year"
-#    _rec_name = 'fiscalyear_id'
-#    _columns = {
-#        'journal_id': fields.many2one('account.journal', 'Journal'),
-#        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year',required=True),
-#        'sequence_id':fields.many2one('ir.sequence', 'Sequence',required=True),
-#    }
-#
-#fiscalyear_seq()
-
 class account_invoice(osv.osv):
     def _amount_all(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -505,21 +493,21 @@ class account_invoice(osv.osv):
         else:
             journal_ids=self.pool.get('account.journal').search(cr,uid,[])
             dom={'journal_id':  [('id','in',journal_ids)]}
-        
+
         if currency_id and company_id:
             currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
             if currency.company_id.id != company_id:
                 val['currency_id'] = False
             else:
                 val['currency_id'] = currency.id
-                
+
         if company_id:
             company = self.pool.get('res.company').browse(cr, uid, company_id)
             if company.currency_id.company_id.id != company_id:
-                val['currency_id'] = False         
+                val['currency_id'] = False
             else:
                 val['currency_id'] = company.currency_id.id
-            
+
         return {'value' : val, 'domain': dom }
 
     # go from canceled state to draft state
@@ -630,7 +618,7 @@ class account_invoice(osv.osv):
             if res and res['value']:
                 self.write(cr, uid, [inv.id], res['value'])
         return True
-    
+
     def check_tax_lines(self, cr, uid, inv, compute_taxes, ait_obj):
         if not inv.tax_line:
             for tax in compute_taxes.values():
@@ -673,7 +661,7 @@ class account_invoice(osv.osv):
                 total -= i['price']
                 total_currency -= i['amount_currency'] or i['price']
         return total, total_currency, invoice_move_lines
-    
+
     def inv_line_characteristic_hashcode(self, invoice, invoice_line):
         """Overridable hashcode generation for invoice lines. Lines having the same hashcode
         will be grouped together if the journal has the 'group line' option. Of course a module
@@ -685,14 +673,14 @@ class account_invoice(osv.osv):
         code += '-'+str(invoice_line.get('analytic_account_id',"False"))
         code += '-'+str(invoice_line.get('date_maturity',"False"))
         return code
-    
+
     def group_lines(self, cr, uid, iml, line, inv):
         """Merge account move lines (and hence analytic lines) if invoice line hashcodes are equals"""
         if inv.journal_id.group_invoice_lines:
             line2 = {}
             for x, y, l in line:
                 tmp = self.inv_line_characteristic_hashcode(inv, l)
-                
+
                 if tmp in line2:
                     am = line2[tmp]['debit'] - line2[tmp]['credit'] + (l['debit'] - l['credit'])
                     line2[tmp]['debit'] = (am > 0) and am or 0.0
@@ -704,7 +692,7 @@ class account_invoice(osv.osv):
             line = []
             for key, val in line2.items():
                 line.append((0,0,val))
-        
+
         return line
 
     def action_move_create(self, cr, uid, ids, *args):
@@ -1473,4 +1461,3 @@ class account_invoice_tax(osv.osv):
 account_invoice_tax()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
