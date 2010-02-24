@@ -581,28 +581,78 @@ class mrp_production(osv.osv):
                         {'location_id':production.location_dest_id.id})
         return True
 
-    #TODO Review materials in function in_prod and prod_end.
     def action_production_end(self, cr, uid, ids):
-        move_ids = []
         for production in self.browse(cr, uid, ids):
-            for res in production.move_lines:
-                for move in production.move_created_ids:
-                    #XXX must use the orm
-                    cr.execute('INSERT INTO stock_move_history_ids \
-                            (parent_id, child_id) VALUES (%s,%s)',
-                            (res.id, move.id))
-                move_ids.append(res.id)
-            vals= {'state':'confirmed'}
-            new_moves = [x.id for x in production.move_created_ids]
-            self.pool.get('stock.move').write(cr, uid, new_moves, vals)
-            if not production.date_finnished:
-                self.write(cr, uid, [production.id],
-                        {'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
-            self.pool.get('stock.move').check_assign(cr, uid, new_moves)
-            self.pool.get('stock.move').action_done(cr, uid, new_moves)
             self._costs_generate(cr, uid, production)
-        self.pool.get('stock.move').action_done(cr, uid, move_ids)
-        self.write(cr,  uid, ids, {'state': 'done'})
+        return self.write(cr,  uid, ids, {'state': 'done', 'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
+
+    def test_production_done(self, cr, uid, ids):
+        res = True
+        for production in self.browse(cr, uid, ids):            
+            if production.move_lines:                
+               res = False
+
+            if production.move_created_ids:                
+               res = False        
+        return res
+
+    def do_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
+        stock_mov_obj = self.pool.get('stock.move')
+        production = self.browse(cr, uid, production_id)
+        
+        raw_product_todo = []
+        final_product_todo = []        
+        
+        if production_mode in ['consume','consume_produce']:
+            consumed_products = {}
+            produced_qty = 0
+            for consumed_product in production.move_lines2:
+                if not consumed_products.get(consumed_product.product_id.id, False):
+                    consumed_products[consumed_product.product_id.id] = 0
+                consumed_products[consumed_product.product_id.id] += consumed_product.product_qty
+            
+            for produced_product in production.move_created_ids2:
+                produced_qty += produced_product.product_qty
+
+            for raw_product in production.move_lines:                
+                consumed_qty = consumed_products.get(raw_product.product_id.id, 0)                
+                consumed_qty -= produced_qty                            
+                rest_qty = production_qty - consumed_qty 
+                if rest_qty > production.product_qty:
+                   rest_qty = production.product_qty            
+                if rest_qty > 0:
+                    stock_mov_obj.consume_moves(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
+
+        if production_mode == 'consume_produce':
+            vals = {'state':'confirmed'}
+            final_product_todo = [x.id for x in production.move_created_ids]
+            stock_mov_obj.write(cr, uid, final_product_todo, vals)
+            produced_products = {}
+            for produced_product in production.move_created_ids2:
+                if not produced_products.get(produced_product.product_id.id, False):
+                    produced_products[produced_product.product_id.id] = 0
+                produced_products[produced_product.product_id.id] += produced_product.product_qty
+
+            for produce_product in production.move_created_ids:                
+                produced_qty = produced_products.get(produce_product.product_id.id, 0)                            
+                rest_qty = production.product_qty - produced_qty
+                if rest_qty <= production_qty:
+                   production_qty = rest_qty 
+                if rest_qty > 0 :
+                    stock_mov_obj.consume_moves(cr, uid, [produce_product.id], production_qty, production.location_dest_id.id, context=context)            
+        
+        
+        for raw_product in production.move_lines2: 
+            new_parent_ids = []           
+            parent_move_ids = [x.id for x in raw_product.move_history_ids]
+            for final_product in production.move_created_ids2:
+                if final_product.id not in parent_move_ids:
+                    new_parent_ids.append(final_product.id)
+            for new_parent_id in new_parent_ids:
+                stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids':[(4,new_parent_id)]})
+
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
         return True
 
     def _costs_generate(self, cr, uid, production):
@@ -1285,8 +1335,7 @@ class StockMove(osv.osv):
                 state = 'confirmed'
                 if move.state=='assigned':
                     state='assigned'
-                for line in res[0]:
-                    print 'Line :',line
+                for line in res[0]:                    
                     valdef = {
                         'picking_id': move.picking_id.id,
                         'product_id': line['product_id'],
@@ -1337,7 +1386,7 @@ class StockMove(osv.osv):
         res = []
         production_obj = self.pool.get('mrp.production')
         for move in self.browse(cr, uid, ids):
-            new_moves = super(StockMove, self).consume_moves(cr, uid, ids, product_qty, location_id, context=context)
+            new_moves = super(StockMove, self).consume_moves(cr, uid, [move.id], product_qty, location_id, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for new_move in new_moves:
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})

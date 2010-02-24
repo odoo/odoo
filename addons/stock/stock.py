@@ -1488,43 +1488,54 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [current_move], update_val)
         return new_move
 
-    def consume_moves(self, cr, uid, ids, quantity, location_id, context=None):
-        new_move = []
+    def consume_moves(self, cr, uid, ids, quantity, location_id, context=None):        
         if not context:
             context = {}        
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
-       
-        for move in self.browse(cr, uid, ids, context=context):
+        res = []       
+        for move in self.browse(cr, uid, ids, context=context):            
             move_qty = move.product_qty
             quantity_rest = move.product_qty
 
-            quantity_rest -= quantity
-            uos_qty = quantity / move_qty * move.product_uos_qty
+            quantity_rest -= quantity            
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
             if quantity_rest <= 0:
-                quantity_rest = quantity
-                break
+                quantity_rest = 0 
+                uos_qty_rest = 0
+                quantity = move.product_qty
+ 
+            uos_qty = quantity / move_qty * move.product_uos_qty
 
-            default_val = {
-                'product_qty': quantity, 
-                'product_uos_qty': uos_qty,
-                'location_id' : location_id,                
-            }
-            if move.product_id.track_production:
-                new_move = self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
-            else:
-                current_move = self.copy(cr, uid, move.id, default_val)
-                new_move.append(current_move)
+            if quantity_rest > 0:  
+                default_val = {
+                    'product_qty': quantity, 
+                    'product_uos_qty': uos_qty,
+                    'location_id' : location_id,                
+                }
+                if move.product_id.track_production:
+                    new_move = self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
+                else:
+                    current_move = self.copy(cr, uid, move.id, default_val)
+                    new_move = [current_move]
 
-            update_val = {}
-            if quantity_rest > 0:                        
+                update_val = {}                                  
                 update_val['product_qty'] = quantity_rest
                 update_val['product_uos_qty'] = uos_qty_rest                          
-                self.write(cr, uid, [move.id], update_val)
+                self.write(cr, uid, [move.id], update_val) 
+
+            else: 
+                quantity_rest = quantity    
+                uos_qty_rest =  uos_qty                      
+                new_move = [move.id] 
             
+            update_val = {}                                  
+            update_val['product_qty'] = quantity_rest
+            update_val['product_uos_qty'] = uos_qty_rest                          
+            self.write(cr, uid, [move.id], update_val) 
             self.action_done(cr, uid, new_move)
-        return new_move
+            res += new_move
+        return res
 
     def scrap_moves(self, cr, uid, ids, quantity, location_dest_id, context=None):
         new_move = []     
