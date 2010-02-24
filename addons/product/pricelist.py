@@ -147,6 +147,7 @@ class product_pricelist(osv.osv):
         if context and ('date' in context):
             date = context['date']
         result = {}
+        result['item_id'] = {}
         for id in ids:
             cr.execute('SELECT * ' \
                     'FROM product_pricelist_version ' \
@@ -199,6 +200,7 @@ class product_pricelist(osv.osv):
             res1 = cr.dictfetchall()
             
             for res in res1:
+                item_id = 0
                 if res:
                     if res['base'] == -1:
                         if not res['base_pricelist_id']:
@@ -247,13 +249,15 @@ class product_pricelist(osv.osv):
                             price = max(price, price_limit+res['price_min_margin'])
                         if res['price_max_margin']:
                             price = min(price, price_limit+res['price_max_margin'])
+                        item_id = res['id']
                         break    
 
                 else:
                     # False means no valid line found ! But we may not raise an
                     # exception here because it breaks the search
                     price = False
-            result[id] = price            
+            result[id] = price
+            result['item_id'] = {id: item_id}    
             if context and ('uom' in context):
                 product = product_obj.browse(cr, uid, prod_id)
                 uom = product.uos_id or product.uom_id

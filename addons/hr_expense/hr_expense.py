@@ -177,7 +177,7 @@ class product_product(osv.osv):
     _inherit = "product.product"
 
     _columns = {
-                'hr_expense_ok': fields.boolean('Can be Expensed', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
+        'hr_expense_ok': fields.boolean('Can constitute an Expense', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
     }
 
 product_product()

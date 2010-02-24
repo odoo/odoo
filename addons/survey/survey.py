@@ -693,6 +693,14 @@ class survey_question_wiz(osv.osv_memory):
                 fields = {}
                 if sur_name_read['page'] == "next" or sur_name_rec['page_no'] == - 1 :
                     if len(p_id) > sur_name_rec['page_no'] + 1 :
+                        if not context.has_key('active') and not sur_name_rec['page_no'] + 1:
+                            cr.execute('select count(id) from survey_history where user_id=%s\
+                                                    and survey_id=%s' % (uid,survey_id))
+                            res = cr.fetchone()[0]
+                            user_limit = survey_obj.read(cr, uid, survey_id, ['response_user'])['response_user']
+                            if user_limit and res >= user_limit:
+                                raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (user_limit))
+
                         if sur_rec['max_response_limit'] and sur_rec['max_response_limit'] <= sur_rec['tot_start_survey'] and not sur_name_rec['page_no'] + 1:
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
                         p_id = p_id[sur_name_rec['page_no'] + 1]
@@ -891,7 +899,13 @@ class survey_question_wiz(osv.osv_memory):
                     etree.SubElement(xml_group, 'button', {'icon': "gtk-cancel", 'special': "cancel",'string':"Cancel"})
                     if pre_button:
                         etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_previous",'string':"Previous",'type':"object"})
-                    etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'name':"action_next",'string':"Next",'type':"object",'context' : tools.ustr(context)})
+                    but_string = "Next"
+                    if int(page_number) + 1 == total_pages:
+                        but_string = "Done"
+                    if context.has_key('active') and int(page_number) + 1 == total_pages:
+                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'string': "Done" ,'special':"cancel",'context' : tools.ustr(context)})
+                    else:
+                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context)})
                     if context.has_key('active') and context.has_key('edit'):
                         etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
                         context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec['page_no'] , 'transfer' : sur_name_read['transfer']})
@@ -905,40 +919,39 @@ class survey_question_wiz(osv.osv_memory):
                     result['fields'] = fields
                     result['context'] = context
                 else:
-                    if not context.has_key('active'):
-                        survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec['tot_comp_survey'] + 1})
-                        sur_response_obj = self.pool.get('survey.response')
-                        sur_response_obj.write(cr, uid, [sur_name_read['response']], {'state' : 'done'})
-                        if sur_rec['send_response']:
-                            user_obj = self.pool.get('res.users')
-                            survey_data = survey_obj.browse(cr, uid, int(survey_id))
-                            response_id = surv_name_wiz.read(cr,uid,context['sur_name_id'])['response']
-                            context.update({'response_id':response_id})
-                            report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
-                            attachments = []
-                            file = open(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
-                            file_data = ""
-                            while 1:
-                                line = file.readline()
-                                file_data += line
-                                if not line:
-                                    break
-                            attachments.append((survey_data.title + ".pdf",file_data))
-                            file.close()
-                            os.remove(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
-                            user_email = False
-                            resp_email = False
-                            if user_obj.browse(cr, uid, uid).address_id.id:
-                                cr.execute("select email from res_partner_address where id =%d" % user_obj.browse(cr, uid, uid).address_id.id)
-                                user_email = cr.fetchone()[0]
-                            resp_id = survey_data.responsible_id.address_id
-                            if resp_id:
-                                cr.execute("select email from res_partner_address where id =%d" % resp_id.id)
-                                resp_email = cr.fetchone()[0]
-                            if user_email and resp_email:
-                                mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_obj.browse(cr, uid, uid).name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
-                                tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_obj.browse(cr, uid, uid).name) , mail, attach = attachments)
-
+                    survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec['tot_comp_survey'] + 1})
+                    sur_response_obj = self.pool.get('survey.response')
+                    sur_response_obj.write(cr, uid, [sur_name_read['response']], {'state' : 'done'})
+                    if sur_rec['send_response']:
+                        user_obj = self.pool.get('res.users')
+                        survey_data = survey_obj.browse(cr, uid, int(survey_id))
+                        response_id = surv_name_wiz.read(cr,uid,context['sur_name_id'])['response']
+                        context.update({'response_id':response_id})
+                        report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
+                        attachments = []
+                        file = open(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
+                        file_data = ""
+                        while 1:
+                            line = file.readline()
+                            file_data += line
+                            if not line:
+                                break
+                        attachments.append((survey_data.title + ".pdf",file_data))
+                        file.close()
+                        os.remove(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
+                        user_email = False
+                        resp_email = False
+                        if user_obj.browse(cr, uid, uid).address_id.id:
+                            cr.execute("select email from res_partner_address where id =%d" % user_obj.browse(cr, uid, uid).address_id.id)
+                            user_email = cr.fetchone()[0]
+                        resp_id = survey_data.responsible_id.address_id
+                        if resp_id:
+                            cr.execute("select email from res_partner_address where id =%d" % resp_id.id)
+                            resp_email = cr.fetchone()[0]
+                        if user_email and resp_email:
+                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_obj.browse(cr, uid, uid).name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
+                            tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_obj.browse(cr, uid, uid).name) , mail, attach = attachments)
+                    
                     xml_form = etree.Element('form', {'string': _('Complete Survey Response')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
                     etree.SubElement(xml_form, 'label', {'string': 'Thanks for your response'})
