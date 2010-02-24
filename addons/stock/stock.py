@@ -1432,26 +1432,27 @@ class stock_move(osv.osv):
         return super(stock_move, self).unlink(
             cr, uid, ids, context=context)    
 
-    def split_lines(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
+    def _create_lot(self, cr, uid, ids, product_id, prefix=False):
         prodlot_obj = self.pool.get('stock.production.lot')
         ir_sequence_obj = self.pool.get('ir.sequence')
+        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+        if not sequence:
+            raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
+        prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix': prefix}, {'product_id': product_id})
+        prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
+        ref = ','.join(map(lambda x:str(x),ids))
+        if prodlot.ref:
+            ref = '%s, %s' % (prodlot.ref, ref) 
+        prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
+        return prodlot_id
+
+    def split_lines(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
+        
 
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
 
-        res = []      
-
-        def _create_lot(move_id, product_id):
-            sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-            if not sequence:
-                raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
-            prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix': prefix}, {'product_id': product_id})
-            prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
-            ref = '%d' % (move_id)
-            if prodlot.ref:
-                ref = '%s, %s' % (prodlot.ref, ref) 
-            prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
-            return prodlot_id
+        res = []
 
         for move in self.browse(cr, uid, ids):            
             if split_by_qty <= 0 or quantity == 0:
@@ -1466,24 +1467,32 @@ class stock_move(osv.osv):
                 'product_qty': split_by_qty,
                 'product_uos_qty': uos_qty,
             }                         
-            for idx in range(int(quantity//split_by_qty)):                                
-                current_move = self.copy(cr, uid, move.id, {'state': move.state})   
+            for idx in range(int(quantity//split_by_qty)):                 
+                if not idx and move.product_qty<=quantity:
+                    current_move = move.id
+                else:
+                    current_move = self.copy(cr, uid, move.id, {'state': move.state})
                 res.append(current_move)
                 if with_lot:
-                    update_val['prodlot_id'] = _create_lot(current_move, move.product_id.id)
+                    update_val['prodlot_id'] = self._create_lot(cr, uid, [current_move], move.product_id.id)
 
                 self.write(cr, uid, [current_move], update_val)
         
             
-            if quantity_rest > 0:                
+            if quantity_rest > 0:    
+                idx = int(quantity//split_by_qty)            
                 update_val['product_qty'] = quantity_rest
-                update_val['product_uos_qty'] = uos_qty_rest                     
-                current_move = self.copy(cr, uid, move.id, {'state': move.state})                    
+                update_val['product_uos_qty'] = uos_qty_rest    
+                if not idx and move.product_qty<=quantity:        
+                    current_move = move.id                    
+                else:
+                    current_move = self.copy(cr, uid, move.id, {'state': move.state}) 
+                                                    
                 res.append(current_move)
                  
                 
                 if with_lot:             
-                    update_val['prodlot_id'] = _create_lot(current_move, move.product_id.id)
+                    update_val['prodlot_id'] = self._create_lot(cr, uid, [current_move], move.product_id.id)
 
                 self.write(cr, uid, [current_move], update_val)
         return res    
@@ -1519,7 +1528,7 @@ class stock_move(osv.osv):
                    default_val.update({'location_dest_id':location_dest_id}) 
                 if location_id:
                    default_val.update({'location_id':location_id}) 
-                    
+                
                 if move.product_id.track_production and location_id:
                     res += self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
                 else:
@@ -1533,13 +1542,16 @@ class stock_move(osv.osv):
 
             else: 
                 quantity_rest = quantity    
-                uos_qty_rest =  uos_qty                      
-                res += [move.id] 
-            
-            update_val = {}                                  
-            update_val['product_qty'] = quantity_rest
-            update_val['product_uos_qty'] = uos_qty_rest                          
-            self.write(cr, uid, [move.id], update_val)
+                uos_qty_rest =  uos_qty
+                
+                if move.product_id.track_production and location_id:
+                    res += self.split_lines(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
+                else:                     
+                    res += [move.id] 
+                    update_val = {}                                  
+                    update_val['product_qty'] = quantity_rest
+                    update_val['product_uos_qty'] = uos_qty_rest                          
+                    self.write(cr, uid, [move.id], update_val)
 
         if consume:
             self.action_done(cr, uid, res)        
