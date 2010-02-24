@@ -1521,13 +1521,13 @@ class stock_move(osv.osv):
             if quantity_rest > 0:  
                 default_val = {
                     'product_qty': quantity, 
-                    'product_uos_qty': uos_qty,
-                    'state': move.state,                                    
+                    'product_uos_qty': uos_qty, 
+                    'state': move.state, 
                 }
                 if location_dest_id:
-                   default_val.update({'location_dest_id':location_dest_id}) 
+                   default_val.update({'location_dest_id': location_dest_id}) 
                 if location_id:
-                   default_val.update({'location_id':location_id}) 
+                   default_val.update({'location_id': location_id}) 
                 
                 if move.product_id.track_production and location_id:
                     res += self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
@@ -1550,7 +1550,12 @@ class stock_move(osv.osv):
                     res += [move.id] 
                     update_val = {}                                  
                     update_val['product_qty'] = quantity_rest
-                    update_val['product_uos_qty'] = uos_qty_rest                          
+                    update_val['product_uos_qty'] = uos_qty_rest
+                    if location_dest_id:
+                       update_val.update({'location_dest_id': location_dest_id}) 
+                    if location_id:
+                       update_val.update({'location_id': location_id}) 
+
                     self.write(cr, uid, [move.id], update_val)
 
         if consume:
