@@ -88,9 +88,9 @@ class abstract_quality_check(object):
             '/base_module_quality/')
         for item in self.list_folders:
             self.item = item
-            path = config['addons_path']+'/base_module_quality/'+item
+            path = config['addons_path'] + '/base_module_quality/' + item
             if os.path.exists(path + '/' + item + '.py') and item not in ['report', 'wizard', 'security']:
-                item2 = 'base_module_quality.' + item +'.' + item
+                item2 = 'base_module_quality.' + item + '.' + item
                 x_module = __import__(item2)
                 x_file = getattr(x_module, item)
                 x_obj = getattr(x_file, item)
@@ -158,7 +158,7 @@ class abstract_quality_check(object):
         return detail
 
     def add_quatation(self, x_no, y_no):
-        return x_no/y_no
+        return x_no / y_no
 
     def get_style(self):
         # This function return style tag with specified styles for html pages
@@ -195,7 +195,7 @@ class abstract_quality_check(object):
 class module_quality_check(osv.osv):
     _name = 'module.quality.check'
     _columns = {
-        'name': fields.char('Rated Module', size=64, ),
+        'name': fields.char('Rated Module', size=64,),
         'final_score': fields.char('Final Score (%)', size=10,),
         'check_detail_ids': fields.one2many('module.quality.detail', 'quality_check_id', 'Tests',)
     }
@@ -226,7 +226,7 @@ class module_quality_check(osv.osv):
         for test in abstract_obj.tests:
             ad = tools.config['addons_path']
             if module_name == 'base':
-                ad = tools.config['root_path']+'/addons'
+                ad = tools.config['root_path'] + '/addons'
             module_path = os.path.join(ad, module_name)
             val = test.quality_test()
             if val.active:
@@ -277,14 +277,14 @@ class module_quality_detail(osv.osv):
     _name = 'module.quality.detail'
     _columns = {
         'quality_check_id': fields.many2one('module.quality.check', 'Quality'),
-        'name': fields.char('Name',size=128),
+        'name': fields.char('Name', size=128),
         'score': fields.float('Score (%)'),
         'ponderation': fields.float('Ponderation', help='Some tests are more critical than others, so they have a bigger weight in the computation of final rating'),
         'note': fields.text('Note'),
         'summary': fields.text('Summary'),
         'detail': fields.text('Details'),
         'message': fields.char('Message', size=64),
-        'state': fields.selection([('done','Done'),('skipped','Skipped'),], 'State', size=6, help='The test will be completed only if the module is installed or if the test may be processed on uninstalled module.'),
+        'state': fields.selection([('done', 'Done'), ('skipped', 'Skipped'), ], 'State', size=6, help='The test will be completed only if the module is installed or if the test may be processed on uninstalled module.'),
     }
 
 module_quality_detail()

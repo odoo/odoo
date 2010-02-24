@@ -61,8 +61,8 @@ class wiz_timebox_fill(wizard.interface):
                 'arch':_gtd_arch,
                 'fields':_gtd_field,
                 'state':[
-                    ('end','Cancel'),
-                    ('process','Add to Timebox')
+                    ('end', 'Cancel'),
+                    ('process', 'Add to Timebox')
                 ]
             }
         },

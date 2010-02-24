@@ -36,24 +36,24 @@ fields = {
   'sort_selection':{
         'string':"Entries Sorted By",
         'type':'selection',
-        'selection':[('date','By date'),('ref','Reference Number')],
+        'selection':[('date', 'By date'), ('ref', 'Reference Number')],
         'required':True,
-        'default': lambda *a: 'date',
+        'default': lambda * a: 'date',
     },
 
 }
 
 def _check_data(self, cr, uid, data, *args):
     period_id = data['form']['period_id'][0][2]
-    journal_id=data['form']['journal_id'][0][2]
+    journal_id = data['form']['journal_id'][0][2]
 
-    if type(period_id)==type([]):
-        
+    if type(period_id) == type([]):
+
         ids_final = []
 
         for journal in journal_id:
             for period in period_id:
-                ids_journal_period = pooler.get_pool(cr.dbname).get('account.journal.period').search(cr,uid, [('journal_id','=',journal),('period_id','=',period)])
+                ids_journal_period = pooler.get_pool(cr.dbname).get('account.journal.period').search(cr, uid, [('journal_id', '=', journal), ('period_id', '=', period)])
 
                 if ids_journal_period:
                     ids_final.append(ids_journal_period)

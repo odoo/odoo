@@ -33,7 +33,7 @@ class project_task(osv.osv):
         todo_obj = self.pool.get('basic.calendar.todo')
         vals = todo_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
-    
+
     def check_import(self, cr, uid, vals, context={}):
         ids = []
         for val in vals:
@@ -45,7 +45,7 @@ class project_task(osv.osv):
                     start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
                     end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
                     diff = end - start
-                    plan = (diff.seconds/float(86400) + diff.days) * obj_tm.factor
+                    plan = (diff.seconds / float(86400) + diff.days) * obj_tm.factor
                 val['planned_hours'] = plan
             else:
                 # Converts timedelta into hours
@@ -61,9 +61,9 @@ class project_task(osv.osv):
                 task_id = self.create(cr, uid, val)
                 ids.append(task_id)
         return ids
-        
+
     def export_cal(self, cr, uid, ids, context={}):
-        task_datas = self.read(cr, uid, ids, [], context ={'read': True})
+        task_datas = self.read(cr, uid, ids, [], context={'read': True})
         tasks = []
         for task in task_datas:
             if task.get('planned_hours', None) and task.get('date_deadline', None):

@@ -29,7 +29,7 @@ parameter_form = '''<?xml version="1.0"?>
 </form>'''
 
 parameter_fields = {
-    'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products.', 'default': lambda *a: False},
+    'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products.', 'default': lambda * a: False},
 }
 
 def _procure_calculation_all(self, db_name, uid, data, context):
@@ -37,7 +37,7 @@ def _procure_calculation_all(self, db_name, uid, data, context):
     cr = db.cursor()
     proc_obj = pool.get('mrp.procurement')
     automatic = data['form']['automatic']
-    proc_obj.run_scheduler(cr, uid, automatic=automatic, use_new_cursor=cr.dbname,\
+    proc_obj.run_scheduler(cr, uid, automatic=automatic, use_new_cursor=cr.dbname, \
             context=context)
     cr.close()
     return {}
@@ -51,7 +51,7 @@ class procurement_compute(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end','Cancel'),('compute','Compute Stock') ]}
+            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end', 'Cancel'), ('compute', 'Compute Stock') ]}
         },
         'compute': {
             'actions': [_procure_calculation],

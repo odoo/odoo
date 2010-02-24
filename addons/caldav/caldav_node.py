@@ -26,43 +26,43 @@ import tools
 import time
 import base64
 
-class node_calendar(object):    
+class node_calendar(object):
     def __init__(self, path, context, calendar):
         self.path = path
         self.context = context
-        self.calendar_id =  calendar.id  
-        self.mimetype = 'ics'        
+        self.calendar_id = calendar.id
+        self.mimetype = 'ics'
         self.create_date = calendar.create_date
         self.write_date = calendar.write_date or calendar.create_date
         self.content_length = 0
         self.displayname = calendar.name
-        
-    
-    def get_data(self, cr, uid):        
+
+
+    def get_data(self, cr, uid):
         calendar_obj = pooler.get_pool(cr.dbname).get('basic.calendar')
-        return calendar_obj.export_cal(cr, uid, [self.calendar_id])               
-        
-    def get_data_len(self, cr):        
+        return calendar_obj.export_cal(cr, uid, [self.calendar_id])
+
+    def get_data_len(self, cr):
         return self.content_length
 
-    def set_data(self, cr, uid, data):        
-        calendar_obj = pooler.get_pool(cr.dbname).get('basic.calendar')        
+    def set_data(self, cr, uid, data):
+        calendar_obj = pooler.get_pool(cr.dbname).get('basic.calendar')
         return calendar_obj.import_cal(cr, uid, base64.encodestring(data), self.calendar_id)
 
-    def get_etag(self,cr):
+    def get_etag(self, cr):
         """ Get a tag, unique per object + modification.
     
             see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
         return self._get_ttag(cr) + ':' + self._get_wtag(cr)
 
-    def _get_wtag(self,cr):
+    def _get_wtag(self, cr):
         """ Return the modification time as a unique, compact string """
         if self.write_date:
-            wtime = time.mktime(time.strptime(self.write_date,'%Y-%m-%d %H:%M:%S'))
+            wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
         else: wtime = time.time()
         return str(wtime)
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         return 'calendar-%d' % self.calendar_id
 
 class Calendar(osv.osv):
@@ -79,5 +79,5 @@ class Calendar(osv.osv):
             return None
         calendar_id, calendar_name = res[0]
         calendar = self.browse(cr, uid, calendar_id)
-        return node_calendar(uri, context, calendar) 
+        return node_calendar(uri, context, calendar)
 Calendar()

@@ -32,7 +32,7 @@ vote_form = """<?xml version="1.0" ?>
 
 vote_fields = {
       'vote': {'string': 'Post Vote', 'type': 'selection',
-        'selection': [('-1','Not Voted'),('0','Very Bad'),('25', 'Bad'),('50','Normal'),('75','Good'),('100','Very Good') ]},
+        'selection': [('-1', 'Not Voted'), ('0', 'Very Bad'), ('25', 'Bad'), ('50', 'Normal'), ('75', 'Good'), ('100', 'Very Good') ]},
 }
 
 
@@ -41,9 +41,9 @@ class idea_vote(wizard.interface):
     def _do_vote(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         vote_obj = pool.get('idea.vote')
-        score=str(data['form']['vote'])
-        dic={'idea_id' : data['id'], 'user_id' : uid, 'score' : score }
-        vote=vote_obj.create(cr,uid,dic)
+        score = str(data['form']['vote'])
+        dic = {'idea_id' : data['id'], 'user_id' : uid, 'score' : score }
+        vote = vote_obj.create(cr, uid, dic)
         return True
 
     states = {

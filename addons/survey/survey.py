@@ -93,8 +93,8 @@ class survey(osv.osv):
         self.write(cr, uid, ids, { 'state' : 'cancel' })
         return True
 
-    def copy(self, cr, uid, id, default=None,context={}):
-        raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
+    def copy(self, cr, uid, id, default=None, context={}):
+        raise osv.except_osv(_('Error !'), _('You cannot duplicate the resource!'))
 
 
 survey()
@@ -141,7 +141,7 @@ class survey_page(osv.osv):
 
     def survey_save(self, cr, uid, ids, context):
         search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
+        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':True, 'page_no' : context['page_number'] })
         return {
@@ -154,8 +154,8 @@ class survey_page(osv.osv):
                 'context': context
                 }
 
-    def copy(self, cr, uid, id, default=None,context={}):
-        raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
+    def copy(self, cr, uid, id, default=None, context={}):
+        raise osv.except_osv(_('Error !'), _('You cannot duplicate the resource!'))
 
 survey_page()
 
@@ -183,7 +183,7 @@ class survey_question(osv.osv):
         'answer_choice_ids' : fields.one2many('survey.answer', 'question_id', 'Answer'),
         'response_ids' : fields.one2many('survey.response.line', 'question_id', 'Response', readonly=1),
         'is_require_answer' : fields.boolean('Require Answer to Question (optional)'),
-        'required_type' : fields.selection([('all','All'), ('at least','At Least'), ('at most','At Most'), ('exactly','Exactly'), ('a range','A Range')], 'Respondent must answer'),
+        'required_type' : fields.selection([('all', 'All'), ('at least', 'At Least'), ('at most', 'At Most'), ('exactly', 'Exactly'), ('a range', 'A Range')], 'Respondent must answer'),
         'req_ans' : fields.integer('#Required Answer'),
         'maximum_req_ans' : fields.integer('Maximum Required Answer'),
         'minimum_req_ans' : fields.integer('Minimum Required Answer'),
@@ -193,22 +193,22 @@ class survey_question(osv.osv):
         'tot_resp' : fields.function(_calc_response, method=True, string="Total Response"),
         'survey' : fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'descriptive_text' : fields.text('Descriptive Text', size=255),
-        'column_heading_ids' : fields.one2many('survey.question.column.heading', 'question_id',' Column heading'),
-        'type' : fields.selection([('multiple_choice_only_one_ans','Multiple Choice (Only One Answer)'),
-                                     ('multiple_choice_multiple_ans','Multiple Choice (Multiple Answer)'),
-                                     ('matrix_of_choices_only_one_ans','Matrix of Choices (Only One Answers Per Row)'),
-                                     ('matrix_of_choices_only_multi_ans','Matrix of Choices (Multiple Answers Per Row)'),
-                                     ('matrix_of_drop_down_menus','Matrix of Drop-down Menus'),
-                                     ('rating_scale','Rating Scale'),('single_textbox','Single Textbox'),
-                                     ('multiple_textboxes','Multiple Textboxes'),
-                                     ('multiple_textboxes_diff_type','Multiple Textboxes With Different Type'),
-                                     ('comment','Comment/Essay Box'),
-                                     ('numerical_textboxes','Numerical Textboxes'),('date','Date'),
-                                     ('date_and_time','Date and Time'),('descriptive_text','Descriptive Text'),
-                                     ('table','Table'),
-                                    ], 'Question Type',  required=1,),
+        'column_heading_ids' : fields.one2many('survey.question.column.heading', 'question_id', ' Column heading'),
+        'type' : fields.selection([('multiple_choice_only_one_ans', 'Multiple Choice (Only One Answer)'),
+                                     ('multiple_choice_multiple_ans', 'Multiple Choice (Multiple Answer)'),
+                                     ('matrix_of_choices_only_one_ans', 'Matrix of Choices (Only One Answers Per Row)'),
+                                     ('matrix_of_choices_only_multi_ans', 'Matrix of Choices (Multiple Answers Per Row)'),
+                                     ('matrix_of_drop_down_menus', 'Matrix of Drop-down Menus'),
+                                     ('rating_scale', 'Rating Scale'), ('single_textbox', 'Single Textbox'),
+                                     ('multiple_textboxes', 'Multiple Textboxes'),
+                                     ('multiple_textboxes_diff_type', 'Multiple Textboxes With Different Type'),
+                                     ('comment', 'Comment/Essay Box'),
+                                     ('numerical_textboxes', 'Numerical Textboxes'), ('date', 'Date'),
+                                     ('date_and_time', 'Date and Time'), ('descriptive_text', 'Descriptive Text'),
+                                     ('table', 'Table'),
+                                    ], 'Question Type', required=1,),
         'is_comment_require' : fields.boolean('Add Comment Field (optional)'),
-        'comment_label' : fields.char('Field Label', size = 255),
+        'comment_label' : fields.char('Field Label', size=255),
         'comment_field_type' : fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
         'comment_valid_type' : fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),
                                                  ('must_be_specific_length', 'Must Be Specific Length'),
@@ -227,11 +227,11 @@ class survey_question(osv.osv):
         'make_comment_field' : fields.boolean('Make Comment Field an Answer Choice'),
         'make_comment_field_err_msg' : fields.text('Error message'),
         'is_validation_require' : fields.boolean('Validate Text (optional)'),
-        'validation_type' : fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),\
-                                                 ('must_be_specific_length', 'Must Be Specific Length'),\
-                                                 ('must_be_whole_number', 'Must Be A Whole Number'),\
-                                                 ('must_be_decimal_number', 'Must Be A Decimal Number'),\
-                                                 ('must_be_date', 'Must Be A Date'),\
+        'validation_type' : fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''), \
+                                                 ('must_be_specific_length', 'Must Be Specific Length'), \
+                                                 ('must_be_whole_number', 'Must Be A Whole Number'), \
+                                                 ('must_be_decimal_number', 'Must Be A Decimal Number'), \
+                                                 ('must_be_date', 'Must Be A Date'), \
                                                  ('must_be_email_address', 'Must Be An Email Address')\
                                                  ], 'Text Validation'),
         'validation_minimum_no' : fields.integer('Minimum number'),
@@ -248,7 +248,7 @@ class survey_question(osv.osv):
         'in_visible_menu_choice':fields.boolean('Is Menu Choice Invisible?'),
         'in_visible_answer_type':fields.boolean('Is Answer Type Invisible?'),
         'comment_column':fields.boolean('Add comment column in matrix'),
-        'column_name':fields.char('Column Name',size=256),
+        'column_name':fields.char('Column Name', size=256),
         'no_of_rows' : fields.integer('No of Rows'),
     }
     _defaults = {
@@ -278,20 +278,20 @@ class survey_question(osv.osv):
             val['in_visible_answer_type'] = False
             return {'value': val}
         if type in ['rating_scale']:
-            val.update({'in_visible_rating_weight':False,'in_visible_menu_choice':True})
+            val.update({'in_visible_rating_weight':False, 'in_visible_menu_choice':True})
             return {'value': val}
         elif type in ['matrix_of_drop_down_menus']:
-            val.update({'in_visible_rating_weight':True,'in_visible_menu_choice':False})
+            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':False})
             return {'value': val}
         elif type in ['single_textbox']:
-            val.update({'in_visible_rating_weight':True,'in_visible_menu_choice':True})
+            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':True})
             return {'value': val}
         else:
-            val.update({'in_visible_rating_weight':True,'in_visible_menu_choice':True,'in_visible_answer_type':True})
+            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':True, 'in_visible_answer_type':True})
             return {'value': val}
 
     def write(self, cr, uid, ids, vals, context=None):
-        questions = self.read(cr,uid, ids, ['answer_choice_ids', 'type', 'required_type','req_ans', 'minimum_req_ans', 'maximum_req_ans', 'column_heading_ids'])
+        questions = self.read(cr, uid, ids, ['answer_choice_ids', 'type', 'required_type', 'req_ans', 'minimum_req_ans', 'maximum_req_ans', 'column_heading_ids'])
         for question in questions:
             col_len = len(question['column_heading_ids'])
             if vals.has_key('column_heading_ids'):
@@ -306,7 +306,7 @@ class survey_question(osv.osv):
                 que_type = question['type']
             if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale']:
                 if not col_len:
-                    raise osv.except_osv(_('Error !'),_("You must enter one or more column heading."))
+                    raise osv.except_osv(_('Error !'), _("You must enter one or more column heading."))
             ans_len = len(question['answer_choice_ids'])
             if vals.has_key('answer_choice_ids'):
                 for ans in vals['answer_choice_ids']:
@@ -314,85 +314,85 @@ class survey_question(osv.osv):
                         ans_len += 1
                     else:
                         ans_len -= 1
-            if que_type not in ['descriptive_text', 'single_textbox', 'comment','table']:
+            if que_type not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
                 if not ans_len:
-                    raise osv.except_osv(_('Error !'),_("You must enter one or more Answer."))
+                    raise osv.except_osv(_('Error !'), _("You must enter one or more Answer."))
             req_type = ""
             if vals.has_key('required_type'):
                 req_type = vals['required_type']
             else:
                 req_type = question['required_type']
-            if que_type in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
+            if que_type in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time']:
                 if req_type in ['at least', 'at most', 'exactly']:
                     if vals.has_key('req_ans'):
                         if not vals['req_ans'] or  vals['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'), _("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
                     else:
                         if not question['req_ans'] or  question['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'), _("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
                 if req_type == 'a range':
                     minimum_ans = 0
                     maximum_ans = 0
                     if vals.has_key('minimum_req_ans'):
                         minimum_ans = vals['minimum_req_ans']
                         if not vals['minimum_req_ans'] or  vals['minimum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'), _("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
                     else:
                         minimum_ans = question['minimum_req_ans']
                         if not question['minimum_req_ans'] or  question['minimum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'), _("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
                     if vals.has_key('maximum_req_ans'):
                         maximum_ans = vals['maximum_req_ans']
                         if not vals['maximum_req_ans'] or vals['maximum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'), _("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
                     else:
                         maximum_ans = question['maximum_req_ans']
                         if not question['maximum_req_ans'] or question['maximum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'), _("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
                     if maximum_ans <= minimum_ans:
-                        raise osv.except_osv(_('Error !'),_("Maximum Required Answer is greater than Minimum Required Answer"))
-            if question['type'] ==  'matrix_of_drop_down_menus' and vals.has_key('column_heading_ids'):
+                        raise osv.except_osv(_('Error !'), _("Maximum Required Answer is greater than Minimum Required Answer"))
+            if question['type'] == 'matrix_of_drop_down_menus' and vals.has_key('column_heading_ids'):
                 for col in vals['column_heading_ids']:
                     if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                        raise osv.except_osv(_('Error !'),_("You must enter one or more menu choices in column heading"))
+                        raise osv.except_osv(_('Error !'), _("You must enter one or more menu choices in column heading"))
                     elif not col[2] or not col[2].has_key('menu_choice') or col[2]['menu_choice'].strip() == '':
-                        raise osv.except_osv(_('Error !'),_("You must enter one or more menu choices in column heading (white spaces not allowed)"))
+                        raise osv.except_osv(_('Error !'), _("You must enter one or more menu choices in column heading (white spaces not allowed)"))
         return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context):
         minimum_ans = 0
         maximum_ans = 0
         if vals.has_key('answer_choice_ids') and  not len(vals['answer_choice_ids']):
-            if vals.has_key('type') and vals['type'] not in ['descriptive_text', 'single_textbox', 'comment','table']:
-                raise osv.except_osv(_('Error !'),_("You must enter one or more answer."))
+            if vals.has_key('type') and vals['type'] not in ['descriptive_text', 'single_textbox', 'comment', 'table']:
+                raise osv.except_osv(_('Error !'), _("You must enter one or more answer."))
         if vals.has_key('column_heading_ids') and  not len(vals['column_heading_ids']):
             if vals.has_key('type') and vals['type'] in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale']:
-                raise osv.except_osv(_('Error !'),_("You must enter one or more column heading."))
-        if vals['type'] in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
+                raise osv.except_osv(_('Error !'), _("You must enter one or more column heading."))
+        if vals['type'] in ['multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time']:
             if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] in ['at least', 'at most', 'exactly']:
                 if vals.has_key('answer_choice_ids') and vals['req_ans'] > len(vals['answer_choice_ids']) or not vals['req_ans']:
-                    raise osv.except_osv(_('Error !'),_("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
+                    raise osv.except_osv(_('Error !'), _("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
             if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] == 'a range':
                 minimum_ans = vals['minimum_req_ans']
                 maximum_ans = vals['maximum_req_ans']
                 if vals.has_key('answer_choice_ids') or vals['minimum_req_ans'] > len(vals['answer_choice_ids']) or not vals['minimum_req_ans']:
-                    raise osv.except_osv(_('Error !'),_("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
+                    raise osv.except_osv(_('Error !'), _("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
                 if vals.has_key('answer_choice_ids') or vals['maximum_req_ans'] > len(vals['answer_choice_ids']) or not vals['maximum_req_ans']:
-                    raise osv.except_osv(_('Error !'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
+                    raise osv.except_osv(_('Error !'), _("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids']) + 1))
                 if maximum_ans <= minimum_ans:
-                    raise osv.except_osv(_('Error !'),_("Maximum Required Answer is greater than Minimum Required Answer"))
-        if vals['type'] ==  'matrix_of_drop_down_menus':
+                    raise osv.except_osv(_('Error !'), _("Maximum Required Answer is greater than Minimum Required Answer"))
+        if vals['type'] == 'matrix_of_drop_down_menus':
             for col in vals['column_heading_ids']:
                 if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                    raise osv.except_osv(_('Error !'),_("You must enter one or more menu choices in column heading"))
+                    raise osv.except_osv(_('Error !'), _("You must enter one or more menu choices in column heading"))
                 elif not col[2] or not col[2].has_key('menu_choice') or col[2]['menu_choice'].strip() == '':
-                    raise osv.except_osv(_('Error !'),_("You must enter one or more menu choices in column heading (white spaces not allowed)"))
+                    raise osv.except_osv(_('Error !'), _("You must enter one or more menu choices in column heading (white spaces not allowed)"))
         res = super(survey_question, self).create(cr, uid, vals, context)
         return res
 
     def survey_save(self, cr, uid, ids, context):
         search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
+        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':True, 'page_no' : context['page_number'] })
         return {
@@ -412,7 +412,7 @@ class survey_question(osv.osv):
             if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
                 data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
         if context.has_key('page_id'):
-            data['page_id']= context['page_id']
+            data['page_id'] = context['page_id']
         return data
 
 survey_question()
@@ -423,12 +423,12 @@ class survey_question_column_heading(osv.osv):
     _description = 'Survey Question Column Heading'
     _rec_name = 'title'
 
-    def _get_in_visible_rating_weight(self,cr, uid, context={}):
-        if context.get('in_visible_rating_weight',False):
+    def _get_in_visible_rating_weight(self, cr, uid, context={}):
+        if context.get('in_visible_rating_weight', False):
             return context['in_visible_rating_weight']
         return False
-    def _get_in_visible_menu_choice(self,cr, uid, context={}):
-        if context.get('in_visible_menu_choice',False):
+    def _get_in_visible_menu_choice(self, cr, uid, context={}):
+        if context.get('in_visible_menu_choice', False):
             return context['in_visible_menu_choice']
         return False
 
@@ -440,7 +440,7 @@ class survey_question_column_heading(osv.osv):
         'in_visible_rating_weight':fields.boolean('Is Rating Scale Invisible ??'),
         'in_visible_menu_choice':fields.boolean('Is Menu Choice Invisible??')
     }
-    _defaults={
+    _defaults = {
        'in_visible_rating_weight':_get_in_visible_rating_weight,
        'in_visible_menu_choice':_get_in_visible_menu_choice,
     }
@@ -473,8 +473,8 @@ class survey_answer(osv.osv):
             }
         return val
 
-    def _get_in_visible_answer_type(self,cr, uid, context={}):
-        if context.get('in_visible_answer_type',False):
+    def _get_in_visible_answer_type(self, cr, uid, context={}):
+        if context.get('in_visible_answer_type', False):
             return context['in_visible_answer_type']
         return False
 
@@ -484,7 +484,7 @@ class survey_answer(osv.osv):
         'sequence' : fields.integer('Sequence'),
         'response' : fields.function(_calc_response_avg, method=True, string="#Response", multi='sums'),
         'average' : fields.function(_calc_response_avg, method=True, string="#Avg", multi='sums'),
-        'type' : fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),('integer','Integer'),('float','Float'),('selection','Selection'),('email','Email')], "Type of Answer",required=1),
+        'type' : fields.selection([('char', 'Character'), ('date', 'Date'), ('datetime', 'Date & Time'), ('integer', 'Integer'), ('float', 'Float'), ('selection', 'Selection'), ('email', 'Email')], "Type of Answer", required=1),
         'menu_choice' : fields.text('Menu Choices'),
         'in_visible_answer_type':fields.boolean('Is Answer Type Invisible??')
     }
@@ -512,15 +512,15 @@ class survey_response(osv.osv):
         'user_id' : fields.many2one('res.users', 'User'),
         'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Response Type', required=1, readonly=1),
         'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Response Answer'),
-        'state' : fields.selection([('done', 'Finished '),('skip', 'Not Finished')], 'Status', readonly=True),
+        'state' : fields.selection([('done', 'Finished '), ('skip', 'Not Finished')], 'Status', readonly=True),
     }
     _defaults = {
         'state' : lambda * a: "skip",
         'response_type' : lambda * a: "manually",
     }
 
-    def copy(self, cr, uid, id, default=None,context={}):
-        raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
+    def copy(self, cr, uid, id, default=None, context={}):
+        raise osv.except_osv(_('Error !'), _('You cannot duplicate the resource!'))
 
 survey_response()
 
@@ -531,7 +531,7 @@ class survey_response_line(osv.osv):
     _columns = {
         'response_id' : fields.many2one('survey.response', 'Response', ondelete='cascade'),
         'date_create' : fields.datetime('Create Date', required=1),
-        'state' : fields.selection([('draft', 'Draft'), ('done', 'Answered'),('skip', 'Skiped')], 'Status', readonly=True),
+        'state' : fields.selection([('draft', 'Draft'), ('done', 'Answered'), ('skip', 'Skiped')], 'Status', readonly=True),
         'question_id' : fields.many2one('survey.question', 'Question'),
         'page_id' : fields.related('question_id', 'page_id', type='many2one', relation='survey.page', string='Page'),
         'response_answer_ids' : fields.one2many('survey.response.answer', 'response_id', 'Response Answer'),
@@ -551,7 +551,7 @@ class survey_tbl_column_heading(osv.osv):
     _columns = {
         'name' : fields.integer('Row Number'),
         'column_id' : fields.many2one('survey.question.column.heading', 'Column'),
-        'value' : fields.char('Value', size = 255),
+        'value' : fields.char('Value', size=255),
         'response_table_id' : fields.many2one('survey.response.line', 'Response', ondelete='cascade'),
     }
 
@@ -564,11 +564,11 @@ class survey_response_answer(osv.osv):
     _columns = {
         'response_id' : fields.many2one('survey.response.line', 'Response', ondelete='cascade'),
         'answer_id' : fields.many2one('survey.answer', 'Answer', required=1),
-        'column_id' : fields.many2one('survey.question.column.heading','Column'),
-        'answer' : fields.char('Value', size =255),
-        'value_choice' : fields.char('Value Choice', size =255),
+        'column_id' : fields.many2one('survey.question.column.heading', 'Column'),
+        'answer' : fields.char('Value', size=255),
+        'value_choice' : fields.char('Value Choice', size=255),
         'comment' : fields.text('Notes'),
-        'comment_field' : fields.char('Comment', size = 255)
+        'comment_field' : fields.char('Comment', size=255)
     }
 
 survey_response_answer()
@@ -606,13 +606,13 @@ class survey_name_wiz(osv.osv_memory):
         'survey_id': fields.selection(_get_survey, "Survey", required="1"),
         'page_no' : fields.integer('Page Number'),
         'note' : fields.text("Description"),
-        'page' : fields.char('Page Position',size = 12),
+        'page' : fields.char('Page Position', size=12),
         'transfer' : fields.boolean('Page Transfer'),
         'store_ans' : fields.text('Store Answer'),
-        'response' : fields.char('Response',size=16)
+        'response' : fields.char('Response', size=16)
     }
     _defaults = {
-        'page_no' : lambda * a: - 1,
+        'page_no' : lambda * a:-1,
         'page' : lambda * a: 'next',
         'transfer' : lambda * a: 1,
         'response' : lambda * a: 0,
@@ -623,17 +623,17 @@ class survey_name_wiz(osv.osv_memory):
         survey_id = sur_id['survey_id']
         context.update({'survey_id' : survey_id, 'sur_name_id' : sur_id['id']})
         cr.execute('select count(id) from survey_history where user_id=%s\
-                    and survey_id=%s' % (uid,survey_id))
+                    and survey_id=%s' % (uid, survey_id))
         res = cr.fetchone()[0]
         user_limit = self.pool.get('survey').read(cr, uid, survey_id, ['response_user'])['response_user']
         if user_limit and res >= user_limit:
-            raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (user_limit))
+            raise osv.except_osv(_('Warning !'), _("You can not give response for this survey more than %s times") % (user_limit))
         survey_obj = self.pool.get('survey')
-        sur_rec = survey_obj.read(cr,uid,self.read(cr,uid,ids)[0]['survey_id'])
+        sur_rec = survey_obj.read(cr, uid, self.read(cr, uid, ids)[0]['survey_id'])
         if sur_rec['max_response_limit'] and sur_rec['max_response_limit'] <= sur_rec['tot_start_survey']:
-            raise osv.except_osv(_('Warning !'),_("You can not give more response. Please contact the author of this survey for further assistance."))
+            raise osv.except_osv(_('Warning !'), _("You can not give more response. Please contact the author of this survey for further assistance."))
         search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
+        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         return {
             'view_type': 'form',
             "view_mode": 'form',
@@ -656,13 +656,13 @@ class survey_question_wiz(osv.osv_memory):
         'name': fields.integer('Number'),
     }
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
-        result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         surv_name_wiz = self.pool.get('survey.name.wiz')
         if view_type in ['form']:
             wiz_id = 0
             if not context.has_key('sur_name_id'):
-                wiz_id = surv_name_wiz.create(cr,uid, {'survey_id' : context['survey_id'],'page_no' :-1,'page':'next','transfer' :1,'response':0})
+                wiz_id = surv_name_wiz.create(cr, uid, {'survey_id' : context['survey_id'], 'page_no' :-1, 'page':'next', 'transfer' :1, 'response':0})
                 sur_name_rec = surv_name_wiz.read(cr, uid, wiz_id, [])
                 context.update({'sur_name_id' :wiz_id})
             else:
@@ -691,15 +691,15 @@ class survey_question_wiz(osv.osv_memory):
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':False})
                 flag = False
                 fields = {}
-                if sur_name_read['page'] == "next" or sur_name_rec['page_no'] == - 1 :
+                if sur_name_read['page'] == "next" or sur_name_rec['page_no'] == -1 :
                     if len(p_id) > sur_name_rec['page_no'] + 1 :
                         if not context.has_key('active') and not sur_name_rec['page_no'] + 1:
                             cr.execute('select count(id) from survey_history where user_id=%s\
-                                                    and survey_id=%s' % (uid,survey_id))
+                                                    and survey_id=%s' % (uid, survey_id))
                             res = cr.fetchone()[0]
                             user_limit = survey_obj.read(cr, uid, survey_id, ['response_user'])['response_user']
                             if user_limit and res >= user_limit:
-                                raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (user_limit))
+                                raise osv.except_osv(_('Warning !'), _("You can not give response for this survey more than %s times") % (user_limit))
 
                         if sur_rec['max_response_limit'] and sur_rec['max_response_limit'] <= sur_rec['tot_start_survey'] and not sur_name_rec['page_no'] + 1:
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
@@ -707,7 +707,7 @@ class survey_question_wiz(osv.osv_memory):
                         surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'page_no' : sur_name_rec['page_no'] + 1})
                         flag = True
                         page_number += 1
-                    if sur_name_rec['page_no'] > - 1:
+                    if sur_name_rec['page_no'] > -1:
                         pre_button = True
                 else:
                     if sur_name_rec['page_no'] != 0:
@@ -723,7 +723,7 @@ class survey_question_wiz(osv.osv_memory):
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
                     if wiz_id:
                         fields["wizardid_" + str(wiz_id)] = {'type':'char', 'size' : 255, 'string':"", 'views':{}}
-                        etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0)})
+                        etree.SubElement(xml_form, 'field', {'invisible':'1', 'name': "wizardid_" + str(wiz_id), 'default':str(lambda * a: 0)})
 
                     if pag_rec['note']:
                         for que_test in pag_rec['note'].split('\n'):
@@ -736,20 +736,20 @@ class survey_question_wiz(osv.osv_memory):
                         descriptive_text = ""
                         separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec['question'])
                         if not context.has_key('active') and que_rec['is_require_answer']:
-                            star='*'
+                            star = '*'
                         else:
-                            star=''
+                            star = ''
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '4'})
                         if context.has_key('active') and context.has_key('edit'):
                             xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '2'})
-                            etree.SubElement(xml_group, 'separator', {'string': star+to_xml(separator_string), 'colspan': '3'})
+                            etree.SubElement(xml_group, 'separator', {'string': star + to_xml(separator_string), 'colspan': '3'})
                             xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
-                            context.update({'question_id' : tools.ustr(que),'page_number' : sur_name_rec['page_no'] , 'transfer' : sur_name_read['transfer'], 'page_id' : p_id})
-                            etree.SubElement(xml_group1, 'button', {'string' :'','icon': "gtk-edit", 'type' :'object', 'name':"action_edit_question", 'context' : tools.ustr(context)})
-                            etree.SubElement(xml_group1, 'button', {'string' :'','icon': "gtk-delete", 'type' :'object','name':"action_delete_question", 'context' : tools.ustr(context)})
+                            context.update({'question_id' : tools.ustr(que), 'page_number' : sur_name_rec['page_no'] , 'transfer' : sur_name_read['transfer'], 'page_id' : p_id})
+                            etree.SubElement(xml_group1, 'button', {'string' :'', 'icon': "gtk-edit", 'type' :'object', 'name':"action_edit_question", 'context' : tools.ustr(context)})
+                            etree.SubElement(xml_group1, 'button', {'string' :'', 'icon': "gtk-delete", 'type' :'object', 'name':"action_delete_question", 'context' : tools.ustr(context)})
                         else:
                             xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
-                            etree.SubElement(xml_group, 'separator', {'string': star+to_xml(separator_string), 'colspan': '4'})
+                            etree.SubElement(xml_group, 'separator', {'string': star + to_xml(separator_string), 'colspan': '4'})
                         ans_ids = ans_obj.read(cr, uid, que_rec['answer_choice_ids'], [])
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
                         if que_rec['type'] == 'multiple_choice_only_one_ans':
@@ -774,38 +774,38 @@ class survey_question_wiz(osv.osv_memory):
                             xml_group = etree.SubElement(xml_group, 'group', {'col': tools.ustr(col), 'colspan': tools.ustr(colspan)})
                             for row in ans_ids:
                                 etree.SubElement(xml_group, 'newline')
-                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_selection_" + tools.ustr(row['id']),'string':to_xml(tools.ustr(row['answer']))})
-                                selection = [('','')]
+                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_selection_" + tools.ustr(row['id']), 'string':to_xml(tools.ustr(row['answer']))})
+                                selection = [('', '')]
                                 for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
                                     selection.append((str(col['id']), col['title']))
                                 fields[tools.ustr(que) + "_selection_" + tools.ustr(row['id'])] = {'type':'selection', 'selection' : selection, 'string': "Answer"}
                                 if que_rec['comment_column']:
-                                   fields[tools.ustr(que) + "_commentcolumn_"+tools.ustr(row['id']) + "_field"] = {'type':'char', 'size' : 255, 'string':tools.ustr(que_rec['column_name']), 'views':{}}
-                                   etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_commentcolumn_"+tools.ustr(row['id'])+ "_field"})
+                                   fields[tools.ustr(que) + "_commentcolumn_" + tools.ustr(row['id']) + "_field"] = {'type':'char', 'size' : 255, 'string':tools.ustr(que_rec['column_name']), 'views':{}}
+                                   etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_commentcolumn_" + tools.ustr(row['id']) + "_field"})
                         elif que_rec['type'] == 'matrix_of_choices_only_multi_ans':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec['column_heading_ids']) + 1), 'colspan': '4'})
-                            etree.SubElement(xml_group, 'separator', {'string': '.','colspan': '1'})
+                            etree.SubElement(xml_group, 'separator', {'string': '.', 'colspan': '1'})
                             for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
-                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col['title']),'colspan': '1'})
+                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col['title']), 'colspan': '1'})
                             for row in ans_ids:
-                                etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row['answer'])) +' :-', 'align': '0.0'})
+                                etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row['answer'])) + ' :-', 'align': '0.0'})
                                 for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
                                     etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_" + tools.ustr(row['id']) + "_" + tools.ustr(col['id']), 'nolabel':"1"})
-                                    fields[tools.ustr(que) + "_" + tools.ustr(row['id'])  + "_" + tools.ustr(col['id'])] = {'type':'boolean', 'string': col['title']}
+                                    fields[tools.ustr(que) + "_" + tools.ustr(row['id']) + "_" + tools.ustr(col['id'])] = {'type':'boolean', 'string': col['title']}
                         elif que_rec['type'] == 'matrix_of_drop_down_menus':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec['column_heading_ids']) + 1), 'colspan': '4'})
-                            etree.SubElement(xml_group, 'separator', {'string': '.','colspan': '1'})
+                            etree.SubElement(xml_group, 'separator', {'string': '.', 'colspan': '1'})
                             for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
-                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col['title']),'colspan': '1'})
+                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col['title']), 'colspan': '1'})
                             for row in ans_ids:
-                                etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row['answer']))+' :-', 'align': '0.0'})
+                                etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row['answer'])) + ' :-', 'align': '0.0'})
                                 for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
                                     selection = []
                                     if col['menu_choice']:
                                         for item in col['menu_choice'].split('\n'):
-                                            if item and not item.strip() == '': selection.append((item ,item))
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_" + tools.ustr(row['id']) + "_" + tools.ustr(col['id']),'nolabel':'1'})
-                                    fields[tools.ustr(que) + "_" + tools.ustr(row['id'])  + "_" + tools.ustr(col['id'])] = {'type':'selection', 'string': col['title'], 'selection':selection}
+                                            if item and not item.strip() == '': selection.append((item , item))
+                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_" + tools.ustr(row['id']) + "_" + tools.ustr(col['id']), 'nolabel':'1'})
+                                    fields[tools.ustr(que) + "_" + tools.ustr(row['id']) + "_" + tools.ustr(col['id'])] = {'type':'selection', 'string': col['title'], 'selection':selection}
                         elif que_rec['type'] == 'multiple_textboxes':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
                             type = "char"
@@ -817,7 +817,7 @@ class survey_question_wiz(osv.osv_memory):
                                 elif que_rec['validation_type'] in ['must_be_date']:
                                     type = "date"
                             for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"})
+                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300", 'colspan': '1', 'name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"})
                                 if type == "char" :
                                     fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type':'char', 'size':255, 'string':ans['answer']}
                                 else:
@@ -825,95 +825,95 @@ class survey_question_wiz(osv.osv_memory):
                         elif que_rec['type'] == 'numerical_textboxes':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
                             for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_numeric"})
+                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300", 'colspan': '1', 'name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_numeric"})
                                 fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_numeric"] = {'type':'integer', 'string':ans['answer']}
                         elif que_rec['type'] == 'date':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
                             for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que) + "_" + tools.ustr(ans['id'])})
+                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300", 'colspan': '1', 'name': tools.ustr(que) + "_" + tools.ustr(ans['id'])})
                                 fields[tools.ustr(que) + "_" + tools.ustr(ans['id'])] = {'type':'date', 'string':ans['answer']}
                         elif que_rec['type'] == 'date_and_time':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
                             for ans in ans_ids:
-                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que) + "_" + tools.ustr(ans['id'])})
+                                etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300", 'colspan': '1', 'name': tools.ustr(que) + "_" + tools.ustr(ans['id'])})
                                 fields[tools.ustr(que) + "_" + tools.ustr(ans['id'])] = {'type':'datetime', 'string':ans['answer']}
                         elif que_rec['type'] == 'descriptive_text':
                             for que_test in que_rec['descriptive_text'].split('\n'):
                                 etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
                         elif que_rec['type'] == 'single_textbox':
-                            etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_single", 'nolabel':"1" ,'colspan':"4"})
+                            etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_single", 'nolabel':"1" , 'colspan':"4"})
                             fields[tools.ustr(que) + "_single"] = {'type':'char', 'size' : 255, 'string':"single_textbox", 'views':{}}
                         elif que_rec['type'] == 'comment':
-                            etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_comment", 'nolabel':"1" ,'colspan':"4"})
+                            etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_comment", 'nolabel':"1" , 'colspan':"4"})
                             fields[tools.ustr(que) + "_comment"] = {'type':'text', 'string':"Comment/Eassy Box", 'views':{}}
                         elif que_rec['type'] == 'table':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': str(len(que_rec['column_heading_ids'])), 'colspan': '4'})
                             for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
-                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col['title']),'colspan': '1'})
-                            for row in range(0,que_rec['no_of_rows']):
+                                etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col['title']), 'colspan': '1'})
+                            for row in range(0, que_rec['no_of_rows']):
                                 for col in que_col_head.read(cr, uid, que_rec['column_heading_ids']):
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_table_" + tools.ustr(col['id']) +"_"+ tools.ustr(row), 'nolabel':"1"})
-                                    fields[tools.ustr(que) + "_table_" + tools.ustr(col['id']) +"_"+ tools.ustr(row)] = {'type':'char','size':255,'views':{}}
+                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_table_" + tools.ustr(col['id']) + "_" + tools.ustr(row), 'nolabel':"1"})
+                                    fields[tools.ustr(que) + "_table_" + tools.ustr(col['id']) + "_" + tools.ustr(row)] = {'type':'char', 'size':255, 'views':{}}
                         elif que_rec['type'] == 'multiple_textboxes_diff_type':
                             xml_group = etree.SubElement(xml_group, 'group', {'col': '4', 'colspan': '4'})
                             for ans in ans_ids:
                                 if ans['type'] == "email" :
                                     fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type':'char', 'size':255, 'string':ans['answer']}
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'widget':'email','width':"300",'colspan': '1','name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"})
+                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'widget':'email', 'width':"300", 'colspan': '1', 'name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"})
                                 else:
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300",'colspan': '1','name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"})
+                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'width':"300", 'colspan': '1', 'name': tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"})
                                     if ans['type'] == "char" :
                                         fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type':'char', 'size':255, 'string':ans['answer']}
-                                    elif ans['type'] in ['integer','float','date','datetime']:
+                                    elif ans['type'] in ['integer', 'float', 'date', 'datetime']:
                                         fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type': str(ans['type']), 'string':ans['answer']}
                                     else:
                                         selection = []
                                         if ans['menu_choice']:
                                             for item in ans['menu_choice'].split('\n'):
-                                                if item and not item.strip() == '': selection.append((item ,item))
+                                                if item and not item.strip() == '': selection.append((item , item))
                                         fields[tools.ustr(que) + "_" + tools.ustr(ans['id']) + "_multi"] = {'type':'selection', 'selection' : selection, 'string':ans['answer']}
                         if que_rec['type'] in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale'] and que_rec['is_comment_require']:
-                            if que_rec['type'] in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans'] and que_rec['comment_field_type'] in ['char','text'] and que_rec['make_comment_field']:
+                            if que_rec['type'] in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans'] and que_rec['comment_field_type'] in ['char', 'text'] and que_rec['make_comment_field']:
                                 etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_otherfield", 'colspan':"4"})
                                 fields[tools.ustr(que) + "_otherfield"] = {'type':'boolean', 'string':que_rec['comment_label'], 'views':{}}
                                 if que_rec['comment_field_type'] == 'char':
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_other", 'nolabel':"1" ,'colspan':"4"})
+                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_other", 'nolabel':"1" , 'colspan':"4"})
                                     fields[tools.ustr(que) + "_other"] = {'type': 'char', 'string': '', 'size':255, 'views':{}}
                                 elif que_rec['comment_field_type'] == 'text':
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_other", 'nolabel':"1" ,'colspan':"4"})
+                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_other", 'nolabel':"1" , 'colspan':"4"})
                                     fields[tools.ustr(que) + "_other"] = {'type': 'text', 'string': '', 'views':{}}
                             else:
                                 if que_rec['comment_field_type'] == 'char':
-                                    etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec['comment_label'])),'colspan':"4"})
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_other", 'nolabel':"1" ,'colspan':"4"})
+                                    etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec['comment_label'])), 'colspan':"4"})
+                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_other", 'nolabel':"1" , 'colspan':"4"})
                                     fields[tools.ustr(que) + "_other"] = {'type': 'char', 'string': '', 'size':255, 'views':{}}
                                 elif que_rec['comment_field_type'] == 'text':
-                                    etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec['comment_label'])),'colspan':"4"})
-                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_other", 'nolabel':"1" ,'colspan':"4"})
+                                    etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_rec['comment_label'])), 'colspan':"4"})
+                                    etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que) + "_other", 'nolabel':"1" , 'colspan':"4"})
                                     fields[tools.ustr(que) + "_other"] = {'type': 'text', 'string': '', 'views':{}}
                     etree.SubElement(xml_form, 'separator', {'colspan': '4'})
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '6', 'colspan': '4'})
                     etree.SubElement(xml_group, 'field', {'name': 'progress_bar_' + tools.ustr(page_number) , 'widget':'progressbar'})
                     fields['progress_bar_' + tools.ustr(page_number)] = {'type':'float', 'string':"Progress", 'views':{}}
-                    etree.SubElement(xml_group, 'label', {'string': tools.ustr(page_number+ 1) + "/" + tools.ustr(total_pages)})
-                    etree.SubElement(xml_group, 'button', {'icon': "gtk-cancel", 'special': "cancel",'string':"Cancel"})
+                    etree.SubElement(xml_group, 'label', {'string': tools.ustr(page_number + 1) + "/" + tools.ustr(total_pages)})
+                    etree.SubElement(xml_group, 'button', {'icon': "gtk-cancel", 'special': "cancel", 'string':"Cancel"})
                     if pre_button:
-                        etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_previous",'string':"Previous",'type':"object"})
+                        etree.SubElement(xml_group, 'button', {'colspan':"1", 'icon':"gtk-go-back", 'name':"action_previous", 'string':"Previous", 'type':"object"})
                     but_string = "Next"
                     if int(page_number) + 1 == total_pages:
                         but_string = "Done"
                     if context.has_key('active') and int(page_number) + 1 == total_pages:
-                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'string': "Done" ,'special':"cancel",'context' : tools.ustr(context)})
+                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'string': "Done" , 'special':"cancel", 'context' : tools.ustr(context)})
                     else:
-                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context)})
+                        etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'name':"action_next", 'string': tools.ustr(but_string) , 'type':"object", 'context' : tools.ustr(context)})
                     if context.has_key('active') and context.has_key('edit'):
-                        etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
-                        context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec['page_no'] , 'transfer' : sur_name_read['transfer']})
+                        etree.SubElement(xml_form, 'separator', {'string' : '', 'colspan': '4'})
+                        context.update({'page_id' : tools.ustr(p_id), 'page_number' : sur_name_rec['page_no'] , 'transfer' : sur_name_read['transfer']})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Add Page','icon': "gtk-new", 'type' :'object','name':"action_new_page", 'context' : tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Edit Page','icon': "gtk-edit", 'type' :'object','name':"action_edit_page", 'context' : tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Delete Page','icon': "gtk-delete", 'type' :'object','name':"action_delete_page", 'context' : tools.ustr(context)})
-                        etree.SubElement(xml_group3, 'button', {'string' :'Add Question','icon': "gtk-new", 'type' :'object','name':"action_new_question", 'context' : tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string' :'Add Page', 'icon': "gtk-new", 'type' :'object', 'name':"action_new_page", 'context' : tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string' :'Edit Page', 'icon': "gtk-edit", 'type' :'object', 'name':"action_edit_page", 'context' : tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string' :'Delete Page', 'icon': "gtk-delete", 'type' :'object', 'name':"action_delete_page", 'context' : tools.ustr(context)})
+                        etree.SubElement(xml_group3, 'button', {'string' :'Add Question', 'icon': "gtk-new", 'type' :'object', 'name':"action_new_question", 'context' : tools.ustr(context)})
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
                     result['fields'] = fields
@@ -925,9 +925,9 @@ class survey_question_wiz(osv.osv_memory):
                     if sur_rec['send_response']:
                         user_obj = self.pool.get('res.users')
                         survey_data = survey_obj.browse(cr, uid, int(survey_id))
-                        response_id = surv_name_wiz.read(cr,uid,context['sur_name_id'])['response']
+                        response_id = surv_name_wiz.read(cr, uid, context['sur_name_id'])['response']
                         context.update({'response_id':response_id})
-                        report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
+                        report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title, context)
                         attachments = []
                         file = open(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
                         file_data = ""
@@ -936,7 +936,7 @@ class survey_question_wiz(osv.osv_memory):
                             file_data += line
                             if not line:
                                 break
-                        attachments.append((survey_data.title + ".pdf",file_data))
+                        attachments.append((survey_data.title + ".pdf", file_data))
                         file.close()
                         os.remove(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
                         user_email = False
@@ -950,13 +950,13 @@ class survey_question_wiz(osv.osv_memory):
                             resp_email = cr.fetchone()[0]
                         if user_email and resp_email:
                             mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_obj.browse(cr, uid, uid).name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
-                            tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_obj.browse(cr, uid, uid).name) , mail, attach = attachments)
-                    
+                            tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_obj.browse(cr, uid, uid).name) , mail, attach=attachments)
+
                     xml_form = etree.Element('form', {'string': _('Complete Survey Response')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
                     etree.SubElement(xml_form, 'label', {'string': 'Thanks for your response'})
                     etree.SubElement(xml_form, 'newline')
-                    etree.SubElement(xml_form, 'button', {'icon': "gtk-go-forward", 'special':"cancel",'string':"OK",'colspan':"2"})
+                    etree.SubElement(xml_form, 'button', {'icon': "gtk-go-forward", 'special':"cancel", 'string':"OK", 'colspan':"2"})
                     root = xml_form.getroottree()
                     result['arch'] = etree.tostring(root)
                     result['fields'] = {}
@@ -973,8 +973,8 @@ class survey_question_wiz(osv.osv_memory):
             fp = open(ret_file_name, 'wb+');
             fp.write(result);
             fp.close();
-        except Exception,e:
-            print 'Exception in create report:',e
+        except Exception, e:
+            print 'Exception in create report:', e
             return (False, str(e))
         return (True, ret_file_name)
 
@@ -998,7 +998,7 @@ class survey_question_wiz(osv.osv_memory):
                                     value[field] = ans.comment_field
                         if que.response_table_ids and len(field.split('_')) == 4 and field.split('_')[1] == "table":
                             for ans in que.response_table_ids:
-                                if str(field.split('_')[2]) == str(ans.column_id.id) and str(field.split('_')[3]) ==  str(ans.name):
+                                if str(field.split('_')[2]) == str(ans.column_id.id) and str(field.split('_')[3]) == str(ans.name):
                                     value[field] = ans.value
                         if que.comment and (field.split('_')[1] == "comment" or field.split('_')[1] == "other"):
                             value[field] = str(que.comment)
@@ -1006,20 +1006,20 @@ class survey_question_wiz(osv.osv_memory):
                             value[field] = str(que.single_text)
                         elif que.response_answer_ids and len(field.split('_')) == 3 and field.split('_')[1] == "selection":
                             for ans in que.response_answer_ids:
-                                if str(field.split('_')[2]) == str( ans.answer_id.id):
+                                if str(field.split('_')[2]) == str(ans.answer_id.id):
                                     value[field] = str(ans.column_id.id)
                         elif que.response_answer_ids and len(field.split('_')) == 2 and field.split('_')[1] == "selection":
                             value[field] = str(que.response_answer_ids[0].answer_id.id)
                         elif que.response_answer_ids and len(field.split('_')) == 3 and field.split('_')[2] != "multi" and field.split('_')[2] != "numeric":
                             for ans in que.response_answer_ids:
-                                if str(field.split('_')[1]) == str( ans.answer_id.id) and str(field.split('_')[2]) == str(ans.column_id.id):
+                                if str(field.split('_')[1]) == str(ans.answer_id.id) and str(field.split('_')[2]) == str(ans.column_id.id):
                                     if ans.value_choice:
                                         value[field] = ans.value_choice
                                     else:
                                         value[field] = True
                         else:
                             for ans in que.response_answer_ids:
-                                if str(field.split('_')[1]) == str( ans.answer_id.id):
+                                if str(field.split('_')[1]) == str(ans.answer_id.id):
                                     value[field] = ans.answer
         else:
             if not context.has_key('sur_name_id'):
@@ -1029,7 +1029,7 @@ class survey_question_wiz(osv.osv_memory):
             surv_name_wiz = self.pool.get('survey.name.wiz')
             sur_name_read = surv_name_wiz.read(cr, uid, context['sur_name_id'])
             ans_list = []
-            for key,val in sur_name_read['store_ans'].items():
+            for key, val in sur_name_read['store_ans'].items():
                 for field in fields_list:
                     if field in list(val):
                         value[field] = val[field]
@@ -1038,7 +1038,7 @@ class survey_question_wiz(osv.osv_memory):
     def create(self, cr, uid, vals, context=None):
         if context.has_key('active') and context['active']:
             return True
-        for key,val in vals.items():
+        for key, val in vals.items():
             if key.split('_')[0] == "progress":
                 vals.pop(key)
             if not context.has_key('sur_name_id') and key.split('_')[0] == "wizardid":
@@ -1050,7 +1050,7 @@ class survey_question_wiz(osv.osv_memory):
         surv_all_resp_obj = self.pool.get('survey.response')
         surv_tbl_column_obj = self.pool.get('survey.tbl.column.heading')
         sur_name_read = surv_name_wiz.read(cr, uid, context['sur_name_id'], [])
-        response_id =  0
+        response_id = 0
         if not sur_name_read['response']:
             response_id = surv_all_resp_obj.create(cr, uid, {'response_type':'link', 'user_id':uid, 'date_create':datetime.datetime.now(), 'survey_id' : context['survey_id']})
             surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'response' : tools.ustr(response_id)})
@@ -1065,8 +1065,8 @@ class survey_question_wiz(osv.osv_memory):
                                               'date': strftime('%Y-%m-%d %H:%M:%S'), 'survey_id': sur_name_read['survey_id']})
             survey_obj = self.pool.get('survey')
             sur_rec = survey_obj.read(cr, uid, sur_name_read['survey_id'])
-            survey_obj.write(cr, uid, sur_name_read['survey_id'],  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
-        for key,val in sur_name_read['store_ans'].items():
+            survey_obj.write(cr, uid, sur_name_read['survey_id'], {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
+        for key, val in sur_name_read['store_ans'].items():
             for field in vals:
                 if field.split('_')[0] == val['question_id']:
                     click_state = False
@@ -1084,7 +1084,7 @@ class survey_question_wiz(osv.osv_memory):
                     que_li.append(que_id)
                     que_rec = que_obj.read(cr, uid, [int(que_id)], [])[0]
                     resp_id = resp_obj.create(cr, uid, {'question_id':que_id, 'date_create':datetime.datetime.now(), \
-                         'state':'done','response_id' : response_id })
+                         'state':'done', 'response_id' : response_id })
                     resp_id_list.append(resp_id)
                     sur_name_read['store_ans'].update({resp_id:{'question_id':que_id}})
                     surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'store_ans':sur_name_read['store_ans']})
@@ -1097,7 +1097,7 @@ class survey_question_wiz(osv.osv_memory):
                     response_list = []
                     for key1, val1 in vals.items():
                         if val1 and key1.split('_')[1] == "table" and key1.split('_')[0] == que_id:
-                            surv_tbl_column_obj.create(cr, uid, {'response_table_id' : resp_id,'column_id':key1.split('_')[2], 'name':key1.split('_')[3], 'value' : val1})
+                            surv_tbl_column_obj.create(cr, uid, {'response_table_id' : resp_id, 'column_id':key1.split('_')[2], 'name':key1.split('_')[3], 'value' : val1})
                             sur_name_read['store_ans'][resp_id].update({key1:val1})
                             select_count += 1
                         elif val1 and key1.split('_')[1] == "otherfield" and key1.split('_')[0] == que_id:
@@ -1121,22 +1121,22 @@ class survey_question_wiz(osv.osv_memory):
                             else:
                                 error = False
                                 if que_rec['is_comment_require'] and que_rec['comment_valid_type'] == 'must_be_specific_length':
-                                    if (not val1 and  que_rec['comment_minimum_no']) or len(val1) <  que_rec['comment_minimum_no'] or len(val1) > que_rec['comment_maximum_no']:
+                                    if (not val1 and  que_rec['comment_minimum_no']) or len(val1) < que_rec['comment_minimum_no'] or len(val1) > que_rec['comment_maximum_no']:
                                         error = True
                                 elif que_rec['is_comment_require'] and  que_rec['comment_valid_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
                                     error = False
                                     try:
                                         if que_rec['comment_valid_type'] == 'must_be_whole_number':
                                             value = int(val1)
-                                            if value <  que_rec['comment_minimum_no'] or value > que_rec['comment_maximum_no']:
+                                            if value < que_rec['comment_minimum_no'] or value > que_rec['comment_maximum_no']:
                                                 error = True
                                         elif que_rec['comment_valid_type'] == 'must_be_decimal_number':
                                             value = float(val1)
-                                            if value <  que_rec['comment_minimum_float'] or value > que_rec['comment_maximum_float']:
+                                            if value < que_rec['comment_minimum_float'] or value > que_rec['comment_maximum_float']:
                                                 error = True
                                         elif que_rec['comment_valid_type'] == 'must_be_date':
                                             value = datetime.datetime.strptime(val1, "%Y-%m-%d")
-                                            if value <  datetime.datetime.strptime(que_rec['comment_minimum_date'], "%Y-%m-%d") or value >  datetime.datetime.strptime(que_rec['comment_maximum_date'], "%Y-%m-%d"):
+                                            if value < datetime.datetime.strptime(que_rec['comment_minimum_date'], "%Y-%m-%d") or value > datetime.datetime.strptime(que_rec['comment_maximum_date'], "%Y-%m-%d"):
                                                 error = True
                                     except:
                                         error = True
@@ -1157,22 +1157,22 @@ class survey_question_wiz(osv.osv_memory):
                         elif val1 and key1.split('_')[0] == que_id and (key1.split('_')[1] == "single"  or (len(key1.split('_')) > 2 and key1.split('_')[2] == 'multi')):
                             error = False
                             if que_rec['is_validation_require'] and que_rec['validation_type'] == 'must_be_specific_length':
-                                if (not val1 and  que_rec['validation_minimum_no']) or len(val1) <  que_rec['validation_minimum_no'] or len(val1) > que_rec['validation_maximum_no']:
+                                if (not val1 and  que_rec['validation_minimum_no']) or len(val1) < que_rec['validation_minimum_no'] or len(val1) > que_rec['validation_maximum_no']:
                                     error = True
                             elif que_rec['is_validation_require'] and que_rec['validation_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
                                 error = False
                                 try:
                                     if que_rec['validation_type'] == 'must_be_whole_number':
                                         value = int(val1)
-                                        if value <  que_rec['validation_minimum_no'] or value > que_rec['validation_maximum_no']:
+                                        if value < que_rec['validation_minimum_no'] or value > que_rec['validation_maximum_no']:
                                             error = True
                                     elif que_rec['validation_type'] == 'must_be_decimal_number':
                                         value = float(val1)
-                                        if value <  que_rec['validation_minimum_float'] or value > que_rec['validation_maximum_float']:
+                                        if value < que_rec['validation_minimum_float'] or value > que_rec['validation_maximum_float']:
                                             error = True
                                     elif que_rec['validation_type'] == 'must_be_date':
                                         value = datetime.datetime.strptime(val1, "%Y-%m-%d")
-                                        if value <  datetime.datetime.strptime(que_rec['validation_minimum_date'], "%Y-%m-%d") or value >  datetime.datetime.strptime(que_rec['validation_maximum_date'], "%Y-%m-%d"):
+                                        if value < datetime.datetime.strptime(que_rec['validation_minimum_date'], "%Y-%m-%d") or value > datetime.datetime.strptime(que_rec['validation_maximum_date'], "%Y-%m-%d"):
                                             error = True
                                 except:
                                     error = True
@@ -1191,7 +1191,7 @@ class survey_question_wiz(osv.osv_memory):
                             sur_name_read['store_ans'][resp_id].update({key1:val1})
                             select_count += 1
                         elif val1 and que_id == key1.split('_')[0] and len(key1.split('_')) > 2 and key1.split('_')[2] == 'numeric':
-                            if not val1=="0":
+                            if not val1 == "0":
                                 try:
                                     numeric_sum += int(val1)
                                     ans_create_id = res_ans_obj.create(cr, uid, {'response_id':resp_id, 'answer_id':key1.split('_')[1], 'answer' : val1})
@@ -1200,7 +1200,7 @@ class survey_question_wiz(osv.osv_memory):
                                 except:
                                     for res in resp_id_list:
                                         sur_name_read['store_ans'].pop(res)
-                                    raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "' \nPlease enter an integer value " ))
+                                    raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "' \nPlease enter an integer value "))
 
                         elif val1 and que_id == key1.split('_')[0] and len(key1.split('_')) == 3:
                             if type(val1) == type('') or type(val1) == type(u''):
@@ -1216,7 +1216,7 @@ class survey_question_wiz(osv.osv_memory):
                             sur_name_read['store_ans'][resp_id].update({key1:val1})
                             select_count += 1
                         surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'store_ans':sur_name_read['store_ans']})
-                    for key,val in vals.items():
+                    for key, val in vals.items():
                         if val and key.split('_')[1] == "commentcolumn" and key.split('_')[0] == que_id:
                             for res_id in response_list:
                                 if key.split('_')[2] in res_id.split('_')[1]:
@@ -1225,7 +1225,7 @@ class survey_question_wiz(osv.osv_memory):
                     if comment_field and comment_value:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
-                        raise osv.except_osv(_('Error re !'), _("'" + que_rec['question']  + "' " + tools.ustr(que_rec['make_comment_field_err_msg'])))
+                        raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['make_comment_field_err_msg'])))
                     if que_rec['type'] == "rating_scale" and que_rec['rating_allow_one_column_require'] and len(selected_value) > len(list(set(selected_value))):
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
@@ -1236,7 +1236,7 @@ class survey_question_wiz(osv.osv_memory):
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
                         raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg'])))
-                    if que_rec['type'] in ['multiple_textboxes_diff_type', 'multiple_choice_multiple_ans','matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans','matrix_of_drop_down_menus','rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time'] and que_rec['is_require_answer']:
+                    if que_rec['type'] in ['multiple_textboxes_diff_type', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time'] and que_rec['is_require_answer']:
                         if matrix_list:
                             if (que_rec['required_type'] == 'all' and len(list(set(matrix_list))) < len(que_rec['answer_choice_ids'])) or \
                             (que_rec['required_type'] == 'at least' and len(list(set(matrix_list))) < que_rec['req_ans']) or \
@@ -1254,7 +1254,7 @@ class survey_question_wiz(osv.osv_memory):
                             for res in resp_id_list:
                                 sur_name_read['store_ans'].pop(res)
                             raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
-                    if que_rec['type'] in ['multiple_choice_only_one_ans','single_textbox','comment'] and  que_rec['is_require_answer'] and select_count <= 0:
+                    if que_rec['type'] in ['multiple_choice_only_one_ans', 'single_textbox', 'comment'] and  que_rec['is_require_answer'] and select_count <= 0:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
                         raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
@@ -1262,8 +1262,8 @@ class survey_question_wiz(osv.osv_memory):
             resp_id_list = []
             for update in click_update:
                 que_rec = que_obj.read(cr, uid , [int(sur_name_read['store_ans'][update]['question_id'])], [])[0]
-                res_ans_obj.unlink(cr, uid,res_ans_obj.search(cr, uid, [('response_id', '=', update)]))
-                surv_tbl_column_obj.unlink(cr, uid,surv_tbl_column_obj.search(cr, uid, [('response_table_id', '=', update)]))
+                res_ans_obj.unlink(cr, uid, res_ans_obj.search(cr, uid, [('response_id', '=', update)]))
+                surv_tbl_column_obj.unlink(cr, uid, surv_tbl_column_obj.search(cr, uid, [('response_table_id', '=', update)]))
                 resp_id_list.append(update)
                 sur_name_read['store_ans'].update({update:{'question_id':sur_name_read['store_ans'][update]['question_id']}})
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'store_ans':sur_name_read['store_ans']})
@@ -1278,7 +1278,7 @@ class survey_question_wiz(osv.osv_memory):
                     ans_id_len = key.split('_')
                     if ans_id_len[0] == sur_name_read['store_ans'][update]['question_id']:
                         if val and key.split('_')[1] == "table":
-                            surv_tbl_column_obj.create(cr, uid, {'response_table_id' : update,'column_id':key.split('_')[2], 'name':key.split('_')[3], 'value' : val})
+                            surv_tbl_column_obj.create(cr, uid, {'response_table_id' : update, 'column_id':key.split('_')[2], 'name':key.split('_')[3], 'value' : val})
                             sur_name_read['store_ans'][update].update({key:val})
                             resp_obj.write(cr, uid, update, {'state': 'done'})
                         elif val and key.split('_')[1] == "otherfield" :
@@ -1303,21 +1303,21 @@ class survey_question_wiz(osv.osv_memory):
                             else:
                                 error = False
                                 if que_rec['is_comment_require'] and  que_rec['comment_valid_type'] == 'must_be_specific_length':
-                                    if (not val and  que_rec['comment_minimum_no']) or len(val) <  que_rec['comment_minimum_no'] or len(val) > que_rec['comment_maximum_no']:
+                                    if (not val and  que_rec['comment_minimum_no']) or len(val) < que_rec['comment_minimum_no'] or len(val) > que_rec['comment_maximum_no']:
                                         error = True
                                 elif que_rec['is_comment_require'] and  que_rec['comment_valid_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
                                     try:
                                         if que_rec['comment_valid_type'] == 'must_be_whole_number':
                                             value = int(val)
-                                            if value <  que_rec['comment_minimum_no'] or value > que_rec['comment_maximum_no']:
+                                            if value < que_rec['comment_minimum_no'] or value > que_rec['comment_maximum_no']:
                                                 error = True
                                         elif que_rec['comment_valid_type'] == 'must_be_decimal_number':
                                             value = float(val)
-                                            if value <  que_rec['comment_minimum_float'] or value > que_rec['comment_maximum_float']:
+                                            if value < que_rec['comment_minimum_float'] or value > que_rec['comment_maximum_float']:
                                                 error = True
                                         elif que_rec['comment_valid_type'] == 'must_be_date':
                                             value = datetime.datetime.strptime(val, "%Y-%m-%d")
-                                            if value <  datetime.datetime.strptime(que_rec['comment_minimum_date'], "%Y-%m-%d") or value >  datetime.datetime.strptime(que_rec['comment_maximum_date'], "%Y-%m-%d"):
+                                            if value < datetime.datetime.strptime(que_rec['comment_minimum_date'], "%Y-%m-%d") or value > datetime.datetime.strptime(que_rec['comment_maximum_date'], "%Y-%m-%d"):
                                                 error = True
                                     except:
                                         error = True
@@ -1327,33 +1327,33 @@ class survey_question_wiz(osv.osv_memory):
                                             error = True
                                 if error:
                                     raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['comment_valid_err_msg'])))
-                                resp_obj.write(cr, uid, update, {'comment':val,'state': 'done'})
+                                resp_obj.write(cr, uid, update, {'comment':val, 'state': 'done'})
                                 sur_name_read['store_ans'][update].update({key:val})
                         elif val and key.split('_')[1] == "comment":
-                            resp_obj.write(cr, uid, update, {'comment':val,'state': 'done'})
+                            resp_obj.write(cr, uid, update, {'comment':val, 'state': 'done'})
                             sur_name_read['store_ans'][update].update({key:val})
                             select_count += 1
                         elif val and (key.split('_')[1] == "single"  or (len(key.split('_')) > 2 and key.split('_')[2] == 'multi')):
                             error = False
                             if que_rec['is_validation_require'] and que_rec['validation_type'] == 'must_be_specific_length':
-                                if (not val and  que_rec['validation_minimum_no']) or len(val) <  que_rec['validation_minimum_no'] or len(val) > que_rec['validation_maximum_no']:
+                                if (not val and  que_rec['validation_minimum_no']) or len(val) < que_rec['validation_minimum_no'] or len(val) > que_rec['validation_maximum_no']:
                                     error = True
                             elif que_rec['is_validation_require'] and que_rec['validation_type'] in ['must_be_whole_number', 'must_be_decimal_number', 'must_be_date']:
                                 error = False
                                 try:
                                     if que_rec['validation_type'] == 'must_be_whole_number':
                                         value = int(val)
-                                        if value <  que_rec['validation_minimum_no'] or value > que_rec['validation_maximum_no']:
+                                        if value < que_rec['validation_minimum_no'] or value > que_rec['validation_maximum_no']:
                                             error = True
                                     elif que_rec['validation_type'] == 'must_be_decimal_number':
                                         value = float(val)
-                                        if value <  que_rec['validation_minimum_float'] or value > que_rec['validation_maximum_float']:
+                                        if value < que_rec['validation_minimum_float'] or value > que_rec['validation_maximum_float']:
                                             error = True
                                     elif que_rec['validation_type'] == 'must_be_date':
                                         value = datetime.datetime.strptime(val, "%Y-%m-%d")
-                                        if value <  datetime.datetime.strptime(que_rec['validation_minimum_date'], "%Y-%m-%d") or value >  datetime.datetime.strptime(que_rec['validation_maximum_date'], "%Y-%m-%d"):
+                                        if value < datetime.datetime.strptime(que_rec['validation_minimum_date'], "%Y-%m-%d") or value > datetime.datetime.strptime(que_rec['validation_maximum_date'], "%Y-%m-%d"):
                                             error = True
-                                except Exception ,e:
+                                except Exception , e:
                                     error = True
                             elif que_rec['is_validation_require'] and  que_rec['validation_type'] == 'must_be_email_address':
                                 import re
@@ -1362,14 +1362,14 @@ class survey_question_wiz(osv.osv_memory):
                             if error:
                                 raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "'  \n" + tools.ustr(que_rec['validation_valid_err_msg'])))
                             if key.split('_')[1] == "single" :
-                                resp_obj.write(cr, uid, update, {'single_text':val,'state': 'done'})
+                                resp_obj.write(cr, uid, update, {'single_text':val, 'state': 'done'})
                             else:
                                 resp_obj.write(cr, uid, update, {'state': 'done'})
                                 ans_create_id = res_ans_obj.create(cr, uid, {'response_id':update, 'answer_id':ans_id_len[1], 'answer' : val})
                             sur_name_read['store_ans'][update].update({key:val})
                             select_count += 1
                         elif val and len(key.split('_')) > 2 and key.split('_')[2] == 'numeric':
-                            if not val=="0":
+                            if not val == "0":
                                 try:
                                     numeric_sum += int(val)
                                     resp_obj.write(cr, uid, update, {'state': 'done'})
@@ -1377,7 +1377,7 @@ class survey_question_wiz(osv.osv_memory):
                                     sur_name_read['store_ans'][update].update({key:val})
                                     select_count += 1
                                 except:
-                                    raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "' \n Please enter an integer value " ))
+                                    raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "' \n Please enter an integer value "))
 
                         elif val and len(key.split('_')) == 3:
                             resp_obj.write(cr, uid, update, {'state': 'done'})
@@ -1395,21 +1395,21 @@ class survey_question_wiz(osv.osv_memory):
                             sur_name_read['store_ans'][update].update({key:val})
                             select_count += 1
                         surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'store_ans':sur_name_read['store_ans']})
-                for key,val in vals.items():
+                for key, val in vals.items():
                     if val and key.split('_')[1] == "commentcolumn" and key.split('_')[0] == sur_name_read['store_ans'][update]['question_id']:
                         for res_id in response_list:
                             if key.split('_')[2] in res_id.split('_')[1]:
                                 a = res_ans_obj.write(cr, uid, [res_id.split('_')[0]], {'comment_field':val})
                                 sur_name_read['store_ans'][update].update({key:val})
                 if comment_field and comment_value:
-                    raise osv.except_osv(_('Error re !'), _("'" + que_rec['question']  + "' " + tools.ustr(que_rec['make_comment_field_err_msg'])))
+                    raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['make_comment_field_err_msg'])))
                 if que_rec['type'] == "rating_scale" and que_rec['rating_allow_one_column_require'] and len(selected_value) > len(list(set(selected_value))):
                     raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "\n you cannot select same answer more than one times'"))
                 if que_rec['numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
                     raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg'])))
                 if not select_count:
                     resp_obj.write(cr, uid, update, {'state': 'skip'})
-                if que_rec['type'] in ['multiple_textboxes_diff_type','multiple_choice_multiple_ans','matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans','matrix_of_drop_down_menus','rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time'] and que_rec['is_require_answer']:
+                if que_rec['type'] in ['multiple_textboxes_diff_type', 'multiple_choice_multiple_ans', 'matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale', 'multiple_textboxes', 'numerical_textboxes', 'date', 'date_and_time'] and que_rec['is_require_answer']:
                     if matrix_list:
                         if (que_rec['required_type'] == 'all' and len(list(set(matrix_list))) < len(que_rec['answer_choice_ids'])) or \
                         (que_rec['required_type'] == 'at least' and len(list(set(matrix_list))) < que_rec['req_ans']) or \
@@ -1423,15 +1423,15 @@ class survey_question_wiz(osv.osv_memory):
                         (que_rec['required_type'] == 'exactly' and select_count != que_rec['req_ans']) or \
                         (que_rec['required_type'] == 'a range' and (select_count < que_rec['minimum_req_ans'] or select_count > que_rec['maximum_req_ans'])):
                             raise osv.except_osv(_('Error !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
-                if que_rec['type'] in ['multiple_choice_only_one_ans','single_textbox','comment'] and  que_rec['is_require_answer'] and select_count <= 0:
+                if que_rec['type'] in ['multiple_choice_only_one_ans', 'single_textbox', 'comment'] and  que_rec['is_require_answer'] and select_count <= 0:
                     raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['req_error_msg'])))
         return True
 
-    def action_new_question(self,cr, uid, ids, context):
-        for key,val in context.items():
+    def action_new_question(self, cr, uid, ids, context):
+        for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
-        view_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.question'),('name','=','survey_question_wizard_test')])
+        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), ('name', '=', 'survey_question_wizard_test')])
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -1443,10 +1443,10 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_new_page(self, cr, uid, ids, context):
-        for key,val in context.items():
+        for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
-        view_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.page'),('name','=','survey_page_wizard_test')])
+        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.page'), ('name', '=', 'survey_page_wizard_test')])
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -1457,11 +1457,11 @@ class survey_question_wiz(osv.osv_memory):
                 'context': context
                 }
 
-    def action_edit_page(self,cr, uid, ids, context):
-        for key,val in context.items():
+    def action_edit_page(self, cr, uid, ids, context):
+        for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
-        view_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.page'),('name','=','survey_page_wizard_test')])
+        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.page'), ('name', '=', 'survey_page_wizard_test')])
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -1473,12 +1473,12 @@ class survey_question_wiz(osv.osv_memory):
                 'context': context
                 }
 
-    def action_delete_page(self,cr, uid, ids, context):
-        for key,val in context.items():
+    def action_delete_page(self, cr, uid, ids, context):
+        for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
         self.pool.get('survey.page').unlink(cr, uid, [context['page_id']])
-        search_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
+        search_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':True, 'page_no' : context['page_number'] })
         return {
@@ -1491,11 +1491,11 @@ class survey_question_wiz(osv.osv_memory):
                 'context': context
                 }
 
-    def action_edit_question(self,cr, uid, ids, context):
-        for key,val in context.items():
+    def action_edit_question(self, cr, uid, ids, context):
+        for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
-        view_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.question'),('name','=','survey_question_wizard_test')])
+        view_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question'), ('name', '=', 'survey_question_wizard_test')])
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -1507,13 +1507,13 @@ class survey_question_wiz(osv.osv_memory):
                 'context': context
                 }
 
-    def action_delete_question(self,cr, uid, ids, context):
-        for key,val in context.items():
+    def action_delete_question(self, cr, uid, ids, context):
+        for key, val in context.items():
             if type(key) == type(True):
                 context.pop(key)
         que_obj = self.pool.get('survey.question')
         que_obj.unlink(cr, uid, [context['question_id']])
-        search_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
+        search_id = self.pool.get('ir.ui.view').search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':True, 'page_no' : context['page_number'] })
         return {
@@ -1529,7 +1529,7 @@ class survey_question_wiz(osv.osv_memory):
     def action_next(self, cr, uid, ids, context=None):
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
+        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':True, 'page':'next'})
         return {
                 'view_type': 'form',
@@ -1544,7 +1544,7 @@ class survey_question_wiz(osv.osv_memory):
     def action_previous(self, cr, uid, ids, context=None):
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
+        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'transfer':True, 'page':'previous'})
         return {
                 'view_type': 'form',
@@ -1577,11 +1577,11 @@ class survey_request(osv.osv):
         'email' : fields.char("E-mail", size=64),
         'survey_id' : fields.many2one("survey", "Survey", required=1),
         'answer_ids' : fields.one2many('survey.answer', 'question_id', 'Answer'),
-        'state' : fields.selection([('waiting_answer', 'Wating Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
+        'state' : fields.selection([('waiting_answer', 'Wating Answer'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=1)
     }
     _defaults = {
         'state' : lambda * a: 'waiting_answer',
-        'date_deadline' : lambda * a :  (now() + RelativeDateTime(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
+        'date_deadline' : lambda * a :  (now() + RelativeDateTime(months= +1)).strftime("%Y-%m-%d %H:%M:%S")
     }
     def survey_req_waiting_answer(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, { 'state' : 'waiting_answer'})
@@ -1624,9 +1624,9 @@ class survey_print_answer(osv.osv_memory):
 
     def action_next(self, cr, uid, ids, context=None):
         response_id = self.read(cr, uid, ids, [])[0]
-        context.update({'active' : True,'survey_id' : response_id['survey_id'], 'response_id' : response_id['response_id']})
+        context.update({'active' : True, 'survey_id' : response_id['survey_id'], 'response_id' : response_id['response_id']})
         search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
+        search_id = search_obj.search(cr, uid, [('model', '=', 'survey.question.wiz'), ('name', '=', 'Survey Search')])
         return {
             'view_type': 'form',
             "view_mode": 'form',

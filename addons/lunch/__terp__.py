@@ -27,9 +27,9 @@
     "category" : "Generic Modules/Others",
     "init_xml": [],
     "update_xml": [
-        'security/ir.model.access.csv', 
-        'lunch_wizard.xml', 
-        'lunch_view.xml', 
+        'security/ir.model.access.csv',
+        'lunch_wizard.xml',
+        'lunch_view.xml',
         'lunch_report.xml',
         #'process/lunch_process.xml'
     ],

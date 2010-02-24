@@ -36,11 +36,11 @@ FORM = UpdateableStr()
 FIELDS = {
     'lines': {'string': 'Invoices', 'type': 'many2many',
         'relation': 'account.move.line'},
-        
+
 }
 
 START_FIELD = {
-    'date': {'string': 'Date payment', 'type': 'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'date': {'string': 'Date payment', 'type': 'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
     'journal_id': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'domain': '[("type","in",["sale","purchase","cash"])]', 'help': 'This field allows you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals.'},
 }
 
@@ -63,33 +63,33 @@ def _search_invoices(obj, cr, uid, data, context):
     # Creating a group that is unique for importing move lines(move lines, once imported into statement lines, should not appear again)
     for st_line in statement.line_ids:
         args_move_line = []
-        args_move_line.append(('name','=', st_line.name))
-        args_move_line.append(('ref','=',st_line.ref))
+        args_move_line.append(('name', '=', st_line.name))
+        args_move_line.append(('ref', '=', st_line.ref))
         if st_line.partner_id:
-            args_move_line.append(('partner_id','=',st_line.partner_id.id))
-        args_move_line.append(('account_id','=',st_line.account_id.id))
-        
-        move_line_id = line_obj.search(cr, uid, args_move_line,context=context)
+            args_move_line.append(('partner_id', '=', st_line.partner_id.id))
+        args_move_line.append(('account_id', '=', st_line.account_id.id))
+
+        move_line_id = line_obj.search(cr, uid, args_move_line, context=context)
         if move_line_id:
             repeated_move_line_ids += move_line_id
-        
+
     journal_ids = data['form']['journal_id'][0][2]
 
     if journal_ids == []:
-        journal_ids = journal_obj.search(cr, uid, [('type', 'in', ('sale','cash','purchase'))], context=context)
-    
+        journal_ids = journal_obj.search(cr, uid, [('type', 'in', ('sale', 'cash', 'purchase'))], context=context)
+
     args = [
         ('reconcile_id', '=', False),
         ('journal_id', 'in', journal_ids),
         ('account_id.reconcile', '=', True)]
-    
+
     if repeated_move_line_ids:
-        args.append(('id','not in',repeated_move_line_ids))
-           
+        args.append(('id', 'not in', repeated_move_line_ids))
+
     line_ids = line_obj.search(cr, uid, args,
         #order='date DESC, id DESC', #doesn't work
         context=context)
-        
+
     FORM.string = '''<?xml version="1.0"?>
 <form string="Import Entries">
     <field name="lines" colspan="4" height="300" width="800" nolabel="1"
@@ -99,7 +99,7 @@ def _search_invoices(obj, cr, uid, data, context):
 
 def _populate_statement(obj, cursor, user, data, context):
     line_ids = data['form']['lines'][0][2]
-    line_date=data['form']['date']
+    line_date = data['form']['date']
     if not line_ids:
         return {}
 
@@ -125,9 +125,9 @@ def _populate_statement(obj, cursor, user, data, context):
                 statement.currency.id, line.amount_currency, context=ctx)
         else:
             if line.debit > 0:
-                amount=line.debit
+                amount = line.debit
             elif line.credit > 0:
-                amount=-line.credit
+                amount = -line.credit
         reconcile_id = statement_reconcile_obj.create(cursor, user, {
             'line_ids': [(6, 0, [line.id])]
             }, context=context)
@@ -137,7 +137,7 @@ def _populate_statement(obj, cursor, user, data, context):
             type = 'supplier'
         else:
             type = 'general'
-        
+
         statement_line_obj.create(cursor, user, {
             'name': line.name or '?',
             'amount': amount,
@@ -150,8 +150,8 @@ def _populate_statement(obj, cursor, user, data, context):
             'date':line_date, #time.strftime('%Y-%m-%d'), #line.date_maturity or,
             }, context=context)
     return {}
-    
-    
+
+
 class PopulateStatementFromInv(wizard.interface):
     """
     Populate the current statement with selected invoices
@@ -176,8 +176,8 @@ class PopulateStatementFromInv(wizard.interface):
                 'arch': FORM,
                 'fields': FIELDS,
                 'state': [
-                    ('end', '_Cancel','', True),
-                    ('finish', 'O_k','', True)
+                    ('end', '_Cancel', '', True),
+                    ('finish', 'O_k', '', True)
                 ]
             },
         },

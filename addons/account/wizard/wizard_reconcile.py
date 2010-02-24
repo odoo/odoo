@@ -88,7 +88,7 @@ def _trans_rec_reconcile(self, cr, uid, data, context=None):
     return {}
 
 def _partial_check(self, cr, uid, data, context):
-    if _trans_rec_get(self,cr,uid, data, context)['writeoff'] == 0:
+    if _trans_rec_get(self, cr, uid, data, context)['writeoff'] == 0:
         return 'init_full'
     return 'init_partial'
 
@@ -106,8 +106,8 @@ _transaction_add_form = '''<?xml version="1.0"?>
 _transaction_add_fields = {
     'journal_id': {'string': 'Write-Off Journal', 'type': 'many2one', 'relation':'account.journal', 'required':True},
     'writeoff_acc_id': {'string':'Write-Off account', 'type':'many2one', 'relation':'account.account', 'required':True},
-    'date_p': {'string':'Date','type':'date'},
-    'comment': {'string':'Comment','type':'char', 'size': 64, 'required':True},
+    'date_p': {'string':'Date', 'type':'date'},
+    'comment': {'string':'Comment', 'type':'char', 'size': 64, 'required':True},
     'analytic_id': {'string':'Analytic Account', 'type': 'many2one', 'relation':'account.analytic.account'},
 }
 
@@ -124,15 +124,15 @@ class wiz_reconcile(wizard.interface):
         },
         'init_full': {
             'actions': [_trans_rec_get],
-            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('reconcile','Reconcile')]}
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end', 'Cancel'), ('reconcile', 'Reconcile')]}
         },
         'init_partial': {
             'actions': [_trans_rec_get],
-            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('addendum','Reconcile With Write-Off'),('partial','Partial Reconcile')]}
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end', 'Cancel'), ('addendum', 'Reconcile With Write-Off'), ('partial', 'Partial Reconcile')]}
         },
         'addendum': {
             'actions': [_trans_rec_addendum],
-            'result': {'type': 'form', 'arch':_transaction_add_form, 'fields':_transaction_add_fields, 'state':[('end','Cancel'),('reconcile','Reconcile')]}
+            'result': {'type': 'form', 'arch':_transaction_add_form, 'fields':_transaction_add_fields, 'state':[('end', 'Cancel'), ('reconcile', 'Reconcile')]}
         },
         'reconcile': {
             'actions': [_trans_rec_reconcile],

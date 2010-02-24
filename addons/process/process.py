@@ -25,36 +25,36 @@ import pooler, tools
 from osv import fields, osv
 
 class Env(dict):
-    
+
     def __init__(self, obj, user):
         self.__obj = obj
         self.__usr = user
-        
+
     def __getitem__(self, name):
-        
+
         if name in ('__obj', '__user'):
             return super(ExprContext, self).__getitem__(name)
-        
+
         if name == 'user':
             return self.__user
-        
+
         if name == 'object':
             return self.__obj
-        
+
         return self.__obj[name]
 
 class process_process(osv.osv):
     _name = "process.process"
     _description = "Process"
     _columns = {
-        'name': fields.char('Name', size=30,required=True, translate=True),
+        'name': fields.char('Name', size=30, required=True, translate=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the process without removing it."),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'note': fields.text('Notes', translate=True),
         'node_ids': fields.one2many('process.node', 'process_id', 'Nodes')
     }
     _defaults = {
-        'active' : lambda *a: True,
+        'active' : lambda * a: True,
     }
 
     def search_by_model(self, cr, uid, res_model, context):
@@ -85,7 +85,7 @@ class process_process(osv.osv):
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
 
         pool = pooler.get_pool(cr.dbname)
-        
+
         process = pool.get('process.process').browse(cr, uid, [id], context)[0]
 
         name = process.name
@@ -135,7 +135,7 @@ class process_process(osv.osv):
 
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
-            
+
             if node.model_id and node.model_id.model == res_model:
                 try:
                     data['active'] = eval(node.model_states, expr_context)
@@ -233,13 +233,13 @@ class process_process(osv.osv):
 
         # calculate graph layout
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
-        g.process(start)        
+        g.process(start)
         g.scale(*scale) #g.scale(100, 100, 180, 120)
         graph = g.result_get()
 
         # fix the height problem
         miny = -1
-        for k,v in nodes.items():
+        for k, v in nodes.items():
             x = graph[k]['x']
             y = graph[k]['y']
             if miny == -1:
@@ -296,11 +296,11 @@ process_process()
 
 class process_node(osv.osv):
     _name = 'process.node'
-    _description ='Process Nodes'
+    _description = 'Process Nodes'
     _columns = {
-        'name': fields.char('Name', size=30,required=True, translate=True),
+        'name': fields.char('Name', size=30, required=True, translate=True),
         'process_id': fields.many2one('process.process', 'Process', required=True, ondelete='cascade'),
-        'kind': fields.selection([('state','State'), ('subflow','Subflow')], 'Kind of Node', required=True),
+        'kind': fields.selection([('state', 'State'), ('subflow', 'Subflow')], 'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
         'note': fields.text('Notes', translate=True),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
@@ -313,9 +313,9 @@ class process_node(osv.osv):
         'help_url': fields.char('Help URL', size=255)
     }
     _defaults = {
-        'kind': lambda *args: 'state',
-        'model_states': lambda *args: False,
-        'flow_start': lambda *args: False,
+        'kind': lambda * args: 'state',
+        'model_states': lambda * args: False,
+        'flow_start': lambda * args: False,
     }
 
     def copy_data(self, cr, uid, id, default=None, context={}):
@@ -342,7 +342,7 @@ process_node_condition()
 
 class process_transition(osv.osv):
     _name = 'process.transition'
-    _description ='Process Transitions'
+    _description = 'Process Transitions'
     _columns = {
         'name': fields.char('Name', size=32, required=True, translate=True),
         'source_node_id': fields.many2one('process.node', 'Source Node', required=True, ondelete='cascade'),
@@ -356,23 +356,23 @@ process_transition()
 
 class process_transition_action(osv.osv):
     _name = 'process.transition.action'
-    _description ='Process Transitions Actions'
+    _description = 'Process Transitions Actions'
     _columns = {
         'name': fields.char('Name', size=32, required=True, translate=True),
-        'state': fields.selection([('dummy','Dummy'),
-                                   ('object','Object Method'),
-                                   ('workflow','Workflow Trigger'),
-                                   ('action','Action')], 'Type', required=True),
+        'state': fields.selection([('dummy', 'Dummy'),
+                                   ('object', 'Object Method'),
+                                   ('workflow', 'Workflow Trigger'),
+                                   ('action', 'Action')], 'Type', required=True),
         'action': fields.char('Action ID', size=64, states={
-            'dummy':[('readonly',1)],
-            'object':[('required',1)],
-            'workflow':[('required',1)],
-            'action':[('required',1)],
+            'dummy':[('readonly', 1)],
+            'object':[('required', 1)],
+            'workflow':[('required', 1)],
+            'action':[('required', 1)],
         },),
         'transition_id': fields.many2one('process.transition', 'Transition', required=True, ondelete='cascade')
     }
     _defaults = {
-        'state': lambda *args: 'dummy',
+        'state': lambda * args: 'dummy',
     }
 
     def copy_data(self, cr, uid, id, default=None, context={}):

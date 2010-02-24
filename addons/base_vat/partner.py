@@ -27,7 +27,7 @@ from tools.func import partial
 
 def mult_add(i, j):
     """Sum each digits of the multiplication of i and j."""
-    return reduce(lambda x, y: x + int(y), str(i*j), 0)
+    return reduce(lambda x, y: x + int(y), str(i * j), 0)
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
@@ -51,7 +51,7 @@ class res_partner(osv.osv):
     def __getattr__(self, attr):
         if not attr.startswith('check_vat_'):
             super(res_partner, self).__getattr__(attr)
-        
+
         def default_vat_check(self, cn, vn):
             # by default, a VAT number is valid if:
             #  it starts with 2 letters
@@ -114,7 +114,7 @@ class res_partner(osv.osv):
         '''
         Check Bulgaria VAT number.
         '''
-        if len(vat) not in [9,10]:
+        if len(vat) not in [9, 10]:
             return False
         try:
             int(vat)
@@ -969,10 +969,10 @@ class res_partner(osv.osv):
 
         if int(vat[9:11]) < 0:
             return False
-        
+
 #        if int(vat[-2:]) != 1:
 #            return False
-        
+
         sum = mult_add(2, int(vat[0])) + int(vat[1]) + \
                 mult_add(2, int(vat[2])) + int(vat[3]) + \
                 mult_add(2, int(vat[4])) + int(vat[5]) + \

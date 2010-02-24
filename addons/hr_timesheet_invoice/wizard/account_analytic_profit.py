@@ -24,7 +24,7 @@ import datetime
 import pooler
 from tools.translate import _
 
-form='''<?xml version="1.0"?>
+form = '''<?xml version="1.0"?>
 <form string="Choose">
     <field name="date_from"/>
     <field name="date_to"/>
@@ -35,10 +35,10 @@ form='''<?xml version="1.0"?>
 class wizard_report(wizard.interface):
     def _date_from(*a):
         return datetime.datetime.today().strftime('%Y-%m-1')
-    
+
     def _date_to(*a):
         return datetime.datetime.today().strftime('%Y-%m-%d')
-    
+
     def _check(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         line_obj = pool.get('account.analytic.line')
@@ -52,11 +52,11 @@ class wizard_report(wizard.interface):
                 ])
         if not ids:
             raise wizard.except_wizard(_('Data Insufficient!'), _('No Records Found for Report!'))
-        
-        return data['form']
-    
 
-    fields={
+        return data['form']
+
+
+    fields = {
         'date_from':{
             'string':'From',
             'type':'date',
@@ -83,7 +83,7 @@ class wizard_report(wizard.interface):
         },
     }
 
-    states={
+    states = {
         'init':{
             'actions':[],
             'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('report', 'Print')]}

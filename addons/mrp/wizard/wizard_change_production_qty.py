@@ -24,7 +24,7 @@ import wizard
 import ir
 import pooler
 from osv.osv import except_osv
-from osv import fields,osv
+from osv import fields, osv
 import netsvc
 from tools.translate import _
 
@@ -34,20 +34,20 @@ form1 = '''<?xml version="1.0"?>
     <field name="product_qty"/>
 </form>'''
 
-form1_fields={
+form1_fields = {
                 'product_qty': {'string': 'Product Qty', 'type':'float', 'required':True},
               }
 
-def _get_qty(self,cr,uid, data, state):
+def _get_qty(self, cr, uid, data, state):
     prod_obj = pooler.get_pool(cr.dbname).get('mrp.production')
-    prod = prod_obj.browse(cr, uid,data['ids'])[0]
-    form1_fields['product_qty']['default']=prod.product_qty
+    prod = prod_obj.browse(cr, uid, data['ids'])[0]
+    form1_fields['product_qty']['default'] = prod.product_qty
     return {}
 def _get_states(self, cr, uid, data, context):
     prod_obj = pooler.get_pool(cr.dbname).get('mrp.production')
-    prod = prod_obj.browse(cr, uid,data['ids'])[0]
+    prod = prod_obj.browse(cr, uid, data['ids'])[0]
     if prod.state in  ('cancel', 'done'):
-        raise wizard.except_wizard(_('Warning !'), _('The production is in "%s" state. You can not change the production quantity anymore') % (prod.state).upper() )
+        raise wizard.except_wizard(_('Warning !'), _('The production is in "%s" state. You can not change the production quantity anymore') % (prod.state).upper())
         return 'end'
     if prod.state in  ('draft'):
         #raise wizard.except_wizard('Warning !', 'The production is in "%s" state. You can change the production quantity directly...!!!' % (prod.state).upper() )
@@ -58,8 +58,8 @@ def _get_states(self, cr, uid, data, context):
 def _change_prod_qty(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     prod_obj = pool.get('mrp.production')
-    prod = prod_obj.browse(cr, uid,data['ids'])[0]
-    prod_obj.write(cr, uid,prod.id, {'product_qty' : data['form']['product_qty']})
+    prod = prod_obj.browse(cr, uid, data['ids'])[0]
+    prod_obj.write(cr, uid, prod.id, {'product_qty' : data['form']['product_qty']})
     prod_obj.action_compute(cr, uid, [prod.id])
 
     move_lines_obj = pool.get('stock.move')
@@ -79,13 +79,13 @@ def _change_prod_qty(self, cr, uid, data, context):
         factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
         res = pool.get('mrp.bom')._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
         for r in res[0]:
-            if r['product_id']== move.product_id.id:
-                move_lines_obj.write(cr, uid,move.id, {'product_qty' :  r['product_qty']})
+            if r['product_id'] == move.product_id.id:
+                move_lines_obj.write(cr, uid, move.id, {'product_qty' :  r['product_qty']})
 
     product_lines_obj = pool.get('mrp.production.product.line')
 
     for m in prod.move_created_ids:
-        move_lines_obj.write(cr, uid,m.id, {'product_qty' : data['form']['product_qty']})
+        move_lines_obj.write(cr, uid, m.id, {'product_qty' : data['form']['product_qty']})
 
     return {}
 
@@ -98,7 +98,7 @@ class change_production_qty(wizard.interface):
 
         'confirm' : {
             'actions' : [_get_qty],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state':[('end','Cancel'),('validate','Validate')]}
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state':[('end', 'Cancel'), ('validate', 'Validate')]}
         },
 
         'validate': {

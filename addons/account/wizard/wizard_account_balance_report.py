@@ -53,8 +53,8 @@ period_fields = {
     'state':{
         'string':"Date/Period Filter",
         'type':'selection',
-        'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'none'
+        'selection':[('bydate', 'By Date'), ('byperiod', 'By Period'), ('all', 'By Date and Period'), ('none', 'No Filter')],
+        'default': lambda * a:'none'
     },
     'fiscalyear': {
         'string':'Fiscal year',
@@ -63,9 +63,9 @@ period_fields = {
         'help':'Keep empty for all open fiscal year'
     },
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
-    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
-    'date_from': {'string':"Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
-    'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'display_account':{'string':"Display accounts ", 'type':'selection', 'selection':[('bal_mouvement', 'With movements'), ('bal_all', 'All'), ('bal_solde', 'With balance is not equal to 0')]},
+    'date_from': {'string':"Start date", 'type':'date', 'required':True , 'default': lambda * a: time.strftime('%Y-01-01')},
+    'date_to': {'string':"End date", 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
 }
 
 account_form = '''<?xml version="1.0"?>
@@ -74,7 +74,7 @@ account_form = '''<?xml version="1.0"?>
 </form>'''
 
 account_fields = {
-    'Account_list': {'string':'Account', 'type':'many2one', 'relation':'account.account', 'required':True ,'domain':[('parent_id','=',False)]},
+    'Account_list': {'string':'Account', 'type':'many2one', 'relation':'account.account', 'required':True , 'domain':[('parent_id', '=', False)]},
 }
 
 class wizard_report(wizard.interface):
@@ -112,29 +112,29 @@ class wizard_report(wizard.interface):
     def _check_date(self, cr, uid, data, context):
         sql = """
             SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql,(data['form']['date_from'],))
+        cr.execute(sql, (data['form']['date_from'],))
         res = cr.dictfetchall()
         if res:
             if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
-                raise  wizard.except_wizard(_('UserError'),_('Date to must be set between %s and %s') % (res[0]['date_start'], res[0]['date_stop']))
+                raise  wizard.except_wizard(_('UserError'), _('Date to must be set between %s and %s') % (res[0]['date_start'], res[0]['date_stop']))
             else:
                 return 'report'
         else:
-            raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
+            raise wizard.except_wizard(_('UserError'), _('Date not in a defined fiscal year'))
 
     states = {
 
         'init': {
             'actions': [],
-            'result': {'type':'choice','next_state':_check_path}
+            'result': {'type':'choice', 'next_state':_check_path}
         },
         'account_selection': {
             'actions': [],
-            'result': {'type':'form', 'arch':account_form,'fields':account_fields, 'state':[('end','Cancel','gtk-cancel'),('checktype','Next','gtk-go-forward')]}
+            'result': {'type':'form', 'arch':account_form, 'fields':account_fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('checktype', 'Next', 'gtk-go-forward')]}
         },
         'checktype': {
             'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
+            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('report', 'Print', 'gtk-print')]}
         },
         'report': {
             'actions': [_check_state],

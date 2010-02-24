@@ -39,53 +39,53 @@ def _to_unicode(s):
 
 class TxtIndex(indexer):
     def _getMimeTypes(self):
-        return ['text/plain','text/html','text/diff','text/xml', 'text/*', 
+        return ['text/plain', 'text/html', 'text/diff', 'text/xml', 'text/*',
         'application/xml']
-    
+
     def _getExtensions(self):
         return ['.txt', '.py']
 
-    def _doIndexContent(self,content):
+    def _doIndexContent(self, content):
         return content
-        
+
 cntIndex.register(TxtIndex())
 
 class DocIndex(indexer):
     def _getMimeTypes(self):
         return [ 'application/ms-word']
-    
+
     def _getExtensions(self):
         return ['.doc']
 
-    def _doIndexFile(self,fname):
-        fp = Popen(['antiword',fname], shell=False, stdout=PIPE).stdout
-        return _to_unicode( fp.read())
+    def _doIndexFile(self, fname):
+        fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
+        return _to_unicode(fp.read())
 
 cntIndex.register(DocIndex())
 
 class PdfIndex(indexer):
     def _getMimeTypes(self):
         return [ 'application/pdf']
-    
+
     def _getExtensions(self):
         return ['.pdf']
 
-    def _doIndexFile(self,fname):
+    def _doIndexFile(self, fname):
         fp = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', fname, '-'], shell=False, stdout=PIPE).stdout
-        return _to_unicode( fp.read())
+        return _to_unicode(fp.read())
 
 cntIndex.register(PdfIndex())
 
 class ImageNoIndex(indexer):
     def _getMimeTypes(self):
         return [ 'image/*']
-    
+
     def _getExtensions(self):
         #better return no extension, and let 'file' do its magic
         return []
         #return ['.png','.jpg','.gif','.jpeg','.bmp','.tiff']
 
-    def _doIndexContent(self,content):
+    def _doIndexContent(self, content):
         return 'image'
 
 

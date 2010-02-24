@@ -43,7 +43,7 @@ class wiz_journal_close(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('close','Close Period')]}
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end', 'Cancel'), ('close', 'Close Period')]}
         },
         'close': {
             'actions': [_data_save],

@@ -29,7 +29,7 @@ import os
 
 class document_configuration_wizard(osv.osv_memory):
 
-    _name='document.configuration.wizard'
+    _name = 'document.configuration.wizard'
     _description = 'Auto Directory configuration'
     _inherit = 'res.config'
     _rec_name = 'host'
@@ -57,9 +57,9 @@ class document_configuration_wizard(osv.osv_memory):
                 nbytes = 128 * 32
                 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 names = array('B', '\0' * nbytes)
-                outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
+                outbytes = unpack('iL', fcntl.ioctl(s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
                 namestr = names.tostring()
-                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
+                ifaces = [namestr[i:i + 32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
 
                 for ifname in [iface for iface in ifaces if iface != 'lo']:
                     ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
@@ -78,13 +78,13 @@ class document_configuration_wizard(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         conf = self.browse(cr, uid, ids[0], context)
-        obj=self.pool.get('document.directory')
-        objid=self.pool.get('ir.model.data')
+        obj = self.pool.get('document.directory')
+        objid = self.pool.get('ir.model.data')
 
         if self.pool.get('sale.order'):
             id = objid._get_id(cr, uid, 'document', 'dir_sale_order_all')
             id = objid.browse(cr, uid, id, context=context).res_id
-            mid = self.pool.get('ir.model').search(cr, uid, [('model','=','sale.order')])
+            mid = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'sale.order')])
             obj.write(cr, uid, [id], {
                 'type':'ressource',
                 'ressource_type_id': mid[0],
@@ -112,7 +112,7 @@ class document_configuration_wizard(osv.osv_memory):
         if self.pool.get('product.product'):
             id = objid._get_id(cr, uid, 'document', 'dir_product')
             id = objid.browse(cr, uid, id, context=context).res_id
-            mid = self.pool.get('ir.model').search(cr, uid, [('model','=','product.product')])
+            mid = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'product.product')])
             obj.write(cr, uid, [id], {
                 'type':'ressource',
                 'ressource_type_id': mid[0],
@@ -134,7 +134,7 @@ class document_configuration_wizard(osv.osv_memory):
         if self.pool.get('account.analytic.account'):
             id = objid._get_id(cr, uid, 'document', 'dir_project')
             id = objid.browse(cr, uid, id, context=context).res_id
-            mid = self.pool.get('ir.model').search(cr, uid, [('model','=','account.analytic.account')])
+            mid = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'account.analytic.account')])
             obj.write(cr, uid, [id], {
                 'type':'ressource',
                 'ressource_type_id': mid[0],
@@ -145,5 +145,5 @@ class document_configuration_wizard(osv.osv_memory):
         # Update the action for FTP browse.
         aid = objid._get_id(cr, uid, 'document_ftp', 'action_document_browse')
         aid = objid.browse(cr, uid, aid, context=context).res_id
-        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost')+':8021/'})
+        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://' + (conf.host or 'localhost') + ':8021/'})
 document_configuration_wizard()

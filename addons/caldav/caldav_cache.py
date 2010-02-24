@@ -10,8 +10,8 @@ def memoize(maxsize):
         def wrapper(*args):
             key = repr(args)
             # performance crap
-            _cache=cache
-            _heap=heap
+            _cache = cache
+            _heap = heap
             _heappop = heapq.heappop
             _heappush = heapq.heappush
             _time = time.time
@@ -20,13 +20,13 @@ def memoize(maxsize):
             if not _cache.has_key(key):
                 if _cursize == _maxsize:
                     # pop oldest element
-                    (_,oldkey) = _heappop(_heap)
+                    (_, oldkey) = _heappop(_heap)
                     _cache.pop(oldkey)
                 else:
                     _cursize += 1
                 # insert this element
                 _cache[key] = f(*args)
-                _heappush(_heap,(_time(),key))
+                _heappush(_heap, (_time(), key))
                 wrapper.misses += 1
             else:
                 wrapper.hits += 1
@@ -34,6 +34,6 @@ def memoize(maxsize):
         wrapper.__doc__ = f.__doc__
         wrapper.__name__ = f.__name__
         wrapper.hits = wrapper.misses = 0
-        return wrapper 
+        return wrapper
     return decorating_function
 

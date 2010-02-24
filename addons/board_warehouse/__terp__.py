@@ -32,7 +32,7 @@ This module implements a dashboard for warehouse that includes:
     * Graph : Number of Delivery products vs planned (bar graph on week par day)
     """,
     'author': 'Tiny',
-    'depends': ['board','mrp','stock' ],
+    'depends': ['board', 'mrp', 'stock' ],
     'update_xml': ['board_warehouse_view.xml'],
     'demo_xml': [],
     'installable': True,

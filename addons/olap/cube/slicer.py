@@ -31,7 +31,7 @@ class slicer(object):
 #   ]
 #
     def run(self, metadata):
-        print '*'*40
+        print '*' * 40
         print self.slicer
         result = []
         for slicer_line in self.slicer:

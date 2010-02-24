@@ -26,17 +26,17 @@ from mx import DateTime
 from tools import config
 
 class sale_order_line(osv.osv):
-    _name='sale.order.line'
-    _inherit='sale.order.line'
+    _name = 'sale.order.line'
+    _inherit = 'sale.order.line'
     _columns = {
-        'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
+        'analytics_id':fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
     def invoice_line_create(self, cr, uid, ids, context={}):
-        create_ids=super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
-        i=0
+        create_ids = super(sale_order_line, self).invoice_line_create(cr, uid, ids, context)
+        i = 0
         for line in self.browse(cr, uid, ids, context):
-            self.pool.get('account.invoice.line').write(cr,uid,[create_ids[i]],{'analytics_id':line.analytics_id.id})
-            i=i+1
+            self.pool.get('account.invoice.line').write(cr, uid, [create_ids[i]], {'analytics_id':line.analytics_id.id})
+            i = i + 1
         return create_ids
 sale_order_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

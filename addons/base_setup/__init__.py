@@ -42,9 +42,9 @@ class base_setup_config_choice(osv.osv_memory):
     def get_default_menu(self, cr, uid, context=None):
         actions = self.pool.get('ir.actions.act_window')
 
-        current_menu_id = actions.search(cr, uid, [('name','=','Menu')],
+        current_menu_id = actions.search(cr, uid, [('name', '=', 'Menu')],
                                          context=context)
-        assert len(current_menu_id) == 1,\
+        assert len(current_menu_id) == 1, \
                'A given user should only have one menu item'
         return actions.browse(cr, uid, current_menu_id[0], context=context)
 

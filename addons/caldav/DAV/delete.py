@@ -32,15 +32,15 @@ from davcmd import deltree
 
 class DELETE:
 
-    def __init__(self,uri,dataclass):
-        self.__dataclass=dataclass
-        self.__uri=uri
+    def __init__(self, uri, dataclass):
+        self.__dataclass = dataclass
+        self.__uri = uri
 
     def delcol(self):
         """ delete a collection """
 
-        dc=self.__dataclass
-        result=dc.deltree(self.__uri)
+        dc = self.__dataclass
+        result = dc.deltree(self.__uri)
 
         if not len(result.items()):
             return None # everything ok
@@ -51,9 +51,9 @@ class DELETE:
     def delone(self):
         """ delete a resource """
 
-        dc=self.__dataclass
-        result=dc.delone(self.__uri)
-        
+        dc = self.__dataclass
+        result = dc.delone(self.__uri)
+
         if not result: return None
         if not len(result.items()):
             return None # everything ok

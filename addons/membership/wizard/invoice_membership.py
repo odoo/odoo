@@ -32,7 +32,7 @@ def _invoice_membership(self, cr, uid, data, context):
     cr.execute('''
             SELECT partner_id, id, type
             FROM res_partner_address
-            WHERE partner_id =ANY(%s)''',(partner_ids,))
+            WHERE partner_id =ANY(%s)''', (partner_ids,))
     fetchal = cr.fetchall()
     if not fetchal:
         raise wizard.except_wizard(_('Error !'), _('No Address defined for this partner'))
@@ -45,7 +45,7 @@ def _invoice_membership(self, cr, uid, data, context):
             continue
         partner_address_ids[pid] = {'id': id, 'type': type}
 
-    invoice_list= []
+    invoice_list = []
     invoice_obj = pool.get('account.invoice')
     partner_obj = pool.get('res.partner')
     product_obj = pool.get('product.product')
@@ -57,7 +57,7 @@ def _invoice_membership(self, cr, uid, data, context):
         account_id = partner_obj.read(cr, uid, partner_id, ['property_account_receivable'])['property_account_receivable'][0]
         read_fpos = partner_obj.read(cr, uid, partner_id, ['property_account_position'])
         fpos_id = read_fpos['property_account_position'] and read_fpos['property_account_position'][0]
-        line_value =  {
+        line_value = {
             'product_id' : product_id,
             }
         quantity = 1
@@ -75,7 +75,7 @@ def _invoice_membership(self, cr, uid, data, context):
         )
         line_value['invoice_id'] = invoice_id
         invoice_line_id = invoice_line_obj.create(cr, uid, line_value, context)
-        invoice_obj.write(cr, uid, invoice_id, {'invoice_line':[(6,0,[invoice_line_id])]})
+        invoice_obj.write(cr, uid, invoice_id, {'invoice_line':[(6, 0, [invoice_line_id])]})
         invoice_list.append(invoice_id)
         if line_value['invoice_line_tax_id']:
             tax_value = invoice_tax_obj.compute(cr, uid, invoice_id).values()
@@ -94,7 +94,7 @@ def _invoice_membership(self, cr, uid, data, context):
         }
     return value
 
-wizard_arch= """<?xml version="1.0"?>
+wizard_arch = """<?xml version="1.0"?>
 <form string="Choose invoice details">
     <field
         name="product"
@@ -119,7 +119,7 @@ class wizard_invoice_membership(wizard.interface):
                             'required': True
                         },
                 },
-                'state' : [('end', 'Cancel'),('ok', 'Confirm') ]}
+                'state' : [('end', 'Cancel'), ('ok', 'Confirm') ]}
         },
         'ok' : {
             'actions' : [],

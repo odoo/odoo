@@ -24,7 +24,7 @@ import netsvc
 import time
 from tools.translate import _
 
-si_so_form ='''<?xml version="1.0"?> 
+si_so_form = '''<?xml version="1.0"?> 
 <form string="Sign in / Sign out">
     <separator string="You are now ready to sign in or out of the attendance follow up" colspan="4" />
     <field name="name" readonly="True" />
@@ -43,7 +43,7 @@ si_form = '''<?xml version="1.0" ?>
 </form>'''
 
 si_fields = {
-    'success' : {'string' : "Sign in's status", 'type' : 'char', 'required' : True, 'readonly' : True}, 
+    'success' : {'string' : "Sign in's status", 'type' : 'char', 'required' : True, 'readonly' : True},
 }
 
 so_form = '''<?xml version="1.0" ?>
@@ -53,7 +53,7 @@ so_form = '''<?xml version="1.0" ?>
 </for>'''
 
 so_fields = {
-    'success' : {'string' : "Sign out's status", 'type' : 'char', 'required' : True, 'readonly' : True}, 
+    'success' : {'string' : "Sign out's status", 'type' : 'char', 'required' : True, 'readonly' : True},
 }
 
 def _get_empid(self, cr, uid, data, context):
@@ -72,7 +72,7 @@ def _sign_in(self, cr, uid, data, context):
             raise wizard.except_wizard(_('UserError'), _('The sign-out date must be in the past'))
             return {'success': False}
         service.execute(cr.dbname, uid, 'hr.attendance', 'create', {
-            'name': data['form']['last_time'], 
+            'name': data['form']['last_time'],
             'action': 'sign_out',
             'employee_id': emp_id
         })
@@ -89,7 +89,7 @@ def _sign_out(self, cr, uid, data, context):
         if data['form']['last_time'] > time.strftime('%Y-%m-%d %H:%M:%S'):
             raise wizard.except_wizard(_('UserError'), _('The Sign-in date must be in the past'))
             return {'success': False}
-        service.execute(cr.dbname, uid, 'hr.attendance', 'create', {'name':data['form']['last_time'], 'action':'sign_in',  'employee_id':emp_id})
+        service.execute(cr.dbname, uid, 'hr.attendance', 'create', {'name':data['form']['last_time'], 'action':'sign_in', 'employee_id':emp_id})
     try:
         success = service.execute(cr.dbname, uid, 'hr.employee', 'attendance_action_change', [emp_id], 'sign_out')
     except:
@@ -97,7 +97,7 @@ def _sign_out(self, cr, uid, data, context):
 
     return {'success' : success}
 
-so_ask_form ='''<?xml version="1.0"?> 
+so_ask_form = '''<?xml version="1.0"?> 
 <form string="Sign in / Sign out">
     <separator string="You did not sign out the last time. Please enter the date and time you signed out." colspan="4" />
     <field name="name" readonly="True" />
@@ -120,7 +120,7 @@ def _si_check(self, cr, uid, data, context):
     cond = not last_att or last_att['action'] == 'sign_out'
     return states[cond]
 
-si_ask_form ='''<?xml version="1.0"?> 
+si_ask_form = '''<?xml version="1.0"?> 
 <form string="Sign in / Sign out">
     <separator string="You did not sign in the last time. Please enter the date and time you signed in." colspan="4" />
     <field name="name" readonly="True" />
@@ -141,7 +141,7 @@ def _so_check(self, cr, uid, data, context):
     states = {True : 'so', False: 'so_ask_si'}
     service = netsvc.LocalService('object_proxy')
     emp_id = data['form']['emp_id']
-    att_id = service.execute(cr.dbname, uid, 'hr.attendance', 'search', [('employee_id', '=', emp_id),('action','!=','action')], limit=1, order='name desc')
+    att_id = service.execute(cr.dbname, uid, 'hr.attendance', 'search', [('employee_id', '=', emp_id), ('action', '!=', 'action')], limit=1, order='name desc')
     last_att = service.execute(cr.dbname, uid, 'hr.attendance', 'read', att_id)
     if last_att:
         last_att = last_att[0]
@@ -155,7 +155,7 @@ class wiz_si_so(wizard.interface):
     states = {
            'init' : {
                'actions' : [_get_empid],
-               'result' : {'type' : 'form', 'arch' : si_so_form, 'fields' : si_so_fields, 'state' : [('end', 'Cancel'),('si_test', 'Sign in'),('so_test', 'Sign out')] }
+               'result' : {'type' : 'form', 'arch' : si_so_form, 'fields' : si_so_fields, 'state' : [('end', 'Cancel'), ('si_test', 'Sign in'), ('so_test', 'Sign out')] }
             },
             'si_test' : {
                 'actions' : [],
@@ -163,7 +163,7 @@ class wiz_si_so(wizard.interface):
             },
             'si_ask_so' : {
                 'actions' : [],
-                'result' : {'type' : 'form', 'arch' : so_ask_form, 'fields' : so_ask_fields, 'state' : [('end', 'Cancel'),('si', 'Sign in') ] }
+                'result' : {'type' : 'form', 'arch' : so_ask_form, 'fields' : so_ask_fields, 'state' : [('end', 'Cancel'), ('si', 'Sign in') ] }
             },
             'si' : {
                 'actions' : [_sign_in],
@@ -175,7 +175,7 @@ class wiz_si_so(wizard.interface):
             },
             'so_ask_si' : {
                 'actions' : [],
-                'result' : {'type' : 'form', 'arch' : si_ask_form, 'fields' : si_ask_fields, 'state' : [('end', 'Cancel'),('so', 'Sign out')] }
+                'result' : {'type' : 'form', 'arch' : si_ask_form, 'fields' : si_ask_fields, 'state' : [('end', 'Cancel'), ('so', 'Sign out')] }
             },
             'so' : {
                 'actions' : [_sign_out],
@@ -184,7 +184,7 @@ class wiz_si_so(wizard.interface):
             'so_wo_si' : {
                 'actions' : [],
                 'result' : {'type' : 'form', 'arch' : so_wo_si_form, 'fields' : {}, 'state' : [('end', 'Ok')] }
-            },            
+            },
     }
 wiz_si_so('hr.si_so')
 

@@ -53,7 +53,7 @@ class save_report(wizard.interface):
     states = {
         'init': {
             'actions': [get_detail],
-            'result': {'type': 'form', 'arch': form_rep, 'fields':fields_rep, 'state': [('end','Cancel')]}
+            'result': {'type': 'form', 'arch': form_rep, 'fields':fields_rep, 'state': [('end', 'Cancel')]}
         },
     }
 save_report('quality_detail_save')

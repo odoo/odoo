@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class report_sale_journal_sale(osv.osv):
@@ -27,24 +27,24 @@ class report_sale_journal_sale(osv.osv):
     _description = "Sales Orders by Journal"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'state': fields.selection([
-            ('draft','Quotation'),
-            ('waiting_date','Waiting Schedule'),
-            ('manual','Manual in progress'),
-            ('progress','In progress'),
-            ('shipping_except','Shipping Exception'),
-            ('invoice_except','Invoice Exception'),
-            ('done','Done'),
-            ('cancel','Cancel')
+            ('draft', 'Quotation'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('manual', 'Manual in progress'),
+            ('progress', 'In progress'),
+            ('shipping_except', 'Shipping Exception'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+            ('cancel', 'Cancel')
         ], 'Order State', readonly=True),
         'journal_id':fields.many2one('sale_journal.sale.journal', 'Journal', readonly=True),
         'quantity': fields.float('Quantities', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
         'count': fields.integer('# of Lines', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'journal_id,name desc,price_total desc'
     def init(self, cr):

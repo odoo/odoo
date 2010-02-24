@@ -69,9 +69,9 @@ def _catalog_send(uname, passwd, did, catalog):
                 L.append('Content-Disposition: form-data; name="%s"' % key)
                 L.append('')
                 L.append(value)
-            for (key,value) in files:
+            for (key, value) in files:
                 L.append('--' + BOUNDARY)
-                L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, key+'.pickle'))
+                L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, key + '.pickle'))
                 L.append('Content-Type: application/octet-stream')
                 L.append('')
                 L.append(value)
@@ -85,14 +85,14 @@ def _catalog_send(uname, passwd, did, catalog):
 
         headers = {"Content-type": content_type, "Accept": "*/*"}
         conn = httplib.HTTPConnection(host)
-        conn.request("POST", '/bin/catalog_result.cgi', body, headers = headers)
+        conn.request("POST", '/bin/catalog_result.cgi', body, headers=headers)
         response = conn.getresponse()
         val = response.status
         conn.close()
         return val
-    return post_multipart('auction-in-europe.com', "/bin/catalog_result.cgi", (('uname',uname),('password',passwd),('did',did)),(('file',catalog),))
+    return post_multipart('auction-in-europe.com', "/bin/catalog_result.cgi", (('uname', uname), ('password', passwd), ('did', did)), (('file', catalog),))
 
-def _get_dates(self,cr,uid, datas, context):
+def _get_dates(self, cr, uid, datas, context):
     global send_fields
     import httplib
     conn = httplib.HTTPConnection('www.auction-in-europe.com')
@@ -107,23 +107,23 @@ def _get_dates(self,cr,uid, datas, context):
                                    _("Connection to WWW.Auction-in-Europe.com failed !"))
     return {'objects':len(datas['ids'])}
 
-def _send(self,cr,uid, datas, context):
+def _send(self, cr, uid, datas, context):
     import pickle
     service = netsvc.LocalService("object_proxy")
-    lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', datas['ids'],  ['obj_num','obj_price'])
+    lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', datas['ids'], ['obj_num', 'obj_price'])
     args = pickle.dumps(lots)
-    _catalog_send(datas['form']['uname'],datas['form']['password'], datas['form']['dates'], args)
+    _catalog_send(datas['form']['uname'], datas['form']['password'], datas['form']['dates'], args)
     return {}
 
 class wiz_auc_lots_pay(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':login_form, 'fields': login_fields, 'state':[('date_ask','Continue'),('end','Cancel')]}
+            'result': {'type': 'form', 'arch':login_form, 'fields': login_fields, 'state':[('date_ask', 'Continue'), ('end', 'Cancel')]}
         },
         'date_ask': {
             'actions': [_get_dates],
-            'result': {'type': 'form', 'arch':send_form, 'fields': send_fields, 'state':[('send','Send on your website'),('end','Cancel')]}
+            'result': {'type': 'form', 'arch':send_form, 'fields': send_fields, 'state':[('send', 'Send on your website'), ('end', 'Cancel')]}
         },
         'send': {
             'actions': [_send],

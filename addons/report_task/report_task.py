@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import mx.DateTime
 
 class  report_task_user_pipeline_open (osv.osv):
@@ -27,15 +27,15 @@ class  report_task_user_pipeline_open (osv.osv):
     _description = "Tasks by user and project"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'task_nbr': fields.float('Task Number', readonly=True),
         'task_hrs': fields.float('Task Hours', readonly=True),
         'task_progress': fields.float('Task Progress', readonly=True),
         'company_id' : fields.many2one('res.company', 'Company'),
-        'task_state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done'),('no','No Task')], 'Status', readonly=True),
+        'task_state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done'), ('no', 'No Task')], 'Status', readonly=True),
     }
 
     def init(self, cr):
@@ -76,8 +76,8 @@ class  report_closed_task(osv.osv):
         'planned_hours': fields.float('Planned Hours', readonly=True),
         'delay_hours': fields.float('Delay Hours', readonly=True),
         'progress': fields.float('Progress (%)', readonly=True),
-        'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance', readonly=True),
-        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True),
+        'priority' : fields.selection([('4', 'Very Low'), ('3', 'Low'), ('2', 'Medium'), ('1', 'Urgent'), ('0', 'Very urgent')], 'Importance', readonly=True),
+        'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True),
         'remaining_hours': fields.float('Remaining Hours', readonly=True),
         'date_end' : fields.datetime('Date Closed', readonly=True)
     }
@@ -105,27 +105,27 @@ class report_timesheet_task_user(osv.osv):
     _auto = False
     _order = "name"
 
-    def _get_task_hours(self, cr, uid, ids, name,args,context):
+    def _get_task_hours(self, cr, uid, ids, name, args, context):
         result = {}
-        for record in self.browse(cr, uid, ids,context):
+        for record in self.browse(cr, uid, ids, context):
             last_date = mx.DateTime.strptime(record.name, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
-            task_obj=self.pool.get('project.task.work')
-            task_ids = task_obj.search(cr,uid,[('user_id','=',record.user_id.id),('date','>=',record.name),('date','<=',last_date.strftime('%Y-%m-%d'))])
-            tsk_hrs = task_obj.read(cr,uid,task_ids,['hours','date','user_id'])
+            task_obj = self.pool.get('project.task.work')
+            task_ids = task_obj.search(cr, uid, [('user_id', '=', record.user_id.id), ('date', '>=', record.name), ('date', '<=', last_date.strftime('%Y-%m-%d'))])
+            tsk_hrs = task_obj.read(cr, uid, task_ids, ['hours', 'date', 'user_id'])
             total = 0.0
             for hrs in tsk_hrs:
                 total += hrs['hours']
             result[record.id] = total
         return result
 
-    def get_hrs_timesheet(self, cr, uid, ids, name,args,context):
+    def get_hrs_timesheet(self, cr, uid, ids, name, args, context):
         result = {}
         sum = 0.0
         for record in self.browse(cr, uid, ids, context):
             last_date = mx.DateTime.strptime(record.name, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
-            obj=self.pool.get('hr_timesheet_sheet.sheet.day')
-            sheet_ids = obj.search(cr,uid,[('sheet_id.user_id','=',record.user_id.id),('name','>=',record.name),('name','<=',last_date.strftime('%Y-%m-%d'))])
-            data_days = obj.read(cr,uid,sheet_ids,['name','sheet_id.user_id','total_attendance'])
+            obj = self.pool.get('hr_timesheet_sheet.sheet.day')
+            sheet_ids = obj.search(cr, uid, [('sheet_id.user_id', '=', record.user_id.id), ('name', '>=', record.name), ('name', '<=', last_date.strftime('%Y-%m-%d'))])
+            data_days = obj.read(cr, uid, sheet_ids, ['name', 'sheet_id.user_id', 'total_attendance'])
             total = 0.0
             for day_attendance in data_days:
                 total += day_attendance['total_attendance']
@@ -133,8 +133,8 @@ class report_timesheet_task_user(osv.osv):
         return result
 
     _columns = {
-        'name': fields.date('Month',readonly=True),
-        'user_id': fields.many2one('res.users', 'User',readonly=True),
+        'name': fields.date('Month', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
         'timesheet_hrs': fields.function(get_hrs_timesheet, method=True, string="Timesheet Hours"),
         'task_hrs': fields.function(_get_task_hours, method=True, string="Task Hours"),
       }

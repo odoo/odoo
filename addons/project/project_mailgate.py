@@ -29,55 +29,55 @@ import base64
 from tools.translate import _
 
 import tools
-from osv import fields,osv,orm
+from osv import fields, osv, orm
 from osv.orm import except_orm
 
 class project_tasks(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
 
-    def msg_new(self, cr, uid, msg):        
+    def msg_new(self, cr, uid, msg):
         mailgate_obj = self.pool.get('mail.gateway')
         msg_body = mailgate_obj.msg_body_get(msg)
-        data = {      
-            'name': msg['Subject'],                  
+        data = {
+            'name': msg['Subject'],
             'description': msg_body['body'],
             'planned_hours' : 0.0,
             'project_id': 1, #TODO : get project id from message
-        }    
+        }
         res = mailgate_obj.partner_get(cr, uid, msg['From'])
         if res:
-            data.update(res)    
-        res = self.create(cr, uid, data)               
+            data.update(res)
+        res = self.create(cr, uid, data)
         return res
-    
-    def msg_update(self, cr, uid, id, msg, data={}, default_act='pending'): 
+
+    def msg_update(self, cr, uid, id, msg, data={}, default_act='pending'):
         mailgate_obj = self.pool.get('mail.gateway')
-        msg_actions, body_data = mailgate_obj.msg_act_get(msg)           
+        msg_actions, body_data = mailgate_obj.msg_act_get(msg)
         data.update({
-            'description': body_data,            
+            'description': body_data,
         })
-        act = 'do_'+default_act
+        act = 'do_' + default_act
         if 'state' in msg_actions:
-            if msg_actions['state'] in ['draft','close','cancel','open','pending']:
+            if msg_actions['state'] in ['draft', 'close', 'cancel', 'open', 'pending']:
                 act = 'do_' + msg_actions['state']
-        
-        for k1,k2 in [('cost','planned_hours')]:
+
+        for k1, k2 in [('cost', 'planned_hours')]:
             try:
                 data[k2] = float(msg_actions[k1])
             except:
                 pass
 
         if 'priority' in msg_actions:
-            if msg_actions['priority'] in ('1','2','3','4','5'):
+            if msg_actions['priority'] in ('1', '2', '3', '4', '5'):
                 data['priority'] = msg_actions['priority']
-        
+
 
         self.write(cr, uid, [id], data)
-        getattr(self,act)(cr, uid, [id])
+        getattr(self, act)(cr, uid, [id])
         return True
 
-    def emails_get(self, cr, uid, ids, context={}):                
+    def emails_get(self, cr, uid, ids, context={}):
         res = []
         if isinstance(ids, (str, int, long)):
             select = [ids]
@@ -91,6 +91,6 @@ class project_tasks(osv.osv):
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):
-        return True 
+        return True
 
 project_tasks()

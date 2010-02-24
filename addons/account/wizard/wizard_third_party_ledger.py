@@ -60,26 +60,26 @@ period_fields = {
     'state':{
         'string':"Date/Period Filter",
         'type':'selection',
-        'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'none'
+        'selection':[('bydate', 'By Date'), ('byperiod', 'By Period'), ('all', 'By Date and Period'), ('none', 'No Filter')],
+        'default': lambda * a:'none'
     },
     'fiscalyear': {
         'string':'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
         'help': 'Keep empty for all open fiscal year',
-        'default': lambda *a:False,
+        'default': lambda * a:False,
     },
-    'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty','states':{'none':[('readonly',True)],'bydate':[('readonly',True)]}},
+    'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty', 'states':{'none':[('readonly', True)], 'bydate':[('readonly', True)]}},
     'result_selection':{
         'string':"Partner",
         'type':'selection',
-        'selection':[('customer','Receivable Accounts'),('supplier','Payable Accounts'),('all','Receivable and Payable Accounts')],
+        'selection':[('customer', 'Receivable Accounts'), ('supplier', 'Payable Accounts'), ('all', 'Receivable and Payable Accounts')],
         'required':True
     },
-    'soldeinit':{'string':"Include initial balances",'type':'boolean'},
-    'reconcil':{'string':"       Include Reconciled Entries",'type':'boolean'},
-    'page_split':{'string':"One Partner Per Page",'type':'boolean'},
-    'date1': {'string':'        Start date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-    'date2': {'string':'End date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'soldeinit':{'string':"Include initial balances", 'type':'boolean'},
+    'reconcil':{'string':"       Include Reconciled Entries", 'type':'boolean'},
+    'page_split':{'string':"One Partner Per Page", 'type':'boolean'},
+    'date1': {'string':'        Start date', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-01-01')},
+    'date2': {'string':'End date', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
 }
 
 
@@ -88,7 +88,7 @@ class wizard_report(wizard.interface):
     def _get_defaults(self, cr, uid, data, context):
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
-        data['form']['display_account']='bal_all'
+        data['form']['display_account'] = 'bal_all'
         data['form']['result_selection'] = 'all'
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
@@ -96,9 +96,9 @@ class wizard_report(wizard.interface):
         else:
             company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
         data['form']['company_id'] = company_id
-        periods_obj=pooler.get_pool(cr.dbname).get('account.period')
-        data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
-        data['form']['fiscalyear'] =False
+        periods_obj = pooler.get_pool(cr.dbname).get('account.period')
+        data['form']['periods'] = periods_obj.search(cr, uid, [('fiscalyear_id', '=', data['form']['fiscalyear'])])
+        data['form']['fiscalyear'] = False
         data['form']['page_split'] = False
         data['form']['reconcil'] = False
         data['form']['soldeinit'] = True
@@ -114,15 +114,15 @@ class wizard_report(wizard.interface):
 
         sql = """
             SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql,(data['form']['date1']))
+        cr.execute(sql, (data['form']['date1']))
         res = cr.dictfetchall()
         if res:
             if (data['form']['date2'] > res[0]['date_stop'] or data['form']['date2'] < res[0]['date_start']):
-                raise  wizard.except_wizard(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']) , str(res[0]['date_stop'])))
+                raise  wizard.except_wizard(_('UserError'), _('Date to must be set between %s and %s') % (str(res[0]['date_start']) , str(res[0]['date_stop'])))
             else:
                 return 'report'
         else:
-            raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
+            raise wizard.except_wizard(_('UserError'), _('Date not in a defined fiscal year'))
 
     def _check_state(self, cr, uid, data, context):
         if data['form']['state'] == 'bydate' or data['form']['state'] == 'all':
@@ -130,7 +130,7 @@ class wizard_report(wizard.interface):
         else :
            data['form']['fiscalyear'] = True
            self._check_date(cr, uid, data, context)
-        acc_id = pooler.get_pool(cr.dbname).get('account.invoice').search(cr, uid, [('state','=','open')])
+        acc_id = pooler.get_pool(cr.dbname).get('account.invoice').search(cr, uid, [('state', '=', 'open')])
         if not acc_id:
                 raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))
         return data['form']
@@ -139,11 +139,11 @@ class wizard_report(wizard.interface):
     states = {
         'init': {
             'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel','gtk-cancel'),('checkreport','Print','gtk-print')]}
+            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('checkreport', 'Print', 'gtk-print')]}
         },
         'checkreport': {
             'actions': [],
-            'result': {'type':'choice','next_state':_check}
+            'result': {'type':'choice', 'next_state':_check}
         },
         'report': {
             'actions': [_check_state],

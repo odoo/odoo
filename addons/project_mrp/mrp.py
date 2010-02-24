@@ -25,11 +25,11 @@ import tools
 class mrp_procurement(osv.osv):
     _name = "mrp.procurement"
     _inherit = "mrp.procurement"
-    
+
     def action_produce_assign_service(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
             sline = self.pool.get('sale.order.line')
-            sale_ids = sline.search(cr, uid, [('procurement_id','=',procurement.id)], context)
+            sale_ids = sline.search(cr, uid, [('procurement_id', '=', procurement.id)], context)
             content = ''
             l = None
             project_id = None
@@ -37,24 +37,24 @@ class mrp_procurement(osv.osv):
                 content += (line.notes or '')
                 l = line
                 if line.order_id.project_id:
-                    content+="\n\n"+line.order_id.project_id.complete_name
-            
+                    content += "\n\n" + line.order_id.project_id.complete_name
+
             # Creating a project for task.Project is created from Procurement.
             proj_name = tools.ustr(procurement.name)
-            proj_exist_id = self.pool.get('project.project').search(cr, uid, [('name','=',proj_name)], context=context)
+            proj_exist_id = self.pool.get('project.project').search(cr, uid, [('name', '=', proj_name)], context=context)
             if  not proj_exist_id:
                 project_id = self.pool.get('project.project').create(cr, uid, {'name':proj_name})
             else:
                 project_id = proj_exist_id[0]
-                
+
             self.write(cr, uid, [procurement.id], {'state':'running'})
             task_id = self.pool.get('project.task').create(cr, uid, {
-                'name': '%s:%s' %(procurement.product_id.name or procurement.origin, procurement.name or ''),
+                'name': '%s:%s' % (procurement.product_id.name or procurement.origin, procurement.name or ''),
                 'date_deadline': procurement.date_planned,
                 'planned_hours': procurement.product_qty,
                 'remaining_hours': procurement.product_qty,
                 'user_id': procurement.product_id.product_manager.id,
-                'notes': "b"+(l and l.order_id.note or ''),
+                'notes': "b" + (l and l.order_id.note or ''),
                 'procurement_id': procurement.id,
                 'description': content,
                 'date_deadline': procurement.date_planned,
@@ -62,7 +62,7 @@ class mrp_procurement(osv.osv):
                 'partner_id': l and l.order_id.partner_id.id or False,
                 'company_id': procurement.company_id.id,
                 'project_id': project_id,
-            },context=context)
+            }, context=context)
         return task_id
 mrp_procurement()
 

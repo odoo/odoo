@@ -24,19 +24,19 @@ import pooler
 import time
 
 def _action_open_window(self, cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname) 
-    mod_obj = pool.get('ir.model.data') 
+    pool = pooler.get_pool(cr.dbname)
+    mod_obj = pool.get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')
-    id = mod_obj.read(cr, uid, result, ['res_id'])          
+    id = mod_obj.read(cr, uid, result, ['res_id'])
     return {
         'name': False,
         'view_type': 'form',
         "view_mode": 'tree,form',
         'res_model': 'product.product',
         'type': 'ir.actions.act_window',
-        'context':{'location': data['ids'][0],'from_date':data['form']['from_date'],'to_date':data['form']['to_date']},
-        'domain':[('type','<>','service')],
-        'search_view_id': id['res_id'] 
+        'context':{'location': data['ids'][0], 'from_date':data['form']['from_date'], 'to_date':data['form']['to_date']},
+        'domain':[('type', '<>', 'service')],
+        'search_view_id': id['res_id']
     }
 
 
@@ -65,7 +65,7 @@ class product_by_location(wizard.interface):
     states = {
       'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Products','gtk-ok')]}
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('open', 'Open Products', 'gtk-ok')]}
         },
     'open': {
             'actions': [],

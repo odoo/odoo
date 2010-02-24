@@ -24,7 +24,7 @@ import pooler
 
 
 class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
-    _name='profile.manufacturing.config.install_modules_wizard'
+    _name = 'profile.manufacturing.config.install_modules_wizard'
     _inherit = 'res.config.installer'
 
     _columns = {
@@ -73,7 +73,7 @@ class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
          'warning': fields.boolean('Warning',
             help="Makes you able to set warnings on products and partners."),
         'board_document':fields.boolean('Document Management',
-            help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
+            help="The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
         'mrp_repair': fields.boolean('Repair',
             help="Allows to manage product repairs. Handle the guarantee limit date and the invoicing of products and services."),
 

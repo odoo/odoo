@@ -41,7 +41,7 @@ class external_pdf(render):
     def __init__(self, pdf):
         render.__init__(self)
         self.pdf = pdf
-        self.output_type='pdf'
+        self.output_type = 'pdf'
 
     def _render(self):
         return self.pdf
@@ -52,28 +52,28 @@ class report_custom(report_int):
             stop = start
         if time_unit == 'month':
             dates = {}
-            a = Date(*map(int, start.split("-"))).year*12+Date(*map(int, start.split("-"))).month
-            z = Date(*map(int,  stop.split("-"))).year*12+Date(*map(int,  stop.split("-"))).month+1
-            for i in range(a,z):
-                year = i/12
-                month = i%12
+            a = Date(*map(int, start.split("-"))).year * 12 + Date(*map(int, start.split("-"))).month
+            z = Date(*map(int, stop.split("-"))).year * 12 + Date(*map(int, stop.split("-"))).month + 1
+            for i in range(a, z):
+                year = i / 12
+                month = i % 12
                 if month == 0:
                     year -= 1
                     month = 12
-                months = {1:"January",2:"February",3:"March",4:"April",5:"May",6:"June",7:"July",8:"August",9:"September",10:"October",11:"November",12:"December"}
+                months = {1:"January", 2:"February", 3:"March", 4:"April", 5:"May", 6:"June", 7:"July", 8:"August", 9:"September", 10:"October", 11:"November", 12:"December"}
                 dates[i] = {
                     'name' :months[month],
                     'start':(Date(year, month, 2) + RelativeDateTime(day=1)).strftime('%Y-%m-%d'),
-                    'stop' :(Date(year, month, 2) + RelativeDateTime(day=-1)).strftime('%Y-%m-%d'),
+                    'stop' :(Date(year, month, 2) + RelativeDateTime(day= -1)).strftime('%Y-%m-%d'),
                 }
             return dates
         elif time_unit == 'week':
             dates = {}
-            a = Date(*map(int, start.split("-"))).iso_week[0]*52+Date(*map(int, start.split("-"))).iso_week[1]
-            z = Date(*map(int,  stop.split("-"))).iso_week[0]*52+Date(*map(int,  stop.split("-"))).iso_week[1]
-            for i in range(a,z+1):
-                year = i/52
-                week = i%52
+            a = Date(*map(int, start.split("-"))).iso_week[0] * 52 + Date(*map(int, start.split("-"))).iso_week[1]
+            z = Date(*map(int, stop.split("-"))).iso_week[0] * 52 + Date(*map(int, stop.split("-"))).iso_week[1]
+            for i in range(a, z + 1):
+                year = i / 52
+                week = i % 52
                 dates[i] = {
                     'name' :"Week #%d" % week,
                     'start':ISO.WeekTime(year, week, 1).strftime('%Y-%m-%d'),
@@ -86,12 +86,12 @@ class report_custom(report_int):
             z = Date(*map(int, stop.split("-")))
             i = a
             while i <= z:
-                dates[map(int,i.strftime('%Y%m%d').split())[0]] = {
+                dates[map(int, i.strftime('%Y%m%d').split())[0]] = {
                     'name' :i.strftime('%Y-%m-%d'),
                     'start':i.strftime('%Y-%m-%d'),
                     'stop' :i.strftime('%Y-%m-%d'),
                 }
-                i = i + RelativeDateTime(days=+1)
+                i = i + RelativeDateTime(days= +1)
             return dates
         return {}
 
@@ -104,7 +104,7 @@ class report_custom(report_int):
             "WHERE mrp_production_workcenter_line.production_id=mrp_production.id "\
             "AND mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id "\
             "AND mrp_production.state NOT IN ('cancel','done') "\
-            "AND mrp_workcenter.id =ANY(%s)",(ids,))
+            "AND mrp_workcenter.id =ANY(%s)", (ids,))
         res = cr.dictfetchone()
         if not res['stop']:
             res['stop'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -123,20 +123,20 @@ class report_custom(report_int):
             y_label = "Load (Cycles)"
         else:
             y_label = "Load (Hours)"
-        ar = area.T(legend = legend.T(),
-                    x_grid_style = line_style.gray70_dash1,
-                    x_axis = axis.X(label="Periods", format="/a90/hC%s"),
-                    x_coord = category_coord.T(x_index, 0),
-                    y_axis = axis.Y(label=y_label),
-                    y_range = (0, None),
-                    size = (640,480))
+        ar = area.T(legend=legend.T(),
+                    x_grid_style=line_style.gray70_dash1,
+                    x_axis=axis.X(label="Periods", format="/a90/hC%s"),
+                    x_coord=category_coord.T(x_index, 0),
+                    y_axis=axis.Y(label=y_label),
+                    y_range=(0, None),
+                    size=(640, 480))
         bar_plot.fill_styles.reset();
 
         # select workcenters
         cr.execute(
             "SELECT id, name FROM mrp_workcenter " \
             "WHERE id=ANY(%s)" \
-            "ORDER BY mrp_workcenter.id" ,(ids,))
+            "ORDER BY mrp_workcenter.id" , (ids,))
         workcenters = cr.dictfetchall()
 
         data = []
@@ -170,7 +170,7 @@ class report_custom(report_int):
         for workcenter in workcenters:
             f = fill_style.Plain()
             f.bgcolor = colors[workcenter_num]
-            ar.add_plot(bar_plot.T(label=workcenter['name'], data=data, fill_style=f, hcol=workcenter_num+1, cluster=(workcenter_num, len(res))))
+            ar.add_plot(bar_plot.T(label=workcenter['name'], data=data, fill_style=f, hcol=workcenter_num + 1, cluster=(workcenter_num, len(res))))
             workcenter_num += 1
 
         #plot = bar_plot.T(label=workcenter['name'], data=data, hcol=1, fill_style=fill_style.white, cluster=(color_index,len(ids)))
@@ -186,10 +186,10 @@ class report_custom(report_int):
 
     def _empty_graph(self, date):
         data = [[date, 0]]
-        ar = area.T(x_coord = category_coord.T(data, 0), y_range = (0, None),
-                    x_axis = axis.X(label="Periods"),
-                    y_axis = axis.Y(label="Load"))
-        ar.add_plot(bar_plot.T(data = data, label="No production order"))
+        ar = area.T(x_coord=category_coord.T(data, 0), y_range=(0, None),
+                    x_axis=axis.X(label="Periods"),
+                    y_axis=axis.Y(label="Load"))
+        ar.add_plot(bar_plot.T(data=data, label="No production order"))
         return ar
 
 report_custom('report.mrp.workcenter.load')

@@ -29,7 +29,7 @@ class stock_move(osv.osv):
             readonly=True),
     }
     _defaults = {
-        'purchase_line_id': lambda *a:False
+        'purchase_line_id': lambda * a:False
     }
 stock_move()
 
@@ -43,7 +43,7 @@ class stock_picking(osv.osv):
             ondelete='set null', select=True, readonly=True),
     }
     _defaults = {
-        'purchase_id': lambda *a: False,
+        'purchase_id': lambda * a: False,
     }
 
     def get_currency_id(self, cursor, user, picking):

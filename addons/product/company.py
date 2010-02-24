@@ -27,22 +27,22 @@ class res_company(osv.osv):
     _columns = {
         'property_valuation_price_type': fields.property(
             'product.price.type',
-            type='many2one', 
-            relation='product.price.type', 
+            type='many2one',
+            relation='product.price.type',
             domain=[],
-            string="Valuation Price Type", 
+            string="Valuation Price Type",
             method=True,
             view_load=True,
             help="The price type field in the selected price type will be used, instead of the default one, \
                   for valuation of product in the current company"),
     }
-    
+
     def _check_currency(self, cr, uid, ids):
         for rec in self.browse(cr, uid, ids):
             if rec.currency_id.id <> rec.property_valuation_price_type.currency_id.id:
                 return False
         return True
-        
+
     _constraints = [
         (_check_currency, 'Error! You can not chooes a pricetype in a different currency than your company (Not supported now).', ['property_valuation_price_type'])
     ]

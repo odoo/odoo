@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 
 
 class notify_message(osv.osv):
     _name = 'notify.message'
     _description = 'Notify By Messages'
     _columns = {
-        'name' :  fields.char('Title',size=64,required=True),
-        'msg' : fields.text('Special Message',size=125,required=True,help='This notification will appear at the bottom of the Invoices when printed.',translate=True)
+        'name' :  fields.char('Title', size=64, required=True),
+        'msg' : fields.text('Special Message', size=125, required=True, help='This notification will appear at the bottom of the Invoices when printed.', translate=True)
     }
 
 notify_message()
@@ -50,8 +50,8 @@ class account_invoice_line(osv.osv):
         }
         states = {
             'name': {
-                'break': [('readonly', True),('required', False),('invisible', True)],
-                'line': [('readonly', True),('required', False),('invisible', True)],
+                'break': [('readonly', True), ('required', False), ('invisible', True)],
+                'line': [('readonly', True), ('required', False), ('invisible', True)],
                 },
             'product_id': article,
             'account_id': article,
@@ -65,8 +65,8 @@ class account_invoice_line(osv.osv):
         res = super(account_invoice_line, self).fields_get(cr, uid, fields, context)
         for field in res:
             if states.has_key(field):
-                for key,value in states[field].items():
-                    res[field].setdefault('states',{})
+                for key, value in states[field].items():
+                    res[field].setdefault('states', {})
                     res[field]['states'][key] = value
         return res
 
@@ -103,22 +103,22 @@ class account_invoice_line(osv.osv):
             if vals['state'] == 'break':
                 vals['name'] = ' '
             if vals['state'] != 'article':
-                vals['quantity']= 0
-                vals['account_id']= self._default_account(cr, user, None)
+                vals['quantity'] = 0
+                vals['account_id'] = self._default_account(cr, user, None)
         return super(account_invoice_line, self).create(cr, user, vals, context)
 
     def write(self, cr, user, ids, vals, context=None):
         if vals.has_key('state'):
             if vals['state'] != 'article':
-                vals['product_id']= False
-                vals['uos_id']= False
-                vals['account_id']= self._default_account(cr, user, None)
-                vals['price_unit']= False
-                vals['price_subtotal']= False
-                vals['quantity']= 0
-                vals['discount']= False
-                vals['invoice_line_tax_id']= False
-                vals['account_analytic_id']= False
+                vals['product_id'] = False
+                vals['uos_id'] = False
+                vals['account_id'] = self._default_account(cr, user, None)
+                vals['price_unit'] = False
+                vals['price_subtotal'] = False
+                vals['quantity'] = 0
+                vals['discount'] = False
+                vals['invoice_line_tax_id'] = False
+                vals['account_analytic_id'] = False
             if vals['state'] == 'line':
                 vals['name'] = ' '
             if vals['state'] == 'break':
@@ -152,24 +152,24 @@ class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
     _columns = {
         'state': fields.selection([
-                ('article','Product'),
-                ('title','Title'),
-                ('text','Note'),
-                ('subtotal','Sub Total'),
-                ('line','Separator Line'),
-                ('break','Page Break'),]
-            ,'Type', select=True, required=True),
+                ('article', 'Product'),
+                ('title', 'Title'),
+                ('text', 'Note'),
+                ('subtotal', 'Sub Total'),
+                ('line', 'Separator Line'),
+                ('break', 'Page Break'), ]
+            , 'Type', select=True, required=True),
         'sequence': fields.integer('Sequence Number', help="Gives the sequence order when displaying a list of invoice lines."),
         'functional_field': fields.function(_fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='char', fnct_search=None, obj=None, method=True, store=False, string="Source Account"),
     }
 
     def _default_account(self, cr, uid, context=None):
         cr.execute("select id from account_account where parent_id IS NULL LIMIT 1")
-        res=cr.fetchone()
+        res = cr.fetchone()
         return res[0]
 
     _defaults = {
-        'state': lambda *a: 'article',
+        'state': lambda * a: 'article',
 #       'account_id': _default_account
     }
 account_invoice_line()
@@ -184,9 +184,9 @@ class one2many_mod2(fields.one2many):
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids),('state','=','article')], limit=self._limit)
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids), ('state', '=', 'article')], limit=self._limit)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append( r['id'] )
+            res[r[self._fields_id]].append(r['id'])
         return res
 
 #   def copy(self, cr, uid, id, default=None, context=None):
@@ -206,8 +206,8 @@ class account_invoice(osv.osv):
 
     _inherit = "account.invoice"
     _columns = {
-        'abstract_line_ids': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines',readonly=True, states={'draft':[('readonly',False)]}),
-        'invoice_line': one2many_mod2('account.invoice.line', 'invoice_id', 'Invoice Lines',readonly=True, states={'draft':[('readonly',False)]}),
+        'abstract_line_ids': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly', False)]}),
+        'invoice_line': one2many_mod2('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly', False)]}),
     }
 account_invoice()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -33,7 +33,7 @@ form_fyear = """<?xml version="1.0"?>
 </form>"""
 
 fields_fyear = {
-    'period': {'string': 'Period', 'type': 'many2one', 'relation': 'account.period', 'required': True,},
+    'period': {'string': 'Period', 'type': 'many2one', 'relation': 'account.period', 'required': True, },
 }
 
 form = """<?xml version="1.0"?>
@@ -44,40 +44,40 @@ form = """<?xml version="1.0"?>
 </form>"""
 
 fields = {
-    'msg': {'string':'File created', 'type':'text', 'size':'100','readonly':True},
+    'msg': {'string':'File created', 'type':'text', 'size':'100', 'readonly':True},
     'file_save':{'string': 'Save File',
         'type': 'binary',
-        'readonly': True,},
+        'readonly': True, },
 }
 
 
 class wizard_vat_declaration(wizard.interface):
 
     def _create_xml(self, cr, uid, data, context):
-        list_of_tags=['00','01','02','03','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','91']
+        list_of_tags = ['00', '01', '02', '03', '45', '46', '47', '48', '49', '54', '55', '56', '57', '59', '61', '62', '63', '64', '71', '81', '82', '83', '84', '85', '86', '87', '91']
         pool_obj = pooler.get_pool(cr.dbname)
         #obj_company = pool_obj.get('res.company').browse(cr,uid,1)
         obj_company = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id
         user_cmpny = obj_company.name
-        vat_no=obj_company.partner_id.vat
+        vat_no = obj_company.partner_id.vat
         if not vat_no:
-            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+            raise wizard.except_wizard(_('Data Insufficient'), _('No VAT Number Associated with Main Company!'))
 
-        tax_ids = pool_obj.get('account.tax.code').search(cr,uid,[])
+        tax_ids = pool_obj.get('account.tax.code').search(cr, uid, [])
         ctx = context.copy()
         ctx['period_id'] = data['form']['period'] #added context here
-        tax_info = pool_obj.get('account.tax.code').read(cr,uid,tax_ids,['code','sum_period'],context=ctx)
+        tax_info = pool_obj.get('account.tax.code').read(cr, uid, tax_ids, ['code', 'sum_period'], context=ctx)
 
-        address=post_code=city=''
+        address = post_code = city = ''
         if not obj_company.partner_id.address:
-                address=post_code=city=''
+                address = post_code = city = ''
 
         city, post_code, address = pooler.get_pool(cr.dbname).get('res.company')._get_default_ad(obj_company.partner_id.address)
 
         obj_fyear = pool_obj.get('account.fiscalyear')
         year_id = obj_fyear.find(cr, uid)
-        
-        account_period=pool_obj.get('account.period').browse(cr, uid, data['form']['period'])
+
+        account_period = pool_obj.get('account.period').browse(cr, uid, data['form']['period'])
         current_year = account_period.fiscalyear_id.name
         period_code = account_period.code
 
@@ -85,10 +85,10 @@ class wizard_vat_declaration(wizard.interface):
         if period_code:
             send_ref = send_ref + period_code
 
-        data_of_file='<?xml version="1.0"?>\n<VATSENDING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-14.xml">'
-        data_of_file +='\n\t<DECLARER>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<NAME>'+str(obj_company.name)+'</NAME>\n\t\t<ADDRESS>'+address+'</ADDRESS>'
-        data_of_file +='\n\t\t<POSTCODE>'+post_code+'</POSTCODE>\n\t\t<CITY>'+city+'</CITY>\n\t\t<SENDINGREFERENCE>'+send_ref+'</SENDINGREFERENCE>\n\t</DECLARER>'
-        data_of_file +='\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t'
+        data_of_file = '<?xml version="1.0"?>\n<VATSENDING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-14.xml">'
+        data_of_file += '\n\t<DECLARER>\n\t\t<VATNUMBER>' + str(vat_no) + '</VATNUMBER>\n\t\t<NAME>' + str(obj_company.name) + '</NAME>\n\t\t<ADDRESS>' + address + '</ADDRESS>'
+        data_of_file += '\n\t\t<POSTCODE>' + post_code + '</POSTCODE>\n\t\t<CITY>' + city + '</CITY>\n\t\t<SENDINGREFERENCE>' + send_ref + '</SENDINGREFERENCE>\n\t</DECLARER>'
+        data_of_file += '\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>' + str(vat_no) + '</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t'
 
         starting_month = account_period.date_start[5:7]
         ending_month = account_period.date_stop[5:7]
@@ -96,33 +96,33 @@ class wizard_vat_declaration(wizard.interface):
             #starting month and ending month of selected period are not the same 
             #it means that the accounting isn't based on periods of 1 month but on quarters
             quarter = str(((int(starting_month) - 1) / 3) + 1)
-            data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
+            data_of_file += '<QUARTER>' + quarter + '</QUARTER>\n\t\t\t'
         else:
-            data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
+            data_of_file += '<MONTH>' + starting_month + '</MONTH>\n\t\t\t'
         data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
-        data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
+        data_of_file += '\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
         for item in tax_info:
             if item['code']:
                 if item['code'] == '71-72':
-                    item['code']='71'
+                    item['code'] = '71'
                 if item['code'] in list_of_tags:
-                    data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(int(item['sum_period']*100)) +  '</D'+str(int(item['code'])) +'>'
+                    data_of_file += '\n\t\t\t\t<D' + str(int(item['code'])) + '>' + str(int(item['sum_period'] * 100)) + '</D' + str(int(item['code'])) + '>'
 
-        data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
-        data['form']['msg']='Save the File with '".xml"' extension.'
-        data['form']['file_save']=base64.encodestring(data_of_file)
+        data_of_file += '\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
+        data['form']['msg'] = 'Save the File with '".xml"' extension.'
+        data['form']['file_save'] = base64.encodestring(data_of_file)
         return data['form']
 
 
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':form_fyear, 'fields':fields_fyear, 'state':[('end','Cancel'),('go','Create XML')]},
+            'result': {'type':'form', 'arch':form_fyear, 'fields':fields_fyear, 'state':[('end', 'Cancel'), ('go', 'Create XML')]},
         },
         'go': {
             'actions': [_create_xml],
-            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Ok')]},
+            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Ok')]},
         }
     }
 

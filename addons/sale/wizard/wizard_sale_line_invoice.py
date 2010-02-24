@@ -32,7 +32,7 @@ invoice_form = """<?xml version="1.0"?>
 """
 
 invoice_fields = {
-    'grouped' : {'string':'Group the invoices', 'type':'boolean', 'default': lambda *a: False}
+    'grouped' : {'string':'Group the invoices', 'type':'boolean', 'default': lambda * a: False}
 }
 
 def _makeInvoices(self, cr, uid, data, context):
@@ -56,7 +56,7 @@ def _makeInvoices(self, cr, uid, data, context):
             'partner_id': order.partner_id.id,
             'address_invoice_id': order.partner_invoice_id.id,
             'address_contact_id': order.partner_invoice_id.id,
-            'invoice_line': [(6,0,lines)],
+            'invoice_line': [(6, 0, lines)],
             'currency_id' : order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term': pay_term,
@@ -65,8 +65,8 @@ def _makeInvoices(self, cr, uid, data, context):
         inv_id = pool.get('account.invoice').create(cr, uid, inv)
         return inv_id
 
-    for line in pool.get('sale.order.line').browse(cr,uid,data['ids']):
-        if (not line.invoiced) and (line.state not in ('draft','cancel')):
+    for line in pool.get('sale.order.line').browse(cr, uid, data['ids']):
+        if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
             if not line.order_id.id in invoices:
                 invoices[line.order_id.id] = []
             line_id = pool.get('sale.order.line').invoice_line_create(cr, uid,
@@ -76,7 +76,7 @@ def _makeInvoices(self, cr, uid, data, context):
             pool.get('sale.order.line').write(cr, uid, [line.id],
                     {'invoiced': True})
         flag = True
-        data_sale = pool.get('sale.order').browse(cr,uid,line.order_id.id)
+        data_sale = pool.get('sale.order').browse(cr, uid, line.order_id.id)
         for line in data_sale.order_line:
             if not line.invoiced:
                 flag = False
@@ -84,7 +84,7 @@ def _makeInvoices(self, cr, uid, data, context):
         if flag:
             wf_service = netsvc.LocalService('workflow')
             wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
-            pool.get('sale.order').write(cr,uid,[line.order_id.id],{'state' : 'progress'})
+            pool.get('sale.order').write(cr, uid, [line.order_id.id], {'state' : 'progress'})
 
     for result in invoices.values():
         order = result[0][0].order_id

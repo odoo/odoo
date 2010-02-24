@@ -55,7 +55,7 @@ class quality_test(base_module_quality.abstract_quality_check):
             return None
         result_dict = {}
         result_dict1 = {}
-        terp_file = os.path.join(module_path,'__terp__.py')
+        terp_file = os.path.join(module_path, '__terp__.py')
         res = eval(tools.file_open(terp_file).read())
         terp_keys = ['category', 'name', 'description', 'author', 'website', 'update_xml', 'init_xml', 'depends', 'version', 'active', 'installable', 'demo_xml']
         for key in terp_keys:
@@ -122,7 +122,7 @@ class quality_test(base_module_quality.abstract_quality_check):
     def run_test(self, cr, uid, module_path):
         terp_score = self.run_test_terp(cr, uid, module_path)
         self.score = terp_score and terp_score[1] or 0.0
-        if self.score*100 < self.min_score:
+        if self.score * 100 < self.min_score:
             self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         if terp_score:
             self.result = self.get_result({'__terp__.py': terp_score})
@@ -136,7 +136,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def get_result_details(self, dict_terp):
         if dict_terp:
-            str_html = '''<html><head>%s</head><body><table class="tablestyle">'''%(self.get_style())
+            str_html = '''<html><head>%s</head><body><table class="tablestyle">''' % (self.get_style())
             header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Tag Name'), _('Feed back About terp file of Module')])
             if not self.error:
                 res = str_html + self.format_html_table(header, data_list=dict_terp) + '</table><newline/></body></html>'

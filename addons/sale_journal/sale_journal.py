@@ -30,11 +30,11 @@ class sale_journal_invoice_type(osv.osv):
         'name': fields.char('Invoice Type', size=64, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the invoice type without removing it."),
         'note': fields.text('Note'),
-        'invoicing_method': fields.selection([('simple','Non grouped'),('grouped','Grouped')], 'Invoicing method', required=True),
+        'invoicing_method': fields.selection([('simple', 'Non grouped'), ('grouped', 'Grouped')], 'Invoicing method', required=True),
     }
     _defaults = {
-        'active': lambda *a: True,
-        'invoicing_method': lambda *a:'simple'
+        'active': lambda * a: True,
+        'invoicing_method': lambda * a:'simple'
     }
 sale_journal_invoice_type()
 
@@ -50,28 +50,28 @@ class sale_journal(osv.osv):
         'date_validation': fields.date('Validation date', readonly=True),
         'sale_stats_ids': fields.one2many("sale_journal.sale.stats", "journal_id", 'Sale Stats', readonly=True),
         'state': fields.selection([
-            ('draft','Draft'),
-            ('open','Open'),
-            ('done','Done'),
+            ('draft', 'Draft'),
+            ('open', 'Open'),
+            ('done', 'Done'),
         ], 'State', required=True),
         'note': fields.text('Note'),
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
-        'user_id': lambda self,cr,uid,context: uid,
-        'state': lambda self,cr,uid,context: 'draft',
+        'date': lambda * a: time.strftime('%Y-%m-%d'),
+        'date_created': lambda * a: time.strftime('%Y-%m-%d'),
+        'user_id': lambda self, cr, uid, context: uid,
+        'state': lambda self, cr, uid, context: 'draft',
     }
     def button_sale_cancel(self, cr, uid, ids, context={}):
         for id in ids:
-            sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
+            sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id', '=', id), ('state', '=', 'draft')])
             for saleid in sale_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'cancel', cr)
         return True
     def button_sale_confirm(self, cr, uid, ids, context={}):
         for id in ids:
-            sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id','=',id),('state','=','draft')])
+            sale_ids = self.pool.get('sale.order').search(cr, uid, [('journal_id', '=', id), ('state', '=', 'draft')])
             for saleid in sale_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'sale.order', saleid, 'order_confirm', cr)
@@ -100,21 +100,21 @@ class picking_journal(osv.osv):
         'date_validation': fields.date('Validation date', readonly=True),
         'picking_stats_ids': fields.one2many("sale_journal.picking.stats", "journal_id", 'Journal Stats', readonly=True),
         'state': fields.selection([
-            ('draft','Draft'),
-            ('open','Open'),
-            ('done','Done'),
+            ('draft', 'Draft'),
+            ('open', 'Open'),
+            ('done', 'Done'),
         ], 'Creation date', required=True),
         'note': fields.text('Note'),
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'date_created': lambda *a: time.strftime('%Y-%m-%d'),
-        'user_id': lambda self,cr,uid,context: uid,
-        'state': lambda self,cr,uid,context: 'draft',
+        'date': lambda * a: time.strftime('%Y-%m-%d'),
+        'date_created': lambda * a: time.strftime('%Y-%m-%d'),
+        'user_id': lambda self, cr, uid, context: uid,
+        'state': lambda self, cr, uid, context: 'draft',
     }
     def button_picking_cancel(self, cr, uid, ids, context={}):
         for id in ids:
-            pick_ids = self.pool.get('stock.picking').search(cr, uid, [('journal_id','=',id)])
+            pick_ids = self.pool.get('stock.picking').search(cr, uid, [('journal_id', '=', id)])
             for pickid in pick_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_cancel', cr)

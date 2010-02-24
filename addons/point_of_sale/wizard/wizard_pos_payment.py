@@ -31,7 +31,7 @@ from tools.translate import _
 def _get_journal(self, cr, uid, context):
     pool = pooler.get_pool(cr.dbname)
     obj = pool.get('account.journal')
-    c=pool.get('res.users').browse(cr,uid,uid).company_id.id
+    c = pool.get('res.users').browse(cr, uid, uid).company_id.id
     ids = obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', c)])
     res = obj.read(cr, uid, ids, ['id', 'name'], context)
     res = [(r['id'], r['name']) for r in res]
@@ -67,14 +67,14 @@ payment_fields = {
     'payment_date': {'string': 'Payment date', 'type': 'date', 'required': True},
     'payment_name': {'string': 'Payment name', 'type': 'char', 'size': '32', 'required':True, 'default':'Payment'},
     'num_sale': {'string': 'Num.File', 'type': 'char', 'size': '32'},
-    'product_id': {'string':'Acompte','type': 'many2one', 'relation': 'product.product'},
+    'product_id': {'string':'Acompte', 'type': 'many2one', 'relation': 'product.product'},
     }
 
 
 def _pre_init(self, cr, uid, data, context):
     def _get_journal(pool, order):
         j_obj = pool.get('account.journal')
-        c = pool.get('res.users').browse(cr,uid,uid).company_id.id
+        c = pool.get('res.users').browse(cr, uid, uid).company_id.id
         journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', c)])
         if journal:
             journal = journal[0]
@@ -91,11 +91,11 @@ def _pre_init(self, cr, uid, data, context):
     #amount = Decimal(str(order.amount_total)) - Decimal(str(order.amount_paid))
     amount = order.amount_total - order.amount_paid
 
-    if amount<=0:
+    if amount <= 0:
         context.update({'flag':True})
-        pool.get('pos.order').action_paid(cr,uid,data['ids'],context)
+        pool.get('pos.order').action_paid(cr, uid, data['ids'], context)
     elif order.amount_paid > 0:
-        pool.get('pos.order').write(cr, uid, data['id'],{'state':'advance'})
+        pool.get('pos.order').write(cr, uid, data['id'], {'state':'advance'})
 
 
     # get journal:
@@ -117,9 +117,9 @@ def _add_pay(self, cr, uid, data, context):
     jrnl_obj = pool.get('account.journal')
     result = data['form']
     invoice_wanted = data['form']['invoice_wanted']
-    jrnl_used=False
-    if data['form'] and data['form'].get('journal',False):
-        jrnl_used=jrnl_obj.browse(cr,uid,data['form']['journal'])
+    jrnl_used = False
+    if data['form'] and data['form'].get('journal', False):
+        jrnl_used = jrnl_obj.browse(cr, uid, data['form']['journal'])
 
     # add 'invoice_wanted' in 'pos.order'
     order_obj.write(cr, uid, [data['id']], {'invoice_wanted': invoice_wanted})
@@ -137,9 +137,9 @@ def _check(self, cr, uid, data, context):
     order_obj = pool.get('pos.order')
     order = order_obj.browse(cr, uid, data['id'], context)
     amount = order.amount_total - order.amount_paid
-    if amount<=0:
+    if amount <= 0:
         context.update({'flag':True})
-        pool.get('pos.order').action_paid(cr,uid,data['ids'],context)
+        pool.get('pos.order').action_paid(cr, uid, data['ids'], context)
 
     action = 'ask_pay'
     if order_obj.test_paid(cr, uid, [data['id']]):

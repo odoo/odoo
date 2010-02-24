@@ -28,45 +28,45 @@ _email_form = '''<?xml version="1.0"?>
     <separator string="Fetching Emails : " />
     <field name="server" colspan="4" nolabel="1" />
  </form>'''
- 
+
 _email_done_form = '''<?xml version="1.0"?>
 <form string="Email Gateway"> 
     <separator string="Log Detail" />
     <newline/>   
     <field name="message" colspan="4" nolabel="1"/>
- </form>''' 
+ </form>'''
 
 _email_fields = {
     'server': {'string':"Server", 'type':'text', 'readonly':True},
        }
-       
+
 _email_done_fields = {
     'message': {'string':"Log Detail", 'type':'text', 'readonly':True},
-       }       
+       }
 
 def _default(self , cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    gateway_pool=pool.get('mail.gateway')   
-    server = []     
-    for mail_gateway in gateway_pool.browse(cr, uid, data['ids'], context=context):        
+    gateway_pool = pool.get('mail.gateway')
+    server = []
+    for mail_gateway in gateway_pool.browse(cr, uid, data['ids'], context=context):
         if mail_gateway.server_id.active:
-            server.append(mail_gateway.name or '%s (%s)'%(mail_gateway.server_id.login, mail_gateway.server_id.name) )
-    data['form']['server'] = '\n'.join(server)    
+            server.append(mail_gateway.name or '%s (%s)' % (mail_gateway.server_id.login, mail_gateway.server_id.name))
+    data['form']['server'] = '\n'.join(server)
     return data['form']
-    
+
 def section_fetch_mail(self , cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname)     
-    gateway_pool=pool.get('mail.gateway')    
-    messages = gateway_pool.fetch_mails(cr, uid, ids=data['ids'], context=context)    
-    data['form']['message'] = '\n'.join(messages)    
+    pool = pooler.get_pool(cr.dbname)
+    gateway_pool = pool.get('mail.gateway')
+    messages = gateway_pool.fetch_mails(cr, uid, ids=data['ids'], context=context)
+    data['form']['message'] = '\n'.join(messages)
     return data['form']
 
 class wiz_mailgateway_fetch_mail(wizard.interface):
     states = {
         'init': {
             'actions': [_default],
-            'result': {'type': 'form', 'arch':_email_form, 'fields':_email_fields, 'state':[('end','Cancel','gtk-cancel'), ('fetch','Fetch','gtk-execute')]}
-                },        
+            'result': {'type': 'form', 'arch':_email_form, 'fields':_email_fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('fetch', 'Fetch', 'gtk-execute')]}
+                },
         'fetch': {
             'actions': [section_fetch_mail],
             'result': {'type': 'form', 'arch': _email_done_form,

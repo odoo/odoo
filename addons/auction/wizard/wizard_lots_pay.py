@@ -36,7 +36,7 @@ invoice_form = '''<?xml version="1.0"?>
 
 invoice_fields = {
     'amount': {'string': 'Amount paid', 'type':'float', 'required':True},
-    'dest_account_id': {'string':'Payment to Account', 'type':'many2one', 'required':True, 'relation':'account.account', 'domain':[('type','=','cash')]},
+    'dest_account_id': {'string':'Payment to Account', 'type':'many2one', 'required':True, 'relation':'account.account', 'domain':[('type', '=', 'cash')]},
     'journal_id': {'string': 'Journal', 'type': 'many2one', 'relation':'account.journal', 'required':True},
     'period_id': {'string': 'Period', 'type': 'many2one', 'relation':'account.period', 'required':True},
 }
@@ -75,13 +75,13 @@ invoice_fields = {
 def _pay_and_reconcile(self, cr, uid, data, context):
 
     pool = pooler.get_pool(cr.dbname)
-    lot = pool.get('auction.lots').browse(cr,uid,data['id'],context)
+    lot = pool.get('auction.lots').browse(cr, uid, data['id'], context)
     form = data['form']
     account_id = form.get('writeoff_acc_id', False)
     period_id = form.get('period_id', False)
     journal_id = form.get('journal_id', False)
     if lot.sel_inv_id:
-        p=pool.get('account.invoice').pay_and_reconcile(['lot.sel_inv_id.id'], form['amount'], form['dest_account_id'], journal_id, account_id, period_id, journal_id, context)
+        p = pool.get('account.invoice').pay_and_reconcile(['lot.sel_inv_id.id'], form['amount'], form['dest_account_id'], journal_id, account_id, period_id, journal_id, context)
 #   lots.sel_inv_id.pay_and_reconcile(cr,uid,data[id], form['amount'], form['dest_account_id'], journal_id, account_id, period_id, journal_id, context)
     return {}
 
@@ -90,7 +90,7 @@ class wiz_auc_lots_pay(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':invoice_form, 'fields': invoice_fields, 'state':[ ('pay','Pay'), ('end','Cancel')]}
+            'result': {'type': 'form', 'arch':invoice_form, 'fields': invoice_fields, 'state':[ ('pay', 'Pay'), ('end', 'Cancel')]}
         },
             'pay': {
             'actions': [_pay_and_reconcile],

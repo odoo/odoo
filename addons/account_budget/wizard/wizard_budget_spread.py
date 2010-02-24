@@ -30,7 +30,7 @@ _spread_form = '''<?xml version="1.0"?>
 
 _spread_fields = {
     'fiscalyear': {'string':'Fiscal Year', 'type':'many2one', 'relation':'account.fiscalyear', 'required':True},
-    'amount': {'string':'Amount', 'type':'float', 'digits':(16,2)},
+    'amount': {'string':'Amount', 'type':'float', 'digits':(16, 2)},
 }
 
 class wizard_budget_spread(wizard.interface):
@@ -43,7 +43,7 @@ class wizard_budget_spread(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':_spread_form, 'fields':_spread_fields, 'state':[('end','Cancel'),('spread','Spread')]}
+            'result': {'type':'form', 'arch':_spread_form, 'fields':_spread_fields, 'state':[('end', 'Cancel'), ('spread', 'Spread')]}
         },
         'spread': {
             'actions': [_spread],

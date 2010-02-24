@@ -37,10 +37,10 @@ _transaction_form = '''<?xml version="1.0"?>
 </form>'''
 
 _transaction_fields = {
-    'fy_id': {'string':'Fiscal Year to close', 'type':'many2one', 'relation': 'account.fiscalyear','required':True, 'domain':[('state','=','draft')]},
-    'journal_id': {'string':'Opening Entries Journal', 'type':'many2one', 'relation': 'account.journal','required':True},
-    'period_id': {'string':'Opening Entries Period', 'type':'many2one', 'relation': 'account.period','required':True, 'domain':"[('fiscalyear_id','=',fy2_id)]"},
-    'fy2_id': {'string':'New Fiscal Year', 'type':'many2one', 'relation': 'account.fiscalyear', 'domain':[('state','=','draft')], 'required':True},
+    'fy_id': {'string':'Fiscal Year to close', 'type':'many2one', 'relation': 'account.fiscalyear', 'required':True, 'domain':[('state', '=', 'draft')]},
+    'journal_id': {'string':'Opening Entries Journal', 'type':'many2one', 'relation': 'account.journal', 'required':True},
+    'period_id': {'string':'Opening Entries Period', 'type':'many2one', 'relation': 'account.period', 'required':True, 'domain':"[('fiscalyear_id','=',fy2_id)]"},
+    'fy2_id': {'string':'New Fiscal Year', 'type':'many2one', 'relation': 'account.fiscalyear', 'domain':[('state', '=', 'draft')], 'required':True},
     'report_name': {'string':'Name of new entries', 'type':'char', 'size': 64, 'required':True},
     'sure': {'string':'Check this box', 'type':'boolean'},
 }
@@ -73,7 +73,7 @@ def _data_save(self, cr, uid, data, context):
                 _('The journal must have centralised counterpart'))
 
     move_ids = pool.get('account.move.line').search(cr, uid, [
-        ('journal_id','=',new_journal.id),('period_id.fiscalyear_id','=',new_fyear.id)])
+        ('journal_id', '=', new_journal.id), ('period_id.fiscalyear_id', '=', new_fyear.id)])
     if move_ids:
         raise wizard.except_wizard(_('UserError'),
                 _('The opening journal must not have any entry in the new fiscal year !'))
@@ -91,13 +91,13 @@ def _data_save(self, cr, uid, data, context):
         accnt_type_data = account.user_type
         if not accnt_type_data:
             continue
-        if accnt_type_data.close_method=='none' or account.type == 'view':
+        if accnt_type_data.close_method == 'none' or account.type == 'view':
             continue
-        if accnt_type_data.close_method=='balance':
-            if abs(account.balance)>0.0001:
+        if accnt_type_data.close_method == 'balance':
+            if abs(account.balance) > 0.0001:
                 pool.get('account.move.line').create(cr, uid, {
-                    'debit': account.balance>0 and account.balance,
-                    'credit': account.balance<0 and -account.balance,
+                    'debit': account.balance > 0 and account.balance,
+                    'credit': account.balance < 0 and - account.balance,
                     'name': data['form']['report_name'],
                     'date': period.date_start,
                     'journal_id': new_journal.id,
@@ -150,7 +150,7 @@ def _data_save(self, cr, uid, data, context):
                             'AND b.period_id =ANY(%s)'\
                             'AND a.period_id =ANY(%s)' \
                         'ORDER BY id ' \
-                        'LIMIT %s OFFSET %s', (account.id,period_ids,periods_fy2,limit, offset))
+                        'LIMIT %s OFFSET %s', (account.id, period_ids, periods_fy2, limit, offset))
                 result = cr.dictfetchall()
                 if not result:
                     break
@@ -166,7 +166,7 @@ def _data_save(self, cr, uid, data, context):
                         'period_id': period.id,
                         })
                 offset += limit
-        if accnt_type_data.close_method=='detail':
+        if accnt_type_data.close_method == 'detail':
             offset = 0
             limit = 100
             while True:
@@ -191,17 +191,17 @@ def _data_save(self, cr, uid, data, context):
                     })
                     pool.get('account.move.line').create(cr, uid, move)
                 offset += limit
-    ids = pool.get('account.move.line').search(cr, uid, [('journal_id','=',new_journal.id),
-        ('period_id.fiscalyear_id','=',new_fyear.id)])
+    ids = pool.get('account.move.line').search(cr, uid, [('journal_id', '=', new_journal.id),
+        ('period_id.fiscalyear_id', '=', new_fyear.id)])
     context['fy_closing'] = True
 
     if ids:
         pool.get('account.move.line').reconcile(cr, uid, ids, context=context)
     new_period = data['form']['period_id']
-    ids = pool.get('account.journal.period').search(cr, uid, [('journal_id','=',new_journal.id),('period_id','=',new_period)])
+    ids = pool.get('account.journal.period').search(cr, uid, [('journal_id', '=', new_journal.id), ('period_id', '=', new_period)])
     if not ids:
         ids = [pool.get('account.journal.period').create(cr, uid, {
-               'name': (new_journal.name or '')+':'+(period.code or ''),
+               'name': (new_journal.name or '') + ':' + (period.code or ''),
                'journal_id': new_journal.id,
                'period_id': period.id
            })]
@@ -214,7 +214,7 @@ class wiz_journal_close(wizard.interface):
     states = {
         'init': {
             'actions': [_data_load],
-            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('close','Create entries')]}
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end', 'Cancel'), ('close', 'Create entries')]}
         },
         'close': {
             'actions': [_data_save],

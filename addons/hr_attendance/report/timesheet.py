@@ -68,7 +68,7 @@ class report_custom(report_rml):
 				order by att.name
 				'''
 				for idx in range(7):
-					cr.execute(sql, (monday.strftime('%Y-%m-%d %H:%M:%S'), (monday + DateTime.RelativeDateTime(days=idx+1)).strftime('%Y-%m-%d %H:%M:%S'), employee_id))
+					cr.execute(sql, (monday.strftime('%Y-%m-%d %H:%M:%S'), (monday + DateTime.RelativeDateTime(days=idx + 1)).strftime('%Y-%m-%d %H:%M:%S'), employee_id))
 					attendances = cr.dictfetchall()
 					week_wh = {}
 	                # Fake sign ins/outs at week ends, to take attendances across week ends into account
@@ -92,15 +92,15 @@ class report_custom(report_rml):
 						week_repr.append('<workhours>%sh%02d</workhours>' % to_hour(week_wh[idx]))
 					week_repr.append('</%s>' % num2day[idx])
 				week_repr.append('<total>')
-				week_repr.append('<worked>%sh%02d</worked>' % to_hour(reduce(lambda x,y:x+y, week_wh.values(), 0)))
+				week_repr.append('<worked>%sh%02d</worked>' % to_hour(reduce(lambda x, y:x + y, week_wh.values(), 0)))
 				week_repr.append('</total>')
 				week_repr.append('</week>')
 				if len(week_repr) > 21: # 21 = minimal length of week_repr
 					week_xml.append('\n'.join(week_repr))
-				
+
 				monday, n_monday = n_monday, n_monday + one_week
 			user_xml.append(user_repr % '\n'.join(week_xml))
-		
+
 		xml = '''<?xml version="1.0" encoding="UTF-8" ?>
 		<report>
 		%s

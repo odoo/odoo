@@ -36,7 +36,7 @@ Main features :
 
     """,
     'author': 'Tiny',
-    'depends': ['sale', 'delivery','report_mrp'],
+    'depends': ['sale', 'delivery', 'report_mrp'],
 #    'depends': ['sale', 'purchase', 'account', 'account_tax_include','board','mrp','board_manufacturing','delivery','profile_manufacturing','account','multi_company'],
     'init_xml': [
         'security/point_of_sale_security.xml',
@@ -64,7 +64,7 @@ Main features :
         'pos_data.xml',
         'pos_workflow.xml'
     ],
-    'demo_xml': ['pos_demo.xml','singer_statement_demo.xml','multi_company_stock_data.xml'],
+    'demo_xml': ['pos_demo.xml', 'singer_statement_demo.xml', 'multi_company_stock_data.xml'],
     'installable': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

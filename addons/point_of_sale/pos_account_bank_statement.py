@@ -31,7 +31,7 @@ class account_bank_statement(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 account_bank_statement()
 
@@ -46,7 +46,7 @@ class account_bank_statement_line(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 account_bank_statement_line()
 

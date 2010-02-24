@@ -52,8 +52,8 @@ def _get_value(self, cr, uid, data, context):
 class wizard_report(wizard.interface):
     states = {
         'init': {
-            'actions': [_get_value], 
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[ ('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
+            'actions': [_get_value],
+            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[ ('end', 'Cancel', 'gtk-cancel'), ('report', 'Print', 'gtk-print')]}
         },
         'report': {
             'actions': [],
@@ -65,8 +65,8 @@ wizard_report('hr.analytical.timesheet')
 class wizard_report_my(wizard.interface):
     states = {
         'init': {
-            'actions': [_get_value], 
-            'result': {'type':'form', 'arch':dates_form_ro, 'fields':dates_fields, 'state':[ ('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
+            'actions': [_get_value],
+            'result': {'type':'form', 'arch':dates_form_ro, 'fields':dates_fields, 'state':[ ('end', 'Cancel', 'gtk-cancel'), ('report', 'Print', 'gtk-print')]}
         },
         'report': {
             'actions': [],

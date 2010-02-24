@@ -30,12 +30,12 @@ from tools import config
 class account_analytic_line(osv.osv):
     _name = 'account.analytic.line'
     _description = 'Analytic lines'
-    
+
     def _amount_currency(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
         for rec in self.browse(cr, uid, ids, context):
-            cmp_cur_id=rec.company_id.currency_id.id
-            aa_cur_id=rec.account_id.currency_id.id
+            cmp_cur_id = rec.company_id.currency_id.id
+            aa_cur_id = rec.account_id.currency_id.id
             # Always provide the amount in currency
             if cmp_cur_id != aa_cur_id:
                 cur_obj = self.pool.get('res.currency')
@@ -46,23 +46,23 @@ class account_analytic_line(osv.osv):
                         rec.account_id.currency_id.id, rec.amount,
                         context=ctx)
             else:
-                result[rec.id]=rec.amount
+                result[rec.id] = rec.amount
         return result
-        
+
     def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
         result = {}
         for rec in self.browse(cr, uid, ids, context):
             # Always provide second currency
-            result[rec.id] = (rec.account_id.currency_id.id,rec.account_id.currency_id.code)
+            result[rec.id] = (rec.account_id.currency_id.id, rec.account_id.currency_id.code)
         return result
-    
+
     def _get_account_line(self, cr, uid, ids, context={}):
         aac_ids = {}
         for acc in self.pool.get('account.analytic.account').browse(cr, uid, ids):
             aac_ids[acc.id] = True
         aal_ids = []
         if aac_ids:
-            aal_ids = self.pool.get('account.analytic.line').search(cr, uid, [('account_id','in',aac_ids.keys())], context=context)
+            aal_ids = self.pool.get('account.analytic.line').search(cr, uid, [('account_id', 'in', aac_ids.keys())], context=context)
         return aal_ids
 
     _columns = {
@@ -81,37 +81,37 @@ class account_analytic_line(osv.osv):
         'currency_id': fields.function(_get_account_currency, method=True, type='many2one', relation='res.currency', string='Account currency',
                 store={
                     'account.analytic.account': (_get_account_line, ['company_id'], 50),
-                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
+                    'account.analytic.line': (lambda self, cr, uid, ids, c={}: ids, ['amount', 'unit_amount'], 10),
                 },
                 help="The related account currency if not equal to the company one."),
-        'company_id': fields.many2one('res.company','Company',required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'amount_currency': fields.function(_amount_currency, method=True, digits=(16, int(config['price_accuracy'])), string='Amount currency',
                 store={
                     'account.analytic.account': (_get_account_line, ['company_id'], 50),
-                    'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
+                    'account.analytic.line': (lambda self, cr, uid, ids, c={}: ids, ['amount', 'unit_amount'], 10),
                 },
                 help="The amount expressed in the related account currency if not equal to the company one."),
         'ref': fields.char('Ref.', size=64),
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', c),
+        'date': lambda * a: time.strftime('%Y-%m-%d'),
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', c),
     }
     _order = 'date'
-    
+
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
 
-        if context.get('from_date',False):
-            args.append(['date', '>=',context['from_date']])
-            
-        if context.get('to_date',False):
-            args.append(['date','<=',context['to_date']])
-            
+        if context.get('from_date', False):
+            args.append(['date', '>=', context['from_date']])
+
+        if context.get('to_date', False):
+            args.append(['date', '<=', context['to_date']])
+
         return super(account_analytic_line, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
-        
+
     def _check_company(self, cr, uid, ids):
         lines = self.browse(cr, uid, ids)
         for l in lines:
@@ -121,16 +121,16 @@ class account_analytic_line(osv.osv):
     _constraints = [
 #        (_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
     ]
-    
+
     # Compute the cost based on the price type define into company
     # property_valuation_price_type property
-    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,company_id,
+    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, company_id,
             unit=False, context=None):
-        if context==None:
-            context={}
+        if context == None:
+            context = {}
         uom_obj = self.pool.get('product.uom')
         product_obj = self.pool.get('product.product')
-        company_obj=self.pool.get('res.company')
+        company_obj = self.pool.get('res.company')
         if  prod_id:
             prod = product_obj.browse(cr, uid, prod_id)
             a = prod.product_tmpl_id.property_account_expense.id
@@ -142,15 +142,15 @@ class account_analytic_line(osv.osv):
                                 'for this product: "%s" (id:%d)') % \
                                 (prod.name, prod.id,))
             if not company_id:
-                company_id=company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
-      
-            # Compute based on pricetype
-            pricetype=self.pool.get('product.price.type').browse(cr,uid,company_obj.browse(cr,uid,company_id).property_valuation_price_type.id)
-            amount_unit=prod.price_get(pricetype.field, context)[prod.id]
+                company_id = company_obj._company_default_get(cr, uid, 'account.analytic.line', context)
 
-            amount=amount_unit*unit_amount or 1.0
+            # Compute based on pricetype
+            pricetype = self.pool.get('product.price.type').browse(cr, uid, company_obj.browse(cr, uid, company_id).property_valuation_price_type.id)
+            amount_unit = prod.price_get(pricetype.field, context)[prod.id]
+
+            amount = amount_unit * unit_amount or 1.0
             return {'value': {
-                'amount': - round(amount, 2),
+                'amount':-round(amount, 2),
                 'general_account_id': a,
                 }}
         return {}
@@ -161,7 +161,7 @@ class account_analytic_line(osv.osv):
             cr.execute('select name from account_analytic_account where id=%s', (context['account_id'],))
             res = cr.fetchone()
             if res:
-                res = _('Entries: ')+ (res[0] or '')
+                res = _('Entries: ') + (res[0] or '')
             return res
         return False
 
@@ -173,14 +173,14 @@ class timesheet_invoice(osv.osv):
     _description = "Analytic account costs and revenues"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, select=True),
         'journal_id': fields.many2one('account.analytic.journal', 'Journal', readonly=True),
         'quantity': fields.float('Quantities', readonly=True),
         'cost': fields.float('Credit', readonly=True),
         'revenue': fields.float('Debit', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc, account_id'
     def init(self, cr):

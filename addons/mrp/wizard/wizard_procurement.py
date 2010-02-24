@@ -50,7 +50,7 @@ class procurement_compute(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end','Cancel'),('compute','Compute Requisitions') ]}
+            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end', 'Cancel'), ('compute', 'Compute Requisitions') ]}
         },
         'compute': {
             'actions': [_procure_calculation],

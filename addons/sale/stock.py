@@ -27,7 +27,7 @@ class stock_move(osv.osv):
         'sale_line_id': fields.many2one('sale.order.line', 'Sale Order Line', ondelete='set null', select=True, readonly=True),
     }
     _defaults = {
-        'sale_line_id': lambda *a:False
+        'sale_line_id': lambda * a:False
     }
 stock_move()
 
@@ -37,7 +37,7 @@ class stock_picking(osv.osv):
         'sale_id': fields.many2one('sale.order', 'Sale Order', ondelete='set null', select=True, readonly=True),
     }
     _defaults = {
-        'sale_id': lambda *a: False
+        'sale_id': lambda * a: False
     }
 
     def get_currency_id(self, cursor, user, picking):
@@ -130,7 +130,7 @@ class stock_picking(osv.osv):
         for invoice in invoice_obj.browse(cursor, user, invoice_ids,
                 context=context):
             invoices[invoice.id] = invoice
-            
+
         for picking in picking_obj.browse(cursor, user, picking_ids,
                 context=context):
 
@@ -138,11 +138,11 @@ class stock_picking(osv.osv):
                 continue
             sale_lines = picking.sale_id.order_line
             invoice_created = invoices[result[picking.id]]
-            
+
             if picking.sale_id.client_order_ref:
                 inv_name = picking.sale_id.client_order_ref + " : " + invoice_created.name
                 invoice_obj.write(cursor, user, [invoice_created.id], {'name': inv_name}, context=context)
-            
+
             for sale_line in sale_lines:
                 if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
                     if group:

@@ -26,13 +26,13 @@ import time
 def compute_burndown(cr, uid, tasks_id, date_start, date_stop):
     latest = False
     if len(tasks_id):
-        cr.execute('select id,create_date,state,planned_hours from project_task where id = ANY(%s) order by create_date',(tasks_id,))
+        cr.execute('select id,create_date,state,planned_hours from project_task where id = ANY(%s) order by create_date', (tasks_id,))
         tasks = cr.fetchall()
 
-        cr.execute('select w.date,w.hours from project_task_work w left join project_task t on (t.id=w.task_id) where t.id = ANY(%s) and t.state in (%s,%s) order by date',(tasks_id,'open','progress',))
+        cr.execute('select w.date,w.hours from project_task_work w left join project_task t on (t.id=w.task_id) where t.id = ANY(%s) and t.state in (%s,%s) order by date', (tasks_id, 'open', 'progress',))
         tasks2 = cr.fetchall()
 
-        cr.execute('select date_end,planned_hours from project_task where id =ANY(%s) and state in (%s,%s) order by date_end' ,(tasks_id,'cancelled','done',))
+        cr.execute('select date_end,planned_hours from project_task where id =ANY(%s) and state in (%s,%s) order by date_end' , (tasks_id, 'cancelled', 'done',))
         tasks2 += cr.fetchall()
         tasks2.sort()
     else:
@@ -43,22 +43,22 @@ def compute_burndown(cr, uid, tasks_id, date_start, date_stop):
     total = 0
     done = 0
     result = []
-    while current_date<=date_stop:
-        while len(tasks) and tasks[0][1] and tasks[0][1][:10]<=current_date:
+    while current_date <= date_stop:
+        while len(tasks) and tasks[0][1] and tasks[0][1][:10] <= current_date:
             latest = tasks.pop(0)
             total += latest[3]
         i = 0
-        while i<len(tasks2):
-            if tasks2[i][0][:10]<=current_date:
+        while i < len(tasks2):
+            if tasks2[i][0][:10] <= current_date:
                 t = tasks2.pop(i)
                 done += t[1]
             else:
-                i+=1
-        result.append( (int(time.mktime(time.strptime(current_date,'%Y-%m-%d'))), total-done) )
+                i += 1
+        result.append((int(time.mktime(time.strptime(current_date, '%Y-%m-%d'))), total - done))
         current_date = (DateTime.strptime(current_date, '%Y-%m-%d') + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
         if not len(tasks) and not len(tasks2):
             break
-    result.append( (int(time.mktime(time.strptime(date_stop,'%Y-%m-%d'))), 0) )
+    result.append((int(time.mktime(time.strptime(date_stop, '%Y-%m-%d'))), 0))
     return result
 
 

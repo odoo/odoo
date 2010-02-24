@@ -40,7 +40,7 @@ form = '''<?xml version="1.0"?>
 </form>'''
 
 fields = {
-    'file': {'string':'Select a PDF File', 'type':'binary','required':True,'filters':'*.pdf'},
+    'file': {'string':'Select a PDF File', 'type':'binary', 'required':True, 'filters':'*.pdf'},
 }
 
 
@@ -48,7 +48,7 @@ class external_pdf(render):
     def __init__(self, pdf):
         render.__init__(self)
         self.pdf = pdf
-        self.output_type='pdf'
+        self.output_type = 'pdf'
     def _render(self):
         return self.pdf
 
@@ -58,12 +58,12 @@ class report_custom(report_int):
 
         pool = pooler.get_pool(cr.dbname)
         obj_indicator = pool.get('account.report.report')
-        code_ids = obj_indicator.browse(cr,uid,data['id'])
+        code_ids = obj_indicator.browse(cr, uid, data['id'])
 
-        self.list={}
+        self.list = {}
 
         def find_child(obj):
-            self.list[obj.code]=str(obj.amount)
+            self.list[obj.code] = str(obj.amount)
             if obj.child_ids:
                 for child in obj.child_ids:
                     find_child(child)
@@ -71,22 +71,22 @@ class report_custom(report_int):
 
         find_child(code_ids)
 
-        file_contents=base64.decodestring(data['form']['file'])
+        file_contents = base64.decodestring(data['form']['file'])
         fp = StringIO.StringIO(file_contents)
 
-        infile = open(tools.config['addons_path']+"/test.pdf", 'wb')
+        infile = open(tools.config['addons_path'] + "/test.pdf", 'wb')
         infile.write(fp.read())
         infile.close()
 
-        obj_user=pool.get('res.users').browse(cr,uid,uid)
-        self.list['printing_user']=obj_user.name
-        self.list['company_name']=obj_user.company_id.name
-        self.list['company_country']=obj_user.company_id.partner_id.country
-        self.list['company_vat']=obj_user.company_id.partner_id.vat
-        self.list['printing_time']=time.strftime('%H:%M:%S')
-        self.list['printing_date']=time.strftime('%D')
+        obj_user = pool.get('res.users').browse(cr, uid, uid)
+        self.list['printing_user'] = obj_user.name
+        self.list['company_name'] = obj_user.company_id.name
+        self.list['company_country'] = obj_user.company_id.partner_id.country
+        self.list['company_vat'] = obj_user.company_id.partner_id.vat
+        self.list['printing_time'] = time.strftime('%H:%M:%S')
+        self.list['printing_date'] = time.strftime('%D')
 
-        tools.pdf_utils.fill_pdf(tools.config['addons_path']+"/test.pdf",'/tmp/output.pdf',self.list)
+        tools.pdf_utils.fill_pdf(tools.config['addons_path'] + "/test.pdf", '/tmp/output.pdf', self.list)
         self.obj = external_pdf(file('/tmp/output.pdf').read())
         self.obj.render()
         return (self.obj.pdf, 'pdf')
@@ -97,11 +97,11 @@ class wizard_print_indicators_with_pdf(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel'),('print','Print')]}
+            'result': {'type': 'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('print', 'Print')]}
         },
         'print': {
             'actions':[],
-            'result' :{'type':'print','report':'print.indicator.pdf', 'state':'end'}
+            'result' :{'type':'print', 'report':'print.indicator.pdf', 'state':'end'}
         }
     }
 wizard_print_indicators_with_pdf('print.indicators.pdf')

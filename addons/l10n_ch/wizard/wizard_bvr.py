@@ -65,7 +65,7 @@ def _check(self, cr, uid, data, context):
 class wizard_report(wizard.interface):
     states = {
         'init': {
-            'actions': [_check], 
+            'actions': [_check],
             'result': {'type':'print', 'report':'l10n_ch.bvr', 'state':'end'}
         }
     }

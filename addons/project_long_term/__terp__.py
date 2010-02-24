@@ -32,9 +32,9 @@
     "init_xml" : [],
     "demo_xml" : [#"project_demo.xml"
 ],
-    "update_xml": [        
+    "update_xml": [
         "project_view.xml",
-        "project_wizard.xml" 
+        "project_wizard.xml"
     ],
     'installable': True,
     'active': False,

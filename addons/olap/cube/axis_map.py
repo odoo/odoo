@@ -32,7 +32,7 @@ class column_fixed(mapping):
     def __init__(self, pos=0, position=0):
         self.pos = pos
     def cube_set(self, cube, value, delta=0):
-        return cube[ self.pos +delta]
+        return cube[ self.pos + delta]
     def value_set(self, value):
         return value.pop(0)
 
@@ -44,7 +44,7 @@ class column_mapping_value(mapping):
 
     def cube_set(self, cube, value, delta=0):
         pos = value.pop(0)
-        return cube[ self.axis_value[pos]+delta ]
+        return cube[ self.axis_value[pos] + delta ]
     def value_set(self, value):
         return False
 
@@ -56,7 +56,7 @@ class column_mapping(mapping):
 
     def cube_set(self, cube, value, delta=0):
         pos = value.pop(0)
-        return cube[ self.axis_value[pos]+delta ]
+        return cube[ self.axis_value[pos] + delta ]
 
     def value_set(self, value):
         return False
@@ -71,7 +71,7 @@ class column_mapping_axis(mapping):
         i = 0
         for a in axis:
             keys[tuple(list(a)[0][1:])] = i
-            i+=1
+            i += 1
 
         self.axis_value = {}
         for m in mapping:
@@ -81,7 +81,7 @@ class column_mapping_axis(mapping):
 
     def cube_set(self, cube, value, delta=0):
         pos = value.pop(0)
-        return cube[ self.axis_value[pos]+delta ]
+        return cube[ self.axis_value[pos] + delta ]
 
     def value_set(self, value):
         return False

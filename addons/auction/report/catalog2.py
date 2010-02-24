@@ -24,7 +24,7 @@ import time
 from report.interface import report_rml
 from report.interface import toxml
 import pooler
-from osv import osv,orm
+from osv import osv, orm
 from time import strptime
 from xml.dom import minidom
 import sys
@@ -66,28 +66,28 @@ class auction_catalog(report_rml):
     def create_xml(self, cr, uid, ids, data, context):
 
         xml = self.catalog_xml(cr, uid, ids, data, context)
-        temp=self.post_process_xml_data(cr, uid, xml, context)
+        temp = self.post_process_xml_data(cr, uid, xml, context)
 
         return temp
-    def catalog_xml(self,cr,uid,ids,data,context,cwid="0"):
+    def catalog_xml(self, cr, uid, ids, data, context, cwid="0"):
         impl = minidom.getDOMImplementation()
 
         doc = impl.createDocument(None, "report", None)
 
-        catalog=doc.createElement('catalog')
+        catalog = doc.createElement('catalog')
         doc.documentElement.appendChild(catalog)
 
 
-        infodb='info'
-        commdb='comm'
+        infodb = 'info'
+        commdb = 'comm'
         tab_avoid = []
-        tab_no_photo=[]
+        tab_no_photo = []
         for id in ids:
-            lot_ids=pooler.get_pool(cr.dbname).get('auction.lots').search(cr, uid, [('auction_id', '=', id)])
-            ab=pooler.get_pool(cr.dbname).get('auction.lots').read(cr,uid,lot_ids,['auction_id','name','lot_num','lot_est1','lot_est2'],context)
+            lot_ids = pooler.get_pool(cr.dbname).get('auction.lots').search(cr, uid, [('auction_id', '=', id)])
+            ab = pooler.get_pool(cr.dbname).get('auction.lots').read(cr, uid, lot_ids, ['auction_id', 'name', 'lot_num', 'lot_est1', 'lot_est2'], context)
             auction_dates_ids = [x["auction_id"][0] for x in ab]
 
-            res=pooler.get_pool(cr.dbname).get('auction.dates').read(cr,uid,ids,['name','auction1','auction2'],context)
+            res = pooler.get_pool(cr.dbname).get('auction.dates').read(cr, uid, ids, ['name', 'auction1', 'auction2'], context)
             # name emelment
             key = 'name'
             categ = doc.createElement(key)
@@ -107,12 +107,12 @@ class auction_catalog(report_rml):
     #         promotion element
             promo = doc.createElement('promotion1')
 
-            fp = file(config['addons_path']+'/auction/report/images/flagey_logo.jpg','r')
+            fp = file(config['addons_path'] + '/auction/report/images/flagey_logo.jpg', 'r')
             file_data = fp.read()
             promo.appendChild(doc.createTextNode(base64.encodestring(file_data)))
             catalog.appendChild(promo)
             promo = doc.createElement('promotion2')
-            fp = file(config['addons_path']+'/auction/report/images/flagey_logo.jpg','r')
+            fp = file(config['addons_path'] + '/auction/report/images/flagey_logo.jpg', 'r')
             file_data = fp.read()
             promo.appendChild(doc.createTextNode(base64.encodestring(file_data)))
             catalog.appendChild(promo)
@@ -126,10 +126,10 @@ class auction_catalog(report_rml):
             for test in ab:
                 if test.has_key('auction_id'):
                     auction_ids.append(test['auction_id'][0])
-            cr.execute('select * from auction_lots where auction_id =ANY(%s)',(auction_ids,))
+            cr.execute('select * from auction_lots where auction_id =ANY(%s)', (auction_ids,))
             res = cr.dictfetchall()
             for cat in res:
-                product =doc.createElement('product')
+                product = doc.createElement('product')
                 products.appendChild(product)
                 if cat['obj_desc']:
                     infos = doc.createElement('infos')
@@ -154,9 +154,9 @@ class auction_catalog(report_rml):
                         content = base64.decodestring(cat['image'])
                         fp.write(content)
                         fp.close()
-                        fp = file(file_name,'r')
+                        fp = file(file_name, 'r')
                         test_file_name = tempfile.mktemp(prefix='openerp_auction_test_', suffix='.jpg')
-                        size = photo_shadow.convert_catalog(fp, test_file_name,110)
+                        size = photo_shadow.convert_catalog(fp, test_file_name, 110)
                         fp = file(test_file_name)
                         file_data = fp.read()
                         test_data = base64.encodestring(file_data)
@@ -164,25 +164,25 @@ class auction_catalog(report_rml):
                         limg.appendChild(doc.createTextNode(test_data))
                         infos.appendChild(limg)
 
-                for key in ('lot_est1','lot_est2'):
+                for key in ('lot_est1', 'lot_est2'):
                     ref2 = doc.createElement(key)
-                    ref2.appendChild(doc.createTextNode( _to_decode(str(cat[key] or 0.0))))
+                    ref2.appendChild(doc.createTextNode(_to_decode(str(cat[key] or 0.0))))
                     product.appendChild(ref2)
                 oldlength = length
                 length += 2.0
-                if length>23.7:
+                if length > 23.7:
                     side += 1
                     length = length - oldlength
                     ref3 = doc.createElement('newpage')
-                    ref3.appendChild(doc.createTextNode( "1" ))
+                    ref3.appendChild(doc.createTextNode("1"))
                     product.appendChild(ref3)
-                if side%2:
+                if side % 2:
                     ref4 = doc.createElement('side')
-                    ref4.appendChild(doc.createTextNode( "1" ))
+                    ref4.appendChild(doc.createTextNode("1"))
                     product.appendChild(ref4)
                 xml1 = doc.toxml()
         return xml1
-auction_catalog('report.auction.cat_flagy', 'auction.dates','','addons/auction/report/catalog2.xsl')
+auction_catalog('report.auction.cat_flagy', 'auction.dates', '', 'addons/auction/report/catalog2.xsl')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

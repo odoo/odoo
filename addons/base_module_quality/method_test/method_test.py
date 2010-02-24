@@ -71,8 +71,8 @@ This test checks if the module classes are raising exception when calling basic 
                 temp.append(_('Exception'))
                 ex_count += 1
             result_dict[obj] = temp
-        self.score = (ok_count + ex_count) and float(ok_count)/float(ok_count + ex_count) or 0.0
-        if self.score*100 < self.min_score:
+        self.score = (ok_count + ex_count) and float(ok_count) / float(ok_count + ex_count) or 0.0
+        if self.score * 100 < self.min_score:
             self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         self.result = self.get_result(result_dict)
         return None

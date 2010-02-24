@@ -34,7 +34,7 @@ def wiki_do_index(self, cr, uid, data, context):
     ids = data['ids']
     pool = pooler.get_pool(cr.dbname)
     wiki_pool = pool.get('wiki.wiki')
-    cr.execute("Select id, section from wiki_wiki where id = ANY(%s) order by section " ,(ids,))
+    cr.execute("Select id, section from wiki_wiki where id = ANY(%s) order by section " , (ids,))
     lst0 = cr.fetchall()
     lst = []
     ids = {}
@@ -83,7 +83,7 @@ class make_index(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':section_form, 'fields':{}, 'state':[('end','Cancel'),('yes','Create Index')]}
+            'result': {'type':'form', 'arch':section_form, 'fields':{}, 'state':[('end', 'Cancel'), ('yes', 'Create Index')]}
         },
         'yes': {
             'actions': [wiki_do_index],

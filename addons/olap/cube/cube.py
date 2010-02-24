@@ -10,7 +10,7 @@ class cube(object):
 
     def run(self, metadata):
         table = common.table_get(metadata, self.object.table_id)
-        return sqlalchemy.select(from_obj = [table], columns=[]),table
+        return sqlalchemy.select(from_obj=[table], columns=[]), table
 
     def validate(self, schema):
         for cube in schema.cube_ids:

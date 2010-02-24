@@ -27,7 +27,7 @@ from report import report_sxw
 class account_analytic_balance(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_analytic_balance, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'get_objects': self._get_objects,
             'lines_g': self._lines_g,
@@ -50,10 +50,10 @@ class account_analytic_balance(report_sxw.rml_parse):
 
     def get_children(self, ids):
         ids2 = []
-        read_data = self.pool.get('account.analytic.account').read(self.cr, self.uid, ids,['child_ids','code','complete_name','balance'])
+        read_data = self.pool.get('account.analytic.account').read(self.cr, self.uid, ids, ['child_ids', 'code', 'complete_name', 'balance'])
         for data in read_data:
             if (data['id'] not in self.acc_ids):
-                inculde_empty =  True
+                inculde_empty = True
                 if (not self.empty_acc) and data['balance'] == 0.00:
                     inculde_empty = False
                 if inculde_empty:
@@ -103,7 +103,7 @@ class account_analytic_balance(report_sxw.rml_parse):
     def _move_sum(self, account_id, date1, date2, option):
         if account_id not in self.acc_data_dict:
             account_analytic_obj = self.pool.get('account.analytic.account')
-            ids = account_analytic_obj.search(self.cr, self.uid,[('parent_id', 'child_of', [account_id])])
+            ids = account_analytic_obj.search(self.cr, self.uid, [('parent_id', 'child_of', [account_id])])
             self.acc_data_dict[account_id] = ids
         else:
             ids = self.acc_data_dict[account_id]
@@ -111,17 +111,17 @@ class account_analytic_balance(report_sxw.rml_parse):
         if option == "credit" :
             self.cr.execute("SELECT -sum(amount) FROM account_analytic_line \
                     WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount<0",
-                    (ids,date1, date2))
+                    (ids, date1, date2))
         elif option == "debit" :
             self.cr.execute("SELECT sum(amount) FROM account_analytic_line \
                     WHERE account_id =ANY(%s)\
                         AND date>=%s AND date<=%s AND amount>0",
-                    (ids,date1, date2))
+                    (ids, date1, date2))
         elif option == "quantity" :
             self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line \
                 WHERE account_id =ANY(%s)\
                     AND date>=%s AND date<=%s",
-                (ids,date1, date2))
+                (ids, date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
 
@@ -150,7 +150,7 @@ class account_analytic_balance(report_sxw.rml_parse):
     def _move_sum_balance(self, account_id, date1, date2):
         debit = self._move_sum(account_id, date1, date2, 'debit')
         credit = self._move_sum(account_id, date1, date2, 'credit')
-        return (debit-credit)
+        return (debit - credit)
 
 #    def _move_sum_quantity(self, account_id, date1, date2):
 #        account_analytic_obj = self.pool.get('account.analytic.account')
@@ -170,22 +170,22 @@ class account_analytic_balance(report_sxw.rml_parse):
 
         if not self.acc_sum_list:
             account_analytic_obj = self.pool.get('account.analytic.account')
-            ids2 = account_analytic_obj.search(self.cr, self.uid,[('parent_id', 'child_of', ids)])
+            ids2 = account_analytic_obj.search(self.cr, self.uid, [('parent_id', 'child_of', ids)])
             self.acc_sum_list = ids2
         else:
             ids2 = self.acc_sum_list
         if option == "debit" :
             self.cr.execute("SELECT sum(amount) FROM account_analytic_line \
                     WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount>0",
-                    (ids,date1, date2,))
+                    (ids, date1, date2,))
         elif option == "credit" :
             self.cr.execute("SELECT -sum(amount) FROM account_analytic_line \
                     WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount<0",
-                    (ids,date1, date2,))
+                    (ids, date1, date2,))
         elif option == "quantity" :
             self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line \
                     WHERE account_id =ANY(%s)AND date>=%s AND date<=%s",
-                    (ids,date1, date2,))
+                    (ids, date1, date2,))
         return self.cr.fetchone()[0] or 0.0
 
 
@@ -221,7 +221,7 @@ class account_analytic_balance(report_sxw.rml_parse):
     def _sum_balance(self, accounts, date1, date2):
         debit = self._sum_all(accounts, date1, date2, 'debit') or 0.0
         credit = self._sum_all(accounts, date1, date2, 'credit') or 0.0
-        return (debit-credit)
+        return (debit - credit)
 
 #    def _sum_quantity(self, accounts, date1, date2):
 #        ids = map(lambda x: x['id'], accounts)

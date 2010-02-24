@@ -29,7 +29,7 @@ from report import report_sxw
 class report_rappel(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(report_rappel, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time' : time,
             'ids_to_objects': self._ids_to_objects,
             'adr_get' : self._adr_get,
@@ -70,13 +70,13 @@ class report_rappel(report_sxw.rml_parse):
         li_delay.sort(reverse=True)
         text = ""
         a = {}
-        partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id','=',partner.id),('reconcile_id','=',False)])
+        partner_line = pooler.get_pool(self.cr.dbname).get('account.move.line').search(self.cr, self.uid, [('partner_id', '=', partner.id), ('reconcile_id', '=', False)])
         partner_delay = []
-        context={}
+        context = {}
         context.update({'lang': partner.lang})
         for i in pooler.get_pool(self.cr.dbname).get('account.move.line').browse(self.cr, self.uid, partner_line, context):
             for delay in li_delay:
-                if  i.followup_line_id and str(i.followup_line_id.delay)==str(delay):
+                if  i.followup_line_id and str(i.followup_line_id.delay) == str(delay):
                     text = i.followup_line_id.description
                     a[delay] = text
                     partner_delay.append(delay)

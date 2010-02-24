@@ -69,18 +69,18 @@ def _get_type(obj, cr, uid, data, context):
     if pick.move_lines:
         usage = pick.move_lines[0].location_id.usage
 
-    if pick.type =='out':
+    if pick.type == 'out':
         invoice_fields['type']['selection'] = [
             ('out_invoice', 'Customer Invoice'),
             ('in_refund', 'Supplier Refund'),
             ]
-    elif pick.type =='in':
+    elif pick.type == 'in':
         invoice_fields['type']['selection'] = [
             ('in_invoice', 'Supplier Invoice'),
             ('out_refund', 'Customer Refund'),
             ]
     else:
-        invoice_fields['type']['selection']=[
+        invoice_fields['type']['selection'] = [
             ('out_invoice', 'Customer Invoice'),
             ('in_invoice', 'Supplier Invoice'),
             ('out_refund', 'Customer Refund'),
@@ -113,8 +113,8 @@ def _create_invoice(obj, cr, uid, data, context):
 
     context['date_inv'] = data['form']['invoice_date']
     res = picking_obj.action_invoice_create(cr, uid, data['ids'],
-            journal_id = data['form']['journal_id'], group=data['form']['group'],
-            type=type, context= context)
+            journal_id=data['form']['journal_id'], group=data['form']['group'],
+            type=type, context=context)
 
     invoice_ids = res.values()
     if not invoice_ids:

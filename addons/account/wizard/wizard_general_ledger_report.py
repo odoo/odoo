@@ -31,7 +31,7 @@ account_form = '''<?xml version="1.0"?>
 </form>'''
 
 account_fields = {
-    'Account_list': {'string':'Chart of Accounts', 'type':'many2one', 'relation':'account.account', 'required':True ,'domain':[('parent_id','=',False)]},
+    'Account_list': {'string':'Chart of Accounts', 'type':'many2one', 'relation':'account.account', 'required':True , 'domain':[('parent_id', '=', False)]},
 }
 
 period_form = '''<?xml version="1.0"?>
@@ -76,19 +76,19 @@ period_fields = {
     'state':{
         'string':"Date/Period Filter",
         'type':'selection',
-        'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'none'
+        'selection':[('bydate', 'By Date'), ('byperiod', 'By Period'), ('all', 'By Date and Period'), ('none', 'No Filter')],
+        'default': lambda * a:'none'
     },
     'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
         'help': 'Keep empty for all open fiscal year'},
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
-    'sortbydate':{'string':"Sort by:",'type':'selection','selection':[('sort_date','Date'),('sort_mvt','Movement')]},
-    'display_account':{'string':"Display accounts ",'type':'selection','selection':[('bal_mouvement','With movements'),('bal_all','All'),('bal_solde','With balance is not equal to 0')]},
-    'landscape':{'string':"Landscape Mode",'type':'boolean'},
-    'soldeinit':{'string':"Include initial balances",'type':'boolean'},
-    'amount_currency':{'string':"With Currency",'type':'boolean'},
-    'date_from': {'string':"           Start date",'type':'date','required':True ,'default': lambda *a: time.strftime('%Y-01-01')},
-    'date_to': {'string':"End date",'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'sortbydate':{'string':"Sort by:", 'type':'selection', 'selection':[('sort_date', 'Date'), ('sort_mvt', 'Movement')]},
+    'display_account':{'string':"Display accounts ", 'type':'selection', 'selection':[('bal_mouvement', 'With movements'), ('bal_all', 'All'), ('bal_solde', 'With balance is not equal to 0')]},
+    'landscape':{'string':"Landscape Mode", 'type':'boolean'},
+    'soldeinit':{'string':"Include initial balances", 'type':'boolean'},
+    'amount_currency':{'string':"With Currency", 'type':'boolean'},
+    'date_from': {'string':"           Start date", 'type':'date', 'required':True , 'default': lambda * a: time.strftime('%Y-01-01')},
+    'date_to': {'string':"End date", 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
 }
 def _check_path(self, cr, uid, data, context):
     if data['model'] == 'account.account':
@@ -97,7 +97,7 @@ def _check_path(self, cr, uid, data, context):
         return 'account_selection'
 
 def _check(self, cr, uid, data, context):
-    if data['form']['landscape']==True:
+    if data['form']['landscape'] == True:
         return 'report_landscape'
     else:
         return 'report'
@@ -106,16 +106,16 @@ def _check_date(self, cr, uid, data, context):
 
     sql = """
         SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-    cr.execute(sql,(data['form']['date_from'],))
+    cr.execute(sql, (data['form']['date_from'],))
     res = cr.dictfetchall()
     if res:
         if (data['form']['date_to'] > res[0]['date_stop'] or data['form']['date_to'] < res[0]['date_start']):
-                raise  wizard.except_wizard(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
+                raise  wizard.except_wizard(_('UserError'), _('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
         else:
             return 'checkreport'
 
     else:
-        raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
+        raise wizard.except_wizard(_('UserError'), _('Date not in a defined fiscal year'))
 
 def _check_state(self, cr, uid, data, context):
 
@@ -142,8 +142,8 @@ class wizard_report(wizard.interface):
         #periods_obj=pooler.get_pool(cr.dbname).get('account.period')
         #data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
         data['form']['sortbydate'] = 'sort_date'
-        data['form']['display_account']='bal_all'
-        data['form']['landscape']=True
+        data['form']['display_account'] = 'bal_all'
+        data['form']['landscape'] = True
         data['form']['fiscalyear'] = False
         data['form']['amount_currency'] = True
         data['form']['context'] = context
@@ -152,19 +152,19 @@ class wizard_report(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'choice','next_state':_check_path}
+            'result': {'type':'choice', 'next_state':_check_path}
         },
         'account_selection': {
             'actions': [],
-            'result': {'type':'form', 'arch':account_form,'fields':account_fields, 'state':[('end','Cancel','gtk-cancel'),('checktype','Next','gtk-go-forward')]}
+            'result': {'type':'form', 'arch':account_form, 'fields':account_fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('checktype', 'Next', 'gtk-go-forward')]}
         },
         'checktype': {
             'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel','gtk-cancel'),('checkreport','Print','gtk-print')]}
+            'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('checkreport', 'Print', 'gtk-print')]}
         },
         'checkreport': {
             'actions': [],
-            'result': {'type':'choice','next_state':_check}
+            'result': {'type':'choice', 'next_state':_check}
         },
         'report_landscape': {
             'actions': [_check_state],

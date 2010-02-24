@@ -33,7 +33,7 @@ class bilan(base_report.base_report):
     def __init__(self, cr, uid, name, context):
         super(bilan, self).__init__(cr, uid, name, context)
 
-report_sxw.report_sxw('report.l10n.fr.bilan', 'account.move.line','addons/l10n_fr/report/bilan.rml', parser=bilan, header=False)
+report_sxw.report_sxw('report.l10n.fr.bilan', 'account.move.line', 'addons/l10n_fr/report/bilan.rml', parser=bilan, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

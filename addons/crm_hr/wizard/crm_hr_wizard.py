@@ -55,7 +55,7 @@ class job2phonecall(wizard.interface):
     def _default_values(self, cr, uid, data, context):
 
         case_obj = pooler.get_pool(cr.dbname).get('crm.applicant')
-        categ_id=pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])
+        categ_id = pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name', '=', 'Outbound')])
         case = case_obj.browse(cr, uid, data['id'])
         return {
                 'user_id' : case.user_id and case.user_id.id,
@@ -112,7 +112,7 @@ class job2phonecall(wizard.interface):
             'view_mode': 'tree,form',
             'res_model': 'crm.phonecall',
             'res_id' : new_phonecall_id,
-            'views': [(id3,'form'),(id2,'tree'),(False,'calendar'),(False,'graph')],
+            'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
         }
@@ -122,7 +122,7 @@ class job2phonecall(wizard.interface):
         'init': {
             'actions': [_default_values],
             'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
-                'state' : [('end', 'Cancel','gtk-cancel'),('order', 'Schedule Phone Call','gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'), ('order', 'Schedule Phone Call', 'gtk-go-forward')]}
         },
         'order': {
             'actions': [],
@@ -168,7 +168,7 @@ class job2meeting(wizard.interface):
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
             'view_id': False,
-            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree'),(False,'graph')],
+            'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree'), (False, 'graph')],
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']
             }
@@ -220,7 +220,7 @@ class partner_create(wizard.interface):
         for case in case_obj.browse(cr, uid, data['ids']):
             partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])
             if partner_id:
-                raise wizard.except_wizard(_('Warning !'),_('A partner is already existing with the same name.'))
+                raise wizard.except_wizard(_('Warning !'), _('A partner is already existing with the same name.'))
             else:
                 partner_id = partner_obj.create(cr, uid, {
                     'name': case.partner_name or case.name,
@@ -259,7 +259,7 @@ class partner_create(wizard.interface):
         'init': {
             'actions': [_selectPartner],
             'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
-                'state' : [('end', 'Cancel', 'gtk-cancel'),('confirm', 'Create Partner', 'gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'), ('confirm', 'Create Partner', 'gtk-go-forward')]}
         },
         'confirm': {
             'actions': [],

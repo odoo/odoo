@@ -19,15 +19,15 @@
 #
 ##############################################################################
 import netsvc
-from osv import fields,osv
+from osv import fields, osv
 
 
 # Overloaded sale_order to manage carriers :
 class sale_order(osv.osv):
     _inherit = 'sale.order'
     _columns = {
-        'carrier_id':fields.many2one("delivery.carrier","Delivery method", help="Complete this field if you plan to invoice the shipping based on picking."),
-        'id': fields.integer('ID', readonly=True,invisible=True),
+        'carrier_id':fields.many2one("delivery.carrier", "Delivery method", help="Complete this field if you plan to invoice the shipping based on picking."),
+        'id': fields.integer('ID', readonly=True, invisible=True),
     }
 
     def onchange_partner_id(self, cr, uid, ids, part):

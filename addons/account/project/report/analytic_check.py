@@ -30,7 +30,7 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
         self.sum_gen_cred = 0.0
         self.sum_ana_deb = 0.0
         self.sum_ana_cred = 0.0
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'lines_p': self._lines_p,
             'general_debit': self._gen_deb,
@@ -69,7 +69,7 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
                 'ana_debit': ad,
                 'ana_credit': ac,
                 'delta_debit': gd - ad,
-                'delta_credit': gc - ac,})
+                'delta_credit': gc - ac, })
             self.sum_gen_deb += gd
             self.sum_gen_cred += gc
             self.sum_ana_deb += ad
@@ -125,12 +125,12 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
         return self.sum_ana_cred
 
     def _delta_deb(self, date1, date2):
-        return (self._gen_deb(date1,date2)-self._ana_deb(date1,date2))
+        return (self._gen_deb(date1, date2) - self._ana_deb(date1, date2))
 
     def _delta_cred(self, date1, date2):
-        return (self._gen_cred(date1,date2)-self._ana_cred(date1,date2))
+        return (self._gen_cred(date1, date2) - self._ana_cred(date1, date2))
 
-report_sxw.report_sxw('report.account.analytic.account.analytic.check', 'account.analytic.account', 'addons/account/project/report/analytic_check.rml',parser=account_analytic_analytic_check, header=False)
+report_sxw.report_sxw('report.account.analytic.account.analytic.check', 'account.analytic.account', 'addons/account/project/report/analytic_check.rml', parser=account_analytic_analytic_check, header=False)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

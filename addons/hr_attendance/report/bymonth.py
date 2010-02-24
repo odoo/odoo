@@ -30,7 +30,7 @@ from report.interface import report_rml
 from report.interface import toxml
 
 one_day = DateTime.RelativeDateTime(days=1)
-month2name = [0,'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+month2name = [0, 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 def hour2str(h):
     hours = int(h)
@@ -42,9 +42,9 @@ class report_custom(report_rml):
         service = netsvc.LocalService('object_proxy')
 
         month = DateTime.DateTime(datas['form']['year'], datas['form']['month'], 1)
-        
+
         user_xml = ['<month>%s</month>' % month2name[month.month], '<year>%s</year>' % month.year]
-        
+
         for employee_id in ids:
             emp = service.execute(cr.dbname, uid, 'hr.employee', 'read', [employee_id])[0]
             stop, days_xml = False, []
@@ -78,15 +78,15 @@ class report_custom(report_rml):
                     if att['action'] == 'sign_out':
                         wh += (dt - ldt).hours
                     ldt = dt
-                
+
                 # Week xml representation
                 wh = hour2str(wh)
-                today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, wh)
+                today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days + 1, wh)
                 days_xml.append(today_xml)
                 today, tomor = tomor, tomor + one_day
-                
+
             user_xml.append(user_repr % '\n'.join(days_xml))
-        
+
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s

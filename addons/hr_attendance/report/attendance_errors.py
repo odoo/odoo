@@ -36,9 +36,9 @@ class attendance_print(report_sxw.rml_parse):
         })
 
     def _get_employees(self, emp_ids):
-        emp_obj_list = self.pool.get('hr.employee').browse(self.cr,self.uid,emp_ids)
-        return emp_obj_list    
-        
+        emp_obj_list = self.pool.get('hr.employee').browse(self.cr, self.uid, emp_ids)
+        return emp_obj_list
+
 #    def _sign(self, dt):
 #        if abs(dt.days) > 1:
 #            format = '%d day'+(((abs(dt.days)>=2) and 's') or '')+' %H:%M:%S'
@@ -59,7 +59,7 @@ class attendance_print(report_sxw.rml_parse):
 
 #            r['delay'] = self._sign(r['delay'])
             r['delay'] = str(r['delay']).split('.')[0]
-            if abs(temp) < max*60:
+            if abs(temp) < max * 60:
                 r['delay2'] = r['delay']
             else:
                 r['delay2'] = '/'
@@ -69,24 +69,24 @@ class attendance_print(report_sxw.rml_parse):
         self.cr.execute("select name as date, create_date, action, create_date-name as delay from hr_attendance where employee_id=%s and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action in (%s,%s) order by name", (employee_id, dt_to, dt_from, 'sign_in', 'sign_out'))
         res = self.cr.dictfetchall()
         if not res:
-            return ('/','/')
-        total2 = datetime.timedelta(seconds = 0, minutes = 0, hours = 0)
-        total = datetime.timedelta(seconds = 0, minutes = 0, hours = 0)
+            return ('/', '/')
+        total2 = datetime.timedelta(seconds=0, minutes=0, hours=0)
+        total = datetime.timedelta(seconds=0, minutes=0, hours=0)
         for r in res:
             if r['action'] == 'sign_out':
                 r['delay'] = -r['delay']
             total += r['delay']
-            if abs(r['delay'].seconds) < max*60:
+            if abs(r['delay'].seconds) < max * 60:
                 total2 += r['delay']
-        
+
         result_dict = {
                 'total' : total and str(total).split('.')[0],
                 'total2' : total2  and  str(total2).split('.')[0]
                 }
 #        return (self._sign(total),total2 and self._sign(total2))
         return [result_dict]
-    
-report_sxw.report_sxw('report.hr.attendance.error', 'hr.employee', 'addons/hr_attendance/report/attendance_errors.rml',parser=attendance_print, header=2)
+
+report_sxw.report_sxw('report.hr.attendance.error', 'hr.employee', 'addons/hr_attendance/report/attendance_errors.rml', parser=attendance_print, header=2)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

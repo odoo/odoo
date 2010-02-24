@@ -55,15 +55,15 @@ def _reconstruct_invoice_ref(cursor, user, reference, context):
     id_invoice = False
     # On fait d'abord une recherche sur toutes les factures
     # we now searhc for company
-    user_obj=pooler.get_pool(cursor.dbname).get('res.users')
-    user_current=user_obj.browse(cursor, user, user)
+    user_obj = pooler.get_pool(cursor.dbname).get('res.users')
+    user_current = user_obj.browse(cursor, user, user)
 
     ##
-    cursor.execute("SELECT inv.id,inv.number from account_invoice AS inv where inv.company_id = %s" ,(user_current.company_id.id,))
+    cursor.execute("SELECT inv.id,inv.number from account_invoice AS inv where inv.company_id = %s" , (user_current.company_id.id,))
     result_invoice = cursor.fetchall()
 
-    for inv_id,inv_name in result_invoice:
-        inv_name =  re.sub('[^0-9]', '0', str(inv_name))
+    for inv_id, inv_name in result_invoice:
+        inv_name = re.sub('[^0-9]', '0', str(inv_name))
         if inv_name == reference:
             id_invoice = inv_id
             break
@@ -71,7 +71,7 @@ def _reconstruct_invoice_ref(cursor, user, reference, context):
         cursor.execute('SELECT l.id ' \
                     'FROM account_move_line l, account_invoice i ' \
                     'WHERE l.move_id = i.move_id AND l.reconcile_id is NULL  ' \
-                        'AND i.id =ANY(%s)',([id_invoice],))
+                        'AND i.id =ANY(%s)', ([id_invoice],))
         inv_line = []
         for id_line in cursor.fetchall():
             inv_line.append(id_line[0])
@@ -166,7 +166,7 @@ def _import(obj, cursor, user, data, context):
         # TODO check if 11 is the right number
         reference = record['reference'][11:-1].lstrip('0')
         values = {
-            'name': 'IN '+ reference,
+            'name': 'IN ' + reference,
             'date': record['date'],
             'amount': record['amount'],
             'ref': reference,
@@ -179,7 +179,7 @@ def _import(obj, cursor, user, data, context):
             ('account_id.type', 'in', ['receivable', 'payable']),
             ], order='date desc', context=context)
         if not line_ids:
-            line_ids = _reconstruct_invoice_ref(cursor,user,reference,None)
+            line_ids = _reconstruct_invoice_ref(cursor, user, reference, None)
 
         line2reconcile = False
         partner_id = False

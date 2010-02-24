@@ -47,7 +47,7 @@ class wiz_state_open(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','No','gtk-no'),('yes','Yes','gtk-yes')]}
+            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'No', 'gtk-no'), ('yes', 'Yes', 'gtk-yes')]}
         },
         'yes': {
             'actions': [_change_inv_state],

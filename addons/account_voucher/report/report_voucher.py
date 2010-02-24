@@ -35,24 +35,24 @@ class report_voucher(report_sxw.rml_parse):
             'get_ref' : self._get_ref
         })
 
-    def convert(self,amount, cur):
-        amt_en = amount_to_text_en.amount_to_text(amount,'en',cur);
+    def convert(self, amount, cur):
+        amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur);
         return amt_en
-    
+
     def debit(self, move_ids):
         debit = 0.0
         for move in move_ids:#self.pool.get('account.move.line').browse(self.cr, self.uid, move_ids):
-            debit +=move.debit
+            debit += move.debit
         return debit
-    
+
     def credit(self, move_ids):
         credit = 0.0
         for move in move_ids:#self.pool.get('account.move.line').browse(self.cr, self.uid, move_ids):
-            credit +=move.credit
+            credit += move.credit
         return credit
-    
+
     def _get_ref(self, voucher_id, move_ids):
-        voucher_line = self.pool.get('account.voucher.line').search(self.cr, self.uid, [('partner_id','=',move_ids.partner_id.id), ('voucher_id','=',voucher_id)])
+        voucher_line = self.pool.get('account.voucher.line').search(self.cr, self.uid, [('partner_id', '=', move_ids.partner_id.id), ('voucher_id', '=', voucher_id)])
         if voucher_line:
             voucher = self.pool.get('account.voucher.line').browse(self.cr, self.uid, voucher_line)[0]
             return voucher.ref
@@ -62,5 +62,5 @@ report_sxw.report_sxw(
     'report.voucher.cash_receipt.drcr',
     'account.voucher',
     'addons/account_voucher/report/report_voucher.rml',
-    parser=report_voucher,header=False
+    parser=report_voucher, header=False
 )

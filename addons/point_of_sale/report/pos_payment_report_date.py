@@ -34,29 +34,29 @@ class pos_payment_report_date(report_sxw.rml_parse):
                 'pos_payment_date_total':self.__pos_payment_date__total__,
                 })
 
-    def __pos_payment_date__(self,form):
+    def __pos_payment_date__(self, form):
         dt1 = form['date_start'] + ' 00:00:00'
         dt2 = form['date_end'] + ' 23:59:59'
-        data={}
+        data = {}
         self.cr.execute ("select pt.name,pol.qty,pol.discount,pol.price_unit, " \
                          "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
                          "and po.state in ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id in %s " \
-                         ,(dt1,dt2,tuple(form['user_id'][0][-1])))
-        data=self.cr.dictfetchall()
+                         , (dt1, dt2, tuple(form['user_id'][0][-1])))
+        data = self.cr.dictfetchall()
         return data
 
-    def __pos_payment_date__total__(self,form):
+    def __pos_payment_date__total__(self, form):
         dt1 = form['date_start'] + ' 00:00:00'
         dt2 = form['date_end'] + ' 23:59:59'
-        res=[]
+        res = []
         self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) " \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
                          "and po.state in ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id in %s " \
-                         ,(dt1,dt2,tuple(form['user_id'][0][-1])))
-        res=self.cr.fetchone()[0]
+                         , (dt1, dt2, tuple(form['user_id'][0][-1])))
+        res = self.cr.fetchone()[0]
         return res
 
 

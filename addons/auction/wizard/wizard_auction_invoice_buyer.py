@@ -41,15 +41,15 @@ invoice_fields = {
 }
 
 
-def _values(self,cr,uid, datas,context={}):
+def _values(self, cr, uid, datas, context={}):
     pool = pooler.get_pool(cr.dbname)
-    lots= pool.get('auction.lots').browse(cr,uid,datas['ids'])
+    lots = pool.get('auction.lots').browse(cr, uid, datas['ids'])
 #   price = 0.0
-    amount_total=0.0
+    amount_total = 0.0
 #   pt_tax=pooler.get_pool(cr.dbname).get('account.tax')
     for lot in lots:
-        buyer=lot and lot.ach_uid.id or False
-        amount_total+=lot.buyer_price
+        buyer = lot and lot.ach_uid.id or False
+        amount_total += lot.buyer_price
 #       taxes = lot.product_id.taxes_id
 #       if lot.author_right:
 #           taxes.append(lot.author_right)
@@ -61,25 +61,25 @@ def _values(self,cr,uid, datas,context={}):
 #       amount_total+=lot.obj_price
     #   up_auction=pooler.get_pool(cr.dbname).get('auction.lots').write(cr,uid,[lot.id],{'ach_uid':datas['form']['buyer_id']})
     invoice_number = False
-    return {'objects':len(datas['ids']), 'amount':amount_total, 'number':invoice_number,'buyer_id':buyer}
+    return {'objects':len(datas['ids']), 'amount':amount_total, 'number':invoice_number, 'buyer_id':buyer}
 
 
 def _makeInvoices(self, cr, uid, data, context):
     newinv = []
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('auction.lots')
-    mod_obj = pool.get('ir.model.data') 
+    mod_obj = pool.get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
     id = mod_obj.read(cr, uid, result, ['res_id'])
-    lots= order_obj.browse(cr,uid,data['ids'])
-    invoice_number=data['form']['number']
+    lots = order_obj.browse(cr, uid, data['ids'])
+    invoice_number = data['form']['number']
     for lot in lots:
-        up_auction=pooler.get_pool(cr.dbname).get('auction.lots').write(cr,uid,[lot.id],{'ach_uid':data['form']['buyer_id']})
-    ids = order_obj.lots_invoice(cr, uid, data['ids'],context,data['form']['number'])
+        up_auction = pooler.get_pool(cr.dbname).get('auction.lots').write(cr, uid, [lot.id], {'ach_uid':data['form']['buyer_id']})
+    ids = order_obj.lots_invoice(cr, uid, data['ids'], context, data['form']['number'])
 #   ids = order_obj.lots_invoice(cr, uid, data['ids'],context,invoice_number)
     cr.commit()
     return {
-        'domain': "[('id','in', ["+','.join(map(str, ids))+"])]",
+        'domain': "[('id','in', [" + ','.join(map(str, ids)) + "])]",
         'name': 'Buyer invoices',
         'view_type': 'form',
         'view_mode': 'tree,form',
@@ -87,7 +87,7 @@ def _makeInvoices(self, cr, uid, data, context):
         'view_id': False,
         'context': "{'type':'in_refund'}",
         'type': 'ir.actions.act_window',
-        'search_view_id': id['res_id']         
+        'search_view_id': id['res_id']
     }
     return {}
 
@@ -98,7 +98,7 @@ class make_invoice(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : invoice_form,
                     'fields' : invoice_fields,
-                    'state' : [('end', 'Cancel'),('invoice', 'Create invoices')]}
+                    'state' : [('end', 'Cancel'), ('invoice', 'Create invoices')]}
         },
         'invoice' : {
             'actions' : [],

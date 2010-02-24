@@ -37,10 +37,10 @@ def activate(self, cr, uid, data, context):
         plan = plan_obj.browse(cr, uid, data['id'], context)
         if (not plan.name) or (not plan.code):
             raise wizard.except_wizard(_('Error'), _('Please put a name and a code before saving the model !'))
-        pids  =  pooler.get_pool(cr.dbname).get('account.analytic.plan').search(cr, uid, [], context=context)
+        pids = pooler.get_pool(cr.dbname).get('account.analytic.plan').search(cr, uid, [], context=context)
         if (not pids):
             raise wizard.except_wizard(_('Error'), _('No analytic plan defined !'))
-        plan_obj.write(cr,uid,[data['id']],{'plan_id':pids[0]})
+        plan_obj.write(cr, uid, [data['id']], {'plan_id':pids[0]})
         return 'info'
     else:
         return 'endit'
@@ -53,15 +53,15 @@ class create_model(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'choice','next_state':activate}
+            'result': {'type':'choice', 'next_state':activate}
         },
         'info': {
             'actions': [],
-            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','OK')]}
+            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end', 'OK')]}
         },
         'endit': {
             'actions': [],
-            'result': {'type':'action','action':_do_nothing , 'state':'end'} #FIXME: check
+            'result': {'type':'action', 'action':_do_nothing , 'state':'end'} #FIXME: check
         },
     }
 create_model('create.model')

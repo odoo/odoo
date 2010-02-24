@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 from tools.translate import _
 
 class showdiff(osv.osv_memory):
     _name = 'wizard.wiki.history.show_diff'
-    
+
     def _get_diff(self, cr, uid, ctx):
         history = self.pool.get('wiki.wiki.history')
         ids = ctx.get('active_ids')
@@ -37,7 +37,7 @@ class showdiff(osv.osv_memory):
 
         elif len(ids) == 1:
             old = history.browse(cr, uid, ids[0])
-            nids = history.search(cr, uid, [('wiki_id','=',old.wiki_id.id)])
+            nids = history.search(cr, uid, [('wiki_id', '=', old.wiki_id.id)])
             nids.sort()
             diff = history.getDiff(cr, uid, ids[0], nids[-1])
         else:

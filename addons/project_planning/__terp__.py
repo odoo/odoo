@@ -39,7 +39,7 @@ At the end of the month, the planning manager can also check if the encoded time
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': [
-        'project', 
+        'project',
         'hr_timesheet',
         'hr_holidays',
     ],

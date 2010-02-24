@@ -41,9 +41,9 @@ intro_start_form = '''<?xml version="1.0"?>
 </form>'''
 
 intro_start_fields = {
-    'check_date':  {'string':"Record from Date",'type':'datetime','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')},
+    'check_date':  {'string':"Record from Date", 'type':'datetime', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d %H:%M:%S')},
     'objects':{'string': 'Objects', 'type': 'many2many', 'relation': 'ir.model', 'help': 'List of objects to be recorded'},
-    'filter_cond':{'string':'Records only', 'type':'selection','selection':[('created','Created'),('modified','Modified'),('created_modified','Created & Modified')], 'required':True, 'default': lambda *args:'created'},
+    'filter_cond':{'string':'Records only', 'type':'selection', 'selection':[('created', 'Created'), ('modified', 'Modified'), ('created_modified', 'Created & Modified')], 'required':True, 'default': lambda * args:'created'},
 
 }
 
@@ -54,52 +54,52 @@ exp_form = '''<?xml version="1.0"?>
 </form>'''
 
 exp_fields = {
-    'res_text':  {'string':"Result",'type':'text', },
+    'res_text':  {'string':"Result", 'type':'text', },
 }
 
 def _info_default(self, cr, uid, data, context):
      pool = pooler.get_pool(cr.dbname)
      mod = pool.get('ir.model')
-     list=('ir.ui.view','ir.ui.menu','ir.model','ir.model.fields','ir.model.access',\
-        'res.partner','res.partner.address','res.partner.category','workflow',\
-        'workflow.activity','workflow.transition','ir.actions.server','ir.server.object.lines')
-     data['form']['objects']=mod.search(cr,uid,[('model','in',list)])
+     list = ('ir.ui.view', 'ir.ui.menu', 'ir.model', 'ir.model.fields', 'ir.model.access', \
+        'res.partner', 'res.partner.address', 'res.partner.category', 'workflow', \
+        'workflow.activity', 'workflow.transition', 'ir.actions.server', 'ir.server.object.lines')
+     data['form']['objects'] = mod.search(cr, uid, [('model', 'in', list)])
      cr.execute('select max(create_date) from ir_model_data')
-     c=(cr.fetchone())[0].split('.')[0]
-     c = time.strptime(c,"%Y-%m-%d %H:%M:%S")
-     sec=c.tm_sec + 1
-     c=(c[0],c[1],c[2],c[3],c[4],sec,c[6],c[7],c[8])
-     data['form']['check_date']=time.strftime("%Y-%m-%d %H:%M:%S",c)
+     c = (cr.fetchone())[0].split('.')[0]
+     c = time.strptime(c, "%Y-%m-%d %H:%M:%S")
+     sec = c.tm_sec + 1
+     c = (c[0], c[1], c[2], c[3], c[4], sec, c[6], c[7], c[8])
+     data['form']['check_date'] = time.strftime("%Y-%m-%d %H:%M:%S", c)
      return data['form']
 
 def _record_objects(self, cr, uid, data, context):
-    check_date=data['form']['check_date']
-    filter=data['form']['filter_cond']
+    check_date = data['form']['check_date']
+    filter = data['form']['filter_cond']
     pool = pooler.get_pool(cr.dbname)
-    user=(pool.get('res.users').browse(cr,uid,uid)).login
+    user = (pool.get('res.users').browse(cr, uid, uid)).login
     mod = pool.get('ir.module.record')
     mod_obj = pool.get('ir.model')
     mod.recording_data = []
 
     for id in data['form']['objects'][0][2]:
-        obj_name=(mod_obj.browse(cr,uid,id)).model
-        obj_pool=pool.get(obj_name)
-        if filter =='created':
-            search_condition =[('create_date','>',check_date)]
-        elif filter =='modified':
-            search_condition =[('write_date','>',check_date)]
-        elif filter =='created_modified':
-            search_condition =['|',('create_date','>',check_date),('write_date','>',check_date)]
+        obj_name = (mod_obj.browse(cr, uid, id)).model
+        obj_pool = pool.get(obj_name)
+        if filter == 'created':
+            search_condition = [('create_date', '>', check_date)]
+        elif filter == 'modified':
+            search_condition = [('write_date', '>', check_date)]
+        elif filter == 'created_modified':
+            search_condition = ['|', ('create_date', '>', check_date), ('write_date', '>', check_date)]
         if '_log_access' in dir(obj_pool):
               if not (obj_pool._log_access):
-                  search_condition=[]
+                  search_condition = []
               if '_auto' in dir(obj_pool):
                   if not obj_pool._auto:
                       continue
-        search_ids=obj_pool.search(cr,uid,search_condition)
+        search_ids = obj_pool.search(cr, uid, search_condition)
         for s_id in search_ids:
-             args=(cr.dbname,uid,user,obj_name,'copy',s_id,{},context)
-             mod.recording_data.append(('query',args, {}, s_id))
+             args = (cr.dbname, uid, user, obj_name, 'copy', s_id, {}, context)
+             mod.recording_data.append(('query', args, {}, s_id))
     return {}
 
 def _create_xml(self, cr, uid, data, context):
@@ -124,7 +124,7 @@ class base_module_record_objects(wizard.interface):
         },
          'record': {
             'actions': [],
-            'result': {'type':'action','action':_record_objects,'state':'intro'}
+            'result': {'type':'action', 'action':_record_objects, 'state':'intro'}
                 },
          'intro': {
             'actions': [ _create_xml ],
@@ -139,7 +139,7 @@ class base_module_record_objects(wizard.interface):
             },
          'end': {
             'actions': [],
-            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','OK')]}
+            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end', 'OK')]}
         },
     }
 base_module_record_objects('base_module_record.module_record_data')

@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 
 
 class report_workcenter_load(osv.osv):
-    _name="report.workcenter.load"
-    _description="Work Center Load"
+    _name = "report.workcenter.load"
+    _description = "Work Center Load"
     _auto = False
     _log_access = False
     _columns = {
@@ -56,14 +56,14 @@ report_workcenter_load()
 
 
 class report_mrp_inout(osv.osv):
-    _name="report.mrp.inout"
-    _description="Stock value variation"
+    _name = "report.mrp.inout"
+    _description = "Stock value variation"
     _auto = False
     _log_access = False
     _rec_name = 'date'
     _columns = {
         'date': fields.char('Week', size=64, required=True),
-        'value': fields.float('Stock value', required=True, digits=(16,2)),
+        'value': fields.float('Stock value', required=True, digits=(16, 2)),
     }
 
     def init(self, cr):

@@ -114,17 +114,17 @@ class account_bank_statement(osv.osv):
             states={'confirm': [('readonly', True)]}, domain=[('type', '=', 'cash')]),
         'period_id': fields.many2one('account.period', 'Period', required=True,
             states={'confirm':[('readonly', True)]}),
-        'balance_start': fields.float('Starting Balance', digits=(16,2),
-            states={'confirm':[('readonly',True)]}),
-        'balance_end_real': fields.float('Ending Balance', digits=(16,2),
+        'balance_start': fields.float('Starting Balance', digits=(16, 2),
+            states={'confirm':[('readonly', True)]}),
+        'balance_end_real': fields.float('Ending Balance', digits=(16, 2),
             states={'confirm':[('readonly', True)]}),
         'balance_end': fields.function(_end_balance, method=True, string='Balance'),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
             states={'confirm':[('readonly', True)]}),
         'move_line_ids': fields.one2many('account.move.line', 'statement_id',
-            'Entry lines', states={'confirm':[('readonly',True)]}),
-        'state': fields.selection([('draft', 'Draft'),('confirm', 'Confirmed')],
+            'Entry lines', states={'confirm':[('readonly', True)]}),
+        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Confirmed')],
             'State', required=True,
             states={'confirm': [('readonly', True)]}, readonly="1",
             help='When new statement is created the state will be \'Draft\'. \
@@ -134,10 +134,10 @@ class account_bank_statement(osv.osv):
     }
 
     _defaults = {
-        'name': lambda self, cr, uid, context=None: \
+        'name': lambda self, cr, uid, context = None: \
                 self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement'),
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
+        'date': lambda * a: time.strftime('%Y-%m-%d'),
+        'state': lambda * a: 'draft',
         'balance_start': _default_balance_start,
         'journal_id': _default_journal_id,
         'period_id': _get_period,
@@ -156,7 +156,7 @@ class account_bank_statement(osv.osv):
                 context=context).company_id.currency_id.id
 
         for st in self.browse(cr, uid, ids, context):
-            if not st.state=='draft':
+            if not st.state == 'draft':
                 continue
 
             if not (abs((st.balance_end or 0.0) - st.balance_end_real) < 0.0001):
@@ -183,7 +183,7 @@ class account_bank_statement(osv.osv):
                     'date': move.date,
                 }, context=context)
                 account_bank_statement_line_obj.write(cr, uid, [move.id], {
-                    'move_ids': [(4,move_id, False)]
+                    'move_ids': [(4, move_id, False)]
                 })
                 if not move.amount:
                     continue
@@ -193,7 +193,7 @@ class account_bank_statement(osv.osv):
                     account_id = st.journal_id.default_credit_account_id.id
                 else:
                     account_id = st.journal_id.default_debit_account_id.id
-                acc_cur = ((move.amount<=0) and st.journal_id.default_debit_account_id) or move.account_id
+                acc_cur = ((move.amount <= 0) and st.journal_id.default_debit_account_id) or move.account_id
                 amount = res_currency_obj.compute(cr, uid, st.currency.id,
                         company_currency_id, move.amount, context=context,
                         account=acc_cur)
@@ -208,8 +208,8 @@ class account_bank_statement(osv.osv):
                     'move_id': move_id,
                     'partner_id': ((move.partner_id) and move.partner_id.id) or False,
                     'account_id': (move.account_id) and move.account_id.id,
-                    'credit': ((amount>0) and amount) or 0.0,
-                    'debit': ((amount<0) and -amount) or 0.0,
+                    'credit': ((amount > 0) and amount) or 0.0,
+                    'debit': ((amount < 0) and - amount) or 0.0,
                     'statement_id': st.id,
                     'journal_id': st.journal_id.id,
                     'period_id': st.period_id.id,
@@ -227,7 +227,7 @@ class account_bank_statement(osv.osv):
 
                 if move.account_id and move.account_id.currency_id and move.account_id.currency_id.id <> company_currency_id:
                     val['currency_id'] = move.account_id.currency_id.id
-                    if company_currency_id==move.account_id.currency_id.id:
+                    if company_currency_id == move.account_id.currency_id.id:
                         amount_cur = move.amount
                     else:
                         amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
@@ -246,8 +246,8 @@ class account_bank_statement(osv.osv):
                             'move_id': move_id,
                             'partner_id': ((move.partner_id) and move.partner_id.id) or False,
                             'account_id': (newline.account_id) and newline.account_id.id,
-                            'debit': newline.amount>0 and newline.amount or 0.0,
-                            'credit': newline.amount<0 and -newline.amount or 0.0,
+                            'debit': newline.amount > 0 and newline.amount or 0.0,
+                            'credit': newline.amount < 0 and - newline.amount or 0.0,
                             'statement_id': st.id,
                             'journal_id': st.journal_id.id,
                             'period_id': st.period_id.id,
@@ -269,7 +269,7 @@ class account_bank_statement(osv.osv):
                     'move_id': move_id,
                     'partner_id': ((move.partner_id) and move.partner_id.id) or False,
                     'account_id': account_id,
-                    'credit': ((amount < 0) and -amount) or 0.0,
+                    'credit': ((amount < 0) and - amount) or 0.0,
                     'debit': ((amount > 0) and amount) or 0.0,
                     'statement_id': st.id,
                     'journal_id': st.journal_id.id,
@@ -289,7 +289,7 @@ class account_bank_statement(osv.osv):
                 if move.reconcile_id and move.reconcile_id.line_ids:
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
-                    if abs(move.reconcile_amount-move.amount)<0.0001:
+                    if abs(move.reconcile_amount - move.amount) < 0.0001:
 
                         writeoff_acc_id = False
                         #There should only be one write-off account!
@@ -312,7 +312,7 @@ class account_bank_statement(osv.osv):
     def button_cancel(self, cr, uid, ids, context={}):
         done = []
         for st in self.browse(cr, uid, ids, context):
-            if st.state=='draft':
+            if st.state == 'draft':
                 continue
             ids = []
             for line in st.line_ids:
@@ -356,7 +356,7 @@ class account_bank_statement(osv.osv):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete bank statement which are already confirmed !'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
-    
+
 account_bank_statement()
 
 
@@ -396,10 +396,10 @@ class account_bank_statement_reconcile(osv.osv):
         currency_id = context.get('currency_id', company_currency_id)
 
         acc_cur = None
-        if context.get('journal_id', False) and context.get('account_id',False):
-            st =self.pool.get('account.journal').browse(cursor, user, context['journal_id'])
+        if context.get('journal_id', False) and context.get('account_id', False):
+            st = self.pool.get('account.journal').browse(cursor, user, context['journal_id'])
             acc = self.pool.get('account.account').browse(cursor, user, context['account_id'])
-            acc_cur = (( context.get('amount',0.0)<=0) and st.default_debit_account_id) or acc
+            acc_cur = ((context.get('amount', 0.0) <= 0) and st.default_debit_account_id) or acc
 
         for reconcile_id in ids:
             res[reconcile_id] = res_currency_obj.compute(cursor, user,
@@ -418,10 +418,10 @@ class account_bank_statement_reconcile(osv.osv):
         currency_id = context.get('currency_id', company_currency_id)
 
         acc_cur = None
-        if context.get('journal_id', False) and context.get('account_id',False):
-            st =self.pool.get('account.journal').browse(cursor, user, context['journal_id'])
+        if context.get('journal_id', False) and context.get('account_id', False):
+            st = self.pool.get('account.journal').browse(cursor, user, context['journal_id'])
             acc = self.pool.get('account.account').browse(cursor, user, context['account_id'])
-            acc_cur = (( context.get('amount',0.0)<=0) and st.default_debit_account_id) or acc
+            acc_cur = ((context.get('amount', 0.0) <= 0) and st.default_debit_account_id) or acc
 
         return res_currency_obj.compute(cursor, user,
                 currency_id, company_currency_id,
@@ -459,7 +459,7 @@ class account_bank_statement_reconcile(osv.osv):
         return res
 
     def name_get(self, cursor, user, ids, context=None):
-        res= []
+        res = []
         for o in self.browse(cursor, user, ids, context=context):
             result = 0.0
             res_currency = ''
@@ -471,7 +471,7 @@ class account_bank_statement_reconcile(osv.osv):
                     result += line.debit - line.credit
             if res_currency:
                 res_currency = ' ' + res_currency
-            res.append((o.id, '[%.2f'% (result - o.total_new,) + res_currency + ']' ))
+            res.append((o.id, '[%.2f' % (result - o.total_new,) + res_currency + ']'))
         return res
 
     _columns = {
@@ -500,14 +500,14 @@ class account_bank_statement_reconcile(osv.osv):
              'reconcile_id', 'Bank Statement Line'),
     }
     _defaults = {
-        'name': lambda *a: time.strftime('%Y-%m-%d'),
-        'partner_id': lambda obj, cursor, user, context=None: \
+        'name': lambda * a: time.strftime('%Y-%m-%d'),
+        'partner_id': lambda obj, cursor, user, context = None: \
                 context.get('partner', False),
         'total_amount': _default_amount,
         'total_currency': _default_currency,
-        'total_second_amount':  lambda obj, cursor, user, context=None: \
+        'total_second_amount':  lambda obj, cursor, user, context = None: \
                 context.get('amount', 0.0),
-        'total_second_currency': lambda obj, cursor, user, context=None: \
+        'total_second_currency': lambda obj, cursor, user, context = None: \
                 context.get('currency_id', False),
         'total_balance': _default_amount,
     }
@@ -521,10 +521,10 @@ class account_bank_statement_reconcile_line(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', required=True),
         'line_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile'),
         'amount': fields.float('Amount', required=True),
-        'analytic_id': fields.many2one('account.analytic.account',"Analytic Account")
+        'analytic_id': fields.many2one('account.analytic.account', "Analytic Account")
     }
     _defaults = {
-        'name': lambda *a: 'Write-Off',
+        'name': lambda * a: 'Write-Off',
     }
 account_bank_statement_reconcile_line()
 
@@ -549,7 +549,7 @@ class account_bank_statement_line(osv.osv):
         if type == 'supplier':
             account_id = part.property_account_payable.id
         else:
-            account_id =  part.property_account_receivable.id
+            account_id = part.property_account_receivable.id
 
         cursor.execute('SELECT sum(debit-credit) \
                 FROM account_move_line \
@@ -590,19 +590,19 @@ class account_bank_statement_line(osv.osv):
         'date': fields.date('Date', required=True),
         'amount': fields.float('Amount'),
         'type': fields.selection([
-            ('supplier','Supplier'),
-            ('customer','Customer'),
-            ('general','General')
+            ('supplier', 'Supplier'),
+            ('customer', 'Customer'),
+            ('general', 'General')
             ], 'Type', required=True),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'account_id': fields.many2one('account.account','Account',
+        'account_id': fields.many2one('account.account', 'Account',
             required=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement',
             select=True, required=True, ondelete='cascade'),
         'reconcile_id': fields.many2one('account.bank.statement.reconcile',
-            'Reconcile', states={'confirm':[('readonly',True)]}),
+            'Reconcile', states={'confirm':[('readonly', True)]}),
         'move_ids': fields.many2many('account.move',
-            'account_bank_statement_line_move_rel', 'move_id','statement_id',
+            'account_bank_statement_line_move_rel', 'move_id', 'statement_id',
             'Moves'),
         'ref': fields.char('Reference', size=32),
         'note': fields.text('Notes'),
@@ -611,10 +611,10 @@ class account_bank_statement_line(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of bank statement line."),
     }
     _defaults = {
-        'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'type': lambda *a: 'general',
-        'sequence': lambda *a: 10,
+        'name': lambda self, cr, uid, context = {}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
+        'date': lambda * a: time.strftime('%Y-%m-%d'),
+        'type': lambda * a: 'general',
+        'sequence': lambda * a: 10,
     }
 
 account_bank_statement_line()

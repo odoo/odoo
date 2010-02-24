@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv,fields
+from osv import osv, fields
 
 class company(osv.osv):
     _inherit = 'res.company'
@@ -37,10 +37,10 @@ class company(osv.osv):
             help="Security days for each manufacturing operation."),
     }
     _defaults = {
-        'schedule_range': lambda *a: 80.0,
-        'po_lead': lambda *a: 1.0,
-        'security_lead': lambda *a: 5.0,
-        'manufacturing_lead': lambda *a: 1.0,
+        'schedule_range': lambda * a: 80.0,
+        'po_lead': lambda * a: 1.0,
+        'security_lead': lambda * a: 5.0,
+        'manufacturing_lead': lambda * a: 1.0,
     }
 company()
 

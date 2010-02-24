@@ -23,7 +23,7 @@ from osv import fields, osv
 import pooler
 
 class profile_accounting_config_install_modules_wizard(osv.osv_memory):
-    _name='profile.accounting.config.install_modules_wizard'
+    _name = 'profile.accounting.config.install_modules_wizard'
     _inherit = 'res.config.installer'
 
     _columns = {
@@ -33,7 +33,7 @@ class profile_accounting_config_install_modules_wizard(osv.osv_memory):
         'account_asset':fields.boolean('Asset Management'),
         'hr_timesheet_invoice':fields.boolean('Invoice on Analytic Entries'),
         'account_budget':fields.boolean('Budgets', help="Helps you to manage financial and analytic budgets."),
-        'board_document':fields.boolean('Document Management',help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
+        'board_document':fields.boolean('Document Management', help="The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
     }
 profile_accounting_config_install_modules_wizard()
 

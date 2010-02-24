@@ -36,14 +36,14 @@ parameter_form = '''<?xml version="1.0"?>
 </form>'''
 
 parameter_fields = {
-    'project_id': {'string':'Project', 'type':'many2one', 'required':True, 'relation':'project.project', 'domain': [('active','<>',False),('state','=','template')]},
+    'project_id': {'string':'Project', 'type':'many2one', 'required':True, 'relation':'project.project', 'domain': [('active', '<>', False), ('state', '=', 'template')]},
 }
 
 def _create_duplicate(self, cr, uid, data, context):
-    event_obj=pooler.get_pool(cr.dbname).get('event.event')
+    event_obj = pooler.get_pool(cr.dbname).get('event.event')
     project_obj = pooler.get_pool(cr.dbname).get('project.project')
-    duplicate_project_id= project_obj.copy(cr, uid,data['form']['project_id'], {'active': True})
-    project_obj.write(cr, uid, [duplicate_project_id], {'name': "copy of " + project_obj.browse(cr, uid, duplicate_project_id, context).name , 'date_start':time.strftime('%Y-%m-%d'),'date_end': event_obj.browse(cr, uid, [data['id']])[0].date_begin[0:10] })
+    duplicate_project_id = project_obj.copy(cr, uid, data['form']['project_id'], {'active': True})
+    project_obj.write(cr, uid, [duplicate_project_id], {'name': "copy of " + project_obj.browse(cr, uid, duplicate_project_id, context).name , 'date_start':time.strftime('%Y-%m-%d'), 'date_end': event_obj.browse(cr, uid, [data['id']])[0].date_begin[0:10] })
     event_obj.write(cr, uid, [data['id']], {'project_id': duplicate_project_id })
     return {}
 
@@ -51,7 +51,7 @@ class wizard_event_project(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end','Cancel'),('done', 'Ok')]}
+            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end', 'Cancel'), ('done', 'Ok')]}
 
         },
         'done':{

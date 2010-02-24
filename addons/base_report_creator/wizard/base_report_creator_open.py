@@ -32,14 +32,14 @@ from tools.translate import _
 class report_creator_open(wizard.interface):
     def _open_report(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        if context.get('report_id',False):
-            raise  wizard.except_wizard(_('UserError'),_('No Wizards available for this object!'))
+        if context.get('report_id', False):
+            raise  wizard.except_wizard(_('UserError'), _('No Wizards available for this object!'))
         rep = pool.get('base_report_creator.report').browse(cr, uid, data['id'], context)
         view_mode = rep.view_type1
         if rep.view_type2:
-            view_mode += ','+rep.view_type2
+            view_mode += ',' + rep.view_type2
         if rep.view_type3:
-            view_mode += ','+rep.view_type3
+            view_mode += ',' + rep.view_type3
         value = {
             'name': rep.name,
             'view_type': 'form',

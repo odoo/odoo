@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class hr_department(osv.osv):
@@ -27,12 +27,12 @@ class hr_department(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context)
         res = []
         for record in reads:
             name = record['name']
             if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
+                name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
 
@@ -51,8 +51,8 @@ class hr_department(osv.osv):
         'manager_id': fields.many2one('res.users', 'Manager', required=True),
         'member_ids': fields.many2many('res.users', 'hr_department_user_rel', 'department_id', 'user_id', 'Members'),
     }
-    def _get_members(self,cr, uid, context={}):
-        mids = self.search(cr, uid, [('manager_id','=',uid)])
+    def _get_members(self, cr, uid, context={}):
+        mids = self.search(cr, uid, [('manager_id', '=', uid)])
         result = {uid:1}
         for m in self.browse(cr, uid, mids, context):
             for user in m.member_ids:
@@ -61,7 +61,7 @@ class hr_department(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_department where id =ANY(%s)',(ids,))
+            cr.execute('select distinct parent_id from hr_department where id =ANY(%s)', (ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -120,10 +120,10 @@ class res_users(osv.osv):
         for arg in args:
             if arg[0] == 'parent_id':
                 parent = arg[2]
-        child_ids = self._child_compute(cr, uid, parent,name, args, {})
+        child_ids = self._child_compute(cr, uid, parent, name, args, {})
         if not child_ids:
             return [('id', 'in', [0])]
-        return [('id', 'in', child_ids.get(uid,[]))]
+        return [('id', 'in', child_ids.get(uid, []))]
 
     def _child_compute(self, cr, uid, ids, name, args, context={}):
         obj_dept = self.pool.get('hr.department')
@@ -137,14 +137,14 @@ class res_users(osv.osv):
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'])
                 childs = map(lambda x: x['member_ids'], data_dept)
                 childs = tools.flatten(childs)
-                childs = obj_user.search(cr, uid, [('id','in',childs),('active','=',True)])
+                childs = obj_user.search(cr, uid, [('id', 'in', childs), ('active', '=', True)])
                 if manager_id in childs:
                     childs.remove(manager_id)
 
                 child_ids.extend(tools.flatten(childs))
                 set = {}
                 map(set.__setitem__, child_ids, [])
-                child_ids =  set.keys()
+                child_ids = set.keys()
             else:
                child_ids = []
             result[manager_id] = child_ids
@@ -155,14 +155,14 @@ class res_users(osv.osv):
         for arg in args:
             if arg[0] == 'child_ids':
                 parent = arg[2]
-        child_ids = self._child_compute(cr, uid, parent,name, args, {})
+        child_ids = self._child_compute(cr, uid, parent, name, args, {})
         if not child_ids:
             return [('id', 'in', [0])]
-        return [('id', 'in', child_ids.get(uid,[]))]
+        return [('id', 'in', child_ids.get(uid, []))]
 
     _columns = {
-        'parent_id': fields.function(_parent_compute, relation='res.users',fnct_search=_parent_search, method=True, string="Managers", type='many2many'),
-        'child_ids': fields.function(_child_compute, relation='res.users', fnct_search=_child_search,method=True, string="Subordinates", type='many2many'),
+        'parent_id': fields.function(_parent_compute, relation='res.users', fnct_search=_parent_search, method=True, string="Managers", type='many2many'),
+        'child_ids': fields.function(_child_compute, relation='res.users', fnct_search=_child_search, method=True, string="Subordinates", type='many2many'),
         'context_department_id': fields.many2one('hr.department', 'Departments'),
     }
 res_users()

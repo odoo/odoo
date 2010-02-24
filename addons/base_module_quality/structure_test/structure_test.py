@@ -44,7 +44,7 @@ This test checks if the module satisfy tiny structure
     def run_test_struct(self, cr, uid, module_path):
         len_module = len(module_path.split('/'))
         module_name = module_path.split('/')
-        module_name = module_name[len_module-1]
+        module_name = module_name[len_module - 1]
         list_files = os.listdir(module_path)
         self.result_dict = {}
         f_list = []
@@ -91,7 +91,7 @@ This test checks if the module satisfy tiny structure
 
         # report folder checking...
         if module_dict.has_key('report'):
-            report_pys = filter(lambda x: (len(x.split('.'))>1 and x.split('.')[1] == 'py') and x != '__init__.py', module_dict['report'])
+            report_pys = filter(lambda x: (len(x.split('.')) > 1 and x.split('.')[1] == 'py') and x != '__init__.py', module_dict['report'])
             report_pys = map(lambda x:x.split('.')[0], report_pys)
             reports = ['.sxw', '.rml', '.xsl', '.py', '.xml']
             org_list_rep = []
@@ -105,7 +105,7 @@ This test checks if the module satisfy tiny structure
 
         # wizard folder checking...
         if module_dict.has_key('wizard'):
-            wizard_pys = filter(lambda x: (len(x.split('.'))>1 and x.split('.')[1] == 'py') and x != '__init__.py', module_dict['wizard'])
+            wizard_pys = filter(lambda x: (len(x.split('.')) > 1 and x.split('.')[1] == 'py') and x != '__init__.py', module_dict['wizard'])
             wizard_pys = map(lambda x:x.split('.')[0], wizard_pys)
             wizards = ['_view.xml', '_workflow.xml', '.py']
             org_list_wiz = []
@@ -133,14 +133,14 @@ This test checks if the module satisfy tiny structure
             final_score += score_process
 
         # final score
-        self.module_score +=  final_score
+        self.module_score += final_score
         self.score = self.module_score / (self.count)
-        self.result = self.get_result({ module_name: [module_name, int(self.score*100)]})
+        self.result = self.get_result({ module_name: [module_name, int(self.score * 100)]})
         return None
 
     def run_test(self, cr, uid, module_path):
         self.run_test_struct(cr, uid, module_path)
-        if self.score*100 < self.min_score:
+        if self.score * 100 < self.min_score:
             self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         else:
             self.message = ''
@@ -170,7 +170,7 @@ This test checks if the module satisfy tiny structure
         return score
 
     def get_result_details(self, dict_struct):
-        str_html = '''<html><head>%s</head><body><table class="tablestyle">'''%(self.get_style())
+        str_html = '''<html><head>%s</head><body><table class="tablestyle">''' % (self.get_style())
         header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('File Name'), _('Feedback about structure of module')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_struct) + '</table></body></html>'

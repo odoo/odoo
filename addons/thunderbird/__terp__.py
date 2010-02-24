@@ -51,7 +51,7 @@
 	"version" : "1.0",
 	"author" : "Axelor",
 	"website" : "http://www.axelor.com/",
-	"depends" : ["base","crm"],
+	"depends" : ["base", "crm"],
 	"category" : "Generic Modules/Thunderbird interface",
 	"init_xml" : [],
 	"demo_xml" : [],

@@ -32,16 +32,16 @@ import wizard
 import netsvc
 
 
-pos_details_res_form= """<?xml version="1.0"?>
+pos_details_res_form = """<?xml version="1.0"?>
 <form string="Sale by User">
      <field name="date_start" />
      <field name="date_end" />
 </form>
 """
 
-pos_details_res_field= {
-    'date_start': {'string':'Start Date','type':'date','required': True,'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'date_end': {'string':'End Date','type':'date','required': True,'default': lambda *a: time.strftime('%Y-%m-%d')},
+pos_details_res_field = {
+    'date_start': {'string':'Start Date', 'type':'date', 'required': True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
+    'date_end': {'string':'End Date', 'type':'date', 'required': True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
 
 
 }
@@ -55,7 +55,7 @@ class wizard_pos_details(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : pos_details_res_form,
                     'fields' : pos_details_res_field,
-                    'state' : [('end', 'Cancel','gtk-cancel'),('print_report', 'Print Report','gtk-print') ]}
+                    'state' : [('end', 'Cancel', 'gtk-cancel'), ('print_report', 'Print Report', 'gtk-print') ]}
         },
         'print_report' : {
             'actions' : [],

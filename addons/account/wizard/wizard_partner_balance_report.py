@@ -53,29 +53,29 @@ period_fields = {
     'state':{
         'string':"Date/Period Filter",
         'type':'selection',
-        'selection':[('bydate','By Date'),('byperiod','By Period'),('all','By Date and Period'),('none','No Filter')],
-        'default': lambda *a:'none'
+        'selection':[('bydate', 'By Date'), ('byperiod', 'By Period'), ('all', 'By Date and Period'), ('none', 'No Filter')],
+        'default': lambda * a:'none'
     },
     'fiscalyear': {
         'string':'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
-        'default': lambda *a:False,
+        'default': lambda * a:False,
         'help': 'Keep empty for all open fiscal year'
     },
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
     'result_selection':{
         'string':"Partner",
         'type':'selection',
-        'selection':[('customer','Receivable Accounts'),('supplier','Payable Accounts'),('all','Receivable and Payable Accounts')],
+        'selection':[('customer', 'Receivable Accounts'), ('supplier', 'Payable Accounts'), ('all', 'Receivable and Payable Accounts')],
         'required':True
     },
-    'soldeinit':{'string':"Include initial balances",'type':'boolean'},
-    'date1': {'string':'          Start date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-01-01')},
-    'date2': {'string':'End date', 'type':'date', 'required':True,'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'soldeinit':{'string':"Include initial balances", 'type':'boolean'},
+    'date1': {'string':'          Start date', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-01-01')},
+    'date2': {'string':'End date', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
 }
 
 class wizard_report(wizard.interface):
 
-    def _get_defaults(self,cr,uid,data,context):
+    def _get_defaults(self, cr, uid, data, context):
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
         if user.company_id:
            company_id = user.company_id.id
@@ -83,9 +83,9 @@ class wizard_report(wizard.interface):
            company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        periods_obj=pooler.get_pool(cr.dbname).get('account.period')
+        periods_obj = pooler.get_pool(cr.dbname).get('account.period')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
-        data['form']['periods'] =periods_obj.search(cr, uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
+        data['form']['periods'] = periods_obj.search(cr, uid, [('fiscalyear_id', '=', data['form']['fiscalyear'])])
         data['form']['company_id'] = company_id
         data['form']['soldeinit'] = True
         data['form']['fiscalyear'] = False
@@ -101,21 +101,21 @@ class wizard_report(wizard.interface):
     def _check_date(self, cr, uid, data, context):
         sql = """
             SELECT f.id, f.date_start, f.date_stop FROM account_fiscalyear f  Where %s between f.date_start and f.date_stop """
-        cr.execute(sql,(data['form']['date1'],))
+        cr.execute(sql, (data['form']['date1'],))
         res = cr.dictfetchall()
         if res:
             if (data['form']['date2'] > res[0]['date_stop'] or data['form']['date2'] < res[0]['date_start']):
-                raise  wizard.except_wizard(_('UserError'),_('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
+                raise  wizard.except_wizard(_('UserError'), _('Date to must be set between %s and %s') % (str(res[0]['date_start']), str(res[0]['date_stop'])))
             else:
                 return 'report'
 
         else:
-            raise wizard.except_wizard(_('UserError'),_('Date not in a defined fiscal year'))
+            raise wizard.except_wizard(_('UserError'), _('Date not in a defined fiscal year'))
 
     states = {
         'init': {
             'actions': [_get_defaults],
-           'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
+           'result': {'type':'form', 'arch':period_form, 'fields':period_fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('report', 'Print', 'gtk-print')]}
         },
 
         'report': {

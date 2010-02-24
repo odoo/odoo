@@ -31,7 +31,7 @@ class auction_bids(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
         })
-report_sxw.report_sxw('report.auction.bids', 'auction.bid', 'addons/auction/report/auction_bids.rml',parser=auction_bids)
+report_sxw.report_sxw('report.auction.bids', 'auction.bid', 'addons/auction/report/auction_bids.rml', parser=auction_bids)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

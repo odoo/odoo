@@ -46,7 +46,7 @@ dates_fields = {
 #   'report_type': {'string': 'Report Type','type': 'selection','selection': [('only_obj', 'Report Objects Only'),('with_account', 'Report Objects With Accounts'),('acc_with_child', 'Report Objects With Accounts and child of Accounts'),],'required': True},
 }
 
-back_form='''<?xml version="1.0"?>
+back_form = '''<?xml version="1.0"?>
 <form string="Notification">
 <separator string="You might have done following mistakes.Please correct them and try again." colspan="4"/>
 <separator string="1. You have selected more than 3 years in any case." colspan="4"/>
@@ -54,24 +54,24 @@ back_form='''<?xml version="1.0"?>
 <label string="You can select maximum 3 years.Please check again." colspan="4"/>
 </form>'''
 
-back_fields={
+back_fields = {
 }
 
-zero_form='''<?xml version="1.0"?>
+zero_form = '''<?xml version="1.0"?>
 <form string="Notification">
 <label string="You have to select at least 1 Fiscal Year. Try again."/>
 </form>'''
 
-zero_fields={
+zero_fields = {
 }
 
-periods_form='''<?xml version="1.0"?>
+periods_form = '''<?xml version="1.0"?>
 <form string="Set Periods">
 <separator string="Select Period(s) (All periods if empty)" colspan="4"/>
             <field name="periods" colspan="4" nolabel="1"/>
 </form>'''
 
-periods_fields={
+periods_fields = {
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'}
 }
 
@@ -85,7 +85,7 @@ class wizard_report(wizard.interface):
     states = {
         'init': {
             'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print BalanceSheet')]}
+            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end', 'Cancel'), ('report', 'Print BalanceSheet')]}
         },
         'report': {
             'actions': [],

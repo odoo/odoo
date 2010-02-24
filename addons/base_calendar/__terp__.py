@@ -21,30 +21,30 @@
 
 
 {
-    "name" : "Basic Calendar Functionality", 
-    "version" : "1.0", 
+    "name" : "Basic Calendar Functionality",
+    "version" : "1.0",
     "depends" : [
-                    "base", 
-                ], 
+                    "base",
+                ],
      'description': """
  Full featured calendar system that support:
   - Alerts (create requests)
   - Recurring events (*)
   - Invitations to others people
-""", 
-    "author" : "Tiny", 
-    'category': 'Generic Modules/Others', 
-    'website': 'http://www.openerp.com', 
+""",
+    "author" : "Tiny",
+    'category': 'Generic Modules/Others',
+    'website': 'http://www.openerp.com',
     "init_xml" : [
                    'base_calendar_data.xml'
-                   ], 
-    "demo_xml" : [], 
+                   ],
+    "demo_xml" : [],
     "update_xml" : [
-                    'security/ir.model.access.csv', 
+                    'security/ir.model.access.csv',
                     'base_calendar_view.xml'
-                    ], 
-    "installable" : True, 
-    "active" : False, 
+                    ],
+    "installable" : True,
+    "active" : False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

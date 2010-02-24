@@ -65,26 +65,26 @@ class document_directory_ics_fields(osv.osv):
         'name': fields.selection(map(lambda x: (x, x), ICS_TAGS.keys()), 'ICS Value', required=True),
         'content_id': fields.many2one('document.directory.content', 'Content', required=True, ondelete='cascade'),
         'expr': fields.char("Expression", size=64),
-        'fn': fields.selection(ICS_FUNCTIONS,'Function',help="Alternate method of calculating the value", required=True)
+        'fn': fields.selection(ICS_FUNCTIONS, 'Function', help="Alternate method of calculating the value", required=True)
     }
     _defaults = {
-        'fn': lambda *a: 'field',
+        'fn': lambda * a: 'field',
     }
-   
+
 document_directory_ics_fields()
 
 class document_directory_content(osv.osv):
     _inherit = 'document.directory.content'
     __rege = re.compile(r'OpenERP-([\w|\.]+)_([0-9]+)@(\w+)$')
     _columns = {
-        'object_id': fields.many2one('ir.model', 'Object', oldname= 'ics_object_id'),
-        'obj_iterate': fields.boolean('Iterate object',help="If set, a separate instance will be created for each record of Object"),
-        'fname_field': fields.char("Filename field",size=16,help="The field of the object used in the filename. Has to be a unique identifier."),
+        'object_id': fields.many2one('ir.model', 'Object', oldname='ics_object_id'),
+        'obj_iterate': fields.boolean('Iterate object', help="If set, a separate instance will be created for each record of Object"),
+        'fname_field': fields.char("Filename field", size=16, help="The field of the object used in the filename. Has to be a unique identifier."),
         'ics_domain': fields.char('Domain', size=64),
         'ics_field_ids': fields.one2many('document.directory.ics.fields', 'content_id', 'Fields Mapping')
     }
     _defaults = {
-        'ics_domain': lambda *args: '[]'
+        'ics_domain': lambda * args: '[]'
     }
     def _file_get(self, cr, node, nodename, content, context=None):
         if not content.obj_iterate:
@@ -95,7 +95,7 @@ class document_directory_content(osv.osv):
             mod = self.pool.get(content.object_id.model)
             uid = node.context.uid
             fname_fld = content.fname_field or 'id'
-            where = []            
+            where = []
             if node.domain:
                 where += eval(node.domain)
             if nodename:
@@ -107,20 +107,20 @@ class document_directory_content(osv.osv):
                 if not nodename.endswith(suffix):
                     return False
                 tval = nodename[len(prefix):0 - len(suffix)]
-                where.append((fname_fld,'=',tval))
+                where.append((fname_fld, '=', tval))
             # print "ics iterate clause:", where
             resids = mod.search(cr, uid, where, context=context)
             if not resids:
                 return False
-        
+
             res2 = []
-            for ro in mod.read(cr,uid,resids,['id', fname_fld]):
+            for ro in mod.read(cr, uid, resids, ['id', fname_fld]):
                 tname = (content.prefix or '') + str(ro[fname_fld])
                 tname += (content.suffix or '') + (content.extension or '')
                 dctx2 = { 'active_id': ro['id'] }
                 if fname_fld:
-                    dctx2['active_'+fname_fld] = ro[fname_fld]
-                n = node_content(tname, node, node.context,content,dctx=dctx2, act_id = ro['id'])
+                    dctx2['active_' + fname_fld] = ro[fname_fld]
+                n = node_content(tname, node, node.context, content, dctx=dctx2, act_id=ro['id'])
                 n.fill_fields(cr, dctx2)
                 res2.append(n)
             return res2
@@ -129,7 +129,7 @@ class document_directory_content(osv.osv):
         if node.extension != '.ics':
                 return super(document_directory_content, self).process_write(cr, uid, node, data, context)
         import vobject
-        parsedCal = vobject.readOne(data)        
+        parsedCal = vobject.readOne(data)
         fields = {}
         funcs = {}
         fexprs = {}
@@ -141,9 +141,9 @@ class document_directory_content(osv.osv):
         ctx.update(node.dctx)
         # print "ICS domain: ", type(content.ics_domain), content.ics_domain
         if content.ics_domain:
-            for d in safe_eval(content.ics_domain,ctx):
+            for d in safe_eval(content.ics_domain, ctx):
                 # TODO: operator?
-                idomain[d[0]]=d[2]
+                idomain[d[0]] = d[2]
         for n in content.ics_field_ids:
             fields[n.name] = n.field_id.name and str(n.field_id.name)
             funcs[n.name] = n.fn
@@ -156,20 +156,20 @@ class document_directory_content(osv.osv):
         for child in parsedCal.getChildren():
             result = {}
             uuid = None
-            
+
             for event in child.getChildren():
                 enl = event.name.lower()
-                if enl =='uid':
+                if enl == 'uid':
                     uuid = event.value
                 if not enl in fields:
                         # print "skip", enl
                         continue
                 if fields[enl] and funcs[enl] == 'field':
-                    if ICS_TAGS[enl]=='normal':
+                    if ICS_TAGS[enl] == 'normal':
                         result[fields[enl]] = event.value.encode('utf8')
-                    elif ICS_TAGS[enl]=='date':
+                    elif ICS_TAGS[enl] == 'date':
                         result[fields[enl]] = event.value.strftime('%Y-%m-%d %H:%M:%S')
-        
+
                     # print "Field ",enl,  result[fields[enl]]
                 elif fields[enl] and funcs[enl] == 'hours':
                     ntag = fexprs[enl] or 'dtstart'
@@ -180,7 +180,7 @@ class document_directory_content(osv.osv):
                     assert isinstance(ts_start, datetime.datetime)
                     assert isinstance(ts_end, datetime.datetime)
                     td = ts_end - ts_start
-                    result[fields[enl]] = td.days * 24.0 + ( td.seconds / 3600.0)
+                    result[fields[enl]] = td.days * 24.0 + (td.seconds / 3600.0)
 
                 # put other functions here..
                 else:
@@ -212,8 +212,8 @@ class document_directory_content(osv.osv):
                     # TODO: perhaps guess the model from the iCal, is it safe?
                     pass
 
-                wexpr = [ ( 'id', '=', wematch.group(2) ) ]
-                
+                wexpr = [ ('id', '=', wematch.group(2)) ]
+
             # print "Looking at ", cmodel, " for ", wexpr
             # print "domain=", idomain
 
@@ -223,15 +223,15 @@ class document_directory_content(osv.osv):
                 id = False
             else:
                 id = fobj.search(cr, uid, wexpr, context=context)
-        
+
             if isinstance(id, list):
                 if len(id) > 1:
                     raise Exception("Multiple matches found for ICS")
-            if id:                
+            if id:
                 fobj.write(cr, uid, id, result, context=context)
             else:
                 r = idomain.copy()
-                r.update(result)                
+                r.update(result)
                 fobj.create(cr, uid, r, context=context)
 
         return True
@@ -256,14 +256,14 @@ class document_directory_content(osv.osv):
         obj_class = self.pool.get(content.object_id.model)
 
         if content.ics_domain:
-            domain = safe_eval(content.ics_domain,ctx)
+            domain = safe_eval(content.ics_domain, ctx)
         else:
             domain = []
         if node.act_id:
-            domain.append(('id','=',node.act_id))
+            domain.append(('id', '=', node.act_id))
         # print "process read clause:",domain
         ids = obj_class.search(cr, uid, domain, context=ctx)
-        cal = vobject.iCalendar()        
+        cal = vobject.iCalendar()
         for obj in obj_class.browse(cr, uid, ids):
             event = cal.add('vevent')
             # Fix dtstamp et last-modified with create and write date on the object line
@@ -276,24 +276,24 @@ class document_directory_content(osv.osv):
                 if field.field_id.name:
                     value = getattr(obj, field.field_id.name)
                 else: value = None
-                if (not value) and field.name=='uid':
+                if (not value) and field.name == 'uid':
                     value = 'OpenERP-%s_%s@%s' % (content.object_id.model, str(obj.id), cr.dbname,)
                     # Why? obj_class.write(cr, uid, [obj.id], {field.field_id.name: value})
-                if ICS_TAGS[field.name]=='normal':
-                    if type(value)==type(obj):
-                        value=value.name
+                if ICS_TAGS[field.name] == 'normal':
+                    if type(value) == type(obj):
+                        value = value.name
                     event.add(field.name).value = tools.ustr(value) or ''
-                elif ICS_TAGS[field.name]=='date' and value:
+                elif ICS_TAGS[field.name] == 'date' and value:
                     if field.name == 'dtstart':
                         date_start = start_date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(value , "%Y-%m-%d %H:%M:%S")))
-                    if field.name == 'dtend' and ( isinstance(value, float) or field.fn == 'hours'):
+                    if field.name == 'dtend' and (isinstance(value, float) or field.fn == 'hours'):
                         value = (start_date + datetime.timedelta(hours=value)).strftime('%Y-%m-%d %H:%M:%S')
-                    if len(value)==10:
+                    if len(value) == 10:
                         value = ics_datetime(value, True)
                     else:
                         value = ics_datetime(value)
                     event.add(field.name).value = value
-        s = cal.serialize()        
+        s = cal.serialize()
         return s
 document_directory_content()
 

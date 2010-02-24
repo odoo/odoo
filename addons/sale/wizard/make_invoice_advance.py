@@ -34,9 +34,9 @@ form = """<?xml version="1.0"?>
 </form>
 """
 fields = {
-        'product_id': {'string':'Product', 'type':'many2one','relation':'product.product','required':True},
-        'amount': {'string':'Unit Price', 'type':'float', 'size':(16,2),'required':True},
-        'qtty': {'string':'Quantity', 'type':'float', 'size':(16,2),'required':True, 'default': lambda *a: 1},
+        'product_id': {'string':'Product', 'type':'many2one', 'relation':'product.product', 'required':True},
+        'amount': {'string':'Unit Price', 'type':'float', 'size':(16, 2), 'required':True},
+        'qtty': {'string':'Quantity', 'type':'float', 'size':(16, 2), 'required':True, 'default': lambda * a: 1},
 }
 
 form_msg = """<?xml version="1.0"?>
@@ -50,7 +50,7 @@ def _createInvoices(self, cr, uid, data, context={}):
     list_inv = []
     pool_obj = pooler.get_pool(cr.dbname)
     obj_sale = pool_obj.get('sale.order')
-    data_sale = obj_sale.browse(cr,uid,data['ids'])
+    data_sale = obj_sale.browse(cr, uid, data['ids'])
     obj_lines = pool_obj.get('account.invoice.line')
     for sale in data_sale:
         address_contact = False
@@ -61,8 +61,8 @@ def _createInvoices(self, cr, uid, data, context={}):
             raise osv.except_osv(
                 _('Error'),
                 _("You cannot make an advance on a sale order that is defined as 'Automatic Invoice after delivery'."))
-        val = obj_lines.product_id_change(cr, uid, [], data['form']['product_id'],uom = False, partner_id = sale.partner_id.id, fposition_id=sale.fiscal_position.id)
-        line_id =obj_lines.create(cr, uid, {
+        val = obj_lines.product_id_change(cr, uid, [], data['form']['product_id'], uom=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
+        line_id = obj_lines.create(cr, uid, {
             'name': val['value']['name'],
             'account_id':val['value']['account_id'],
             'price_unit': data['form']['amount'],
@@ -70,7 +70,7 @@ def _createInvoices(self, cr, uid, data, context={}):
             'discount': False,
             'uos_id': val['value']['uos_id'],
             'product_id':data['form']['product_id'],
-            'invoice_line_tax_id': [(6,0,val['value']['invoice_line_tax_id'])],
+            'invoice_line_tax_id': [(6, 0, val['value']['invoice_line_tax_id'])],
             'account_analytic_id': sale.project_id and sale.project_id.id or False,
             'note':'',
         })
@@ -84,7 +84,7 @@ def _createInvoices(self, cr, uid, data, context={}):
             'partner_id': sale.partner_id.id,
             'address_invoice_id':sale.partner_invoice_id.id,
             'address_contact_id':sale.partner_order_id.id,
-            'invoice_line': [(6,0,create_ids)],
+            'invoice_line': [(6, 0, create_ids)],
             'currency_id' :sale.pricelist_id.currency_id.id,
             'comment': '',
             'payment_term':sale.payment_term.id,
@@ -96,42 +96,42 @@ def _createInvoices(self, cr, uid, data, context={}):
         for inv in sale.invoice_ids:
             ids_inv.append(inv.id)
         ids_inv.append(inv_id)
-        obj_sale.write(cr,uid,sale.id,{'invoice_ids':[(6,0,ids_inv)]})
+        obj_sale.write(cr, uid, sale.id, {'invoice_ids':[(6, 0, ids_inv)]})
         list_inv.append(inv_id)
 #
 # If invoice on picking: add the cost on the SO
 # If not, the advance will be deduced when generating the final invoice
 #
-        if sale.order_policy=='picking':
+        if sale.order_policy == 'picking':
             pool_obj.get('sale.order.line').create(cr, uid, {
                 'order_id': sale.id,
                 'name': val['value']['name'],
-                'price_unit': -data['form']['amount'],
+                'price_unit':-data['form']['amount'],
                 'product_uom_qty': data['form']['qtty'],
                 'product_uos_qty': data['form']['qtty'],
                 'product_uos': val['value']['uos_id'],
                 'product_uom': val['value']['uos_id'],
                 'product_id':data['form']['product_id'],
                 'discount': False,
-                'tax_id': [(6,0,val['value']['invoice_line_tax_id'])],
+                'tax_id': [(6, 0, val['value']['invoice_line_tax_id'])],
             }, context)
     return {'invoice_ids':list_inv}
 
 class sale_advance_payment(wizard.interface):
     def _open_invoice(self, cr, uid, data, context):
         pool_obj = pooler.get_pool(cr.dbname)
-        mod_obj = pool_obj.get('ir.model.data') 
+        mod_obj = pool_obj.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        id = mod_obj.read(cr, uid, result, ['res_id'])        
-        model_data_ids = pool_obj.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','invoice_form')])
-        resource_id = pool_obj.get('ir.model.data').read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+        id = mod_obj.read(cr, uid, result, ['res_id'])
+        model_data_ids = pool_obj.get('ir.model.data').search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'invoice_form')])
+        resource_id = pool_obj.get('ir.model.data').read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
-            'domain': "[('id','in', ["+','.join(map(str,data['form']['invoice_ids']))+"])]",
+            'domain': "[('id','in', [" + ','.join(map(str, data['form']['invoice_ids'])) + "])]",
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
-            'views': [(False,'tree'),(resource_id,'form')],
+            'views': [(False, 'tree'), (resource_id, 'form')],
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']
@@ -140,11 +140,11 @@ class sale_advance_payment(wizard.interface):
     states = {
         'init' : {
             'actions' : [],
-            'result' : {'type' : 'form' ,   'arch' : form,'fields' : fields,'state' : [('end','Cancel','gtk-cancel'),('create','Create Advance Invoice','gtk-ok')]}
+            'result' : {'type' : 'form' , 'arch' : form, 'fields' : fields, 'state' : [('end', 'Cancel', 'gtk-cancel'), ('create', 'Create Advance Invoice', 'gtk-ok')]}
         },
         'create': {
             'actions': [_createInvoices],
-            'result': {'type' : 'form' ,'arch' : form_msg,'fields' : fields_msg, 'state':[('end','Close','gtk-close'),('open','Open Advance Invoice','gtk-open')]}
+            'result': {'type' : 'form' , 'arch' : form_msg, 'fields' : fields_msg, 'state':[('end', 'Close', 'gtk-close'), ('open', 'Open Advance Invoice', 'gtk-open')]}
         },
         'open': {
             'actions': [],

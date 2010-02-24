@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields, osv, orm
 import crm
 
 class crm_helpdesk(osv.osv):
@@ -32,7 +32,7 @@ class crm_helpdesk(osv.osv):
             'date': fields.datetime('Date'),
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
-            'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
+            'canal_id': fields.many2one('res.partner.canal', 'Channel', help="The channels represent the different communication modes available with the customer." \
                                                                             " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),

@@ -32,7 +32,7 @@ class hr_timesheet_invoice_factor(osv.osv):
         'factor': fields.float('Discount (%)', required=True),
     }
     _defaults = {
-        'factor': lambda *a: 0.0,
+        'factor': lambda * a: 0.0,
     }
 
 hr_timesheet_invoice_factor()
@@ -49,7 +49,7 @@ class account_analytic_account(osv.osv):
                 res.setdefault(account.id, 0.0)
                 res[account.id] += invoice.amount_untaxed
         for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[id] = round(res.get(id, 0.0), 2)
         return res
 
 
@@ -59,13 +59,13 @@ class account_analytic_account(osv.osv):
         'amount_max': fields.float('Max. Invoice Price'),
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
             help="Total invoiced"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor','Reinvoice Costs',
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Reinvoice Costs',
             help="Fill this field if you plan to automatically generate invoices based " \
             "on the costs in this analytic account: timesheets, expenses, ..." \
             "You can configure an automatic invoice rate on analytic accounts."),
     }
     _defaults = {
-        'pricelist_id': lambda self,cr, uid, ctx: ctx.get('pricelist_id', False),
+        'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
 account_analytic_account()
 
@@ -73,24 +73,24 @@ account_analytic_account()
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),                
+        'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing'),
     }
 
     def unlink(self, cursor, user, ids, context=None):
-        return super(account_analytic_line,self).unlink(cursor, user, ids,
+        return super(account_analytic_line, self).unlink(cursor, user, ids,
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        self._check_inv(cr, uid, ids,vals)
-        return super(account_analytic_line,self).write(cr, uid, ids, vals,
+        self._check_inv(cr, uid, ids, vals)
+        return super(account_analytic_line, self).write(cr, uid, ids, vals,
                 context=context)
 
-    def _check_inv(self, cr, uid, ids,vals):
+    def _check_inv(self, cr, uid, ids, vals):
         select = ids
         if isinstance(select, (int, long)):
             select = [ids]
-        if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
+        if (not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
                     raise osv.except_osv(_('Error !'),
@@ -114,11 +114,11 @@ class hr_analytic_timesheet(osv.osv):
         res = {}
         if not account_id:
             return res
-        res.setdefault('value',{})
+        res.setdefault('value', {})
         acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
         st = acc.to_invoice.id
         res['value']['to_invoice'] = st or False
-        if acc.state=='pending':
+        if acc.state == 'pending':
             res['warning'] = {
                 'title': 'Warning',
                 'message': 'The analytic account is in pending state.\nYou should not work on this account !'

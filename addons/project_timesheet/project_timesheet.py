@@ -37,7 +37,7 @@ class project_work(osv.osv):
         if not emp_id:
             user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
             raise osv.except_osv(_('Bad Configuration !'),
-                 _('No employee defined for user "%s". You must create one.')% (user_name,))
+                 _('No employee defined for user "%s". You must create one.') % (user_name,))
         emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0])
         if not emp.product_id:
             raise osv.except_osv(_('Bad Configuration !'),
@@ -47,7 +47,7 @@ class project_work(osv.osv):
             raise osv.except_osv(_('Bad Configuration !'),
                  _('No journal defined on the related employee.\nFill in the timesheet tab of the employee form.'))
 
-        a =  emp.product_id.product_tmpl_id.property_account_expense.id
+        a = emp.product_id.product_tmpl_id.property_account_expense.id
         if not a:
             a = emp.product_id.categ_id.property_account_expense_categ.id
             if not a:
@@ -58,7 +58,7 @@ class project_work(osv.osv):
         res['general_account_id'] = a
         res['product_uom_id'] = emp.product_id.uom_id.id
         return res
-        
+
     def create(self, cr, uid, vals, *args, **kwargs):
         obj = self.pool.get('hr.analytic.timesheet')
         vals_line = {}
@@ -79,15 +79,15 @@ class project_work(osv.osv):
         vals_line['amount'] = 00.0
         vals_line['product_uom_id'] = result['product_uom_id']
         timeline_id = obj.create(cr, uid, vals_line, {})
-        
+
         # Compute based on pricetype
-        amount_unit=obj.on_change_unit_amount(cr, uid, line_id, 
+        amount_unit = obj.on_change_unit_amount(cr, uid, line_id,
             vals_line['product_id'], vals_line['unit_amount'], unit, context)
-            
-        vals_line['amount'] = (-1) * vals['hours']* (unit_amount or 0.0)
-        obj.write(cr, uid,[timeline_id], vals_line, {})
+
+        vals_line['amount'] = (-1) * vals['hours'] * (unit_amount or 0.0)
+        obj.write(cr, uid, [timeline_id], vals_line, {})
         vals['hr_analytic_timesheet_id'] = timeline_id
-        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
+        return super(project_work, self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         vals_line = {}
@@ -111,15 +111,15 @@ class project_work(osv.osv):
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
                 vals_line['unit_amount'] = vals['hours']
-                
+
                 # Compute based on pricetype
-                amount_unit=obj.on_change_unit_amount(cr, uid, line_id, 
+                amount_unit = obj.on_change_unit_amount(cr, uid, line_id,
                     vals_line['product_id'], vals_line['unit_amount'], unit, context)
-                
+
                 vals_line['amount'] = (-1) * vals['hours'] * (amount_unit or 0.0)
             obj.write(cr, uid, [line_id], vals_line, {})
 
-        return super(project_work,self).write(cr, uid, ids, vals, context)
+        return super(project_work, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         pool_analytic_timesheet = self.pool.get('hr.analytic.timesheet')
@@ -130,9 +130,9 @@ class project_work(osv.osv):
             if timesheet_id in list_avail_ids:
                 obj = pool_analytic_timesheet.unlink(cr, uid, [timesheet_id], *args, **kwargs)
 
-        return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
+        return super(project_work, self).unlink(cr, uid, ids, *args, **kwargs)
 
-    _columns={
+    _columns = {
         'hr_analytic_timesheet_id':fields.integer('Related Timeline Id')
     }
 
@@ -147,10 +147,10 @@ class task(osv.osv):
             if task_obj.work_ids:
                 work_ids = [x.id for x in task_obj.work_ids]
                 self.pool.get('project.task.work').unlink(cr, uid, work_ids, *args, **kwargs)
-        
-        return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
-    
-    def write(self, cr, uid, ids,vals,context={}):
+
+        return super(task, self).unlink(cr, uid, ids, *args, **kwargs)
+
+    def write(self, cr, uid, ids, vals, context={}):
         if (vals.has_key('project_id') and vals['project_id']) or (vals.has_key('name') and vals['name']):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
@@ -168,7 +168,7 @@ class task(osv.osv):
                         if (vals.has_key('name') and vals['name']):
                             vals_line['name'] = '%s: %s' % (tools.ustr(vals['name']), tools.ustr(task_work.name) or '/')
                         hr_anlytic_timesheet.write(cr, uid, [line_id], vals_line, {})
-        return super(task,self).write(cr, uid, ids, vals, context)
+        return super(task, self).write(cr, uid, ids, vals, context)
 
 task()
 

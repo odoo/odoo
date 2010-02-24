@@ -29,9 +29,9 @@ import wizard
 import pooler
 from tools.translate import _
 
-def _check(self,cr,uid,data,*a):
+def _check(self, cr, uid, data, *a):
     pool = pooler.get_pool(cr.dbname)
-    order_lst = pool.get('pos.order').browse(cr,uid,data['ids'])
+    order_lst = pool.get('pos.order').browse(cr, uid, data['ids'])
     for order in order_lst:
         if order.state_2 in ('to_verify'):
             raise wizard.except_wizard('Error!', 'Can not print the receipt because of discount and/or payment ')

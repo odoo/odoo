@@ -29,12 +29,12 @@ class cal_event_import_wizard(wizard.interface):
         <separator string="Select ICS file"/>
         <field name="file_path" colspan="4" width="300" nolabel="1"/>
     </form>'''
-    
+
     form1_fields = {
             'file_path': {
-                'string': 'Select ICS file', 
-                'type': 'binary', 
-                'required': True, 
+                'string': 'Select ICS file',
+                'type': 'binary',
+                'required': True,
                 'filters': '*.ics'
                 }
             }
@@ -42,12 +42,12 @@ class cal_event_import_wizard(wizard.interface):
     <form string="Import Message">
         <field name="msg" colspan="4" width="300" nolabel="1"/>
     </form>'''
-    
+
     display_fields = {
             'msg': {
-                'string': '', 
-                'type': 'text', 
-                'readonly': True, 
+                'string': '',
+                'type': 'text',
+                'readonly': True,
                 }
             }
 
@@ -61,28 +61,28 @@ class cal_event_import_wizard(wizard.interface):
         if vals:
             cnt = len(vals)
         return {}
-    
+
     def _result_set(self, cr, uid, data, context=None):
-        msg = (cnt and "Imported %s components" % cnt) or 'Import Sucessful' 
+        msg = (cnt and "Imported %s components" % cnt) or 'Import Sucessful'
         return {'msg': msg}
-    
+
     states = {
         'init': {
-            'actions': [], 
+            'actions': [],
             'result': {'type': 'form', 'arch': form1, 'fields': form1_fields, \
                        'state': [('end', '_Cancel', 'gtk-cancel'), ('open', '_Import', 'gtk-ok')]}
-        }, 
+        },
         'open': {
-            'actions': [], 
+            'actions': [],
             'result': {'type': 'action', 'action': _process_imp_ics, 'state': 'display'}
-        }, 
+        },
        'display': {
-            'actions': [_result_set], 
+            'actions': [_result_set],
             'result': {'type': 'form', 'arch': display, 'fields': display_fields, \
                        'state': [('end', 'Ok', 'gtk-ok')]}
-        }, 
+        },
     }
-    
+
 cal_event_import_wizard('calendar.event.import')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

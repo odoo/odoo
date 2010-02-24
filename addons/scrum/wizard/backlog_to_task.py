@@ -37,7 +37,7 @@ btt_fields = {
 def _do_create(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     backlogs = pool.get('scrum.product.backlog').browse(cr, uid, data['ids'])
-    mod_obj = pool.get('ir.model.data') 
+    mod_obj = pool.get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'project', 'view_task_search_form')
     id = mod_obj.read(cr, uid, result, ['res_id'])
     ids = []
@@ -54,7 +54,7 @@ def _do_create(self, cr, uid, data, context):
         }))
 
     value = {
-        'domain': "[('product_backlog_id','in',["+','.join(map(str,data['ids']))+"])]",
+        'domain': "[('product_backlog_id','in',[" + ','.join(map(str, data['ids'])) + "])]",
         'name': 'Open Backlog Tasks',
         'view_type': 'form',
         'view_mode': 'tree,form',

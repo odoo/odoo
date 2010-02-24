@@ -31,7 +31,7 @@ form = '''<?xml version="1.0"?>
 </form>'''
 
 fields = {
-    'select_base': {'string':'Choose Criteria', 'type':'selection','selection':[('year','Based On Fiscal Years'),('periods','Based on Fiscal Periods')],'required':True,},
+    'select_base': {'string':'Choose Criteria', 'type':'selection', 'selection':[('year', 'Based On Fiscal Years'), ('periods', 'Based on Fiscal Periods')], 'required':True, },
 }
 
 next_form = '''<?xml version="1.0"?>
@@ -40,7 +40,7 @@ next_form = '''<?xml version="1.0"?>
 </form>'''
 
 next_fields = {
-    'base_selection': {'string':'Select Criteria', 'type':'many2many','required':True,},
+    'base_selection': {'string':'Select Criteria', 'type':'many2many', 'required':True, },
 }
 
 def _load(self, cr, uid, data, context):
@@ -48,29 +48,29 @@ def _load(self, cr, uid, data, context):
     return data['form']
 
 def _load_base(self, cr, uid, data, context):
-    next_fields['base_selection']['relation']='account.fiscalyear'
-    if data['form']['select_base']=='periods':
-        next_fields['base_selection']['relation']='account.period'
+    next_fields['base_selection']['relation'] = 'account.fiscalyear'
+    if data['form']['select_base'] == 'periods':
+        next_fields['base_selection']['relation'] = 'account.period'
     return data['form']
 
 def _check_len(self, cr, uid, data, context):
-    if len(data['form']['base_selection'][0][2])>8:
-        raise wizard.except_wizard(_('User Error!'),_("Please select maximum 8 records to fit the page-width."))
+    if len(data['form']['base_selection'][0][2]) > 8:
+        raise wizard.except_wizard(_('User Error!'), _("Please select maximum 8 records to fit the page-width."))
     return data['form']
 
 class wizard_print_indicators(wizard.interface):
     states = {
         'init': {
             'actions': [_load],
-            'result': {'type': 'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel'),('next','Next')]}
+            'result': {'type': 'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('next', 'Next')]}
         },
         'next': {
             'actions': [_load_base],
-            'result': {'type':'form', 'arch':next_form, 'fields':next_fields, 'state':[('end','Cancel'),('print','Print')]}
+            'result': {'type':'form', 'arch':next_form, 'fields':next_fields, 'state':[('end', 'Cancel'), ('print', 'Print')]}
         },
         'print': {
             'actions':[_check_len],
-            'result' :{'type':'print','report':'print.indicators', 'state':'end'}
+            'result' :{'type':'print', 'report':'print.indicators', 'state':'end'}
         }
     }
 wizard_print_indicators('print.indicators')

@@ -43,7 +43,7 @@ def make_default(val):
     return fct
 
 def _to_xml(s):
-    return (s or '').replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+    return (s or '').replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 def _get_moves(self, cr, uid, data, context):
     move_obj = pooler.get_pool(cr.dbname).get('stock.move')
@@ -105,15 +105,15 @@ def _do_split(self, cr, uid, data, context):
     move_lines = move_obj.browse(cr, uid, data['ids'])
     wf_service = netsvc.LocalService("workflow")
     complete, too_few, too_many = [], [], []
-    for move in move_lines:        
+    for move in move_lines:
         states = []
-    
+
         if move.product_qty == data['form']['move%s' % move.id]:
             complete.append(move)
         elif move.product_qty > data['form']['move%s' % move.id]:
             too_few.append(move)
         else:
-            too_many.append(move)        
+            too_many.append(move)
         # Average price computation
         if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
             product = move.product_id
@@ -124,26 +124,26 @@ def _do_split(self, cr, uid, data, context):
             currency = data['form']['currency%s' % move.id]
 
             qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
-            pricetype=pool.get('product.price.type').browse(cr,uid,user.company_id.property_valuation_price_type.id)
-            
+            pricetype = pool.get('product.price.type').browse(cr, uid, user.company_id.property_valuation_price_type.id)
+
             if (qty > 0):
                 new_price = currency_obj.compute(cr, uid, currency,
                         user.company_id.currency_id.id, price)
                 new_price = uom_obj._compute_price(cr, uid, uom, new_price,
                         product.uom_id.id)
-                if product.qty_available<=0:
+                if product.qty_available <= 0:
                     new_std_price = new_price
                 else:
                     # Get the standard price
-                    amount_unit=product.price_get(pricetype.field, context)[product.id]
+                    amount_unit = product.price_get(pricetype.field, context)[product.id]
                     new_std_price = ((amount_unit * product.qty_available)\
-                        + (new_price * qty))/(product.qty_available + qty)
+                        + (new_price * qty)) / (product.qty_available + qty)
 
                 product_obj.write(cr, uid, [product.id],
                         {pricetype.field: new_std_price})
-                move_obj.write(cr, uid, move.id, {'price_unit': new_price})        
+                move_obj.write(cr, uid, move.id, {'price_unit': new_price})
 
-    for move in too_few:        
+    for move in too_few:
         if data['form']['move%s' % move.id] != 0:
             new_move = move_obj.copy(cr, uid, move.id,
                 {
@@ -160,15 +160,15 @@ def _do_split(self, cr, uid, data, context):
                     'product_qty' : move.product_qty - data['form']['move%s' % move.id],
                     'product_uos_qty':move.product_qty - data['form']['move%s' % move.id],
                 })
-        
-    
+
+
     for move in too_many:
         move_obj.write(cr, uid, move.id,
                 {
                     'product_qty': data['form']['move%s' % move.id],
                     'product_uos_qty': data['form']['move%s' % move.id]
                 })
-        complete.append(move) 
+        complete.append(move)
 
     for move in complete:
         move_obj.action_done(cr, uid, [move.id])
@@ -177,9 +177,9 @@ def _do_split(self, cr, uid, data, context):
         cr.execute('select move.id from stock_picking pick \
                     right join stock_move move on move.picking_id = pick.id and move.state = ''%s'' where pick.id = %s',
                     ('done', move.picking_id.id))
-        res = cr.fetchall()        
-        if len(res) == len(move.picking_id.move_lines):                       
-            pick_obj.action_move(cr, uid, [move.picking_id.id])            
+        res = cr.fetchall()
+        if len(res) == len(move.picking_id.move_lines):
+            pick_obj.action_move(cr, uid, [move.picking_id.id])
             wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
 
     return {}

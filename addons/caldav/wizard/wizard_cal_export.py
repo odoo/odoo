@@ -30,22 +30,22 @@ class cal_event_export_wizard(wizard.interface):
         <field name="name"/>
         <field name="file_path" colspan="4" width="300"/>
     </form>'''
-    
+
     form1_fields = {
             'file_path': {
-                'string': 'Save ICS file', 
-                'type': 'binary', 
-                'required': True, 
+                'string': 'Save ICS file',
+                'type': 'binary',
+                'required': True,
                 'filters': '*.ics'
                 },
             'name': {
-                    'string': 'File name', 
-                    'type': 'char', 
-                    'size': 34, 
-                    'required': True, 
-                    'help': 'Save in .ics format'}, 
+                    'string': 'File name',
+                    'type': 'char',
+                    'size': 34,
+                    'required': True,
+                    'help': 'Save in .ics format'},
             }
-    
+
     def _process_export_ics(self, cr, uid, data, context):
         model = data.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
@@ -55,11 +55,11 @@ class cal_event_export_wizard(wizard.interface):
 
     states = {
         'init': {
-            'actions': [_process_export_ics], 
+            'actions': [_process_export_ics],
             'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, \
-                       'state': [('end', '_Cancel', 'gtk-cancel')]}}, 
+                       'state': [('end', '_Cancel', 'gtk-cancel')]}},
     }
-    
+
 cal_event_export_wizard('calendar.event.export')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -34,9 +34,9 @@ class accounting_report(report_sxw.rml_parse):
             'childs':self.process
         })
 
-    def process(self,id,level=0):
-        res = pooler.get_pool(self.cr.dbname).get('account.report.report').read(self.cr,self.uid,[id])
-        ret_dict={
+    def process(self, id, level=0):
+        res = pooler.get_pool(self.cr.dbname).get('account.report.report').read(self.cr, self.uid, [id])
+        ret_dict = {
             'name':res[0]['name'],
             'code':res[0]['code'],
             'amount':res[0]['amount'],
@@ -48,7 +48,7 @@ class accounting_report(report_sxw.rml_parse):
 
         self.ret_list.append(ret_dict)
         for child_id in res[0]['child_ids']:
-                self.process(child_id,level+1)
+                self.process(child_id, level + 1)
         return self.ret_list
 
 

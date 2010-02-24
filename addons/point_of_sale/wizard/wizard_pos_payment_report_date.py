@@ -25,7 +25,7 @@ import netsvc
 import wizard
 import time
 
-pos_payment_report_date_form= """<?xml version="1.0"?>
+pos_payment_report_date_form = """<?xml version="1.0"?>
 <form string="Sale by User">
      <field name="date_start" />
      <field name="date_end"/>
@@ -33,10 +33,10 @@ pos_payment_report_date_form= """<?xml version="1.0"?>
 </form>
 """
 
-pos_payment_report_date_field= {
+pos_payment_report_date_field = {
 
-    'date_start': {'string':'Start Date','type':'date','required': True,'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'date_end': {'string':'End Date','type':'date','required': True,'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'date_start': {'string':'Start Date', 'type':'date', 'required': True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
+    'date_end': {'string':'End Date', 'type':'date', 'required': True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
     'user_id': {'string': 'Salesman', 'type': 'many2many', 'relation': 'res.users', 'required': True},
 }
 
@@ -48,7 +48,7 @@ class wizard_pos_payment_report_date(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : pos_payment_report_date_form,
                     'fields' : pos_payment_report_date_field,
-                    'state' : [('end', 'Cancel','gtk-cancel'),('print_report', 'Print Report','gtk-print') ]}
+                    'state' : [('end', 'Cancel', 'gtk-cancel'), ('print_report', 'Print Report', 'gtk-print') ]}
         },
         'print_report' : {
             'actions' : [],

@@ -63,7 +63,7 @@ class sale_order(osv.osv):
 
     def _amount_line_tax(self, cr, uid, line, context={}):
         val = 0.0
-        for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id):
+        for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1 - (line.discount or 0.0) / 100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id):
             val += c['amount']
         return val
 
@@ -99,7 +99,7 @@ class sale_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             WHERE
-                p.sale_id = ANY(%s) GROUP BY m.state, p.sale_id''',(ids,))
+                p.sale_id = ANY(%s) GROUP BY m.state, p.sale_id''', (ids,))
         for oid, nbr, state in cr.fetchall():
             if state == 'cancel':
                 continue
@@ -232,19 +232,19 @@ class sale_order(osv.osv):
         'note': fields.text('Notes', translate=True),
 
         'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Untaxed Amount',
-            store = {
+            store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums'),
         'amount_tax': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Taxes',
-            store = {
+            store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums'),
         'amount_total': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Total',
-            store = {
+            store={
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
@@ -253,17 +253,17 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.many2one('res.company','Company',select=1),
+        'company_id': fields.many2one('res.company', 'Company', select=1),
     }
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
-        'picking_policy': lambda *a: 'direct',
-        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
-        'order_policy': lambda *a: 'manual',
-        'state': lambda *a: 'draft',
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'sale.order', context=c),
+        'picking_policy': lambda * a: 'direct',
+        'date_order': lambda * a: time.strftime('%Y-%m-%d'),
+        'order_policy': lambda * a: 'manual',
+        'state': lambda * a: 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
-        'invoice_quantity': lambda *a: 'order',
+        'invoice_quantity': lambda * a: 'order',
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
@@ -296,7 +296,7 @@ class sale_order(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):
             return False
-        cr.execute('select id from sale_order_line where order_id = ANY(%s) and state=%s',(ids,'cancel'))
+        cr.execute('select id from sale_order_line where order_id = ANY(%s) and state=%s', (ids, 'cancel'))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
@@ -377,10 +377,10 @@ class sale_order(osv.osv):
         for preinv in order.invoice_ids:
             if preinv.state not in ('cancel',):
                 for preline in preinv.invoice_line:
-                    inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
+                    inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit':-preline.price_unit})
                     lines.append(inv_line_id)
         journal_obj = self.pool.get('account.journal')
-        journal_ids = journal_obj.search(cr, uid, [('type', '=','sale'),('company_id', '=', order.company_id.id)], limit=1)
+        journal_ids = journal_obj.search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
         if not journal_ids:
             raise osv.except_osv(_('Error !'),
                 _('There is no sale journal defined for this company: "%s" (id:%d)') % (order.company_id.name, order.company_id.id))
@@ -399,7 +399,7 @@ class sale_order(osv.osv):
             'comment': order.note,
             'payment_term': pay_term,
             'fiscal_position': order.partner_id.property_account_position.id,
-            'date_invoice' : context.get('date_invoice',False),
+            'date_invoice' : context.get('date_invoice', False),
             'company_id' : order.company_id.id,
         }
         inv_obj = self.pool.get('account.invoice')
@@ -411,7 +411,7 @@ class sale_order(osv.osv):
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv=False):
         res = False
         invoices = {}
         invoice_ids = []
@@ -438,7 +438,7 @@ class sale_order(osv.osv):
         picking_obj = self.pool.get('stock.picking')
         for val in invoices.values():
             if grouped:
-                res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []), context=context)
+                res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x, y: x + y, [l for o, l in val], []), context=context)
                 for o, l in val:
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     if o.order_policy == 'picking':
@@ -515,11 +515,11 @@ class sale_order(osv.osv):
         event_obj = self.pool.get('res.partner.event')
         for o in self.browse(cr, uid, ids):
             if event_p:
-                event_obj.create(cr, uid, {'name': 'Sale Order: '+ o.name,\
-                        'partner_id': o.partner_id.id,\
-                        'date': time.strftime('%Y-%m-%d %H:%M:%S'),\
-                        'user_id': (o.user_id and o.user_id.id) or uid,\
-                        'partner_type': 'customer', 'probability': 1.0,\
+                event_obj.create(cr, uid, {'name': 'Sale Order: ' + o.name, \
+                        'partner_id': o.partner_id.id, \
+                        'date': time.strftime('%Y-%m-%d %H:%M:%S'), \
+                        'user_id': (o.user_id and o.user_id.id) or uid, \
+                        'partner_type': 'customer', 'probability': 1.0, \
                         'planned_revenue': o.amount_untaxed})
             if (o.order_policy == 'manual'):
                 self.write(cr, uid, [o.id], {'state': 'manual'})
@@ -548,7 +548,7 @@ class sale_order(osv.osv):
         write_cancel_ids = []
         for order in self.browse(cr, uid, ids, context={}):
             for line in order.order_line:
-                if (not line.procurement_id) or (line.procurement_id.state=='done'):
+                if (not line.procurement_id) or (line.procurement_id.state == 'done'):
                     if line.state != 'done':
                         write_done_ids.append(line.id)
                 else:
@@ -597,7 +597,7 @@ class sale_order(osv.osv):
                             'sale_id': order.id,
                             'address_id': order.partner_shipping_id.id,
                             'note': order.note,
-                            'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
+                            'invoice_state': (order.order_policy == 'picking' and '2binvoiced') or 'none',
                             'company_id': order.company_id.id,
                         })
 
@@ -708,9 +708,9 @@ class sale_order(osv.osv):
             partnertype = 'customer'
             eventtype = 'sale'
             event = {
-                'name': 'Order: '+name,
+                'name': 'Order: ' + name,
                 'som': False,
-                'description': 'Order '+str(inv['id']),
+                'description': 'Order ' + str(inv['id']),
                 'document': '',
                 'partner_id': part,
                 'date': time.strftime('%Y-%m-%d'),
@@ -763,57 +763,57 @@ class sale_order_line(osv.osv):
     _name = 'sale.order.line'
     _description = 'Sale Order line'
     _columns = {
-        'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'name': fields.char('Description', size=256, required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly', False)]}),
+        'name': fields.char('Description', size=256, required=True, select=True, readonly=True, states={'draft':[('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sale order lines."),
-        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer", readonly=True, states={'draft':[('readonly',False)]}),
+        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the the shipping of the products to the customer", readonly=True, states={'draft':[('readonly', False)]}),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'procurement_id': fields.many2one('mrp.procurement', 'Requisition'),
-        'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy'])), readonly=True, states={'draft':[('readonly',False)]}),
+        'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy'])), readonly=True, states={'draft':[('readonly', False)]}),
         'price_net': fields.function(_amount_line_net, method=True, string='Net Price', digits=(16, int(config['price_accuracy']))),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits=(16, int(config['price_accuracy']))),
-        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly',False)]}),
-        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Requisition Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft':[('readonly',False)]}),
+        'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly', False)]}),
+        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Requisition Method', required=True, readonly=True, states={'draft':[('readonly', False)]}),
+        'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft':[('readonly', False)]}),
         'address_allotment_id': fields.many2one('res.partner.address', 'Allotment Partner'),
-        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_uos_qty': fields.float('Quantity (UoS)', readonly=True, states={'draft':[('readonly',False)]}),
+        'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True, readonly=True, states={'draft':[('readonly', False)]}),
+        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, readonly=True, states={'draft':[('readonly', False)]}),
+        'product_uos_qty': fields.float('Quantity (UoS)', readonly=True, states={'draft':[('readonly', False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
-        'discount': fields.float('Discount (%)', digits=(16, 2), readonly=True, states={'draft':[('readonly',False)]}),
+        'discount': fields.float('Discount (%)', digits=(16, 2), readonly=True, states={'draft':[('readonly', False)]}),
         'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number Packages'),
         'notes': fields.text('Notes', translate=True),
         'th_weight': fields.float('Weight'),
-        'state': fields.selection([('draft', 'Draft'),('confirmed', 'Confirmed'),('done', 'Done'),('cancel', 'Cancelled'),('exception', 'Exception')], 'State', required=True, readonly=True,
+        'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled'), ('exception', 'Exception')], 'State', required=True, readonly=True,
                 help=' * The \'Draft\' state is set automatically when sale order in draft state. \
                     \n* The \'Confirmed\' state is set automatically when sale order in confirm state. \
                     \n* The \'Exception\' state is set automatically when sale order is set as exception. \
                     \n* The \'Done\' state is set automatically when sale order is set as done. \
                     \n* The \'Cancelled\' state is set automatically when user cancel sale order.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
-        'salesman_id':fields.related('order_id','user_id',type='many2one',relation='res.users',string='Salesman'),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='Salesman'),
+        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
     }
     _order = 'sequence, id'
     _defaults = {
-        'discount': lambda *a: 0.0,
-        'delay': lambda *a: 0.0,
-        'product_uom_qty': lambda *a: 1,
-        'product_uos_qty': lambda *a: 1,
-        'sequence': lambda *a: 10,
-        'invoiced': lambda *a: 0,
-        'state': lambda *a: 'draft',
-        'type': lambda *a: 'make_to_stock',
-        'product_packaging': lambda *a: False
+        'discount': lambda * a: 0.0,
+        'delay': lambda * a: 0.0,
+        'product_uom_qty': lambda * a: 1,
+        'product_uos_qty': lambda * a: 1,
+        'sequence': lambda * a: 10,
+        'invoiced': lambda * a: 0,
+        'state': lambda * a: 'draft',
+        'type': lambda * a: 'make_to_stock',
+        'product_packaging': lambda * a: False
     }
 
     def invoice_line_create(self, cr, uid, ids, context={}):
         def _get_line_qty(line):
-            if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
+            if (line.order_id.invoice_quantity == 'order') or not line.procurement_id:
                 if line.product_uos:
                     return line.product_uos_qty or 0.0
                 return line.product_uom_qty
@@ -822,7 +822,7 @@ class sale_order_line(osv.osv):
                         line.procurement_id.id, context)
 
         def _get_line_uom(line):
-            if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
+            if (line.order_id.invoice_quantity == 'order') or not line.procurement_id:
                 if line.product_uos:
                     return line.product_uos.id
                 return line.product_uom.id
@@ -981,7 +981,7 @@ class sale_order_line(osv.osv):
                 if product_obj.uos_id.category_id.id != uos2.category_id.id:
                     uos = False
             else:
-                uos = False        
+                uos = False
         if product_obj.description_sale:
             result['notes'] = product_obj.description_sale
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
@@ -1068,7 +1068,7 @@ class sale_order_line(osv.osv):
         """Allows to delete sale order lines in draft,cancel states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel']:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sale order line which is %s !')%(rec.state,))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sale order line which is %s !') % (rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
 sale_order_line()
@@ -1098,9 +1098,9 @@ class sale_config_picking_policy(osv.osv_memory):
            "in one or two operations by the worker.")
     }
     _defaults = {
-        'picking_policy': lambda *a: 'direct',
-        'order_policy': lambda *a: 'picking',
-        'step': lambda *a: 'one'
+        'picking_policy': lambda * a: 'direct',
+        'order_policy': lambda * a: 'picking',
+        'step': lambda * a: 'one'
     }
 
     def execute(self, cr, uid, ids, context=None):

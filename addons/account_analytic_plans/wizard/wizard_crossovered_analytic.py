@@ -35,21 +35,21 @@ form = """<?xml version="1.0"?>
 </form>"""
 
 fields = {
-    'date1': {'string':'Start Date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-    'date2': {'string':'End Date', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'date1': {'string':'Start Date', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-01-01')},
+    'date2': {'string':'End Date', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
     'journal_ids': {'string':'Analytic Journal', 'type':'many2many', 'relation':'account.analytic.journal'},
-    'ref' :{'string':'Analytic Account Reference', 'type':'many2one', 'relation':'account.analytic.account','required':True},
-    'empty_line': {'string':'Dont show empty lines', 'type':'boolean', 'default': lambda *a:False},
+    'ref' :{'string':'Analytic Account Reference', 'type':'many2one', 'relation':'account.analytic.account', 'required':True},
+    'empty_line': {'string':'Dont show empty lines', 'type':'boolean', 'default': lambda * a:False},
 }
 
 class wizard_crossovered_analytic(wizard.interface):
     def _checklines(self, cr, uid, data, context):
         cr.execute('select account_id from account_analytic_line')
-        res=cr.fetchall()
-        acc_ids=[x[0] for x in res]
+        res = cr.fetchall()
+        acc_ids = [x[0] for x in res]
 
-        obj_acc = pooler.get_pool(cr.dbname).get('account.analytic.account').browse(cr,uid,data['form']['ref'])
-        name=obj_acc.name
+        obj_acc = pooler.get_pool(cr.dbname).get('account.analytic.account').browse(cr, uid, data['form']['ref'])
+        name = obj_acc.name
 
         account_ids = pooler.get_pool(cr.dbname).get('account.analytic.account').search(cr, uid, [('parent_id', 'child_of', [data['form']['ref']])])
 
@@ -60,13 +60,13 @@ class wizard_crossovered_analytic(wizard.interface):
                 break
 
         if flag:
-            raise wizard.except_wizard(_('User Error'),_('There are no Analytic lines related to Account %s' % name))
+            raise wizard.except_wizard(_('User Error'), _('There are no Analytic lines related to Account %s' % name))
         return {}
 
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel'),('print','Print')]},
+            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('print', 'Print')]},
         },
         'print': {
             'actions': [_checklines],

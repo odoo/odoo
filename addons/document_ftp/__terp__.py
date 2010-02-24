@@ -32,7 +32,7 @@
     'init_xml': [],
     'update_xml': [
         'document_ftp_view.xml',
-        'security/ir.model.access.csv'        
+        'security/ir.model.access.csv'
     ],
     'demo_xml': [],
     'installable': True,

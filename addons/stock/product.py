@@ -29,14 +29,14 @@ class product_product(osv.osv):
         res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
         if res: return res
         if (context.get('location', False)):
-            return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['location'], context).name
+            return _('Products: ') + self.pool.get('stock.location').browse(cr, user, context['location'], context).name
         return res
 
-    def get_product_available(self,cr,uid,ids,context=None):
+    def get_product_available(self, cr, uid, ids, context=None):
         if not context:
             context = {}
-        states=context.get('states',[])
-        what=context.get('what',())
+        states = context.get('states', [])
+        what = context.get('what', ())
         if not ids:
             ids = self.search(cr, uid, [])
         res = {}.fromkeys(ids, 0.0)
@@ -67,11 +67,11 @@ class product_product(osv.osv):
                 location_ids.append(w.lot_stock_id.id)
 
         # build the list of ids of children of the location given by id
-        if context.get('compute_child',True):
+        if context.get('compute_child', True):
             child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
-            location_ids= len(child_location_ids) and child_location_ids or location_ids
+            location_ids = len(child_location_ids) and child_location_ids or location_ids
         else:
-            location_ids= location_ids
+            location_ids = location_ids
 
         uoms_o = {}
         product2uom = {}
@@ -82,15 +82,15 @@ class product_product(osv.osv):
         results = []
         results2 = []
 
-        from_date=context.get('from_date',False)
-        to_date=context.get('to_date',False)
-        date_str=False
+        from_date = context.get('from_date', False)
+        to_date = context.get('to_date', False)
+        date_str = False
         if from_date and to_date:
-            date_str="date_planned>='%s' and date_planned<='%s'"%(from_date,to_date)
+            date_str = "date_planned>='%s' and date_planned<='%s'" % (from_date, to_date)
         elif from_date:
-            date_str="date_planned>='%s'"%(from_date)
+            date_str = "date_planned>='%s'" % (from_date)
         elif to_date:
-            date_str="date_planned<='%s'"%(to_date)
+            date_str = "date_planned<='%s'" % (to_date)
 
         if 'in' in what:
             # all moves from a location out of the set to a location in the set
@@ -100,8 +100,8 @@ class product_product(osv.osv):
                 'where location_id <> ANY(%s)'\
                 'and location_dest_id =ANY(%s)'\
                 'and product_id =ANY(%s)'\
-                'and state in %s' + (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
+                'and state in %s' + (date_str and 'and ' + date_str + ' ' or '') + ''\
+                'group by product_id,product_uom', (location_ids, location_ids, ids, tuple(states),)
             )
             results = cr.fetchall()
         if 'out' in what:
@@ -112,8 +112,8 @@ class product_product(osv.osv):
                 'where location_id = ANY(%s)'\
                 'and location_dest_id <> ANY(%s) '\
                 'and product_id =ANY(%s)'\
-                'and state in %s' + (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom',(location_ids,location_ids,ids,tuple(states),)
+                'and state in %s' + (date_str and 'and ' + date_str + ' ' or '') + ''\
+                'group by product_id,product_uom', (location_ids, location_ids, ids, tuple(states),)
             )
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')
@@ -138,21 +138,21 @@ class product_product(osv.osv):
 
     def _product_available(self, cr, uid, ids, field_names=None, arg=False, context={}):
         if not field_names:
-            field_names=[]
+            field_names = []
         res = {}
         for id in ids:
             res[id] = {}.fromkeys(field_names, 0.0)
         for f in field_names:
             c = context.copy()
-            if f=='qty_available':
+            if f == 'qty_available':
                 c.update({ 'states':('done',), 'what':('in', 'out') })
-            if f=='virtual_available':
-                c.update({ 'states':('confirmed','waiting','assigned','done'), 'what':('in', 'out') })
-            if f=='incoming_qty':
-                c.update({ 'states':('confirmed','waiting','assigned'), 'what':('in',) })
-            if f=='outgoing_qty':
-                c.update({ 'states':('confirmed','waiting','assigned'), 'what':('out',) })
-            stock=self.get_product_available(cr,uid,ids,context=c)
+            if f == 'virtual_available':
+                c.update({ 'states':('confirmed', 'waiting', 'assigned', 'done'), 'what':('in', 'out') })
+            if f == 'incoming_qty':
+                c.update({ 'states':('confirmed', 'waiting', 'assigned'), 'what':('in',) })
+            if f == 'outgoing_qty':
+                c.update({ 'states':('confirmed', 'waiting', 'assigned'), 'what':('out',) })
+            stock = self.get_product_available(cr, uid, ids, context=c)
             for id in ids:
                 res[id][f] = stock.get(id, 0.0)
         return res
@@ -165,15 +165,15 @@ class product_product(osv.osv):
         'track_production': fields.boolean('Track Production Lots' , help="Forces to use a Production Lot during production order"),
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to use a tracking lot during receptions"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to use a tracking lot during deliveries"),
-        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one', domain=[('usage','=','internal')]),
+        'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one', domain=[('usage', '=', 'internal')]),
     }
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        res = super(product_product, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if context == None:
             context = {}
         if ('location' in context) and context['location']:
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
-            fields=res.get('fields',{})
+            fields = res.get('fields', {})
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
@@ -223,7 +223,7 @@ class product_template(osv.osv):
             string="Requisition Location",
             method=True,
             view_load=True,
-            domain=[('usage','like','procurement')],
+            domain=[('usage', 'like', 'procurement')],
             help="For the current product, this stock location will be used, instead of the default one, as the source location for stock moves generated by procurements"),
         'property_stock_production': fields.property(
             'stock.location',
@@ -232,7 +232,7 @@ class product_template(osv.osv):
             string="Production Location",
             method=True,
             view_load=True,
-            domain=[('usage','like','production')],
+            domain=[('usage', 'like', 'production')],
             help="For the current product, this stock location will be used, instead of the default one, as the source location for stock moves generated by production orders"),
         'property_stock_inventory': fields.property(
             'stock.location',
@@ -241,7 +241,7 @@ class product_template(osv.osv):
             string="Inventory Location",
             method=True,
             view_load=True,
-            domain=[('usage','like','inventory')],
+            domain=[('usage', 'like', 'inventory')],
             help="For the current product, this stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory"),
         'property_stock_account_input': fields.property('account.account',
             type='many2one', relation='account.account',

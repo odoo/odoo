@@ -18,28 +18,28 @@ class dav_interface:
     ### defined properties (modify this but let the DAV stuff there!)
     ### the format is namespace: [list of properties]
 
-    PROPS={"DAV:" : ('creationdate', 
-                     'displayname', 
-                     'getcontentlanguage', 
-                     'getcontentlength', 
-                     'getcontenttype', 
-                     'getetag', 
-                     'getlastmodified', 
-                     'lockdiscovery', 
-                     'resourcetype', 
-                     'source', 
+    PROPS = {"DAV:" : ('creationdate',
+                     'displayname',
+                     'getcontentlanguage',
+                     'getcontentlength',
+                     'getcontenttype',
+                     'getetag',
+                     'getlastmodified',
+                     'lockdiscovery',
+                     'resourcetype',
+                     'source',
                      'supportedlock'),
-           "NS2" : ("p1","p2")
+           "NS2" : ("p1", "p2")
            }
 
     # here we define which methods handle which namespace
     # the first item is the namespace URI and the second one
     # the method prefix
     # e.g. for DAV:getcontenttype we call dav_getcontenttype()
-    M_NS={"DAV:" : "_get_dav",
+    M_NS = {"DAV:" : "_get_dav",
           "NS2"  : "ns2" }
 
-    def get_propnames(self,uri):
+    def get_propnames(self, uri):
         """ return the property names allowed for the given URI 
 
         In this method we simply return the above defined properties
@@ -50,14 +50,14 @@ class dav_interface:
         """
         return self.PROPS
 
-    def get_prop2(self,uri,ns,pname):
+    def get_prop2(self, uri, ns, pname):
         """ return the value of a property 
         """
-        if lower(ns)=="dav:": return self.get_dav(uri,pname)
+        if lower(ns) == "dav:": return self.get_dav(uri, pname)
 
         raise DAV_NotFound
 
-    def get_prop(self,uri,ns,propname):
+    def get_prop(self, uri, ns, propname):
         """ return the value of a given property
 
         uri        -- uri of the object to get the property of
@@ -65,17 +65,17 @@ class dav_interface:
         pname        -- name of the property
         """
         if self.M_NS.has_key(ns):
-            prefix=self.M_NS[ns]
+            prefix = self.M_NS[ns]
         else:
-            print "No namespace:",ns, "( for prop:", propname,")"
+            print "No namespace:", ns, "( for prop:", propname, ")"
             raise DAV_NotFound
-        mname=prefix+"_"+propname
-        if not hasattr(self,mname):
+        mname = prefix + "_" + propname
+        if not hasattr(self, mname):
             raise DAV_NotFound
 
         try:
-            m=getattr(self,mname)
-            r=m(uri)
+            m = getattr(self, mname)
+            r = m(uri)
             return r
         except AttributeError, e:
             print 'Property %s not supported' % propname
@@ -86,7 +86,7 @@ class dav_interface:
     ### DATA methods (for GET and PUT)
     ###
 
-    def get_data(self,uri):
+    def get_data(self, uri):
         """ return the content of an object 
 
         return data or raise an exception
@@ -94,7 +94,7 @@ class dav_interface:
         """
         raise DAV_NotFound
 
-    def put(self,uri,data):
+    def put(self, uri, data):
         """ write an object to the repository 
 
         return a result code or raise an exception
@@ -106,17 +106,17 @@ class dav_interface:
     ### Methods for DAV properties
     ###
 
-    def _get_dav_creationdate(self,uri):
+    def _get_dav_creationdate(self, uri):
         """ return the creationdate of a resource """
-        d=self.get_creationdate(uri)
+        d = self.get_creationdate(uri)
         # format it
         if isinstance(d, int) or isinstance(d, float):
             d = time.localtimetime(d)
-        return time.strftime("%Y-%m-%dT%H:%M:%S%Z",d)
+        return time.strftime("%Y-%m-%dT%H:%M:%S%Z", d)
 
-    def _get_dav_getlastmodified(self,uri):
+    def _get_dav_getlastmodified(self, uri):
         """ return the last modified date of a resource """
-        d=self.get_lastmodified(uri)
+        d = self.get_lastmodified(uri)
         if isinstance(d, int) or isinstance(d, float):
             d = time.localtime(d)
         # format it
@@ -127,22 +127,22 @@ class dav_interface:
     ### OVERRIDE THESE!
     ###
 
-    def get_creationdate(self,uri):
+    def get_creationdate(self, uri):
         """ return the creationdate of the resource """
         return time.time()
 
-    def get_lastmodified(self,uri):
+    def get_lastmodified(self, uri):
         """ return the last modification date of the resource """
         return time.time()
 
-    
+
     ###
     ### COPY MOVE DELETE
     ###
 
     ### methods for deleting a resource
 
-    def rmcol(self,uri):
+    def rmcol(self, uri):
         """ delete a collection 
 
         This should not delete any children! This is automatically done
@@ -153,7 +153,7 @@ class dav_interface:
         """
         raise DAV_NotFound
 
-    def rm(self,uri):
+    def rm(self, uri):
         """ delete a single resource 
 
         return a success code or raise an exception
@@ -210,27 +210,27 @@ class dav_interface:
 
     ### MOVE handlers
 
-    def moveone(self,src,dst,overwrite):
+    def moveone(self, src, dst, overwrite):
         """ move one resource with Depth=0 """
-        return moveone(self,src,dst,overwrite)
+        return moveone(self, src, dst, overwrite)
 
-    def movetree(self,src,dst,overwrite):
+    def movetree(self, src, dst, overwrite):
         """ move a collection with Depth=infinity """
-        return movetree(self,src,dst,overwrite)
+        return movetree(self, src, dst, overwrite)
 
     ### COPY handlers
 
-    def copyone(self,src,dst,overwrite):
+    def copyone(self, src, dst, overwrite):
         """ copy one resource with Depth=0 """
-        return copyone(self,src,dst,overwrite)
+        return copyone(self, src, dst, overwrite)
 
-    def copytree(self,src,dst,overwrite):
+    def copytree(self, src, dst, overwrite):
         """ copy a collection with Depth=infinity """
-        return copytree(self,src,dst,overwrite)
+        return copytree(self, src, dst, overwrite)
 
 
     ### low level copy methods (you only need these for method 2)
-    def copy(self,src,dst):
+    def copy(self, src, dst):
         """ copy a resource with depth==0 
 
         You don't need to bother about overwrite or not.
@@ -241,7 +241,7 @@ class dav_interface:
         return 201
 
 
-    def copycol(self,src,dst):
+    def copycol(self, src, dst):
         """ copy a resource with depth==infinity 
 
         You don't need to bother about overwrite or not.
@@ -253,11 +253,11 @@ class dav_interface:
 
     ### some utility functions you need to implement
 
-    def exists(self,uri):
+    def exists(self, uri):
         """ return 1 or None depending on if a resource exists """
         return None # no
 
-    def is_collection(self,uri):
+    def is_collection(self, uri):
         """ return 1 or None depending on if a resource is a collection """
         return None # no
 

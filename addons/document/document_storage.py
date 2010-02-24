@@ -71,12 +71,12 @@ def random_name():
     name = "".join(d)
     return name
 
-INVALID_CHARS={'*':str(hash('*')), '|':str(hash('|')) , "\\":str(hash("\\")), '/':'__', ':':str(hash(':')), '"':str(hash('"')), '<':str(hash('<')) , '>':str(hash('>')) , '?':str(hash('?'))}
+INVALID_CHARS = {'*':str(hash('*')), '|':str(hash('|')) , "\\":str(hash("\\")), '/':'__', ':':str(hash(':')), '"':str(hash('"')), '<':str(hash('<')) , '>':str(hash('>')) , '?':str(hash('?'))}
 
 
 def create_directory(path):
     dir_name = random_name()
-    path = os.path.join(path,dir_name)
+    path = os.path.join(path, dir_name)
     os.makedirs(path)
     return dir_name
 
@@ -103,46 +103,46 @@ class document_storage(osv.osv):
         'user_id': fields.many2one('res.users', 'Owner'),
         'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
         'dir_ids': fields.one2many('document.directory', 'parent_id', 'Directories'),
-        'type': fields.selection([('db','Database'),('filestore','Internal File storage'),
-            ('realstore','External file storage'), ('virtual','Virtual storage')], 'Type', required=True),
-        'path': fields.char('Path',size=250,select=1,help="For file storage, the root path of the storage"),
-        'online': fields.boolean('Online',help="If not checked, media is currently offline and its contents not available", required=True),
+        'type': fields.selection([('db', 'Database'), ('filestore', 'Internal File storage'),
+            ('realstore', 'External file storage'), ('virtual', 'Virtual storage')], 'Type', required=True),
+        'path': fields.char('Path', size=250, select=1, help="For file storage, the root path of the storage"),
+        'online': fields.boolean('Online', help="If not checked, media is currently offline and its contents not available", required=True),
         'readonly': fields.boolean('Read Only', help="If set, media is for reading only"),
     }
 
-    def _get_rootpath(self,cr,uid,context=None):
+    def _get_rootpath(self, cr, uid, context=None):
         from tools import config
         return os.path.join(tools.config['root_path'], 'filestore', cr.dbname)
 
     _defaults = {
-        'user_id': lambda self,cr,uid,ctx: uid,
-        'online': lambda *args: True,
-        'readonly': lambda *args: False,
+        'user_id': lambda self, cr, uid, ctx: uid,
+        'online': lambda * args: True,
+        'readonly': lambda * args: False,
         # Note: the defaults below should only be used ONCE for the default
         # storage media. All other times, we should create different paths at least.
-        'type': lambda *args: 'filestore',
+        'type': lambda * args: 'filestore',
         'path': _get_rootpath,
     }
     _sql_constraints = [
         # SQL note: a path = NULL doesn't have to be unique.
         ('path_uniq', 'UNIQUE(type,path)', "The storage path must be unique!")
         ]
-    
-    def get_data(self, cr,uid, id, file_node,context = None, fil_obj = None):
+
+    def get_data(self, cr, uid, id, file_node, context=None, fil_obj=None):
         """ retrieve the contents of some file_node having storage_id = id
             optionally, fil_obj could point to the browse object of the file
             (ir.attachment)
         """
         if not context:
             context = {}
-        boo = self.browse(cr,uid,id,context)
+        boo = self.browse(cr, uid, id, context)
         if fil_obj:
             ira = fil_obj
         else:
-            ira = self.pool.get('ir.attachment').browse(cr,uid, file_node.file_id, context=context)
-        return self.__get_data_3(cr,uid,boo, ira, context)
-    
-    def __get_data_3(self,cr,uid, boo, ira, context):
+            ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
+        return self.__get_data_3(cr, uid, boo, ira, context)
+
+    def __get_data_3(self, cr, uid, boo, ira, context):
         if not boo.online:
             raise RuntimeError('media offline')
         if boo.type == 'filestore':
@@ -150,17 +150,17 @@ class document_storage(osv.osv):
                 # On a migrated db, some files may have the wrong storage type
                 # try to fix their directory.
                 if ira.file_size:
-                    netsvc.Logger().notifyChannel('document',netsvc.LOG_WARNING,"ir.attachment #%d does not have a filename, but is at filestore, fix it!" %ira.id)
+                    netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
                 return None
-            fpath = os.path.join(boo.path,ira.store_fname)
-            print "Trying to read \"%s\".."% fpath
-            return file(fpath,'rb').read()
+            fpath = os.path.join(boo.path, ira.store_fname)
+            print "Trying to read \"%s\".." % fpath
+            return file(fpath, 'rb').read()
         elif boo.type == 'db':
             # TODO: we need a better api for large files
             if ira.db_datas:
-                out=base64.decodestring(ira.db_datas)
+                out = base64.decodestring(ira.db_datas)
             else:
-                out=''
+                out = ''
             return out
         elif boo.type == 'realstore':
             # fpath = os.path.join(boo.path,
@@ -168,23 +168,23 @@ class document_storage(osv.osv):
         else:
             raise TypeError("No %s storage" % boo.type)
 
-    def set_data(self, cr,uid, id, file_node, data, context = None, fil_obj = None):
+    def set_data(self, cr, uid, id, file_node, data, context=None, fil_obj=None):
         """ store the data.
             This function MUST be used from an ir.attachment. It wouldn't make sense
             to store things persistently for other types (dynamic).
         """
         if not context:
             context = {}
-        boo = self.browse(cr,uid,id,context)
+        boo = self.browse(cr, uid, id, context)
         logger = netsvc.Logger()
         if fil_obj:
             ira = fil_obj
         else:
-            ira = self.pool.get('ir.attachment').browse(cr,uid, file_node.file_id, context=context)
-            
+            ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
+
         if not boo.online:
             raise RuntimeError('media offline')
-        logger.notifyChannel('document',netsvc.LOG_DEBUG,"Store data for ir.attachment #%d" %ira.id)
+        logger.notifyChannel('document', netsvc.LOG_DEBUG, "Store data for ir.attachment #%d" % ira.id)
         store_fname = None
         fname = None
         if boo.type == 'filestore':
@@ -192,32 +192,32 @@ class document_storage(osv.osv):
             try:
                 flag = None
                 # This can be improved  
-                if os.path.isdir(path):              
+                if os.path.isdir(path):
                     for dirs in os.listdir(path):
-                        if os.path.isdir(os.path.join(path,dirs)) and len(os.listdir(os.path.join(path,dirs)))<4000:
+                        if os.path.isdir(os.path.join(path, dirs)) and len(os.listdir(os.path.join(path, dirs))) < 4000:
                             flag = dirs
                             break
                 flag = flag or create_directory(path)
                 filename = random_name()
                 fname = os.path.join(path, flag, filename)
-                fp = file(fname,'wb')
+                fp = file(fname, 'wb')
                 fp.write(data)
                 fp.close()
-                logger.notifyChannel('document',netsvc.LOG_DEBUG,"Saved data to %s" % fname)
+                logger.notifyChannel('document', netsvc.LOG_DEBUG, "Saved data to %s" % fname)
                 filesize = len(data) # os.stat(fname).st_size
-                store_fname = os.path.join(flag,filename)
-                
+                store_fname = os.path.join(flag, filename)
+
                 # TODO Here, an old file would be left hanging.
 
-            except Exception,e :
-                netsvc.Logger().notifyChannel('document',netsvc.LOG_WARNING,"Couldn't save data: %s" %str(e))
+            except Exception, e :
+                netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "Couldn't save data: %s" % str(e))
                 raise except_orm(_('Error!'), str(e))
         elif boo.type == 'db':
             filesize = len(data)
             # will that work for huge data? TODO
-            out=base64.encodestring(data)
+            out = base64.encodestring(data)
             cr.execute('UPDATE ir_attachment SET db_datas = %s WHERE id = %s',
-                ( out, file_node.file_id ))
+                (out, file_node.file_id))
         else:
             raise TypeError("No %s storage" % boo.type)
 
@@ -226,9 +226,9 @@ class document_storage(osv.osv):
             icont = ''
             mime = ira.file_type
             try:
-                mime,icont = cntIndex.doIndex(data, ira.datas_fname, 
-                ira.file_type or None,fname)
-            except Exception,e:
+                mime, icont = cntIndex.doIndex(data, ira.datas_fname,
+                ira.file_type or None, fname)
+            except Exception, e:
                 logger.notifyChannel('document', netsvc.LOG_DEBUG, 'Cannot index file: %s' % str(e))
                 pass
 
@@ -236,46 +236,46 @@ class document_storage(osv.osv):
             # to write the fname and size, and update them in the db concurrently.
             # We cannot use a write() here, because we are already in one.
             cr.execute('UPDATE ir_attachment SET store_fname = %s, file_size = %s, index_content = %s, file_type = %s WHERE id = %s',
-                (store_fname, filesize, ustr(icont), mime, file_node.file_id ))
+                (store_fname, filesize, ustr(icont), mime, file_node.file_id))
             file_node.content_length = filesize
             file_node.content_type = mime
             return True
-        except Exception,e :
-            netsvc.Logger().notifyChannel('document',netsvc.LOG_WARNING,"Couldn't save data: %s" %str(e))
+        except Exception, e :
+            netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "Couldn't save data: %s" % str(e))
             # should we really rollback once we have written the actual data?
             # at the db case (only), that rollback would be safe
             raise except_orm(_('Error at doc write!'), str(e))
 
-    def prepare_unlink(self,cr,uid,storage_bo, fil_bo):
+    def prepare_unlink(self, cr, uid, storage_bo, fil_bo):
         """ Before we unlink a file (fil_boo), prepare the list of real
         files that have to be removed, too. """
-    
+
         if not storage_bo.online:
             raise RuntimeError('media offline')
-        
+
         if storage_bo.type == 'filestore':
             fname = fil_bo.store_fname
             if not fname:
                 return None
             path = storage_bo.path
-            return ( storage_bo.id, 'file', os.path.join(path,fname))
+            return (storage_bo.id, 'file', os.path.join(path, fname))
         elif storage_bo.type == 'db':
             return None
         else:
             raise TypeError("No %s storage" % boo.type)
 
-    def do_unlink(self, cr,uid,unres):
+    def do_unlink(self, cr, uid, unres):
         for id, ktype, fname in unres:
             if ktype == 'file':
                 try:
                     os.unlink(fname)
-                except Exception,e:
-                    netsvc.Logger().notifyChannel('document',netsvc.LOG_WARNING,"Could not remove file %s, please remove manually." % fname)
+                except Exception, e:
+                    netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "Could not remove file %s, please remove manually." % fname)
             else:
-                netsvc.Logger().notifyChannel('document',netsvc.LOG_WARNING,"Unknown unlink key %s" % ktype)
-    
+                netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "Unknown unlink key %s" % ktype)
+
         return True
-    
+
 
 document_storage()
 

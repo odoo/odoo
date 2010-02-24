@@ -50,29 +50,29 @@ def timeformat_convert(cr, uid, time_string, context={}):
         split_list = str(time_string).split('.')
         hour_part = split_list[0]
         mins_part = split_list[1]
-        round_mins  = int(round(float(mins_part) * 60,-2))
+        round_mins = int(round(float(mins_part) * 60, -2))
         converted_string = hour_part + ':' + str(round_mins)[0:2]
         return converted_string
 
-def leaves_resource(cr,uid,id):
+def leaves_resource(cr, uid, id):
 #    To get the leaves for the resource_ids working on phase
 
         pool = pooler.get_pool(cr.dbname)
         resource_leaves_pool = pool.get('resource.calendar.leaves')
-        resource_leave_ids = resource_leaves_pool.search(cr,uid,[('resource_id','=',id)])
+        resource_leave_ids = resource_leaves_pool.search(cr, uid, [('resource_id', '=', id)])
         leaves = []
         if resource_leave_ids:
-            res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
+            res_leaves = resource_leaves_pool.read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
             for leave in range(len(res_leaves)):
-                    dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
-                    dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
+                    dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'], '%Y-%m-%d %H:%M:%S')
+                    dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'], '%Y-%m-%d %H:%M:%S')
                     no = dt_end - dt_start
                     leave_days = no.days + 1
             [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(leave_days))]
             leaves.sort()
         return leaves
 
-def resource_list(cr,uid,obj):
+def resource_list(cr, uid, obj):
 #    To get the resource_ids working on phase
 
         pool = pooler.get_pool(cr.dbname)
@@ -82,12 +82,12 @@ def resource_list(cr,uid,obj):
         leaves = []
         calendar_id = obj.project_id.resource_calendar_id
         for no in range(len(resources)):
-            resource_id = resource_pool.search(cr,uid,[('id','=',resources[no].resource_id.id)])
+            resource_id = resource_pool.search(cr, uid, [('id', '=', resources[no].resource_id.id)])
             if resource_id and calendar_id:
             #   Getting list of leaves for specific resource
-                leaves = leaves_resource(cr,uid,resource_id)
+                leaves = leaves_resource(cr, uid, resource_id)
             #   Creating the faces.Resource object with resource specific efficiency and vacation
-            resource_objs.append(classobj(str(resources[no].resource_id.name),(Resource,),{'__doc__':resources[no].resource_id.name,'__name__':resources[no].resource_id.name,'efficiency':resources[no].useability/100,'vacation':tuple(leaves)}))
+            resource_objs.append(classobj(str(resources[no].resource_id.name), (Resource,), {'__doc__':resources[no].resource_id.name, '__name__':resources[no].resource_id.name, 'efficiency':resources[no].useability / 100, 'vacation':tuple(leaves)}))
         return resource_objs
 
 class wizard_compute_phases(wizard.interface):
@@ -103,7 +103,7 @@ class wizard_compute_phases(wizard.interface):
         wktime_cal = []
         leaves = []
         phase_id = data['form']['phase_id']
-        phase = phase_pool.browse(cr,uid,phase_id)
+        phase = phase_pool.browse(cr, uid, phase_id)
         calendar_id = phase.project_id.resource_calendar_id.id
 
 #     If project has a working calendar then that would be used otherwise
@@ -111,14 +111,14 @@ class wizard_compute_phases(wizard.interface):
         if calendar_id:
             time_range = "8:00-8:00"
             non_working = ""
-            wk = {"0":"mon","1":"tue","2":"wed","3":"thu","4":"fri","5":"sat","6":"sun"}
+            wk = {"0":"mon", "1":"tue", "2":"wed", "3":"thu", "4":"fri", "5":"sat", "6":"sun"}
             wk_days = {}
             wk_time = {}
             wktime_list = []
             hours = []
             hr = 0
-            week_ids = resource_week_pool.search(cr,uid,[('calendar_id','=',calendar_id)])
-            week_obj = resource_week_pool.read(cr,uid,week_ids,['dayofweek','hour_from','hour_to'])
+            week_ids = resource_week_pool.search(cr, uid, [('calendar_id', '=', calendar_id)])
+            week_obj = resource_week_pool.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'])
 
 #     Converting time formats into appropriate format required
 #     and creating a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
@@ -128,12 +128,12 @@ class wizard_compute_phases(wizard.interface):
                     day = wk[week['dayofweek']]
                     wk_days[week['dayofweek']] = wk[week['dayofweek']]
 
-                hour_from_str = timeformat_convert(cr,uid,week['hour_from'])
-                hour_to_str = timeformat_convert(cr,uid,week['hour_to'])
+                hour_from_str = timeformat_convert(cr, uid, week['hour_from'])
+                hour_to_str = timeformat_convert(cr, uid, week['hour_to'])
                 res_str = hour_from_str + '-' + hour_to_str
                 hours.append(week['hour_from'])
                 hours.append(week['hour_to'])
-                wktime_list.append((day,res_str))
+                wktime_list.append((day, res_str))
 
 #     Converting it to format like [('mon', '8:00-12:00', '13:00-18:00')]
             for item in wktime_list:
@@ -143,41 +143,41 @@ class wizard_compute_phases(wizard.interface):
                     wk_time[item[0]] = [item[0]]
                     wk_time[item[0]].append(item[1])
 
-            for k,v in wk_time.items():
+            for k, v in wk_time.items():
                 wktime_cal.append(tuple(v))
 
             for hour in range(len(hours)):
-                if hour%2 ==0:
-                    hr += float(hours[hour+1]) - float(hours[hour])
-            avg_hr = hr/len(wktime_cal)
+                if hour % 2 == 0:
+                    hr += float(hours[hour + 1]) - float(hours[hour])
+            avg_hr = hr / len(wktime_cal)
 
 #     For non working days adding [('tue,wed,fri,sat,sun', '8:00-8:00')]
-            for k,v in wk_days.items():
+            for k, v in wk_days.items():
                 if wk.has_key(k):
                     wk.pop(k)
             for v in wk.itervalues():
                 non_working += v + ','
             if non_working:
-                wktime_cal.append((non_working[:-1],time_range))
+                wktime_cal.append((non_working[:-1], time_range))
 
 #     If project working calendar has any leaves
-            resource_leave_ids = resource_leaves_pool.search(cr,uid,[('calendar_id','=',calendar_id)])
+            resource_leave_ids = resource_leaves_pool.search(cr, uid, [('calendar_id', '=', calendar_id)])
             if resource_leave_ids:
-                res_leaves = resource_leaves_pool.read(cr,uid,resource_leave_ids,['date_from','date_to'])
+                res_leaves = resource_leaves_pool.read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
                 for leave in range(len(res_leaves)):
-                    dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'],'%Y-%m-%d %H:%M:%S')
-                    dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'],'%Y-%m-%d %H:%M:%S')
+                    dt_start = datetime.datetime.strptime(res_leaves[leave]['date_from'], '%Y-%m-%d %H:%M:%S')
+                    dt_end = datetime.datetime.strptime(res_leaves[leave]['date_to'], '%Y-%m-%d %H:%M:%S')
                     no = dt_end - dt_start
                     leave_days = no.days + 1
                 [leaves.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(leave_days))]
                 leaves.sort()
 
 
-        def phase_schedule(cr,uid,phase,start_date,avg_hour = 0.0):
+        def phase_schedule(cr, uid, phase, start_date, avg_hour=0.0):
            if phase:
 
                 #    To get resources and the duration for the phase
-                resources_list = resource_list(cr,uid,phase)
+                resources_list = resource_list(cr, uid, phase)
                 if not avg_hour:
                     avg_hour = 8.0
                 man_days = str(phase.duration * avg_hour) + 'H'
@@ -193,10 +193,10 @@ class wizard_compute_phases(wizard.interface):
 
                     def phase():
                         effort = man_days
-                        resource = reduce(operator.or_,resources_list)
+                        resource = reduce(operator.or_, resources_list)
 
                 project = BalancedProject(Project)
-                print 'Project Phase Start & End:::',project.phase.name,project.phase.booked_resource,project.phase.start.to_datetime(),project.phase.end.to_datetime()
+                print 'Project Phase Start & End:::', project.phase.name, project.phase.booked_resource, project.phase.start.to_datetime(), project.phase.end.to_datetime()
                 s_date = project.phase.start.to_datetime()
                 e_date = project.phase.end.to_datetime()
 
@@ -211,19 +211,19 @@ class wizard_compute_phases(wizard.interface):
                     end_date = e_date
 
                 #    Writing the dates back
-                phase_pool.write(cr,uid,[phase.id],{'date_start':start_date,'date_end':end_date})
+                phase_pool.write(cr, uid, [phase.id], {'date_start':start_date, 'date_end':end_date})
                 date_start = end_date
 
                 #    Recursive calling the next phases till all the phases are scheduled
                 for phase in phase.next_phase_ids:
-                   phase_schedule(cr,uid,phase,date_start)
+                   phase_schedule(cr, uid, phase, date_start)
 
         #    Phase Scheduling starts from here with the call to phase_schedule method
-        start_dt = datetime.datetime.strftime((datetime.datetime.strptime(phase.project_id.date_start,"%Y-%m-%d")),"%Y-%m-%d %H:%M")
+        start_dt = datetime.datetime.strftime((datetime.datetime.strptime(phase.project_id.date_start, "%Y-%m-%d")), "%Y-%m-%d %H:%M")
         if avg_hr:
-            phase_schedule(cr,uid,phase,start_dt,avg_hr)
+            phase_schedule(cr, uid, phase, start_dt, avg_hr)
         else:
-            phase_schedule(cr,uid,phase,start_dt)
+            phase_schedule(cr, uid, phase, start_dt)
 
         return {}
     states = {
@@ -237,7 +237,7 @@ class wizard_compute_phases(wizard.interface):
         },
         'compute': {
             'actions': [_compute_date],
-            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
+            'result': {'type':'form', 'arch':success_msg, 'fields':{}, 'state':[('end', 'Ok')]},
         }
     }
 wizard_compute_phases('wizard.compute.phases')

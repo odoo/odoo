@@ -39,10 +39,10 @@ class invoice_create(wizard.interface):
         pool = pooler.get_pool(cr.dbname)
         analytic_line_obj = pool.get('account.analytic.line').browse(cr, uid, data['ids'], context)
         for obj_acc in analytic_line_obj:
-            if obj_acc.invoice_id and obj_acc.invoice_id.state !='cancel':
-                raise wizard.except_wizard(_('Warning'),_('The analytic entry "%s" is already invoiced!')%(obj_acc.name,))
-        
-        cr.execute("SELECT distinct(account_id) from account_analytic_line where id =ANY(%s)",(data['ids'],))
+            if obj_acc.invoice_id and obj_acc.invoice_id.state != 'cancel':
+                raise wizard.except_wizard(_('Warning'), _('The analytic entry "%s" is already invoiced!') % (obj_acc.name,))
+
+        cr.execute("SELECT distinct(account_id) from account_analytic_line where id =ANY(%s)", (data['ids'],))
         account_ids = cr.fetchall()
         return {'accounts': [x[0] for x in account_ids]}
 
@@ -69,7 +69,7 @@ class invoice_create(wizard.interface):
 
             date_due = False
             if partner.property_payment_term:
-                pterm_list= account_payment_term_obj.compute(cr, uid,
+                pterm_list = account_payment_term_obj.compute(cr, uid,
                         partner.property_payment_term.id, value=1,
                         date_ref=time.strftime('%Y-%m-%d'))
                 if pterm_list:
@@ -78,7 +78,7 @@ class invoice_create(wizard.interface):
                     date_due = pterm_list[-1]
 
             curr_invoice = {
-                'name': time.strftime('%D')+' - '+account.name,
+                'name': time.strftime('%D') + ' - ' + account.name,
                 'partner_id': account.partner_id.id,
                 'address_contact_id': res_partner_obj.address_get(cr, uid,
                     [account.partner_id.id], adr_pref=['contact'])['contact'],
@@ -93,15 +93,15 @@ class invoice_create(wizard.interface):
             last_invoice = pool.get('account.invoice').create(cr, uid, curr_invoice)
             invoices.append(last_invoice)
 
-            context2=context.copy()
+            context2 = context.copy()
             context2['lang'] = partner.lang
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
                         "AND id =ANY(%s) AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id,to_invoice", (account.id,data['ids'],))
+                    "GROUP BY product_id,to_invoice", (account.id, data['ids'],))
 
-            for product_id,factor_id,qty in cr.fetchall():
+            for product_id, factor_id, qty in cr.fetchall():
                 product = pool.get('product.product').browse(cr, uid, product_id, context2)
                 if not product:
                     raise wizard.except_wizard(_('Error'), _('At least one line has no product !'))
@@ -110,7 +110,7 @@ class invoice_create(wizard.interface):
 
                 if not data['form']['product']:
                     if factor.customer_name:
-                        factor_name = product.name+' - '+factor.customer_name
+                        factor_name = product.name + ' - ' + factor.customer_name
                     else:
                         factor_name = product.name
                 else:
@@ -118,7 +118,7 @@ class invoice_create(wizard.interface):
 
                 if account.pricelist_id:
                     pl = account.pricelist_id.id
-                    price = pool.get('product.pricelist').price_get(cr,uid,[pl], data['form']['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
+                    price = pool.get('product.pricelist').price_get(cr, uid, [pl], data['form']['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
                 else:
                     price = 0.0
 
@@ -129,11 +129,11 @@ class invoice_create(wizard.interface):
                     'price_unit': price,
                     'quantity': qty,
                     'discount':factor.factor,
-                    'invoice_line_tax_id': [(6,0,tax )],
+                    'invoice_line_tax_id': [(6, 0, tax)],
                     'invoice_id': last_invoice,
                     'name': factor_name,
                     'product_id': data['form']['product'] or product_id,
-                    'invoice_line_tax_id': [(6,0,tax)],
+                    'invoice_line_tax_id': [(6, 0, tax)],
                     'uos_id': product.uom_id.id,
                     'account_id': account_id,
                     'account_analytic_id': account.id,
@@ -155,16 +155,16 @@ class invoice_create(wizard.interface):
                         if line['product_uom_id']:
                             details.append("%s %s" % (line['unit_amount'], pool.get('product.uom').browse(cr, uid, [line['product_uom_id']])[0].name))
                         else:
-                            details.append("%s" % (line['unit_amount'], ))
+                            details.append("%s" % (line['unit_amount'],))
                     if data['form']['name']:
                         details.append(line['name'])
                     #if data['form']['price']:
                     #   details.append(abs(line['amount']))
-                    note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
+                    note.append(u' - '.join(map(lambda x: unicode(x) or '', details)))
 
-                curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
+                curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '', note))
                 pool.get('account.invoice.line').create(cr, uid, curr_line)
-                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id =ANY(%s)" ,(last_invoice,account.id,data['ids']))
+                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id =ANY(%s)" , (last_invoice, account.id, data['ids']))
 
         pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)
 
@@ -174,7 +174,7 @@ class invoice_create(wizard.interface):
         mod_id = mod_obj.search(cr, uid, [('name', '=', 'action_invoice_tree1')])[0]
         res_id = mod_obj.read(cr, uid, mod_id, ['res_id'])['res_id']
         act_win = act_obj.read(cr, uid, res_id, [])
-        act_win['domain'] = [('id','in',invoices),('type','=','out_invoice')]
+        act_win['domain'] = [('id', 'in', invoices), ('type', '=', 'out_invoice')]
         act_win['name'] = _('Invoices')
         return act_win
 
@@ -221,7 +221,7 @@ class invoice_create(wizard.interface):
     states = {
         'init' : {
             'actions' : [_get_accounts],
-            'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end','Cancel'),('create','Create Invoices')]},
+            'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end', 'Cancel'), ('create', 'Create Invoices')]},
         },
         'create' : {
             'actions' : [],

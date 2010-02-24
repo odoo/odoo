@@ -44,7 +44,7 @@ ask_fields = {
     'new_task_description': {'string':'New Task Description', 'type':'text', 'help':"Reinclude the description of the task in the task of the user."},
     'planned_hours': {'string':'Planned Hours', 'type':'float', 'widget':'float_time', 'help':"Estimated time to close this task by the delegated user."},
     'planned_hours_me': {'string':'Hours to Validate', 'type':'float', 'widget':'float_time', 'help':"Estimated time for you to validate the work done by the user to whom you delegate this task."},
-    'state': {'string':'Validation State', 'type':'selection', 'selection': [('pending','Pending'),('done','Done')], 'help':"New state of your own task. Pending will be reopened automatically when the delegated task is closed.", 'required':True},
+    'state': {'string':'Validation State', 'type':'selection', 'selection': [('pending', 'Pending'), ('done', 'Done')], 'help':"New state of your own task. Pending will be reopened automatically when the delegated task is closed.", 'required':True},
 }
 
 class wizard_delegate(wizard.interface):
@@ -68,7 +68,7 @@ class wizard_delegate(wizard.interface):
             'planned_hours': data['form']['planned_hours_me'] + (task.effective_hours or 0.0),
             'name': newname,
         })
-        if data['form']['state']=='pending':
+        if data['form']['state'] == 'pending':
             task_obj.do_pending(cr, uid, [data['id']])
         else:
             task_obj.do_close(cr, uid, [data['id']])
@@ -86,7 +86,7 @@ class wizard_delegate(wizard.interface):
             'user_id': False,
             'planned_hours': task.remaining_hours,
             'planned_hours_me': 1.0,
-            'prefix': _('CHECK: ')+ newname,
+            'prefix': _('CHECK: ') + newname,
             'new_task_description': task.description,
             'state': 'pending'
         }

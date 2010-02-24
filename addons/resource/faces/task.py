@@ -136,7 +136,7 @@ class _MeProxy(object):
         if name in ("length", "effort", "duration", "todo", "done",
                     "buffer", "performed", "performed_effort",
                     "performed_end", "performed_start",
-                    "performed_work_time" ):
+                    "performed_work_time"):
             return self.task._to_delta(make_val("0d"))
 
         if name in ("complete", "priority", "efficiency"):
@@ -381,7 +381,7 @@ def _instrument(func):
             #@            << calculate argument >>
             #@+node:<< calculate argument >>
             arg0 = code[i]
-            arg1 = code[i+1]
+            arg1 = code[i + 1]
             oparg = arg0 + arg1 * 256
             #@nonl
             #@-node:<< calculate argument >>
@@ -451,7 +451,7 @@ def _instrument(func):
                       co.co_cellvars)
 
 
-    func =  new.function(new_co,
+    func = new.function(new_co,
                          func.func_globals,
                          func.func_name,
                          func.func_defaults,
@@ -973,7 +973,7 @@ def VariableLoad(limit=0):
     if balance != SLOPPY:
         raise RuntimeError("You may specify variable_load only with balance=SLOPPY")
 
-    return -limit
+    return - limit
 #@-node:VariableLoad
 #@+node:_calc_load
 def _calc_load(task, resource):
@@ -1019,7 +1019,7 @@ class AllocationAlgorithm(object):
         The task allocator calls test_allocation for every alternative resource.
         It compares the first items of all return lists, and allocates the
         resource with the minum first item value"""
-        return (task.end, )
+        return (task.end,)
     #@-node:test_allocation
     #@+node:allocate
     def allocate(self, task, state):
@@ -1158,7 +1158,7 @@ class StrictAllocator(AllocationAlgorithm):
 
         # find the earliest start date
         start, book_load\
-               = self.balance(task, start, delta, adjust_date,
+ = self.balance(task, start, delta, adjust_date,
                               calc_load, resource)
 
         end = to_end(start + delta)
@@ -1303,7 +1303,7 @@ class SloppyAllocator(AllocationAlgorithm):
 
                 if book_load <= 0:
                     #variable book_load ==> calc the maxmimal possible book_load >= (the given book_load)
-                    used_book_load = - book_load
+                    used_book_load = -book_load
                     diff_load = max_load - load
                     if diff_load and diff_load >= book_load:
                         used_book_load = diff_load
@@ -1318,7 +1318,7 @@ class SloppyAllocator(AllocationAlgorithm):
 
                 date = to_start(endi)
 
-        return -sum_effort, end, resource, intervals
+        return - sum_effort, end, resource, intervals
     #@-node:test_allocation_length
     #@+node:test_allocation_effort
     def test_allocation_effort(self, task, resource):
@@ -1362,7 +1362,7 @@ class SloppyAllocator(AllocationAlgorithm):
 
                 if book_load <= 0:
                     #variable book_load ==> calc the maxmimal possible book_load >= (the given book_load)
-                    book_load = - book_load
+                    book_load = -book_load
                     diff_load = max_load - load
                     if diff_load and diff_load >= book_load:
                         book_load = diff_load
@@ -2295,7 +2295,7 @@ class Task(object):
             try:
                 if not isinstance(res, (resource.Resource,
                                         resource._MetaResource)):
-                    raise ValueError("the resource '%s' is unknown." %  res)
+                    raise ValueError("the resource '%s' is unknown." % res)
 
                 start = _to_datetime(start)
                 end = _to_datetime(end)
@@ -2597,7 +2597,7 @@ class Task(object):
         else:
             #@        << set userdefined attribute >>
             #@+node:<< set userdefined attribute >>
-            if callable( getattr(self.__class__, name, None)):
+            if callable(getattr(self.__class__, name, None)):
                 raise NameError('You may not use "%s" as attribute' % name)
 
             setattr(self, name, value)
@@ -2830,7 +2830,7 @@ class Task(object):
     def _set_working_days(self, value):
 
         if type(value[0]) is str:
-            value = (value, )
+            value = (value,)
 
         self.working_days = value
         self._properties["working_days"] = True

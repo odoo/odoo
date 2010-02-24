@@ -36,7 +36,7 @@ sur_form = '''<?xml version="1.0"?>
 </form>'''
 
 sur_fields = {
-    'date': {'string':'Operation date','type':'date', 'required':'False'},
+    'date': {'string':'Operation date', 'type':'date', 'required':'False'},
     'period':{'string': 'Force period', 'type': 'many2one',
         'relation': 'account.period', 'required': False},
     'description':{'string':'Description', 'type':'char', 'required':'True'},
@@ -81,7 +81,7 @@ class wiz_refund(wizard.interface):
                         cr.execute("""SELECT id
                                       from account_period where date('%s')
                                       between date_start AND  date_stop and company_id = %s limit 1 """,
-                                      (form['date'],pool.get('res.users').browse(cr,uid,uid).company_id.id,))
+                                      (form['date'], pool.get('res.users').browse(cr, uid, uid).company_id.id,))
                     else:
                         #in mono company mode
                         cr.execute("""SELECT id
@@ -102,17 +102,17 @@ class wiz_refund(wizard.interface):
             if not period:
                 raise wizard.except_wizard(_('Data Insufficient !'), _('No Period found on Invoice!'))
 
-            refund_id = pool.get('account.invoice').refund(cr, uid, [inv.id],date, period, description)
+            refund_id = pool.get('account.invoice').refund(cr, uid, [inv.id], date, period, description)
             refund = pool.get('account.invoice').browse(cr, uid, refund_id[0])
             # we compute due date
             #!!!due date = date inv date on formdate
-            pool.get('account.invoice').write(cr, uid, [refund.id],{'date_due':date,'check_total':inv.check_total})
+            pool.get('account.invoice').write(cr, uid, [refund.id], {'date_due':date, 'check_total':inv.check_total})
             # to make the taxes calculated
             pool.get('account.invoice').button_compute(cr, uid, refund_id)
 
             created_inv.append(refund_id[0])
             #if inv is paid we unreconcile
-            if mode in ('cancel','modify'):
+            if mode in ('cancel', 'modify'):
                 movelines = inv.move_id.line_id
                 #we unreconcile the lines
                 to_reconcile_ids = {}
@@ -120,9 +120,9 @@ class wiz_refund(wizard.interface):
                     #if the account of the line is the as the one in the invoice
                     #we reconcile
                     if line.account_id.id == inv.account_id.id :
-                        to_reconcile_ids[line.account_id.id] =[line.id]
+                        to_reconcile_ids[line.account_id.id] = [line.id]
                     if type(line.reconcile_id) != osv.orm.browse_null :
-                        reconcile_obj.unlink(cr,uid, line.reconcile_id.id)
+                        reconcile_obj.unlink(cr, uid, line.reconcile_id.id)
                 #we advance the workflow of the refund to open
                 wf_service = netsvc.LocalService('workflow')
                 wf_service.trg_validate(uid, 'account.invoice', refund.id, 'invoice_open', cr)
@@ -143,9 +143,9 @@ class wiz_refund(wizard.interface):
                     invoice = pool.get('account.invoice').read(cr, uid, [inv.id],
                         ['name', 'type', 'number', 'reference',
                             'comment', 'date_due', 'partner_id', 'address_contact_id',
-                            'address_invoice_id', 'partner_insite','partner_contact',
+                            'address_invoice_id', 'partner_insite', 'partner_contact',
                             'partner_ref', 'payment_term', 'account_id', 'currency_id',
-                            'invoice_line', 'tax_line', 'journal_id','period_id'
+                            'invoice_line', 'tax_line', 'journal_id', 'period_id'
                         ]
                     )
                     invoice = invoice[0]
@@ -173,12 +173,12 @@ class wiz_refund(wizard.interface):
                         invoice[field] = invoice[field] and invoice[field][0]
 
                     # create the new invoice
-                    inv_id = pool.get('account.invoice').create(cr, uid, invoice,{})
+                    inv_id = pool.get('account.invoice').create(cr, uid, invoice, {})
                     # we compute due date
                     if inv.payment_term.id:
-                        data = pool.get('account.invoice').onchange_payment_term_date_invoice(cr, uid, [inv_id],inv.payment_term.id,date)
+                        data = pool.get('account.invoice').onchange_payment_term_date_invoice(cr, uid, [inv_id], inv.payment_term.id, date)
                         if 'value' in data and data['value']:
-                            pool.get('account.invoice').write(cr, uid, [inv_id],data['value'])
+                            pool.get('account.invoice').write(cr, uid, [inv_id], data['value'])
                     created_inv.append(inv_id)
 
         #we get the view id
@@ -204,7 +204,7 @@ class wiz_refund(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':sur_form, 'fields':sur_fields, 'state':[('end','Cancel'),('refund','Refund Invoice'),('cancel_invoice','Cancel Invoice'),('modify_invoice','Modify Invoice')]}
+            'result': {'type':'form', 'arch':sur_form, 'fields':sur_fields, 'state':[('end', 'Cancel'), ('refund', 'Refund Invoice'), ('cancel_invoice', 'Cancel Invoice'), ('modify_invoice', 'Modify Invoice')]}
         },
         'refund': {
             'actions': [],

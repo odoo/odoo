@@ -46,8 +46,8 @@ class OpenDocumentTextFile :
         return buffer
 
 if __name__ == "__main__" :
-    s =StringIO.StringIO(file(sys.argv[1]).read())
+    s = StringIO.StringIO(file(sys.argv[1]).read())
     odt = OpenDocumentTextFile(s)
-    print odt.toString().encode('ascii','replace')
+    print odt.toString().encode('ascii', 'replace')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

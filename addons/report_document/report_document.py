@@ -30,7 +30,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import time
 import tools
 
@@ -39,19 +39,19 @@ class report_document_user(osv.osv):
     _description = "Files details by Users"
     _auto = False
     _columns = {
-        'name': fields.char('Year', size=64,readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'name': fields.char('Year', size=64, readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'user_id':fields.integer('Owner', readonly=True),
-        'user':fields.char('User',size=64,readonly=True),
-        'file_title': fields.char('File Name',size=64,readonly=True),
-        'directory': fields.char('Directory',size=64,readonly=True),
+        'user':fields.char('User', size=64, readonly=True),
+        'file_title': fields.char('File Name', size=64, readonly=True),
+        'directory': fields.char('Directory', size=64, readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
         'change_date': fields.datetime('Modified Date', readonly=True),
         'file_size': fields.integer('File Size', readonly=True),
         'nbr':fields.integer('# of Files', readonly=True),
-        'type':fields.char('Directory Type',size=64,readonly=True),
-        'partner':fields.char('Partner',size=64,readonly=True),
+        'type':fields.char('Directory Type', size=64, readonly=True),
+        'partner':fields.char('Partner', size=64, readonly=True),
      }
     def init(self, cr):
          cr.execute("""
@@ -82,17 +82,17 @@ class report_files_partner(osv.osv):
     _description = "Files details by Partners"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'file_title': fields.char('File Name',size=64,readonly=True),
-        'directory': fields.char('Directory',size=64,readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'file_title': fields.char('File Name', size=64, readonly=True),
+        'directory': fields.char('Directory', size=64, readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
         'change_date': fields.datetime('Modified Date', readonly=True),
         'file_size': fields.integer('File Size', readonly=True),
         'nbr':fields.integer('# of Files', readonly=True),
-        'type':fields.char('Directory Type',size=64,readonly=True),
-        'partner':fields.char('Partner',size=64,readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'type':fields.char('Directory Type', size=64, readonly=True),
+        'partner':fields.char('Partner', size=64, readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
      }
     def init(self, cr):
          tools.drop_view_if_exists(cr, 'report_files_partner')
@@ -119,7 +119,7 @@ class report_document_file(osv.osv):
     _columns = {
         'file_size': fields.integer('File Size', readonly=True),
         'nbr':fields.integer('# of Files', readonly=True),
-        'month': fields.char('Month', size=24,readonly=True),
+        'month': fields.char('Month', size=24, readonly=True),
      }
     _order = "month"
     def init(self, cr):
@@ -142,10 +142,10 @@ class report_document_wall(osv.osv):
     _auto = False
     _columns = {
         'name': fields.date('Month', readonly=True),
-        'user_id':fields.many2one('res.users', 'Owner',readonly=True),
-        'user':fields.char('User',size=64,readonly=True),
-        'month': fields.char('Month', size=24,readonly=True),
-        'file_name':fields.char('Last Posted File Name',size=64,readonly=True),
+        'user_id':fields.many2one('res.users', 'Owner', readonly=True),
+        'user':fields.char('User', size=64, readonly=True),
+        'month': fields.char('Month', size=24, readonly=True),
+        'file_name':fields.char('Last Posted File Name', size=64, readonly=True),
         'last':fields.datetime('Last Posted Time', readonly=True),
              }
 

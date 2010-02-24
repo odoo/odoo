@@ -36,7 +36,7 @@ class stock_report_prodlots(osv.osv):
             'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
             'prodlot_id': fields.many2one('stock.production.lot', 'Production lot', readonly=True, select=True),
     }
-    
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'stock_report_prodlots')
         cr.execute("""
@@ -75,11 +75,11 @@ class stock_report_prodlots(osv.osv):
                 ) as report
                 group by location_id, product_id, prodlot_id
             )""")
-        
+
     def unlink(self, cr, uid, ids, context={}):
         raise osv.except_osv(_('Error !'), _('You cannot delete any record!'))
 
-        
+
 stock_report_prodlots()
 
 class stock_report_tracklots(osv.osv):
@@ -92,7 +92,7 @@ class stock_report_tracklots(osv.osv):
             'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
             'tracking_id': fields.many2one('stock.tracking', 'Tracking lot', readonly=True, select=True),
     }
-    
+
     def init(self, cr):
         cr.execute("""
            create or replace view stock_report_tracklots as (
@@ -131,7 +131,7 @@ class stock_report_tracklots(osv.osv):
                 ) as report
                 group by location_id, product_id, tracking_id
             )""")
-        
+
     def unlink(self, cr, uid, ids, context={}):
         raise osv.except_osv(_('Error !'), _('You cannot delete any record!'))
 

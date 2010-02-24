@@ -33,34 +33,34 @@ import netsvc
 class wizard_load_configured_table(wizard.interface):
     def _get_table_data(self, cr, uid, data, context={}):
         pool_obj = pooler.get_pool(cr.dbname)
-        
+
 #        vals={}
 #        vals['configure']=True
 #        vals['state']='dbconfigure'
 #        pooler.get_pool(cr.dbname).get('olap.schema').write(cr,uid,data['id'],vals)
-        
+
         wf_service = netsvc.LocalService('workflow')
         wf_service.trg_validate(uid, 'olap.schema', data['id'], 'dbconfigure', cr)
-        
-        lines=pool_obj.get('olap.schema').read(cr, uid, data['id'],context={})
-        fact_ids=pool_obj.get('olap.database.tables').search(cr, uid, ([('fact_database_id','=',lines['database_id'][0])]),context={})
-        model_data_ids = pool_obj.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_olap_database_tables_form')],context={})
-        resource_id = pool_obj.get('ir.model.data').read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
-        
+
+        lines = pool_obj.get('olap.schema').read(cr, uid, data['id'], context={})
+        fact_ids = pool_obj.get('olap.database.tables').search(cr, uid, ([('fact_database_id', '=', lines['database_id'][0])]), context={})
+        model_data_ids = pool_obj.get('ir.model.data').search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_olap_database_tables_form')], context={})
+        resource_id = pool_obj.get('ir.model.data').read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
+
         return {
-            'domain': "[('id','in', ["+','.join(map(str,fact_ids))+"])]",
+            'domain': "[('id','in', [" + ','.join(map(str, fact_ids)) + "])]",
             'name': 'Database Tables',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'olap.database.tables',
-            'views': [(False,'tree'),(resource_id,'form')],
+            'views': [(False, 'tree'), (resource_id, 'form')],
             'type': 'ir.actions.act_window'
         }
-        
+
     states = {
         'init' : {
             'actions' : [],
-            'result' : {'type' : 'action' ,'action':_get_table_data,'state':'end'}
+            'result' : {'type' : 'action' , 'action':_get_table_data, 'state':'end'}
         }
       }
 

@@ -54,22 +54,22 @@ class order(report_sxw.rml_parse):
         dsum = 0
         for line in res:
             if line[0] != 0:
-                dsum = dsum +(line[2] * (line[0]*line[1]/100))
+                dsum = dsum + (line[2] * (line[0] * line[1] / 100))
         return dsum
 
     def _get_journal_amt(self, order_id):
-        lst=[]
+        lst = []
         sql = """ select aj.name from account_bank_statement as abs
                     LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
                     LEFT JOIN account_journal as aj ON aj.id = abs.journal_id
-                    WHERE absl.pos_statement_id = %d"""%(order_id.id)
+                    WHERE absl.pos_statement_id = %d""" % (order_id.id)
         self.cr.execute(sql)
         res = self.cr.fetchone()
         lst.append(res[0])
         sql2 = """ select sum(absl.amount) as amt from account_bank_statement as abs
                     LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
                     LEFT JOIN account_journal as aj ON aj.id = abs.journal_id
-                    where aj.name = '%s' """%(res[0])
+                    where aj.name = '%s' """ % (res[0])
         self.cr.execute(sql2)
         res1 = self.cr.fetchone()
         lst.append(res1[0])

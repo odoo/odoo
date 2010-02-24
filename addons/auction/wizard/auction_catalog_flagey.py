@@ -25,12 +25,12 @@ import pooler
 
 def _wo_check(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    current_auction=pool.get('auction.dates').browse(cr,uid,data['id'])
-    v_lots=pool.get('auction.lots').search(cr,uid,[('auction_id','=',current_auction.id)])
-    v_ids=pool.get('auction.lots').browse(cr,uid,v_lots)
+    current_auction = pool.get('auction.dates').browse(cr, uid, data['id'])
+    v_lots = pool.get('auction.lots').search(cr, uid, [('auction_id', '=', current_auction.id)])
+    v_ids = pool.get('auction.lots').browse(cr, uid, v_lots)
     for ab in v_ids:
         if not ab.auction_id :
-            raise wizard.except_wizard('Error!','No Lots belong to this Auction Date')
+            raise wizard.except_wizard('Error!', 'No Lots belong to this Auction Date')
     return 'report'
 
 class wizard_report(wizard.interface):

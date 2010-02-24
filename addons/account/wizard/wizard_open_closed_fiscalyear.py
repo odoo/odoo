@@ -37,13 +37,13 @@ fields = {
 
 def _remove_entries(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    data_fyear = pool.get('account.fiscalyear').browse(cr,uid,data['form']['fyear_id'])
+    data_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fyear_id'])
     if not data_fyear.end_journal_period_id:
         raise wizard.except_wizard(_('Error'), _('No journal for ending writing has been defined for the fiscal year'))
     period_journal = data_fyear.end_journal_period_id
-    ids_move = pool.get('account.move').search(cr,uid,[('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
+    ids_move = pool.get('account.move').search(cr, uid, [('journal_id', '=', period_journal.journal_id.id), ('period_id', '=', period_journal.period_id.id)])
     if ids_move:
-        cr.execute('delete from account_move where id =ANY(%s)',(ids_move,))
+        cr.execute('delete from account_move where id =ANY(%s)', (ids_move,))
     #cr.execute('UPDATE account_journal_period ' \
     #        'SET state = %s ' \
     #        'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %s)',
@@ -63,7 +63,7 @@ class open_closed_fiscal(wizard.interface):
                 'type': 'form',
                 'arch': form,
                 'fields': fields,
-                'state':[('end','Cancel'),('open','Open')]
+                'state':[('end', 'Cancel'), ('open', 'Open')]
             }
         },
         'open': {

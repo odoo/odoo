@@ -25,8 +25,8 @@ from osv import fields, osv
 
 
 class account_move_line(osv.osv):
-    _name="account.move.line"
-    _inherit="account.move.line"
+    _name = "account.move.line"
+    _inherit = "account.move.line"
     _description = "Entry lines"
 
     def _query_get(self, cr, uid, obj='l', context={}):
@@ -37,7 +37,7 @@ class account_move_line(osv.osv):
                     #the query have to be build with no reference to periods but thanks to the creation date
                     if context['periods']:
                         #if one or more period are given, use them
-                        p_ids = self.pool.get('account.period').search(cr,uid,[('id','in',context['periods'])])
+                        p_ids = self.pool.get('account.period').search(cr, uid, [('id', 'in', context['periods'])])
                     else:
                         #else we have to consider all the periods of the selected fiscal year(s)
                         fiscalyear_obj = self.pool.get('account.fiscalyear')
@@ -47,7 +47,7 @@ class account_move_line(osv.osv):
                             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
                         else:
                             fiscalyear_ids = [context['fiscalyear']]
-                        p_ids = self.pool.get('account.period').search(cr,uid,[('fiscalyear_id','in',fiscalyear_ids)])
+                        p_ids = self.pool.get('account.period').search(cr, uid, [('fiscalyear_id', 'in', fiscalyear_ids)])
 
                     if p_ids == []:
                         return query
@@ -56,7 +56,7 @@ class account_move_line(osv.osv):
                     res = ''
                     count = 1
                     clause_list = query.split('AND')
-                    ref_string = ' '+obj+'.period_id in'
+                    ref_string = ' ' + obj + '.period_id in'
                     for clause in clause_list:
                         if count != 1 and not clause.startswith(ref_string):
                             res += "AND"
@@ -67,13 +67,13 @@ class account_move_line(osv.osv):
                     #add to 'res' a new clause containing the creation date criterion
                     count = 1
                     res += " AND ("
-                    periods = self.pool.get('account.period').read(cr,uid,p_ids,['date_start','date_stop'])
+                    periods = self.pool.get('account.period').read(cr, uid, p_ids, ['date_start', 'date_stop'])
                     for period in periods:
                         if count != 1:
                             res += " OR "
                         #creation date criterion: the creation date of the move_line has to be 
                         # between the date_start and the date_stop of the selected periods
-                        res += "("+obj+".create_date between to_date('" + period['date_start']  + "','yyyy-mm-dd') and to_date('" + period['date_stop']  + "','yyyy-mm-dd'))"
+                        res += "(" + obj + ".create_date between to_date('" + period['date_start'] + "','yyyy-mm-dd') and to_date('" + period['date_stop'] + "','yyyy-mm-dd'))"
                         count += 1
                     res += ")"
                     return res

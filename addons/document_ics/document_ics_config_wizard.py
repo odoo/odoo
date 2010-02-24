@@ -49,7 +49,7 @@ ICS_TAGS = {
             }
 
 class document_ics_crm_wizard(osv.osv_memory):
-    _name='document.ics.crm.wizard'
+    _name = 'document.ics.crm.wizard'
     _inherit = 'res.config'
 
     _columns = {
@@ -66,25 +66,25 @@ class document_ics_crm_wizard(osv.osv_memory):
         'phonecall' : fields.boolean('Phone Calls', help="Helps you to encode the result of a phone call or to plan a list of phone calls to process."),
     }
     _defaults = {
-        'meeting': lambda *args: True,
-        'opportunity': lambda *args: True,
-        'phonecall': lambda *args: True,
+        'meeting': lambda * args: True,
+        'opportunity': lambda * args: True,
+        'phonecall': lambda * args: True,
     }
 
     def execute(self, cr, uid, ids, context=None):
-        data=self.read(cr, uid, ids, [])[0]
+        data = self.read(cr, uid, ids, [])[0]
         dir_obj = self.pool.get('document.directory')
         dir_cont_obj = self.pool.get('document.directory.content')
         dir_id = dir_obj.search(cr, uid, [('name', '=', 'Calendars')])
         if dir_id:
             dir_id = dir_id[0]
         else:
-            dir_id = dir_obj.create(cr, uid, {'name': 'Calendars' ,'user_id' : uid, 'type': 'directory'})
+            dir_id = dir_obj.create(cr, uid, {'name': 'Calendars' , 'user_id' : uid, 'type': 'directory'})
         for section in ['meeting', 'lead', 'opportunity', 'jobs', 'bugs', 'fund', 'helpdesk', 'claims', 'phonecall']:
             if data[section]:
-                section_id=self.pool.get('crm.case.section').search(cr, uid, [('name', '=', SECTION_NAME[section])])
+                section_id = self.pool.get('crm.case.section').search(cr, uid, [('name', '=', SECTION_NAME[section])])
                 if section_id:
-                    object_id=self.pool.get('ir.model').search(cr, uid, [('name', '=', 'Case')])[0]
+                    object_id = self.pool.get('ir.model').search(cr, uid, [('name', '=', 'Case')])[0]
 
                     vals_cont = {
                           'name': SECTION_NAME[section],
@@ -99,9 +99,9 @@ class document_ics_crm_wizard(osv.osv_memory):
 
                     content_id = dir_cont_obj.create(cr, uid, vals_cont)
 
-                    ics_obj=self.pool.get('document.directory.ics.fields')
+                    ics_obj = self.pool.get('document.directory.ics.fields')
                     for tag in ['description', 'url', 'summary', 'dtstart', 'dtend', 'uid']:
-                        field_id =  self.pool.get('ir.model.fields').search(cr, uid, [('model_id.name', '=', 'Case'), ('field_description', '=', ICS_TAGS[tag])])[0]
+                        field_id = self.pool.get('ir.model.fields').search(cr, uid, [('model_id.name', '=', 'Case'), ('field_description', '=', ICS_TAGS[tag])])[0]
                         vals_ics = {
                             'field_id':  field_id ,
                             'name':  tag ,

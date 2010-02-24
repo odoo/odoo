@@ -38,16 +38,16 @@ pay_form = '''<?xml version="1.0"?>
     <field name="total"/>
 </form>'''
 
-def _start(self,cr,uid,data,context):
+def _start(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    rec=pool.get('auction.lots').browse(cr,uid,data['ids'],context)
-    amount1=0.0
+    rec = pool.get('auction.lots').browse(cr, uid, data['ids'], context)
+    amount1 = 0.0
     for r in rec:
-        amount1+=r.buyer_price
-        buyer= r and r.ach_uid.id or False
+        amount1 += r.buyer_price
+        buyer = r and r.ach_uid.id or False
         if r.is_ok:
             raise wizard.except_wizard('Error !', 'Some lots of the selection are already paid.')
-    return {'amount':amount1, 'total':amount1,'buyer_id':buyer}
+    return {'amount':amount1, 'total':amount1, 'buyer_id':buyer}
 
 pay_fields = {
     'amount': {'string': 'Amount paid', 'type':'float'},
@@ -57,29 +57,29 @@ pay_fields = {
     'statement_id2': {'string':'Statement', 'type':'many2one', 'relation':'account.bank.statement'},
     'amount3': {'string': 'Amount paid', 'type':'float'},
     'statement_id3': {'string':'Statement', 'type':'many2one', 'relation':'account.bank.statement'},
-    'total': {'string': 'Amount to paid', 'type':'float','readonly':True}
+    'total': {'string': 'Amount to paid', 'type':'float', 'readonly':True}
 }
 
 def _pay_and_reconcile(self, cr, uid, data, context):
-    if not abs(data['form']['total'] - (data['form']['amount']+data['form']['amount2']+data['form']['amount3']))<0.01:
-        rest=data['form']['total']-(data['form']['amount']+data['form']['amount2']+data['form']['amount3'])
-        raise wizard.except_wizard('Payment aborted !', 'You should pay all the total: "%.2f" are missing to accomplish the payment.' %(round(rest,2)))
-    
+    if not abs(data['form']['total'] - (data['form']['amount'] + data['form']['amount2'] + data['form']['amount3'])) < 0.01:
+        rest = data['form']['total'] - (data['form']['amount'] + data['form']['amount2'] + data['form']['amount3'])
+        raise wizard.except_wizard('Payment aborted !', 'You should pay all the total: "%.2f" are missing to accomplish the payment.' % (round(rest, 2)))
+
     pool = pooler.get_pool(cr.dbname)
-    lots = pool.get('auction.lots').browse(cr,uid,data['ids'],context)
-    ref_bk_s=pooler.get_pool(cr.dbname).get('account.bank.statement.line')
-    
+    lots = pool.get('auction.lots').browse(cr, uid, data['ids'], context)
+    ref_bk_s = pooler.get_pool(cr.dbname).get('account.bank.statement.line')
+
     for lot in lots:
         if data['form']['buyer_id']:
-            pool.get('auction.lots').write(cr,uid,[lot.id],{'ach_uid':data['form']['buyer_id']})
+            pool.get('auction.lots').write(cr, uid, [lot.id], {'ach_uid':data['form']['buyer_id']})
         if not lot.auction_id:
-            raise wizard.except_wizard('Error !', 'No auction date for "%s": Please set one.'%(lot.name))
-        pool.get('auction.lots').write(cr,uid,[lot.id],{'is_ok':True})
-    
-    for st,stamount in [('statement_id1','amount'),('statement_id2','amount2'),('statement_id3','amount3')]:
+            raise wizard.except_wizard('Error !', 'No auction date for "%s": Please set one.' % (lot.name))
+        pool.get('auction.lots').write(cr, uid, [lot.id], {'is_ok':True})
+
+    for st, stamount in [('statement_id1', 'amount'), ('statement_id2', 'amount2'), ('statement_id3', 'amount3')]:
         if data['form'][st]:
-            new_id=ref_bk_s.create(cr,uid,{
-                'name':'Buyer:'+str(lot.ach_login or '')+', auction:'+ lots[0].auction_id.name,
+            new_id = ref_bk_s.create(cr, uid, {
+                'name':'Buyer:' + str(lot.ach_login or '') + ', auction:' + lots[0].auction_id.name,
                 'date': time.strftime('%Y-%m-%d'),
                 'partner_id':data['form']['buyer_id'] or False,
                 'type':'customer',
@@ -88,7 +88,7 @@ def _pay_and_reconcile(self, cr, uid, data, context):
                 'amount':data['form'][stamount]
             })
             for lot in lots:
-                pool.get('auction.lots').write(cr,uid,[lot.id],{'statement_id':[(4,new_id)]})
+                pool.get('auction.lots').write(cr, uid, [lot.id], {'statement_id':[(4, new_id)]})
     return {}
 
 
@@ -96,7 +96,7 @@ class wiz_auc_lots_pay(wizard.interface):
     states = {
         'init': {
             'actions': [_start],
-            'result': {'type': 'form', 'arch':pay_form, 'fields': pay_fields, 'state':[('end','Cancel'),('pay','Pay')]}
+            'result': {'type': 'form', 'arch':pay_form, 'fields': pay_fields, 'state':[('end', 'Cancel'), ('pay', 'Pay')]}
         },
         'pay': {
         'actions': [_pay_and_reconcile],

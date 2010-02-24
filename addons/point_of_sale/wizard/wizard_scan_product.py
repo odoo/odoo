@@ -54,7 +54,7 @@ class pos_scan_product(wizard.interface):
                     'type': 'form',
                     'arch': form_gencod,
                     'fields': fields_gencod,
-                    'state': [('end','Cancel','gtk-cancel'),
+                    'state': [('end', 'Cancel', 'gtk-cancel'),
                               ('add', 'Add', 'gtk-ok', True)],
             }
         },

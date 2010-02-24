@@ -42,9 +42,9 @@ def _period_get(self, cr, uid, datas, ctx={}):
 _journal_fields = {
     'journal_id': {'string':'Journal', 'type':'many2one', 'relation':'account.journal', 'required':True},
     'period_id': {
-        'string':'Period', 
-        'type':'many2one', 
-        'relation':'account.period', 
+        'string':'Period',
+        'type':'many2one',
+        'relation':'account.period',
         'required':True,
     }
 }
@@ -54,7 +54,7 @@ def _action_open_window(self, cr, uid, data, context):
     cr.execute('select id,name from ir_ui_view where model=%s and type=%s', ('account.move.line', 'form'))
     view_res = cr.fetchone()
     jp = pooler.get_pool(cr.dbname).get('account.journal.period')
-    ids = jp.search(cr, uid, [('journal_id','=',form['journal_id']), ('period_id','=',form['period_id'])])
+    ids = jp.search(cr, uid, [('journal_id', '=', form['journal_id']), ('period_id', '=', form['period_id'])])
     if not len(ids):
         name = pooler.get_pool(cr.dbname).get('account.journal').read(cr, uid, [form['journal_id']])[0]['name']
         state = pooler.get_pool(cr.dbname).get('account.period').read(cr, uid, [form['period_id']])[0]['state']
@@ -62,30 +62,30 @@ def _action_open_window(self, cr, uid, data, context):
             raise wizard.except_wizard(_('UserError'), _('This period is already closed !'))
         company = pooler.get_pool(cr.dbname).get('account.period').read(cr, uid, [form['period_id']])[0]['company_id'][0]
         jp.create(cr, uid, {'name':name, 'period_id': form['period_id'], 'journal_id':form['journal_id'], 'company_id':company})
-    ids = jp.search(cr, uid, [('journal_id','=',form['journal_id']), ('period_id','=',form['period_id'])])
+    ids = jp.search(cr, uid, [('journal_id', '=', form['journal_id']), ('period_id', '=', form['period_id'])])
     jp = jp.browse(cr, uid, ids, context=context)[0]
     name = (jp.journal_id.code or '') + ':' + (jp.period_id.code or '')
 
     mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'account', 'view_account_move_line_filter')
-    id = mod_obj.read(cr, uid, result, ['res_id'])    
+    id = mod_obj.read(cr, uid, result, ['res_id'])
     return {
-        'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (form['journal_id'],form['period_id']),
+        'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (form['journal_id'], form['period_id']),
         'name': name,
         'view_type': 'form',
         'view_mode': 'tree,form',
         'res_model': 'account.move.line',
         'view_id': view_res,
-        'context': "{'journal_id':%d, 'period_id':%d}" % (form['journal_id'],form['period_id']),
+        'context': "{'journal_id':%d, 'period_id':%d}" % (form['journal_id'], form['period_id']),
         'type': 'ir.actions.act_window',
-        'search_view_id': id['res_id']        
+        'search_view_id': id['res_id']
     }
 
 class wiz_journal(wizard.interface):
     states = {
         'init': {
             'actions': [_period_get],
-            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('open','Open Journal')]}
+            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end', 'Cancel'), ('open', 'Open Journal')]}
         },
         'open': {
             'actions': [],

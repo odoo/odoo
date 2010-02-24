@@ -32,7 +32,7 @@ invoice_form = """<?xml version="1.0"?>
 """
 
 invoice_fields = {
-    'grouped' : {'string':'Group the invoices', 'type':'boolean', 'default': lambda x,y,z: False},
+    'grouped' : {'string':'Group the invoices', 'type':'boolean', 'default': lambda x, y, z: False},
     'invoice_date': {'string': 'Invoiced date', 'type':'date' }
 }
 
@@ -45,11 +45,11 @@ ack_fields = {}
 
 def _makeInvoices(self, cr, uid, data, context):
     pool_obj = pooler.get_pool(cr.dbname)
-    mod_obj = pool_obj.get('ir.model.data') 
+    mod_obj = pool_obj.get('ir.model.data')
     order_obj = pool_obj.get('sale.order')
     newinv = []
 
-    order_obj.action_invoice_create(cr, uid, data['ids'], data['form']['grouped'], date_inv = data['form']['invoice_date'])
+    order_obj.action_invoice_create(cr, uid, data['ids'], data['form']['grouped'], date_inv=data['form']['invoice_date'])
     for id in data['ids']:
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
@@ -58,11 +58,11 @@ def _makeInvoices(self, cr, uid, data, context):
         for i in o.invoice_ids:
             newinv.append(i.id)
     act_obj = pool_obj.get('ir.actions.act_window')
-    xml_id='action_invoice_tree5'
+    xml_id = 'action_invoice_tree5'
     result = mod_obj._get_id(cr, uid, 'account', xml_id)
     id = mod_obj.read(cr, uid, result, ['res_id'])['res_id']
     result = act_obj.read(cr, uid, id)
-    result['domain'] ="[('id','in', ["+','.join(map(str,newinv))+"])]"
+    result['domain'] = "[('id','in', [" + ','.join(map(str, newinv)) + "])]"
     return result
     #return {
     #    'domain': "[('id','in', ["+','.join(map(str,newinv))+"])]",
@@ -83,7 +83,7 @@ class make_invoice(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : invoice_form,
                     'fields' : invoice_fields,
-                    'state' : [('end', 'Cancel'),('invoice', 'Create invoices') ]}
+                    'state' : [('end', 'Cancel'), ('invoice', 'Create invoices') ]}
         },
         'invoice' : {
             'actions' : [_makeInvoices],

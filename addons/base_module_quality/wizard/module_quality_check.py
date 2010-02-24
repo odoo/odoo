@@ -42,7 +42,7 @@ class quality_check(wizard.interface):
     def _open_quality_check(self, cr, uid, data, context):
         obj_ids = self._create_quality_check(cr, uid, data, context)
         return {
-            'domain': "[('id','in', ["+','.join(map(str,obj_ids))+"])]",
+            'domain': "[('id','in', [" + ','.join(map(str, obj_ids)) + "])]",
             'name': _('Quality Check'),
             'view_type': 'form',
             'view_mode': 'tree,form',

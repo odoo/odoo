@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 from tools.sql import drop_view_if_exists
 
 class report_timesheet_user(osv.osv):
@@ -27,12 +27,12 @@ class report_timesheet_user(osv.osv):
     _description = "Timesheet per day"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'cost': fields.float('Cost', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc,user_id desc'
     def init(self, cr):
@@ -60,12 +60,12 @@ class report_timesheet_account(osv.osv):
     _description = "Timesheet per account"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
 
     }
     _order = 'name desc,account_id desc,user_id desc'
@@ -94,15 +94,15 @@ class report_timesheet_account_date(osv.osv):
     _description = "Daily timesheet per account"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc,account_id desc,user_id desc'
-    
+
     def init(self, cr):
         drop_view_if_exists(cr, 'report_timesheet_account_date')
         cr.execute("""
@@ -167,33 +167,33 @@ class report_random_timsheet(osv.osv):
     _name = "report.random.timesheet"
     _description = "Random Timesheet Report"
     _auto = False
-    
+
     _columns = {
-        'analytic_account_id' : fields.many2one('account.analytic.account','Analytic Account', readonly=True),
+        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
         'quantity' : fields.float('Quantity', readonly=True),
         'date': fields.date('Date', readonly=True),
         'user_id' : fields.many2one('res.users', 'User', readonly=True)
     }
     _order = "date desc"
-    
+
     def __init__(self, pool, cr):
         super(report_random_timsheet, self).__init__(pool, cr)
         self.called = False
-    
+
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ To call the init() method timely
         """
         if not self.called:
             self.init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
-        
+
         res = super(report_random_timsheet, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return res
-    
+
     def init(self, cr, uid=1):
         drop_view_if_exists(cr, 'report_random_timesheet')
-        
+
         cr.execute("""create or replace view report_random_timesheet as (
 
             select 
@@ -207,7 +207,7 @@ class report_random_timsheet(osv.osv):
                 AND (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-3))
             LIMIT 10
             )
-            """ )
+            """)
 
 report_random_timsheet()
 
@@ -215,25 +215,25 @@ class random_timesheet_lines(osv.osv):
     _name = "random.timesheet.lines"
     _description = "Random Timesheet Lines"
     _auto = False
-    
+
     _columns = {
-        'date': fields.date('Date', readonly=True),     
+        'date': fields.date('Date', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
         'user_id' : fields.many2one('res.users', 'User', readonly=True),
         'quantity' : fields.float('Quantity', readonly=True),
-        'product_id' : fields.many2one('product.product', 'Product', readonly=True), 
-        'analytic_account_id' : fields.many2one('account.analytic.account','Analytic Account', readonly=True),
+        'product_id' : fields.many2one('product.product', 'Product', readonly=True),
+        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
         'uom_id' : fields.many2one('product.uom', 'UoM', readonly=True),
         'amount' : fields.float('Amount', readonly=True),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoicing', readonly=True),
         'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True)
     }
-    
+
     _order = "date desc"
-    
+
     def init(self, cr):
         drop_view_if_exists(cr, 'random_timesheet_lines')
-        
+
         cr.execute("""create or replace view random_timesheet_lines as (
             select 
                 line.id as id, line.date as date, line.name as name, line.unit_amount as quantity,
@@ -245,7 +245,7 @@ class random_timesheet_lines(osv.osv):
             where
                 (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-15))
             )
-            """ )
+            """)
 
 random_timesheet_lines()
 

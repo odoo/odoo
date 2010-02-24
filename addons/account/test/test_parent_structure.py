@@ -26,23 +26,23 @@ USERID = 1
 USERPASS = 'admin'
 
 
-sock = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/object' % ('localhost',8069))
+sock = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/object' % ('localhost', 8069))
 
 ids = sock.execute(DB, USERID, USERPASS, 'account.account', 'search', [], {})
-account_lists = sock.execute(DB, USERID, USERPASS, 'account.account', 'read', ids, ['parent_id','parent_left','parent_right'])
+account_lists = sock.execute(DB, USERID, USERPASS, 'account.account', 'read', ids, ['parent_id', 'parent_left', 'parent_right'])
 
-accounts = dict(map(lambda x: (x['id'],x), account_lists))
+accounts = dict(map(lambda x: (x['id'], x), account_lists))
 for a in account_lists:
     if a['parent_id']:
         assert a['parent_left'] > accounts[a['parent_id'][0]]['parent_left']
         assert a['parent_right'] < accounts[a['parent_id'][0]]['parent_right']
     assert a['parent_left'] < a['parent_right']
     for a2 in account_lists:
-        assert not ((a2['parent_right']>a['parent_left']) and 
-            (a2['parent_left']<a['parent_left']) and 
-            (a2['parent_right']<a['parent_right']))
-        if a2['parent_id']==a['id']:
-            assert (a2['parent_left']>a['parent_left']) and (a2['parent_right']<a['parent_right'])
+        assert not ((a2['parent_right'] > a['parent_left']) and
+            (a2['parent_left'] < a['parent_left']) and
+            (a2['parent_right'] < a['parent_right']))
+        if a2['parent_id'] == a['id']:
+            assert (a2['parent_left'] > a['parent_left']) and (a2['parent_right'] < a['parent_right'])
 
 print 'Tests Ok'
 

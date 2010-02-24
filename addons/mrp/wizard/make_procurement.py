@@ -36,7 +36,7 @@ def make_procurement(obj, cr, uid, data, context=None):
     wh = pool.get('stock.warehouse').browse(cr, uid, data['form']['warehouse_id'], context)
     user = pool.get('res.users').browse(cr, uid, uid, context)
     procure_id = pool.get('mrp.procurement').create(cr, uid, {
-        'name':'INT:'+str(user.login),
+        'name':'INT:' + str(user.login),
         'date_planned':data['form']['date_planned'],
         'product_id':data['form']['product_id'],
         'product_qty':data['form']['qty'],
@@ -66,11 +66,11 @@ class MakeProcurement(wizard.interface):
     <field name="date_planned"/>
 </form>"""
     procurement_fields = {
-        'qty': {'string': 'Quantity', 'type': 'float', 'digits':(16,2), 'required': True},
+        'qty': {'string': 'Quantity', 'type': 'float', 'digits':(16, 2), 'required': True},
         'product_id': {'string': 'product', 'type': 'many2one', 'relation': 'product.product', 'required': True, 'readonly':1},
         'uom_id': {'string': 'Unit of Measure', 'type': 'many2one', 'relation': 'product.uom', 'required':True},
         'warehouse_id': {'string': 'Warehouse', 'type': 'many2one', 'relation':'stock.warehouse', 'required':True},
-        'date_planned': {'string': 'Planned Date', 'type': 'date', 'required':True, 'default': lambda *args: time.strftime('%Y-%m-%d')}
+        'date_planned': {'string': 'Planned Date', 'type': 'date', 'required':True, 'default': lambda * args: time.strftime('%Y-%m-%d')}
     }
 
     states = {

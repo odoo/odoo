@@ -27,8 +27,8 @@ import tools
 import mx.DateTime
 
 from tools.translate import _
-from osv import fields 
-from osv import osv 
+from osv import fields
+from osv import osv
 from osv import orm
 from osv.orm import except_orm
 
@@ -45,7 +45,7 @@ class case(osv.osv):
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
-    def remind_user(self, cr, uid, ids, context={}, attach=False, 
+    def remind_user(self, cr, uid, ids, context={}, attach=False,
             destination=True):
         for case in self.browse(cr, uid, ids):
             if not case.section_id.reply_to:
@@ -66,24 +66,24 @@ class case(osv.osv):
 
                 if attach:
                     attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', 'crm.case'), ('res_id', '=', case.id)])
-                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
+                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
                     attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
                 # Send an email
                 flag = tools.email_send(
                     src,
                     dest,
-                    "Reminder: [%s] %s" % (str(case.id), case.name, ),
+                    "Reminder: [%s] %s" % (str(case.id), case.name,),
                     self.format_body(body),
                     reply_to=case.section_id.reply_to,
                     openobject_id=str(case.id),
                     attach=attach_to_send
                 )
                 if flag:
-                    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
+                    raise osv.except_osv(_('Email!'), ("Email Successfully Sent"))
                 else:
-                    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
-        return True    
+                    raise osv.except_osv(_('Email Fail!'), ("Email is not sent successfully"))
+        return True
 
     def _check(self, cr, uid, ids=False, context={}):
         '''
@@ -96,21 +96,21 @@ class case(osv.osv):
                 and state not in (\'cancel\',\'done\')',
                 (time.strftime("%Y-%m-%d %H:%M:%S"),
                     time.strftime('%Y-%m-%d %H:%M:%S')))
-        ids2 = map(lambda x: x[0], cr.fetchall() or [])        
+        ids2 = map(lambda x: x[0], cr.fetchall() or [])
         cases = self.browse(cr, uid, ids2, context)
-        return self._action(cr, uid, cases, False, context=context)        
+        return self._action(cr, uid, cases, False, context=context)
 
-    def _action(self, cr, uid, cases, state_to, scrit=None, context={}):     
+    def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
         if not context:
             context = {}
-        context['state_to'] = state_to        
+        context['state_to'] = state_to
         rule_obj = self.pool.get('base.action.rule')
         model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])        
-        rule_ids = rule_obj.search(cr, uid, [('name','=',model_ids[0])])
+        model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
+        rule_ids = rule_obj.search(cr, uid, [('name', '=', model_ids[0])])
         return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
-    def format_body(self, body):        
+    def format_body(self, body):
         return self.pool.get('base.action.rule').format_body(body)
 
     def format_mail(self, obj, body):
@@ -120,16 +120,16 @@ case()
 class base_action_rule(osv.osv):
     _inherit = 'base.action.rule'
     _description = 'Action Rules'
-    
+
     def do_check(self, cr, uid, action, obj, context={}):
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)
-        
+
         if hasattr(obj, 'section_id'):
-            ok = ok and (not action.trg_section_id or action.trg_section_id.id==obj.section_id.id)
+            ok = ok and (not action.trg_section_id or action.trg_section_id.id == obj.section_id.id)
         if hasattr(obj, 'categ_id'):
-            ok = ok and (not action.trg_categ_id or action.trg_categ_id.id==obj.categ_id.id)
+            ok = ok and (not action.trg_categ_id or action.trg_categ_id.id == obj.categ_id.id)
         if hasattr(obj, 'history_line'):
-            ok = ok and (not action.trg_max_history or action.trg_max_history<=(len(obj.history_line)+1))
+            ok = ok and (not action.trg_max_history or action.trg_max_history <= (len(obj.history_line) + 1))
             reg_history = action.regex_history
             result_history = True
             if reg_history:
@@ -143,21 +143,21 @@ class base_action_rule(osv.osv):
         return ok
 
     def do_action(self, cr, uid, action, model_obj, obj, context={}):
-        res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)         
+        res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
-        
+
         if action.act_section_id:
             obj.section_id = action.act_section_id
-            write['section_id'] = action.act_section_id.id        
-        
+            write['section_id'] = action.act_section_id.id
+
         if hasattr(obj, 'email_cc') and action.act_email_cc:
             if '@' in (obj.email_cc or ''):
                 emails = obj.email_cc.split(",")
                 if  obj.act_email_cc not in emails:# and '<'+str(action.act_email_cc)+">" not in emails:
-                    write['email_cc'] = obj.email_cc+','+obj.act_email_cc
+                    write['email_cc'] = obj.email_cc + ',' + obj.act_email_cc
             else:
                 write['email_cc'] = obj.act_email_cc
-        
+
         model_obj.write(cr, uid, [obj.id], write, context)
         emails = []
         if hasattr(obj, 'email_from') and action.act_mail_to_partner:
@@ -167,28 +167,28 @@ class base_action_rule(osv.osv):
             emails = list(set(emails))
             self.email_send(cr, uid, obj, emails, action.act_mail_body)
         return True
-   
-    
+
+
 base_action_rule()
 
 class base_action_rule_line(osv.osv):
     _inherit = 'base.action.rule.line'
 
     def state_get(self, cr, uid, context={}):
-        res = super(base_action_rule_line, self).state_get(cr, uid, context=context)   
-        return res + [('escalate','Escalate')] + crm.AVAILABLE_STATES
+        res = super(base_action_rule_line, self).state_get(cr, uid, context=context)
+        return res + [('escalate', 'Escalate')] + crm.AVAILABLE_STATES
 
     def priority_get(self, cr, uid, context={}):
-        res = super(base_action_rule_line, self).priority_get(cr, uid, context=context) 
+        res = super(base_action_rule_line, self).priority_get(cr, uid, context=context)
         return res + crm.AVAILABLE_PRIORITIES
-    
-    _columns = {        
+
+    _columns = {
         'trg_section_id': fields.many2one('crm.case.section', 'Section'),
         'trg_max_history': fields.integer('Maximum Communication History'),
-        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),        
+        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),
         'regex_history' : fields.char('Regular Expression on Case History', size=128),
-        'act_section_id': fields.many2one('crm.case.section', 'Set section to'),        
-        'act_mail_to_partner': fields.boolean('Mail to partner',help="Check this if you want the rule to send an email to the partner."),        
+        'act_section_id': fields.many2one('crm.case.section', 'Set section to'),
+        'act_mail_to_partner': fields.boolean('Mail to partner', help="Check this if you want the rule to send an email to the partner."),
     }
 
 base_action_rule_line()

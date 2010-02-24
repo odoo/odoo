@@ -31,17 +31,17 @@ import netsvc
 from caldav_fs import tinydav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
-from service.websrv_lib import HTTPDir,FixSendError
+from service.websrv_lib import HTTPDir, FixSendError
 
-class DAVHandler(FixSendError,DAVRequestHandler):
+class DAVHandler(FixSendError, DAVRequestHandler):
     verbose = False
-    
-    def get_userinfo(self,user,pw):        
+
+    def get_userinfo(self, user, pw):
         return False
 
     def _log(self, message):
-        netsvc.Logger().notifyChannel("webdav",netsvc.LOG_DEBUG,message)
-    
+        netsvc.Logger().notifyChannel("webdav", netsvc.LOG_DEBUG, message)
+
     def handle(self):
         pass
 
@@ -50,25 +50,25 @@ class DAVHandler(FixSendError,DAVRequestHandler):
 
     def setup(self):
         davpath = '/calendar/'
-        self.baseuri = "http://%s:%d%s"% (self.server.server_name,self.server.server_port,davpath)
-        self.IFACE_CLASS  = tinydav_handler(self)
+        self.baseuri = "http://%s:%d%s" % (self.server.server_name, self.server.server_port, davpath)
+        self.IFACE_CLASS = tinydav_handler(self)
         pass
-    
+
     def log_message(self, format, *args):
-        netsvc.Logger().notifyChannel('webdav',netsvc.LOG_DEBUG_RPC,format % args)
+        netsvc.Logger().notifyChannel('webdav', netsvc.LOG_DEBUG_RPC, format % args)
 
     def log_error(self, format, *args):
-        netsvc.Logger().notifyChannel('webdav',netsvc.LOG_WARNING,format % args)
+        netsvc.Logger().notifyChannel('webdav', netsvc.LOG_WARNING, format % args)
 
 
 try:
-    from service.http_server import reg_http_service,OpenERPAuthProvider    
+    from service.http_server import reg_http_service, OpenERPAuthProvider
     davpath = '/calendar/'
     handler = DAVHandler
-    handler.verbose = config.get_misc('webdav','verbose',True)
-    handler.debug = config.get_misc('webdav','debug',True)
-    reg_http_service(HTTPDir(davpath,DAVHandler,OpenERPAuthProvider()))
-    netsvc.Logger().notifyChannel('webdav',netsvc.LOG_INFO,"WebDAV service registered at path: %s/ "% davpath)
+    handler.verbose = config.get_misc('webdav', 'verbose', True)
+    handler.debug = config.get_misc('webdav', 'debug', True)
+    reg_http_service(HTTPDir(davpath, DAVHandler, OpenERPAuthProvider()))
+    netsvc.Logger().notifyChannel('webdav', netsvc.LOG_INFO, "WebDAV service registered at path: %s/ " % davpath)
 except Exception, e:
     logger = netsvc.Logger()
     logger.notifyChannel('webdav', netsvc.LOG_ERROR, 'Cannot launch webdav: %s' % e)

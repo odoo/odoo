@@ -81,7 +81,7 @@ Test checks for fields, views, security rules, dependancy level
                     if name.split('_')[-1] == 'ids':
                         good_field += 1
                     else:
-                        data = '%s field should end with _ids'% (ttype)
+                        data = '%s field should end with _ids' % (ttype)
                         result_dict[field.model].append([field.model, name, data])
                 elif check_str.match(name):
                     good_field += 1
@@ -165,7 +165,7 @@ Test checks for fields, views, security rules, dependancy level
         score_depend = (100 - (bad_depend * 5)) / 100.0 #  note : score is calculated based on if you have for e.g. two module extra in dependancy it will score -10 out of 100
         score_security = good_sec and float(good_sec - bad_sec) / float(good_sec)
         self.score = (score_view + score_field + score_security + score_depend) / 4
-        if self.score*100 < self.min_score:
+        if self.score * 100 < self.min_score:
             self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         self.result = self.get_result({ module_name: [int(score_field * 100), int(score_view * 100), int(score_security * 100), int(score_depend * 100)]})
         self.result_details += self.get_result_details(result_dict)
@@ -182,7 +182,7 @@ Test checks for fields, views, security rules, dependancy level
     def get_result_details(self, dict_obj):
         res = ""
         if dict_obj != {}:
-            str_html = '''<html><strong> Fields Result</strong><head>%s</head><body>'''%(self.get_style())
+            str_html = '''<html><strong> Fields Result</strong><head>%s</head><body>''' % (self.get_style())
             res += str_html
             header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Object Name'), _('Field name'), _('Suggestion')])
             if not self.error:
@@ -200,7 +200,7 @@ Test checks for fields, views, security rules, dependancy level
         return ""
 
     def get_result_general(self, dict_obj, name=''):
-        str_html = '''<html><strong> %s Result</strong><head>%s</head><body><table class="tablestyle">'''% (name, self.get_style())
+        str_html = '''<html><strong> %s Result</strong><head>%s</head><body><table class="tablestyle">''' % (name, self.get_style())
         header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Object Name'), _('Suggestion')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_obj) + '</table></body></html>'

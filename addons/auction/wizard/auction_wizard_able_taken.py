@@ -33,10 +33,10 @@ take_fields = {
 #   'confirm_en': {'string':'Catalog Number', 'type':'integer'},
 }
 
-def _confirm_able(self,cr,uid,data,context={}):
-    res={}
+def _confirm_able(self, cr, uid, data, context={}):
+    res = {}
     pool = pooler.get_pool(cr.dbname)
-    pool.get('auction.lots').write(cr,uid,data['ids'],{'ach_emp':True})
+    pool.get('auction.lots').write(cr, uid, data['ids'], {'ach_emp':True})
     return {}
 
 class able_take_away(wizard.interface):
@@ -47,7 +47,7 @@ class able_take_away(wizard.interface):
                     'type' : 'form',
                     'arch' : take_form,
                     'fields' : take_fields,
-                    'state' : [('end', 'Cancel'),('go', 'Able Taken away')]}
+                    'state' : [('end', 'Cancel'), ('go', 'Able Taken away')]}
         },
             'go' : {
             'actions' : [_confirm_able],

@@ -36,7 +36,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         return None
 
     def run_test(self, cr, uid, module_path):
-        config_file_path = config['addons_path']+'/base_module_quality/pylint_test/pylint_test_config.txt'
+        config_file_path = config['addons_path'] + '/base_module_quality/pylint_test/pylint_test_config.txt'
         list_files = os.listdir(module_path)
         for i in list_files:
             path = os.path.join(module_path, i)
@@ -48,7 +48,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         score = 0.0
         dict_py = {}
         flag = False
-        self.result_details += '''<html><body><head>%s</head>'''%(self.get_style())
+        self.result_details += '''<html><body><head>%s</head>''' % (self.get_style())
         for file_py in list_files:
             if file_py.split('.')[-1] == 'py' and not file_py.endswith('__init__.py') and not file_py.endswith('__terp__.py'):
                 if not flag:
@@ -61,7 +61,7 @@ class quality_test(base_module_quality.abstract_quality_check):
                     self.error = True
                     import netsvc
                     netsvc.Logger().notifyChannel('Pylint:', netsvc.LOG_WARNING, "Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)")
-                    self.result += _("Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)")+"\n"
+                    self.result += _("Error. Is pylint correctly installed? (http://pypi.python.org/pypi/pylint)") + "\n"
                     return None
                 count += 1
 #                leftchar = -1
@@ -101,7 +101,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         self.result_details += '</body></html>'
         average_score = count and score / count or score
         self.score = (max(average_score, 0)) / 10
-        if self.score*100 < self.min_score:
+        if self.score * 100 < self.min_score:
             self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         self.result = self.get_result(dict_py)
         return None

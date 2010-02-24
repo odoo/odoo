@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class report_sale_journal_invoice_type_stats(osv.osv):
@@ -27,27 +27,27 @@ class report_sale_journal_invoice_type_stats(osv.osv):
     _description = "Stats on picking by invoice method"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'invoice_state':fields.selection([
-            ("invoiced","invoiced"),
-            ("2binvoiced","to be invoiced"),
-            ("none","None")
+            ("invoiced", "invoiced"),
+            ("2binvoiced", "to be invoiced"),
+            ("none", "None")
         ], "Invoice state", readonly=True),
         'state': fields.selection([
-            ('draft','draft'),
-            ('auto','waiting'),
-            ('confirmed','confirmed'),
-            ('assigned','assigned'),
-            ('done','done'),
-            ('cancel','cancel'),
+            ('draft', 'draft'),
+            ('auto', 'waiting'),
+            ('confirmed', 'confirmed'),
+            ('assigned', 'assigned'),
+            ('done', 'done'),
+            ('cancel', 'cancel'),
         ], 'State', readonly=True),
         'invoice_type_id':fields.many2one('sale_journal.invoice.type', 'Invoicing method', readonly=True),
         'quantity': fields.float('Quantities', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
         'count': fields.integer('# of Lines', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
 
     }
     _order = 'state,invoice_state,name desc'
@@ -80,22 +80,22 @@ class report_sale_journal_picking(osv.osv):
     _description = "Picking lists by Journal"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'state': fields.selection([
-            ('draft','draft'),
-            ('auto','waiting'),
-            ('confirmed','confirmed'),
-            ('assigned','assigned'),
-            ('done','done'),
-            ('cancel','cancel'),
+            ('draft', 'draft'),
+            ('auto', 'waiting'),
+            ('confirmed', 'confirmed'),
+            ('assigned', 'assigned'),
+            ('done', 'done'),
+            ('cancel', 'cancel'),
         ], 'State', readonly=True),
         'journal_id':fields.many2one('sale_journal.picking.journal', 'Journal', readonly=True),
         'quantity': fields.float('Quantities', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
         'count': fields.integer('# of Lines', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
 
     }
     _order = 'journal_id,name desc,price_total desc'

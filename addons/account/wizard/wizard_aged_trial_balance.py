@@ -41,37 +41,37 @@ _aged_trial_form = """<?xml version="1.0"?>
 
 _aged_trial_fields = {
     'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-    'period_length': {'string': 'Period length (days)', 'type': 'integer', 'required': True, 'default': lambda *a:30},
-    'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'period_length': {'string': 'Period length (days)', 'type': 'integer', 'required': True, 'default': lambda * a:30},
+    'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
     'result_selection':{
         'string':"Filter on Partners",
         'type':'selection',
-        'selection':[('customer','Receivable'),('supplier','Payable'),('all','Receivable and Payable')],
+        'selection':[('customer', 'Receivable'), ('supplier', 'Payable'), ('all', 'Receivable and Payable')],
         'required':True,
-        'default': lambda *a: 'all',
+        'default': lambda * a: 'all',
     },
     'direction_selection':{
         'string':"Analysis Direction",
         'type':'selection',
-        'selection':[('past','Past'),('future','Future')],
+        'selection':[('past', 'Past'), ('future', 'Future')],
         'required':True,
-        'default': lambda *a: 'past',
+        'default': lambda * a: 'past',
     },
 }
 
 def _calc_dates(self, cr, uid, data, context):
     res = {}
     period_length = data['form']['period_length']
-    if period_length<=0:
+    if period_length <= 0:
         raise wizard.except_wizard(_('UserError'), _('You must enter a period length that cannot be 0 or below !'))
-    start = datetime.date.fromtimestamp(time.mktime(time.strptime(data['form']['date1'],"%Y-%m-%d")))
-    start = DateTime(int(start.year),int(start.month),int(start.day))
+    start = datetime.date.fromtimestamp(time.mktime(time.strptime(data['form']['date1'], "%Y-%m-%d")))
+    start = DateTime(int(start.year), int(start.month), int(start.day))
     if data['form']['direction_selection'] == 'past':
         for i in range(5)[::-1]:
             stop = start - RelativeDateTime(days=period_length)
             res[str(i)] = {
-                'name' : str((5-(i+1))*period_length) + '-' + str((5-i)*period_length),
-                
+                'name' : str((5 - (i + 1)) * period_length) + '-' + str((5 - i) * period_length),
+
                 'stop': start.strftime('%Y-%m-%d'),
                 'start' : stop.strftime('%Y-%m-%d'),
                 }
@@ -79,8 +79,8 @@ def _calc_dates(self, cr, uid, data, context):
     else:
         for i in range(5):
             stop = start + RelativeDateTime(days=period_length)
-            res[str(5-(i+1))] = {
-                'name' : str((i)*period_length)+'-'+str((i+1)*period_length),
+            res[str(5 - (i + 1))] = {
+                'name' : str((i) * period_length) + '-' + str((i + 1) * period_length),
                 'start': start.strftime('%Y-%m-%d'),
                 'stop' : stop.strftime('%Y-%m-%d'),
                 }
@@ -101,7 +101,7 @@ class wizard_report(wizard.interface):
     states = {
         'init': {
             'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':_aged_trial_form, 'fields':_aged_trial_fields, 'state':[('end','Cancel'),('print','Print Aged Trial Balance')]},
+            'result': {'type':'form', 'arch':_aged_trial_form, 'fields':_aged_trial_fields, 'state':[('end', 'Cancel'), ('print', 'Print Aged Trial Balance')]},
         },
         'print': {
             'actions': [_calc_dates],

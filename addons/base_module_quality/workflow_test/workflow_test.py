@@ -92,12 +92,12 @@ class quality_test(base_module_quality.abstract_quality_check):
             if activity_chk[act]['start'] == 'ok':
                 act_ok += 1
             else:
-                not_ok +=  1
+                not_ok += 1
                 result_dict[activity_chk[act]['model']] = [activity_chk[act]['model'], 'Workflow activities should have atleast one starting node']
             if activity_chk[act]['stop'] == 'ok':
                 act_ok += 1
             else:
-                not_ok +=  1
+                not_ok += 1
                 result_dict[activity_chk[act]['model']] = [activity_chk[act]['model'], 'Workflow activities should have atleast one ending node']
 
         score_general = act_ok and float(act_ok) / float(act_ok + not_ok)
@@ -111,13 +111,13 @@ class quality_test(base_module_quality.abstract_quality_check):
                 node = dom.childNodes
                 count = self.count_button(node[0], count=0)
                 if count > 3 and not view.model in wkf_avail:
-                    bad_view +=  1
+                    bad_view += 1
                     result_dict[view.model] = [view.model, 'The presence of a field state in object often indicative of a need for workflow behind. And connect them to ensure consistency in this field.']
                 elif count > 0 and view.model in wkf_avail:
                     good_view += 1
         score_avail = good_view and float(good_view) / float(bad_view + good_view)
         self.score = (score_general + score_avail) / 2
-        if self.score*100 < self.min_score:
+        if self.score * 100 < self.min_score:
             self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         if not wkf_ids and not bad_view:
             self.error = True
@@ -134,7 +134,7 @@ class quality_test(base_module_quality.abstract_quality_check):
         return ""
 
     def get_result_details(self, dict_wf):
-        str_html = '''<html><head>%s</head><body><table class="tablestyle">'''%(self.get_style())
+        str_html = '''<html><head>%s</head><body><table class="tablestyle">''' % (self.get_style())
         header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Object Name'), _('Feed back About Workflow of Module')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_wf) + '</table><newline/></body></html>'

@@ -38,7 +38,7 @@ _moves_arch_end = '''<?xml version="1.0"?>
     <field name="back_order_notification" colspan="4" nolabel="1"/>
 </form>'''
 _moves_fields_end = {
-    'back_order_notification': {'string':'Back Order' ,'type':'text', 'readonly':True}
+    'back_order_notification': {'string':'Back Order' , 'type':'text', 'readonly':True}
                      }
 
 def make_default(val):
@@ -47,7 +47,7 @@ def make_default(val):
     return fct
 
 def _to_xml(s):
-    return (s or '').replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+    return (s or '').replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 def _get_moves(self, cr, uid, data, context):
     pick_obj = pooler.get_pool(cr.dbname).get('stock.picking')
@@ -61,7 +61,7 @@ def _get_moves(self, cr, uid, data, context):
         if m.state in ('done', 'cancel'):
             continue
         quantity = m.product_qty
-        if m.state!='assigned':
+        if m.state != 'assigned':
             quantity = 0
 
         _moves_arch_lst.append('<field name="move%s" />' % (m.id,))
@@ -70,16 +70,16 @@ def _get_moves(self, cr, uid, data, context):
                 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
 
         if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
-            price=0
+            price = 0
             if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
-                price=m.purchase_line_id.price_unit
+                price = m.purchase_line_id.price_unit
 
-            currency=0
+            currency = 0
             if hasattr(pick, 'purchase_id') and pick.purchase_id:
-                currency=pick.purchase_id.pricelist_id.currency_id.id
+                currency = pick.purchase_id.pricelist_id.currency_id.id
 
             _moves_arch_lst.append('<group col="6"><field name="uom%s" nolabel="1"/>\
-                    <field name="price%s"/>' % (m.id,m.id,))
+                    <field name="price%s"/>' % (m.id, m.id,))
 
             _moves_fields['price%s' % m.id] = {'string': 'Unit Price',
                     'type': 'float', 'required': True, 'default': make_default(price)}
@@ -109,7 +109,7 @@ def _do_split(self, cr, uid, data, context):
 
     complete, too_many, too_few = [], [], []
     pool = pooler.get_pool(cr.dbname)
-    for move in move_obj.browse(cr, uid, data['form'].get('moves',[])):
+    for move in move_obj.browse(cr, uid, data['form'].get('moves', [])):
         if move.product_qty == data['form']['move%s' % move.id]:
             complete.append(move)
         elif move.product_qty > data['form']['move%s' % move.id]:
@@ -133,20 +133,20 @@ def _do_split(self, cr, uid, data, context):
             currency = data['form']['currency%s' % move.id]
 
             qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
-            pricetype=pool.get('product.price.type').browse(cr,uid,user.company_id.property_valuation_price_type.id)
+            pricetype = pool.get('product.price.type').browse(cr, uid, user.company_id.property_valuation_price_type.id)
             if (qty > 0):
                 new_price = currency_obj.compute(cr, uid, currency,
                         user.company_id.currency_id.id, price)
                 new_price = uom_obj._compute_price(cr, uid, uom, new_price,
                         product.uom_id.id)
-                if product.qty_available<=0:
+                if product.qty_available <= 0:
                     new_std_price = new_price
                 else:
                     # Get the standard price
-                    amount_unit=product.price_get(pricetype.field, context)[product.id]
+                    amount_unit = product.price_get(pricetype.field, context)[product.id]
                     new_std_price = ((amount_unit * product.qty_available)\
-                        + (new_price * qty))/(product.qty_available + qty)
-                        
+                        + (new_price * qty)) / (product.qty_available + qty)
+
                 # Write the field according to price type field
                 product_obj.write(cr, uid, [product.id],
                         {pricetype.field: new_std_price})

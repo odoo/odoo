@@ -26,22 +26,22 @@ from osv import fields
 import time
 
 def _launch_wizard(self, cr, uid, data, context):
-    address_obj= pooler.get_pool(cr.dbname).get('res.partner.address')
-    m= address_obj.browse(cr,uid,data['id'],context)
-    url=''
-    url="http://maps.google.com/maps?oi=map&q="
+    address_obj = pooler.get_pool(cr.dbname).get('res.partner.address')
+    m = address_obj.browse(cr, uid, data['id'], context)
+    url = ''
+    url = "http://maps.google.com/maps?oi=map&q="
     if m.street:
-        url+=m.street.replace(' ','+')
+        url += m.street.replace(' ', '+')
     if m.street2:
-        url+='+'+m.street2.replace(' ','+')
+        url += '+' + m.street2.replace(' ', '+')
     if m.city:
-        url+='+'+m.city.replace(' ','+')
+        url += '+' + m.city.replace(' ', '+')
     if m.state_id:
-        url+='+'+m.state_id.name.replace(' ','+')
+        url += '+' + m.state_id.name.replace(' ', '+')
     if m.country_id:
-        url+='+'+m.country_id.name.replace(' ','+')
+        url += '+' + m.country_id.name.replace(' ', '+')
     if m.zip:
-        url+='+'+m.zip.replace(' ','+')
+        url += '+' + m.zip.replace(' ', '+')
     return {
     'type': 'ir.actions.act_url',
     'url':url,
@@ -50,7 +50,7 @@ def _launch_wizard(self, cr, uid, data, context):
 
 class launch_map(wizard.interface):
 
-    states= {'init' : {'actions': [],
+    states = {'init' : {'actions': [],
                        'result':{'type':'action',
                                  'action': _launch_wizard,
                                  'state':'end'}

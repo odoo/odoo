@@ -29,7 +29,7 @@ from tools import config
 from tools.translate import _
 
 def is_pair(x):
-    return not x%2
+    return not x % 2
 
 #----------------------------------------------------------
 # UOM
@@ -65,10 +65,10 @@ class product_uom(osv.osv):
             del ctx['read_delta']
         if value:
             data = 0.0
-            if round(1 / round(1/value, 6), 6) != value:
+            if round(1 / round(1 / value, 6), 6) != value:
                 data = value
             self.write(cursor, user, id, {
-                'factor': round(1/value, 6),
+                'factor': round(1 / value, 6),
                 'factor_inv_data': data,
                 }, context=ctx)
         else:
@@ -95,10 +95,10 @@ class product_uom(osv.osv):
     }
 
     _defaults = {
-        'factor': lambda *a: 1.0,
-        'factor_inv': lambda *a: 1.0,
-        'active': lambda *a: 1,
-        'rounding': lambda *a: 0.01,
+        'factor': lambda * a: 1.0,
+        'factor_inv': lambda * a: 1.0,
+        'active': lambda * a: 1,
+        'rounding': lambda * a: 0.01,
     }
 
     _sql_constraints = [
@@ -154,12 +154,12 @@ class product_uom(osv.osv):
     def onchange_factor_inv(self, cursor, user, ids, value):
         if value == 0.0:
             return {'value': {'factor': 0}}
-        return {'value': {'factor': round(1/value, 6)}}
+        return {'value': {'factor': round(1 / value, 6)}}
 
     def onchange_factor(self, cursor, user, ids, value):
         if value == 0.0:
             return {'value': {'factor_inv': 0}}
-        return {'value': {'factor_inv': round(1/value, 6)}}
+        return {'value': {'factor_inv': round(1 / value, 6)}}
 
 product_uom()
 
@@ -168,8 +168,8 @@ class product_ul(osv.osv):
     _name = "product.ul"
     _description = "Shipping Unit"
     _columns = {
-        'name' : fields.char('Name', size=64,select=True, required=True, translate=True),
-        'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('pallet', 'Pallet')], 'Type', required=True),
+        'name' : fields.char('Name', size=64, select=True, required=True, translate=True),
+        'type' : fields.selection([('unit', 'Unit'), ('pack', 'Pack'), ('box', 'Box'), ('pallet', 'Pallet')], 'Type', required=True),
     }
 product_ul()
 
@@ -182,12 +182,12 @@ class product_category(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context)
         res = []
         for record in reads:
             name = record['name']
             if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
+                name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
 
@@ -200,7 +200,7 @@ class product_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
-        'parent_id': fields.many2one('product.category','Parent Category', select=True),
+        'parent_id': fields.many2one('product.category', 'Parent Category', select=True),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
     }
@@ -208,7 +208,7 @@ class product_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from product_category where id =ANY(%s)',(ids,))
+            cr.execute('select distinct parent_id from product_category where id =ANY(%s)', (ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -241,33 +241,33 @@ class product_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
-        'product_manager': fields.many2one('res.users','Product Manager'),
-        'description': fields.text('Description',translate=True),
-        'description_purchase': fields.text('Purchase Description',translate=True),
-        'description_sale': fields.text('Sale Description',translate=True),
-        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way requisitions are processed. Consumables are stockable products with infinite stock, or for use when you have no inventory management in the system."),
-        'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True, help="Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."),
+        'product_manager': fields.many2one('res.users', 'Product Manager'),
+        'description': fields.text('Description', translate=True),
+        'description_purchase': fields.text('Purchase Description', translate=True),
+        'description_sale': fields.text('Sale Description', translate=True),
+        'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Will change the way requisitions are processed. Consumables are stockable products with infinite stock, or for use when you have no inventory management in the system."),
+        'supply_method': fields.selection([('produce', 'Produce'), ('buy', 'Buy')], 'Supply method', required=True, help="Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."),
         'sale_delay': fields.float('Customer Lead Time', help="This is the average time between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Requisition Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the requisition request."),
+        'procure_method': fields.selection([('make_to_stock', 'Make to Stock'), ('make_to_order', 'Make to Order')], 'Requisition Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the requisition request."),
         'rental': fields.boolean('Can be Rent'),
-        'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
+        'categ_id': fields.many2one('product.category', 'Category', required=True, change_default=True),
         'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy'])), help="Base price for computing the customer price. Sometimes called the catalog price."),
         'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy'])), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross weight', help="The gross weight in Kg."),
         'weight_net': fields.float('Net weight', help="The net weight in Kg."),
-        'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True,
+        'cost_method': fields.selection([('standard', 'Standard Price'), ('average', 'Average Price')], 'Costing Method', required=True,
             help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
         'warranty': fields.float('Warranty (months)'),
         'sale_ok': fields.boolean('Can be sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
-        'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'State', help="Tells the user if he can use the product or not."),
+        'state': fields.selection([('', ''), ('draft', 'In Development'), ('sellable', 'In Production'), ('end', 'End of Lifecycle'), ('obsolete', 'Obsolete')], 'State', help="Tells the user if he can use the product or not."),
         'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Used by companies that manage two units of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
-        'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
+        'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16, 4),
             help='Coefficient to convert UOM to UOS\n'
             ' uom = uos * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
@@ -276,7 +276,7 @@ class product_template(osv.osv):
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
         'loc_case': fields.char('Case', size=16),
-        'company_id': fields.many2one('res.company', 'Company',select=1),
+        'company_id': fields.many2one('res.company', 'Company', select=1),
     }
 
     def _get_uom_id(self, cr, uid, *args):
@@ -289,32 +289,32 @@ class product_template(osv.osv):
             return context['categ_id']
         return False
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
+    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id and uom_po_id:
-            uom_obj=self.pool.get('product.uom')
-            uom=uom_obj.browse(cursor,user,[uom_id])[0]
-            uom_po=uom_obj.browse(cursor,user,[uom_po_id])[0]
+            uom_obj = self.pool.get('product.uom')
+            uom = uom_obj.browse(cursor, user, [uom_id])[0]
+            uom_po = uom_obj.browse(cursor, user, [uom_po_id])[0]
             if uom.category_id.id != uom_po.category_id.id:
                 return {'value': {'uom_po_id': uom_id}}
         return False
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
 #        'company_id': lambda self, cr, uid, context: False, # Visible by all
-        'type': lambda *a: 'product',
-        'list_price': lambda *a: 1,
-        'cost_method': lambda *a: 'standard',
-        'supply_method': lambda *a: 'buy',
-        'standard_price': lambda *a: 1,
-        'sale_ok': lambda *a: 1,
-        'sale_delay': lambda *a: 7,
-        'produce_delay': lambda *a: 1,
-        'purchase_ok': lambda *a: 1,
-        'procure_method': lambda *a: 'make_to_stock',
+        'type': lambda * a: 'product',
+        'list_price': lambda * a: 1,
+        'cost_method': lambda * a: 'standard',
+        'supply_method': lambda * a: 'buy',
+        'standard_price': lambda * a: 1,
+        'sale_ok': lambda * a: 1,
+        'sale_delay': lambda * a: 7,
+        'produce_delay': lambda * a: 1,
+        'purchase_ok': lambda * a: 1,
+        'procure_method': lambda * a: 'make_to_stock',
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
-        'uos_coeff' : lambda *a: 1.0,
-        'mes_type' : lambda *a: 'fixed',
+        'uos_coeff' : lambda * a: 1.0,
+        'mes_type' : lambda * a: 'fixed',
         'categ_id' : _default_category,
     }
 
@@ -348,7 +348,7 @@ class product_product(osv.osv):
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(product_product, self).view_header_get(cr, uid, view_id, view_type, context)
         if (context.get('categ_id', False)):
-            return _('Products: ')+self.pool.get('product.category').browse(cr, uid, context['categ_id'], context).name
+            return _('Products: ') + self.pool.get('product.category').browse(cr, uid, context['categ_id'], context).name
         return res
 
     def _product_price(self, cr, uid, ids, name, arg, context={}):
@@ -358,7 +358,7 @@ class product_product(osv.osv):
         if pricelist:
             for id in ids:
                 try:
-                    price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], id, quantity, context=context)[pricelist]
+                    price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], id, quantity, context=context)[pricelist]
                 except:
                     price = 0.0
                 res[id] = price
@@ -372,9 +372,9 @@ class product_product(osv.osv):
         return _product_available
 
     _product_qty_available = _get_product_available_func(('done',), ('in', 'out'))
-    _product_virtual_available = _get_product_available_func(('confirmed','waiting','assigned','done'), ('in', 'out'))
-    _product_outgoing_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('out',))
-    _product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
+    _product_virtual_available = _get_product_available_func(('confirmed', 'waiting', 'assigned', 'done'), ('in', 'out'))
+    _product_outgoing_qty = _get_product_available_func(('confirmed', 'waiting', 'assigned'), ('out',))
+    _product_incoming_qty = _get_product_available_func(('confirmed', 'waiting', 'assigned'), ('in',))
 
     def _product_lst_price(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -388,7 +388,7 @@ class product_product(osv.osv):
                         uom.id, product.list_price, context['uom'])
             else:
                 res[product.id] = product.list_price
-            res[product.id] =  (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
+            res[product.id] = (res[product.id] or 0.0) * (product.price_margin or 1.0) + product.price_extra
         return res
 
     def _get_partner_code_name(self, cr, uid, ids, product_id, partner_id, context={}):
@@ -414,14 +414,14 @@ class product_product(osv.osv):
                 data['code'] = p.code
             if not data['name']:
                 data['name'] = p.name
-            res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
-                    (data['name'] or '') + (data['variants'] and (' - '+data['variants']) or '')
+            res[p.id] = (data['code'] and ('[' + data['code'] + '] ') or '') + \
+                    (data['name'] or '') + (data['variants'] and (' - ' + data['variants']) or '')
         return res
 
     _defaults = {
-        'active': lambda *a: 1,
-        'price_extra': lambda *a: 0.0,
-        'price_margin': lambda *a: 1.0,
+        'active': lambda * a: 1,
+        'price_extra': lambda * a: 0.0,
+        'price_margin': lambda * a: 1.0,
     }
 
     _name = "product.product"
@@ -445,14 +445,14 @@ class product_product(osv.osv):
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
-        'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
+        'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
     }
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
+    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id and uom_po_id:
-            uom_obj=self.pool.get('product.uom')
-            uom=uom_obj.browse(cursor,user,[uom_id])[0]
-            uom_po=uom_obj.browse(cursor,user,[uom_po_id])[0]
+            uom_obj = self.pool.get('product.uom')
+            uom = uom_obj.browse(cursor, user, [uom_id])[0]
+            uom_po = uom_obj.browse(cursor, user, [uom_po_id])[0]
             if uom.category_id.id != uom_po.category_id.id:
                 return {'value': {'uom_po_id': uom_id}}
         return False
@@ -467,7 +467,7 @@ class product_product(osv.osv):
                 int(partner.ean13)
             except:
                 return False
-            sum=0
+            sum = 0
             for i in range(12):
                 if is_pair(i):
                     sum += int(partner.ean13[i])
@@ -489,28 +489,28 @@ class product_product(osv.osv):
         def _name_get(d):
             #name = self._product_partner_ref(cr, user, [d['id']], '', '', context)[d['id']]
             #code = self._product_code(cr, user, [d['id']], '', '', context)[d['id']]
-            name = d.get('name','')
-            code = d.get('default_code',False)
+            name = d.get('name', '')
+            code = d.get('default_code', False)
             if code:
-                name = '[%s] %s' % (code,name)
+                name = '[%s] %s' % (code, name)
             if d['variants']:
                 name = name + ' - %s' % (d['variants'],)
             return (d['id'], name)
-        result = map(_name_get, self.read(cr, user, ids, ['variants','name','default_code'], context))
+        result = map(_name_get, self.read(cr, user, ids, ['variants', 'name', 'default_code'], context))
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
+            args = []
         if not context:
-            context={}
+            context = {}
         if name:
-            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('default_code', '=', name)] + args, limit=limit, context=context)
             if not len(ids):
-                ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
+                ids = self.search(cr, user, [('ean13', '=', name)] + args, limit=limit, context=context)
             if not len(ids):
-                ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
-                ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+                ids = self.search(cr, user, [('default_code', operator, name)] + args, limit=limit, context=context)
+                ids += self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context)
@@ -536,7 +536,7 @@ class product_product(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not context:
-            context={}
+            context = {}
 
         product = self.read(cr, uid, id, ['name'], context=context)
         if not default:
@@ -544,7 +544,7 @@ class product_product(osv.osv):
         default = default.copy()
         default['name'] = product['name'] + _(' (copy)')
 
-        if context.get('variant',False):
+        if context.get('variant', False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
                     'price_margin', 'price_extra']
             data = self.read(cr, uid, id, fields=fields, context=context)
@@ -593,10 +593,10 @@ class product_packaging(osv.osv):
         if not len(ids):
             return []
         res = []
-        for pckg in self.browse(cr, uid, ids,context=context):
+        for pckg in self.browse(cr, uid, ids, context=context):
             p_name = pckg.ean and '[' + pckg.ean + '] ' or ''
             p_name += pckg.ul.name
-            res.append((pckg.id,p_name))
+            res.append((pckg.id, p_name))
         return res
 
     def _get_1st_ul(self, cr, uid, context={}):
@@ -605,8 +605,8 @@ class product_packaging(osv.osv):
         return (res and res[0]) or False
 
     _defaults = {
-        'rows' : lambda *a : 3,
-        'sequence' : lambda *a : 1,
+        'rows' : lambda * a : 3,
+        'sequence' : lambda * a : 1,
         'ul' : _get_1st_ul,
     }
 
@@ -633,13 +633,13 @@ class product_supplierinfo(osv.osv):
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery Lead Time', required=True, help="Lead time in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."),
         'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
-        'company_id':fields.many2one('res.company','Company',select=1),
+        'company_id':fields.many2one('res.company', 'Company', select=1),
     }
     _defaults = {
-        'qty': lambda *a: 0.0,
-        'sequence': lambda *a: 1,
-        'delay': lambda *a: 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c)
+        'qty': lambda * a: 0.0,
+        'sequence': lambda * a: 1,
+        'delay': lambda * a: 1,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c)
     }
     _order = 'sequence'
 product_supplierinfo()

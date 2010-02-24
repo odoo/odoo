@@ -35,7 +35,7 @@ class l10n_fr_report(osv.osv):
         'line_ids': fields.one2many('l10n.fr.line', 'report_id', 'Lines'),
     }
     _sql_constraints = [
-                ('code_uniq', 'unique (code)','The code report must be unique !')
+                ('code_uniq', 'unique (code)', 'The code report must be unique !')
         ]
 l10n_fr_report()
 

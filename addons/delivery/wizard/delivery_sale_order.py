@@ -30,13 +30,13 @@ from tools.misc import UpdateableStr
 delivery_form = UpdateableStr()
 
 delivery_fields = {
-    'carrier_id' : {'string':'Delivery Method', 'type':'many2one', 'relation': 'delivery.carrier','required':True}
+    'carrier_id' : {'string':'Delivery Method', 'type':'many2one', 'relation': 'delivery.carrier', 'required':True}
 }
 
 def _delivery_default(self, cr, uid, data, context):
     order_obj = pooler.get_pool(cr.dbname).get('sale.order')
     order = order_obj.browse(cr, uid, data['ids'])[0]
-    delivery_form.string="""<?xml version="1.0"?>
+    delivery_form.string = """<?xml version="1.0"?>
     <form string="Create deliveries">
         <separator colspan="4" string="Delivery Method" />
         <field name="carrier_id" context="{'order_id': %d}"/>
@@ -57,10 +57,10 @@ def _delivery_set(self, cr, uid, data, context):
     order_objs = order_obj.browse(cr, uid, data['ids'], context)
 
     for order in order_objs:
-        grid_id = pooler.get_pool(cr.dbname).get('delivery.carrier').grid_get(cr, uid, [data['form']['carrier_id']],order.partner_shipping_id.id)
+        grid_id = pooler.get_pool(cr.dbname).get('delivery.carrier').grid_get(cr, uid, [data['form']['carrier_id']], order.partner_shipping_id.id)
         if not grid_id:
             raise wizard.except_wizard(_('No grid avaible !'), _('No grid matching for this carrier !'))
-        grid_obj=pooler.get_pool(cr.dbname).get('delivery.grid')
+        grid_obj = pooler.get_pool(cr.dbname).get('delivery.grid')
         grid = grid_obj.browse(cr, uid, [grid_id])[0]
 
         taxes = grid.carrier_id.product_id.taxes_id
@@ -73,7 +73,7 @@ def _delivery_set(self, cr, uid, data, context):
             'product_uom': grid.carrier_id.product_id.uom_id.id,
             'product_id': grid.carrier_id.product_id.id,
             'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
-            'tax_id': [(6,0,taxes_ids)],
+            'tax_id': [(6, 0, taxes_ids)],
             'type': 'make_to_stock'
         })
 
@@ -83,7 +83,7 @@ class make_delivery(wizard.interface):
     states = {
         'init' : {
             'actions' : [_delivery_default],
-            'result' : {'type' : 'form', 'arch' : delivery_form, 'fields' : delivery_fields, 'state' : [('end', 'Cancel', 'gtk-cancel'),('delivery', 'Add Delivery Costs', 'gtk-ok') ]}
+            'result' : {'type' : 'form', 'arch' : delivery_form, 'fields' : delivery_fields, 'state' : [('end', 'Cancel', 'gtk-cancel'), ('delivery', 'Add Delivery Costs', 'gtk-ok') ]}
         },
         'delivery' : {
             'actions' : [_delivery_set],

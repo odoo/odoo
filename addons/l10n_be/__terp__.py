@@ -39,18 +39,18 @@
 
     """,
     'author': 'Tiny',
-    'depends': [ 
-                    'account', 
-                    'account_report', 
-                    'base_vat', 
-                    'base_iban', 
+    'depends': [
+                    'account',
+                    'account_report',
+                    'base_vat',
+                    'base_iban',
                     'account_chart'
                 ],
     'init_xml': [],
     'update_xml': [
-                    'account_pcmn_belgium.xml', 
+                    'account_pcmn_belgium.xml',
                     'l10n_be_wizard.xml',
-                    'l10n_be_sequence.xml', 
+                    'l10n_be_sequence.xml',
                     'fiscal_templates.xml',
                     #'security/ir.model.access.csv'
                    ],

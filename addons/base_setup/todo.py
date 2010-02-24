@@ -66,14 +66,14 @@ class base_setup_company(osv.osv_memory):
 
         defaults['company_id'] = company.id
         defaults['currency'] = company.currency_id.id
-        for field in ['name','logo','rml_header1','rml_footer1','rml_footer2']:
+        for field in ['name', 'logo', 'rml_header1', 'rml_footer1', 'rml_footer2']:
             defaults[field] = company[field]
 
         if company.partner_id.address:
             address = company.partner_id.address[0]
-            for field in ['street','street2','zip','city','email','phone']:
+            for field in ['street', 'street2', 'zip', 'city', 'email', 'phone']:
                 defaults[field] = address[field]
-            for field in ['country_id','state_id']:
+            for field in ['country_id', 'state_id']:
                 if address[field]:
                     defaults[field] = address[field].id
 

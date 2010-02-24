@@ -41,13 +41,13 @@ dates_fields = {
 class wizard_report(wizard.interface):
     def _get_defaults(self, cr, uid, data, context):
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-        data['form']['fiscalyear'] =fiscalyear_obj.find(cr, uid)
+        data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
         return data['form']
 
     states = {
         'init': {
             'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
+            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end', 'Cancel'), ('report', 'Print')]}
         },
         'report': {
             'actions': [],

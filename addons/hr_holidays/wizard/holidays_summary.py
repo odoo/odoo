@@ -25,7 +25,7 @@ import datetime
 import time
 import pooler
 
-form='''<?xml version="1.0"?>
+form = '''<?xml version="1.0"?>
 <form string="Report Options">
     <field name="date_from" colspan="2" />
     <field name="holiday_type" colspan="2" />
@@ -33,59 +33,59 @@ form='''<?xml version="1.0"?>
 
 </form>'''
 
-zero_form='''<?xml version="1.0"?>
+zero_form = '''<?xml version="1.0"?>
 <form string="Notification">
 <label string="You have to select at least 1 Department. Try again." colspan="4"/>
 </form>'''
 
-zero_fields={
+zero_fields = {
 }
 
 class wizard_report(wizard.interface):
     def _check(self, cr, uid, data, context):
-        data['form']['date_from']=time.strftime('%Y-%m-%d')
-        data['form']['holiday_type']='Validated'
+        data['form']['date_from'] = time.strftime('%Y-%m-%d')
+        data['form']['holiday_type'] = 'Validated'
 
         return data['form']
 
     def _checkdepts(self, cr, uid, data, context):
 
-        if len(data['form']['depts'][0][2])==0:
+        if len(data['form']['depts'][0][2]) == 0:
             return 'notify'
         else:
             return 'report'
 
-    fields={
+    fields = {
         'date_from':{
                 'string':'From',
                 'type':'date',
                 'required':True,
         },
         'depts': {
-                'string': 'Department(s)', 
-                'type': 'many2many', 
+                'string': 'Department(s)',
+                'type': 'many2many',
                 'relation': 'hr.department'
         },
         'holiday_type':{
                 'string':"Select Holiday Type",
                 'required':True,
                 'type':'selection',
-                'selection':[('Validated','Validated'),('Confirmed','Confirmed'),('both','Both Validated and Confirmed')]
+                'selection':[('Validated', 'Validated'), ('Confirmed', 'Confirmed'), ('both', 'Both Validated and Confirmed')]
         },
     }
 
-    states={
+    states = {
         'init':{
             'actions':[_check],
             'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('checkdept', 'Print')]}
         },
         'checkdept': {
             'actions': [],
-            'result': {'type':'choice','next_state':_checkdepts}
+            'result': {'type':'choice', 'next_state':_checkdepts}
         },
         'notify': {
             'actions': [],
-            'result': {'type':'form','arch':zero_form,'fields':zero_fields,'state':[('end','Ok')]}
+            'result': {'type':'form', 'arch':zero_form, 'fields':zero_fields, 'state':[('end', 'Ok')]}
         },
         'report':{
             'actions':[],

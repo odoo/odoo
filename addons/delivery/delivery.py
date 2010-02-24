@@ -21,7 +21,7 @@
 
 import time
 import netsvc
-from osv import fields,osv
+from osv import fields, osv
 from tools.translate import _
 
 class delivery_carrier(osv.osv):
@@ -29,31 +29,31 @@ class delivery_carrier(osv.osv):
     _description = "Carrier and delivery grids"
 
     def get_price(self, cr, uid, ids, field_name, arg=None, context={}):
-        res={}
-        sale_obj=self.pool.get('sale.order')
-        grid_obj=self.pool.get('delivery.grid')
-        for carrier in self.browse(cr,uid,ids,context):
-            order_id=context.get('order_id',False)
-            price=False
+        res = {}
+        sale_obj = self.pool.get('sale.order')
+        grid_obj = self.pool.get('delivery.grid')
+        for carrier in self.browse(cr, uid, ids, context):
+            order_id = context.get('order_id', False)
+            price = False
             if order_id:
               order = sale_obj.browse(cr, uid, [order_id])[0]
-              carrier_grid=self.grid_get(cr,uid,[carrier.id],order.partner_shipping_id.id,context)
+              carrier_grid = self.grid_get(cr, uid, [carrier.id], order.partner_shipping_id.id, context)
               if carrier_grid:
-                  price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
+                  price = grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
               else:
                   price = 0.0
-            res[carrier.id]=price
+            res[carrier.id] = price
         return res
     _columns = {
         'name': fields.char('Carrier', size=64, required=True),
         'partner_id': fields.many2one('res.partner', 'Carrier Partner', required=True),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
-        'price' : fields.function(get_price, method=True,string='Price'),
+        'price' : fields.function(get_price, method=True, string='Price'),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the delivery carrier without removing it.")
     }
     _defaults = {
-        'active': lambda *args:1
+        'active': lambda * args:1
     }
     def grid_get(self, cr, uid, ids, contact_id, context={}):
         contact = self.pool.get('res.partner.address').browse(cr, uid, [contact_id])[0]
@@ -66,9 +66,9 @@ class delivery_carrier(osv.osv):
                     continue
                 if state_ids and not contact.state_id.id in state_ids:
                     continue
-                if grid.zip_from and (contact.zip or '')< grid.zip_from:
+                if grid.zip_from and (contact.zip or '') < grid.zip_from:
                     continue
-                if grid.zip_to and (contact.zip or '')> grid.zip_to:
+                if grid.zip_to and (contact.zip or '') > grid.zip_to:
                     continue
                 return grid.id
         return False
@@ -89,8 +89,8 @@ class delivery_grid(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the delivery grid without removing it."),
     }
     _defaults = {
-        'active': lambda *a: 1,
-        'sequence': lambda *a: 1,
+        'active': lambda * a: 1,
+        'sequence': lambda * a: 1,
     }
     _order = 'sequence'
 
@@ -108,7 +108,7 @@ class delivery_grid(osv.osv):
             volume += (line.product_id.volume or 0.0) * line.product_uom_qty
 
 
-        return self.get_price_from_picking(cr, uid, id, total,weight, volume, context)
+        return self.get_price_from_picking(cr, uid, id, total, weight, volume, context)
 
     def get_price_from_picking(self, cr, uid, id, total, weight, volume, context={}):
         grid = self.browse(cr, uid, id, context)
@@ -117,10 +117,10 @@ class delivery_grid(osv.osv):
         ok = False
 
         for line in grid.line_ids:
-            price_dict = {'price': total, 'volume':volume, 'weight': weight, 'wv':volume*weight}
-            test = eval(line.type+line.operator+str(line.max_value), price_dict)
+            price_dict = {'price': total, 'volume':volume, 'weight': weight, 'wv':volume * weight}
+            test = eval(line.type + line.operator + str(line.max_value), price_dict)
             if test:
-                if line.price_type=='variable':
+                if line.price_type == 'variable':
                     price = line.list_price * price_dict[line.variable_factor]
                 else:
                     price = line.list_price
@@ -139,20 +139,20 @@ class delivery_grid_line(osv.osv):
     _description = "Delivery line of grid"
     _columns = {
         'name': fields.char('Name', size=32, required=True),
-        'grid_id': fields.many2one('delivery.grid', 'Grid',required=True),
-        'type': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable', required=True),
-        'operator': fields.selection([('=','='),('<=','<='),('>=','>=')], 'Operator', required=True),
+        'grid_id': fields.many2one('delivery.grid', 'Grid', required=True),
+        'type': fields.selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price')], 'Variable', required=True),
+        'operator': fields.selection([('=', '='), ('<=', '<='), ('>=', '>=')], 'Operator', required=True),
         'max_value': fields.float('Maximum Value', required=True),
-        'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
-        'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),
+        'price_type': fields.selection([('fixed', 'Fixed'), ('variable', 'Variable')], 'Price Type', required=True),
+        'variable_factor': fields.selection([('weight', 'Weight'), ('volume', 'Volume'), ('wv', 'Weight * Volume'), ('price', 'Price')], 'Variable Factor', required=True),
         'list_price': fields.float('Sale Price', required=True),
         'standard_price': fields.float('Cost Price', required=True),
     }
     _defaults = {
-        'type': lambda *args: 'weight',
-        'operator': lambda *args: '<=',
-        'price_type': lambda *args: 'fixed',
-        'variable_factor': lambda *args: 'weight',
+        'type': lambda * args: 'weight',
+        'operator': lambda * args: '<=',
+        'price_type': lambda * args: 'fixed',
+        'variable_factor': lambda * args: 'weight',
     }
     _order = 'list_price'
 

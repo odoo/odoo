@@ -33,11 +33,11 @@ class wiz_timebox_empty(wizard.interface):
         ids = pool.get('project.gtd.timebox').search(cr, uid, [])
         if not len(ids):
             raise wizard.except_wizard(_('Error !'), _('No timebox child of this one !'))
-        tids = pool.get('project.task').search(cr, uid, [('timebox_id','=',data['id'])])
+        tids = pool.get('project.task').search(cr, uid, [('timebox_id', '=', data['id'])])
         close = []
         up = []
         for task in pool.get('project.task').browse(cr, uid, tids, context):
-            if (task.state in ('cancel','done')) or (task.user_id.id<>uid):
+            if (task.state in ('cancel', 'done')) or (task.user_id.id <> uid):
                 close.append(task.id)
             else:
                 up.append(task.id)

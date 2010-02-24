@@ -34,7 +34,7 @@ import time
 from report import report_sxw
 from tools import mod10r
 import re
-import os 
+import os
 import sys
 import shutil
 from mx.DateTime import *
@@ -46,7 +46,7 @@ class account_invoice_bvr(report_sxw.rml_parse):
         self.copyocrbfile('addons/l10n_ch/report/ocrbb.ttf')
         self.localcontext.update({
             'time': time,
-            'user':self.pool.get("res.users").browse(cr,uid,uid),
+            'user':self.pool.get("res.users").browse(cr, uid, uid),
             'mod10r': mod10r,
             '_space': self._space,
             '_get_ref': self._get_ref,
@@ -55,33 +55,33 @@ class account_invoice_bvr(report_sxw.rml_parse):
             'police_absolute_path' : self.police_absolute_path,
             'copyocrbfile': self.copyocrbfile
         })
-    def _get_and_change_date_format_for_swiss (self,date_to_format):
-        date_formatted=''
+    def _get_and_change_date_format_for_swiss (self, date_to_format):
+        date_formatted = ''
         print date_to_format
         if date_to_format:
-            date_formatted = strptime(date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
+            date_formatted = strptime(date_to_format, '%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
-        
+
     def police_absolute_path(self, inner_path) :
         path = os.path.join(os.path.dirname(sys.argv[0]), inner_path)
         return  path
-        
-    def copyocrbfile(self,file):
+
+    def copyocrbfile(self, file):
         src = self.police_absolute_path(file)
         file = os.path.basename(src)
-        dest = os.path.join('/tmp/',file)
+        dest = os.path.join('/tmp/', file)
         if not os.path.isfile(dest):
             try:
-                shutil.copyfile(src,dest)
+                shutil.copyfile(src, dest)
             except:
                 """print ocrbfile was not copy in /tmp/ please 
                 copy it manually from l10_ch/report"""
-        
-            
 
-    def comma_me(self,amount):
+
+
+    def comma_me(self, amount):
         if  type(amount) is float :
-            amount = str('%.2f'%amount)
+            amount = str('%.2f' % amount)
         else :
             amount = str(amount)
         orig = amount
@@ -91,11 +91,11 @@ class account_invoice_bvr(report_sxw.rml_parse):
         else:
             return self.comma_me(new)
 
-    def _space(self,nbr, nbrspc=5):
+    def _space(self, nbr, nbrspc=5):
         res = ''
         for i in range(len(nbr)):
             res = res + nbr[i]
-            if not (i-1) % nbrspc:
+            if not (i - 1) % nbrspc:
                 res = res + ' '
         return res
 
@@ -106,7 +106,7 @@ class account_invoice_bvr(report_sxw.rml_parse):
         invoice_number = ''
         if o.number:
             invoice_number = re.sub('[^0-9]', '0', o.number)
-        return mod10r(res + invoice_number.rjust(26-len(res), '0'))
+        return mod10r(res + invoice_number.rjust(26 - len(res), '0'))
 
 report_sxw.report_sxw(
     'report.l10n_ch.bvr',

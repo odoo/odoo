@@ -64,7 +64,7 @@ _reconcile_fields = {
         'string': 'Account to reconcile',
         'type': 'many2many',
         'relation': 'account.account',
-        'domain': [('reconcile','=',1)],
+        'domain': [('reconcile', '=', 1)],
         'help': 'If no account is specified, the reconciliation will be made using every accounts that can be reconcilied',
     },
     'writeoff_acc_id': {
@@ -98,20 +98,20 @@ _reconcile_fields = {
     'power': {
         'string': 'Power',
         'type': 'selection',
-        'selection': [(p,str(p)) for p in range(2, 10)],
+        'selection': [(p, str(p)) for p in range(2, 10)],
         'required': True
     },
     'date1': {
         'string': 'Start of period',
         'type': 'date',
         'required': True,
-        'default': lambda *a: time.strftime('%Y-01-01')
+        'default': lambda * a: time.strftime('%Y-01-01')
     },
     'date2': {
         'string': 'End of period',
         'type': 'date',
         'required': True,
-        'default': lambda *a: time.strftime('%Y-%m-%d')
+        'default': lambda * a: time.strftime('%Y-%m-%d')
     },
 }
 
@@ -150,14 +150,14 @@ def do_reconcile(cr, uid, credits, debits, max_amount, power, writeoff_acc_id, p
                         return [move[0]]
                 else:
                     del move_list[i]
-                    res = check(value - move[1], move_list, power-1)
+                    res = check(value - move[1], move_list, power - 1)
                     move_list[i:i] = [move]
                     if res:
                         res.append(move[0])
                         return res
             return False
 
-        for p in range(1, power+1):
+        for p in range(1, power + 1):
             res = check(value, move_list, p)
             if res:
                 return res
@@ -177,7 +177,7 @@ def do_reconcile(cr, uid, credits, debits, max_amount, power, writeoff_acc_id, p
                         return ([move[0]], res)
                 else:
                     del list1[i]
-                    res = check3(value + move[1], list1, list2, list1power-1, power-1)
+                    res = check3(value + move[1], list1, list2, list1power - 1, power - 1)
                     list1[i:i] = [move]
                     if res:
                         x, y = res
@@ -190,9 +190,9 @@ def do_reconcile(cr, uid, credits, debits, max_amount, power, writeoff_acc_id, p
             if res:
                 return res
         return False
-            
+
     def check5(list1, list2, max_power):
-        for p in range(2, max_power+1):
+        for p in range(2, max_power + 1):
             res = check4(list1, list2, p)
             if res:
                 return res
@@ -209,8 +209,8 @@ def do_reconcile(cr, uid, credits, debits, max_amount, power, writeoff_acc_id, p
             debits = [(id, debit) for (id, debit) in debits if id not in res[1]]
         else:
             ok = False
-    return (reconciled, len(credits)+len(debits))
-                
+    return (reconciled, len(credits) + len(debits))
+
 def _reconcile(self, cr, uid, data, context):
     service = netsvc.LocalService("object_proxy")
     move_line_obj = pooler.get_pool(cr.dbname).get('account.move.line')
@@ -221,7 +221,7 @@ def _reconcile(self, cr, uid, data, context):
     if not form['account_ids'][0][2]:
         raise wizard.except_wizard(_('UserError'), _('You must select accounts to reconcile'))
     for account_id in form['account_ids'][0][2]:
-    
+
         # reconcile automatically all transactions from partners whose balance is 0
         cr.execute(
             "SELECT partner_id " \
@@ -244,11 +244,11 @@ def _reconcile(self, cr, uid, data, context):
                 "AND reconcile_id IS NULL",
                 (account_id, partner_id))
             line_ids = [id for (id,) in cr.fetchall()]
-            
+
             if len(line_ids):
                 move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
                 reconciled += len(line_ids)
-        
+
         # get the list of partners who have more than one unreconciled transaction
         cr.execute(
             "SELECT partner_id " \
@@ -274,7 +274,7 @@ def _reconcile(self, cr, uid, data, context):
                 "AND debit > 0",
                 (account_id, partner_id))
             debits = cr.fetchall()
-                
+
             # get the list of unreconciled 'credit transactions' for this partner
             cr.execute(
                 "SELECT id, credit " \
@@ -286,7 +286,7 @@ def _reconcile(self, cr, uid, data, context):
                 "AND credit > 0",
                 (account_id, partner_id))
             credits = cr.fetchall()
-            
+
             (rec, unrec) = do_reconcile(cr, uid, credits, debits, max_amount, power, form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
             reconciled += rec
             unreconciled += unrec
@@ -302,17 +302,17 @@ def _reconcile(self, cr, uid, data, context):
             "AND state <> 'draft' " + partner_filter,
             (account_id,))
         additional_unrec = cr.fetchone()[0]
-    return {'reconciled':reconciled, 'unreconciled':unreconciled+additional_unrec}
+    return {'reconciled':reconciled, 'unreconciled':unreconciled + additional_unrec}
 
 class wiz_reconcile(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':_reconcile_form, 'fields':_reconcile_fields, 'state':[('end','Cancel'),('reconcile','Reconcile')]}
+            'result': {'type':'form', 'arch':_reconcile_form, 'fields':_reconcile_fields, 'state':[('end', 'Cancel'), ('reconcile', 'Reconcile')]}
         },
         'reconcile': {
             'actions': [_reconcile],
-            'result': {'type':'form', 'arch':_result_form, 'fields':_result_fields, 'state':[('end','OK')]}
+            'result': {'type':'form', 'arch':_result_form, 'fields':_result_fields, 'state':[('end', 'OK')]}
         }
     }
 wiz_reconcile('account.automatic.reconcile')

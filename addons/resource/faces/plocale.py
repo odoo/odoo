@@ -45,10 +45,10 @@ def get_gettext():
     trans = _get_translation()
     if trans: return trans.ugettext
     return lambda msg: msg
-        
+
 
 def get_encoding():
     trans = _get_translation()
     if trans: return trans.charset()
     return locale.getpreferredencoding()
-    
+

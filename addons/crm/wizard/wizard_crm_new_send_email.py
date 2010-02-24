@@ -53,26 +53,26 @@ email_send_form = '''<?xml version="1.0"?>
 
 email_send_fields = {
     'to': {'string':"To", 'type':'char', 'size':64, 'required':True},
-    'cc': {'string':"CC", 'type':'char', 'size':128,},
+    'cc': {'string':"CC", 'type':'char', 'size':128, },
     'subject': {'string':'Subject', 'type':'char', 'size':128, 'required':True},
     'text': {'string':'Message', 'type':'text_tag', 'required':True},
-    'state':{'string':'State', 'type':'selection', 'selection':[('done','Done'),('pending','Pending'),('unchanged','Unchanged')]},
+    'state':{'string':'State', 'type':'selection', 'selection':[('done', 'Done'), ('pending', 'Pending'), ('unchanged', 'Unchanged')]},
     'doc1' :  {'string':"Attachment1", 'type':'binary'},
     'doc2' :  {'string':"Attachment2", 'type':'binary'},
     'doc3' :  {'string':"Attachment3", 'type':'binary'},
-    'state' :  {'string':"Set State to", 'type':'selection', 'required' : True, 'default' :'done',\
-                    'selection': [('unchanged','Unchanged'),('done','Done'),('pending','Pending')]},
+    'state' :  {'string':"Set State to", 'type':'selection', 'required' : True, 'default' :'done', \
+                    'selection': [('unchanged', 'Unchanged'), ('done', 'Done'), ('pending', 'Pending')]},
 }
 
 # this sends an email to ALL the addresses of the selected partners.
 def _mass_mail_send(self, cr, uid, data, context):
-    attach = filter(lambda x: x, [data['form']['doc1'],  data['form']['doc2'],  data['form']['doc3']])
-    attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
+    attach = filter(lambda x: x, [data['form']['doc1'], data['form']['doc2'], data['form']['doc3']])
+    attach = map(lambda x: x and ('Attachment' + str(attach.index(x) + 1), base64.decodestring(x)), attach)
 
     pool = pooler.get_pool(cr.dbname)
-    case_pool=pool.get(data.get('model'))
+    case_pool = pool.get(data.get('model'))
 
-    case = case_pool.browse(cr,uid,data['ids'])[0]
+    case = case_pool.browse(cr, uid, data['ids'])[0]
     case_pool.write(cr, uid, [case.id], {
                 'som': False,
                 'canal_id': False,
@@ -90,7 +90,7 @@ def _mass_mail_send(self, cr, uid, data, context):
         case_pool.format_body(body),
         attach=attach,
         reply_to=case.section_id.reply_to,
-        openobject_id=str(case.id), 
+        openobject_id=str(case.id),
         subtype="html"
     )
     if flag:
@@ -101,33 +101,33 @@ def _mass_mail_send(self, cr, uid, data, context):
         elif data['form']['state'] == 'pending':
             case_pool.case_pending(cr, uid, data['ids'])
         cr.commit()
-        raise wizard.except_wizard(_('Email!'),("Email Successfully Sent"))
+        raise wizard.except_wizard(_('Email!'), ("Email Successfully Sent"))
     else:
-        raise wizard.except_wizard(_('Warning!'),_("Email not sent !"))
+        raise wizard.except_wizard(_('Warning!'), _("Email not sent !"))
     return {}
 
 def _get_info(self, cr, uid, data, context):
     if not data['id']:
         return {}
-        
+
     pool = pooler.get_pool(cr.dbname)
     case = pool.get(data.get('model')).browse(cr, uid, data['id'])
     if not case.user_id:
-        raise wizard.except_wizard(_('Error'),_('You must define a responsible user for this case in order to use this action!'))
+        raise wizard.except_wizard(_('Error'), _('You must define a responsible user for this case in order to use this action!'))
     if not case.user_id.address_id.email:
-        raise wizard.except_wizard(_('Warning!'),_("Please specify user's email address !"))
-        
+        raise wizard.except_wizard(_('Warning!'), _("Please specify user's email address !"))
+
     return {
-        'to': case.email_from, 
-        'subject': case.name, 
+        'to': case.email_from,
+        'subject': case.name,
         'cc': case.email_cc or ''
     }
-    
+
 class wizard_send_mail(wizard.interface):
     states = {
         'init': {
             'actions': [_get_info],
-            'result': {'type': 'form', 'arch': email_send_form, 'fields': email_send_fields, 'state':[('end','Cancel','gtk-cancel'), ('send','Send Email','gtk-go-forward')]}
+            'result': {'type': 'form', 'arch': email_send_form, 'fields': email_send_fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('send', 'Send Email', 'gtk-go-forward')]}
         },
         'send': {
             'actions': [_mass_mail_send],

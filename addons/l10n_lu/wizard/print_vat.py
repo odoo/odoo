@@ -29,7 +29,7 @@ _tax_fields = {
         'type': 'many2one',
         'relation': 'account.tax.code',
         'required': True,
-        'domain': [('parent_id','=',False)]},
+        'domain': [('parent_id', '=', False)]},
     'period_id': {
         'string':'Period',
         'type': 'many2one',
@@ -42,7 +42,7 @@ class external_pdf(render):
     def __init__(self, pdf):
         render.__init__(self)
         self.pdf = pdf
-        self.output_type='pdf'
+        self.output_type = 'pdf'
     def _render(self):
         return self.pdf
 
@@ -53,11 +53,11 @@ class report_custom(report_int):
         pool = pooler.get_pool(cr.dbname)
 
         taxobj = pool.get('account.tax.code')
-        code_ids = taxobj.search(cr, uid, [('parent_id','child_of',[datas['form']['tax_code_id']])])
+        code_ids = taxobj.search(cr, uid, [('parent_id', 'child_of', [datas['form']['tax_code_id']])])
         result = {}
         for t in taxobj.browse(cr, uid, code_ids, {'period_id': datas['form']['period_id']}):
             if t.code:
-                result['case_'+str(t.code)] = '%.2f' % (t.sum_period or 0.0, )
+                result['case_' + str(t.code)] = '%.2f' % (t.sum_period or 0.0,)
 
         user = pool.get('res.users').browse(cr, uid, uid, context)
 
@@ -69,7 +69,7 @@ class report_custom(report_int):
             result['info_address'] = partner.address[0].street
             result['info_address2'] = (partner.address[0].zip or '') + ' ' + (partner.address[0].city or '')
 
-        tools.pdf_utils.fill_pdf(tools.config['addons_path']+'/l10n_lu/wizard/2008_DECL_F_M10.pdf', '/tmp/output.pdf', result)
+        tools.pdf_utils.fill_pdf(tools.config['addons_path'] + '/l10n_lu/wizard/2008_DECL_F_M10.pdf', '/tmp/output.pdf', result)
         self.obj = external_pdf(file('/tmp/output.pdf').read())
         self.obj.render()
         return (self.obj.pdf, 'pdf')
@@ -81,7 +81,7 @@ class wizard_report(wizard.interface):
     states = {
         'init': {
              'actions': [],
-             'result': {'type':'form', 'arch':_tax_form, 'fields':_tax_fields, 'state':[('end','Cancel'),('pdf','Print Taxes Statement')]},
+             'result': {'type':'form', 'arch':_tax_form, 'fields':_tax_fields, 'state':[('end', 'Cancel'), ('pdf', 'Print Taxes Statement')]},
         },
         'pdf': {
             'actions': [],

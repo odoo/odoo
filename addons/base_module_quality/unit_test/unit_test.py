@@ -45,7 +45,7 @@ This test checks the Unit Test(PyUnit) Cases of the module. Note that 'unit_test
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
         module_name = module_path.split('/')[-1]
-        test_file = config['addons_path'] +'/' + module_name +'/unit_test/test.py'
+        test_file = config['addons_path'] + '/' + module_name + '/unit_test/test.py'
         if not os.path.isfile(test_file):
             self.result += _("Module does not have 'unit_test/test.py' file")
             return None
@@ -61,7 +61,7 @@ This test checks the Unit Test(PyUnit) Cases of the module. Note that 'unit_test
         test_file = getattr(test_module, 'unit_test')
         test_obj = getattr(test_file, 'test')
 
-        test_result = test_obj.runTest(cr,uid)
+        test_result = test_obj.runTest(cr, uid)
         self.result = self.get_result(test_result)
         self.result_details += self.get_result_details(test_result)
         return None
@@ -80,17 +80,17 @@ This test checks the Unit Test(PyUnit) Cases of the module. Note that 'unit_test
 
     def get_result_details(self, data_list):
         detail = '''<html><head>%s</head><body><table class="tablestyle">
-           <tr><th class="tdatastyle">Test Cases</th ><th class="tdatastyle">Result</th>'''%(self.get_style())
+           <tr><th class="tdatastyle">Test Cases</th ><th class="tdatastyle">Result</th>''' % (self.get_style())
         html = ''
 
         if data_list[0] == True:
             data = data_list[1].split('... ok')
-            for case in map(lambda x:x[0].replace('\n',''),map(lambda x: x.split(' ('),data)):
+            for case in map(lambda x:x[0].replace('\n', ''), map(lambda x: x.split(' ('), data)):
                 if case.find('Ran') != -1:
                     case = case[case.index('Ran'):-2]
-                    html += '<tr><th class="tdatastyle">%s</th><th class="tdatastyle">OK</th></tr>'%(case)
+                    html += '<tr><th class="tdatastyle">%s</th><th class="tdatastyle">OK</th></tr>' % (case)
                 else:
-                    html += '<tr><td class="tdatastyle">%s</td><td class="tdatastyle">OK</td></tr>'%(case)
+                    html += '<tr><td class="tdatastyle">%s</td><td class="tdatastyle">OK</td></tr>' % (case)
             res = detail + html + '</table></body></html>'
             return res
         else:
@@ -98,7 +98,7 @@ This test checks the Unit Test(PyUnit) Cases of the module. Note that 'unit_test
             detail += '''<th class="tdatastyle">Details</th></tr>'''
             data = data_list[1].split("======================================================================")
             test = data[0].split('\n')
-            for err in (data_list[0].failures,data_list[0].errors):
+            for err in (data_list[0].failures, data_list[0].errors):
                 for value in err:
                     detail_dict[value[0]._testMethodName] = value[1]
             for case in map(lambda x:x.split('...'), test):
@@ -107,8 +107,8 @@ This test checks the Unit Test(PyUnit) Cases of the module. Note that 'unit_test
                 test_name = case[0].split(' (')[0]
                 if not detail_dict.has_key(test_name):
                     detail_dict[test_name] = ''
-                html += '<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><td class="tdatastyle">%s</td></tr>'%(test_name, case[1], detail_dict[test_name])
-            return detail + html +'</tr></table></body></html>'
+                html += '<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><td class="tdatastyle">%s</td></tr>' % (test_name, case[1], detail_dict[test_name])
+            return detail + html + '</tr></table></body></html>'
         return ''
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

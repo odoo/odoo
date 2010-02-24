@@ -20,7 +20,7 @@
 ##############################################################################
 
 import netsvc
-from osv import fields,osv
+from osv import fields, osv
 
 class product(osv.osv):
     _inherit = "product.product"
@@ -28,7 +28,7 @@ class product(osv.osv):
         'auto_pick': fields.boolean('Auto Picking', help="Auto picking for raw materials of production orders.")
     }
     _defaults = {
-        'auto_pick': lambda *args: True
+        'auto_pick': lambda * args: True
     }
 product()
 

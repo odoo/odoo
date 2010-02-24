@@ -38,7 +38,7 @@ class res_partner(osv.osv):
 res_partner()
 
 class picking(osv.osv):
-    _inherit="stock.picking"
+    _inherit = "stock.picking"
     _columns = {
         'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal'),
         'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal'),
@@ -47,7 +47,7 @@ class picking(osv.osv):
 picking()
 
 class sale(osv.osv):
-    _inherit="sale.order"
+    _inherit = "sale.order"
     _columns = {
         'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal'),
         'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')

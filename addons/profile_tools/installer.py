@@ -34,6 +34,6 @@ class misc_tools_installer(osv.osv_memory):
     _defaults = {
         'lunch': True,
         }
-    
+
 misc_tools_installer()
 

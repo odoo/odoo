@@ -42,8 +42,8 @@ class account_move_line(osv.osv):
                         WHERE move_line_id = ml.id
                         AND po.state != 'cancel') as amount
                     FROM account_move_line ml
-                    WHERE id =ANY(%s)""" ,(ids,))
-        r=dict(cr.fetchall())
+                    WHERE id =ANY(%s)""" , (ids,))
+        r = dict(cr.fetchall())
         return r
 
     def _to_pay_search(self, cr, uid, obj, name, args, context):
@@ -59,7 +59,7 @@ class account_move_line(osv.osv):
         FROM payment_line pl
         INNER JOIN payment_order po ON (pl.order_id = po.id)
         WHERE move_line_id = l.id AND po.state != 'cancel')''' \
-        + x[1] + str(x[2])+' ',args))
+        + x[1] + str(x[2]) + ' ', args))
 
         cr.execute(('''select id
             from account_move_line l
@@ -68,12 +68,12 @@ class account_move_line(osv.osv):
                 where type=%s and active)
             and reconcile_id is null
             and credit > 0
-            and ''' + where + ' and ' + query), ('payable',) )
+            and ''' + where + ' and ' + query), ('payable',))
 
         res = cr.fetchall()
         if not len(res):
-            return [('id','=','0')]
-        return [('id','in',map(lambda x:x[0], res))]
+            return [('id', '=', '0')]
+        return [('id', 'in', map(lambda x:x[0], res))]
 
     def line2bank(self, cr, uid, ids, payment_type=None, context=None):
         """

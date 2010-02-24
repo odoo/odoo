@@ -27,7 +27,7 @@ import sql_db
 numerotate_form_cont = '''<?xml version="1.0"?>
 <form title="%s">
     <field name="number" string="%s"/>
-</form>''' % ('Continuous Numerotation','First Number')
+</form>''' % ('Continuous Numerotation', 'First Number')
 
 numerotate_fields_cont = {
     'number': {'string':'First Number', 'type':'integer', 'required':True}
@@ -45,7 +45,7 @@ numerotate_form = '''<?xml version="1.0"?>
     <field name="bord_vnd_id"/>
     <newline/>
     <field name="lot_num"/>
-</form>''' % ('Catalog Numerotation','Object Reference')
+</form>''' % ('Catalog Numerotation', 'Object Reference')
 
 numerotate_fields = {
     'bord_vnd_id': {'string':'Depositer Inventory', 'type':'many2one', 'required':True, 'relation':'auction.deposit'},
@@ -65,7 +65,7 @@ numerotate_form2 = '''<?xml version="1.0"?>
         <separator string="%s" colspan="4"/>
         <field name="obj_num"/>
     </group>
-</form>''' % ('Catalog Numerotation','Object Reference','Object Reference')
+</form>''' % ('Catalog Numerotation', 'Object Reference', 'Object Reference')
 
 numerotate_fields2 = {
     'bord_vnd_id': {'string':'Object Inventory', 'type':'many2one', 'relation':'auction.deposit', 'readonly':True},
@@ -77,50 +77,50 @@ numerotate_fields2 = {
     'obj_num': {'string':'Catalog Number', 'type':'integer', 'required':True}
 }
 
-def _read_record(self,cr,uid,datas,context={}):
+def _read_record(self, cr, uid, datas, context={}):
     form = datas['form']
-    res = pooler.get_pool(cr.dbname).get('auction.lots').search(cr,uid,[('bord_vnd_id','=',form['bord_vnd_id']), ('lot_num','=',int(form['lot_num']))])
+    res = pooler.get_pool(cr.dbname).get('auction.lots').search(cr, uid, [('bord_vnd_id', '=', form['bord_vnd_id']), ('lot_num', '=', int(form['lot_num']))])
     found = [r for r in res if r in datas['ids']]
-    if len(found)==0:
+    if len(found) == 0:
         raise wizard.except_wizard('UserError', 'This record does not exist !')
-    datas = pooler.get_pool(cr.dbname).get('auction.lots').read(cr,uid,found,['obj_num', 'name', 'lot_est1', 'lot_est2', 'obj_desc'])
+    datas = pooler.get_pool(cr.dbname).get('auction.lots').read(cr, uid, found, ['obj_num', 'name', 'lot_est1', 'lot_est2', 'obj_desc'])
     return datas[0]
 
-def _test_exist(self,cr,uid,datas,context={}):
+def _test_exist(self, cr, uid, datas, context={}):
     form = datas['form']
-    res = pooler.get_pool(cr.dbname).get('auction.lots').search(cr,uid,[('bord_vnd_id','=',form['bord_vnd_id']), ('lot_num','=',int(form['lot_num']))])
+    res = pooler.get_pool(cr.dbname).get('auction.lots').search(cr, uid, [('bord_vnd_id', '=', form['bord_vnd_id']), ('lot_num', '=', int(form['lot_num']))])
     found = [r for r in res if r in datas['ids']]
-    if len(found)==0:
+    if len(found) == 0:
         return 'not_exist'
     return 'search'
 
-def _numerotate(self,cr,uid,datas,context={}):
+def _numerotate(self, cr, uid, datas, context={}):
     form = datas['form']
-    res = pooler.get_pool(cr.dbname).get('auction.lots').search(cr,uid,[('bord_vnd_id','=',form['bord_vnd_id']), ('lot_num','=',int(form['lot_num']))])
+    res = pooler.get_pool(cr.dbname).get('auction.lots').search(cr, uid, [('bord_vnd_id', '=', form['bord_vnd_id']), ('lot_num', '=', int(form['lot_num']))])
     found = [r for r in res if r in datas['ids']]
-    if len(found)==0:
+    if len(found) == 0:
         raise wizard.except_wizard('UserError', 'This record does not exist !')
-    pooler.get_pool(cr.dbname).get('auction.lots').write(cr,uid,found,{'obj_num':int(form['obj_num'])} )
+    pooler.get_pool(cr.dbname).get('auction.lots').write(cr, uid, found, {'obj_num':int(form['obj_num'])})
     return {'lot_inv':'', 'lot_num':''}
 
-def _numerotate_cont(self,cr,uid,datas,context={}):
+def _numerotate_cont(self, cr, uid, datas, context={}):
     nbr = int(datas['form']['number'])
     refs = pooler.get_pool(cr.dbname).get('auction.lots')
-    rec_ids = refs.browse(cr,uid,datas['ids'])
+    rec_ids = refs.browse(cr, uid, datas['ids'])
     for rec_id in rec_ids:
-        refs.write(cr,uid,[rec_id.id],{'obj_num':nbr})
-        nbr+=1
+        refs.write(cr, uid, [rec_id.id], {'obj_num':nbr})
+        nbr += 1
     return {}
 
 class wiz_auc_lots_numerotate(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':numerotate_form, 'fields': numerotate_fields, 'state':[('end','Cancel'),('choice','Continue')]}
+            'result': {'type': 'form', 'arch':numerotate_form, 'fields': numerotate_fields, 'state':[('end', 'Cancel'), ('choice', 'Continue')]}
         },
         'search': {
             'actions': [_read_record],
-            'result': {'type': 'form', 'arch':numerotate_form2, 'fields': numerotate_fields2, 'state':[('end','Exit'),('init','Back'),('set_number','Numerotate')]}
+            'result': {'type': 'form', 'arch':numerotate_form2, 'fields': numerotate_fields2, 'state':[('end', 'Exit'), ('init', 'Back'), ('set_number', 'Numerotate')]}
         },
         'choice' : {
             'actions' : [],
@@ -128,7 +128,7 @@ class wiz_auc_lots_numerotate(wizard.interface):
         },
         'not_exist' : {
             'actions': [],
-            'result': {'type': 'form', 'arch':numerotate_not_exist, 'fields': {}, 'state':[('end','Exit'),('init','Retry')]}
+            'result': {'type': 'form', 'arch':numerotate_not_exist, 'fields': {}, 'state':[('end', 'Exit'), ('init', 'Retry')]}
         },
         'set_number': {
             'actions': [_numerotate],
@@ -142,7 +142,7 @@ class wiz_auc_lots_numerotate(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':numerotate_form_cont, 'fields': numerotate_fields_cont, 'state':[('end','Exit'),('set_number','Numerotation')]}
+            'result': {'type': 'form', 'arch':numerotate_form_cont, 'fields': numerotate_fields_cont, 'state':[('end', 'Exit'), ('set_number', 'Numerotation')]}
         },
         'set_number': {
             'actions': [_numerotate_cont],

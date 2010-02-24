@@ -29,7 +29,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['document', 'crm'],
     'init_xml': ['document_data.xml'],
-    'update_xml': ['document_view.xml', 'security/ir.model.access.csv','document_ics_config_wizard.xml'],
+    'update_xml': ['document_view.xml', 'security/ir.model.access.csv', 'document_ics_config_wizard.xml'],
     'demo_xml': ['document_demo.xml'],
     'installable': True,
     'active': False,

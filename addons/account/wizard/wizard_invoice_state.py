@@ -31,7 +31,7 @@ def _invoice_confirm(self, cr, uid, data, context):
 class wizard_invoice_confirm(wizard.interface):
     states = {
         'init': {
-            'actions': [_invoice_confirm], 
+            'actions': [_invoice_confirm],
             'result': {'type':'state', 'state':'end'}
         }
     }
@@ -47,7 +47,7 @@ def _invoice_cancel(self, cr, uid, data, context):
 class wizard_invoice_cancel(wizard.interface):
     states = {
         'init': {
-            'actions': [_invoice_cancel], 
+            'actions': [_invoice_cancel],
             'result': {'type':'state', 'state':'end'}
         }
     }

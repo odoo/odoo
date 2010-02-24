@@ -23,7 +23,7 @@ from osv import fields, osv
 import pooler
 
 class profile_service_config_install_modules_wizard(osv.osv_memory):
-    _name='profile.service.config.install_modules_wizard'
+    _name = 'profile.service.config.install_modules_wizard'
     _inherit = 'res.config.installer'
     _rec_name = 'crm_configuration'
     _columns = {
@@ -35,7 +35,7 @@ class profile_service_config_install_modules_wizard(osv.osv_memory):
         'project_mrp':fields.boolean('Sales Management', help="Manages quotation and sales orders. It allows you to automatically create and invoice tasks on fixes prices from quotations."),
         'account_budget_crossover':fields.boolean('Analytic Budgets', help="Allows you to manage analytic budgets by journals. This module is used to manage budgets of your projects."),
         'board_document':fields.boolean('Document Management',
-                    help= "The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
+                    help="The Document Management System of Open ERP allows you to store, browse, automatically index, search and preview all kind of documents (internal documents, printed reports, calendar system). It opens an FTP access for the users to easily browse association's document."),
         'project_gtd':fields.boolean('Getting Things Done', help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
         'scrum':fields.boolean('Scrum Methodology', help="Scrum is an 'agile development methodology', mainly used in IT projects. It helps you to manage teams, long term roadmaps, sprints, and so on."),
         'base_contact':fields.boolean('Advanced Contacts Management',

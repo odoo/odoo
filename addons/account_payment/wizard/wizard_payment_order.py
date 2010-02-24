@@ -29,19 +29,19 @@ FORM = UpdateableStr()
 
 FIELDS = {
     'entries': {'string':'Entries', 'type':'many2many',
-        'relation': 'account.move.line',},
+        'relation': 'account.move.line', },
 }
-field_duedate={
-    'duedate': {'string':'Due Date', 'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d'),},
+field_duedate = {
+    'duedate': {'string':'Due Date', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d'), },
     }
-arch_duedate='''<?xml version="1.0"?>
+arch_duedate = '''<?xml version="1.0"?>
 <form string="Search Payment lines">
     <field name="duedate" />
 </form>'''
 
 
 def search_entries(self, cr, uid, data, context):
-    search_due_date=data['form']['duedate']
+    search_due_date = data['form']['duedate']
 
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('payment.order')
@@ -54,8 +54,8 @@ def search_entries(self, cr, uid, data, context):
         ctx = '''context="{'journal_id': %d}"''' % payment.mode.journal.id
 
     # Search for move line to pay:
-    domain = [('reconcile_id', '=', False),('account_id.type', '=', 'payable'),('amount_to_pay', '>', 0)]
-    domain = domain + ['|',('date_maturity','<',search_due_date),('date_maturity','=',False)]
+    domain = [('reconcile_id', '=', False), ('account_id.type', '=', 'payable'), ('amount_to_pay', '>', 0)]
+    domain = domain + ['|', ('date_maturity', '<', search_due_date), ('date_maturity', '=', False)]
     line_ids = line_obj.search(cr, uid, domain, context=context)
     FORM.string = '''<?xml version="1.0"?>
 <form string="Populate Payment:">
@@ -65,10 +65,10 @@ def search_entries(self, cr, uid, data, context):
     return {}
 
 def create_payment(self, cr, uid, data, context):
-    line_ids= data['form']['entries'][0][2]
+    line_ids = data['form']['entries'][0][2]
     if not line_ids: return {}
 
-    pool= pooler.get_pool(cr.dbname)
+    pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('payment.order')
     line_obj = pool.get('account.move.line')
 
@@ -87,7 +87,7 @@ def create_payment(self, cr, uid, data, context):
             date_to_pay = line.date_maturity
         elif payment.date_prefered == 'fixed':
             date_to_pay = payment.date_planned
-        pool.get('payment.line').create(cr,uid,{
+        pool.get('payment.line').create(cr, uid, {
             'move_line_id': line.id,
             'amount_currency': line.amount_to_pay,
             'bank_id': line2bank.get(line.id),
@@ -119,8 +119,8 @@ class wizard_payment_order(wizard.interface):
                 'arch': arch_duedate,
                 'fields':field_duedate,
                 'state': [
-                    ('end','_Cancel'),
-                    ('search','_Search', '', True)
+                    ('end', '_Cancel'),
+                    ('search', '_Search', '', True)
                 ]
             },
          },
@@ -132,8 +132,8 @@ class wizard_payment_order(wizard.interface):
                 'arch': FORM,
                 'fields': FIELDS,
                 'state': [
-                    ('end','_Cancel'),
-                    ('create','_Add to payment order', '', True)
+                    ('end', '_Cancel'),
+                    ('create', '_Add to payment order', '', True)
                 ]
             },
          },

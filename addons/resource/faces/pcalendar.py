@@ -44,13 +44,13 @@ TIME_RANGE_PATTERN = re.compile("(\\d+):(\\d+)\\s*-\\s*(\\d+):(\\d+)")
 TIME_DELTA_PATTERN = re.compile("([-+]?\\d+(\\.\\d+)?)([dwmyMH])")
 
 DEFAULT_MINIMUM_TIME_UNIT = 15
-DEFAULT_WORKING_DAYS_PER_WEEK  = 5
+DEFAULT_WORKING_DAYS_PER_WEEK = 5
 DEFAULT_WORKING_DAYS_PER_MONTH = 20
 DEFAULT_WORKING_DAYS_PER_YEAR = 200
 DEFAULT_WORKING_HOURS_PER_DAY = 8
 
-DEFAULT_WORKING_TIMES = ( (8 * 60, 12 * 60 ),
-                          (13 * 60, 17 * 60 ) )
+DEFAULT_WORKING_TIMES = ((8 * 60, 12 * 60),
+                          (13 * 60, 17 * 60))
 DEFAULT_WORKING_DAYS = { 0 : DEFAULT_WORKING_TIMES,
                          1 : DEFAULT_WORKING_TIMES,
                          2 : DEFAULT_WORKING_TIMES,
@@ -77,7 +77,7 @@ def to_time_range(src):
         raise ValueError("%s is no time range" % src)
 
     from_time = int(mo.group(1)) * 60 + int(mo.group(2))
-    to_time   = int(mo.group(3)) * 60 + int(mo.group(4))
+    to_time = int(mo.group(3)) * 60 + int(mo.group(4))
     return from_time, to_time
 #@-node:to_time_range
 #@+node:to_datetime
@@ -141,7 +141,7 @@ def _to_days(src):
     result = { }
     for t in tokens:
         try:
-            index =  { "mon" : 0,
+            index = { "mon" : 0,
                        "tue" : 1,
                        "wed" : 2,
                        "thu" : 3,
@@ -249,10 +249,10 @@ def to_timedelta(src, cal=None, is_duration=False):
 
     def convert_minutes(minutes):
         minutes = int(minutes)
-        hours   = minutes / 60
+        hours = minutes / 60
         minutes = minutes % 60
-        days    = hours / d_w_h
-        hours   = hours % d_w_h
+        days = hours / d_w_h
+        hours = hours % d_w_h
         return [ days, 0, 0, 0, minutes, hours ]
 
     def convert_days(value):

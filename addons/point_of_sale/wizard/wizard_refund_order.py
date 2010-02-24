@@ -42,7 +42,7 @@ entry_form = '''<?xml version="1.0"?>
 </form>
 '''
 
-def _get_journal(self,cr,uid,context):
+def _get_journal(self, cr, uid, context):
     pool = pooler.get_pool(cr.dbname)
     obj = pool.get('account.journal')
     user = pool.get('res.users').browse(cr, uid, uid)
@@ -52,7 +52,7 @@ def _get_journal(self,cr,uid,context):
     res.insert(0, ('', ''))
     return res
 
-def _get_pdt(self,cr,uid,context):
+def _get_pdt(self, cr, uid, context):
     pool = pooler.get_pool(cr.dbname)
     obj = pool.get('product.product')
     ids = obj.search(cr, uid, [('income_pdt', '=', True)])
@@ -61,7 +61,7 @@ def _get_pdt(self,cr,uid,context):
     res.insert(0, ('', ''))
     return res
 
-def _get_pdt_exp(self,cr,uid,context):
+def _get_pdt_exp(self, cr, uid, context):
     pool = pooler.get_pool(cr.dbname)
     obj = pool.get('product.product')
     company_id = pool.get('res.users').browse(cr, uid, uid).company_id.id
@@ -91,53 +91,53 @@ out_fields = {
 def _get_out(self, cr, uid, data, context):
     args = {}
     pool = pooler.get_pool(cr.dbname)
-    statement_obj= pool.get('account.bank.statement')
-    product_obj= pool.get('product.template')
-    productp_obj= pool.get('product.product')
+    statement_obj = pool.get('account.bank.statement')
+    product_obj = pool.get('product.template')
+    productp_obj = pool.get('product.product')
     res_obj = pool.get('res.users')
-    curr_company = res_obj.browse(cr,uid,uid).company_id.id
-    statement_id = statement_obj.search(cr,uid, [('journal_id','=',data['form']['journal_id']),('company_id','=',curr_company),('user_id','=',uid),('state','=','open')])
-    monday = (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Monday,0))).strftime('%Y-%m-%d')
-    sunday = (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Sunday,0))).strftime('%Y-%m-%d')
-    done_statmt = statement_obj.search(cr,uid, [('date','>=',monday+' 00:00:00'),('date','<=',sunday+' 23:59:59'),('journal_id','=',data['form']['journal_id']),('company_id','=',curr_company),('user_id','=',uid)])
-    stat_done = statement_obj.browse(cr,uid, done_statmt)
-    address_u = pool.get('res.users').browse(cr,uid,uid).address_id
+    curr_company = res_obj.browse(cr, uid, uid).company_id.id
+    statement_id = statement_obj.search(cr, uid, [('journal_id', '=', data['form']['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')])
+    monday = (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Monday, 0))).strftime('%Y-%m-%d')
+    sunday = (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Sunday, 0))).strftime('%Y-%m-%d')
+    done_statmt = statement_obj.search(cr, uid, [('date', '>=', monday + ' 00:00:00'), ('date', '<=', sunday + ' 23:59:59'), ('journal_id', '=', data['form']['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid)])
+    stat_done = statement_obj.browse(cr, uid, done_statmt)
+    address_u = pool.get('res.users').browse(cr, uid, uid).address_id
     am = 0.0
-    amount_check = productp_obj.browse(cr,uid,data['form']['product_id']).am_out or False
+    amount_check = productp_obj.browse(cr, uid, data['form']['product_id']).am_out or False
     for st in stat_done:
         for s in st.line_ids:
-            if address_u and s.partner_id==address_u.partner_id and s.am_out:
-                am+=s.amount
-    if (-data['form']['amount'] or 0.0)+ am <-(res_obj.browse(cr,uid,uid).company_id.max_diff or 0.0) and amount_check:
-        val = (res_obj.browse(cr,uid,uid).company_id.max_diff or 0.0)+ am
-        raise wizard.except_wizard(_('Error !'), _('The maximum value you can still withdraw is exceeded. \n Remaining value is equal to %d ')%(val))
+            if address_u and s.partner_id == address_u.partner_id and s.am_out:
+                am += s.amount
+    if (-data['form']['amount'] or 0.0) + am < -(res_obj.browse(cr, uid, uid).company_id.max_diff or 0.0) and amount_check:
+        val = (res_obj.browse(cr, uid, uid).company_id.max_diff or 0.0) + am
+        raise wizard.except_wizard(_('Error !'), _('The maximum value you can still withdraw is exceeded. \n Remaining value is equal to %d ') % (val))
 
-    acc_id = product_obj.browse(cr,uid,data['form']['product_id']).property_account_income
+    acc_id = product_obj.browse(cr, uid, data['form']['product_id']).property_account_income
     if not acc_id:
-        raise wizard.except_wizard(_('Error !'), _('please check that account is set to %s')%(product_obj.browse(cr,uid,data['form']['product_id']).name))
+        raise wizard.except_wizard(_('Error !'), _('please check that account is set to %s') % (product_obj.browse(cr, uid, data['form']['product_id']).name))
     if not statement_id:
         raise wizard.except_wizard(_('Error !'), _('You have to open at least one cashbox'))
     if statement_id:
         statement_id = statement_id[0]
     if not statement_id:
-        statement_id = statement_obj.create(cr,uid,{'date':time.strftime('%Y-%m-%d 00:00:00'),
+        statement_id = statement_obj.create(cr, uid, {'date':time.strftime('%Y-%m-%d 00:00:00'),
                                         'journal_id':data['form']['journal_id'],
                                         'company_id':curr_company,
                                         'user_id':uid,
                                         })
-    args['statement_id']= statement_id
-    args['journal_id']= data['form']['journal_id']
+    args['statement_id'] = statement_id
+    args['journal_id'] = data['form']['journal_id']
     if acc_id:
-        args['account_id']= acc_id.id
-    amount= data['form']['amount'] or 0.0
+        args['account_id'] = acc_id.id
+    amount = data['form']['amount'] or 0.0
     if data['form']['amount'] > 0:
-        amount= -data['form']['amount']
+        amount = -data['form']['amount']
     args['amount'] = amount
-    if productp_obj.browse(cr,uid,data['form']['product_id']).am_out:
+    if productp_obj.browse(cr, uid, data['form']['product_id']).am_out:
         args['am_out'] = True
     args['ref'] = data['form']['ref'] or ''
-    args['name'] = "%s: %s "%(product_obj.browse(cr,uid,data['form']['product_id']).name, data['form']['name'].decode('utf8'))
-    address_u = pool.get('res.users').browse(cr,uid,uid).address_id
+    args['name'] = "%s: %s " % (product_obj.browse(cr, uid, data['form']['product_id']).name, data['form']['name'].decode('utf8'))
+    address_u = pool.get('res.users').browse(cr, uid, uid).address_id
     if address_u:
         partner_id = address_u.partner_id and address_u.partner_id.id or None
         args['partner_id'] = partner_id
@@ -150,32 +150,32 @@ def _get_in(self, cr, uid, data, context):
     statement_obj = pool.get('account.bank.statement')
     product_obj = pool.get('product.template')
     res_obj = pool.get('res.users')
-    curr_company = res_obj.browse(cr,uid,uid).company_id.id
-    statement_id = statement_obj.search(cr,uid, [('journal_id','=',data['form']['journal_id']),('company_id','=',curr_company),('user_id','=',uid),('state','=','open')])
+    curr_company = res_obj.browse(cr, uid, uid).company_id.id
+    statement_id = statement_obj.search(cr, uid, [('journal_id', '=', data['form']['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid), ('state', '=', 'open')])
     if not statement_id:
         raise wizard.except_wizard(_('Error !'), _('You have to open at least one cashbox'))
 
     product = pool.get('product.product').browse(cr, uid, data['form']['product_id'])
-    acc_id = product_obj.browse(cr,uid,data['form']['product_id']).property_account_income
+    acc_id = product_obj.browse(cr, uid, data['form']['product_id']).property_account_income
     if not acc_id:
-        raise wizard.except_wizard(_('Error !'), _('please check that account is set to %s')%(product_obj.browse(cr,uid,data['form']['product_id']).name))
+        raise wizard.except_wizard(_('Error !'), _('please check that account is set to %s') % (product_obj.browse(cr, uid, data['form']['product_id']).name))
     if statement_id:
         statement_id = statement_id[0]
     if not statement_id:
-        statement_id = statement_obj.create(cr,uid,{'date':time.strftime('%Y-%m-%d 00:00:00'),
+        statement_id = statement_obj.create(cr, uid, {'date':time.strftime('%Y-%m-%d 00:00:00'),
                                                     'journal_id':data['form']['journal_id'],
                                                     'company_id':curr_company,
                                                     'user_id':uid,
                                                    })
 
     args['statement_id'] = statement_id
-    args['journal_id'] =  data['form']['journal_id']
+    args['journal_id'] = data['form']['journal_id']
     if acc_id:
-        args['account_id'] =  acc_id.id
+        args['account_id'] = acc_id.id
     args['amount'] = data['form']['amount'] or 0.0
-    args['ref'] = "%s" %(data['form']['ref'] or '')
-    args['name'] = "%s: %s "% (product_obj.browse(cr,uid,data['form']['product_id']).name, data['form']['name'].decode('utf8'))
-    address_u = pool.get('res.users').browse(cr,uid,uid).address_id
+    args['ref'] = "%s" % (data['form']['ref'] or '')
+    args['name'] = "%s: %s " % (product_obj.browse(cr, uid, data['form']['product_id']).name, data['form']['name'].decode('utf8'))
+    address_u = pool.get('res.users').browse(cr, uid, uid).address_id
     if address_u:
         partner_id = address_u.partner_id and address_u.partner_id.id or None
         args['partner_id'] = partner_id

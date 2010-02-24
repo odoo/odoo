@@ -32,7 +32,7 @@ class project_phase(osv.osv):
     _name = "project.phase"
     _description = "Project Phase"
 
-    def _check_recursion(self,cr,uid,ids):
+    def _check_recursion(self, cr, uid, ids):
          obj_self = self.browse(cr, uid, ids[0])
          prev_ids = obj_self.previous_phase_ids
          next_ids = obj_self.next_phase_ids
@@ -51,7 +51,7 @@ class project_phase(osv.osv):
 
          #iter prev_ids
          while prev_ids:
-             cr.execute('select distinct prv_phase_id from project_phase_previous_rel where phase_id in ('+','.join(map(str, prev_ids))+')')
+             cr.execute('select distinct prv_phase_id from project_phase_previous_rel where phase_id in (' + ','.join(map(str, prev_ids)) + ')')
              prv_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
              if obj_self.id in prv_phase_ids:
                  return False
@@ -62,7 +62,7 @@ class project_phase(osv.osv):
 
         #iter next_ids
          while next_ids:
-             cr.execute('select distinct next_phase_id from project_phase_next_rel where phase_id in ('+','.join(map(str, next_ids))+')')
+             cr.execute('select distinct next_phase_id from project_phase_next_rel where phase_id in (' + ','.join(map(str, next_ids)) + ')')
              next_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
              if obj_self.id in next_phase_ids:
                  return False
@@ -88,12 +88,12 @@ class project_phase(osv.osv):
      }
 
     _defaults = {
-        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_start': lambda * a: time.strftime('%Y-%m-%d'),
     }
 
     _order = "name"
     _constraints = [
-        (_check_recursion,'Error ! Loops In Phases Not Allowed',['next_phase_ids','previous_phase_ids'])
+        (_check_recursion, 'Error ! Loops In Phases Not Allowed', ['next_phase_ids', 'previous_phase_ids'])
     ]
 project_phase()
 
@@ -108,7 +108,7 @@ class project_resource_allocation(osv.osv):
         'useability': fields.float('Useability', help="Useability of this ressource for this project phase in percentage (=50%)"),
     }
     _defaults = {
-        'useability': lambda *a: 100,
+        'useability': lambda * a: 100,
     }
 
 project_resource_allocation()

@@ -32,15 +32,15 @@ import wizard
 import netsvc
 
 
-sale_pos_res_form= """<?xml version="1.0"?>
+sale_pos_res_form = """<?xml version="1.0"?>
 <form string="Sale by User">
      <field name="user_id" />
 
 </form>
 """
 
-sale_pos_res_field= {
-   
+sale_pos_res_field = {
+
     'user_id': {'string': 'Salesman', 'type': 'many2many', 'relation': 'res.users', 'required': True},
 
 }
@@ -54,7 +54,7 @@ class wizard_pos_sales_user_today(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : sale_pos_res_form,
                     'fields' : sale_pos_res_field,
-                    'state' : [('end', 'Cancel','gtk-cancel'),('print_report', 'Print Report','gtk-print') ]}
+                    'state' : [('end', 'Cancel', 'gtk-cancel'), ('print_report', 'Print Report', 'gtk-print') ]}
         },
         'print_report' : {
             'actions' : [],

@@ -57,7 +57,7 @@ class account_tax_code_report(rml_parse.rml_parse):
         })
 
     def get_line(self, obj):
-        line_ids = self.pool.get('account.move.line').search(self.cr, self.uid, [('tax_code_id','=',obj.id)])
+        line_ids = self.pool.get('account.move.line').search(self.cr, self.uid, [('tax_code_id', '=', obj.id)])
         if not line_ids: return []
 
         return map(_record_to_report_line,

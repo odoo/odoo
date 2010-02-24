@@ -2,7 +2,7 @@
 import sqlalchemy
 import common
 import axis_map
-import pooler,tools
+import pooler, tools
 
 class level(object):
     def __init__(self, level, sublevels=[]):
@@ -15,7 +15,7 @@ class level(object):
             if self.object:
                 break
             for hierarchy in dimension.hierarchy_ids:
-                if hierarchy.name==self.level:
+                if hierarchy.name == self.level:
                     self.object = hierarchy
                     break
 
@@ -33,7 +33,7 @@ class level(object):
                 pos += 1
         return self.object
 
-    def _to_unicode(self,s):
+    def _to_unicode(self, s):
         try:
             return s.encode('ascii')
         except UnicodeError:
@@ -45,7 +45,7 @@ class level(object):
                 except UnicodeError:
                     return s
 
-    def _to_decode(self,s):
+    def _to_decode(self, s):
         try:
             return s.encode('utf-8')
         except UnicodeError:
@@ -70,7 +70,7 @@ class level(object):
                     'delta':0
                 }
         '''
-        if self.sublevels[0].name=='all':
+        if self.sublevels[0].name == 'all':
             return [{
                 'value': [([str(self.level)], str(self.level), False)],
                 'query': {
@@ -84,8 +84,8 @@ class level(object):
         # Make these 2 commands working in all cases:
         # return self._run_transform(metadata)
         # return self._run_star(metadata)
-        
-        if self.object.table_id<>self.object.dimension_id.cube_id.table_id: # Add a condition on the object
+
+        if self.object.table_id <> self.object.dimension_id.cube_id.table_id: # Add a condition on the object
             result = self._run_transform(metadata)
         else:
             result = self._run_star(metadata)
@@ -135,18 +135,18 @@ class level(object):
         axis_select2.append_column(result_axis['column_name'][-1].label('axis_name'))
         query = axis_select2.execute()
         result = query.fetchall()
-          
+
         def _tuple_define(x):
-            y=list(x)
+            y = list(x)
             if y[-1] == None:
                 y[-1] = '/'
-            elif isinstance(y[-1],float):
+            elif isinstance(y[-1], float):
                 y[-1] = str (int(y[-1]))
             else:
                 y[-1] = self._to_unicode(y[-1])
                 y[-1] = tools.ustr(y[-1])
-            return ([self.level]+y[:-1]),y[-1]
-             
+            return ([self.level] + y[:-1]), y[-1]
+
         axis = map(_tuple_define, result)
         # Gives the mapping
 
@@ -158,16 +158,16 @@ class level(object):
                 primary_key = self.object.table_id.column_link_id.table_id
             tableprim = sqlalchemy.Table(primary_key.table_db_name, metadata)
             pk = common.get_primary_key(primary_key)
-            col = common.col_get(tableprim,pk)
+            col = common.col_get(tableprim, pk)
             axis_select.append_column(col.label('axis_primarykey'))
             query = axis_select.execute()
             result = query.fetchall()
         else:
             # To find the primary key that suits best as per the given criteria
             raise 'Primary key table not made in the hierarchy'
-            
+
         maps = []
-        position =0
+        position = 0
         for mapping in result_axis['axis_mapping']:
             mapinst = mapping(result, position)
             maps.append(mapinst)
@@ -187,7 +187,7 @@ class level(object):
 #       result_axis['axis_mapping'] = maps
 #       print '*'*50
 #       print table, result, result_axis
-        return table, axis, result ,result_axis
+        return table, axis, result , result_axis
 
     def _run_star(self, metadata):
         """
@@ -196,7 +196,7 @@ class level(object):
             reassign to values.
         """
         print '*** Start ***'
-        table, result,result_mapping, result_axis = self._compute_axis(metadata, True)
+        table, result, result_mapping, result_axis = self._compute_axis(metadata, True)
         result_axis.setdefault('where_clause', [])
         #
         # The result to be applied to the main query object
@@ -226,7 +226,7 @@ class level(object):
 
         table, axis, mapping, result_axis = self._compute_axis(metadata, True)
         table2 = common.table_get(metadata, self.object.dimension_id.cube_id.table_id)
-        sql_table = sqlalchemy.Table(self.object.table_id.column_link_id.table_id.table_db_name,metadata)
+        sql_table = sqlalchemy.Table(self.object.table_id.column_link_id.table_id.table_db_name, metadata)
         col = common.col_get(sql_table, self.object.table_id.column_link_id)
 
         #
@@ -236,30 +236,30 @@ class level(object):
         result = []
         for a in axis:
             k = tuple(list(a)[0][1:])
-            mapping_axis = filter(lambda m: tuple(list(m)[:-1])==k, mapping)
+            mapping_axis = filter(lambda m: tuple(list(m)[:-1]) == k, mapping)
             primary_keys = map(lambda x:list(x)[-1], mapping_axis)
             # To convert everything in to the string so that no conversion needed at later stage 
             # This is for the elements to be displayed in the rows and columns
             for i in range(len(a[0])):
                 if a[0][i]:
-                    if isinstance(a[0][i],int):
+                    if isinstance(a[0][i], int):
                         a[0][i] = str(a[0][i])
-                    elif isinstance(a[0][i],float):
+                    elif isinstance(a[0][i], float):
                         a[0][i] = str(int(a[0][i]))
                 else:
                     a[0][i] = '/'
             a = list(a)
-            if isinstance(a[-1],int):
+            if isinstance(a[-1], int):
                 a[-1] = str(a[-1])
-            elif isinstance(a[-1],float):
+            elif isinstance(a[-1], float):
                 a[-1] = str(int(a[-1]))
             a = tuple(a)
-            primary_keys = map(lambda x: str(x),primary_keys)
-            result.append( {
+            primary_keys = map(lambda x: str(x), primary_keys)
+            result.append({
                 'value': [a],
                 'query': {
-                          
-                    'whereclause': [col.in_(primary_keys)],#.extend(result_axis['where_clause']),
+
+                    'whereclause': [col.in_(primary_keys)], #.extend(result_axis['where_clause']),
                     'column': [sqlalchemy.literal('transform')],
                 },
                 'axis_mapping': axis_map.column_static(False),
@@ -268,17 +268,17 @@ class level(object):
         return result
 
     def __repr__(self):
-        res= '\t\t<olap.level \n'
-        res+= '\t\t\t'+str(self.level)+'\n'
+        res = '\t\t<olap.level \n'
+        res += '\t\t\t' + str(self.level) + '\n'
         for l in self.sublevels:
-            res+= '\t\t\t'+str(l)+'\n'
+            res += '\t\t\t' + str(l) + '\n'
         res += '\t\t>'
         return res
 
 class level_filter(object):
     def __init__(self, name):
-        self.name=name
-        self.object=None
+        self.name = name
+        self.object = None
 
     def validate(self, level):
         self.object = level
@@ -293,14 +293,14 @@ class level_filter(object):
     # Return a description of what have been added
     #
     def run(self, metadata, table):
-        return self.object._types[self.object.type].run( self, metadata, table)
+        return self.object._types[self.object.type].run(self, metadata, table)
 
     def __repr__(self):
-        return '<olap.level_filter '+self.name+'>'
+        return '<olap.level_filter ' + self.name + '>'
 
 class level_function(object):
     def __init__(self, name):
-        self.type='function'
+        self.type = 'function'
         self.name = name
         self.object = None
     # [{
@@ -309,14 +309,14 @@ class level_function(object):
     #   'query': SQLAlchemy query object
     # }]
     def run(self, metadata, table):
-        return self.object._types[self.object.type].children( self, metadata, table)
+        return self.object._types[self.object.type].children(self, metadata, table)
 
     def validate(self, level):
         self.object = level
         return 0
 
     def __repr__(self):
-        return '<olap.level_function '+self.name+'>'
+        return '<olap.level_function ' + self.name + '>'
 
 # vim: ts=4 sts=4 sw=4 si et
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

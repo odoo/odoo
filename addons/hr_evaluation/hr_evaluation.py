@@ -34,7 +34,7 @@ class hr_evaluation_plan(osv.osv):
         'active': fields.boolean('Active')
     }
     _defaults = {
-        'active' : lambda *a: True,
+        'active' : lambda * a: True,
     }
 hr_evaluation_plan()
 
@@ -45,14 +45,14 @@ class hr_evaluation_plan_phase(osv.osv):
     _columns = {
         'name': fields.char("Phase", size=64, required=True),
         'sequence': fields.integer("Sequence"),
-        'company_id': fields.related('plan_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
-        'plan_id': fields.many2one('hr_evaluation.plan','Evaluation Plan', required=True, ondelete='cascade'),
+        'company_id': fields.related('plan_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
+        'plan_id': fields.many2one('hr_evaluation.plan', 'Evaluation Plan', required=True, ondelete='cascade'),
         'action': fields.selection([
-            ('top-down','Top-Down Appraisal Requests'),
-            ('bottom-up','Bottom-Up Appraisal Requests'),
-            ('self','Self Appraisal Requests'),
-            ('final','Final Interview')], 'Action', required=True),
-        'survey_id': fields.many2one('survey','Appraisal Form',required=True),
+            ('top-down', 'Top-Down Appraisal Requests'),
+            ('bottom-up', 'Bottom-Up Appraisal Requests'),
+            ('self', 'Self Appraisal Requests'),
+            ('final', 'Final Interview')], 'Action', required=True),
+        'survey_id': fields.many2one('survey', 'Appraisal Form', required=True),
         'send_answer_manager': fields.boolean('All Answers',
             help="Send all answers to the manager"),
         'send_answer_employee': fields.boolean('All Answers',
@@ -67,12 +67,12 @@ class hr_evaluation_plan_phase(osv.osv):
 
     }
     _defaults = {
-        'sequence' : lambda *a: 1,
+        'sequence' : lambda * a: 1,
     }
 hr_evaluation_plan_phase()
 
 class hr_employee(osv.osv):
-    _inherit="hr.employee"
+    _inherit = "hr.employee"
     _columns = {
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Evaluation Plan'),
         'evaluation_date': fields.date('Next Evaluation', help="Date of the next evaluation"),
@@ -92,14 +92,14 @@ class hr_evaluation(osv.osv):
         'manager_id': fields.many2one('res.users', "Manager", required=True),
         'note_summary': fields.text('Evaluation Summary'),
         'note_action': fields.text('Action Plan',
-            help="If the evaluation does not meet the expectations, you can propose"+
+            help="If the evaluation does not meet the expectations, you can propose" +
               "an action plan"),
         'rating': fields.selection([
-            ('0','Significantly bellow expectations'),
-            ('1','Did not meet expectations'),
-            ('2','Meet expectations'),
-            ('3','Exceeds expectations'),
-            ('4','Significantly exceeds expectations'),
+            ('0', 'Significantly bellow expectations'),
+            ('1', 'Did not meet expectations'),
+            ('2', 'Meet expectations'),
+            ('3', 'Exceeds expectations'),
+            ('4', 'Significantly exceeds expectations'),
         ], "Overall Rating", help="This is the overall rating on that summarize the evaluation"),
         'survey_request_ids': fields.many2many('survey.request',
             'hr_evaluation_evaluation_requests',
@@ -109,32 +109,32 @@ class hr_evaluation(osv.osv):
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan'),
         'phase_id': fields.many2one('hr_evaluation.plan.phase', 'Phase'),
         'state': fields.selection([
-            ('draft','Draft'),
-            ('wait','Plan In Progress'),
-            ('progress','Final Validation'),
-            ('done','Done'),
-            ('cancel','Cancelled'),
-        ], 'State', required=True,readonly=True)
+            ('draft', 'Draft'),
+            ('wait', 'Plan In Progress'),
+            ('progress', 'Final Validation'),
+            ('done', 'Done'),
+            ('cancel', 'Cancelled'),
+        ], 'State', required=True, readonly=True)
     }
     _defaults = {
-        'date' : lambda *a: time.strftime('%Y-%m-%d'),
-        'state' : lambda *a: 'draft',
+        'date' : lambda * a: time.strftime('%Y-%m-%d'),
+        'state' : lambda * a: 'draft',
     }
 
-    def button_plan_in_progress(self,cr, uid, ids, context):
-        self.write(cr,uid,ids,{'state':'wait'})
+    def button_plan_in_progress(self, cr, uid, ids, context):
+        self.write(cr, uid, ids, {'state':'wait'})
         return True
 
-    def button_final_validation(self,cr, uid, ids, context):
-        self.write(cr,uid,ids,{'state':'progress'})
+    def button_final_validation(self, cr, uid, ids, context):
+        self.write(cr, uid, ids, {'state':'progress'})
         return True
 
-    def button_done(self,cr, uid, ids, context):
-        self.write(cr,uid,ids,{'state':'done'})
+    def button_done(self, cr, uid, ids, context):
+        self.write(cr, uid, ids, {'state':'done'})
         return True
 
-    def button_cancel(self,cr, uid, ids, context):
-        self.write(cr,uid,ids,{'state':'cancel'})
+    def button_cancel(self, cr, uid, ids, context):
+        self.write(cr, uid, ids, {'state':'cancel'})
         return True
 
 hr_evaluation()

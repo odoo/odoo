@@ -43,7 +43,7 @@ def _get_moves(self, cr, uid, data, context):
         for m in [line for line in prod.move_created_ids]:
             quantity = m.product_qty
             arch_lst.append('<field name="track%s" />\n<newline />' % m.id)
-            fields['track%s' % m.id] = {'string' : m.product_id.name, 'type' : 'boolean', 'default' : lambda x,y,z: False}
+            fields['track%s' % m.id] = {'string' : m.product_id.name, 'type' : 'boolean', 'default' : lambda x, y, z: False}
             res.setdefault('moves', []).append(m.id)
         arch_lst.append('</form>')
         arch.string = '\n'.join(arch_lst)
@@ -65,7 +65,7 @@ def _track_lines(self, cr, uid, data, context):
                     current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
                 else:
                     current_move = move.id
-                new_prodlot = prodlot_obj.create(cr, uid, {'name': 'PRODUCTION:%d:LOT:%d' % (data['id'], idx+1)})
+                new_prodlot = prodlot_obj.create(cr, uid, {'name': 'PRODUCTION:%d:LOT:%d' % (data['id'], idx + 1)})
                 update_val['prodlot_id'] = new_prodlot
                 move_obj.write(cr, uid, [current_move], update_val)
     return {}
@@ -89,7 +89,7 @@ class wizard_track_move(wizard.interface):
         },
         'track':{
             'actions':[_get_moves],
-            'result': {'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel'),('split','Track')]}
+            'result': {'type':'form', 'arch':arch, 'fields':fields, 'state':[('end', 'Cancel'), ('split', 'Track')]}
         },
         'split': {
             'actions': [_track_lines],

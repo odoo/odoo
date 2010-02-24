@@ -5,8 +5,8 @@ from level_interface import level_interface
 
 class level_normal(level_interface):
     def run(self, level, metadata, table):
-        col = common.col_get(sqlalchemy.Table(level.object.table_name,metadata), level.object.column_name)
-        col_id = common.col_get(sqlalchemy.Table(level.object.table_name,metadata), level.object.column_name)
+        col = common.col_get(sqlalchemy.Table(level.object.table_name, metadata), level.object.column_name)
+        col_id = common.col_get(sqlalchemy.Table(level.object.table_name, metadata), level.object.column_name)
         result = {
                   'column': [col_id],
                   'column_name': [col],
@@ -16,8 +16,8 @@ class level_normal(level_interface):
         return result
 
     def children(self, level, metadata, table):
-        col = common.col_get(sqlalchemy.Table(level.object.table_name,metadata), level.object.column_name)
-        col_id = common.col_get(sqlalchemy.Table(level.object.table_name,metadata), level.object.column_name)
+        col = common.col_get(sqlalchemy.Table(level.object.table_name, metadata), level.object.column_name)
+        col_id = common.col_get(sqlalchemy.Table(level.object.table_name, metadata), level.object.column_name)
         result = {
                   'column': [col_id],
                   'column_name': [col],

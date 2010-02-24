@@ -27,10 +27,10 @@ class res_partner(osv.osv):
     _columns = {
         'property_product_pricelist_purchase': fields.property(
           'product.pricelist',
-          type='many2one', 
-          relation='product.pricelist', 
-          domain=[('type','=','purchase')],
-          string="Purchase Pricelist", 
+          type='many2one',
+          relation='product.pricelist',
+          domain=[('type', '=', 'purchase')],
+          string="Purchase Pricelist",
           method=True,
           view_load=True,
           help="This pricelist will be used, instead of the default one, for purchases from the current partner"),

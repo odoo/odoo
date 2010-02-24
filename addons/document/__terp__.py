@@ -44,7 +44,7 @@
         'security/document_security.xml',
         'security/ir.model.access.csv'
     ],
-    'demo_xml': [ 'document_demo.xml',],
+    'demo_xml': [ 'document_demo.xml', ],
     'installable': True,
     'active': False,
     'certificate': None,

@@ -21,27 +21,27 @@
 
 
 {
-    "name" : "Share Calendar using Caldav", 
-    "version" : "1.0", 
+    "name" : "Share Calendar using Caldav",
+    "version" : "1.0",
     "depends" : [
-                    "base", 
-                ], 
+                    "base",
+                ],
      'description': """
  Contains basic functionality for caldav system like:  
   - Availabilities of synchronisation using WebDAV
-""", 
-    "author" : "Tiny", 
-    'category': 'Generic Modules/Others', 
-    'website': 'http://www.openerp.com', 
-    "init_xml" : ["caldav_data.xml"], 
-    "demo_xml" : [], 
+""",
+    "author" : "Tiny",
+    'category': 'Generic Modules/Others',
+    'website': 'http://www.openerp.com',
+    "init_xml" : ["caldav_data.xml"],
+    "demo_xml" : [],
     "update_xml" : [
-                    'security/ir.model.access.csv', 
-                    'caldav_wizard.xml', 
+                    'security/ir.model.access.csv',
+                    'caldav_wizard.xml',
                     'caldav_view.xml'
-                    ], 
-    "installable" : True, 
-    "active" : False, 
+                    ],
+    "installable" : True,
+    "active" : False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

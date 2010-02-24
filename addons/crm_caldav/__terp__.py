@@ -27,20 +27,20 @@
     'description': """
     New Futures in Meeting:        
         *  Share meeting with other calendar clients like sunbird         
-""", 
-    'author': 'Tiny', 
-    'website': 'http://www.openerp.com', 
+""",
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
     'depends': ['caldav', 'crm'
-                    ], 
-    'init_xml': [ 
-                'crm_caldav_data.xml',                 
-    ], 
-
-    'update_xml': [        
-        'crm_caldav_wizard.xml',               
+                    ],
+    'init_xml': [
+                'crm_caldav_data.xml',
     ],
-    'demo_xml': [], 
-    'installable': True, 
-    'active': False,     
+
+    'update_xml': [
+        'crm_caldav_wizard.xml',
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

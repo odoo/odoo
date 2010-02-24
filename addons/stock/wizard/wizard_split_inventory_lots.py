@@ -46,41 +46,41 @@ def _split_lines(self, cr, uid, data, context):
     if not sequence:
         raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
     if data['form']['prefix']:
-        sequence=data['form']['prefix']+'/'+(sequence or '')
-        
+        sequence = data['form']['prefix'] + '/' + (sequence or '')
+
     inv = inv_line_obj.browse(cr, uid, [inv_id])[0]
-    quantity=data['form']['quantity']
+    quantity = data['form']['quantity']
     prodlot_obj.write(cr, uid, inv.prod_lot_id.id, {'name':sequence})
-    
+
     if quantity <= 0 or inv.product_qty == 0:
         return {}
 
-    quantity_rest = inv.product_qty%quantity
+    quantity_rest = inv.product_qty % quantity
 
     update_val = {
         'product_qty': quantity,
     }
 
     new_line = []
-    for idx in range(int(inv.product_qty//quantity)):
+    for idx in range(int(inv.product_qty // quantity)):
         if idx:
             current_line = inv_line_obj.copy(cr, uid, inv.id, {'prod_lot_id': inv.prod_lot_id.id})
             new_line.append(current_line)
         else:
             current_line = inv.id
         inv_line_obj.write(cr, uid, [current_line], update_val)
-    
+
     if quantity_rest > 0:
-        idx = int(inv.product_qty//quantity)
-        update_val['product_qty']=quantity_rest
-        
+        idx = int(inv.product_qty // quantity)
+        update_val['product_qty'] = quantity_rest
+
         if idx:
             current_line = inv_line_obj.copy(cr, uid, inv.id, {'prod_lot_id': inv.prod_lot_id.id})
             new_line.append(current_line)
         else:
             current_line = inv.id
         inv_line_obj.write(cr, uid, [current_line], update_val)
-        
+
     return {}
 
 class wizard_split_inventory_lots(wizard.interface):

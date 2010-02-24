@@ -36,17 +36,17 @@ confirm_order_fields = {
     'confirm_cashbox': {'string':'Name of box', 'type':'many2one', 'required':True, 'relation':'lunch.cashbox' },
 }
 
-def _confirm(self,cr,uid,data,context):
-    pool= pooler.get_pool(cr.dbname)
+def _confirm(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)
     order_ref = pool.get('lunch.order')
-    order_ref.confirm(cr,uid,data['ids'],data['form']['confirm_cashbox'],context)
+    order_ref.confirm(cr, uid, data['ids'], data['form']['confirm_cashbox'], context)
     return {}
 
 class order_confirm(wizard.interface):
     states = {
         'init': {
             'action':[],
-            'result':{'type' : 'form', 'arch' : confirm_order_form, 'fields' : confirm_order_fields, 'state' : [('end', 'Cancel'),('go', 'Confirm Order') ]},
+            'result':{'type' : 'form', 'arch' : confirm_order_form, 'fields' : confirm_order_fields, 'state' : [('end', 'Cancel'), ('go', 'Confirm Order') ]},
         },
         'go' : {
             'actions' : [_confirm],

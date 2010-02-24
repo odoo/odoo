@@ -37,9 +37,9 @@ dates_fields = {
 	'company_id': {'string': 'Company', 'type': 'many2one',
 		'relation': 'res.company', 'required': True},
 	'based_on':{'string':'Base on', 'type':'selection', 'selection':[
-			('invoices','Invoices'),
-			('payments','Payments'),
-			], 'required':True, 'default': lambda *a: 'invoices'},
+			('invoices', 'Invoices'),
+			('payments', 'Payments'),
+			], 'required':True, 'default': lambda * a: 'invoices'},
 	'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
 
 }

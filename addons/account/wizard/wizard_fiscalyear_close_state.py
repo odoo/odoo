@@ -32,7 +32,7 @@ _transaction_form = '''<?xml version="1.0"?>
 </form>'''
 
 _transaction_fields = {
-    'fy_id': {'string':'Fiscal Year to close', 'type':'many2one', 'relation': 'account.fiscalyear','required':True, 'domain':[('state','=','draft')]},
+    'fy_id': {'string':'Fiscal Year to close', 'type':'many2one', 'relation': 'account.fiscalyear', 'required':True, 'domain':[('state', '=', 'draft')]},
     'sure': {'string':'Check this box', 'type':'boolean'},
 }
 
@@ -46,9 +46,9 @@ def _data_save(self, cr, uid, data, context):
     cr.execute('UPDATE account_journal_period ' \
             'SET state = %s ' \
             'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %s)',
-            ('done',fy_id))
+            ('done', fy_id))
     cr.execute('UPDATE account_period SET state = %s ' \
-            'WHERE fiscalyear_id = %s', ('done',fy_id))
+            'WHERE fiscalyear_id = %s', ('done', fy_id))
     cr.execute('UPDATE account_fiscalyear ' \
             'SET state = %s WHERE id = %s', ('done', fy_id))
     return {}
@@ -57,7 +57,7 @@ class wiz_journal_close_state(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('close','Close states')]}
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end', 'Cancel'), ('close', 'Close states')]}
         },
         'close': {
             'actions': [_data_save],

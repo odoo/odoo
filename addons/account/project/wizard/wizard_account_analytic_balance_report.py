@@ -30,8 +30,8 @@ dates_form = '''<?xml version="1.0"?>
 </form>'''
 
 dates_fields = {
-    'date1': {'string':'Start of Period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-    'date2': {'string':'End of Period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'date1': {'string':'Start of Period', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-01-01')},
+    'date2': {'string':'End of Period', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
     'empty_acc': {'string':'Empty Accounts ? ', 'type':'boolean', 'help':'Check if you want to display Accounts with 0 balance too.'},
 }
 
@@ -39,8 +39,8 @@ dates_fields = {
 class wizard_report(wizard.interface):
     states = {
         'init': {
-            'actions': [], 
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'), ('report','Print')]}
+            'actions': [],
+            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end', 'Cancel'), ('report', 'Print')]}
         },
         'report': {
             'actions': [],

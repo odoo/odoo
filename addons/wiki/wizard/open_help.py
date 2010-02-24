@@ -29,11 +29,11 @@ from osv import osv
 from tools.translate import _
 
 class wiz_open_help(wizard.interface):
-    
+
     def _open_wiki_page(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        pages = pool.get('wiki.wiki').search(cr, uid, [('name','=','Basic Wiki Editing')])
-        
+        pages = pool.get('wiki.wiki').search(cr, uid, [('name', '=', 'Basic Wiki Editing')])
+
         value = {
             'name': 'Basic Wiki Editing',
             'view_type': 'form',
@@ -43,7 +43,7 @@ class wiz_open_help(wizard.interface):
             'res_id': pages[0],
             'type': 'ir.actions.act_window',
         }
-                    
+
         return value
 
     states = {

@@ -23,7 +23,7 @@
 # Please note that these reports are not multi-currency !!!
 #
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class report_purchase_order_product(osv.osv):
@@ -31,24 +31,24 @@ class report_purchase_order_product(osv.osv):
     _description = "Purchases Orders by Products"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'state': fields.selection([
-            ('draft','Quotation'),
-            ('waiting_date','Waiting Schedule'),
-            ('manual','Manual in progress'),
-            ('progress','In progress'),
-            ('shipping_except','Shipping Exception'),
-            ('invoice_except','Invoice Exception'),
-            ('done','Done'),
-            ('cancel','Cancel')
+            ('draft', 'Quotation'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('manual', 'Manual in progress'),
+            ('progress', 'In progress'),
+            ('shipping_except', 'Shipping Exception'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+            ('cancel', 'Cancel')
         ], 'Order State', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'quantity': fields.float('# of Products', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
         'count': fields.integer('# of Lines', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
 
     }
     _order = 'name desc,price_total desc'
@@ -80,24 +80,24 @@ class report_purchase_order_category(osv.osv):
     _description = "Purchases Orders by Categories"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'state': fields.selection([
-            ('draft','Quotation'),
-            ('waiting_date','Waiting Schedule'),
-            ('manual','Manual in progress'),
-            ('progress','In progress'),
-            ('shipping_except','Shipping Exception'),
-            ('invoice_except','Invoice Exception'),
-            ('done','Done'),
-            ('cancel','Cancel')
+            ('draft', 'Quotation'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('manual', 'Manual in progress'),
+            ('progress', 'In progress'),
+            ('shipping_except', 'Shipping Exception'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+            ('cancel', 'Cancel')
         ], 'Order State', readonly=True),
         'category_id': fields.many2one('product.category', 'Categories', readonly=True),
         'quantity': fields.float('# of Products', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
         'count': fields.integer('# of Lines', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc,price_total desc'
     def init(self, cr):

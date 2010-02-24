@@ -46,12 +46,12 @@ class aged_trial_report(rml_parse.rml_parse):
 
 	def _get_lines(self, form):
 
-		if (form['result_selection'] == 'customer' ):
+		if (form['result_selection'] == 'customer'):
 			self.ACCOUNT_TYPE = ['receivable']
 		elif (form['result_selection'] == 'supplier'):
 			self.ACCOUNT_TYPE = ['payable']
 		else:
-			self.ACCOUNT_TYPE = ['payable','receivable']
+			self.ACCOUNT_TYPE = ['payable', 'receivable']
 
 
 		res = []
@@ -66,7 +66,7 @@ class aged_trial_report(rml_parse.rml_parse):
 					OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
 					AND (line.partner_id=res_partner.id)
 					AND (account_account.company_id = %s)
-				ORDER BY res_partner.name""" , (form['date1'],form['company_id']))
+				ORDER BY res_partner.name""" , (form['date1'], form['company_id']))
 		partners = self.cr.dictfetchall()
 		## mise a 0 du total
 		for i in range(7):
@@ -87,7 +87,7 @@ class aged_trial_report(rml_parse.rml_parse):
 					OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
 					AND (account_account.company_id = %s)
 					AND account_account.active
-					GROUP BY partner_id""" , (self.ACCOUNT_TYPE, partner_ids,form['date1'],form['company_id'],))
+					GROUP BY partner_id""" , (self.ACCOUNT_TYPE, partner_ids, form['date1'], form['company_id'],))
 		t = self.cr.fetchall()
 		for i in t:
 			totals[i[0]] = i[1]
@@ -105,7 +105,7 @@ class aged_trial_report(rml_parse.rml_parse):
 						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
 						AND (account_account.company_id = %s)
 						AND account_account.active
-						GROUP BY partner_id""", (self.ACCOUNT_TYPE, form['date1'], partner_ids,form['date1'], form['company_id'],))
+						GROUP BY partner_id""", (self.ACCOUNT_TYPE, form['date1'], partner_ids, form['date1'], form['company_id'],))
 			t = self.cr.fetchall()
 			for i in t:
 				future_past[i[0]] = i[1]
@@ -139,7 +139,7 @@ class aged_trial_report(rml_parse.rml_parse):
 						OR (reconcile_id IN (SELECT recon.id FROM account_move_reconcile AS recon WHERE recon.create_date > %s )))
 						AND (account_account.company_id = %s)
 						AND account_account.active
-					GROUP BY partner_id""" , (self.ACCOUNT_TYPE, form[str(i)]['start'], form[str(i)]['stop'],partner_ids ,form['date1'] ,form['company_id'],))
+					GROUP BY partner_id""" , (self.ACCOUNT_TYPE, form[str(i)]['start'], form[str(i)]['stop'], partner_ids , form['date1'] , form['company_id'],))
 
 			t = self.cr.fetchall()
 			d = {}
@@ -177,11 +177,11 @@ class aged_trial_report(rml_parse.rml_parse):
 				values[str(i)] = during and during[0] or ""
 
 			total = False
-			if totals.has_key( partner['id'] ):
+			if totals.has_key(partner['id']):
 				total = [ totals[partner['id']] ]
 			values['total'] = total and total[0] or 0.0
 			## Add for total
-			self.total_account[(i+1)] = self.total_account[(i+1)] + (total and total[0] or 0.0)
+			self.total_account[(i + 1)] = self.total_account[(i + 1)] + (total and total[0] or 0.0)
 			values['name'] = partner['name']
 			#t = 0.0
 			#for i in range(5)+['direction']:
@@ -195,20 +195,20 @@ class aged_trial_report(rml_parse.rml_parse):
 		totals = {}
 		for r in res:
 			total += float(r['total'] or 0.0)
-			for i in range(5)+['direction']:
+			for i in range(5) + ['direction']:
 				totals.setdefault(str(i), 0.0)
 				totals[str(i)] += float(r[str(i)] or 0.0)
 		return res
 
-	def _get_total(self,pos):
+	def _get_total(self, pos):
 		period = self.total_account[int(pos)]
 		return period
 
-	def _get_direction(self,pos):
+	def _get_direction(self, pos):
 		period = self.total_account[int(pos)]
 		return period
 
-	def _get_for_period(self,pos):
+	def _get_for_period(self, pos):
 		period = self.total_account[int(pos)]
 		return period
 
@@ -220,7 +220,7 @@ class aged_trial_report(rml_parse.rml_parse):
 
 
 report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',
-		'addons/account/report/aged_trial_balance.rml',parser=aged_trial_report,header=False)
+		'addons/account/report/aged_trial_balance.rml', parser=aged_trial_report, header=False)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

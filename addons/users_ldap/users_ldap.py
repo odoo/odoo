@@ -46,10 +46,10 @@ class CompanyLDAP(osv.osv):
             help="Create the user if not in database"),
     }
     _defaults = {
-        'ldap_server': lambda *a: '127.0.0.1',
-        'ldap_server_port': lambda *a: 389,
-        'sequence': lambda *a: 10,
-        'create_user': lambda *a: True,
+        'ldap_server': lambda * a: '127.0.0.1',
+        'ldap_server_port': lambda * a: 389,
+        'sequence': lambda * a: 10,
+        'create_user': lambda * a: True,
     }
 
 CompanyLDAP()
@@ -65,7 +65,7 @@ res_company()
 class users(osv.osv):
     _inherit = "res.users"
     def login(self, db, login, password):
-        ret = super(users,self).login(db, login, password)
+        ret = super(users, self).login(db, login, password)
         tools.debug(ret)
         if ret:
             return ret
@@ -97,7 +97,7 @@ class users(osv.osv):
                         name = result_data[0][1]['cn'][0]
                         if l.bind_s(dn, password):
                             l.unbind()
-                            cr.execute("SELECT id FROM res_users WHERE login=%s",(tools.ustr(login),))
+                            cr.execute("SELECT id FROM res_users WHERE login=%s", (tools.ustr(login),))
                             res = cr.fetchone()
                             tools.debug(res)
                             if res:
@@ -134,7 +134,7 @@ class users(osv.osv):
 
     def check(self, db, uid, passwd):
         try:
-            return super(users,self).check(db, uid, passwd)
+            return super(users, self).check(db, uid, passwd)
         except: # AccessDenied
             pass
         cr = pooler.get_db(db).cursor()
@@ -165,7 +165,7 @@ class users(osv.osv):
                     pass
         cr.close()
         raise security.ExceptionNoTb('AccessDenied')
-        
+
 users()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

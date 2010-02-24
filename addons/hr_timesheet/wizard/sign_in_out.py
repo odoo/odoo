@@ -25,7 +25,7 @@ import time
 import pooler
 from tools.translate import _
 
-si_form ='''<?xml version="1.0"?> 
+si_form = '''<?xml version="1.0"?> 
 <form string="Sign in / Sign out">
     <separator string="Sign in" colspan="4"/>
     <field name="name" readonly="True" />
@@ -78,7 +78,7 @@ def _get_empid(self, cr, uid, data, context):
     raise wizard.except_wizard(_('UserError'), _('No employee defined for your user !'))
 
 def _get_empid2(self, cr, uid, data, context):
-    res = _get_empid(self,cr, uid, data, context)
+    res = _get_empid(self, cr, uid, data, context)
     cr.execute('select name,action from hr_attendance where employee_id=%s order by name desc limit 1', (res['emp_id'],))
     res['server_date'] = time.strftime('%Y-%m-%d %H:%M:%S')
     res['date_start'] = cr.fetchone()[0]
@@ -91,7 +91,7 @@ def _sign_in_result(self, cr, uid, data, context):
     emp_id = data['form']['emp_id']
     from osv.osv import except_osv
     try:
-        success = emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data['form']['date'] or False)
+        success = emp_obj.attendance_action_change(cr, uid, [emp_id], type='sign_in' , dt=data['form']['date'] or False)
     except except_osv, e:
         raise wizard.except_wizard(e.name, e.value)
     return {}
@@ -103,7 +103,7 @@ def _write(self, cr, uid, data, emp_id, context):
     minimum = data['form']['analytic_amount']
     if minimum:
         hour = round(round((hour + minimum / 2) / minimum) * minimum, 2)
-    res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id'])
+    res = timesheet_obj.default_get(cr, uid, ['product_id', 'product_uom_id'])
     if not res['product_uom_id']:
         raise wizard.except_wizard(_('UserError'), _('No cost unit defined for this employee !'))
     up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour, res['product_uom_id'])['value']
@@ -118,14 +118,14 @@ def _write(self, cr, uid, data, emp_id, context):
 def _sign_out_result_end(self, cr, uid, data, context):
     emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
     emp_id = data['form']['emp_id']
-    emp_obj.attendance_action_change(cr, uid, [emp_id], type='sign_out',dt=data['form']['date'])
+    emp_obj.attendance_action_change(cr, uid, [emp_id], type='sign_out', dt=data['form']['date'])
     _write(self, cr, uid, data, emp_id, context)
     return {}
 
 def _sign_out_result(self, cr, uid, data, context):
     emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
     emp_id = data['form']['emp_id']
-    emp_obj.attendance_action_change(cr, uid, [emp_id], type='action',dt=data['form']['date'])
+    emp_obj.attendance_action_change(cr, uid, [emp_id], type='action', dt=data['form']['date'])
     _write(self, cr, uid, data, emp_id, context)
     return {}
 
@@ -145,7 +145,7 @@ class wiz_si_so(wizard.interface):
             },
             'sign_out' : { # this means sign_in...
                 'actions' : [_get_empid],
-                'result' : {'type':'form', 'arch':si_form, 'fields' : si_fields, 'state':[('end', 'Cancel'),('si_result', 'Start Working') ] }
+                'result' : {'type':'form', 'arch':si_form, 'fields' : si_fields, 'state':[('end', 'Cancel'), ('si_result', 'Start Working') ] }
             },
             'si_result' : {
                 'actions' : [_sign_in_result],
@@ -153,7 +153,7 @@ class wiz_si_so(wizard.interface):
             },
             'sign_in' : { # this means sign_out...
                 'actions' : [_get_empid2],
-                'result' : {'type':'form', 'arch':so_form, 'fields':so_fields, 'state':[('end', 'Cancel'),('so_result', 'Change Work'),('so_result_end', 'Stop Working') ] }
+                'result' : {'type':'form', 'arch':so_form, 'fields':so_fields, 'state':[('end', 'Cancel'), ('so_result', 'Change Work'), ('so_result_end', 'Stop Working') ] }
             },
             'so_result' : {
                 'actions' : [_sign_out_result],

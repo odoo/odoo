@@ -30,21 +30,21 @@ import pooler
 from tools import config
 
 class purchase_order_line(osv.osv):
-    _name='purchase.order.line'
-    _inherit='purchase.order.line'
+    _name = 'purchase.order.line'
+    _inherit = 'purchase.order.line'
     _columns = {
-        'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
+        'analytics_id':fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
 
 purchase_order_line()
 
 class purchase_order(osv.osv):
-    _name='purchase.order'
-    _inherit='purchase.order'
+    _name = 'purchase.order'
+    _inherit = 'purchase.order'
 
     def inv_line_create(self, cr, uid, a, ol):
-        res=super(purchase_order,self).inv_line_create(cr, uid, a, ol)
-        res[2]['analytics_id']=ol.analytics_id.id
+        res = super(purchase_order, self).inv_line_create(cr, uid, a, ol)
+        res[2]['analytics_id'] = ol.analytics_id.id
         return res
 
 purchase_order()

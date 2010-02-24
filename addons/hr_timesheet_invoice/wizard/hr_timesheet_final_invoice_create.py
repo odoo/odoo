@@ -37,7 +37,7 @@ class final_invoice_create(wizard.interface):
 
     def _do_create(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data') 
+        mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
         analytic_account_obj = pool.get('account.analytic.account')
@@ -48,7 +48,7 @@ class final_invoice_create(wizard.interface):
         invoices = []
         for account in analytic_account_obj.browse(cr, uid, account_ids, context):
             partner = account.partner_id
-            amount_total=0.0
+            amount_total = 0.0
             if (not partner) or not (account.pricelist_id):
                 raise wizard.except_wizard(_('Analytic account incomplete'),
                         _('Please fill in the partner and pricelist field '
@@ -56,7 +56,7 @@ class final_invoice_create(wizard.interface):
 
             date_due = False
             if partner.property_payment_term:
-                pterm_list= account_payment_term_obj.compute(cr, uid,
+                pterm_list = account_payment_term_obj.compute(cr, uid,
                         partner.property_payment_term.id, value=1,
                         date_ref=time.strftime('%Y-%m-%d'))
                 if pterm_list:
@@ -65,7 +65,7 @@ class final_invoice_create(wizard.interface):
                     date_due = pterm_list[-1]
 
             curr_invoice = {
-                'name': time.strftime('%D')+' - '+account.name,
+                'name': time.strftime('%D') + ' - ' + account.name,
                 'partner_id': account.partner_id.id,
                 'address_contact_id': pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['contact'])['contact'],
                 'address_invoice_id': pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['invoice'])['invoice'],
@@ -78,7 +78,7 @@ class final_invoice_create(wizard.interface):
             last_invoice = pool.get('account.invoice').create(cr, uid, curr_invoice)
             invoices.append(last_invoice)
 
-            context2=context.copy()
+            context2 = context.copy()
             context2['lang'] = partner.lang
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
                     "FROM account_analytic_line as line " \
@@ -115,12 +115,12 @@ class final_invoice_create(wizard.interface):
 
                 tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 curr_line = {
-                    'price_unit': -amount,
+                    'price_unit':-amount,
                     'quantity': 1.0,
                     'discount': 0.0,
-                    'invoice_line_tax_id': [(6,0,tax)],
+                    'invoice_line_tax_id': [(6, 0, tax)],
                     'invoice_id': last_invoice,
-                    'name': ref or '' +(product and ' - '+product.name or ''),
+                    'name': ref or '' + (product and ' - ' + product.name or ''),
                     'product_id': product_id,
                     'uos_id': product_uom_id,
                     'account_id': account_id,
@@ -139,7 +139,7 @@ class final_invoice_create(wizard.interface):
                 'price_unit': account.amount_max - amount_total,
                 'quantity': 1.0,
                 'discount': 0.0,
-                'invoice_line_tax_id': [(6,0,tax)],
+                'invoice_line_tax_id': [(6, 0, tax)],
                 'invoice_id': last_invoice,
                 'name': product.name,
                 'product_id': product.id,
@@ -149,11 +149,11 @@ class final_invoice_create(wizard.interface):
             }
             pool.get('account.invoice.line').create(cr, uid, curr_line)
             if account.amount_max < amount_total:
-                pool.get('account.invoice').write(cr, uid, [last_invoice], {'type': 'out_refund',})
+                pool.get('account.invoice').write(cr, uid, [last_invoice], {'type': 'out_refund', })
             cr.execute('update account_analytic_line set invoice_id=%s where invoice_id is null and account_id=%s', (last_invoice, account.id))
 
         return {
-            'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
+            'domain': "[('id','in', [" + ','.join(map(str, invoices)) + "])]",
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',
@@ -161,7 +161,7 @@ class final_invoice_create(wizard.interface):
             'view_id': False,
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id'] 
+            'search_view_id': res['res_id']
         }
 
 
@@ -187,7 +187,7 @@ class final_invoice_create(wizard.interface):
     states = {
         'init' : {
             'actions' : [_get_defaults],
-            'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end','Cancel'),('create','Create invoices')]},
+            'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end', 'Cancel'), ('create', 'Create invoices')]},
         },
         'create' : {
             'actions' : [],

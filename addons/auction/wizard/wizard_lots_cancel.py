@@ -64,20 +64,20 @@ fields_ask = {
 #   return {}
 #
 
-def _cancel(self,cr,uid,data,context):
+def _cancel(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    lot = pool.get('auction.lots').browse(cr,uid,data['id'],context)
+    lot = pool.get('auction.lots').browse(cr, uid, data['id'], context)
     if lot.ach_inv_id:
-        p=pool.get('account.invoice').refund(['lot.ach_inv_id.id'],context)
+        p = pool.get('account.invoice').refund(['lot.ach_inv_id.id'], context)
     if lot.vnd_inv_id:
-        p=pool.get('account.invoice').refund(['lot.vnd_inv_id.id'],context)
+        p = pool.get('account.invoice').refund(['lot.vnd_inv_id.id'], context)
     return {}
 
 class wiz_auc_lots_cancel(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':paid_form, 'fields': fields_ask, 'state':[('make_cancel','Cancel Payment'), ('end','Cancel')]}
+            'result': {'type': 'form', 'arch':paid_form, 'fields': fields_ask, 'state':[('make_cancel', 'Cancel Payment'), ('end', 'Cancel')]}
         },
         'make_cancel': {
             'actions': [_cancel],

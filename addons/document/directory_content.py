@@ -36,10 +36,10 @@ class document_directory_content_type(osv.osv):
         'name': fields.char('Content Type', size=64, required=True),
         'code': fields.char('Extension', size=4),
         'active': fields.boolean('Active'),
-        'mimetype': fields.char('Mime Type',size=32)
+        'mimetype': fields.char('Mime Type', size=32)
     }
     _defaults = {
-        'active': lambda *args: 1
+        'active': lambda * args: 1
     }
 document_directory_content_type()
 
@@ -62,21 +62,21 @@ class document_directory_content(osv.osv):
         'directory_id': fields.many2one('document.directory', 'Directory'),
     }
     _defaults = {
-        'extension': lambda *args: '.pdf',
-        'sequence': lambda *args: 1,
-        'include_name': lambda *args: 1,
+        'extension': lambda * args: '.pdf',
+        'sequence': lambda * args: 1,
+        'include_name': lambda * args: 1,
     }
-    
+
     def _file_get(self, cr, node, nodename, content, context=None):
         """ return the nodes of a <node> parent having a <content> content
             The return value MUST be false or a list of node_class objects.
         """
-    
+
         # TODO: respect the context!
         model = node.res_model
         if content.include_name and not model:
             return False
-        
+
         res2 = []
         tname = ''
         if content.include_name:
@@ -87,13 +87,13 @@ class document_directory_content(osv.osv):
         else:
             tname = (content.prefix or '') + (content.suffix or '') + (content.extension or '')
         if tname.find('/'):
-            tname=tname.replace('/', '_')
+            tname = tname.replace('/', '_')
         if not nodename:
-            n = nodes.node_content(tname, node, node.context,content)
-            res2.append( n)
+            n = nodes.node_content(tname, node, node.context, content)
+            res2.append(n)
         else:
             if nodename == tname:
-                n = nodes.node_content(tname, node, node.context,content)
+                n = nodes.node_content(tname, node, node.context, content)
                 n.fill_fields(cr)
                 res2.append(n)
         return res2
@@ -102,12 +102,12 @@ class document_directory_content(osv.osv):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         return True
-    
+
     def process_read(self, cr, uid, node, context=None):
         if node.extension != '.pdf':
             raise Exception("Invalid content: %s" % node.extension)
         report = self.pool.get('ir.actions.report.xml').browse(cr, uid, node.report_id)
-        srv = netsvc.Service._services['report.'+report.report_name]
-        pdf,pdftype = srv.create(cr, uid, [node.context.context['res_id']], {}, {})        
+        srv = netsvc.Service._services['report.' + report.report_name]
+        pdf, pdftype = srv.create(cr, uid, [node.context.context['res_id']], {}, {})
         return pdf
 document_directory_content()

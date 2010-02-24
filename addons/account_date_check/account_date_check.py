@@ -31,19 +31,19 @@ from tools import config
 from tools.translate import _
 
 class account_journal(osv.osv):
-    _inherit='account.journal'
-    _name='account.journal'
+    _inherit = 'account.journal'
+    _name = 'account.journal'
     _columns = {
         'allow_date':fields.boolean('Allows date not in the period'),
     }
     _defaults = {
-        'allow_date': lambda *a: 1,
+        'allow_date': lambda * a: 1,
         }
 account_journal()
 
 class account_move_line(osv.osv):
-    _inherit='account.move.line'
-    _name='account.move.line'
+    _inherit = 'account.move.line'
+    _name = 'account.move.line'
 
     def check_date(self, cr, uid, vals, context=None, check=True):
         if not context:
@@ -60,20 +60,20 @@ class account_move_line(osv.osv):
             else:
                 journal_id = context['journal_id']
                 period_id = context['period_id']
-            journal=self.pool.get('account.journal').browse(cr,uid,[journal_id])[0]
+            journal = self.pool.get('account.journal').browse(cr, uid, [journal_id])[0]
             if not journal.allow_date:
-                period=self.pool.get('account.period').browse(cr,uid,[period_id])[0]
-                if not time.strptime(vals['date'],'%Y-%m-%d')>=time.strptime(period.date_start,'%Y-%m-%d') and time.strptime(vals['date'],'%Y-%m-%d')<=time.strptime(period.date_stop,'%Y-%m-%d'):
-                    raise osv.except_osv(_('Error'),_('The date of your Ledger Posting is not in the defined period !'))
+                period = self.pool.get('account.period').browse(cr, uid, [period_id])[0]
+                if not time.strptime(vals['date'], '%Y-%m-%d') >= time.strptime(period.date_start, '%Y-%m-%d') and time.strptime(vals['date'], '%Y-%m-%d') <= time.strptime(period.date_stop, '%Y-%m-%d'):
+                    raise osv.except_osv(_('Error'), _('The date of your Ledger Posting is not in the defined period !'))
         else:
             return True
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
-        flag=self.check_date(cr, uid, vals, context, check)
+        flag = self.check_date(cr, uid, vals, context, check)
         result = super(account_move_line, self).write(cr, uid, ids, vals, context, check, update_check)
         return result
     def create(self, cr, uid, vals, context=None, check=True):
-        flag=self.check_date(cr, uid, vals, context, check)
+        flag = self.check_date(cr, uid, vals, context, check)
         result = super(account_move_line, self).create(cr, uid, vals, context, check)
         return result
 account_move_line()

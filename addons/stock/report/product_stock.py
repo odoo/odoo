@@ -34,7 +34,7 @@ class external_pdf(render):
     def __init__(self, pdf):
         render.__init__(self)
         self.pdf = pdf
-        self.output_type='pdf'
+        self.output_type = 'pdf'
 
     def _render(self):
         return self.pdf
@@ -49,7 +49,7 @@ class report_stock(report_int):
             warehouse_id = pooler.get_pool(cr.dbname).get('stock.warehouse').search(cr, uid, [])[0]
             location_id = pooler.get_pool(cr.dbname).get('stock.warehouse').browse(cr, uid, warehouse_id).lot_stock_id.id
 
-        loc_ids = pooler.get_pool(cr.dbname).get('stock.location').search(cr, uid, [('location_id','child_of',[location_id])])
+        loc_ids = pooler.get_pool(cr.dbname).get('stock.location').search(cr, uid, [('location_id', 'child_of', [location_id])])
 
         now = time.strftime('%Y-%m-%d')
         dt_from = now
@@ -62,7 +62,7 @@ class report_stock(report_int):
         prods = pooler.get_pool(cr.dbname).get('stock.location')._product_all_get(cr, uid, location_id, product_ids)
 
         for p in prods:
-            products[p] = [(now,prods[p])]
+            products[p] = [(now, prods[p])]
             prods[p] = 0
 
         if not loc_ids or not product_ids:
@@ -73,29 +73,29 @@ class report_stock(report_int):
                    "where state in %s"
                    "and location_id=ANY(%s)"
                    "and product_id=ANY(%s)"
-                   "group by date_planned,product_id",(('confirmed','assigned','waiting'),loc_ids ,product_ids,))
+                   "group by date_planned,product_id", (('confirmed', 'assigned', 'waiting'), loc_ids , product_ids,))
         for (qty, dt, prod_id) in cr.fetchall():
-            if dt<=dt_from:
-                dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
+            if dt <= dt_from:
+                dt = (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
             else:
                 dt = dt[:10]
             products.setdefault(prod_id, [])
-            products[prod_id].append((dt,-qty))
+            products[prod_id].append((dt, -qty))
 
         cr.execute("select sum(r.product_qty * u.factor), r.date_planned, r.product_id "
                    "from stock_move r left join product_uom u on (r.product_uom=u.id) "
                    "where state in %s"
                    "and location_dest_id=ANY(%s)"
                    "and product_id=ANY(%s)"
-                   "group by date_planned,product_id",(('confirmed','assigned','waiting'),loc_ids ,product_ids,))
+                   "group by date_planned,product_id", (('confirmed', 'assigned', 'waiting'), loc_ids , product_ids,))
 
         for (qty, dt, prod_id) in cr.fetchall():
-            if dt<=dt_from:
-                dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
+            if dt <= dt_from:
+                dt = (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
             else:
                 dt = dt[:10]
             products.setdefault(prod_id, [])
-            products[prod_id].append((dt,qty))
+            products[prod_id].append((dt, qty))
 
         dt = dt_from
         qty = 0

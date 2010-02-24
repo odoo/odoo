@@ -33,7 +33,7 @@
     "category" : "Generic Modules/Inventory Control",
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["product_view.xml",],
+    "update_xml" : ["product_view.xml", ],
     "active": False,
     "installable": True
 }

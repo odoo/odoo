@@ -49,7 +49,7 @@ class report_custom(report_rml):
         def process(location_id, level):
             xml = '<row>'
             location_name = pooler.get_pool(cr.dbname).get('stock.location').read(cr, uid, [location_id], ['name'])
-            xml += "<col para='yes' tree='yes' space='" + str(3*level) + "mm'>"
+            xml += "<col para='yes' tree='yes' space='" + str(3 * level) + "mm'>"
             xml += location_name[0]['name'] + '</col>'
 
             prod_info = pooler.get_pool(cr.dbname).get('stock.location')._product_get(cr, uid, location_id)
@@ -57,24 +57,24 @@ class report_custom(report_rml):
             for prod_id in prod_info.keys():
                 if prod_info[prod_id] != 0.0:
                     prod_name = pooler.get_pool(cr.dbname).get('product.product').read(cr, uid, [prod_id], ['name'])
-                    xml +=  prod_name[0]['name'] + '\n'
+                    xml += prod_name[0]['name'] + '\n'
             xml += '</col>'
 
             xml += "<col>"
             for prod_id in prod_info.keys():
                 if prod_info[prod_id] != 0.0:
-                    xml +=  str(prod_info[prod_id]) + '\n'
+                    xml += str(prod_info[prod_id]) + '\n'
             xml += '</col></row>'
 
             location_child = pooler.get_pool(cr.dbname).get('stock.location').read(cr, uid, [location_id], ['child_ids'])
             for child_id in location_child[0]['child_ids']:
-                xml += process(child_id, level+1)
+                xml += process(child_id, level + 1)
             return xml
 
         for location_id in ids:
             xml = '<lines>' + process(location_id, 0) + '</lines>'
 
-        xml = '<?xml version="1.0" ?>' '<report>'+ config + header + xml + '</report>'
+        xml = '<?xml version="1.0" ?>' '<report>' + config + header + xml + '</report>'
 
         return self.post_process_xml_data(cr, uid, xml, context)
 

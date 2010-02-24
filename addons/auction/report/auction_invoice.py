@@ -26,14 +26,14 @@ class auction_invoice(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
 
-    def create(self,cr, uid, ids, datas, context):
+    def create(self, cr, uid, ids, datas, context):
         service = netsvc.LocalService("object_proxy")
-        lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', ids, ['ach_inv_id'])
+        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', ids, ['ach_inv_id'])
 
         invoices = {}
         for l in lots:
             if l['ach_inv_id']:
-                invoices[l['ach_inv_id'][0]]=True
+                invoices[l['ach_inv_id'][0]] = True
         new_ids = invoices.keys()
         if not len(new_ids):
             raise 'UserError', 'Objects not Invoiced !'
@@ -41,7 +41,7 @@ class auction_invoice(report_int):
         datas['ids'] = new_ids
 
         self._obj_invoice = netsvc.LocalService('report.account.invoice')
-        return self._obj_invoice.create(cr,uid, new_ids, datas, context)
+        return self._obj_invoice.create(cr, uid, new_ids, datas, context)
 
     def result(self):
         return self._obj_invoice.result()

@@ -46,9 +46,9 @@ _fim_patterns = {
 }
 
 _postnet_patterns = {
-    '1' : "...||",    '2' : "..|.|",    '3' : "..||.",    '4' : ".|..|",
-    '5' : ".|.|.",    '6' : ".||..",    '7' : "|...|",    '8' : "|..|.",
-    '9' : "|.|..",    '0' : "||...",    'S' : "|",        
+    '1' : "...||", '2' : "..|.|", '3' : "..||.", '4' : ".|..|",
+    '5' : ".|.|.", '6' : ".||..", '7' : "|...|", '8' : "|..|.",
+    '9' : "|.|..", '0' : "||...", 'S' : "|",
 }
 
 
@@ -95,13 +95,13 @@ class FIM(Barcode):
     USPS Publication 25, A Guide to Business Mail Preparation
     http://new.usps.com/cpim/ftp/pubs/pub25.pdf
     """
-    
+
     def __init__(self, value='', **args):
-        self.barwidth = inch * (1.0/32.0)
-        self.barspace = inch * (1.0/16.0)
-        self.height = inch * (5.0/8.0)
+        self.barwidth = inch * (1.0 / 32.0)
+        self.barspace = inch * (1.0 / 16.0)
+        self.height = inch * (5.0 / 8.0)
         self.rquiet = inch * (0.25)
-        self.lquiet = inch * (15.0/32.0)
+        self.lquiet = inch * (15.0 / 32.0)
         self.quiet = 0
 
         for (k, v) in args.items():
@@ -160,13 +160,13 @@ class POSTNET(Barcode):
     USPS Publication 25, A Guide to Business Mail Preparation
     http://new.usps.com/cpim/ftp/pubs/pub25.pdf
     """
-    
+
     def __init__(self, value='', **args):
         self.sbarheight = inch * 0.050
         self.fbarheight = inch * 0.125
         self.barwide = inch * 0.018
         self.spacewide = inch * 0.0275
-       
+
         for (k, v) in args.items():
             setattr(self, k, v)
 
@@ -206,7 +206,7 @@ class POSTNET(Barcode):
         check = (10 - (check % 10)) % 10
         self.encoded = self.encoded + `check` + 'S'
         return self.encoded
-        
+
     def decompose(self):
         self.decomposed = ''
         for c in self.encoded:
@@ -214,7 +214,7 @@ class POSTNET(Barcode):
         return self.decomposed
 
     def computeSize(self):
-        self.width = len(self.decomposed) * self.barwide 
+        self.width = len(self.decomposed) * self.barwide
         self.width = self.width + (len(self.decomposed) - 1) * self.spacewide
         self.height = self.fbarheight
         self.xo = 0.0
@@ -222,7 +222,7 @@ class POSTNET(Barcode):
     def draw(self):
         sdown = self.fbarheight - self.sbarheight
         left = self.xo
-        
+
         for c in self.decomposed:
             if c == '.':
                 h = self.sbarheight

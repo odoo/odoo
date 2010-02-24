@@ -82,7 +82,7 @@ sms_send_form = '''<?xml version="1.0"?>
     <field name="password"/>
     <newline/>
     <field name="text" colspan="3"/>
-</form>''' % ('SMS - Gateway: clickatell','Bulk SMS send')
+</form>''' % ('SMS - Gateway: clickatell', 'Bulk SMS send')
 
 sms_send_fields = {
     'app_id': {'string':'API ID', 'type':'char', 'required':True},
@@ -93,8 +93,8 @@ sms_send_fields = {
 
 def _sms_send(self, cr, uid, data, context):
     service = netsvc.LocalService("object_proxy")
-    lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', data['ids'], ['obj_num','obj_price','ach_uid'])
-    res = service.execute(cr.dbname,uid, 'res.partner', 'read', [l['ach_uid'] for l in lots if l['ach_uid']], ['gsm'])
+    lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', data['ids'], ['obj_num', 'obj_price', 'ach_uid'])
+    res = service.execute(cr.dbname, uid, 'res.partner', 'read', [l['ach_uid'] for l in lots if l['ach_uid']], ['gsm'])
     #res = service.execute(cr.dbname, uid, 'res.partner', 'read', data['ids'], ['gsm'])
 #   service = netsvc.LocalService("object_proxy")
 #   pool=pooler.get_pool(cr.dbname)
@@ -137,7 +137,7 @@ class lots_sms(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':sms_send_form, 'fields': sms_send_fields, 'state':[('send','Send SMS'), ('end','Cancel')]}
+            'result': {'type': 'form', 'arch':sms_send_form, 'fields': sms_send_fields, 'state':[('send', 'Send SMS'), ('end', 'Cancel')]}
         },
         'send': {
             'actions': [_sms_send],

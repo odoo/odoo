@@ -36,28 +36,28 @@ from common import Barcode
 import string
 
 _patterns = {
-    '0':    ("bsbSBsBsb", 0),       '1': ("BsbSbsbsB", 1),
-    '2':    ("bsBSbsbsB", 2),       '3': ("BsBSbsbsb", 3),
-    '4':    ("bsbSBsbsB", 4),       '5': ("BsbSBsbsb", 5),
-    '6':    ("bsBSBsbsb", 6),       '7': ("bsbSbsBsB", 7),
-    '8':    ("BsbSbsBsb", 8),       '9': ("bsBSbsBsb", 9),
-    'A':    ("BsbsbSbsB", 10),      'B': ("bsBsbSbsB", 11),
-    'C':    ("BsBsbSbsb", 12),      'D': ("bsbsBSbsB", 13),
-    'E':    ("BsbsBSbsb", 14),      'F': ("bsBsBSbsb", 15),
-    'G':    ("bsbsbSBsB", 16),      'H': ("BsbsbSBsb", 17),
-    'I':    ("bsBsbSBsb", 18),      'J': ("bsbsBSBsb", 19),
-    'K':    ("BsbsbsbSB", 20),      'L': ("bsBsbsbSB", 21),
-    'M':    ("BsBsbsbSb", 22),      'N': ("bsbsBsbSB", 23),
-    'O':    ("BsbsBsbSb", 24),      'P': ("bsBsBsbSb", 25),
-    'Q':    ("bsbsbsBSB", 26),      'R': ("BsbsbsBSb", 27),
-    'S':    ("bsBsbsBSb", 28),      'T': ("bsbsBsBSb", 29),
-    'U':    ("BSbsbsbsB", 30),      'V': ("bSBsbsbsB", 31),
-    'W':    ("BSBsbsbsb", 32),      'X': ("bSbsBsbsB", 33),
-    'Y':    ("BSbsBsbsb", 34),      'Z': ("bSBsBsbsb", 35),
-    '-':    ("bSbsbsBsB", 36),      '.': ("BSbsbsBsb", 37),
-    ' ':    ("bSBsbsBsb", 38),      '*': ("bSbsBsBsb", 39),
-    '$':    ("bSbSbSbsb", 40),      '/': ("bSbSbsbSb", 41),
-    '+':    ("bSbsbSbSb", 42),      '%': ("bsbSbSbSb", 43)
+    '0':    ("bsbSBsBsb", 0), '1': ("BsbSbsbsB", 1),
+    '2':    ("bsBSbsbsB", 2), '3': ("BsBSbsbsb", 3),
+    '4':    ("bsbSBsbsB", 4), '5': ("BsbSBsbsb", 5),
+    '6':    ("bsBSBsbsb", 6), '7': ("bsbSbsBsB", 7),
+    '8':    ("BsbSbsBsb", 8), '9': ("bsBSbsBsb", 9),
+    'A':    ("BsbsbSbsB", 10), 'B': ("bsBsbSbsB", 11),
+    'C':    ("BsBsbSbsb", 12), 'D': ("bsbsBSbsB", 13),
+    'E':    ("BsbsBSbsb", 14), 'F': ("bsBsBSbsb", 15),
+    'G':    ("bsbsbSBsB", 16), 'H': ("BsbsbSBsb", 17),
+    'I':    ("bsBsbSBsb", 18), 'J': ("bsbsBSBsb", 19),
+    'K':    ("BsbsbsbSB", 20), 'L': ("bsBsbsbSB", 21),
+    'M':    ("BsBsbsbSb", 22), 'N': ("bsbsBsbSB", 23),
+    'O':    ("BsbsBsbSb", 24), 'P': ("bsBsBsbSb", 25),
+    'Q':    ("bsbsbsBSB", 26), 'R': ("BsbsbsBSb", 27),
+    'S':    ("bsBsbsBSb", 28), 'T': ("bsbsBsBSb", 29),
+    'U':    ("BSbsbsbsB", 30), 'V': ("bSBsbsbsB", 31),
+    'W':    ("BSBsbsbsb", 32), 'X': ("bSbsBsbsB", 33),
+    'Y':    ("BSbsBsbsb", 34), 'Z': ("bSBsBsbsb", 35),
+    '-':    ("bSbsbsBsB", 36), '.': ("BSbsbsBsb", 37),
+    ' ':    ("bSBsbsBsb", 38), '*': ("bSbsBsBsb", 39),
+    '$':    ("bSbSbSbsb", 40), '/': ("bSbSbsbSb", 41),
+    '+':    ("bSbsbSbSb", 42), '%': ("bsbSbSbSb", 43)
 }
 
 _valchars = [
@@ -68,28 +68,28 @@ _valchars = [
 ]
 
 _extended = {
-    '\0':   "%U",    '\01':  "$A",    '\02':  "$B",    '\03':  "$C",
-    '\04':  "$D",    '\05':  "$E",    '\06':  "$F",    '\07':  "$G",
-    '\010': "$H",    '\011': "$I",    '\012': "$J",    '\013': "$K",
-    '\014': "$L",    '\015': "$M",    '\016': "$N",    '\017': "$O",
-    '\020': "$P",    '\021': "$Q",    '\022': "$R",    '\023': "$S",
-    '\024': "$T",    '\025': "$U",    '\026': "$V",    '\027': "$W",
-    '\030': "$X",    '\031': "$Y",    '\032': "$Z",    '\033': "%A",
-    '\034': "%B",    '\035': "%C",    '\036': "%D",    '\037': "%E",
-    '!':    "/A",    '"':    "/B",    '#':    "/C",    '$':    "/D",
-    '%':    "/E",    '&':    "/F",    '\'':   "/G",    '(':    "/H",
-    ')':    "/I",    '*':    "/J",    '+':    "/K",    ',':    "/L",
-    '/':    "/O",    ':':    "/Z",    ';':    "%F",    '<':    "%G",
-    '=':    "%H",    '>':    "%I",    '?':    "%J",    '@':    "%V",
-    '[':    "%K",    '\\':   "%L",    ']':    "%M",    '^':    "%N",
-    '_':    "%O",    '`':    "%W",    'a':    "+A",    'b':    "+B",
-    'c':    "+C",    'd':    "+D",    'e':    "+E",    'f':    "+F",
-    'g':    "+G",    'h':    "+H",    'i':    "+I",    'j':    "+J",
-    'k':    "+K",    'l':    "+L",    'm':    "+M",    'n':    "+N",
-    'o':    "+O",    'p':    "+P",    'q':    "+Q",    'r':    "+R",
-    's':    "+S",    't':    "+T",    'u':    "+U",    'v':    "+V",
-    'w':    "+W",    'x':    "+X",    'y':    "+Y",    'z':    "+Z",
-    '{':    "%P",    '|':    "%Q",    '}':    "%R",    '~':    "%S",
+    '\0':   "%U", '\01':  "$A", '\02':  "$B", '\03':  "$C",
+    '\04':  "$D", '\05':  "$E", '\06':  "$F", '\07':  "$G",
+    '\010': "$H", '\011': "$I", '\012': "$J", '\013': "$K",
+    '\014': "$L", '\015': "$M", '\016': "$N", '\017': "$O",
+    '\020': "$P", '\021': "$Q", '\022': "$R", '\023': "$S",
+    '\024': "$T", '\025': "$U", '\026': "$V", '\027': "$W",
+    '\030': "$X", '\031': "$Y", '\032': "$Z", '\033': "%A",
+    '\034': "%B", '\035': "%C", '\036': "%D", '\037': "%E",
+    '!':    "/A", '"':    "/B", '#':    "/C", '$':    "/D",
+    '%':    "/E", '&':    "/F", '\'':   "/G", '(':    "/H",
+    ')':    "/I", '*':    "/J", '+':    "/K", ',':    "/L",
+    '/':    "/O", ':':    "/Z", ';':    "%F", '<':    "%G",
+    '=':    "%H", '>':    "%I", '?':    "%J", '@':    "%V",
+    '[':    "%K", '\\':   "%L", ']':    "%M", '^':    "%N",
+    '_':    "%O", '`':    "%W", 'a':    "+A", 'b':    "+B",
+    'c':    "+C", 'd':    "+D", 'e':    "+E", 'f':    "+F",
+    'g':    "+G", 'h':    "+H", 'i':    "+I", 'j':    "+J",
+    'k':    "+K", 'l':    "+L", 'm':    "+M", 'n':    "+N",
+    'o':    "+O", 'p':    "+P", 'q':    "+Q", 'r':    "+R",
+    's':    "+S", 't':    "+T", 'u':    "+U", 'v':    "+V",
+    'w':    "+W", 'x':    "+X", 'y':    "+Y", 'z':    "+Z",
+    '{':    "%P", '|':    "%Q", '}':    "%R", '~':    "%S",
     '\177': "%T"
 }
 
@@ -112,9 +112,9 @@ def _encode39(str, cksum):
         newval = newval + _valchars[v]
     return newval + '*'
 
-        
+
 class _Code39Base(Barcode):
-    def __init__(self, value = "", **args):
+    def __init__(self, value="", **args):
         self.xdim = inch * 0.0075
         self.lquiet = None
         self.rquiet = None
@@ -127,14 +127,14 @@ class _Code39Base(Barcode):
 
         for (k, v) in args.items():
             setattr(self, k, v)
-            
+
         if self.quiet:
             if self.lquiet is None:
                 self.lquiet = max(inch * 0.25, self.xdim * 10.0)
                 self.rquiet = max(inch * 0.25, self.xdim * 10.0)
         else:
             self.lquiet = self.rquiet = 0.0
-                                                         
+
         Barcode.__init__(self, value)
 
     def decompose(self):

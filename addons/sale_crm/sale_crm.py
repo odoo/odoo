@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv,fields
+from osv import osv, fields
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -29,7 +29,7 @@ class sale_order(osv.osv):
     }
 
     def _get_section(self, cr, uid, context):
-       return context.get('context_section_id',False)
+       return context.get('context_section_id', False)
 
     _defaults = {
           'section_id': _get_section

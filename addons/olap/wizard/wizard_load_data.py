@@ -53,14 +53,14 @@ form1 = '''<?xml version="1.0"?>
 </form>'''
 
 field1 = {
-    'fact_table': {'string':'Fact Name', 'type':'char','size':'64', 'required':True, 'readonly':True},
-    'db_name': {'string':'Database Name', 'type':'char','size':'64', 'required':True, 'readonly':True},
+    'fact_table': {'string':'Fact Name', 'type':'char', 'size':'64', 'required':True, 'readonly':True},
+    'db_name': {'string':'Database Name', 'type':'char', 'size':'64', 'required':True, 'readonly':True},
 }
 
-def olap_db_connect(self,cr,uid,part,context={}):
+def olap_db_connect(self, cr, uid, part, context={}):
     pool = pooler.get_pool(cr.dbname)
-    lines=pool.get('olap.schema').browse(cr, uid, part['id'],context)
-    id_db=lines.database_id.id
+    lines = pool.get('olap.schema').browse(cr, uid, part['id'], context)
+    id_db = lines.database_id.id
     type = lines.database_id.type
     db_name = lines.database_id.db_name
     tobj = pool.get('olap.database.tables')
@@ -75,51 +75,51 @@ def olap_db_connect(self,cr,uid,part,context={}):
         cr_db = tdb.cursor()
         cr.execute('select table_db_name,id from olap_database_tables where fact_database_id=%d', (id_db,))
         tables = dict(cr.fetchall())
-        tables_id = map(lambda x: str(tables[x]),tables)
-        cols={}
+        tables_id = map(lambda x: str(tables[x]), tables)
+        cols = {}
         if tables_id:
-            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) +')')
+            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) + ')')
         else:
             cr.execute('select column_db_name,id,table_id from olap_database_columns')
-      
+
         for data in cr.fetchall():
-            cols[str(data[1])]=(data[0],int(data[2]))
-            
-        print 'Creating / Updating Tables...' 
+            cols[str(data[1])] = (data[0], int(data[2]))
+
+        print 'Creating / Updating Tables...'
         cr_db.execute("select table_name, table_catalog from INFORMATION_SCHEMA.tables as a where a.table_schema = 'public'")
         for table in cr_db.fetchall():
             val = {
                 'fact_database_id':id_db,
                 'table_db_name':table[0]
             }
-           
+
             if table[0] in tables.keys():
-                table_id=tobj.write(cr,uid,[tables[table[0]]], val, context)
+                table_id = tobj.write(cr, uid, [tables[table[0]]], val, context)
             else:
-                val['name']=table[0]
-                tables[val['name']] = tobj.create(cr,uid,val, context)    
-        print 'Creating / Updating Columns...' 
+                val['name'] = table[0]
+                tables[val['name']] = tobj.create(cr, uid, val, context)
+        print 'Creating / Updating Columns...'
         cr_db.execute("""SELECT
                 table_name, column_name, udt_name
             from
                 INFORMATION_SCHEMA.columns
             WHERE table_schema = 'public'""")
-        
+
         for col in cr_db.fetchall():
-            val={
+            val = {
                 'table_id': tables[col[0]],
                 'column_db_name': col[1],
                 'type': col[2],
             }
-            
-            id_made=filter(lambda x:(int(cols[x][1])==int(tables[col[0]])),cols)
+
+            id_made = filter(lambda x:(int(cols[x][1]) == int(tables[col[0]])), cols)
             if col[1] in cols.keys() and col[0] in tables.keys()and id_made:
-                col_id=tcol.write(cr,uid,cols[tables[str(col[0])]], val, context)
+                col_id = tcol.write(cr, uid, cols[tables[str(col[0])]], val, context)
             else:
-                val['name']=col[1]
-                id_made = tcol.create(cr,uid,val, context)
-                cols[str(id_made)] = (val['name'],int(val['table_id']))
-        print 'Creating / Updating Constraints...' 
+                val['name'] = col[1]
+                id_made = tcol.create(cr, uid, val, context)
+                cols[str(id_made)] = (val['name'], int(val['table_id']))
+        print 'Creating / Updating Constraints...'
         cr_db.execute("""select 
                 table_name,column_name 
             from 
@@ -129,15 +129,15 @@ def olap_db_connect(self,cr,uid,part,context={}):
                             select constraint_name from INFORMATION_SCHEMA .table_constraints
                             where 
                                 constraint_type = 'PRIMARY KEY')""")
-        print "Updating the Primary Key Constraint" 
+        print "Updating the Primary Key Constraint"
         for constraint in cr_db.fetchall():
-            val={
+            val = {
                 'primary_key':True
             }
-            
-            id_to_write=filter(lambda x:(int(cols[x][1])==int(tables[constraint[0]])and(constraint[1]==cols[x][0])),cols)
-            col_id=tcol.write(cr,uid,int(id_to_write[0]),val,context) 
-        print "Updating the Foreign key constraint" 
+
+            id_to_write = filter(lambda x:(int(cols[x][1]) == int(tables[constraint[0]])and(constraint[1] == cols[x][0])), cols)
+            col_id = tcol.write(cr, uid, int(id_to_write[0]), val, context)
+        print "Updating the Foreign key constraint"
         cr_db.execute("""select 
                     constraint_name,table_name 
             from 
@@ -147,8 +147,8 @@ def olap_db_connect(self,cr,uid,part,context={}):
                             select constraint_name from INFORMATION_SCHEMA.table_constraints 
                             where 
                                 constraint_type = 'FOREIGN KEY')""")
-        for_key=dict(cr_db.fetchall())
-        
+        for_key = dict(cr_db.fetchall())
+
         cr_db.execute("""select 
                      table_name,column_name,constraint_name 
                  from 
@@ -157,17 +157,17 @@ def olap_db_connect(self,cr,uid,part,context={}):
                      constraint_name in (
                                  select constraint_name from INFORMATION_SCHEMA.table_constraints 
                                  where 
-                                     constraint_type = 'FOREIGN KEY')""") 
+                                     constraint_type = 'FOREIGN KEY')""")
 
         for constraint in cr_db.fetchall():
-            val={
+            val = {
                 'related_to':tables[for_key[constraint[2]]]
             }
-            id_to_write=filter(lambda x:(int(cols[x][1])==int(tables[constraint[0]])and (constraint[1]==cols[x][0])),cols)
-            col_id=tcol.write(cr,uid,int(id_to_write[0]),val,context) 
-    
-    
-    elif type =='mysql':
+            id_to_write = filter(lambda x:(int(cols[x][1]) == int(tables[constraint[0]])and (constraint[1] == cols[x][0])), cols)
+            col_id = tcol.write(cr, uid, int(id_to_write[0]), val, context)
+
+
+    elif type == 'mysql':
         try:
             import MySQLdb
             host = lines.database_id.db_host or ''
@@ -175,59 +175,59 @@ def olap_db_connect(self,cr,uid,part,context={}):
             db = lines.database_id.db_name or ''
             user = lines.database_id.db_login or ''
             passwd = lines.database_id.db_password or ''
-            tdb = MySQLdb.connect(host = host,port = port, db = db, user = user, passwd = passwd)
-            
+            tdb = MySQLdb.connect(host=host, port=port, db=db, user=user, passwd=passwd)
+
         except Exception, e:
-            raise osv.except_osv('MySQLdb Packages Not Installed.',e )
-        
+            raise osv.except_osv('MySQLdb Packages Not Installed.', e)
+
         cr_db = tdb.cursor()
         cr.execute('select table_db_name,id from olap_database_tables where fact_database_id=%d', (id_db,))
         tables = dict(cr.fetchall())
-        tables_id = map(lambda x: str(tables[x]),tables)
-        cols={}
+        tables_id = map(lambda x: str(tables[x]), tables)
+        cols = {}
         if tables_id:
-            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) +')')
+            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) + ')')
         else:
             cr.execute('select column_db_name,id,table_id from olap_database_columns')
-        
+
         for data in cr.fetchall():
-            cols[str(data[1])]=(data[0],int(data[2]))
-        cr_db.execute("select table_name, table_catalog from INFORMATION_SCHEMA.tables where table_schema =%s",(db_name))
-        
+            cols[str(data[1])] = (data[0], int(data[2]))
+        cr_db.execute("select table_name, table_catalog from INFORMATION_SCHEMA.tables where table_schema =%s", (db_name))
+
         for table in cr_db.fetchall():
             val = {
                 'fact_database_id':id_db,
                 'table_db_name':table[0]
             }
-           
+
             if table[0] in tables.keys():
-                table_id=tobj.write(cr,uid,[tables[table[0]]], val, context)
-                
+                table_id = tobj.write(cr, uid, [tables[table[0]]], val, context)
+
             else:
-                val['name']=table[0]
-                tables[val['name']] = tobj.create(cr,uid,val, context)
+                val['name'] = table[0]
+                tables[val['name']] = tobj.create(cr, uid, val, context)
         cr_db.execute("""SELECT
                 table_name, column_name, data_type
             from
                 INFORMATION_SCHEMA.columns
-            WHERE table_schema = %s""",(db_name))
-        
+            WHERE table_schema = %s""", (db_name))
+
         for col in cr_db.fetchall():
-            
-            val={
+
+            val = {
                 'table_id': tables[col[0]],
                 'column_db_name': col[1],
                 'type': col[2],
             }
-            
-            id_made=filter(lambda x:(int(cols[x][1])==int(tables[col[0]])),cols)
+
+            id_made = filter(lambda x:(int(cols[x][1]) == int(tables[col[0]])), cols)
             if col[1] in cols.keys() and col[0] in tables.keys()and id_made:
-                col_id=tcol.write(cr,uid,cols[tables[str(col[0])]], val, context)
+                col_id = tcol.write(cr, uid, cols[tables[str(col[0])]], val, context)
             else:
-                val['name']=col[1]
-                id_made = tcol.create(cr,uid,val, context)
-                cols[str(id_made)] = (val['name'],int(val['table_id']))
-       
+                val['name'] = col[1]
+                id_made = tcol.create(cr, uid, val, context)
+                cols[str(id_made)] = (val['name'], int(val['table_id']))
+
         cr_db.execute("""select 
                 REFERENCED_COLUMN_NAME,REFERENCED_TABLE_NAME,COLUMN_NAME,TABLE_NAME
             from 
@@ -237,22 +237,22 @@ def olap_db_connect(self,cr,uid,part,context={}):
                             select constraint_name from INFORMATION_SCHEMA .table_constraints
                             where 
                                 constraint_type in('PRIMARY KEY','FOREIGN KEY'))
-                            """,(db_name)) 
+                            """, (db_name))
 
         for constraint in cr_db.fetchall():
-            
+
             if constraint[0]:
-                val={
+                val = {
                      'related_to':tables[constraint[1]]
                      }
             else:
-                
-                val={
+
+                val = {
                      'primary_key':True
                      }
-            id_to_write=filter(lambda x:(int(cols[x][1])==int(tables[constraint[3]])and(constraint[2]==cols[x][0])),cols)
-            col_id=tcol.write(cr,uid,int(id_to_write[0]),val,context)  
-    
+            id_to_write = filter(lambda x:(int(cols[x][1]) == int(tables[constraint[3]])and(constraint[2] == cols[x][0])), cols)
+            col_id = tcol.write(cr, uid, int(id_to_write[0]), val, context)
+
     elif type == 'oracle':
         try:
             import cx_Oracle
@@ -262,66 +262,66 @@ def olap_db_connect(self,cr,uid,part,context={}):
             user = lines.database_id.db_login.upper() or ''
             passwd = lines.database_id.db_password or ''
             tdb = cx_Oracle.connect(user, passwrd, host)
-            
+
         except Exception, e:
-                    raise osv.except_osv('cx_Oracle Packages Not Installed.',e )
+                    raise osv.except_osv('cx_Oracle Packages Not Installed.', e)
 
         cr_db = tdb.cursor()
         cr.execute('select table_db_name,id from olap_database_tables where fact_database_id=%d', (id_db,))
         tables = dict(cr.fetchall())
-        tables_id = map(lambda x: str(tables[x]),tables)
-        cols={}
+        tables_id = map(lambda x: str(tables[x]), tables)
+        cols = {}
         if tables_id:
-            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) +')')
+            cr.execute('select column_db_name,id,table_id from olap_database_columns where table_id in (' + ','.join(tables_id) + ')')
         else:
             cr.execute('select column_db_name,id,table_id from olap_database_columns')
-        
-        for data in cr.fetchall():
-            cols[str(data[1])]=(data[0],int(data[2]))
 
-        cr_db.execute("select table_name from all_tables where owner =%s",(user))
+        for data in cr.fetchall():
+            cols[str(data[1])] = (data[0], int(data[2]))
+
+        cr_db.execute("select table_name from all_tables where owner =%s", (user))
         temp = cr_db.fetchall()
         for table in temp:
             val = {
                 'fact_database_id':id_db,
                 'table_db_name':table[0]
             }
-            
+
             if table[0] in tables.keys():
-                table_id=tobj.write(cr,uid,[tables[table[0]]], val, context)
-                
+                table_id = tobj.write(cr, uid, [tables[table[0]]], val, context)
+
             else:
-                val['name']=table[0]
-                tables[val['name']] = tobj.create(cr,uid,val, context)
+                val['name'] = table[0]
+                tables[val['name']] = tobj.create(cr, uid, val, context)
 
         cr_db.execute("""SELECT
                 table_name, column_name, data_type
             from
                 all_tab_columns 
-            WHERE owner = %s""",(user))
+            WHERE owner = %s""", (user))
         temp = cr_db.fetchall()
         for col in temp:
-            if col[2]=='NUMBER':
-                type_col='numeric'
-            elif col[2]=='DATE':
-                type_col='date'
-            elif col[2]=='VARCHAR2':
-                type_col='varchar'
+            if col[2] == 'NUMBER':
+                type_col = 'numeric'
+            elif col[2] == 'DATE':
+                type_col = 'date'
+            elif col[2] == 'VARCHAR2':
+                type_col = 'varchar'
             else:
-                type_col=col[2]
-            val={
+                type_col = col[2]
+            val = {
                 'table_id': tables[col[0]],
                 'column_db_name': col[1],
                 'type': type_col,
             }
-            
-            id_made=filter(lambda x:(int(cols[x][1])==int(tables[col[0]])),cols)
+
+            id_made = filter(lambda x:(int(cols[x][1]) == int(tables[col[0]])), cols)
             if col[1] in cols.keys() and col[0] in tables.keys()and id_made:
-                col_id=tcol.write(cr,uid,cols[tables[str(col[0])]], val, context)
+                col_id = tcol.write(cr, uid, cols[tables[str(col[0])]], val, context)
             else:
-                val['name']=col[1]
-                id_made = tcol.create(cr,uid,val, context)
-                cols[str(id_made)] = (val['name'],int(val['table_id']))
+                val['name'] = col[1]
+                id_made = tcol.create(cr, uid, val, context)
+                cols[str(id_made)] = (val['name'], int(val['table_id']))
 
         cr_db.execute("""select 
                 table_name,column_name,constraint_name
@@ -332,26 +332,26 @@ def olap_db_connect(self,cr,uid,part,context={}):
                             select constraint_name from all_constraints
                             where 
                                 constraint_type = 'P' and owner= %s)
-                            """,(user)) 
+                            """, (user))
         temp = cr_db.fetchall()
-        pk_table = {}        
+        pk_table = {}
         for constraint in temp:
-            val={
+            val = {
                 'primary_key' : True
             }
             pk_table[constraint[2]] = constraint[0]
 
-            id_to_write=filter(lambda x : (int(cols[x][1])==int(tables[constraint[0]])and(constraint[1]==cols[x][0])),cols)
-            col_id=tcol.write(cr,uid,int(id_to_write[0]),val,context)
+            id_to_write = filter(lambda x : (int(cols[x][1]) == int(tables[constraint[0]])and(constraint[1] == cols[x][0])), cols)
+            col_id = tcol.write(cr, uid, int(id_to_write[0]), val, context)
 
         cr_db.execute("""select 
                         constraint_name,r_constraint_name from all_constraints
                             where 
                                 constraint_type = 'R'  and owner = %s
-                            """,(user))
-        constraints_map={}
+                            """, (user))
+        constraints_map = {}
         for data in cr_db.fetchall():
-            constraints_map[data[0]]=data[1]
+            constraints_map[data[0]] = data[1]
 
         cr_db.execute("""select 
                 table_name,column_name,constraint_name
@@ -362,43 +362,43 @@ def olap_db_connect(self,cr,uid,part,context={}):
                             select constraint_name from all_constraints
                             where 
                                 constraint_type = 'R' and owner = %s)
-                            """,(user))
-            
+                            """, (user))
+
 
         temp = cr_db.fetchall()
         for constraint in temp:
-            rel_constraint_name=constraints_map[constraint[2]]
+            rel_constraint_name = constraints_map[constraint[2]]
             req_table = pk_table[rel_constraint_name]
-            val={
+            val = {
                 'related_to' : tables[req_table]
             }
-            id_to_write=filter(lambda x:(int(cols[x][1])==int(tables[constraint[0]])and (constraint[1]==cols[x][0])),cols)
-            col_id=tcol.write(cr,uid,int(id_to_write[0]),val,context)
-            
-    pooler.get_pool(cr.dbname).get('olap.fact.database').write(cr,uid,[id_db],{'loaded':True})
+            id_to_write = filter(lambda x:(int(cols[x][1]) == int(tables[constraint[0]])and (constraint[1] == cols[x][0])), cols)
+            col_id = tcol.write(cr, uid, int(id_to_write[0]), val, context)
+
+    pooler.get_pool(cr.dbname).get('olap.fact.database').write(cr, uid, [id_db], {'loaded':True})
     wf_service = netsvc.LocalService('workflow')
     wf_service.trg_validate(uid, 'olap.schema', part['id'], 'dbload', cr)
     return {}
 
-def _getdata(self,cr,uid,part,context={}):
-    lines=pooler.get_pool(cr.dbname).get('olap.schema').browse(cr, uid, part['id'],context)
-    part['form']['fact_table']=lines.database_id.name
-    part['form']['db_name']=lines.database_id.db_name
+def _getdata(self, cr, uid, part, context={}):
+    lines = pooler.get_pool(cr.dbname).get('olap.schema').browse(cr, uid, part['id'], context)
+    part['form']['fact_table'] = lines.database_id.name
+    part['form']['db_name'] = lines.database_id.db_name
     return part['form']
 
 class wizard_data_loader(wizard.interface):
     states = {
        'init': {
             'actions': [_getdata],
-            'result': {'type':'form','arch':form1, 'fields':field1, 'state':[('end','Cancel'),('ok','Load Database Structure')]}
+            'result': {'type':'form', 'arch':form1, 'fields':field1, 'state':[('end', 'Cancel'), ('ok', 'Load Database Structure')]}
         },
         'ok': {
             'actions': [olap_db_connect],
-            'result': {'type':'form','arch':info,'fields':{}, 'state':[('end','Continue and Configure Structure')]}
+            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end', 'Continue and Configure Structure')]}
         },
         'info': {
             'actions': [],
-            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','Ok')]}
+            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end', 'Ok')]}
         },
       }
 wizard_data_loader('olap.load.table')

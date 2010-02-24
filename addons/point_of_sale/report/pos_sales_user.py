@@ -34,15 +34,15 @@ class pos_sales_user(report_sxw.rml_parse):
 
                 })
 
-    def _get_data(self,form):
+    def _get_data(self, form):
         dt1 = form['date_start'] + ' 00:00:00'
         dt2 = form['date_end'] + ' 23:59:59'
-        data={}
+        data = {}
         self.cr.execute("select po.name as pos,po.date_order,ru.name as user,po.state,rc.name " \
                         "from pos_order as po,res_users as ru,res_company as rc " \
                         "where po.date_order >= %s and po.date_order <= %s " \
                         "and po.company_id=rc.id and po.user_id=ru.id and po.user_id in %s " \
-                            ,(dt1,dt2,tuple(form['user_id'][0][-1])))
+                            , (dt1, dt2, tuple(form['user_id'][0][-1])))
 
         data = self.cr.dictfetchall()
         return data

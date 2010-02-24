@@ -31,7 +31,7 @@ _info_form = '''<?xml version="1.0"?>
 
 def _trans_unrec(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    recs = pool.get('account.move.line').read(cr, uid, data['ids'], ['reconcile_id',])
+    recs = pool.get('account.move.line').read(cr, uid, data['ids'], ['reconcile_id', ])
     recs = filter(lambda x: x['reconcile_id'], recs)
     rec_ids = [rec['reconcile_id'][0] for rec in recs]
     if len(rec_ids):

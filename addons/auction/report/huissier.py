@@ -31,8 +31,8 @@ class report_custom(report_rml):
     def __init__(self, name, table, tmpl, xsl):
         report_rml.__init__(self, name, table, tmpl, xsl)
 
-    def create_xml(self,cr, uid, ids, datas, context={}):
-        pool= pooler.get_pool(cr.dbname)
+    def create_xml(self, cr, uid, ids, datas, context={}):
+        pool = pooler.get_pool(cr.dbname)
         lots = pool.get('auction.lots').browse(cr, uid, ids)
         auction = lots[0].auction_id
 
@@ -42,15 +42,15 @@ class report_custom(report_rml):
         <name>%s</name>
         <date-au1>%s</date-au1>
     </auction>''' % (toxml(auction['name']), toxml(auction['auction1']))
-    
+
         i = 0
         for l in lots:
 #           l['id_cont'] = str(i)
-            if l['obj_price']==0:
+            if l['obj_price'] == 0:
                 price_french = u'retiré'
             else:
-                price_french = int_to_text(int(l['obj_price'] or 0.0))+' eur'
-            i+=1
+                price_french = int_to_text(int(l['obj_price'] or 0.0)) + ' eur'
+            i += 1
             xml += '''  <object>
         <number>%d</number>
         <obj_num>%d</obj_num>
@@ -59,7 +59,7 @@ class report_custom(report_rml):
         <obj_price>%s</obj_price>
     </object>''' % (i, l['obj_num'], ustr(toxml(l['name'])), ustr(price_french), ustr(l['obj_price'] or '/'))
         xml += '</report>'
-        
+
         return xml
 
 report_custom('report.flagey.huissier', 'auction.lots', '', 'addons/auction/report/huissier.xsl')

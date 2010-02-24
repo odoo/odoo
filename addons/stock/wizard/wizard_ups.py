@@ -31,7 +31,7 @@ _ups_form = '''<?xml version="1.0"?>
 </form>'''
 
 _ups_fields = {
-    'weight' : { 'string' : 'Lot weight', 'type' : 'float', 'default' : lambda *a: 3.0, 'required' : True },
+    'weight' : { 'string' : 'Lot weight', 'type' : 'float', 'default' : lambda * a: 3.0, 'required' : True },
 }
 
 _ups_finalform = '''<?xml version="1.0"?>
@@ -67,7 +67,7 @@ class wiz_ups(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch' : _ups_form, 'fields' : _ups_fields, 'state':[('end','Cancel'),('ups_save','Get xml file'), ('ups_upload', 'Upload xml file')]}
+            'result': {'type': 'form', 'arch' : _ups_form, 'fields' : _ups_fields, 'state':[('end', 'Cancel'), ('ups_save', 'Get xml file'), ('ups_upload', 'Upload xml file')]}
         },
         'ups_save': {
             'actions': [create_xmlfile],

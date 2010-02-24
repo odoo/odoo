@@ -33,7 +33,7 @@ class pos_details_summary(report_sxw.rml_parse):
                                                 lambda sum_qty, line:
                                                         sum_qty + line.qty,
                                                 object.lines,
-                                                0 ),
+                                                0),
                                     objects,
                                     0)
 
@@ -42,11 +42,11 @@ class pos_details_summary(report_sxw.rml_parse):
         return reduce(lambda acc, object:
                                         acc + reduce(
                                                 lambda sum_dis, line:
-                                                        sum_dis + ((line.price_unit * line.qty ) * (line.discount / 100)),
+                                                        sum_dis + ((line.price_unit * line.qty) * (line.discount / 100)),
                                                 object.lines,
                                                 0.0),
                                     objects,
-                                    0.0 )
+                                    0.0)
 
     def _get_payments(self, objects, ignore_gift=False):
         gift_journal_id = None
@@ -78,7 +78,7 @@ class pos_details_summary(report_sxw.rml_parse):
                                     [o for o in objects if o.invoice_id and o.invoice_id.number],
                                     0.0)
 
-    def _ellipsis(self, string, maxlen=100, ellipsis = '...'):
+    def _ellipsis(self, string, maxlen=100, ellipsis='...'):
         ellipsis = ellipsis or ''
         return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
 
@@ -92,7 +92,7 @@ class pos_details_summary(report_sxw.rml_parse):
             for line in order.lines:
                 if len(line.product_id.taxes_id):
                     tax = line.product_id.taxes_id[0]
-                    res[tax.name] = (line.price_unit * line.qty * (1-(line.discount or 0.0) / 100.0)) + (tax.id in list_ids and res[tax.name] or 0)
+                    res[tax.name] = (line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)) + (tax.id in list_ids and res[tax.name] or 0)
                     list_ids.append(tax.id)
         return res
 

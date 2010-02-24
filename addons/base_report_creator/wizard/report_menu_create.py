@@ -43,9 +43,9 @@ def report_menu_create(self, cr, uid, data, context):
 
     view = board.view_type1
     if board.view_type2:
-        view+=','+board.view_type2
+        view += ',' + board.view_type2
     if board.view_type3:
-        view+=','+board.view_type3
+        view += ',' + board.view_type3
     action_id = pool.get('ir.actions.act_window').create(cr, uid, {
         'name': board.name,
         'view_type':'form',
@@ -57,20 +57,20 @@ def report_menu_create(self, cr, uid, data, context):
         'name': data['form']['menu_name'],
         'parent_id': data['form']['menu_parent_id'],
         'icon': 'STOCK_SELECT_COLOR',
-        'action': 'ir.actions.act_window,'+str(action_id)
+        'action': 'ir.actions.act_window,' + str(action_id)
     }, context)
     return {}
 
 class wizard_section_menu_create(wizard.interface):
     states = {
         'init': {
-            'actions': [], 
-            'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end','Cancel'),('create_menu','Create Menu')]}
+            'actions': [],
+            'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end', 'Cancel'), ('create_menu', 'Create Menu')]}
         },
         'create_menu': {
-            'actions': [report_menu_create], 
+            'actions': [report_menu_create],
             'result': {
-                'type':'state', 
+                'type':'state',
                 'state':'end'
             }
         }

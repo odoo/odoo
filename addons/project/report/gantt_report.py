@@ -34,8 +34,8 @@ class external_pdf(render):
     def __init__(self, pdf):
         render.__init__(self)
         self.pdf = pdf
-        self.output_type='pdf'
-    
+        self.output_type = 'pdf'
+
     def _render(self):
         return self.pdf
 
@@ -44,14 +44,14 @@ class report_tasks(report_int):
         io = StringIO.StringIO()
 
         date_to_int = lambda x: int(x.ticks())
-        int_to_date = lambda x: '/a60{}'+localtime(x).strftime('%d %m %Y')
+        int_to_date = lambda x: '/a60{}' + localtime(x).strftime('%d %m %Y')
         gt = GanttCanvas(io, convertors=(date_to_int, int_to_date))
 
         tasks = pooler.get_pool(cr.dbname).get('project.task').browse(cr, uid, ids)
         tasks, last_date = _compute_tasks(cr, uid, tasks, now())
         for user_id in tasks.keys():
             for t in tasks[user_id]:
-                gt.add(t[3], t[2], [(t[0],t[1])])
+                gt.add(t[3], t[2], [(t[0], t[1])])
         try:
             gt.draw()
         except:
@@ -67,12 +67,12 @@ class report_projects(report_int):
     def create(self, cr, uid, ids, datas, context={}):
         io = StringIO.StringIO()
         date_to_int = lambda x: int(x.ticks())
-        int_to_date = lambda x: '/a60{}'+localtime(x).strftime('%d %m %Y')
+        int_to_date = lambda x: '/a60{}' + localtime(x).strftime('%d %m %Y')
         gt = GanttCanvas(io, convertors=(date_to_int, int_to_date))
         tasks, last_date = _project_compute(cr, uid, ids[0])
         for user_id in tasks.keys():
             for t in tasks[user_id]:
-                gt.add(t[3], t[2], [(t[0],t[1])])
+                gt.add(t[3], t[2], [(t[0], t[1])])
         try:
             gt.draw()
         except:

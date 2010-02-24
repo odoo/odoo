@@ -40,13 +40,13 @@ pay_fields1 = {
 }
 def _payer(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    pool.get('auction.lots').write(cr,uid,data['ids'],{'is_ok':True, 'state':'paid'})
+    pool.get('auction.lots').write(cr, uid, data['ids'], {'is_ok':True, 'state':'paid'})
     return {}
 
 
 def _payer_sel(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    pool.get('auction.lots').write(cr,uid,data['ids'],{'paid_vnd':True})
+    pool.get('auction.lots').write(cr, uid, data['ids'], {'paid_vnd':True})
     return {}
 
 
@@ -54,7 +54,7 @@ class wiz_auc_pay(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':pay_form, 'fields': pay_fields, 'state':[('end','Cancel'),('pay','Pay')]}
+            'result': {'type': 'form', 'arch':pay_form, 'fields': pay_fields, 'state':[('end', 'Cancel'), ('pay', 'Pay')]}
         },
         'pay': {
         'actions': [_payer],
@@ -67,7 +67,7 @@ class wiz_auc_pay_sel(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':pay_form1, 'fields': pay_fields1, 'state':[('end','Cancel'),('pay2','Pay')]}
+            'result': {'type': 'form', 'arch':pay_form1, 'fields': pay_fields1, 'state':[('end', 'Cancel'), ('pay2', 'Pay')]}
         },
         'pay2': {
         'actions': [_payer_sel],

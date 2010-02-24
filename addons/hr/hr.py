@@ -39,7 +39,7 @@ class hr_employee_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee_category where id=ANY(%s)',(ids,))
+            cr.execute('select distinct parent_id from hr_employee_category where id=ANY(%s)', (ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -63,7 +63,7 @@ hr_employee_marital_status()
 
 class crm_job(osv.osv):
 
-    def _no_of_employee(self, cr, uid, ids, name,args,context=None):
+    def _no_of_employee(self, cr, uid, ids, name, args, context=None):
         res = {}
         for emp in self.browse(cr, uid, ids):
             res[emp.id] = str(len(emp.employee_ids))
@@ -76,14 +76,14 @@ class crm_job(osv.osv):
         'ref': fields.char('Code', size=64),
         'expected_employees':fields.integer('Expected Employees'),
         'no_of_employee': fields.function(_no_of_employee, method=True, string='No of Employee', type='char'),
-        'employee_ids':fields.one2many('hr.employee', 'job_id','Employees'),
+        'employee_ids':fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
         'requirements':fields.text('Requirements'),
-        'department_id':fields.many2one('hr.department','Department')
+        'department_id':fields.many2one('hr.department', 'Department')
 
         }
     _defaults = {
-        'expected_employees': lambda *a: 1,
+        'expected_employees': lambda * a: 1,
         }
 
 crm_job()
@@ -98,7 +98,7 @@ class hr_employee(osv.osv):
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
         'sinid': fields.char('SIN No', size=32),
         'otherid': fields.char('Other ID', size=32),
-        'gender': fields.selection([('',''),('male','Male'),('female','Female')], 'Gender'),
+        'gender': fields.selection([('', ''), ('male', 'Male'), ('female', 'Female')], 'Gender'),
         'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
 
         'partner_id' : fields.related('company_id', 'partner_id', type='many2one', relation='res.partner', readonly=True),
@@ -112,20 +112,20 @@ class hr_employee(osv.osv):
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager', select=True),
         'category_id' : fields.many2one('hr.employee.category', 'Category'),
-        'child_ids': fields.one2many('hr.employee', 'parent_id','Subordinates'),
-        'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
-        'coach_id':fields.many2one('res.users','Coach'),
+        'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
+        'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade'),
+        'coach_id':fields.many2one('res.users', 'Coach'),
         'job_id':fields.many2one('crm.job', 'Job'),
 
     }
     _defaults = {
-        'active' : lambda *a: True,
+        'active' : lambda * a: True,
     }
 
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee where id =ANY(%s)',(ids,))
+            cr.execute('select distinct parent_id from hr_employee where id =ANY(%s)', (ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False

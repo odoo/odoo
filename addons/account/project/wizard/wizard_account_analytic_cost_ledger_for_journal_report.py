@@ -32,9 +32,9 @@ _form = '''<?xml version="1.0"?>
 </form>'''
 
 _fields = {
-    'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-    'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'journal': {'string':'Journals','type':'many2many', 'relation':'account.analytic.journal'},
+    'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-01-01')},
+    'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
+    'journal': {'string':'Journals', 'type':'many2many', 'relation':'account.analytic.journal'},
 }
 
 
@@ -47,8 +47,8 @@ class wizard_report(wizard.interface):
                 'arch': _form,
                 'fields': _fields,
                 'state': [
-                    ('end','Cancel'),
-                    ('report','Print')
+                    ('end', 'Cancel'),
+                    ('report', 'Print')
                 ]
             }
         },

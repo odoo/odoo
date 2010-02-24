@@ -44,12 +44,12 @@ sale_fields = {
         'relation': 'res.partner',
         'help': 'Use this partner if there is no partner on the case'},
     'picking_policy': {'string': 'Picking Policy', 'type': 'selection',
-        'selection': [('direct','Direct Delivery'),('one','All at once')]},
+        'selection': [('direct', 'Direct Delivery'), ('one', 'All at once')]},
     'products': {'string': 'Products', 'type': 'many2many',
         'relation': 'product.product'},
     'analytic_account': {'string': 'Analytic Account', 'type': 'many2one',
         'relation': 'account.analytic.account'},
-    'close': {'string': 'Close Case', 'type': 'boolean', 'default': lambda *a: 1,
+    'close': {'string': 'Close Case', 'type': 'boolean', 'default': lambda * a: 1,
         'help': 'Check this to close the case after having created the sale order.'},
 }
 
@@ -75,7 +75,7 @@ class make_sale(wizard.interface):
                 ['invoice', 'delivery', 'contact'])
         default_pricelist = partner_obj.browse(cr, uid, data['form']['partner_id'],
                     context).property_product_pricelist.id
-        fpos_data = partner_obj.browse(cr, uid, data['form']['partner_id'],context).property_account_position
+        fpos_data = partner_obj.browse(cr, uid, data['form']['partner_id'], context).property_account_position
         new_ids = []
 
         for case in case_obj.browse(cr, uid, data['ids']):
@@ -93,7 +93,7 @@ class make_sale(wizard.interface):
                 pricelist = default_pricelist
 
             if False in partner_addr.values():
-                raise wizard.except_wizard(_('Data Insufficient!'),_('Customer has no addresses defined!'))
+                raise wizard.except_wizard(_('Data Insufficient!'), _('Customer has no addresses defined!'))
 
             vals = {
                 'origin': 'CRM-Opportunity:%s' % str(case.id),
@@ -122,7 +122,7 @@ class make_sale(wizard.interface):
                         product_id, qty=1, partner_id=partner_id, fiscal_position=fpos)['value']
                 value['product_id'] = product_id
                 value['order_id'] = new_id
-                value['tax_id'] = [(6,0,value['tax_id'])]
+                value['tax_id'] = [(6, 0, value['tax_id'])]
                 sale_line_obj.create(cr, uid, value)
 
             case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
@@ -146,7 +146,7 @@ class make_sale(wizard.interface):
         'init': {
             'actions': [_selectPartner],
             'result': {'type': 'form', 'arch': sale_form, 'fields': sale_fields,
-                'state' : [('end', 'Cancel', 'gtk-cancel'),('order', 'Create Quote', 'gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'), ('order', 'Create Quote', 'gtk-go-forward')]}
         },
         'order': {
             'actions': [],

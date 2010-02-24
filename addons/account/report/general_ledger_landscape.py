@@ -37,7 +37,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
     _name = 'report.account.general.ledger_landscape'
 
 
-    def set_context(self, objects, data, ids, report_type = None):
+    def set_context(self, objects, data, ids, report_type=None):
         ##
         self.borne_date = self.get_min_date(data['form'])
         ##
@@ -49,7 +49,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
 
-        super(general_ledger_landscape, self).set_context(objects, data, new_ids,report_type)
+        super(general_ledger_landscape, self).set_context(objects, data, new_ids, report_type)
 
     def __init__(self, cr, uid, name, context):
         super(general_ledger_landscape, self).__init__(cr, uid, name, context=context)
@@ -59,7 +59,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
         self.tot_currency = 0.0
         self.period_sql = ""
         self.sold_accounts = {}
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'lines': self.lines,
             'sum_debit_account': self._sum_debit_account,
@@ -72,7 +72,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
             'sum_currency_amount_account': self._sum_currency_amount_account
         })
         self.context = context
-    def _calc_contrepartie(self,cr,uid,ids, context={}):
+    def _calc_contrepartie(self, cr, uid, ids, context={}):
         result = {}
             #for id in ids:
         #    result.setdefault(id, False)
@@ -90,23 +90,23 @@ class general_ledger_landscape(rml_parse.rml_parse):
             # We have the account ID we will search all account move line from now until this time
             # We are in the case of we are on the top of the account move Line
             cr.execute('SELECT distinct(ac.code) as code_rest,ac.name as name_rest from account_account AS ac, account_move_line mv\
-                    where ac.id = mv.account_id and mv.move_id = %s  and mv.account_id <> %s' , (num_id_move,account_id,))
+                    where ac.id = mv.account_id and mv.move_id = %s  and mv.account_id <> %s' , (num_id_move, account_id,))
             res_mv = cr.dictfetchall()
             # we need a result more than 2 line to make the test so we will made the the on 1 because we have exclude the current line
-            if (len(res_mv) >=1):
+            if (len(res_mv) >= 1):
                 concat = ''
                 rup_id = 0
                 for move_rest in res_mv:
                     concat = concat + move_rest['code_rest'] + '|'
                     result[account_line.id] = concat
-                    if rup_id >5:
+                    if rup_id > 5:
                         # we need to stop the computing and to escape but before we will add "..."
                         result[account_line.id] = concat + '...'
                         break
-                    rup_id+=1
+                    rup_id += 1
         return result
 
-    def get_min_date(self,form):
+    def get_min_date(self, form):
 
         ## Get max born from account_fiscal year
         #
@@ -122,10 +122,10 @@ class general_ledger_landscape(rml_parse.rml_parse):
             periods = form['periods'][0][2]
             if not periods:
                 self.cr.execute("""
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = %s""" ,(form['fiscalyear'],))
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id = %s""" , (form['fiscalyear'],))
             else:
                 self.cr.execute("""
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id =ANY(%s)""",(periods,))
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id =ANY(%s)""", (periods,))
 
             res = self.cr.dictfetchall()
             borne_min = res[0]['start_date']
@@ -137,21 +137,21 @@ class general_ledger_landscape(rml_parse.rml_parse):
             periods = form['periods'][0][2]
             if not periods:
                 self.cr.execute("""
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id =  = %s""" ,(form['fiscalyear'],))
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.fiscalyear_id =  = %s""" , (form['fiscalyear'],))
 
             else:
                 self.cr.execute("""
-                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id =ANY(%s)""",(periods,))
+                    Select min(p.date_start) as start_date,max(p.date_stop) as stop_date from account_period as p where p.id =ANY(%s)""", (periods,))
             res = self.cr.dictfetchall()
             period_min = res[0]['start_date']
             period_max = res[0]['stop_date']
             date_min = form['date_from']
             date_max = form['date_to']
-            if period_min<date_min:
+            if period_min < date_min:
                 borne_min = period_min
             else :
                 borne_min = date_min
-            if date_max<period_max:
+            if date_max < period_max:
                 borne_max = period_max
             else :
                 borne_max = date_max
@@ -180,7 +180,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
         ## We will make the test for period or date
         ## We will now make the test
         #
-        ctx['state'] = form['context'].get('state','all')
+        ctx['state'] = form['context'].get('state', 'all')
         if form.has_key('fiscalyear'):
             ctx['fiscalyear'] = form['fiscalyear']
             ctx['periods'] = form['periods'][0][2]
@@ -194,28 +194,28 @@ class general_ledger_landscape(rml_parse.rml_parse):
         if account and account.child_consol_ids: # add ids of consolidated childs also of selected account
             ctx['consolidate_childs'] = True
             ctx['account_id'] = account.id
-        ids_acc = self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])], context=ctx)
+        ids_acc = self.pool.get('account.account').search(self.cr, self.uid, [('parent_id', 'child_of', [account.id])], context=ctx)
         for child_id in ids_acc:
             child_account = self.pool.get('account.account').browse(self.cr, self.uid, child_id)
-            sold_account = self._sum_solde_account(child_account,form)
+            sold_account = self._sum_solde_account(child_account, form)
             self.sold_accounts[child_account.id] = sold_account
             if form['display_account'] == 'bal_mouvement':
                 if child_account.type != 'view' \
                 and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-                    [('account_id','=',child_account.id)],
+                    [('account_id', '=', child_account.id)],
                     context=ctx)) <> 0 :
                     res.append(child_account)
             elif form['display_account'] == 'bal_solde':
                 if child_account.type != 'view' \
                 and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-                    [('account_id','=',child_account.id)],
+                    [('account_id', '=', child_account.id)],
                     context=ctx)) <> 0 :
-                    if ( sold_account <> 0.0):
+                    if (sold_account <> 0.0):
                         res.append(child_account)
             else:
                 if child_account.type != 'view' \
                 and len(self.pool.get('account.move.line').search(self.cr, self.uid,
-                    [('account_id','>=',child_account.id)],
+                    [('account_id', '>=', child_account.id)],
                     context=ctx)) <> 0 :
                     res.append(child_account)
         ##
@@ -226,7 +226,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
             ## We will now compute solde initiaux
             for move in res:
                 self.cr.execute("""SELECT sum(l.debit) AS sum_debit, sum(l.credit) AS sum_credit FROM account_move_line l \
-                                   WHERE l.account_id = %s AND l.date <  %s  AND l.date >  %s""",(move.id,self.borne_date['max_date'],self.borne_date['min_date']))
+                                   WHERE l.account_id = %s AND l.date <  %s  AND l.date >  %s""", (move.id, self.borne_date['max_date'], self.borne_date['min_date']))
                 resultat = self.cr.dictfetchall()
                 if resultat[0] :
                     if resultat[0]['sum_debit'] == None:
@@ -279,11 +279,11 @@ class general_ledger_landscape(rml_parse.rml_parse):
         for l in res:
             line = self.pool.get('account.move.line').browse(self.cr, self.uid, l['id'])
             l['move'] = line.move_id.name
-            self.cr.execute('Select id from account_invoice where move_id =%s',(line.move_id.id,))
+            self.cr.execute('Select id from account_invoice where move_id =%s', (line.move_id.id,))
             tmpres = self.cr.dictfetchall()
             if len(tmpres) > 0 :
                 inv = self.pool.get('account.invoice').browse(self.cr, self.uid, tmpres[0]['id'])
-                l['ref'] = inv_types[inv.type] + ': '+str(inv.number)
+                l['ref'] = inv_types[inv.type] + ': ' + str(inv.number)
             if line.partner_id :
                 l['partner'] = line.partner_id.name
             else :
@@ -292,7 +292,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 #            c = time.strptime(l['date'],"%Y-%m-%d")
 #            l['date'] = time.strftime("%d-%m-%Y",c)
             l['progress'] = sum
-            l['line_corresp'] = self._calc_contrepartie(self.cr,self.uid,[l['id']])[l['id']]
+            l['line_corresp'] = self._calc_contrepartie(self.cr, self.uid, [l['id']])[l['id']]
             # Modification du amount Currency
             if (l['credit'] > 0):
                 if l['amount_currency'] != None:
@@ -307,7 +307,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
         self.cr.execute("SELECT sum(debit) "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND "+self.query,(account.id,))
+                "WHERE l.account_id = %s AND " + self.query, (account.id,))
         ## Add solde init to the result
         #
         sum_debit = self.cr.fetchone()[0] or 0.0
@@ -321,7 +321,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
 
         self.cr.execute("SELECT sum(credit) "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND "+self.query,(account.id,))
+                "WHERE l.account_id = %s AND " + self.query, (account.id,))
         ## Add solde init to the result
         #
         sum_credit = self.cr.fetchone()[0] or 0.0
@@ -335,9 +335,9 @@ class general_ledger_landscape(rml_parse.rml_parse):
     def _sum_solde_account(self, account, form):
         self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_solde "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id = %s AND "+self.query,(account.id,))
+                "WHERE l.account_id = %s AND " + self.query, (account.id,))
         sum_solde = self.cr.fetchone()[0] or 0.0
-        if form.get('soldeinit',False):
+        if form.get('soldeinit', False):
             sum_solde += account.init_debit - account.init_credit
 
         return sum_solde
@@ -347,7 +347,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
             return 0.0
         self.cr.execute("SELECT sum(debit) "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id =ANY(%s) AND "+self.query,(self.child_ids,))
+                "WHERE l.account_id =ANY(%s) AND " + self.query, (self.child_ids,))
         sum_debit = self.cr.fetchone()[0] or 0.0
         return sum_debit
 
@@ -356,7 +356,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
             return 0.0
         self.cr.execute("SELECT sum(credit) "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id =ANY(%s) AND "+self.query,(self.child_ids,))
+                "WHERE l.account_id =ANY(%s) AND " + self.query, (self.child_ids,))
         ## Add solde init to the result
         #
         sum_credit = self.cr.fetchone()[0] or 0.0
@@ -367,14 +367,14 @@ class general_ledger_landscape(rml_parse.rml_parse):
             return 0.0
         self.cr.execute("SELECT (sum(debit) - sum(credit)) as tot_solde "\
                 "FROM account_move_line l "\
-                "WHERE l.account_id =ANY(%s) AND "+self.query,(self.child_ids,))
+                "WHERE l.account_id =ANY(%s) AND " + self.query, (self.child_ids,))
         sum_solde = self.cr.fetchone()[0] or 0.0
         return sum_solde
 
     def _set_get_account_currency_code(self, account_id):
         self.cr.execute("SELECT c.code as code "\
                 "FROM res_currency c,account_account as ac "\
-                "WHERE ac.id = %s AND ac.currency_id = c.id",(account_id,))
+                "WHERE ac.id = %s AND ac.currency_id = c.id", (account_id,))
         result = self.cr.fetchone()
         if result:
             self.account_currency = result[0]

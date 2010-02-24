@@ -33,8 +33,8 @@ class pos_payment_report_user(report_sxw.rml_parse):
                 'pos_payment_user_total':self.__pos_payment_user__total__,
                 })
 
-    def __pos_payment_user__(self,form):
-        data={}
+    def __pos_payment_user__(self, form):
+        data = {}
         ids = form['user_id'][0][-1]
         idss = map(str, ids)
         sql = "select pt.name,pol.qty,pol.discount,pol.price_unit, " \
@@ -42,20 +42,20 @@ class pos_payment_report_user(report_sxw.rml_parse):
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
                          "and po.state in ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date " \
-                         "and po.user_id in (%s)" % (",".join(idss), )
+                         "and po.user_id in (%s)" % (",".join(idss),)
         self.cr.execute (sql)
-        data=self.cr.dictfetchall()
+        data = self.cr.dictfetchall()
         return data
-    def __pos_payment_user__total__(self,form):
-        res=[]
+    def __pos_payment_user__total__(self, form):
+        res = []
         ids = form['user_id'][0][-1]
         idss = map(str, ids)
         self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) " \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
                          "and po.state='paid' and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date " \
-                         "and po.user_id in (%s)" % (",".join(idss), ))
-        res=self.cr.fetchone()
+                         "and po.user_id in (%s)" % (",".join(idss),))
+        res = self.cr.fetchone()
         res = res and res[0] or None
 
         return res

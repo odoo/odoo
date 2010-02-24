@@ -34,15 +34,15 @@ class pos_sales_user_today(report_sxw.rml_parse):
 
                 })
 
-    def _get_data(self,form):
-        data={}
+    def _get_data(self, form):
+        data = {}
         ids = form['user_id'][0][-1]
         idss = map(str, ids)
 
         self.cr.execute("select po.name as pos,po.date_order,ru.name as user,po.state,rc.name " \
                         "from pos_order as po,res_users as ru,res_company as rc " \
                         "where to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date " \
-                        "and po.company_id=rc.id and po.user_id=ru.id and po.user_id in (%s)"% (",".join(idss), ))
+                        "and po.company_id=rc.id and po.user_id=ru.id and po.user_id in (%s)" % (",".join(idss),))
 
         data = self.cr.dictfetchall()
         return data

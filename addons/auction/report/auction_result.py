@@ -32,7 +32,7 @@ class auction_result(report_sxw.rml_parse):
             'time': time,
 
         })
-report_sxw.report_sxw('report.auction.result', 'auction.lots', 'addons/auction/report/auction_result.rml',parser=auction_result)
+report_sxw.report_sxw('report.auction.result', 'auction.lots', 'addons/auction/report/auction_result.rml', parser=auction_result)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

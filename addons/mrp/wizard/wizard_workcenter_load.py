@@ -29,15 +29,15 @@ _time_unit_form = '''<?xml version="1.0"?>
 </form>'''
 
 _time_unit_fields = {
-    'time_unit': {'string':'Type of period', 'type':'selection', 'selection':[('day', 'Day by day'),('week', 'Per week'),('month', 'Per month')], 'required':True},
-    'measure_unit': {'string':'Amount measuring unit', 'type':'selection', 'selection':[('hours', 'Amount in hours'),('cycles', 'Amount in cycles')], 'required':True},
+    'time_unit': {'string':'Type of period', 'type':'selection', 'selection':[('day', 'Day by day'), ('week', 'Per week'), ('month', 'Per month')], 'required':True},
+    'measure_unit': {'string':'Amount measuring unit', 'type':'selection', 'selection':[('hours', 'Amount in hours'), ('cycles', 'Amount in cycles')], 'required':True},
 }
 
 class wizard_mrp_workcenter(wizard.interface):
     states = {
         'init': {
-            'actions': [], 
-            'result': {'type':'form', 'arch':_time_unit_form, 'fields':_time_unit_fields, 'state':[('end','Cancel'),('report','Print') ]},
+            'actions': [],
+            'result': {'type':'form', 'arch':_time_unit_form, 'fields':_time_unit_fields, 'state':[('end', 'Cancel'), ('report', 'Print') ]},
         },
         'report': {
             'actions': [],

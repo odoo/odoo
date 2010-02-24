@@ -32,23 +32,23 @@ import pooler
 class wizard_load_columns(wizard.interface):
     def _get_table_data(self, cr, uid, data, context={}):
         pool_obj = pooler.get_pool(cr.dbname)
-        ids_cols=pool_obj.get('olap.database.columns').search(cr, uid, ([('table_id','=',data['id'])]),context={})
-        model_data_ids = pool_obj.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_olap_database_columns_form')],context={})
-        resource_id = pool_obj.get('ir.model.data').read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+        ids_cols = pool_obj.get('olap.database.columns').search(cr, uid, ([('table_id', '=', data['id'])]), context={})
+        model_data_ids = pool_obj.get('ir.model.data').search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_olap_database_columns_form')], context={})
+        resource_id = pool_obj.get('ir.model.data').read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
-            'domain': "[('id','in', ["+','.join(map(str,ids_cols))+"])]",
+            'domain': "[('id','in', [" + ','.join(map(str, ids_cols)) + "])]",
             'name': 'Database Columns',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'olap.database.columns',
-            'views': [(False,'tree'),(resource_id,'form')],
+            'views': [(False, 'tree'), (resource_id, 'form')],
             'type': 'ir.actions.act_window',
         }
-        
+
     states = {
         'init' : {
             'actions' : [],
-            'result' : {'type' : 'action' ,'action':_get_table_data,'state':'end'}
+            'result' : {'type' : 'action' , 'action':_get_table_data, 'state':'end'}
         }
       }
 

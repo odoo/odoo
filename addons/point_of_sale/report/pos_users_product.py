@@ -35,28 +35,28 @@ class pos_user_product(report_sxw.rml_parse):
                 'get_total':self._get_total,
 
                 })
-    def _get_data(self,o):
-        data={}
-        sql1=""" SELECT distinct(o.id) from account_bank_statement s, account_bank_statement_line l,pos_order o,pos_order_line i where  i.order_id=o.id and o.state='paid' and l.statement_id=s.id and l.pos_statement_id=o.id and s.id=%d"""%(o.id)
+    def _get_data(self, o):
+        data = {}
+        sql1 = """ SELECT distinct(o.id) from account_bank_statement s, account_bank_statement_line l,pos_order o,pos_order_line i where  i.order_id=o.id and o.state='paid' and l.statement_id=s.id and l.pos_statement_id=o.id and s.id=%d""" % (o.id)
         self.cr.execute(sql1)
         data = self.cr.dictfetchall()
-        a_l=[]
+        a_l = []
         for r in data:
             a_l.append(r['id'])
-        a = ','.join(map(str,a_l))
+        a = ','.join(map(str, a_l))
         if len(a):
-            sql2="""SELECT sum(qty) as qty,l.price_unit*sum(l.qty) as amt,t.name as name from product_product p, product_template t, pos_order_line l where order_id in (%s) and p.product_tmpl_id=t.id and l.product_id=p.id group by t.name, l.price_unit"""%(a)
+            sql2 = """SELECT sum(qty) as qty,l.price_unit*sum(l.qty) as amt,t.name as name from product_product p, product_template t, pos_order_line l where order_id in (%s) and p.product_tmpl_id=t.id and l.product_id=p.id group by t.name, l.price_unit""" % (a)
             self.cr.execute(sql2)
             data = self.cr.dictfetchall()
         for d in data:
             self.total += d['amt']
         return data
 
-    def _get_user(self,object):
+    def _get_user(self, object):
         for o in object :
             sql = """select ru.name from account_bank_statement as abs,res_users ru
                                     where abs.user_id = ru.id
-                                    and abs.id = %d"""%(o.id)
+                                    and abs.id = %d""" % (o.id)
             self.cr.execute(sql)
             data = self.cr.fetchone()
             return data[0]

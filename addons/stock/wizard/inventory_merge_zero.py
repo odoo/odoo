@@ -46,7 +46,7 @@ _inventory_fields = {
 def do_merge(self, cr, uid, data, context):
     invent_obj = pooler.get_pool(cr.dbname).get('stock.inventory')
     invent_line_obj = pooler.get_pool(cr.dbname).get('stock.inventory.line')
-    prod_obj =  pooler.get_pool(cr.dbname).get('product.product')
+    prod_obj = pooler.get_pool(cr.dbname).get('product.product')
 
     if len(data['ids']) <> 1:
         raise wizard.except_wizard(_('Warning'),
@@ -56,10 +56,10 @@ def do_merge(self, cr, uid, data, context):
 
     cr.execute('select distinct location_id,product_id from stock_inventory_line where inventory_id=%s', (data['ids'][0],))
     inv = cr.fetchall()
-    cr.execute('select distinct product_id from stock_move where location_dest_id=%s or location_id=%s',(loc,loc,))
+    cr.execute('select distinct product_id from stock_move where location_dest_id=%s or location_id=%s', (loc, loc,))
     stock = cr.fetchall()
     for s in stock:
-        if (loc,s[0]) not in inv:
+        if (loc, s[0]) not in inv:
             p = prod_obj.browse(cr, uid, s[0])
             invent_line_obj.create(cr, uid, {
                 'inventory_id': data['ids'][0],

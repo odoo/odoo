@@ -45,7 +45,7 @@ class account_fiscal_position(osv.osv):
                 if tax.tax_src_id.id == t.id:
                     if tax.tax_dest_id:
                         result.append(tax.tax_dest_id.id)
-                    ok=True
+                    ok = True
             if not ok:
                 result.append(t.id)
         return result
@@ -54,7 +54,7 @@ class account_fiscal_position(osv.osv):
         if not fposition_id :
             return account_id
         for pos in fposition_id.account_ids:
-            if pos.account_src_id.id==account_id:
+            if pos.account_src_id.id == account_id:
                 account_id = pos.account_dest_id.id
                 break
         return account_id
@@ -79,8 +79,8 @@ class account_fiscal_position_account(osv.osv):
     _rec_name = 'position_id'
     _columns = {
         'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
-        'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type','<>','view')], required=True),
-        'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type','<>','view')], required=True)
+        'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type', '<>', 'view')], required=True),
+        'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type', '<>', 'view')], required=True)
     }
 account_fiscal_position_account()
 
@@ -100,10 +100,10 @@ class res_partner(osv.osv):
                 a.type =ANY(%s) and
                 l.partner_id =ANY(%s) and
                 l.reconcile_id is null and
-                """+query+"""
+                """ + query + """
             group by
                 l.partner_id, a.type
-            """,(['receivable','payable'],ids,))
+            """, (['receivable', 'payable'], ids,))
         tinvert = {
             'credit': 'receivable',
             'debit': 'payable'
@@ -112,32 +112,32 @@ class res_partner(osv.osv):
         res = {}
         for id in ids:
             res[id] = {}.fromkeys(field_names, 0)
-        for pid,type,val in cr.fetchall():
-            if val is None: val=0
-            res[pid][maps[type]] = (type=='receivable') and val or -val
+        for pid, type, val in cr.fetchall():
+            if val is None: val = 0
+            res[pid][maps[type]] = (type == 'receivable') and val or - val
         return res
 
     def _credit_search(self, cr, uid, obj, name, args, context):
         if not len(args):
             return []
-        where = ' and '.join(map(lambda x: '(sum(debit-credit)'+x[1]+str(x[2])+')',args))
+        where = ' and '.join(map(lambda x: '(sum(debit-credit)' + x[1] + str(x[2]) + ')', args))
         query = self.pool.get('account.move.line')._query_get(cr, uid, context={})
-        cr.execute(('select partner_id from account_move_line l where account_id in (select id from account_account where type=%s and active) and reconcile_id is null and '+query+' and partner_id is not null group by partner_id having '+where), ('receivable',) )
+        cr.execute(('select partner_id from account_move_line l where account_id in (select id from account_account where type=%s and active) and reconcile_id is null and ' + query + ' and partner_id is not null group by partner_id having ' + where), ('receivable',))
         res = cr.fetchall()
         if not len(res):
-            return [('id','=','0')]
-        return [('id','in',map(lambda x:x[0], res))]
+            return [('id', '=', '0')]
+        return [('id', 'in', map(lambda x:x[0], res))]
 
     def _debit_search(self, cr, uid, obj, name, args, context):
         if not len(args):
             return []
         query = self.pool.get('account.move.line')._query_get(cr, uid, context={})
-        where = ' and '.join(map(lambda x: '(sum(debit-credit)'+x[1]+str(x[2])+')',args))
-        cr.execute(('select partner_id from account_move_line l where account_id in (select id from account_account where type=%s and active) and reconcile_id is null and '+query+' and partner_id is not null group by partner_id having '+where), ('payable',) )
+        where = ' and '.join(map(lambda x: '(sum(debit-credit)' + x[1] + str(x[2]) + ')', args))
+        cr.execute(('select partner_id from account_move_line l where account_id in (select id from account_account where type=%s and active) and reconcile_id is null and ' + query + ' and partner_id is not null group by partner_id having ' + where), ('payable',))
         res = cr.fetchall()
         if not len(res):
-            return [('id','=','0')]
-        return [('id','in',map(lambda x:x[0], res))]
+            return [('id', '=', '0')]
+        return [('id', 'in', map(lambda x:x[0], res))]
 
     _columns = {
         'credit': fields.function(_credit_debit_get,
@@ -177,7 +177,7 @@ class res_partner(osv.osv):
             'account.payment.term',
             type='many2one',
             relation='account.payment.term',
-            string ='Payment Term',
+            string='Payment Term',
             method=True,
             view_load=True,
             help="This payment term will be used instead of the default one for the current partner"),

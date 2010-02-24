@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from osv import fields,osv
+from osv import fields, osv
 
 class board_board(osv.osv):
     _name = 'board.board'
@@ -33,11 +33,11 @@ class board_board(osv.osv):
         for line in board.line_ids:
             linestr = '<action string="%s" name="%d" colspan="4"' % (line.name, line.action_id.id)
             if line.height:
-                linestr+=(' height="%d"' % (line.height,))
+                linestr += (' height="%d"' % (line.height,))
             if line.width:
-                linestr+=(' width="%d"' % (line.width,))
+                linestr += (' width="%d"' % (line.width,))
             linestr += '/>'
-            if line.position=='left':
+            if line.position == 'left':
                 left.append(linestr)
             else:
                 right.append(linestr)
@@ -88,13 +88,13 @@ class board_board(osv.osv):
         res = {}
         res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
 
-        vids = self.pool.get('ir.ui.view.custom').search(cr, user, [('user_id','=',user), ('ref_id','=',view_id)])
+        vids = self.pool.get('ir.ui.view.custom').search(cr, user, [('user_id', '=', user), ('ref_id', '=', view_id)])
         if vids:
             view_id = vids[0]
             arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id)
             res['arch'] = arch.arch
 
-        res['toolbar'] = {'print':[],'action':[],'relate':[]}
+        res['toolbar'] = {'print':[], 'action':[], 'relate':[]}
         return res
 
     _columns = {
@@ -105,7 +105,7 @@ class board_board(osv.osv):
 
     # the following lines added to let the button on dashboard work.
     _defaults = {
-        'name': lambda *args: 'Dashboard'
+        'name': lambda * args: 'Dashboard'
     }
 
 board_board()
@@ -120,10 +120,10 @@ class board_line(osv.osv):
         'width': fields.integer('Width'),
         'board_id': fields.many2one('board.board', 'Dashboard', required=True, ondelete='cascade'),
         'action_id': fields.many2one('ir.actions.act_window', 'Action', required=True),
-        'position': fields.selection([('left','Left'),('right','Right')], 'Position', required=True)
+        'position': fields.selection([('left', 'Left'), ('right', 'Right')], 'Position', required=True)
     }
     _defaults = {
-        'position': lambda *args: 'left'
+        'position': lambda * args: 'left'
     }
 board_line()
 
@@ -151,8 +151,8 @@ class board_note(osv.osv):
         'type': fields.selection(_type_get, 'Note type', size=64),
     }
     _defaults = {
-        'user_id': lambda object,cr,uid,context: uid,
-        'date': lambda object,cr,uid,context: time.strftime('%Y-%m-%d'),
+        'user_id': lambda object, cr, uid, context: uid,
+        'date': lambda object, cr, uid, context: time.strftime('%Y-%m-%d'),
     }
 board_note()
 

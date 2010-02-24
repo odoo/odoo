@@ -30,14 +30,14 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['crm','project','report_crm'],
+    'depends': ['crm', 'project', 'report_crm'],
     'init_xml': [
         'crm_bugs_data.xml'
     ],
     'update_xml': [
         'crm_bug_wizard.xml',
         'crm_bugs_view.xml',
-        'crm_bugs_menu.xml',        
+        'crm_bugs_menu.xml',
         'crm_feature_menu.xml',
         'report_crm_project_bug_view.xml',
         'security/crm_project_security.xml',

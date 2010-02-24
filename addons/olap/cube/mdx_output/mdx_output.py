@@ -6,8 +6,8 @@ import copy
 def decimal_to_float(cube):
 # Note FP: I think the decimal > float conversion should be done more
 # in upstream
-    if type(cube)==type([]) and len(cube):
-        if type(cube[0])==type([]):
+    if type(cube) == type([]) and len(cube):
+        if type(cube[0]) == type([]):
             for b in cube:
                 decimal_to_float(b)
         else:
@@ -38,12 +38,12 @@ def sort_axis(data):
             sort_apply(cube, axis_pos2)
 
 def mdx_output(data):
-    print 'DATA',  data
+    print 'DATA', data
 #    decimal_to_float(data[1])
 #    sort_axis(data) 
     return data
 
-if __name__=='__main__':
+if __name__ == '__main__':
 	print 'Testing Code'
 	data = ([[(['user'], 'All user')], [(['measures', 'credit_limit'], 'credit_limit'), (['measures', 'count'], 'count')]], [[[66700.0], [22L]]])
 	data = ([[([u'Products'], u'All Products'), ([u'Order Date'], u'All Order Date')]], [[False], [False]])

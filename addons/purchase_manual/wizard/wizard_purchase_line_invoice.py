@@ -55,7 +55,7 @@ def _makeInvoices(self, cr, uid, data, context):
             'partner_id': order.partner_id.id,
             'address_invoice_id': order.partner_address_id.id,
             'address_contact_id': order.partner_address_id.id,
-            'invoice_line': [(6,0,lines)],
+            'invoice_line': [(6, 0, lines)],
             'currency_id' : order.pricelist_id.currency_id.id,
             'comment': order.notes,
             'payment_term': pay_term,
@@ -64,8 +64,8 @@ def _makeInvoices(self, cr, uid, data, context):
         inv_id = pool.get('account.invoice').create(cr, uid, inv)
         return inv_id
 
-    for line in pool.get('purchase.order.line').browse(cr,uid,data['ids']):
-        if (not line.invoiced) and (line.state not in ('draft','cancel')):
+    for line in pool.get('purchase.order.line').browse(cr, uid, data['ids']):
+        if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
             if not line.order_id.id in invoices:
                 invoices[line.order_id.id] = []
             if line.product_id:
@@ -97,7 +97,7 @@ def _makeInvoices(self, cr, uid, data, context):
             })
             cr.execute('insert into purchase_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
             pool.get('purchase.order.line').write(cr, uid, [line.id], {'invoiced': True})
-            invoices[line.order_id.id].append((line,inv_id))
+            invoices[line.order_id.id].append((line, inv_id))
 
     res = []
     for result in invoices.values():
@@ -107,7 +107,7 @@ def _makeInvoices(self, cr, uid, data, context):
     return {'invoice_ids': res}
 
     return {
-        'domain': "[('id','in', ["+','.join(map(str,res))+"])]",
+        'domain': "[('id','in', [" + ','.join(map(str, res)) + "])]",
         'name': _('Supplier Invoices'),
         'view_type': 'form',
         'view_mode': 'tree,form',
@@ -120,15 +120,15 @@ def _makeInvoices(self, cr, uid, data, context):
 class line_make_invoice(wizard.interface):
     def _open_invoice(self, cr, uid, data, context):
         pool_obj = pooler.get_pool(cr.dbname)
-        model_data_ids = pool_obj.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','invoice_supplier_form')])
-        resource_id = pool_obj.get('ir.model.data').read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+        model_data_ids = pool_obj.get('ir.model.data').search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'invoice_supplier_form')])
+        resource_id = pool_obj.get('ir.model.data').read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
         return {
-            'domain': "[('id','in', ["+','.join(map(str,data['form']['invoice_ids']))+"])]",
+            'domain': "[('id','in', [" + ','.join(map(str, data['form']['invoice_ids'])) + "])]",
             'name': 'Invoices',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
-            'views': [(False,'tree'),(resource_id,'form')],
+            'views': [(False, 'tree'), (resource_id, 'form')],
             'context': "{'type':'in_invoice'}",
             'type': 'ir.actions.act_window'
         }

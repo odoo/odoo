@@ -41,15 +41,15 @@ section_fields = {
 def wiki_menu_create(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     group = pool.get('wiki.groups').browse(cr, uid, data['id'])
-    action_id = pool.get('ir.actions.wizard').search(cr, uid, [('wiz_name','=','wiki.wiki.page.open')])
+    action_id = pool.get('ir.actions.wizard').search(cr, uid, [('wiz_name', '=', 'wiki.wiki.page.open')])
 
     menu_id = pool.get('ir.ui.menu').create(cr, uid, {
         'name': data['form']['menu_name'],
         'parent_id': data['form']['menu_parent_id'],
         'icon': 'STOCK_DIALOG_QUESTION',
-        'action': 'ir.actions.wizard,'+str(action_id[0])
+        'action': 'ir.actions.wizard,' + str(action_id[0])
     }, context)
-    
+
     home = data['form']['page']
     group_id = data['id']
     res = {
@@ -57,19 +57,19 @@ def wiki_menu_create(self, cr, uid, data, context):
     }
     pool.get('wiki.groups').write(cr, uid, [data['id']], res)
     pool.get('wiki.groups.link').create(cr, uid, {'group_id':group_id, 'action_id':menu_id})
-    
+
     return {}
 
 class wizard_create_menu(wizard.interface):
     states = {
         'init': {
-            'actions': [], 
-            'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end','Cancel'),('create_menu','Create Menu')]}
+            'actions': [],
+            'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end', 'Cancel'), ('create_menu', 'Create Menu')]}
         },
         'create_menu': {
-            'actions': [wiki_menu_create], 
+            'actions': [wiki_menu_create],
             'result': {
-                'type':'state', 
+                'type':'state',
                 'state':'end'
             }
         }

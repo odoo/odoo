@@ -34,7 +34,7 @@ _subscription_form = '''<?xml version="1.0"?>
 </form>''' % ('Subscription Compute',)
 
 _subscription_fields = {
-    'date': {'string':'Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True},
+    'date': {'string':'Date', 'type':'date', 'default':lambda * a: time.strftime('%Y-%m-%d'), 'required':True},
 }
 
 class wiz_subscription(wizard.interface):
@@ -47,7 +47,7 @@ class wiz_subscription(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_subscription_form, 'fields':_subscription_fields, 'state':[('end','Cancel'),('generate','Compute Entry Dates')]}
+            'result': {'type': 'form', 'arch':_subscription_form, 'fields':_subscription_fields, 'state':[('end', 'Cancel'), ('generate', 'Compute Entry Dates')]}
         },
         'generate': {
             'actions': [_action_generate],

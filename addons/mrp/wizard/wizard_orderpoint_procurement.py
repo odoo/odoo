@@ -34,7 +34,7 @@ parameter_form = '''<?xml version="1.0"?>
 </form>'''
 
 parameter_fields = {
-    'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'If the stock of a product is under 0, it will act like an orderpoint', 'default': lambda *a: False},
+    'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'If the stock of a product is under 0, it will act like an orderpoint', 'default': lambda * a: False},
 }
 
 def _procure_calculation_orderpoint(self, db_name, uid, data, context):
@@ -43,7 +43,7 @@ def _procure_calculation_orderpoint(self, db_name, uid, data, context):
     try:
         proc_obj = pool.get('mrp.procurement')
         automatic = data['form']['automatic']
-        proc_obj._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
+        proc_obj._procure_orderpoint_confirm(cr, uid, automatic=automatic, \
                 use_new_cursor=cr.dbname, context=context)
     finally:
         cr.close()
@@ -58,7 +58,7 @@ class procurement_compute(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end','Cancel'),('compute','Compute Stock')]}
+            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end', 'Cancel'), ('compute', 'Compute Stock')]}
         },
         'compute': {
             'actions': [_procure_calculation],

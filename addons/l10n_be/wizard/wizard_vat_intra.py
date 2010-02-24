@@ -46,12 +46,12 @@ form_intra = """<?xml version="1.0"?>
 </form>"""
 fields_intra = {
     'trimester': {'string': 'Trimester Number', 'type': 'selection', 'selection':[
-            ('1','Jan/Feb/Mar'),
-            ('2','Apr/May/Jun'),
-            ('3','Jul/Aug/Sep'),
-            ('4','Oct/Nov/Dec')], 'required': True},
+            ('1', 'Jan/Feb/Mar'),
+            ('2', 'Apr/May/Jun'),
+            ('3', 'Jul/Aug/Sep'),
+            ('4', 'Oct/Nov/Dec')], 'required': True},
     'test_xml': {'string':'Test XML file', 'type':'boolean'},
-    'mand_id':{'string':'MandataireId','type':'char','size':'14','required': True},
+    'mand_id':{'string':'MandataireId', 'type':'char', 'size':'14', 'required': True},
     'fyear': {'string': 'Fiscal Year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
     'country_ids': {
         'string': 'European Countries',
@@ -68,10 +68,10 @@ msg_form = """<?xml version="1.0"?>
     <field name="file_save" />
 </form>"""
 msg_fields = {
-  'msg': {'string':'File created', 'type':'text', 'size':'100','readonly':True},
+  'msg': {'string':'File created', 'type':'text', 'size':'100', 'readonly':True},
   'file_save':{'string': 'Save File',
         'type': 'binary',
-        'readonly': True,},
+        'readonly': True, },
 }
 
 class parter_vat_intra(wizard.interface):
@@ -83,26 +83,26 @@ class parter_vat_intra(wizard.interface):
     def _create_xml(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         data_cmpny = pool.get('res.users').browse(cr, uid, uid).company_id
-        data_fiscal = pool.get('account.fiscalyear').browse(cr,uid,data['form']['fyear'])
+        data_fiscal = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fyear'])
         company_vat = data_cmpny.partner_id.vat
 
         if not company_vat:
-            raise wizard.except_wizard('Data Insufficient','No VAT Number Associated with Main Company!')
+            raise wizard.except_wizard('Data Insufficient', 'No VAT Number Associated with Main Company!')
 
-        seq_controlref = pool.get('ir.sequence').get(cr, uid,'controlref')
-        seq_declarantnum = pool.get('ir.sequence').get(cr, uid,'declarantnum')
+        seq_controlref = pool.get('ir.sequence').get(cr, uid, 'controlref')
+        seq_declarantnum = pool.get('ir.sequence').get(cr, uid, 'declarantnum')
         cref = company_vat + seq_controlref
         dnum = cref + seq_declarantnum
         if len(data_fiscal.date_start.split('-')[0]) < 4:
-            raise wizard.except_wizard('Data Insufficient','Trimester year should be length of 4 digits!')
+            raise wizard.except_wizard('Data Insufficient', 'Trimester year should be length of 4 digits!')
         period_trimester = data['form']['trimester'] + data_fiscal.date_start.split('-')[0]
 
         street = zip_city = country = ''
         addr = pool.get('res.partner').address_get(cr, uid, [data_cmpny.partner_id.id], ['invoice'])
-        if addr.get('invoice',False):
-            ads = pool.get('res.partner.address').browse(cr,uid,[addr['invoice']])[0]
+        if addr.get('invoice', False):
+            ads = pool.get('res.partner.address').browse(cr, uid, [addr['invoice']])[0]
             zip_city = (ads.city or '') + ' ' + (ads.zip or '')
-            if zip_city== ' ':
+            if zip_city == ' ':
                 zip_city = ''
             if ads.street:
                 street = ads.street
@@ -114,22 +114,22 @@ class parter_vat_intra(wizard.interface):
 
         sender_date = time.strftime('%Y-%m-%d')
         data_file = '<?xml version="1.0"?>\n<VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="' + str(company_vat) + '"'
-        data_file +=' ControlRef="' + cref + '" MandataireId="' + data['form']['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
+        data_file += ' ControlRef="' + cref + '" MandataireId="' + data['form']['mand_id'] + '" SenderDate="' + str(sender_date) + '"'
         if data['form']['test_xml']:
             data_file += ' Test="1"'
         data_file += ' VersionTech="1.2">'
-        data_file +='\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>'
-        data_file +='\n\t\t\t<Country>' + str(country) +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
+        data_file += '\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat) + '</VATNum>\n\t\t\t<Name>' + str(data_cmpny.name) + '</Name>\n\t\t\t<Street>' + str(street) + '</Street>\n\t\t\t<CityAndZipCode>' + str(zip_city) + '</CityAndZipCode>'
+        data_file += '\n\t\t\t<Country>' + str(country) + '</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
 
-        data_comp ='\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>\n\t\t\t<Country>'+ str(country) +'</Country>\n\t\t</CompanyInfo>'
-        data_period = '\n\t\t<Period>'+ str(period_trimester) +'</Period>' #trimester
+        data_comp = '\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat) + '</VATNum>\n\t\t\t<Name>' + str(data_cmpny.name) + '</Name>\n\t\t\t<Street>' + str(street) + '</Street>\n\t\t\t<CityAndZipCode>' + str(zip_city) + '</CityAndZipCode>\n\t\t\t<Country>' + str(country) + '</Country>\n\t\t</CompanyInfo>'
+        data_period = '\n\t\t<Period>' + str(period_trimester) + '</Period>' #trimester
 
         error_message = []
         seq = 0
         amount_sum = 0
-        p_id_list = pool.get('res.partner').search(cr,uid,[('vat','!=',False)])
+        p_id_list = pool.get('res.partner').search(cr, uid, [('vat', '!=', False)])
         if not p_id_list:
-            raise wizard.except_wizard('Data Insufficient!','No partner has a VAT Number asociated with him.')
+            raise wizard.except_wizard('Data Insufficient!', 'No partner has a VAT Number asociated with him.')
 
         nb_period = len(data_fiscal.period_ids)
         fiscal_periods = data_fiscal.period_ids
@@ -163,7 +163,7 @@ class parter_vat_intra(wizard.interface):
                 start_date = fiscal_periods[3].date_start
                 end_date = fiscal_periods[3].date_stop
 
-        period = "to_date('" + str(start_date) + "','yyyy-mm-dd') and to_date('" + str(end_date) +"','yyyy-mm-dd')"
+        period = "to_date('" + str(start_date) + "','yyyy-mm-dd') and to_date('" + str(end_date) + "','yyyy-mm-dd')"
         record = {}
 
         for p_id in p_id_list:
@@ -202,7 +202,7 @@ class parter_vat_intra(wizard.interface):
             record[p_id] = list_partner
 
         if len(error_message):
-            data['form']['msg'] = 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
+            data['form']['msg'] = 'Exception : \n' + '-' * 50 + '\n' + '\n'.join(error_message)
             return data['form']
         data_clientinfo = ''
 
@@ -211,9 +211,9 @@ class parter_vat_intra(wizard.interface):
             amt = record[r][0] or 0
             amt = int(amt * 100)
             amount_sum += amt
-            data_clientinfo +='\n\t\t<ClientList SequenceNum="'+str(seq)+'">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>'+record[r][2] +'</VATNum>\n\t\t\t\t<Country>'+record[r][3] +'</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>'+str(amt) +'</Amount>\n\t\t\t<Period>'+str(period_trimester) +'</Period>\n\t\t\t<Code>'+str(record[r][1]) +'</Code>\n\t\t</ClientList>'
+            data_clientinfo += '\n\t\t<ClientList SequenceNum="' + str(seq) + '">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>' + record[r][2] + '</VATNum>\n\t\t\t\t<Country>' + record[r][3] + '</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>' + str(amt) + '</Amount>\n\t\t\t<Period>' + str(period_trimester) + '</Period>\n\t\t\t<Code>' + str(record[r][1]) + '</Code>\n\t\t</ClientList>'
         amount_sum = int(amount_sum)
-        data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
+        data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="' + dnum + '" ClientNbr="' + str(seq) + '" AmountSum="' + str(amount_sum) + '" >'
         data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n\t</DeclarantList>\n</VatIntra>'
         data['form']['msg'] = 'Save the File with '".xml"' extension.'
         data['form']['file_save'] = base64.encodestring(data_file)
@@ -222,11 +222,11 @@ class parter_vat_intra(wizard.interface):
     states = {
         'init': {
             'actions': [_get_europe_country],
-            'result': {'type': 'form', 'arch':form_intra, 'fields': fields_intra, 'state':[('end','Cancel'),('go','Create XML') ]}
+            'result': {'type': 'form', 'arch':form_intra, 'fields': fields_intra, 'state':[('end', 'Cancel'), ('go', 'Create XML') ]}
                 },
          'go': {
             'actions': [_create_xml],
-            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end','Ok')]},
+            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end', 'Ok')]},
                 }
              }
 parter_vat_intra('vat.intra.xml')

@@ -35,16 +35,16 @@ parents = {
 class account_balance(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_balance, self).__init__(cr, uid, name, context=context)
-        self.flag=1
-        self.dr_total= 0.00
-        self.cr_total= 0.00
-        self.parent_bal=0
-        self.status=0
-        self.done_total=0
-        self.baldiv={}
-        self.empty_parent=0
+        self.flag = 1
+        self.dr_total = 0.00
+        self.cr_total = 0.00
+        self.parent_bal = 0
+        self.status = 0
+        self.done_total = 0
+        self.baldiv = {}
+        self.empty_parent = 0
         self.result_total = {}
-        self.total_for_perc=[]
+        self.total_for_perc = []
         self.localcontext.update({
             'time': time,
             'lines': self.lines,
@@ -319,10 +319,10 @@ class account_balance(report_sxw.rml_parse):
 #                                i+=1
 #        return super(account_balance,self).repeatIn(lst, name, nodes_parent=False)
 #end
-    
-    def linesForYear(self,form):
-        temp=0
-        years={}
+
+    def linesForYear(self, form):
+        temp = 0
+        years = {}
 
         global pattern
         global show
@@ -330,190 +330,190 @@ class account_balance(report_sxw.rml_parse):
         global bal_zero
         global ref_bal
 
-        pattern=form['compare_pattern']
+        pattern = form['compare_pattern']
 
-        if form['show_columns']!=1:
-            show=0
+        if form['show_columns'] != 1:
+            show = 0
         else:
-            show=form['show_columns']
+            show = form['show_columns']
 
-        if form['format_perc']!=1:
-            perc=0
+        if form['format_perc'] != 1:
+            perc = 0
         else:
-            perc=form['format_perc']
+            perc = form['format_perc']
 
-        if form['account_choice']=='bal_zero':
-            bal_zero=0
+        if form['account_choice'] == 'bal_zero':
+            bal_zero = 0
         else:
-            bal_zero=1
+            bal_zero = 1
 
         ctx = self.context.copy()
 
-        if perc==1:
-            if form['select_account']!=False:
-                ref_ac=self.pool.get('account.account').browse(self.cr, self.uid,form['select_account'],ctx.copy())
-                if ref_ac.balance<>0.00:
-                    ref_bal=ref_ac.balance
+        if perc == 1:
+            if form['select_account'] != False:
+                ref_ac = self.pool.get('account.account').browse(self.cr, self.uid, form['select_account'], ctx.copy())
+                if ref_ac.balance <> 0.00:
+                    ref_bal = ref_ac.balance
                 else:
-                    ref_bal=1.00
+                    ref_bal = 1.00
             else:
-                ref_bal='nothing'
+                ref_bal = 'nothing'
         else:
-            ref_bal='nothing'
+            ref_bal = 'nothing'
 
 
-        total_for_perc=[]
+        total_for_perc = []
 #       if perc==1:
-        self.done_total=1
-        self.total_for_perc=self.linesForTotal(form,ids={},doneAccount={},level=1)
-        self.done_total=0
+        self.done_total = 1
+        self.total_for_perc = self.linesForTotal(form, ids={}, doneAccount={}, level=1)
+        self.done_total = 0
 
-        for t1 in range(0,len(form['fiscalyear'][0][2])):
+        for t1 in range(0, len(form['fiscalyear'][0][2])):
             locale.setlocale(locale.LC_ALL, '')
-            self.result_total["sum_credit" + str(t1)]=locale.format("%.2f", self.result_total["sum_credit" + str(t1)], grouping=True)
-            self.result_total["sum_debit" + str(t1)]=locale.format("%.2f", self.result_total["sum_debit" + str(t1)], grouping=True)
+            self.result_total["sum_credit" + str(t1)] = locale.format("%.2f", self.result_total["sum_credit" + str(t1)], grouping=True)
+            self.result_total["sum_debit" + str(t1)] = locale.format("%.2f", self.result_total["sum_debit" + str(t1)], grouping=True)
 #           self.flag=1
 #           self.result_total = {}
 
-        for temp in range(0,len(form['fiscalyear'][0][2])):
-            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][0][2][temp])
-            years["year"+str(temp)]=fy[0][1][12:16]
+        for temp in range(0, len(form['fiscalyear'][0][2])):
+            fy = self.pool.get('account.fiscalyear').name_get(self.cr, self.uid, form['fiscalyear'][0][2][temp])
+            years["year" + str(temp)] = fy[0][1][12:16]
 
         return [years]
 
 
-    def linesForTotal(self,form,ids={},doneAccount={},level=1):
-        if self.done_total==1:
-            self.done_total==1
+    def linesForTotal(self, form, ids={}, doneAccount={}, level=1):
+        if self.done_total == 1:
+            self.done_total == 1
         else:
             return [self.result_total]
-        accounts=[]
+        accounts = []
         if not ids:
             ids = self.ids
         if not ids:
             return []
         ctx = self.context.copy()
-        result_total_parent=[]
+        result_total_parent = []
 
         for id in form['fiscalyear'][0][2]:
-            tmp=[]
+            tmp = []
 
             ctx['fiscalyear'] = id
             ctx['periods'] = form['periods'][0][2]
             ctx['period_manner'] = form['period_manner']
-            ctx['state'] = form['context'].get('state','all')
+            ctx['state'] = form['context'].get('state', 'all')
             tmp = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx.copy())
 
             if len(tmp):
                 accounts.append(tmp)
 
-        merged_accounts=zip(*accounts)
+        merged_accounts = zip(*accounts)
          # used to check for the frst record so all sum_credit and sum_debit r set to 0.00
-        if level==1:
-            doneAccount={}
+        if level == 1:
+            doneAccount = {}
         for entry in merged_accounts:
-            
+
             if entry[0].id in doneAccount:
                 continue
             doneAccount[entry[0].id] = 1
-            for k in range(0,len(entry)):
-                temp_credit=0.00
-                temp_debit=0.00
+            for k in range(0, len(entry)):
+                temp_credit = 0.00
+                temp_debit = 0.00
                 if entry[0].type <> 'view':
-                    temp_credit+=entry[k].credit
-                    temp_debit+=entry[k].debit
+                    temp_credit += entry[k].credit
+                    temp_debit += entry[k].debit
 
-                if self.flag==1:
-                    self.result_total["sum_credit" + str(k)]=0.00
-                    self.result_total["sum_debit" + str(k)]=0.00
-                if form['account_choice']=='bal_zero':
-                    if temp_credit<>temp_debit:
-                        self.result_total["sum_credit" + str(k)]+=temp_credit
-                        self.result_total["sum_debit" + str(k)]+=temp_debit
+                if self.flag == 1:
+                    self.result_total["sum_credit" + str(k)] = 0.00
+                    self.result_total["sum_debit" + str(k)] = 0.00
+                if form['account_choice'] == 'bal_zero':
+                    if temp_credit <> temp_debit:
+                        self.result_total["sum_credit" + str(k)] += temp_credit
+                        self.result_total["sum_debit" + str(k)] += temp_debit
                 else:
-                    self.result_total["sum_credit" + str(k)]+=temp_credit
-                    self.result_total["sum_debit" + str(k)]+=temp_debit
+                    self.result_total["sum_credit" + str(k)] += temp_credit
+                    self.result_total["sum_debit" + str(k)] += temp_debit
 
-            self.flag=2
+            self.flag = 2
 
             if entry[0].child_id:
-                ids2 = [(x.code,x.id) for x in entry[0].child_id]
+                ids2 = [(x.code, x.id) for x in entry[0].child_id]
                 ids2.sort()
 
-                result_total_parent = self.linesForTotal(form, [x[1] for x in ids2],doneAccount,level+1)
+                result_total_parent = self.linesForTotal(form, [x[1] for x in ids2], doneAccount, level + 1)
 
         return [self.result_total]
 
     def lines(self, form, ids={}, done={}, level=1):
-        accounts=[]
+        accounts = []
         if not ids:
             ids = self.ids
         if not ids:
             return []
         result = []
         ctx = self.context.copy()
-        tmp1=[]
+        tmp1 = []
         for id in form['fiscalyear'][0][2]:
 
             ctx['fiscalyear'] = id
             ctx['periods'] = form['periods'][0][2]
-            ctx['period_manner']=form['period_manner']
-            ctx['state'] = form['context'].get('state','all')
-            tmp1 = self.pool.get('account.account').browse(self.cr, self.uid, ids,ctx.copy())
+            ctx['period_manner'] = form['period_manner']
+            ctx['state'] = form['context'].get('state', 'all')
+            tmp1 = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx.copy())
 
             if len(tmp1):
                 accounts.append(tmp1)
 
-        if level==1:   #if parent is called,done is not empty when called again.
-            done={}
+        if level == 1:   #if parent is called,done is not empty when called again.
+            done = {}
 
         def cmp_code(x, y):
             return cmp(x.code, y.code)
-        for n in range(0,len(accounts)):
+        for n in range(0, len(accounts)):
             accounts[n].sort(cmp_code)
-        common={}
-        merged_accounts=zip(*accounts)
+        common = {}
+        merged_accounts = zip(*accounts)
 
         for entry in merged_accounts:
-            j=0
-            checked=1
+            j = 0
+            checked = 1
 
-            if form['account_choice']!='all':    #  if checked,include empty a/c;not otherwise
-                checked=0
+            if form['account_choice'] != 'all':    #  if checked,include empty a/c;not otherwise
+                checked = 0
 
             if entry[0].id in done:
                 continue
             done[entry[0].id] = 1
 
             if entry[0].child_id:  # this is for parent account,dont check 0 for it
-                checked=4
-                self.status=1 # for displaying it Bold
+                checked = 4
+                self.status = 1 # for displaying it Bold
             else:
-                self.status=0
-            if checked==0:
-                i=0
-                for i in range(0,len(entry)):
-                    if bal_zero==0:
-                        if entry[i].balance<>0.0:
-                            checked=4
+                self.status = 0
+            if checked == 0:
+                i = 0
+                for i in range(0, len(entry)):
+                    if bal_zero == 0:
+                        if entry[i].balance <> 0.0:
+                            checked = 4
                             break
                         else:
-                            checked=3
-                            i=i+1
+                            checked = 3
+                            i = i + 1
                     else:
                         if entry[i].credit <> 0.0 or entry[i].debit <> 0.0:
-                            checked=4
+                            checked = 4
                             break
                         else:
-                            checked=3
-                            i=i+1
+                            checked = 3
+                            i = i + 1
 
-            if checked==3:
+            if checked == 3:
                 # this is the point where we skip those accounts which are encountered as empty ones
                 continue
-                self.empty_parent=0
+                self.empty_parent = 0
             else:
-                self.empty_parent=1
+                self.empty_parent = 1
                 res = {
                     'code': entry[0].code,
                     'name': entry[0].name,
@@ -521,96 +521,96 @@ class account_balance(report_sxw.rml_parse):
                     'status': self.status,
                     }
 
-                for j in range(0,len(entry)):
+                for j in range(0, len(entry)):
 
                     locale.setlocale(locale.LC_ALL, '')
-                    res["debit"+str(j)]=locale.format("%.2f", entry[j].debit, grouping=True)
-                    res["credit"+str(j)]=locale.format("%.2f", entry[j].credit, grouping=True)
-                    res["balance"+str(j)]=locale.format("%.2f", entry[j].balance, grouping=True)
+                    res["debit" + str(j)] = locale.format("%.2f", entry[j].debit, grouping=True)
+                    res["credit" + str(j)] = locale.format("%.2f", entry[j].credit, grouping=True)
+                    res["balance" + str(j)] = locale.format("%.2f", entry[j].balance, grouping=True)
 
 
-                    if j==0:
-                        res["bal_cash"+str(j)]="0.00"
-                        res["bal_perc"+str(j)]="0.00%"
+                    if j == 0:
+                        res["bal_cash" + str(j)] = "0.00"
+                        res["bal_perc" + str(j)] = "0.00%"
                     else:
-                        temp_cash=entry[j].balance - entry[j-1].balance
-                        res["bal_cash"+str(j)]=locale.format("%.2f", temp_cash, grouping=True)
-                        if entry[j-1].balance<>0.00:
-                            temp_perc=(entry[j].balance - entry[j-1].balance )*100/entry[j-1].balance
+                        temp_cash = entry[j].balance - entry[j - 1].balance
+                        res["bal_cash" + str(j)] = locale.format("%.2f", temp_cash, grouping=True)
+                        if entry[j - 1].balance <> 0.00:
+                            temp_perc = (entry[j].balance - entry[j - 1].balance) * 100 / entry[j - 1].balance
                         else:
-                            temp_perc=(entry[j].balance) *100
+                            temp_perc = (entry[j].balance) * 100
 
-                        res["bal_perc"+str(j)]=locale.format("%.2f", temp_perc) + "%"
+                        res["bal_perc" + str(j)] = locale.format("%.2f", temp_perc) + "%"
 
-                    if ref_bal=='nothing':
-                        if level==1:
-                            self.parent_bal=1
+                    if ref_bal == 'nothing':
+                        if level == 1:
+                            self.parent_bal = 1
                         else:
-                            self.parent_bal=0
+                            self.parent_bal = 0
 
-                        if self.parent_bal==1:
-                            res["balance_perc"+str(j)]="/"
+                        if self.parent_bal == 1:
+                            res["balance_perc" + str(j)] = "/"
                         else:
-                            if entry[j].balance==0.00:
-                                if self.baldiv["baldiv"+str(level-1)+str(j)]<>0.00:
-                                    res["balance_perc"+str(j)]="0.00%"
+                            if entry[j].balance == 0.00:
+                                if self.baldiv["baldiv" + str(level - 1) + str(j)] <> 0.00:
+                                    res["balance_perc" + str(j)] = "0.00%"
                                 else:
-                                    res["balance_perc"+str(j)]="/"
+                                    res["balance_perc" + str(j)] = "/"
                             else:
-                                if self.baldiv["baldiv"+str(level-1)+str(j)]<>0.00:
-                                    temp=self.baldiv["baldiv"+str(level-1)+str(j)]
-                                    temp1=(entry[j].balance * 100 )/ float(temp)
-                                    temp1=round(temp1,2)
-                                    res["balance_perc" + str(j)]=str(temp1)+"%"
+                                if self.baldiv["baldiv" + str(level - 1) + str(j)] <> 0.00:
+                                    temp = self.baldiv["baldiv" + str(level - 1) + str(j)]
+                                    temp1 = (entry[j].balance * 100) / float(temp)
+                                    temp1 = round(temp1, 2)
+                                    res["balance_perc" + str(j)] = str(temp1) + "%"
                                 else:
-                                    res["balance_perc"+str(j)]="/"
+                                    res["balance_perc" + str(j)] = "/"
                     else:
-                        res["balance_perc"+str(j)]=str( (entry[j].balance * 100 )/ float(ref_bal)) + "%"
+                        res["balance_perc" + str(j)] = str((entry[j].balance * 100) / float(ref_bal)) + "%"
 
             result.append(res)
 
             if entry[0].child_id:
 
-                for q in range(0,len(form['fiscalyear'][0][2])):
-                    self.baldiv["baldiv"+str(level)+str(q)]=entry[q].balance
+                for q in range(0, len(form['fiscalyear'][0][2])):
+                    self.baldiv["baldiv" + str(level) + str(q)] = entry[q].balance
 
-                ids2 = [(x.code,x.id) for x in entry[0].child_id]
+                ids2 = [(x.code, x.id) for x in entry[0].child_id]
                 ids2.sort()
-                dir=[]
-                dir += self.lines(form, [x[1] for x in ids2], done, level+1)
-                if dir==[]:
-                    for w in range(0,len(form['fiscalyear'][0][2])):
-                        if entry[w].credit <> 0.0 or entry[w].debit <> 0.0 or entry[w].balance<>0.00:
-                            dont_pop=1
+                dir = []
+                dir += self.lines(form, [x[1] for x in ids2], done, level + 1)
+                if dir == []:
+                    for w in range(0, len(form['fiscalyear'][0][2])):
+                        if entry[w].credit <> 0.0 or entry[w].debit <> 0.0 or entry[w].balance <> 0.00:
+                            dont_pop = 1
                             break
                         else:
-                            dont_pop=0
-                    if dont_pop==1:
-                        result +=dir
+                            dont_pop = 0
+                    if dont_pop == 1:
+                        result += dir
                     else:
                         result.pop(-1)   # here we pop up the parent having its children as emprty accounts
                 else:
-                    result +=dir
+                    result += dir
 
         return result
 
-    def get_years(self,form):
-        result =[]
-        res={}
-        for temp in range(0,len(form['fiscalyear'][0][2])):
-            res={}
-            fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][0][2][temp])
-            res['year']=fy[0][1]
-            res['last_str']=temp
-            
+    def get_years(self, form):
+        result = []
+        res = {}
+        for temp in range(0, len(form['fiscalyear'][0][2])):
+            res = {}
+            fy = self.pool.get('account.fiscalyear').name_get(self.cr, self.uid, form['fiscalyear'][0][2][temp])
+            res['year'] = fy[0][1]
+            res['last_str'] = temp
+
             result.append(res)
         self.linesForYear(form)
         return result
-    
-    def get_lines(self,year_dict,form):
+
+    def get_lines(self, year_dict, form):
         final_result = []
-        line_l =[]
-        res = {}         
+        line_l = []
+        res = {}
         line_l = self.lines(form)
         self.cal_total(year_dict)
         if line_l:
@@ -619,44 +619,44 @@ class account_balance(report_sxw.rml_parse):
                 res['code'] = l['code']
                 res['name'] = l['name']
                 res['level'] = l['level']
-                for k,v in l.items():
-                    if k.startswith('debit'+str(year_dict['last_str'])):
-                     res['debit'] = v  
-                    if k.startswith('credit'+str(year_dict['last_str'])):
+                for k, v in l.items():
+                    if k.startswith('debit' + str(year_dict['last_str'])):
+                     res['debit'] = v
+                    if k.startswith('credit' + str(year_dict['last_str'])):
                      res['credit'] = v
-                    if k.startswith('balance'+str(year_dict['last_str'])) and not k.startswith('balance_perc'+str(year_dict['last_str'])):
-                     res['balance'] =v 
-                    if k.startswith('balance_perc'+str(year_dict['last_str'])) and not k.startswith('balance'+str(year_dict['last_str'])):
+                    if k.startswith('balance' + str(year_dict['last_str'])) and not k.startswith('balance_perc' + str(year_dict['last_str'])):
+                     res['balance'] = v
+                    if k.startswith('balance_perc' + str(year_dict['last_str'])) and not k.startswith('balance' + str(year_dict['last_str'])):
                      res['balance_perc'] = v
                     if form['compare_pattern'] == 'bal_perc':
-                        if k.startswith('bal_perc'+str(year_dict['last_str'])):
+                        if k.startswith('bal_perc' + str(year_dict['last_str'])):
                          res['pattern'] = v
                     elif form['compare_pattern'] == 'bal_cash':
-                        if k.startswith('bal_cash'+str(year_dict['last_str'])):
+                        if k.startswith('bal_cash' + str(year_dict['last_str'])):
                          res['pattern'] = v
                     else:
                          res['pattern'] = ''
                 final_result.append(res)
         return final_result
 
-    def cal_total(self,year_dict):
+    def cal_total(self, year_dict):
         total_l = self.result_total
         if total_l:
-            for k,v in total_l.items():
-                if k.startswith('sum_debit'+str(year_dict['last_str'])):
+            for k, v in total_l.items():
+                if k.startswith('sum_debit' + str(year_dict['last_str'])):
                     self.dr_total = v
-                elif k.startswith('sum_credit'+str(year_dict['last_str'])):
+                elif k.startswith('sum_credit' + str(year_dict['last_str'])):
                     self.cr_total = v
                 else:
                     continue
         return True
-    
+
     def total_dr(self):
         return self.dr_total
-    
+
     def total_cr(self):
         return self.cr_total
-    
+
 report_sxw.report_sxw('report.account.balance.account.balance', 'account.account', 'addons/account_balance/report/account_balance.rml', parser=account_balance, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

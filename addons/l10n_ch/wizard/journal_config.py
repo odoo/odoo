@@ -33,42 +33,42 @@ from osv import fields, osv
 
 class Journal(osv.osv_memory):
     """Create account.journal.todo in order to add configuration wizzard"""
-    _name ="account.journal.todo"
+    _name = "account.journal.todo"
     _inherit = 'res.config'
 
     def _get_journal(self, cr, uid, ctx):
         if not self.__dict__.has_key('_inner_steps') :
             self._inner_steps = 0
-        ids = self.pool.get('account.journal').search(cr,uid,[])
+        ids = self.pool.get('account.journal').search(cr, uid, [])
         if self._inner_steps == 'done' :
             return False
         return ids[self._inner_steps]
-        
+
     def _get_debit(self, cr, uid, ctx):
         if not self.__dict__.has_key('_inner_steps') :
             self._inner_steps = 0
         if self._inner_steps == 'done' :
             return False
-        ids = self.pool.get('account.journal').search(cr,uid,[])
+        ids = self.pool.get('account.journal').search(cr, uid, [])
         return self.pool.get('account.journal').browse(
             cr,
             uid,
             ids[self._inner_steps]
         ).default_debit_account_id.id
-        
+
     def _get_credit(self, cr, uid, ctx):
         if not self.__dict__.has_key('_inner_steps') :
             self._inner_steps = 0
         if self._inner_steps == 'done' :
             return False
-        ids = self.pool.get('account.journal').search(cr,uid,[])
+        ids = self.pool.get('account.journal').search(cr, uid, [])
         return self.pool.get('account.journal').browse(
             cr,
             uid,
             ids[self._inner_steps]
         ).default_credit_account_id.id
-        
-    _columns={
+
+    _columns = {
         'name': fields.many2one(
             'account.journal',
             'Journal to set',
@@ -76,14 +76,14 @@ class Journal(osv.osv_memory):
              help="The currenty edited account journal"
         ),
         'default_credit_account_id': fields.many2one(
-                'account.account', 'Default Credit Account', 
+                'account.account', 'Default Credit Account',
                 domain="[('type','!=','view')]",
                 help="The Default Credit Account of the account journal"
 
             ),
         'default_debit_account_id': fields.many2one(
-                'account.account', 
-                'Default Debit Account', 
+                'account.account',
+                'Default Debit Account',
                 domain="[('type','!=','view')]",
                 help="The Default Debit Account of the account journal"
             ),
@@ -94,33 +94,33 @@ class Journal(osv.osv_memory):
         'default_debit_account_id':_get_debit,
         'default_credit_account_id':_get_credit,
         }
-    
+
     def on_change_debit(self, cr, uid, id, journal, account) :
         if account :
             self.pool.get('account.journal').write(
                 cr, uid, journal,
-                vals={'default_debit_account_id': account,}
-                )
-        return {}
-        
-    def on_change_credit(self, cr, uid, id, journal, account) :
-        if account : 
-            self.pool.get('account.journal').write(
-                cr, uid, journal,
-                vals={'default_credit_account_id': account,}
+                vals={'default_debit_account_id': account, }
                 )
         return {}
 
-    def execute(self,cr,uid,ids,context=None):
+    def on_change_credit(self, cr, uid, id, journal, account) :
+        if account :
+            self.pool.get('account.journal').write(
+                cr, uid, journal,
+                vals={'default_credit_account_id': account, }
+                )
+        return {}
+
+    def execute(self, cr, uid, ids, context=None):
         jids = self.pool.get('account.journal').search(cr, uid, [])
-        if self._inner_steps < len(jids)-1:
+        if self._inner_steps < len(jids) - 1:
             self._inner_steps += 1
             return {
                 'view_type': 'form',
                 "view_mode": 'form',
                 'res_model': 'account.journal.todo',
                 'view_id': self.pool.get('ir.ui.view')\
-                    .search(cr, uid, [('name','=','account.journal.todo.form')]),
+                    .search(cr, uid, [('name', '=', 'account.journal.todo.form')]),
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 }

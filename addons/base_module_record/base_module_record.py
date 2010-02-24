@@ -21,7 +21,7 @@
 
 from xml.dom import minidom
 from osv.osv import osv_pool
-from osv import fields,osv
+from osv import fields, osv
 import netsvc
 import pooler
 import string
@@ -38,11 +38,11 @@ class recording_objects_proxy(objects_proxy):
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
         if mod and mod.recording:
-            if args[4] in ('copy','write','unlink','create'):
+            if args[4] in ('copy', 'write', 'unlink', 'create'):
                 if _old_args is not None:
                     args[5].update(_old_args)
                     if args[5]:
-                        mod.recording_data.append(('query', args, argv,res))
+                        mod.recording_data.append(('query', args, argv, res))
         return res
 
     def exec_workflow(self, *args, **argv):
@@ -88,81 +88,81 @@ class base_module_record(osv.osv):
         i = 0
         while True:
             try:
-                name = filter(lambda x: x in string.letters, (data.get('name','') or '').lower())
+                name = filter(lambda x: x in string.letters, (data.get('name', '') or '').lower())
             except:
-                name=''
-            val = model.replace('.','_')+'_'+name+ str(i)
-            i+=1
+                name = ''
+            val = model.replace('.', '_') + '_' + name + str(i)
+            i += 1
             if val not in self.ids.values():
                 break
         return val
 
     def _get_id(self, cr, uid, model, id):
-        if type(id)==type(()):
-            id=id[0]
-        if (model,id) in self.ids:
-            return self.ids[(model,id)], False
+        if type(id) == type(()):
+            id = id[0]
+        if (model, id) in self.ids:
+            return self.ids[(model, id)], False
         dt = self.pool.get('ir.model.data')
-        dtids = dt.search(cr, uid, [('model','=',model), ('res_id','=',id)])
+        dtids = dt.search(cr, uid, [('model', '=', model), ('res_id', '=', id)])
         if not dtids:
             return None, None
         obj = dt.browse(cr, uid, dtids[0])
         self.depends[obj.module] = True
-        return obj.module+'.'+obj.name, obj.noupdate
+        return obj.module + '.' + obj.name, obj.noupdate
 
     def _create_record(self, cr, uid, doc, model, data, record_id, noupdate=False):
         record = doc.createElement('record')
         record.setAttribute("id", record_id)
         record.setAttribute("model", model)
         record_list = [record]
-        lids  = self.pool.get('ir.model.data').search(cr, uid, [('model','=',model)])
+        lids = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', model)])
         res = self.pool.get('ir.model.data').read(cr, uid, lids[:1], ['module'])
         if res:
-            self.depends[res[0]['module']]=True
+            self.depends[res[0]['module']] = True
         fields = self.pool.get(model).fields_get(cr, uid)
-        for key,val in data.items():
-            if not (val or (fields[key]['type']=='boolean')):
+        for key, val in data.items():
+            if not (val or (fields[key]['type'] == 'boolean')):
                 continue
-            if fields[key]['type'] in ('integer','float'):
+            if fields[key]['type'] in ('integer', 'float'):
                 field = doc.createElement('field')
                 field.setAttribute("name", key)
-                field.setAttribute("eval", val and str(val) or 'False' )
+                field.setAttribute("eval", val and str(val) or 'False')
                 record.appendChild(field)
             elif fields[key]['type'] in ('boolean',):
                 field = doc.createElement('field')
                 field.setAttribute("name", key)
-                field.setAttribute("eval", val and '1' or '0' )
+                field.setAttribute("eval", val and '1' or '0')
                 record.appendChild(field)
             elif fields[key]['type'] in ('many2one',):
                 field = doc.createElement('field')
                 field.setAttribute("name", key)
-                if type(val) in (type(''),type(u'')):
+                if type(val) in (type(''), type(u'')):
                     id = val
                 else:
-                    id,update = self._get_id(cr, uid, fields[key]['relation'], val)
+                    id, update = self._get_id(cr, uid, fields[key]['relation'], val)
                     noupdate = noupdate or update
                 if not id:
                     field.setAttribute("model", fields[key]['relation'])
                     fld_nm = self.pool.get(fields[key]['relation'])._rec_name
-                    name = self.pool.get(fields[key]['relation']).read(cr, uid, val,[fld_nm])[fld_nm] or False
-                    field.setAttribute("search", str([(str(fld_nm) ,'=', name)]))
+                    name = self.pool.get(fields[key]['relation']).read(cr, uid, val, [fld_nm])[fld_nm] or False
+                    field.setAttribute("search", str([(str(fld_nm) , '=', name)]))
                 else:
                     field.setAttribute("ref", id)
                 record.appendChild(field)
             elif fields[key]['type'] in ('one2many',):
                 for valitem in (val or []):
-                    if valitem[0] in (0,1):
+                    if valitem[0] in (0, 1):
                         if key in self.pool.get(model)._columns:
                             fname = self.pool.get(model)._columns[key]._fields_id
                         else:
                             fname = self.pool.get(model)._inherit_fields[key][2]._fields_id
                         valitem[2][fname] = record_id
-                        newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
+                        newid, update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
                         if not newid:
                             newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
                         self.ids[(fields[key]['relation'], valitem[1])] = newid
 
-                        childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'],valitem[2], newid)
+                        childrecord, update = self._create_record(cr, uid, doc, fields[key]['relation'], valitem[2], newid)
                         noupdate = noupdate or update
                         record_list += childrecord
                     else:
@@ -170,15 +170,15 @@ class base_module_record(osv.osv):
             elif fields[key]['type'] in ('many2many',):
                 res = []
                 for valitem in (val or []):
-                    if valitem[0]==6:
+                    if valitem[0] == 6:
                         for id2 in valitem[2]:
-                            id,update = self._get_id(cr, uid, fields[key]['relation'], id2)
-                            self.ids[(fields[key]['relation'],id2)] = id
+                            id, update = self._get_id(cr, uid, fields[key]['relation'], id2)
+                            self.ids[(fields[key]['relation'], id2)] = id
                             noupdate = noupdate or update
                             res.append(id)
                         field = doc.createElement('field')
                         field.setAttribute("name", key)
-                        field.setAttribute("eval", "[(6,0,["+','.join(map(lambda x: "ref('%s')" % (x,), res))+'])]')
+                        field.setAttribute("eval", "[(6,0,[" + ','.join(map(lambda x: "ref('%s')" % (x,), res)) + '])]')
                         record.appendChild(field)
             else:
                 field = doc_createXElement(doc, 'field')
@@ -190,49 +190,49 @@ class base_module_record(osv.osv):
 
     def get_copy_data(self, cr, uid, model, id, result):
         res = []
-        obj=self.pool.get(model)
-        data=obj.read(cr, uid,[id])
-        if type(data)==type([]):
+        obj = self.pool.get(model)
+        data = obj.read(cr, uid, [id])
+        if type(data) == type([]):
             del data[0]['id']
-            data=data[0]
+            data = data[0]
         else:
             del data['id']
 
         mod_fields = obj.fields_get(cr, uid)
         for f in filter(lambda a: isinstance(obj._columns[a], fields.function)\
-                    and (not obj._columns[a].store),obj._columns):
+                    and (not obj._columns[a].store), obj._columns):
             del data[f]
 
-        for key,val in data.items():
+        for key, val in data.items():
             if result.has_key(key):
                 continue
             if mod_fields[key]['type'] == 'many2one':
-                if type(data[key])==type(True) or type(data[key])==type(1):
-                    result[key]=data[key]
+                if type(data[key]) == type(True) or type(data[key]) == type(1):
+                    result[key] = data[key]
                 elif not data[key]:
                     result[key] = False
                 else:
-                    result[key]=data[key][0]
+                    result[key] = data[key][0]
 
             elif mod_fields[key]['type'] in ('one2many',):
                 continue # due to this start stop recording will not record one2many field
                 rel = mod_fields[key]['relation']
                 if len(data[key]):
-                    res1=[]
+                    res1 = []
                     for rel_id in data[key]:
-                        res=[0,0]
-                        res.append(self.get_copy_data(cr, uid,rel,rel_id,{}))
+                        res = [0, 0]
+                        res.append(self.get_copy_data(cr, uid, rel, rel_id, {}))
                         res1.append(res)
-                    result[key]=res1
+                    result[key] = res1
                 else:
-                    result[key]=data[key]
+                    result[key] = data[key]
 
             elif mod_fields[key]['type'] == 'many2many':
-                result[key]=[(6,0,data[key])]
+                result[key] = [(6, 0, data[key])]
 
             else:
-                result[key]=data[key]
-        for k,v in obj._inherits.items():
+                result[key] = data[key]
+        for k, v in obj._inherits.items():
             del result[v]
         return result
 
@@ -243,7 +243,7 @@ class base_module_record(osv.osv):
         record_list = [record]
 
         value = doc.createElement('value')
-        value.setAttribute('eval', '[ref(\'%s\')]' % (record_id, ))
+        value.setAttribute('eval', '[ref(\'%s\')]' % (record_id,))
         value.setAttribute('model', model)
 
         record.appendChild(value)
@@ -252,44 +252,44 @@ class base_module_record(osv.osv):
     def _generate_object_xml(self, cr, uid, rec, recv, doc, result=None):
         record_list = []
         noupdate = False
-        if rec[4]=='write':
+        if rec[4] == 'write':
             for id in rec[5]:
-                id,update = self._get_id(cr, uid, rec[3], id)
+                id, update = self._get_id(cr, uid, rec[3], id)
                 noupdate = noupdate or update
                 if not id:
                     continue
-                record,update = self._create_record(cr, uid, doc, rec[3], rec[6], id)
+                record, update = self._create_record(cr, uid, doc, rec[3], rec[6], id)
                 noupdate = noupdate or update
                 record_list += record
 
         elif rec[4] in ('menu_create',):
             for id in rec[5]:
-                id,update = self._get_id(cr, uid, rec[3], id)
+                id, update = self._get_id(cr, uid, rec[3], id)
                 noupdate = noupdate or update
                 if not id:
                     continue
-                record,update = self._create_function(cr, uid, doc, rec[3], rec[4], id)
+                record, update = self._create_function(cr, uid, doc, rec[3], rec[4], id)
                 noupdate = noupdate or update
                 record_list += record
 
-        elif rec[4]=='create':
-            id = self._create_id(cr, uid, rec[3],rec[5])
-            record,noupdate = self._create_record(cr, uid, doc, rec[3], rec[5], id)
+        elif rec[4] == 'create':
+            id = self._create_id(cr, uid, rec[3], rec[5])
+            record, noupdate = self._create_record(cr, uid, doc, rec[3], rec[5], id)
             self.ids[(rec[3], result)] = id
             record_list += record
 
-        elif rec[4]=='copy':
-            data=self.get_copy_data(cr,uid,rec[3],rec[5],rec[6])
-            copy_rec=(rec[0],rec[1],rec[2],rec[3],rec[4],rec[5],data,rec[7])
-            rec=copy_rec
-            rec_data=[(self.recording_data[0][0],rec,self.recording_data[0][2],self.recording_data[0][3])]
-            self.recording_data=rec_data
-            id = self._create_id(cr, uid, rec[3],rec[6])
-            record,noupdate = self._create_record(cr, uid, doc, rec[3], rec[6], id)
+        elif rec[4] == 'copy':
+            data = self.get_copy_data(cr, uid, rec[3], rec[5], rec[6])
+            copy_rec = (rec[0], rec[1], rec[2], rec[3], rec[4], rec[5], data, rec[7])
+            rec = copy_rec
+            rec_data = [(self.recording_data[0][0], rec, self.recording_data[0][2], self.recording_data[0][3])]
+            self.recording_data = rec_data
+            id = self._create_id(cr, uid, rec[3], rec[6])
+            record, noupdate = self._create_record(cr, uid, doc, rec[3], rec[6], id)
             self.ids[(rec[3], result)] = id
             record_list += record
 
-        return record_list,noupdate
+        return record_list, noupdate
 
     def _generate_assert_xml(self, rec, doc):
         pass
@@ -302,8 +302,8 @@ class base_module_record(osv.osv):
             terp = doc.createElement("openerp")
             doc.appendChild(terp)
             for rec in self.recording_data:
-                if rec[0]=='workflow':
-                    rec_id,noupdate = self._get_id(cr, uid, rec[1][3], rec[1][5])
+                if rec[0] == 'workflow':
+                    rec_id, noupdate = self._get_id(cr, uid, rec[1][3], rec[1][5])
                     if not rec_id:
                         continue
                     data = doc.createElement("data")
@@ -315,8 +315,8 @@ class base_module_record(osv.osv):
                     if noupdate:
                         data.setAttribute("noupdate", "1")
                     wkf.setAttribute("ref", rec_id)
-                if rec[0]=='query':
-                    res_list,noupdate = self._generate_object_xml(cr, uid, rec[1], rec[2], doc, rec[3])
+                if rec[0] == 'query':
+                    res_list, noupdate = self._generate_object_xml(cr, uid, rec[1], rec[2], doc, rec[3])
                     data = doc.createElement("data")
                     if noupdate:
                         data.setAttribute("noupdate", "1")
@@ -324,7 +324,7 @@ class base_module_record(osv.osv):
                         terp.appendChild(data)
                     for res in res_list:
                         data.appendChild(res)
-                elif rec[0]=='assert':
+                elif rec[0] == 'assert':
                         pass
             return doc.toprettyxml(indent="\t").encode('utf-8')
 base_module_record()

@@ -36,8 +36,8 @@ import time
 try:
     import vobject
 except ImportError:
-    raise osv.except_osv('vobject Import Error!','Please install python-vobject from http://vobject.skyhouseconsulting.com/')
- 
+    raise osv.except_osv('vobject Import Error!', 'Please install python-vobject from http://vobject.skyhouseconsulting.com/')
+
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
 # R-1  Required and can come only once
@@ -60,7 +60,7 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
             r_id = cr.fetchone()
             if r_id:
                 return (id, r_id[0])
-        cr.execute(qry)        
+        cr.execute(qry)
         ids = map(lambda x: str(x[0]), cr.fetchall())
         if id in ids:
             return (id, None)
@@ -138,7 +138,7 @@ def map_data(cr, uid, obj):
                 continue
             if field_type == 'timedelta':
                 if map_val:
-                    vals[field] = (map_val.seconds/float(86400) + map_val.days)
+                    vals[field] = (map_val.seconds / float(86400) + map_val.days)
             if map_val:
                 vals[field] = map_val
     return vals
@@ -146,7 +146,7 @@ def map_data(cr, uid, obj):
 class CalDAV(object):
     __attribute__ = {}
 
-    
+
 
     def ical_set(self, name, value, type):
         if name in self.__attribute__ and self.__attribute__[name]:
@@ -156,7 +156,7 @@ class CalDAV(object):
     def ical_get(self, name, type):
         if self.__attribute__.get(name):
             val = self.__attribute__.get(name).get(type, None)
-            valtype =  self.__attribute__.get(name).get('type', None)
+            valtype = self.__attribute__.get(name).get('type', None)
             if type == 'value':
                 if valtype and valtype == 'datetime' and val:
                     if isinstance(val, list):
@@ -172,7 +172,7 @@ class CalDAV(object):
             if self.__attribute__[name]:
                 self.__attribute__[name][type] = None
         return True
-    
+
     def parse_ics(self, cr, uid, child, cal_children=None, context=None):
         att_data = []
         for cal_data in child.getChildren():
@@ -217,10 +217,10 @@ class CalDAV(object):
                         model_obj = self.pool.get(model)
                         r_ids = []
                         if model_obj._columns.get('recurrent_uid', None):
-                            cr.execute('select id from %s  where recurrent_uid=%s' 
+                            cr.execute('select id from %s  where recurrent_uid=%s'
                                            % (model_obj._table, data[map_field]))
                             r_ids = map(lambda x: x[0], cr.fetchall())
-                        if r_ids: 
+                        if r_ids:
                             rdata = self.pool.get(model).read(cr, uid, r_ids)
                             event_obj = self.pool.get('basic.calendar.event')
                             rcal = event_obj.export_cal(cr, uid, rdata, context=context)
@@ -248,7 +248,7 @@ class CalDAV(object):
                                      data[map_field], ical, context=context)
                     elif data[map_field]:
                         if map_type in ("char", "text"):
-                            vevent.add(field).value = tools.ustr(data[map_field]) 
+                            vevent.add(field).value = tools.ustr(data[map_field])
                         elif map_type in ('datetime', 'date') and data[map_field]:
                             if field in ('exdate'):
                                 vevent.add(field).value = [parser.parse(data[map_field])]
@@ -271,7 +271,7 @@ class CalDAV(object):
                                     if val1 == data[map_field]:
                                         vevent.add(field).value = key1
         return vevent
-    
+
     def check_import(self, cr, uid, vals, context={}):
         ids = []
         model_obj = self.pool.get(context.get('model'))
@@ -339,27 +339,27 @@ class Calendar(CalDAV, osv.osv):
         'vtimezone': None, # Use: O-n, Type: Collection of Timezone class
     }
     _columns = {
-            'name': fields.char("Name", size=64), 
-            'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'), 
-            'active': fields.boolean('Active'), 
-            'create_date': fields.datetime('Created Date'), 
-            'write_date': fields.datetime('Modifided Date'), 
+            'name': fields.char("Name", size=64),
+            'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),
+            'active': fields.boolean('Active'),
+            'create_date': fields.datetime('Created Date'),
+            'write_date': fields.datetime('Modifided Date'),
     }
 
     _defaults = {
-                'active': lambda *a: True, 
+                'active': lambda * a: True,
                  }
 
     def export_cal(self, cr, uid, ids, vobj='vevent', context={}):
         cal = self.browse(cr, uid, ids[0])
-        ical = vobject.iCalendar()        
+        ical = vobject.iCalendar()
         for line in cal.line_ids:
             if line.name in ('valarm', 'attendee'):
                 continue
             mod_obj = self.pool.get(line.object_id.model)
             data_ids = mod_obj.search(cr, uid, eval(line.domain), context=context)
             datas = mod_obj.read(cr, uid, data_ids, context=context)
-            context.update({'model': line.object_id.model, 
+            context.update({'model': line.object_id.model,
                                     'calendar_id': cal.id
                                     })
             self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)
@@ -380,7 +380,7 @@ class Calendar(CalDAV, osv.osv):
             cal_children[line.name] = line.object_id.model
         for child in parsedCal.getChildren():
             if child.name.lower() in cal_children:
-                context.update({'model': cal_children[child.name.lower()], 
+                context.update({'model': cal_children[child.name.lower()],
                                 'calendar_id': cal.id
                                 })
                 self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower(), context=context)
@@ -392,7 +392,7 @@ class Calendar(CalDAV, osv.osv):
                     self.check_import(cr, uid, [val], context=context)
         return {}
 Calendar()
-    
+
 class basic_calendar_line(osv.osv):
     _name = 'basic.calendar.lines'
     _description = 'Calendar Lines'
@@ -400,18 +400,18 @@ class basic_calendar_line(osv.osv):
             'name': fields.selection([('vevent', 'Event'), ('vtodo', 'TODO'), \
                                     ('valarm', 'Alarm'), \
                                     ('attendee', 'Attendee')], \
-                                    string="Type", size=64), 
-            'object_id': fields.many2one('ir.model', 'Object'), 
+                                    string="Type", size=64),
+            'object_id': fields.many2one('ir.model', 'Object'),
             'calendar_id': fields.many2one('basic.calendar', 'Calendar', \
-                                       required=True, ondelete='cascade'), 
-            'domain': fields.char('Domain', size=124), 
+                                       required=True, ondelete='cascade'),
+            'domain': fields.char('Domain', size=124),
             'mapping_ids': fields.one2many('basic.calendar.fields', 'type_id', 'Fields Mapping')
-    }   
+    }
 
     _defaults = {
-        'domain': lambda *a: '[]', 
+        'domain': lambda * a: '[]',
     }
-    
+
     def create(self, cr, uid, vals, context={}):
         cr.execute("Select count(id) from basic_calendar_lines \
                                 where name='%s' and calendar_id=%s" % (vals.get('name'), vals.get('calendar_id')))
@@ -427,12 +427,12 @@ basic_calendar_line()
 class basic_calendar_attribute(osv.osv):
     _name = 'basic.calendar.attributes'
     _description = 'Calendar attributes'
-    _columns = {        
-        'name': fields.char("Name", size=64, required=True), 
+    _columns = {
+        'name': fields.char("Name", size=64, required=True),
         'type': fields.selection([('vevent', 'Event'), ('vtodo', 'TODO'), \
                                     ('alarm', 'Alarm'), \
                                     ('attendee', 'Attendee')], \
-                                    string="Type", size=64, required=True), 
+                                    string="Type", size=64, required=True),
     }
 
 basic_calendar_attribute()
@@ -442,22 +442,22 @@ class basic_calendar_fields(osv.osv):
     _description = 'Calendar fields'
 
     _columns = {
-        'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'), 
-        'name': fields.many2one('basic.calendar.attributes', 'Name', required=True), 
+        'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'),
+        'name': fields.many2one('basic.calendar.attributes', 'Name', required=True),
         'type_id': fields.many2one('basic.calendar.lines', 'Type', \
-                                   required=True, ondelete='cascade'), 
-        'expr': fields.char("Expression", size=64), 
-        'fn': fields.selection([('field', 'Use the field'), 
-                        ('const', 'Expression as constant'), 
-                        ('hours', 'Interval in hours'), 
-                        ], 'Function'), 
-        'mapping': fields.text('Mapping'), 
+                                   required=True, ondelete='cascade'),
+        'expr': fields.char("Expression", size=64),
+        'fn': fields.selection([('field', 'Use the field'),
+                        ('const', 'Expression as constant'),
+                        ('hours', 'Interval in hours'),
+                        ], 'Function'),
+        'mapping': fields.text('Mapping'),
     }
 
     _defaults = {
-        'fn': lambda *a: 'field', 
+        'fn': lambda * a: 'field',
     }
-   
+
     def check_line(self, cr, uid, vals, name, context=None):
         f_obj = self.pool.get('ir.model.fields')
         field = f_obj.browse(cr, uid, vals['field_id'], context=context)
@@ -470,7 +470,7 @@ class basic_calendar_fields(osv.osv):
             if (relation != 'NULL') and (not relation == line_rel):
                 raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines' % (name)))
         return True
-    
+
     def create(self, cr, uid, vals, context={}):
         cr.execute('select name from basic_calendar_attributes \
                             where id=%s' % (vals.get('name')))
@@ -485,7 +485,7 @@ class basic_calendar_fields(osv.osv):
             if res[0] > 0:
                 raise osv.except_osv(_('Warning !'), _('Can not map the field more than once'))
         return super(basic_calendar_fields, self).create(cr, uid, vals, context=context)
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if not vals:
             return
@@ -525,7 +525,7 @@ class Event(CalDAV, osv.osv_memory):
         'transp': None, # Use: O-1, Type: TEXT, Defines whether an event is transparent or not to busy time searches.
         'uid': None, # Use: O-1, Type: TEXT, Defines the persistent, globally unique identifier for the calendar component.
         'url': None, # Use: O-1, Type: URL, Defines a Uniform Resource Locator (URL) associated with the iCalendar object.
-        'recurid': None, 
+        'recurid': None,
         'attach': None, # Use: O-n, Type: BINARY, Provides the capability to associate a document object with a calendar component.
         'attendee': None, # Use: O-n, Type: CAL-ADDRESS, Defines an "Attendee" within a calendar component.
         'categories': None, # Use: O-n, Type: TEXT, Defines the categories for a calendar component.
@@ -533,13 +533,13 @@ class Event(CalDAV, osv.osv_memory):
         'contact': None, # Use: O-n, Type: TEXT, Used to represent contact information or alternately a  reference to contact information associated with the calendar component.
         'exdate': None, # Use: O-n, Type: DATE-TIME, Defines the list of date/time exceptions for a recurring calendar component.
         'exrule': None, # Use: O-n, Type: RECUR, Defines a rule or repeating pattern for an exception to a recurrence set.
-        'rstatus': None, 
+        'rstatus': None,
         'related': None, # Use: O-n, Specify the relationship of the alarm trigger with respect to the start or end of the calendar component.
                                 #  like A trigger set 5 minutes after the end of the event or to-do.---> TRIGGER;related=END:PT5M
         'resources': None, # Use: O-n, Type: TEXT, Defines the equipment or resources anticipated for an activity specified by a calendar entity like RESOURCES:EASEL,PROJECTOR,VCR, LANGUAGE=fr:1 raton-laveur
         'rdate': None, # Use: O-n, Type: DATE-TIME, Defines the list of date/times for a recurrence set.
         'rrule': None, # Use: O-n, Type: RECUR, Defines a rule or repeating pattern for recurring events, to-dos, or time zone definitions.
-        'x-prop': None, 
+        'x-prop': None,
         'duration': None, # Use: O-1, Type: DURATION, Specifies a positive duration of time.
         'dtend': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that a calendar component ends.
     }
@@ -553,38 +553,38 @@ class ToDo(CalDAV, osv.osv_memory):
     _calname = 'vtodo'
 
     __attribute__ = {
-                'class': None, 
-                'completed': None, 
-                'created': None, 
-                'description': None, 
-                'dtstamp': None, 
-                'dtstart': None, 
-                'duration': None, 
-                'due': None, 
-                'geo': None, 
-                'last-mod ': None, 
-                'location': None, 
-                'organizer': None, 
-                'percent': None, 
-                'priority': None, 
-                'recurid': None, 
-                'seq': None, 
-                'status': None, 
-                'summary': None, 
-                'uid': None, 
-                'url': None, 
-                'attach': None, 
-                'attendee': None, 
-                'categories': None, 
-                'comment': None, 
-                'contact': None, 
-                'exdate': None, 
-                'exrule': None, 
-                'rstatus': None, 
-                'related': None, 
-                'resources': None, 
-                'rdate': None, 
-                'rrule': None, 
+                'class': None,
+                'completed': None,
+                'created': None,
+                'description': None,
+                'dtstamp': None,
+                'dtstart': None,
+                'duration': None,
+                'due': None,
+                'geo': None,
+                'last-mod ': None,
+                'location': None,
+                'organizer': None,
+                'percent': None,
+                'priority': None,
+                'recurid': None,
+                'seq': None,
+                'status': None,
+                'summary': None,
+                'uid': None,
+                'url': None,
+                'attach': None,
+                'attendee': None,
+                'categories': None,
+                'comment': None,
+                'contact': None,
+                'exdate': None,
+                'exrule': None,
+                'rstatus': None,
+                'related': None,
+                'resources': None,
+                'rdate': None,
+                'rrule': None,
             }
 
     def export_cal(self, cr, uid, datas, vobj='vevent', context={}):
@@ -609,15 +609,15 @@ class FreeBusy(CalDAV):
     'attendee': None, # Use: O-n, Type: CAL-ADDRESS, Defines an "Attendee" within a calendar component.
     'comment': None, # Use: O-n, Type: TEXT, Specifies non-processing information intended to provide a comment to the calendar user.
     'freebusy': None, # Use: O-n, Type: PERIOD, Defines one or more free or busy time intervals.
-    'rstatus': None, 
-    'X-prop': None, 
+    'rstatus': None,
+    'X-prop': None,
     }
 
 
 class Timezone(CalDAV, osv.osv_memory):
     _name = 'basic.calendar.timezone'
     _calname = 'vtimezone'
-    
+
     __attribute__ = {
     'tzid': {'field': 'tzid'}, # Use: R-1, Type: Text, Specifies the text value that uniquely identifies the "VTIMEZONE" calendar component.
     'last-mod': None, # Use: O-1, Type: DATE-TIME, Specifies the date and time that the information associated with the calendar component was last revised in the calendar store.
@@ -626,7 +626,7 @@ class Timezone(CalDAV, osv.osv_memory):
     'daylightc': {'tzprop': None}, # Use: R-1,
     'x-prop': None, # Use: O-n, Type: Text,
     }
-    
+
     def get_name_offset(self, cr, uid, tzid, context={}):
         mytz = pytz.timezone(tzid.title())
         mydt = datetime.now(tz=mytz)
@@ -649,7 +649,7 @@ class Timezone(CalDAV, osv.osv_memory):
         tz_std.add("DTSTART").value = datetime.now() # TODO
         tz_std.add("TZNAME").value = tzname
         return ical
-    
+
     def import_cal(self, cr, uid, ical_data, context=None):
         for child in ical_data.getChildren():
             if child.name.lower() == 'tzid':
@@ -658,7 +658,7 @@ class Timezone(CalDAV, osv.osv_memory):
         vals = map_data(cr, uid, self)
         return vals
 
-Timezone()   
+Timezone()
 
 
 class Alarm(CalDAV, osv.osv_memory):
@@ -674,7 +674,7 @@ class Alarm(CalDAV, osv.osv_memory):
     'duration': None, #           Type: DURATION, Duration' and 'repeat' are both optional, and MUST NOT occur more than once each, but if one occurs, so MUST the other. Use:- 0-1 for AUDIO, EMAIL and PROCEDURE, Use:- 0-n for DISPLAY
     'repeat': None, #           Type: INTEGER, Duration' and 'repeat' are both optional, and MUST NOT occur more than once each, but if one occurs, so MUST the other. Use:- 0-1 for AUDIO, EMAIL and PROCEDURE, Use:- 0-n for DISPLAY
     'attach': None, # Use:- O-n: which MUST point to a sound resource, which is rendered when the alarm is triggered for AUDIO, Use:- O-n: which are intended to be sent as message attachments for EMAIL, Use:- R-1:which MUST point to a procedure resource, which is invoked when the alarm is triggered for PROCEDURE.
-    'x-prop': None, 
+    'x-prop': None,
     }
 
     def export_cal(self, cr, uid, model, alarm_id, vevent, context={}):
@@ -686,7 +686,7 @@ class Alarm(CalDAV, osv.osv_memory):
         interval = alarm_data['trigger_interval']
         occurs = alarm_data['trigger_occurs']
         duration = (occurs == 'after' and alarm_data['trigger_duration']) \
-                                        or -(alarm_data['trigger_duration'])
+                                        or - (alarm_data['trigger_duration'])
         related = alarm_data['trigger_related']
         trigger = valarm.add('TRIGGER')
         trigger.params['related'] = [related.upper()]
@@ -711,7 +711,7 @@ class Alarm(CalDAV, osv.osv_memory):
             if child.name.lower() == 'trigger':
                 seconds = child.value.seconds
                 days = child.value.days
-                diff = (days * 86400) +  seconds
+                diff = (days * 86400) + seconds
                 interval = 'days'
                 related = 'before'
                 if not seconds:
@@ -762,7 +762,7 @@ class Attendee(CalDAV, osv.osv_memory):
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)
         for para in ical_data.params:
             if para.lower() == 'cn':
-                self.ical_set(para.lower(), ical_data.params[para][0]+':'+ \
+                self.ical_set(para.lower(), ical_data.params[para][0] + ':' + \
                         ical_data.value, 'value')
             else:
                 self.ical_set(para.lower(), ical_data.params[para][0].lower(), 'value')

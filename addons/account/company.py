@@ -28,7 +28,7 @@ class res_company(osv.osv):
     }
 
     _defaults = {
-        'overdue_msg': lambda *a: 'Would your payment have been carried \
+        'overdue_msg': lambda * a: 'Would your payment have been carried \
 out after this mail was sent, please consider the present one as \
 void. Do not hesitate to contact our accounting department'
     }

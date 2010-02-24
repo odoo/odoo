@@ -39,7 +39,7 @@ intro_fields = {
         'string': 'Introduction',
         'type': 'text',
         'readonly': True,
-        'default': lambda *args: """This system must be used with the Tiny OpenOffice plugin. If you
+        'default': lambda * args: """This system must be used with the Tiny OpenOffice plugin. If you
 did not installed yet, you can find this package on:
     http://www.openerp.com
 
@@ -51,12 +51,12 @@ it to the Open ERP server.
         'string': 'Operation',
         'type': 'selection',
         'selection': [
-            ('create','Create a new report'),
-            ('modify','Modify an existing report')
+            ('create', 'Create a new report'),
+            ('modify', 'Modify an existing report')
             ],
         'size': 32,
         'required': True,
-        'default': lambda *args: 'create',
+        'default': lambda * args: 'create',
     },
 }
 
@@ -72,7 +72,7 @@ get_fields = {
         'type': 'many2one',
         'relation': 'ir.actions.report.xml',
         'required': True,
-        'domain': [('report_sxw_content','<>',False)],
+        'domain': [('report_sxw_content', '<>', False)],
     },
 }
 
@@ -125,7 +125,7 @@ send_form_fields = {
         'type': 'many2one',
         'relation': 'ir.actions.report.xml',
         'required': True,
-        'domain': [('report_sxw_content','<>',False)]
+        'domain': [('report_sxw_content', '<>', False)]
     },
     'file_sxw': {
         'string': 'Your .SXW file',
@@ -144,7 +144,7 @@ rml_form_fields = {
        'file_rml': {
         'string': 'Save As',
         'type': 'binary',
-    } 
+    }
 }
 
 save_rml_arch = '''<?xml version="1.0"?>
@@ -166,7 +166,7 @@ class base_report_designer_modify(wizard.interface):
         import StringIO
         pool = pooler.get_pool(cr.dbname)
         sxwval = StringIO.StringIO(base64.decodestring(data['form']['file_sxw']))
-        fp = tools.file_open('normalized_oo2rml.xsl',subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+        fp = tools.file_open('normalized_oo2rml.xsl', subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
         newrmlcontent = str(tiny_sxw2rml.sxw2rml(sxwval, xsl=fp.read()))
         report = pool.get('ir.actions.report.xml').write(cr, uid, [data['form']['report_id']], {
             'report_sxw_content': base64.decodestring(data['form']['file_sxw']),
@@ -190,8 +190,8 @@ class base_report_designer_modify(wizard.interface):
                 'arch': intro_form,
                 'fields': intro_fields,
                 'state': [
-                    ('end','Cancel'),
-                    ('get_form','Modify a report')
+                    ('end', 'Cancel'),
+                    ('get_form', 'Modify a report')
                 ]
             }
         },
@@ -202,7 +202,7 @@ class base_report_designer_modify(wizard.interface):
                 'arch': get_form,
                 'fields': get_fields,
                 'state': [
-                    ('end','Cancel'),
+                    ('end', 'Cancel'),
                     ('get_form_result', 'Continue'),
                 ]
             }
@@ -214,7 +214,7 @@ class base_report_designer_modify(wizard.interface):
                 'arch': get_form_result,
                 'fields': get_form_fields,
                 'state': [
-                    ('end','Close'),
+                    ('end', 'Close'),
                     ('send_form', 'Upload the modified report'),
                 ]
             }
@@ -226,7 +226,7 @@ class base_report_designer_modify(wizard.interface):
                 'arch': send_form_arch,
                 'fields': send_form_fields,
                 'state': [
-                    ('end','Close'),
+                    ('end', 'Close'),
                     ('save_rml_to', 'Update the report'),
                 ]
             }
@@ -239,7 +239,7 @@ class base_report_designer_modify(wizard.interface):
                     'fields': rml_form_fields,
                     'state': [
                             ('save_rml', 'Save rml'),
-                            ('send_form_result','Skip'),
+                            ('send_form_result', 'Skip'),
                         ]
             }
         },
@@ -250,7 +250,7 @@ class base_report_designer_modify(wizard.interface):
                 'arch': send_form_result_arch,
                 'fields': send_form_result_fields,
                 'state': [
-                    ('end','Close'),
+                    ('end', 'Close'),
                 ]
             }
         },
@@ -260,7 +260,7 @@ class base_report_designer_modify(wizard.interface):
                 'type': 'form',
                 'arch': save_rml_arch, 'fields': {},
                 'state': [
-                    ('end','Close'),
+                    ('end', 'Close'),
                 ]
             }
         },

@@ -33,7 +33,7 @@ class authorizer:
 
     def has_user(self, username):
         """Whether the username exists in the virtual users table."""
-        if username=='anonymous':
+        if username == 'anonymous':
             return False
         return True
 
@@ -45,10 +45,10 @@ class authorizer:
         "elradfmw".
         """
         paths = path.split('/')
-        if not len(paths)>2:
+        if not len(paths) > 2:
             return True
         db_name = paths[1]
-        db,pool = pooler.get_db_and_pool(db_name)
+        db, pool = pooler.get_db_and_pool(db_name)
         res = security.login(db_name, username, self.password)
         return bool(res)
 

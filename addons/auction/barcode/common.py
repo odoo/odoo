@@ -38,13 +38,13 @@ import string
 class Barcode(Flowable):
     """Abstract Base for barcodes. Includes implementations of
     some methods suitable for the more primitive barcode types"""
-    
-    def __init__(self, value = ''):
+
+    def __init__(self, value=''):
         self.value = value
-        
+
         if not hasattr(self, 'gap'):
             self.gap = None
-            
+
         self.validate()
         self.encode()
         #print self.encoded
@@ -68,9 +68,9 @@ class Barcode(Flowable):
 
         if self.gap == None:
             self.gap = xdim
-            
+
         w = 0.0
-        
+
         for c in self.decomposed:
             if c in 'sb':
                 w = w + xdim
@@ -78,7 +78,7 @@ class Barcode(Flowable):
                 w = w + wx
             else: # 'i'
                 w = w + self.gap
-    
+
         if self.height is None:
             self.height = w * 0.15
             self.height = max(0.25 * inch, self.height)
@@ -90,13 +90,13 @@ class Barcode(Flowable):
             self.xo = self.lquiet
         else:
             self.xo = 0.0
-            
+
         self.width = w
 
     def draw(self):
         xdim = self.xdim
         wx = xdim * self.ratio
-    
+
         left = self.xo
         b = self.bearers * xdim
         bb = b * 0.5
@@ -115,7 +115,7 @@ class Barcode(Flowable):
             elif c == 'B':
                 self.rect(left, bb, wx, tb)
                 left = left + wx
-                
+
         if self.bearers:
             self.rect(self.lquiet, 0.0, \
                 self.width - (self.lquiet + self.rquiet), b)
@@ -128,20 +128,20 @@ class Barcode(Flowable):
 
 class MultiWidthBarcode(Barcode):
     """Base for variable-bar-width codes like Code93 and Code128"""
-    
+
     def computeSize(self, *args):
         xdim = self.xdim
         oa, oA = ord('a') - 1, ord('A') - 1
 
         w = 0.0
-        
+
         for c in self.decomposed:
             oc = ord(c)
             if c in string.lowercase:
                 w = w + xdim * (oc - oa)
             elif c in string.uppercase:
                 w = w + xdim * (oc - oA)
-    
+
         if self.height is None:
             self.height = w * 0.15
             self.height = max(0.25 * inch, self.height)
@@ -151,7 +151,7 @@ class MultiWidthBarcode(Barcode):
             self.xo = self.lquiet
         else:
             self.xo = 0.0
-            
+
         self.width = w
 
     def draw(self):
@@ -229,16 +229,16 @@ class I2of5(Barcode):
         'start' : 'bsbs',
         'stop' : 'Bsb',
 
-        'B0' : 'bbBBb',     'S0' : 'ssSSs',
-        'B1' : 'BbbbB',     'S1' : 'SsssS',
-        'B2' : 'bBbbB',     'S2' : 'sSssS',
-        'B3' : 'BBbbb',     'S3' : 'SSsss',
-        'B4' : 'bbBbB',     'S4' : 'ssSsS',
-        'B5' : 'BbBbb',     'S5' : 'SsSss',
-        'B6' : 'bBBbb',     'S6' : 'sSSss',
-        'B7' : 'bbbBB',     'S7' : 'sssSS',
-        'B8' : 'BbbBb',     'S8' : 'SssSs',
-        'B9' : 'bBbBb',     'S9' : 'sSsSs'
+        'B0' : 'bbBBb', 'S0' : 'ssSSs',
+        'B1' : 'BbbbB', 'S1' : 'SsssS',
+        'B2' : 'bBbbB', 'S2' : 'sSssS',
+        'B3' : 'BBbbb', 'S3' : 'SSsss',
+        'B4' : 'bbBbB', 'S4' : 'ssSsS',
+        'B5' : 'BbBbb', 'S5' : 'SsSss',
+        'B6' : 'bBBbb', 'S6' : 'sSSss',
+        'B7' : 'bbbBB', 'S7' : 'sssSS',
+        'B8' : 'BbbBb', 'S8' : 'SssSs',
+        'B9' : 'bBbBb', 'S9' : 'sSsSs'
     }
 
     def __init__(self, value='', **args):
@@ -306,7 +306,7 @@ class I2of5(Barcode):
 
         for i in range(0, len(self.encoded), 2):
             b = self.patterns['B' + self.encoded[i]]
-            s = self.patterns['S' + self.encoded[i+1]]
+            s = self.patterns['S' + self.encoded[i + 1]]
 
             for i in range(0, len(b)):
                 dval = dval + b[i] + s[i]
@@ -360,13 +360,13 @@ class MSI(Barcode):
     """
 
     patterns = {
-        'start' : 'Bs',          'stop' : 'bSb',
+        'start' : 'Bs', 'stop' : 'bSb',
 
-        '0' : 'bSbSbSbS',        '1' : 'bSbSbSBs',
-        '2' : 'bSbSBsbS',        '3' : 'bSbSBsBs',
-        '4' : 'bSBsbSbS',        '5' : 'bSBsbSBs',
-        '6' : 'bSBsBsbS',        '7' : 'bSBsBsBs',
-        '8' : 'BsbSbSbS',        '9' : 'BsbSbSBs'
+        '0' : 'bSbSbSbS', '1' : 'bSbSbSBs',
+        '2' : 'bSbSBsbS', '3' : 'bSbSBsBs',
+        '4' : 'bSBsbSbS', '5' : 'bSBsbSBs',
+        '6' : 'bSBsBsbS', '7' : 'bSBsBsBs',
+        '8' : 'BsbSbSbS', '9' : 'BsbSbSBs'
     }
 
     def __init__(self, value="", **args):
@@ -486,20 +486,20 @@ class Codabar(Barcode):
     """
 
     patterns = {
-        '0':    'bsbsbSB',        '1':    'bsbsBSb',        '2':    'bsbSbsB',
-        '3':    'BSbsbsb',        '4':    'bsBsbSb',        '5':    'BsbsbSb',
-        '6':    'bSbsbsB',        '7':    'bSbsBsb',        '8':    'bSBsbsb',
-        '9':    'BsbSbsb',        '-':    'bsbSBsb',        '$':    'bsBSbsb',
-        ':':    'BsbsBsB',        '/':    'BsBsbsB',        '.':    'BsBsBsb',
-        '+':    'bsBsBsB',        'A':    'bsBSbSb',        'B':    'bSbSbsB',
-        'C':    'bsbSbSB',        'D':    'bsbSBSb'
+        '0':    'bsbsbSB', '1':    'bsbsBSb', '2':    'bsbSbsB',
+        '3':    'BSbsbsb', '4':    'bsBsbSb', '5':    'BsbsbSb',
+        '6':    'bSbsbsB', '7':    'bSbsBsb', '8':    'bSBsbsb',
+        '9':    'BsbSbsb', '-':    'bsbSBsb', '$':    'bsBSbsb',
+        ':':    'BsbsBsB', '/':    'BsBsbsB', '.':    'BsBsBsb',
+        '+':    'bsBsBsB', 'A':    'bsBSbSb', 'B':    'bSbSbsB',
+        'C':    'bsbSbSB', 'D':    'bsbSBSb'
     }
 
     values = {
-        '0' : 0,    '1' : 1,    '2' : 2,    '3' : 3,    '4' : 4,
-        '5' : 5,    '6' : 6,    '7' : 7,    '8' : 8,    '9' : 9,
-        '-' : 10,   '$' : 11,   ':' : 12,   '/' : 13,   '.' : 14,
-        '+' : 15,   'A' : 16,   'B' : 17,   'C' : 18,   'D' : 19
+        '0' : 0, '1' : 1, '2' : 2, '3' : 3, '4' : 4,
+        '5' : 5, '6' : 6, '7' : 7, '8' : 8, '9' : 9,
+        '-' : 10, '$' : 11, ':' : 12, '/' : 13, '.' : 14,
+        '+' : 15, 'A' : 16, 'B' : 17, 'C' : 18, 'D' : 19
     }
 
     chars = string.digits + "-$:/.+"
@@ -564,7 +564,7 @@ class Codabar(Barcode):
         dval = ""
         for c in self.encoded:
             dval = dval + self.patterns[c] + 'i'
-        self.decomposed = dval[:-1]            
+        self.decomposed = dval[:-1]
         return self.decomposed
 
 
@@ -613,19 +613,19 @@ class Code11(Barcode):
 
     http://www.cwi.nl/people/dik/english/codes/barcodes.html
     """
-    
+
     chars = string.digits + '-'
-    
+
     patterns = {
-        '0' : 'bsbsB',        '1' : 'BsbsB',        '2' : 'bSbsB',
-        '3' : 'BSbsb',        '4' : 'bsBsB',        '5' : 'BsBsb',
-        '6' : 'bSBsb',        '7' : 'bsbSB',        '8' : 'BsbSb',
-        '9' : 'Bsbsb',        '-' : 'bsBsb',        'S' : 'bsBSb' # Start/Stop
+        '0' : 'bsbsB', '1' : 'BsbsB', '2' : 'bSbsB',
+        '3' : 'BSbsb', '4' : 'bsBsB', '5' : 'BsBsb',
+        '6' : 'bSBsb', '7' : 'bsbSB', '8' : 'BsbSb',
+        '9' : 'Bsbsb', '-' : 'bsBsb', 'S' : 'bsBSb' # Start/Stop
     }
 
     values = {
-        '0' : 0,    '1' : 1,    '2' : 2,    '3' : 3,    '4' : 4,
-        '5' : 5,    '6' : 6,    '7' : 7,    '8' : 8,    '9' : 9,
+        '0' : 0, '1' : 1, '2' : 2, '3' : 3, '4' : 4,
+        '5' : 5, '6' : 6, '7' : 7, '8' : 8, '9' : 9,
         '-' : 10,
     }
 
@@ -680,7 +680,7 @@ class Code11(Barcode):
             # compute first checksum
             i = 0; v = 1; c = 0
             while i < len(s):
-                c = c + v * string.index(self.chars, s[-(i+1)])
+                c = c + v * string.index(self.chars, s[-(i + 1)])
                 i = i + 1; v = v + 1
                 if v > 10:
                     v = 1
@@ -690,7 +690,7 @@ class Code11(Barcode):
             # compute second checksum
             i = 0; v = 1; c = 0
             while i < len(s):
-                c = c + v * string.index(self.chars, s[-(i+1)])
+                c = c + v * string.index(self.chars, s[-(i + 1)])
                 i = i + 1; v = v + 1
                 if v > 9:
                     v = 1
@@ -702,6 +702,6 @@ class Code11(Barcode):
         dval = ""
         for c in self.encoded:
             dval = dval + self.patterns[c] + 'i'
-        self.decomposed = dval[:-1]            
+        self.decomposed = dval[:-1]
         return self.decomposed
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

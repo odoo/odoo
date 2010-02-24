@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 import ir
 import pooler
@@ -33,7 +33,7 @@ class stock_location_path(osv.osv):
         'location_dest_id' : fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1),
         'delay': fields.integer('Delay (days)', help="Number of days to do this transition"),
         'auto': fields.selection(
-            [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
+            [('auto', 'Automatic Move'), ('manual', 'Manual Operation'), ('transparent', 'Automatic No Step Added')],
             'Automatic Move',
             required=True, select=1,
             help="This is used to define paths the product has to follow within the location tree.\n" \
@@ -43,8 +43,8 @@ class stock_location_path(osv.osv):
             ),
     }
     _defaults = {
-        'auto': lambda *arg: 'auto',
-        'delay': lambda *arg: 1
+        'auto': lambda * arg: 'auto',
+        'delay': lambda * arg: 1
     }
 stock_location_path()
 

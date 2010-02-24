@@ -37,10 +37,10 @@ pay_form = '''<?xml version="1.0"?>
 </form>'''
 
 pay_fields = {
-    'amount': {'string': 'Amount paid', 'type':'float', 'required':True, 'digits': (16,int(tools.config['price_accuracy']))},
+    'amount': {'string': 'Amount paid', 'type':'float', 'required':True, 'digits': (16, int(tools.config['price_accuracy']))},
     'name': {'string': 'Entry Name', 'type':'char', 'size': 64, 'required':True},
-    'date': {'string': 'Payment date', 'type':'date', 'required':True, 'default':lambda *args: time.strftime('%Y-%m-%d')},
-    'journal_id': {'string': 'Journal/Payment Mode', 'type': 'many2one', 'relation':'account.journal', 'required':True, 'domain':[('type','=','cash')]},
+    'date': {'string': 'Payment date', 'type':'date', 'required':True, 'default':lambda * args: time.strftime('%Y-%m-%d')},
+    'journal_id': {'string': 'Journal/Payment Mode', 'type': 'many2one', 'relation':'account.journal', 'required':True, 'domain':[('type', '=', 'cash')]},
     'period_id': {'string': 'Period', 'type': 'many2one', 'relation':'account.period', 'required':True},
 }
 
@@ -59,25 +59,25 @@ def _pay_and_reconcile(self, cr, uid, data, context):
     journal = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context)
     # Compute the amount in company's currency, with the journal currency (which is equal to payment currency) 
     # when it is needed :  If payment currency (according to selected journal.currency) is <> from company currency
-    if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
+    if journal.currency and invoice.company_id.currency_id.id <> journal.currency.id:
         ctx = {'date':data['form']['date']}
         amount = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, amount, context=ctx)
         currency_id = journal.currency.id
         # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
-        context.update({'amount_currency':form['amount'],'currency_id':currency_id})
-    
-    if invoice.company_id.currency_id.id<>invoice.currency_id.id:
+        context.update({'amount_currency':form['amount'], 'currency_id':currency_id})
+
+    if invoice.company_id.currency_id.id <> invoice.currency_id.id:
         ctx = {'date':data['form']['date']}
         amount = cur_obj.compute(cr, uid, invoice.currency_id.id, invoice.company_id.currency_id.id, amount, context=ctx)
         currency_id = invoice.currency_id.id
         # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
-        context.update({'amount_currency':form['amount'],'currency_id':currency_id})
-        
+        context.update({'amount_currency':form['amount'], 'currency_id':currency_id})
+
     # Take the choosen date
     if form.has_key('comment'):
-        context.update({'date_p':form['date'],'comment':form['comment']})
+        context.update({'date_p':form['date'], 'comment':form['comment']})
     else:
-        context.update({'date_p':form['date'],'comment':False})      
+        context.update({'date_p':form['date'], 'comment':False})
 
     acc_id = journal.default_credit_account_id and journal.default_credit_account_id.id
     if not acc_id:
@@ -106,19 +106,19 @@ def _wo_check(self, cr, uid, data, context):
     inv_amount_company_currency = abs(inv_amount_company_currency)
 
     # Get the current amount paid in company currency
-    if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
+    if journal.currency and invoice.company_id.currency_id.id <> journal.currency.id:
         ctx = {'date':data['form']['date']}
         amount_paid = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, data['form']['amount'], round=True, context=ctx)
     else:
         amount_paid = data['form']['amount']
     # Get the old payment if there are some
     if invoice.payment_ids:
-        debit=credit=0.0
+        debit = credit = 0.0
         for payment in invoice.payment_ids:
-            debit+=payment.debit
-            credit+=payment.credit
-        amount_paid+=abs(debit-credit)
-        
+            debit += payment.debit
+            credit += payment.credit
+        amount_paid += abs(debit - credit)
+
     # Test if there is a difference according to currency rouding setting
     if pool.get('res.currency').is_zero(cr, uid, invoice.company_id.currency_id,
             (amount_paid - inv_amount_company_currency)):
@@ -164,7 +164,7 @@ class wizard_pay_invoice(wizard.interface):
     states = {
         'init': {
             'actions': [_get_period],
-            'result': {'type':'form', 'arch':pay_form, 'fields':pay_fields, 'state':[('end','Cancel'),('reconcile','Partial Payment'),('writeoff_check','Full Payment')]}
+            'result': {'type':'form', 'arch':pay_form, 'fields':pay_fields, 'state':[('end', 'Cancel'), ('reconcile', 'Partial Payment'), ('writeoff_check', 'Full Payment')]}
         },
         'writeoff_check': {
             'actions': [],
@@ -172,7 +172,7 @@ class wizard_pay_invoice(wizard.interface):
         },
         'addendum': {
             'actions': [_get_value_addendum],
-            'result': {'type': 'form', 'arch':_transaction_add_form, 'fields':_transaction_add_fields, 'state':[('end','Cancel'),('reconcile','Pay and reconcile')]}
+            'result': {'type': 'form', 'arch':_transaction_add_form, 'fields':_transaction_add_fields, 'state':[('end', 'Cancel'), ('reconcile', 'Pay and reconcile')]}
         },
         'reconcile': {
             'actions': [_pay_and_reconcile],

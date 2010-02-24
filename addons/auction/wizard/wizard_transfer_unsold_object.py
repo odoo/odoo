@@ -43,24 +43,24 @@ transfer_unsold_object_fields = {
          'auction_id_to': {'string':'To Auction Date', 'type':'many2one', 'required':True, 'relation':'auction.dates'},
 }
 
-def _start(self,cr,uid,data,context):
+def _start(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    rec=pool.get('auction.lots').browse(cr,uid,data['id'],context)
-    auction_from= rec and rec.auction_id.id or False
+    rec = pool.get('auction.lots').browse(cr, uid, data['id'], context)
+    auction_from = rec and rec.auction_id.id or False
     return {'auction_id_from':auction_from}
 
 def _transfer_unsold_object(self, cr, uid, data, context):
     #if not (data['form']['auction_id_to']) :
     #   return {}
 #Historique de l objet + changement de l auction date + supp des bid line
-    line_ids= pooler.get_pool(cr.dbname).get('auction.bid_line').search(cr,uid,[('lot_id','in',data['ids'])])
+    line_ids = pooler.get_pool(cr.dbname).get('auction.bid_line').search(cr, uid, [('lot_id', 'in', data['ids'])])
     pooler.get_pool(cr.dbname).get('auction.bid_line').unlink(cr, uid, line_ids)
-    
+
     obj_pool = pooler.get_pool(cr.dbname).get('auction.lots')
-    ids= obj_pool.search(cr,uid,[('auction_id','=',data['form']['auction_id_from']),('state','=','unsold')])
+    ids = obj_pool.search(cr, uid, [('auction_id', '=', data['form']['auction_id_from']), ('state', '=', 'unsold')])
     for rec in obj_pool.browse(cr, uid, ids, context):
-        new_id=pooler.get_pool(cr.dbname).get('auction.lot.history').create(cr,uid,{'auction_id':rec.auction_id.id,'lot_id':rec.id,'price': rec.obj_ret, 'name': 'reasons'+rec.auction_id.auction1})
-        up_auction=pooler.get_pool(cr.dbname).get('auction.lots').write(cr,uid,[rec.id],{'auction_id':data['form']['auction_id_to'],
+        new_id = pooler.get_pool(cr.dbname).get('auction.lot.history').create(cr, uid, {'auction_id':rec.auction_id.id, 'lot_id':rec.id, 'price': rec.obj_ret, 'name': 'reasons' + rec.auction_id.auction1})
+        up_auction = pooler.get_pool(cr.dbname).get('auction.lots').write(cr, uid, [rec.id], {'auction_id':data['form']['auction_id_to'],
                                                                                         'obj_ret':None,
                                                                                         'obj_price':None,
                                                                                         'ach_login':None,
@@ -80,11 +80,11 @@ class transfer_object(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : transfer_unsold_object_form,
                     'fields' :transfer_unsold_object_fields,
-                    'state' : [('transfer', 'Transfer'),('end', 'Cancel') ]}
+                    'state' : [('transfer', 'Transfer'), ('end', 'Cancel') ]}
         },
         'transfer' : {
             'actions' : [_transfer_unsold_object],
-            'result' : {'type' : 'state','state' : 'end'}
+            'result' : {'type' : 'state', 'state' : 'end'}
         },
     }
 transfer_object('auction.lots.transfer.unsold.object')

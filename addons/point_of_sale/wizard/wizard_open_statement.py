@@ -40,36 +40,36 @@ statement_fields = {}
 
 def _close_statement(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    company_id=pool.get('res.users').browse(cr,uid,uid).company_id.id
+    company_id = pool.get('res.users').browse(cr, uid, uid).company_id.id
     statement_obj = pool.get('account.bank.statement')
     singer_obj = pool.get('singer.statement')
-    journal_obj=pool.get('account.journal')
-    journal_lst=journal_obj.search(cr,uid,[('company_id','=',company_id),('auto_cash','=',True),('check_dtls','=',False)])
-    journal_ids=journal_obj.browse(cr,uid, journal_lst)
+    journal_obj = pool.get('account.journal')
+    journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True), ('check_dtls', '=', False)])
+    journal_ids = journal_obj.browse(cr, uid, journal_lst)
     for journal in journal_ids:
-        ids = statement_obj.search(cr, uid, [('state','!=','confirm'),('user_id','=',uid),('journal_id','=',journal.id)])
-        statement_obj.button_confirm(cr,uid,ids)
+        ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
+        statement_obj.button_confirm(cr, uid, ids)
     return {}
 def _open_statement(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    company_id=pool.get('res.users').browse(cr,uid,uid).company_id.id
+    company_id = pool.get('res.users').browse(cr, uid, uid).company_id.id
     statement_obj = pool.get('account.bank.statement')
     singer_obj = pool.get('singer.statement')
-    journal_obj=pool.get('account.journal')
-    journal_lst=journal_obj.search(cr,uid,[('company_id','=',company_id),('auto_cash','=',True)])
-    journal_ids=journal_obj.browse(cr,uid, journal_lst)
+    journal_obj = pool.get('account.journal')
+    journal_lst = journal_obj.search(cr, uid, [('company_id', '=', company_id), ('auto_cash', '=', True)])
+    journal_ids = journal_obj.browse(cr, uid, journal_lst)
     for journal in journal_ids:
-        ids = statement_obj.search(cr, uid, [('state','!=','confirm'),('user_id','=',uid),('journal_id','=',journal.id)])
+        ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)])
         if len(ids):
-            raise wizard.except_wizard(_('Message'),_('You can not open a Cashbox for "%s". \n Please close the cashbox related to. '%(journal.name) ))
+            raise wizard.except_wizard(_('Message'), _('You can not open a Cashbox for "%s". \n Please close the cashbox related to. ' % (journal.name)))
         sql = """ Select id from account_bank_statement
                                 where journal_id=%d
                                 and company_id =%d
-                                order by id desc limit 1"""%(journal.id,company_id)
-        singer_ids=None
+                                order by id desc limit 1""" % (journal.id, company_id)
+        singer_ids = None
         cr.execute(sql)
         st_id = cr.fetchone()
-        number=''
+        number = ''
         if journal.statement_sequence_id:
             number = pool.get('ir.sequence').get_id(cr, uid, journal.id)
         else:
@@ -82,19 +82,19 @@ def _open_statement(self, cr, uid, data, context):
 #                                                  'state':'open',
 #                                                  'name':number
 #                                                  })
-        period=statement_obj._get_period(cr,uid,context) or None
-        cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')"%(journal.id,company_id,uid,number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
+        period = statement_obj._get_period(cr, uid, context) or None
+        cr.execute("INSERT INTO account_bank_statement(journal_id,company_id,user_id,state,name, period_id,date) VALUES(%d,%d,%d,'open','%s',%d,'%s')" % (journal.id, company_id, uid, number, period, time.strftime('%Y-%m-%d %H:%M:%S')))
         cr.commit()
-        cr.execute("select id from account_bank_statement where journal_id=%d and company_id=%d and user_id=%d and state='open' and name='%s'"%(journal.id,company_id,uid,number))
-        statement_id=cr.fetchone()[0]
+        cr.execute("select id from account_bank_statement where journal_id=%d and company_id=%d and user_id=%d and state='open' and name='%s'" % (journal.id, company_id, uid, number))
+        statement_id = cr.fetchone()[0]
         if st_id:
-            statemt_id=statement_obj.browse(cr,uid,st_id[0])
+            statemt_id = statement_obj.browse(cr, uid, st_id[0])
             if statemt_id and statemt_id.ending_details_ids:
-                statement_obj.write(cr, uid,[statement_id], {'balance_start':statemt_id.balance_end,
+                statement_obj.write(cr, uid, [statement_id], {'balance_start':statemt_id.balance_end,
                                                             'state':'open'})
                 if statemt_id.ending_details_ids:
                     for i in statemt_id.ending_details_ids:
-                        c=singer_obj.create(cr,uid, { 'pieces':i.pieces,
+                        c = singer_obj.create(cr, uid, { 'pieces':i.pieces,
                                                     'number':i.number,
                                                     'starting_id':statement_id,
                             })
@@ -109,7 +109,7 @@ class statement_open(wizard.interface):
                 'type': 'form',
                 'arch': statement_form,
                 'fields': statement_fields,
-                'state': (('end', 'No','gtk-cancel'),
+                'state': (('end', 'No', 'gtk-cancel'),
                           ('open', 'Yes', 'gtk-ok', True)
                          )
             }
@@ -131,7 +131,7 @@ class statement_close(wizard.interface):
                 'type': 'form',
                 'arch': statement_form_close,
                 'fields': statement_fields,
-                'state': (('end', 'No','gtk-cancel'),
+                'state': (('end', 'No', 'gtk-cancel'),
                           ('open', 'Yes', 'gtk-ok', True)
                          )
             }

@@ -42,26 +42,26 @@ _survey_fields = {
     'orientation':{
         'string':"Orientation",
         'type':'selection',
-        'selection':[('vertical','Portrait(Vertical)'),
-                     ('horizontal','Landscape(Horizontal)')],
-        'default': lambda *a:'vertical'},
+        'selection':[('vertical', 'Portrait(Vertical)'),
+                     ('horizontal', 'Landscape(Horizontal)')],
+        'default': lambda * a:'vertical'},
     'paper_size':{
         'string':"Paper Size",
         'type':'selection',
-        'selection':[('letter','Letter (8.5" x 11")'),
-                     ('legal','Legal (8.5" x 14")'),
-                     ('a4','A4 (210mm x 297mm)')],
-        'default': lambda *a:'letter'},
-    'survey_title': {'string':'Include Survey Title', 'type':'boolean', 'default':lambda *a: 0},
-    'page_number': {'string':'Include Page Numbers', 'type':'boolean', 'default':lambda *a: 0},
-    'without_pagebreak': {'string':'Print Without Page Breaks', 'type':'boolean', 'default':lambda *a: 0},
+        'selection':[('letter', 'Letter (8.5" x 11")'),
+                     ('legal', 'Legal (8.5" x 14")'),
+                     ('a4', 'A4 (210mm x 297mm)')],
+        'default': lambda * a:'letter'},
+    'survey_title': {'string':'Include Survey Title', 'type':'boolean', 'default':lambda * a: 0},
+    'page_number': {'string':'Include Page Numbers', 'type':'boolean', 'default':lambda * a: 0},
+    'without_pagebreak': {'string':'Print Without Page Breaks', 'type':'boolean', 'default':lambda * a: 0},
     }
 
 class print_survey_wizard(wizard.interface):
     states = {
         'init' : {
             'actions' : [],
-            'result' : {'type' : 'form', 'arch' :_survey_form, 'fields' :_survey_fields,\
+            'result' : {'type' : 'form', 'arch' :_survey_form, 'fields' :_survey_fields, \
                              'state' : [('end', 'Cancel', 'gtk-cancel'), ('print', 'Print', 'gtk-print')]}
                 },
         'print': {

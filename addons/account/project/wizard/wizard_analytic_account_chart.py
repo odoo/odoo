@@ -57,8 +57,8 @@ class wizard_analytic_account_chart(wizard.interface):
         if data['form']['from_date']:
             result_context.update({'from_date' : data['form']['from_date']})
         if data['form']['to_date']:
-            result_context.update({'to_date' : data['form']['to_date']})    
-            
+            result_context.update({'to_date' : data['form']['to_date']})
+
         result['context'] = str(result_context)
         return result
 

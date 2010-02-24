@@ -33,15 +33,15 @@ class lot_location(report_sxw.rml_parse):
             'qty_total':self._qty_total,
         })
 
-    def process(self,location_id):
+    def process(self, location_id):
         location_obj = pooler.get_pool(self.cr.dbname).get('stock.location')
-        data = location_obj._product_get_report(self.cr,self.uid, [location_id])
-        data['location_name'] = location_obj.read(self.cr, self.uid, [location_id],['name'])[0]['name']
+        data = location_obj._product_get_report(self.cr, self.uid, [location_id])
+        data['location_name'] = location_obj.read(self.cr, self.uid, [location_id], ['name'])[0]['name']
         self.grand_total += data['total']
         return [data]
 
     def _qty_total(self):
-        return str( self.grand_total)
+        return str(self.grand_total)
 
 report_sxw.report_sxw('report.lot.location', 'stock.location', 'addons/stock/report/lot_location.rml', parser=lot_location)
 

@@ -30,7 +30,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['crm','hr','board_crm_configuration','survey'],
+    'depends': ['crm', 'hr', 'board_crm_configuration', 'survey'],
     'init_xml': [
         'crm_hr_data.xml'
     ],

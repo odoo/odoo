@@ -24,7 +24,7 @@ from osv import osv
 import netsvc
 
 class purchase_order_line(osv.osv):
-    _inherit='purchase.order.line'
+    _inherit = 'purchase.order.line'
     _columns = {
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', required=True, readonly=True,
                                   help=' * The \'Draft\' state is set automatically when purchase order in draft state. \
@@ -33,12 +33,12 @@ class purchase_order_line(osv.osv):
                                        \n* The \'Cancelled\' state is set automatically when user cancel purchase order.'),
         'invoice_lines': fields.many2many('account.invoice.line', 'purchase_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
-        'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner"),
-        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date")
+        'partner_id': fields.related('order_id', 'partner_id', string='Partner', readonly=True, type="many2one", relation="res.partner"),
+        'date_order': fields.related('order_id', 'date_order', string='Order Date', readonly=True, type="date")
     }
     _defaults = {
-        'state': lambda *args: 'draft',
-        'invoiced': lambda *a: 0,
+        'state': lambda * args: 'draft',
+        'invoiced': lambda * a: 0,
 
     }
     def copy_data(self, cr, uid, id, default=None, context={}):
@@ -51,14 +51,14 @@ class purchase_order_line(osv.osv):
             'invoice_lines':[],
         })
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
- 
+
     def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context)
         return True
 purchase_order_line()
 
 class purchase_order(osv.osv):
-    _inherit='purchase.order'
+    _inherit = 'purchase.order'
     def action_invoice_create(self, cr, uid, ids, context={}):
         print 'Invoice Create'
         res = super(purchase_order, self).action_invoice_create(cr, uid, ids, context)
@@ -74,7 +74,7 @@ class purchase_order(osv.osv):
         todo = []
         for po in self.browse(cr, uid, ids, context):
             for line in po.order_line:
-                if line.state=='draft':
+                if line.state == 'draft':
                     todo.append(line.id)
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         return res

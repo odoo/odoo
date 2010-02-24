@@ -29,7 +29,7 @@ class account_installer(osv.osv_memory):
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
-        ids = modules.search(cr, uid, [('category_id','=','Account Charts')])
+        ids = modules.search(cr, uid, [('category_id', '=', 'Account Charts')])
         return list(
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids)),
@@ -71,7 +71,7 @@ class account_installer(osv.osv_memory):
                           context=context)[0]['charts']
         self.logger.notifyChannel(
             'installer', netsvc.LOG_DEBUG,
-            'Installing chart of accounts %s'%chart)
+            'Installing chart of accounts %s' % chart)
         return modules | set([chart])
 
 

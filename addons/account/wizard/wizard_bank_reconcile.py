@@ -38,7 +38,7 @@ def _action_open_window(self, cr, uid, data, context):
     if not account_id:
         raise wizard.except_wizard(_('Error'), _('You have to define the bank account\nin the journal definition for reconciliation.'))
     return {
-        'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (form['journal_id'],account_id),
+        'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (form['journal_id'], account_id),
         'name': _('Standard Encoding'),
 
         'view_type': 'form',
@@ -53,7 +53,7 @@ class wiz_journal(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('open','Open for bank reconciliation')]}
+            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end', 'Cancel'), ('open', 'Open for bank reconciliation')]}
         },
         'open': {
             'actions': [],

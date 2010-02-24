@@ -27,7 +27,7 @@ from report.misc import choice_colors
 # Draw a graph
 # 
 class GanttCanvas(object):
-    def __init__(self, io, convertors=(lambda x:x,lambda x:x)):
+    def __init__(self, io, convertors=(lambda x:x, lambda x:x)):
         self._datas = {}
         self._canvas = canvas.init(fname=io, format='pdf')
         self._canvas.set_author("Open ERP")
@@ -38,19 +38,19 @@ class GanttCanvas(object):
 
     def add(self, user, name, datas):
         if hasattr(user, 'replace'):
-            user=user.replace('/', '//')
+            user = user.replace('/', '//')
         if hasattr(name, 'replace'):
-            name=name.replace('/', '//')
+            name = name.replace('/', '//')
         name = name.encode('ascii', 'ignore')
         if user not in self._datas:
             self._datas[user] = []
         for f in datas:
             x = map(self._conv[0], f)
-            if x[0]<self._min or not self._min:
+            if x[0] < self._min or not self._min:
                 self._min = x[0]
-            if x[1]>self._max or not self._max:
+            if x[1] > self._max or not self._max:
                 self._max = x[1]
-            self._datas[user].append( (name, x))
+            self._datas[user].append((name, x))
             self._names.setdefault(name, x[0])
 
     def draw(self):
@@ -67,25 +67,25 @@ class GanttCanvas(object):
         def _interval_get(*args):
             result = []
             for i in range(20):
-                d = localtime(self._min + (((self._max-self._min)/20)*(i+1)))
+                d = localtime(self._min + (((self._max - self._min) / 20) * (i + 1)))
                 res = DateTime(d.year, d.month, d.day).ticks()
-                if (not result) or result[-1]<>res:
+                if (not result) or result[-1] <> res:
                     result.append(res)
             return result
 
-        ar = area.T(y_coord = category_coord.T(names, 1),
+        ar = area.T(y_coord=category_coord.T(names, 1),
             x_grid_style=line_style.gray50_dash1,
             x_grid_interval=_interval_get,
-            x_range = (self._min,self._max),
+            x_range=(self._min, self._max),
             x_axis=axis.X(label="Date", format=self._conv[1]),
             y_axis=axis.Y(label="Tasks"),
-            legend = legend.T(), size = (680,450))
+            legend=legend.T(), size=(680, 450))
 
         for user in self._datas:
             chart_object.set_defaults(interval_bar_plot.T, direction="horizontal", data=self._datas[user])
             f = fill_style.Plain()
             f.bgcolor = user_color[user]
-            ar.add_plot(interval_bar_plot.T(fill_styles = [f, None], label=user, cluster=(0,1)))
+            ar.add_plot(interval_bar_plot.T(fill_styles=[f, None], label=user, cluster=(0, 1)))
 
         ar.draw(self._canvas)
 
@@ -94,13 +94,13 @@ class GanttCanvas(object):
 
 if __name__ == '__main__':
     date_to_int = lambda x: int(x.ticks())
-    int_to_date = lambda x: '/a60{}'+localtime(x).strftime('%d %m %Y')
+    int_to_date = lambda x: '/a60{}' + localtime(x).strftime('%d %m %Y')
     gt = GanttCanvas('test.pdf', convertors=(date_to_int, int_to_date))
-    gt.add('nicoe', 'Graphe de gantt', [(DateTime(2005,6,12), DateTime(2005,6,13))])
-    gt.add('nicoe', 'Tarifs', [(DateTime(2005,6,19), DateTime(2005,6,21))])
-    gt.add('gaetan', 'Calcul des prix', [(DateTime(2005,6,12), DateTime(2005,6,13))])
-    gt.add('nico', 'Mise a jour du site', [(DateTime(2005,6,13), DateTime(2005,6,16))])
-    gt.add('tom', 'Coucou', [(DateTime(2005,6,11), DateTime(2005,6,12))])
+    gt.add('nicoe', 'Graphe de gantt', [(DateTime(2005, 6, 12), DateTime(2005, 6, 13))])
+    gt.add('nicoe', 'Tarifs', [(DateTime(2005, 6, 19), DateTime(2005, 6, 21))])
+    gt.add('gaetan', 'Calcul des prix', [(DateTime(2005, 6, 12), DateTime(2005, 6, 13))])
+    gt.add('nico', 'Mise a jour du site', [(DateTime(2005, 6, 13), DateTime(2005, 6, 16))])
+    gt.add('tom', 'Coucou', [(DateTime(2005, 6, 11), DateTime(2005, 6, 12))])
     gt.draw()
     gt.close()
 

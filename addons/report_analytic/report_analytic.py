@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 
 class report_analytic_account_close(osv.osv):
     _name = "report.analytic.account.close"

@@ -24,12 +24,12 @@ import pooler
 from tools.translate import _
 
 def _event_tasks(self, cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname) 
-    mod_obj = pool.get('ir.model.data') 
+    pool = pooler.get_pool(cr.dbname)
+    mod_obj = pool.get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'project', 'view_task_search_form')
-    id = mod_obj.read(cr, uid, result, ['res_id'])    
+    id = mod_obj.read(cr, uid, result, ['res_id'])
     event_id = data['id']
-    cr.execute('SELECT project_id FROM event_event WHERE id = %s', (event_id, ))
+    cr.execute('SELECT project_id FROM event_event WHERE id = %s', (event_id,))
     res = cr.fetchone()
     if not res[0]:
         raise wizard.except_wizard(_('Error !'), _('No project defined for this event.\nYou can create one with the retro-planning button !'))
@@ -41,7 +41,7 @@ def _event_tasks(self, cr, uid, data, context):
         'res_model': 'project.task',
         'context': { },
         'type': 'ir.actions.act_window',
-        'search_view_id': id['res_id']         
+        'search_view_id': id['res_id']
     }
     return value
 

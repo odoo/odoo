@@ -29,7 +29,7 @@ import base64
 from tools.translate import _
 
 import tools
-from osv import fields,osv,orm
+from osv import fields, osv, orm
 from osv.orm import except_orm
 
 from crm import crm
@@ -45,14 +45,14 @@ class crm_project_bug(osv.osv):
         'date': fields.datetime('Date'),
         'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
+        'canal_id': fields.many2one('res.partner.canal', 'Channel', help="The channels represent the different communication modes available with the customer." \
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'planned_revenue': fields.float('Planned Revenue'),
         'planned_cost': fields.float('Planned Costs'),
         'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-        'categ_id': fields.many2one('crm.case.categ','Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'type_id': fields.many2one('crm.case.resource.type', 'Bug Type', domain="[('object_id.model', '=', 'crm.project.bug')]"),
 
@@ -61,27 +61,27 @@ class crm_project_bug(osv.osv):
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'project_id':fields.many2one('project.project', 'Project'),
-        'duration': fields.float('Duration'),        
+        'duration': fields.float('Duration'),
         'probability': fields.float('Probability (%)'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]")
     }
 
     def _get_project(self, cr, uid, context):
-       user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
+       user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
        if user.context_project_id:
            return user.context_project_id
-       return False  
+       return False
 
     def _convert(self, cr, uid, ids, xml_id, context=None):
         data_obj = self.pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'crm_project', xml_id)        
+        id2 = data_obj._get_id(cr, uid, 'crm_project', xml_id)
         categ_id = False
         if id2:
-            categ_id = data_obj.browse(cr, uid, id2, context=context).res_id    
+            categ_id = data_obj.browse(cr, uid, id2, context=context).res_id
         if categ_id:
             self.write(cr, uid, ids, {'categ_id': categ_id})
         return True
-   
+
     def convert_to_feature(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'feature_request_categ', context=context)
 
@@ -89,7 +89,7 @@ class crm_project_bug(osv.osv):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
     _defaults = {
-          'project_id':_get_project,          
+          'project_id':_get_project,
           }
 crm_project_bug()
 

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 from osv import orm
 
 from tools.translate import _
@@ -30,7 +30,7 @@ def _get_answers(cr, uid, ids):
     from profile_question_yes_rel
     where profile=ANY(%s)"""
 
-    cr.execute(query,(ids,))
+    cr.execute(query, (ids,))
     ans_yes = [x[0] for x in cr.fetchall()]
 
     query = """
@@ -38,7 +38,7 @@ def _get_answers(cr, uid, ids):
     from profile_question_no_rel
     where profile=ANY(%s)"""
 
-    cr.execute(query,(ids,))
+    cr.execute(query, (ids,))
     ans_no = [x[0] for x in cr.fetchall()]
 
     return [ans_yes, ans_no]
@@ -50,7 +50,7 @@ def _get_parents(cr, uid, ids):
      select distinct(parent_id)
      from crm_segmentation
      where parent_id is not null
-     and id=ANY(%s)""",(ids,))
+     and id=ANY(%s)""", (ids,))
 
     parent_ids = [x[0] for x in cr.fetchall()]
 
@@ -66,7 +66,7 @@ def _get_parents(cr, uid, ids):
     return ids_to_check
 
 
-def test_prof(cr, uid, seg_id, pid, answers_ids = []):
+def test_prof(cr, uid, seg_id, pid, answers_ids=[]):
 #return True if the partner pid fetch the segmentation rule seg_id
     ids_to_check = _get_parents(cr, uid, [seg_id])
     [yes_answers, no_answers] = _get_answers(cr, uid, ids_to_check)
@@ -86,7 +86,7 @@ def test_prof(cr, uid, seg_id, pid, answers_ids = []):
 
 
 def _recompute_categ(self, cr, uid, pid, answers_ids):
-    ok =  []
+    ok = []
     cr.execute('''
         select r.category_id
         from res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id)
@@ -100,7 +100,7 @@ def _recompute_categ(self, cr, uid, pid, answers_ids):
         from crm_segmentation
         where profiling_active = true'''
     if ok != []:
-        query = query +''' and categ_id not in(%s)'''% ','.join([str(i) for i in ok ])
+        query = query + ''' and categ_id not in(%s)''' % ','.join([str(i) for i in ok ])
     query = query + ''' order by id '''
 
     cr.execute(query)
@@ -113,19 +113,19 @@ def _recompute_categ(self, cr, uid, pid, answers_ids):
 
 
 class question(osv.osv):
-    _name="crm_profiling.question"
-    _description= "Question"
-    _columns={
-        'name': fields.char("Question",size=128, required=True),
-        'answers_ids': fields.one2many("crm_profiling.answer","question_id","Avalaible answers",),
+    _name = "crm_profiling.question"
+    _description = "Question"
+    _columns = {
+        'name': fields.char("Question", size=128, required=True),
+        'answers_ids': fields.one2many("crm_profiling.answer", "question_id", "Avalaible answers",),
         }
 
 question()
 
 
 class questionnaire(osv.osv):
-    _name="crm_profiling.questionnaire"
-    _description= "Questionnaire"
+    _name = "crm_profiling.questionnaire"
+    _description = "Questionnaire"
 
     def build_form(self, cr, uid, data, context):
         query = """
@@ -134,38 +134,38 @@ class questionnaire(osv.osv):
         where id in ( select question from profile_questionnaire_quest_rel where questionnaire = %s)"""
         res = cr.execute(query, (data['form']['questionnaire_name'],))
         result = cr.fetchall()
-        quest_fields={}
-        quest_form='''<?xml version="1.0"?>
+        quest_fields = {}
+        quest_form = '''<?xml version="1.0"?>
             <form string="%s">''' % _('Questionnaire')
         for name, oid in result:
             quest_form = quest_form + '<field name="quest_form%d"/><newline/>' % (oid,)
-            quest_fields['quest_form%d' % (oid,)] = {'string': name, 'type': 'many2one', 'relation': 'crm_profiling.answer', 'domain': [('question_id','=',oid)] }
+            quest_fields['quest_form%d' % (oid,)] = {'string': name, 'type': 'many2one', 'relation': 'crm_profiling.answer', 'domain': [('question_id', '=', oid)] }
         quest_form = quest_form + '''</form>'''
         return quest_form, quest_fields
 
     _columns = {
-        'name': fields.char("Questionnaire",size=128, required=True),
+        'name': fields.char("Questionnaire", size=128, required=True),
         'description':fields.text("Description", required=True),
-        'questions_ids': fields.many2many('crm_profiling.question','profile_questionnaire_quest_rel','questionnaire', 'question', "Questions"),
+        'questions_ids': fields.many2many('crm_profiling.question', 'profile_questionnaire_quest_rel', 'questionnaire', 'question', "Questions"),
     }
 
 questionnaire()
 
 
 class answer(osv.osv):
-    _name="crm_profiling.answer"
-    _description="Answer"
-    _columns={
-        "name": fields.char("Answer",size=128, required=True),
-        "question_id": fields.many2one('crm_profiling.question',"Question"),
+    _name = "crm_profiling.answer"
+    _description = "Answer"
+    _columns = {
+        "name": fields.char("Answer", size=128, required=True),
+        "question_id": fields.many2one('crm_profiling.question', "Question"),
         }
 answer()
 
 
 class partner(osv.osv):
-    _inherit="res.partner"
-    _columns={
-        "answers_ids": fields.many2many("crm_profiling.answer","partner_question_rel","partner","answer","Answers"),
+    _inherit = "res.partner"
+    _columns = {
+        "answers_ids": fields.many2many("crm_profiling.answer", "partner_question_rel", "partner", "answer", "Answers"),
         }
 
     def _questionnaire_compute(self, cr, uid, data, context):
@@ -179,25 +179,25 @@ class partner(osv.osv):
         for x in cr.fetchall():
             temp.append(x[0])
 
-        self.write(cr, uid, [data['id']],{'answers_ids':[[6,0,temp]]}, context)
+        self.write(cr, uid, [data['id']], {'answers_ids':[[6, 0, temp]]}, context)
         return {}
 
 
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
-            context={}
+            context = {}
         if 'answers_ids' in vals:
-            vals['category_id']=[[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
+            vals['category_id'] = [[6, 0, _recompute_categ(self, cr, uid, ids[0], vals['answers_ids'][0][2])]]
         return super(partner, self).write(cr, uid, ids, vals, context=context)
 
 partner()
 
 
 class crm_segmentation(osv.osv):
-    _inherit="crm.segmentation"
-    _columns={
-        "answer_yes": fields.many2many("crm_profiling.answer","profile_question_yes_rel","profile","answer","Included Answers"),
-        "answer_no": fields.many2many("crm_profiling.answer","profile_question_no_rel","profile","answer","Excluded Answers"),
+    _inherit = "crm.segmentation"
+    _columns = {
+        "answer_yes": fields.many2many("crm_profiling.answer", "profile_question_yes_rel", "profile", "answer", "Included Answers"),
+        "answer_no": fields.many2many("crm_profiling.answer", "profile_question_no_rel", "profile", "answer", "Excluded Answers"),
         'parent_id': fields.many2one('crm.segmentation', 'Parent Profile'),
         'child_ids': fields.one2many('crm.segmentation', 'parent_id', 'Child Profiles'),
         'profiling_active': fields.boolean('Use The Profiling Rules', help='Check this box if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored')
@@ -207,7 +207,7 @@ class crm_segmentation(osv.osv):
     ]
 
     def process_continue(self, cr, uid, ids, start=False):
-        categs = self.read(cr,uid,ids,['categ_id','exclusif','partner_id', 'sales_purchase_active', 'profiling_active'])
+        categs = self.read(cr, uid, ids, ['categ_id', 'exclusif', 'partner_id', 'sales_purchase_active', 'profiling_active'])
         for categ in categs:
             if start:
                 if categ['exclusif']:
@@ -219,7 +219,7 @@ class crm_segmentation(osv.osv):
             partners = [x[0] for x in cr.fetchall()]
 
             if categ['sales_purchase_active']:
-                to_remove_list=[]
+                to_remove_list = []
                 cr.execute('select id from crm_segmentation_line where segmentation_id=%s', (id,))
                 line_ids = [x[0] for x in cr.fetchall()]
 
@@ -230,10 +230,10 @@ class crm_segmentation(osv.osv):
                     partners.remove(pid)
 
             if categ['profiling_active']:
-                to_remove_list=[]
+                to_remove_list = []
                 for pid in partners:
 
-                    cr.execute('select distinct(answer) from partner_question_rel where partner=%s',(pid,))
+                    cr.execute('select distinct(answer) from partner_question_rel where partner=%s', (pid,))
                     answers_ids = [x[0] for x in cr.fetchall()]
 
                     if (not test_prof(cr, uid, id, pid, answers_ids)):
@@ -242,7 +242,7 @@ class crm_segmentation(osv.osv):
                     partners.remove(pid)
 
             for partner_id in partners:
-                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner_id))
+                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0], partner_id))
             cr.commit()
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})

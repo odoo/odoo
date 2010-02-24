@@ -25,15 +25,15 @@ def som(cr, uid, partner_id, args):
     result = args['som_interval_default']
     max = args['som_interval_max'] or 4
     factor = args['som_interval_decrease']
-    date_start=time.time() - args['som_interval']*3600*24*max
+    date_start = time.time() - args['som_interval'] * 3600 * 24 * max
     for i in range(max):
-        next_date = date_start + args['som_interval']*3600*24
+        next_date = date_start + args['som_interval'] * 3600 * 24
         cr.execute(
              '''
              select s.factor from res_partner_event e
              left join res_partner_som s
-             on (e.som=s.id) where partner_id=%s and date>=%s and date<%s''', 
-             (partner_id, 
+             on (e.som=s.id) where partner_id=%s and date>=%s and date<%s''',
+             (partner_id,
               time.strftime('%Y-%m-%d', time.gmtime(date_start)),
               time.strftime('%Y-%m-%d', time.gmtime(next_date))))
 
@@ -43,13 +43,13 @@ def som(cr, uid, partner_id, args):
             nbr = 0.0
             for som in soms:
                 if som[0]:
-                    c+=1
-                    nbr+=som[0]
+                    c += 1
+                    nbr += som[0]
             if c:
-                avg = nbr/c
+                avg = nbr / c
             else:
                 avg = result
-            result = result*(1-factor) + (avg*factor)
+            result = result * (1 - factor) + (avg * factor)
         else:
             avg = args['som_interval_default']
         date_start = next_date

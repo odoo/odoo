@@ -26,7 +26,7 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
-    "depends" : ["stock", "hr", "purchase", "product","process"],
+    "depends" : ["stock", "hr", "purchase", "product", "process"],
     "description": """
     This is the base module to manage the manufacturing process in Open ERP.
 

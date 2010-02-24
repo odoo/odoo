@@ -10,7 +10,7 @@ from osv import fields, osv
 class Tax_template(osv.osv_memory):
     """Creat account.journal.todo class in order
         to add configuration wizzard"""
-    _name ="account.tax.template.todo"
+    _name = "account.tax.template.todo"
     _inherit = 'res.config'
 
     def _ensure_step(self):
@@ -18,7 +18,7 @@ class Tax_template(osv.osv_memory):
             self._inner_steps = 0
 
     def _current_tax_template(self, cr, uid):
-        ids = self.pool.get('account.tax.template').search(cr,uid,[])
+        ids = self.pool.get('account.tax.template').search(cr, uid, [])
         return self.pool.get('account.tax.template').browse(
             cr, uid, ids[self._inner_steps]
             )
@@ -26,7 +26,7 @@ class Tax_template(osv.osv_memory):
     def _get_tax(self, cr, uid, ctx):
         self._ensure_step()
         return self.pool.get('account.tax.template')\
-            .search(cr,uid,[])[self._inner_steps]
+            .search(cr, uid, [])[self._inner_steps]
 
     def _get_collected(self, cr, uid, ctx):
         self._ensure_step()
@@ -75,16 +75,16 @@ class Tax_template(osv.osv_memory):
         return self._on_change(
             cr, uid, ids, tax, vals={'account_paid_id': account})
 
-    def execute(self,cr,uid,ids,context={}):
+    def execute(self, cr, uid, ids, context={}):
         jids = self.pool.get('account.tax.template').search(cr, uid, [])
-        if self._inner_steps < len(jids)-1 :
+        if self._inner_steps < len(jids) - 1 :
             self._inner_steps += 1
             return {
                 'view_type': 'form',
                 "view_mode": 'form',
                 'res_model': 'account.tax.template.todo',
                 'view_id':self.pool.get('ir.ui.view').search(
-                    cr, uid, [('name','=','account.tax.template.todo')]),
+                    cr, uid, [('name', '=', 'account.tax.template.todo')]),
                 'type': 'ir.actions.act_window',
                 'target':'new',
                 }

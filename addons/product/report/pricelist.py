@@ -33,14 +33,14 @@ class report_custom(report_rml):
 
         price_list_id = data['form']['price_list']
 
-        product_categ_id =pool.get('product.category').search(cr,uid,[])
-        currency = pool.get('product.pricelist').read(cr,uid,[price_list_id],['currency_id','name'])[0]
+        product_categ_id = pool.get('product.category').search(cr, uid, [])
+        currency = pool.get('product.pricelist').read(cr, uid, [price_list_id], ['currency_id', 'name'])[0]
 
 
-        qty =[]
+        qty = []
 
-        for i in range(1,6):
-            q = 'qty%d'%i
+        for i in range(1, 6):
+            q = 'qty%d' % i
             if data['form'][q]:
                 qty.append(data['form'][q])
 
@@ -49,31 +49,31 @@ class report_custom(report_rml):
 
         product_xml = []
         cols = ''
-        cols = cols+'6cm'
-        title ='<title name=" Description " number="0" />'
-        i=1
+        cols = cols + '6cm'
+        title = '<title name=" Description " number="0" />'
+        i = 1
         for q in qty:
-            cols = cols+',2.5cm'
-            if q==1:
-                title+='<title name="%d unit" number="%d"/>'%(q,i)
+            cols = cols + ',2.5cm'
+            if q == 1:
+                title += '<title name="%d unit" number="%d"/>' % (q, i)
             else:
-                title+='<title name="%d units" number="%d"/>'%(q,i)
-            i+=1
+                title += '<title name="%d units" number="%d"/>' % (q, i)
+            i += 1
         date = datetime.date.today()
-        str_date=date.strftime("%d/%m/%Y")
-        product_xml.append('<cols>'+cols+'</cols>')
-        product_xml.append('<pricelist> %s </pricelist>'%currency['name'])
-        product_xml.append('<currency> %s </currency>'%currency['currency_id'][1])
-        product_xml.append('<date> %s </date>'%str_date)
+        str_date = date.strftime("%d/%m/%Y")
+        product_xml.append('<cols>' + cols + '</cols>')
+        product_xml.append('<pricelist> %s </pricelist>' % currency['name'])
+        product_xml.append('<currency> %s </currency>' % currency['currency_id'][1])
+        product_xml.append('<date> %s </date>' % str_date)
         product_xml.append("<product>")
 
         for p_categ_id in product_categ_id:
-            product_ids = pool.get('product.product').search(cr,uid,[('id','in',ids),('categ_id','=',p_categ_id)])
+            product_ids = pool.get('product.product').search(cr, uid, [('id', 'in', ids), ('categ_id', '=', p_categ_id)])
             if product_ids:
-                categ_name = pool.get('product.category').read(cr,uid,[p_categ_id],['name'])
-                products = pool.get('product.product').read(cr,uid,product_ids,['id','name','code'])
+                categ_name = pool.get('product.category').read(cr, uid, [p_categ_id], ['name'])
+                products = pool.get('product.product').read(cr, uid, product_ids, ['id', 'name', 'code'])
                 pro = []
-                i=0
+                i = 0
                 pro.append('<pro name="%s" categ="true">' % (categ_name[0]['name']))
                 temp = []
                 for q in qty:
@@ -82,24 +82,24 @@ class report_custom(report_rml):
                 pro.append('</pro>')
                 for x in products:
                     #Replacement of special characters with their code html for allowing reporting - Edited by Hasa
-                    x['name'] = x['name'].replace("&","&amp;")
-                    x['name'] = x['name'].replace("\"","&quot;")
+                    x['name'] = x['name'].replace("&", "&amp;")
+                    x['name'] = x['name'].replace("\"", "&quot;")
                     if x['code']:
                         pro.append('<pro name="[%s] %s" >' % (x['code'], x['name']))
                     else:
                         pro.append('<pro name="%s" >' % (x['name']))
                     temp = []
                     for q in qty:
-                        price_dict = pool.get('product.pricelist').price_get(cr,uid,[price_list_id],x['id'],q)
+                        price_dict = pool.get('product.pricelist').price_get(cr, uid, [price_list_id], x['id'], q)
                         if price_dict[price_list_id]:
                             price = price_dict[price_list_id]
                         else:
-                            res = pool.get('product.product').read(cr, uid,[x['id']])
-                            price =  res[0]['list_price']
+                            res = pool.get('product.product').read(cr, uid, [x['id']])
+                            price = res[0]['list_price']
 #                        temp.append('<price name="%s %s" />'%(price_list[i][x['id']]*q[2]['name'],currency['currency_id'][1]))
 
-                        temp.append('<price name="%.2f" />'%(price))
-                    i+=1
+                        temp.append('<price name="%.2f" />' % (price))
+                    i += 1
                     pro.extend(temp)
                     pro.append('</pro>')
 #                categ.extend(pro)
@@ -112,9 +112,9 @@ class report_custom(report_rml):
         <report>
         %s
         </report>
-        '''  % (title+'\n'.join(product_xml))
+        ''' % (title + '\n'.join(product_xml))
         return self.post_process_xml_data(cr, uid, xml, context)
 
-report_custom('report.pricelist.pricelist', 'product.product','','addons/product_pricelist_print/report/product_price.xsl')
+report_custom('report.pricelist.pricelist', 'product.product', '', 'addons/product_pricelist_print/report/product_price.xsl')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

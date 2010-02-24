@@ -32,53 +32,53 @@ from StringIO import StringIO
 from HTMLParser import HTMLParser
 
 class Wiki(osv.osv):
-    _name="wiki.wiki"
+    _name = "wiki.wiki"
 Wiki()
 
 class WikiGroup(osv.osv):
     _name = "wiki.groups"
-    _description="Wiki Groups"
+    _description = "Wiki Groups"
     _order = 'name'
-    _columns={
+    _columns = {
        'name':fields.char('Wiki Group', size=256, select=True, required=True),
        'page_ids':fields.one2many('wiki.wiki', 'group_id', 'Pages'),
        'notes':fields.text("Description"),
        'create_date':fields.datetime("Created Date", select=True),
        'template': fields.text('Wiki Template'),
        'section': fields.boolean("Make Section ?"),
-       'method':fields.selection([('list','List'),('page','Home Page'),('tree','Tree')],'Display Method'),
+       'method':fields.selection([('list', 'List'), ('page', 'Home Page'), ('tree', 'Tree')], 'Display Method'),
        'home':fields.many2one('wiki.wiki', 'Pages'),
     }
     _defaults = {
-        'method': lambda *a: 'page',
+        'method': lambda * a: 'page',
     }
 WikiGroup()
 
 class GroupLink(osv.osv):
     _name = "wiki.groups.link"
-    _description="Wiki Groups Links"
+    _description = "Wiki Groups Links"
     _rec_name = 'action_id'
-    _columns={
+    _columns = {
        'group_id':fields.many2one('wiki.groups', 'Parent Group', ondelete='set null'),
        'action_id': fields.many2one('ir.ui.menu', 'Menu')
     }
 GroupLink()
 
 class Wiki(osv.osv):
-    _inherit="wiki.wiki"
-    _description="Wiki Page"
+    _inherit = "wiki.wiki"
+    _description = "Wiki Page"
     _order = 'section,create_date desc'
-    _columns={
+    _columns = {
         'name':fields.char('Title', size=256, select=True, required=True),
-        'write_uid':fields.many2one('res.users',"Last Author"),
+        'write_uid':fields.many2one('res.users', "Last Author"),
         'text_area':fields.text("Content"),
-        'create_uid':fields.many2one('res.users','Author', select=True),
+        'create_uid':fields.many2one('res.users', 'Author', select=True),
         'create_date':fields.datetime("Created on", select=True),
         'write_date':fields.datetime("Modification Date", select=True),
         'tags':fields.char('Tags', size=1024),
-        'history_id':fields.one2many('wiki.wiki.history','wiki_id','History Lines'),
+        'history_id':fields.one2many('wiki.wiki.history', 'wiki_id', 'History Lines'),
         'minor_edit':fields.boolean('Minor edit', select=True),
-        'summary':fields.char('Summary',size=256),
+        'summary':fields.char('Summary', size=256),
         'section': fields.char('Sequence', size=32, help="Use page section code like 1.2.1"),
         'group_id':fields.many2one('wiki.groups', 'Wiki Group', select=1, ondelete='set null'),
         'toc':fields.boolean('Table of Contents'),
@@ -86,7 +86,7 @@ class Wiki(osv.osv):
         'parent_id':fields.many2one('wiki.wiki', 'Parent Page'),
         'child_ids':fields.one2many('wiki.wiki', 'parent_id', 'Child Pages'),
     }
-    
+
     def onchange_group_id(self, cr, uid, ids, group_id, content, context={}):
         if (not group_id) or content:
             return {}
@@ -97,7 +97,7 @@ class Wiki(osv.osv):
         s = section.split('.')
         template = grp.template
         try:
-            s[-1] = str(int(s[-1])+1)
+            s[-1] = str(int(s[-1]) + 1)
         except:
             pass
         section = '.'.join(s)
@@ -111,30 +111,30 @@ class Wiki(osv.osv):
         return super(Wiki, self).copy_data(cr, uid, id, {'wiki_id':False}, context)
 
     def create(self, cr, uid, vals, context=None):
-	id = super(Wiki,self).create(cr, uid, vals, context)
+	id = super(Wiki, self).create(cr, uid, vals, context)
         history = self.pool.get('wiki.wiki.history')
 	if vals.get('text_area'):
 	    res = {
                 'minor_edit':vals.get('minor_edit', True),
-                'text_area':vals.get('text_area',''),
+                'text_area':vals.get('text_area', ''),
                 'write_uid':uid,
                 'wiki_id' : id,
-                'summary':vals.get('summary','')
+                'summary':vals.get('summary', '')
             }
             history.create(cr, uid, res)
 	return id
 
     def write(self, cr, uid, ids, vals, context=None):
-        result = super(Wiki,self).write(cr, uid, ids, vals, context)
+        result = super(Wiki, self).write(cr, uid, ids, vals, context)
         history = self.pool.get('wiki.wiki.history')
         if vals.get('text_area'):
             for id in ids:
                 res = {
                     'minor_edit':vals.get('minor_edit', True),
-                    'text_area':vals.get('text_area',''),
+                    'text_area':vals.get('text_area', ''),
                     'write_uid':uid,
                     'wiki_id' : id,
-                    'summary':vals.get('summary','')
+                    'summary':vals.get('summary', '')
                 }
                 history.create(cr, uid, res)
         return result
@@ -142,20 +142,20 @@ class Wiki(osv.osv):
 Wiki()
 
 class History(osv.osv):
-    _name="wiki.wiki.history"
-    _description="Wiki History"
-    _rec_name="date_time"
+    _name = "wiki.wiki.history"
+    _description = "Wiki History"
+    _rec_name = "date_time"
     _order = 'id DESC'
-    _columns={
-      'create_date':fields.datetime("Date",select=True),
+    _columns = {
+      'create_date':fields.datetime("Date", select=True),
       'text_area':fields.text("Text area"),
-      'minor_edit':fields.boolean('This is a major edit ?',select=True),
-      'summary':fields.char('Summary',size=256, select=True),
-      'write_uid':fields.many2one('res.users',"Modify By", select=True),
-      'wiki_id':fields.many2one('wiki.wiki','Wiki Id', select=True)
+      'minor_edit':fields.boolean('This is a major edit ?', select=True),
+      'summary':fields.char('Summary', size=256, select=True),
+      'write_uid':fields.many2one('res.users', "Modify By", select=True),
+      'wiki_id':fields.many2one('wiki.wiki', 'Wiki Id', select=True)
     }
     _defaults = {
-        'write_uid': lambda obj,cr,uid,context: uid,
+        'write_uid': lambda obj, cr, uid, context: uid,
     }
     def getDiff(self, cr, uid, v1, v2, context={}):
         import difflib

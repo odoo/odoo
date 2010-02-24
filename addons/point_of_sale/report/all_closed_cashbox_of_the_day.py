@@ -38,13 +38,13 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
                 'get_sub_total':self._get_sub_total,
                 'get_net_total_starting':self._get_net_total_starting,
                 })
-    def _get_user(self,line_ids):
-        sql = "select name from res_users where id = %d"%(line_ids['create_uid'])
+    def _get_user(self, line_ids):
+        sql = "select name from res_users where id = %d" % (line_ids['create_uid'])
         self.cr.execute(sql)
         user = self.cr.fetchone()
         return user[0]
 
-    def _get_data(self,user):
+    def _get_data(self, user):
         data = {}
         sql = """ SELECT abs.journal_id,abs.id,abs.date,abs.closing_date,abs.name as statement,aj.name as journal,ap.name as period,ru.name as user,rc.name as company,
                        abs.state,abs.balance_end_real FROM account_bank_statement as abs
@@ -52,22 +52,22 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
                        LEFT JOIN account_period as ap ON ap.id = abs.period_id
                        LEFT JOIN res_users as ru ON ru.id = abs.user_id
                        LEFT JOIN res_company as rc ON rc.id = abs.company_id
-                       WHERE to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date and abs.state in ('confirm','open') and abs.user_id = %d"""%(user.id)
+                       WHERE to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date and abs.state in ('confirm','open') and abs.user_id = %d""" % (user.id)
         self.cr.execute(sql)
         data = self.cr.dictfetchall()
         return data
 
-    def _get_lines(self,statement):
+    def _get_lines(self, statement):
         data = {}
         sql = """ select absl.* from account_bank_statement_line as absl, account_bank_statement as abs
-                           where absl.statement_id = abs.id and abs.id = %d"""%(statement['id'])
+                           where absl.statement_id = abs.id and abs.id = %d""" % (statement['id'])
         self.cr.execute(sql)
         data = self.cr.dictfetchall()
         return data
 
-    def _get_bal(self,data):
+    def _get_bal(self, data):
         res = {}
-        sql =""" select sum(pieces*number) as bal from singer_statement where starting_id = %d """%(data['id'])
+        sql = """ select sum(pieces*number) as bal from singer_statement where starting_id = %d """ % (data['id'])
         self.cr.execute(sql)
         res = self.cr.dictfetchall()
         if res :
@@ -75,25 +75,25 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         else :
             return False
 
-    def _get_sub_total(self,user,data,date):
-        res={}
+    def _get_sub_total(self, user, data, date):
+        res = {}
         self.cr.execute(""" select sum(absl.amount) from account_bank_statement as abs
                             LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
                             WHERE abs.journal_id = %d
                             and abs.state in ('confirm','open')
                             and abs.date = '%s'
                             and abs.user_id = %d
-                            """%(data,date,user.id))
+                            """ % (data, date, user.id))
         res = self.cr.fetchall()
         if res[0][0]:
             return res[0][0]
         else:
             return False
-    def _get_partner(self,statement):
+    def _get_partner(self, statement):
         res = {}
-        sql =""" select rp.name  from account_bank_statement_line as absl,res_partner as rp
+        sql = """ select rp.name  from account_bank_statement_line as absl,res_partner as rp
                                         where absl.partner_id = rp.id
-                                        and absl.pos_statement_id = %d"""%(statement['pos_statement_id'])
+                                        and absl.pos_statement_id = %d""" % (statement['pos_statement_id'])
         self.cr.execute(sql)
         res = self.cr.dictfetchall()
         if res :
@@ -102,20 +102,20 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
             return 0.00
 
 
-    def _get_net_total_starting(self,user):
+    def _get_net_total_starting(self, user):
         lst = []
-        res={}
+        res = {}
         total_ending_bal = 0.0
         total_starting_bal = 0.0
         sql = """ SELECT abs.id,abs.balance_end_real as net_total FROM account_bank_statement as abs
                     WHERE to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date
                     and abs.state in ('confirm','open') 
-                    and abs.user_id = %d"""%(user.id)
+                    and abs.user_id = %d""" % (user.id)
         self.cr.execute(sql)
         res = self.cr.dictfetchall()
         for r in res :
             total_ending_bal += (r['net_total'] or 0.0)
-            sql1 =""" select sum(pieces*number) as bal from singer_statement where starting_id = %d"""%(r['id'])
+            sql1 = """ select sum(pieces*number) as bal from singer_statement where starting_id = %d""" % (r['id'])
             self.cr.execute(sql1)
             data = self.cr.dictfetchall()
             if data[0]['bal']:
@@ -124,15 +124,15 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         lst.append(total_starting_bal)
         return lst
 
-    def _get_net_total(self,user):
+    def _get_net_total(self, user):
         lst = []
-        res={}
+        res = {}
         total_ending_bal = 0.0
         total_starting_bal = 0.0
         sql = """select sum(absl.amount) as net_total from account_bank_statement as abs
                     LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
                     where abs.state in ('confirm','open') and abs.user_id = %d
-                    and to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date """%(user.id)
+                    and to_char(date_trunc('day',abs.date),'YYYY-MM-DD')::date  = current_date """ % (user.id)
 
         self.cr.execute(sql)
         res = self.cr.dictfetchall()

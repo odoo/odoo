@@ -27,8 +27,8 @@ import ir
 import pooler
 from tools.translate import _
 
-class bug2task(wizard.interface):    
-    
+class bug2task(wizard.interface):
+
     def _check_state(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         case_obj = pool.get('crm.project.bug')
@@ -43,7 +43,7 @@ class bug2task(wizard.interface):
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
         res = data_obj.read(cr, uid, result, ['res_id'])
-        
+
 
         id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
         id3 = data_obj._get_id(cr, uid, 'project', 'view_task_tree2')
@@ -53,45 +53,45 @@ class bug2task(wizard.interface):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         bug_case_obj = pool.get('crm.project.bug')
-        task_obj = pool.get('project.task')        
-        for bug in bug_case_obj.browse(cr, uid, data['ids']):                
-            new_task_id = task_obj.create(cr, uid, {            
-                'name': bug.name,                
-                'partner_id': bug.partner_id.id,                
+        task_obj = pool.get('project.task')
+        for bug in bug_case_obj.browse(cr, uid, data['ids']):
+            new_task_id = task_obj.create(cr, uid, {
+                'name': bug.name,
+                'partner_id': bug.partner_id.id,
                 'description':bug.description,
                 'date': bug.date,
-                'project_id':bug.project_id.id, 
-                'priority':bug.priority,    
-                'user_id':bug.user_id.id,  
-                'planned_hours': 0.0,        
-            })       
-            
-            new_task = task_obj.browse(cr, uid, new_task_id)
-            
-            vals = {
-                'task_id': new_task_id,                
-                }            
+                'project_id':bug.project_id.id,
+                'priority':bug.priority,
+                'user_id':bug.user_id.id,
+                'planned_hours': 0.0,
+            })
 
-            bug_case_obj.write(cr, uid, [bug.id], vals)           
-        
-        value = {            
+            new_task = task_obj.browse(cr, uid, new_task_id)
+
+            vals = {
+                'task_id': new_task_id,
+                }
+
+            bug_case_obj.write(cr, uid, [bug.id], vals)
+
+        value = {
             'name': _('Tasks'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'project.task',
             'res_id': int(new_task_id),
             'view_id': False,
-            'views': [(id2,'form'),(id3,'tree'),(False,'calendar'),(False,'graph')],
+            'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id'] 
+            'search_view_id': res['res_id']
         }
-        return value    
+        return value
 
     states = {
         'init': {
             'actions': [_check_state],
             'result': {'type': 'action', 'action': _makeTask, 'state':'end' }
-        }        
+        }
     }
 
 bug2task('crm.bug.task_set')

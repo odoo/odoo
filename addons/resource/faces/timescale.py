@@ -31,7 +31,7 @@ class TimeScale(object):
         self.data_calendar = calendar
         self._create_chart_calendar()
         self.now = self.to_num(self.data_calendar.now)
-                
+
 
     def to_datetime(self, xval):
         return xval.to_datetime()
@@ -63,7 +63,7 @@ class TimeScale(object):
         #pad worktime slots of calendar (all days should be equally long)
         slot_sum = lambda slots: sum(map(lambda slot: slot[1] - slot[0], slots))
         day_sum = lambda day: slot_sum(dcal.get_working_times(day))
-        
+
         max_work_time = max(map(day_sum, range(7)))
 
         #working_time should have 2/3
@@ -72,7 +72,7 @@ class TimeScale(object):
         #now create timeslots for ccal
         def create_time_slots(day):
             src_slots = dcal.get_working_times(day)
-            slots = [0, src_slots, 24*60]
+            slots = [0, src_slots, 24 * 60]
             slots = tuple(cbook.flatten(slots))
             slots = zip(slots[:-1], slots[1:])
 

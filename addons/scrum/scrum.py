@@ -34,9 +34,9 @@ class scrum_project(osv.osv):
         'scrum': fields.integer('Is a Scrum Project'),
     }
     _defaults = {
-        'product_owner_id': lambda self,cr,uid,context={}: uid,
-        'sprint_size': lambda *a: 15,
-        'scrum': lambda *a: 1
+        'product_owner_id': lambda self, cr, uid, context = {}: uid,
+        'sprint_size': lambda * a: 15,
+        'scrum': lambda * a: 1
     }
 scrum_project()
 
@@ -52,8 +52,8 @@ class scrum_sprint(osv.osv):
                 tot += bl.planned_hours
                 prog += bl.planned_hours * bl.progress / 100.0
             res.setdefault(sprint.id, 0.0)
-            if tot>0:
-                res[sprint.id] = round(prog/tot*100)
+            if tot > 0:
+                res[sprint.id] = round(prog / tot * 100)
         return res
     def _calc_effective(self, cr, uid, ids, name, args, context):
         res = {}
@@ -73,7 +73,7 @@ class scrum_sprint(osv.osv):
         'name' : fields.char('Sprint Name', required=True, size=64),
         'date_start': fields.date('Starting Date', required=True),
         'date_stop': fields.date('Ending Date', required=True),
-        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)]),
+        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum', '=', 1)]),
         'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True),
         'scrum_master_id': fields.many2one('res.users', 'Scrum Master', required=True),
         'meeting_ids': fields.one2many('scrum.meeting', 'sprint_id', 'Daily Scrum'),
@@ -83,21 +83,21 @@ class scrum_sprint(osv.osv):
         'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'State', required=True),
+        'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('done', 'Done')], 'State', required=True),
     }
     _defaults = {
-        'state': lambda *a: 'draft',
-        'date_start' : lambda *a:time.strftime('%Y-%m-%d'),
+        'state': lambda * a: 'draft',
+        'date_start' : lambda * a:time.strftime('%Y-%m-%d'),
     }
     def onchange_project_id(self, cr, uid, ids, project_id):
         v = {}
         if project_id:
             proj = self.pool.get('project.project').browse(cr, uid, [project_id])[0]
-            v['product_owner_id']= proj.product_owner_id and proj.product_owner_id.id or False
-            v['scrum_master_id']= proj.user_id and proj.user_id.id or False
+            v['product_owner_id'] = proj.product_owner_id and proj.product_owner_id.id or False
+            v['scrum_master_id'] = proj.user_id and proj.user_id.id or False
             v['date_stop'] = (DateTime.now() + DateTime.RelativeDateTime(days=int(proj.sprint_size or 14))).strftime('%Y-%m-%d')
         return {'value':v}
-        
+
 scrum_sprint()
 
 class scrum_product_backlog(osv.osv):
@@ -106,14 +106,14 @@ class scrum_product_backlog(osv.osv):
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
+            args = []
         if not context:
-            context={}
+            context = {}
         match = re.match('^S\(([0-9]+)\)$', name)
         if match:
-            ids = self.search(cr, uid, [('sprint_id','=', int(match.group(1)))], limit=limit, context=context)
+            ids = self.search(cr, uid, [('sprint_id', '=', int(match.group(1)))], limit=limit, context=context)
             return self.name_get(cr, uid, ids, context=context)
-        return super(scrum_product_backlog, self).name_search(cr, uid, name, args, operator,context, limit=limit)
+        return super(scrum_product_backlog, self).name_search(cr, uid, name, args, operator, context, limit=limit)
 
     def _calc_progress(self, cr, uid, ids, name, args, context):
         res = {}
@@ -124,8 +124,8 @@ class scrum_product_backlog(osv.osv):
                 tot += task.planned_hours
                 prog += task.planned_hours * task.progress / 100.0
             res.setdefault(bl.id, 0.0)
-            if tot>0:
-                res[bl.id] = round(prog/tot*100)
+            if tot > 0:
+                res[bl.id] = round(prog / tot * 100)
         return res
     def _calc_effective(self, cr, uid, ids, name, args, context):
         res = {}
@@ -145,19 +145,19 @@ class scrum_product_backlog(osv.osv):
         'name' : fields.char('Feature', size=64, required=True),
         'note' : fields.text('Note'),
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product backlog without removing it."),
-        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)]),
+        'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum', '=', 1)]),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'sprint_id': fields.many2one('scrum.sprint', 'Sprint'),
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
+        'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', required=True),
         'progress': fields.function(_calc_progress, method=True, string='Progress'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours')
     }
     _defaults = {
-        'state': lambda *a: 'draft',
-        'active': lambda *a: 1
+        'state': lambda * a: 'draft',
+        'active': lambda * a: 1
     }
     _order = "sequence"
 scrum_product_backlog()
@@ -190,7 +190,7 @@ class scrum_meeting(osv.osv):
     # TODO: Find the right sprint thanks to users and date
     #
     _defaults = {
-        'date' : lambda *a:time.strftime('%Y-%m-%d'),
+        'date' : lambda * a:time.strftime('%Y-%m-%d'),
     }
 scrum_meeting()
 

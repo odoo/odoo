@@ -36,7 +36,7 @@ def _compute_tasks(cr, uid, task_list, date_begin):
         # TODO: reorder ! with dependencies
         if not task.planned_hours:
             continue
-        if task.state in ('draft','open','progress') and task.user_id:
+        if task.state in ('draft', 'open', 'progress') and task.user_id:
 
             # Find the starting date of the task
             if task.user_id.id in users:
@@ -44,9 +44,9 @@ def _compute_tasks(cr, uid, task_list, date_begin):
             else:
                 date_start = date_begin
             sequences.sort()
-            for (seq,dt) in sequences:
-                if seq<task.sequence:
-                    date_start = max(dt,date_start)
+            for (seq, dt) in sequences:
+                if seq < task.sequence:
+                    date_start = max(dt, date_start)
                 else:
                     break
 
@@ -59,7 +59,7 @@ def _compute_tasks(cr, uid, task_list, date_begin):
             # Compute the closing date of the task
             tasks[task.id] = []
             res = pooler.get_pool(cr.dbname).get('resource.calendar').interval_get(cr, uid, task.project_id.resource_calendar_id.id, date_start, task.remaining_hours)
-            for (d1,d2) in res:
+            for (d1, d2) in res:
                 tasks[task.id].append((d1, d2, task.name, task.user_id.login))
             date_close = tasks[task.id] and tasks[task.id][-1][1] or False
 
@@ -67,14 +67,14 @@ def _compute_tasks(cr, uid, task_list, date_begin):
             if date_close:
                 users[task.user_id.id] = date_close
                 sequences.append((task.sequence, date_close))
-                if date_close>last_date:
-                    last_date=date_close
+                if date_close > last_date:
+                    last_date = date_close
     return tasks, last_date
 
 def _compute_project(cr, uid, project, date_begin):
     tasks, last_date = _compute_tasks(cr, uid, project.tasks, date_begin)
     for proj in project.child_ids:
-        d0 = DateTime.strptime(proj.date_start,'%Y-%m-%d')
+        d0 = DateTime.strptime(proj.date_start, '%Y-%m-%d')
         if d0 > last_date:
             last_date = d0
         t2, l2 = _compute_project(cr, uid, proj, last_date)

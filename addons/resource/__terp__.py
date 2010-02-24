@@ -38,7 +38,7 @@
     'update_xml': [
         #'security/resource_security.xml',
 #        'security/ir.model.access.csv',        
-        'resource_view.xml',        
+        'resource_view.xml',
     ],
     'demo_xml': [#'resource_demo.xml'
                 ],

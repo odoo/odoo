@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
+    ('draft', 'Draft'),
+    ('open', 'Open'),
     ('cancel', 'Cancelled'),
     ('done', 'Closed'),
-    ('pending','Pending')
+    ('pending', 'Pending')
 ]
 
 class report_crm_case_user(osv.osv):
@@ -35,13 +35,13 @@ class report_crm_case_user(osv.osv):
     _description = "Cases by user and section"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),        
+        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc, user_id'
     def init(self, cr):
@@ -67,12 +67,12 @@ class report_crm_case_categ(osv.osv):
     _description = "Cases by section and category"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc'
     def init(self, cr):
@@ -97,14 +97,14 @@ class report_crm_case_section(osv.osv):
     _name = "report.crm.case.section"
     _description = "Cases by Section"
     _auto = False
-    
+
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
 #        'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr_cases': fields.integer('# of Cases', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
     }
     _order = 'name desc'
     def init(self, cr):
@@ -127,7 +127,7 @@ class report_crm_case_service_dashboard(osv.osv):
     _name = "report.crm.case.service.dashboard"
     _description = "Report of Closed and Open CRM Cases within past 15 days"
     _auto = False
-    _columns = {        
+    _columns = {
         'date_deadline': fields.datetime('Deadline', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
         'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
@@ -135,7 +135,7 @@ class report_crm_case_service_dashboard(osv.osv):
         'create_date' : fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
-    
+
     def init(self, cr):
         cr.execute("""create or replace view report_crm_case_service_dashboard as (
             select
@@ -162,9 +162,9 @@ class report_crm_case_section_stage(osv.osv):
     _description = "Cases by section and stage"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
@@ -195,16 +195,16 @@ class report_crm_case_section_type(osv.osv):
     _description = "Cases by Section and Type"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
     }
     _order = 'section_id'
-    
+
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, "report_crm_case_section_type")
         cr.execute("""
@@ -228,9 +228,9 @@ class report_crm_case_section_categ_stage(osv.osv):
     _description = "Cases by Section, Category and Stage"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
@@ -261,9 +261,9 @@ class report_crm_case_section_categ_type(osv.osv):
     _description = "Cases by Section, Category and Type"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),

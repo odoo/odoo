@@ -38,19 +38,19 @@ class pos_sales_user_today_current_user(report_sxw.rml_parse):
                 })
 
     def _get_user(self, user):
-        pos_user={}
-        self.cr.execute("select name from res_users where id = %s",str(self.uid))
-        pos_user=self.cr.dictfetchone()
+        pos_user = {}
+        self.cr.execute("select name from res_users where id = %s", str(self.uid))
+        pos_user = self.cr.dictfetchone()
         return pos_user['name']
 
     def _get_data_current_user(self, user):
-        data={}
+        data = {}
         self.cr.execute("select po.name,po. state,sum(pol.qty)as Qty,sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt ,res_users as ru,res_company as rc  " \
                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
                         "and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date  and po.user_id = ru.id and rc.id = %s and ru.id = %s " \
                         "group by po.name, po.state " \
-                        ,(str(user.company_id.id),str(self.uid)))
+                        , (str(user.company_id.id), str(self.uid)))
 
         data = self.cr.dictfetchall()
         for d in data:

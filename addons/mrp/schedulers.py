@@ -60,7 +60,7 @@ class mrp_procurement(osv.osv):
             cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by priority,date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
             ids = map(lambda x: x[0], cr.fetchall())
             for proc in procurement_obj.browse(cr, uid, ids):
-                if (maxdate.strftime('%Y-%m-%d')>=proc.date_planned):
+                if (maxdate.strftime('%Y-%m-%d') >= proc.date_planned):
                     wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
                 else:
                     offset += 1
@@ -112,7 +112,7 @@ class mrp_procurement(osv.osv):
     Not run now procurement: %d
 
     Exceptions;
-    '''% (start_date, end_date, report_total, report_except, report_later)
+    ''' % (start_date, end_date, report_total, report_except, report_later)
             summary += '\n'.join(report)
             request.create(cr, uid,
                 {'name': "Requisition calculation report.",
@@ -156,7 +156,7 @@ class mrp_procurement(osv.osv):
                     'origin': 'SCHEDULER',
                     'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                     'product_id': product.id,
-                    'product_qty': -product.virtual_available,
+                    'product_qty':-product.virtual_available,
                     'product_uom': product.uom_id.id,
                     'location_id': location_id,
                     'procure_method': 'make_to_order',
@@ -164,7 +164,7 @@ class mrp_procurement(osv.osv):
                 wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
                 wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_check', cr)
 
-    def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
+    def _procure_orderpoint_confirm(self, cr, uid, automatic=False, \
             use_new_cursor=False, context=None, user_id=False):
         '''
         use_new_cursor: False or the dbname
@@ -192,7 +192,7 @@ class mrp_procurement(osv.osv):
                         op.location_id.id, [op.product_id.id],
                         {'uom': op.product_uom.id})[op.product_id.id]
                 if prods < op.product_min_qty:
-                    qty = max(op.product_min_qty, op.product_max_qty)-prods
+                    qty = max(op.product_min_qty, op.product_max_qty) - prods
                     reste = qty % op.qty_multiple
                     if reste > 0:
                         qty += op.qty_multiple - reste

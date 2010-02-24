@@ -38,14 +38,14 @@ invoice_fields = {
     'number': {'string':'Invoice Number', 'type':'integer'},
 }
 
-def _values(self,cr,uid, datas,context={}):
-    lots= pooler.get_pool(cr.dbname).get('auction.lots').browse(cr,uid,datas['ids'])
+def _values(self, cr, uid, datas, context={}):
+    lots = pooler.get_pool(cr.dbname).get('auction.lots').browse(cr, uid, datas['ids'])
 #   service = netsvc.LocalService("object_proxy")
 #   lots = service.execute(cr,uid, 'auction.lots', 'read', datas['ids'])
 #   auction = service.execute(cr,uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
     price = 0.0
-    amount_total=0.0
-    pt_tax=pooler.get_pool(cr.dbname).get('account.tax')
+    amount_total = 0.0
+    pt_tax = pooler.get_pool(cr.dbname).get('account.tax')
     for lot in lots:
     #   taxes = lot.product_id.taxes_id
     #   if lot.bord_vnd_id.tax_id:
@@ -56,7 +56,7 @@ def _values(self,cr,uid, datas,context={}):
     #   for t in tax:
     #       amount_total+=t['amount']
     #   amount_total+=lot.obj_price
-        amount_total+=lot.seller_price  
+        amount_total += lot.seller_price
 #TODO: recuperer id next invoice (de la sequence)???
     invoice_number = False
     return {'objects':len(datas['ids']), 'amount':amount_total, 'number':invoice_number}
@@ -65,14 +65,14 @@ def _makeInvoices(self, cr, uid, data, context):
 
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('auction.lots')
-    mod_obj = pool.get('ir.model.data') 
+    mod_obj = pool.get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
     id = mod_obj.read(cr, uid, result, ['res_id'])
     newinv = []
-    ids = order_obj.seller_trans_create(cr, uid, data['ids'],context)
+    ids = order_obj.seller_trans_create(cr, uid, data['ids'], context)
     cr.commit()
     return {
-        'domain': "[('id','in', ["+','.join(map(str, ids))+"])]",
+        'domain': "[('id','in', [" + ','.join(map(str, ids)) + "])]",
         'name': 'Seller invoices',
         'view_type': 'form',
         'view_mode': 'tree,form',
@@ -80,7 +80,7 @@ def _makeInvoices(self, cr, uid, data, context):
         'view_id': False,
         'context': "{'type':'out_refund'}",
         'type': 'ir.actions.act_window',
-        'search_view_id': id['res_id']        
+        'search_view_id': id['res_id']
     }
     return {}
 
@@ -91,7 +91,7 @@ class make_invoice(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : invoice_form,
                     'fields' : invoice_fields,
-                    'state' : [('end', 'Cancel'),('invoice', 'Create invoices')]}
+                    'state' : [('end', 'Cancel'), ('invoice', 'Create invoices')]}
         },
         'invoice' : {
             'actions' : [_makeInvoices],

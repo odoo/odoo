@@ -45,7 +45,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
         # remove osv_memory class becaz it does not have demo data
         if obj_list:
-            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model =ANY(%s)",(obj_list,))
+            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model =ANY(%s)", (obj_list,))
             res = cr.fetchall()
             print res
             for remove_obj in res:
@@ -80,9 +80,9 @@ This test checks the speed of the module. Note that at least 5 demo data is need
                     pool.get(obj).read(cr, uid, [ids[0]])
                     code_base_complexity = cr.count - cnt
 
-                    pool.get(obj).read(cr, uid, ids[:size/2])
+                    pool.get(obj).read(cr, uid, ids[:size / 2])
                     cnt = cr.count
-                    pool.get(obj).read(cr, uid, ids[:size/2])
+                    pool.get(obj).read(cr, uid, ids[:size / 2])
                     code_half_complexity = cr.count - cnt
 
                     pool.get(obj).read(cr, uid, ids)
@@ -112,7 +112,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
             result_dict[obj] = speed_list
             result_dict2[obj] = list2
         self.score = obj_counter and score / obj_counter or 0.0
-        if self.score*100 < self.min_score:
+        if self.score * 100 < self.min_score:
             self.message = 'Score is below than minimal score(%s%%)' % self.min_score
         self.result_details += self.get_result_details(result_dict)
         self.result += self.get_result(result_dict2)
@@ -125,7 +125,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
         return ""
 
     def get_result_details(self, dict_speed):
-        str_html = '''<html><head>%s</head><body><table class="tablestyle">'''%(self.get_style())
+        str_html = '''<html><head>%s</head><body><table class="tablestyle">''' % (self.get_style())
         header = ('<tr><th class="tdatastyle" >%s</th><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Object Name'), _('N (Number of Records)'), _('1'), _('N/2'), _('N'), _('Reading Complexity')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_speed) + '</table></body></html>'

@@ -43,19 +43,19 @@ form1 = '''<?xml version="1.0"?>
 
 field1 = {
  #   'account_id': {'string':"Analytic Account", 'type':'many2one', 'relation':'account.analytic.account', 'required':True, 'domain':"[('type','=','normal')]"},
-    'user_name': {'string':'User', 'type':'char','size':'64', 'required':True, 'readonly':True},
+    'user_name': {'string':'User', 'type':'char', 'size':'64', 'required':True, 'readonly':True},
 #    'db_name': {'string':'Database Name', 'type':'char','size':'64', 'required':True, 'readonly':True},
 
 }
 
-def clear_logs(self,cr,uid,part,context={}):
-    ids=pooler.get_pool(cr.dbname).get('olap.query.logs').search(cr,uid,[('user_id','=',uid)])
-    pooler.get_pool(cr.dbname).get('olap.query.logs').unlink(cr, uid,ids,context)
+def clear_logs(self, cr, uid, part, context={}):
+    ids = pooler.get_pool(cr.dbname).get('olap.query.logs').search(cr, uid, [('user_id', '=', uid)])
+    pooler.get_pool(cr.dbname).get('olap.query.logs').unlink(cr, uid, ids, context)
     return {}
 
-def _getdata(self,cr,uid,part,context={}):
-    ids=pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid)
-    part['form']['user_name']=ids['name']
+def _getdata(self, cr, uid, part, context={}):
+    ids = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid)
+    part['form']['user_name'] = ids['name']
 #    part['form']['db_name']=lines.database_id.db_name
     return part['form']
 
@@ -65,17 +65,17 @@ class wizard_clear_logs(wizard.interface):
 
        'init': {
             'actions': [_getdata],
-            'result': {'type':'form','arch':form1, 'fields':field1, 'state':[('end','Cancel'),('ok','Clear Logs')]}
+            'result': {'type':'form', 'arch':form1, 'fields':field1, 'state':[('end', 'Cancel'), ('ok', 'Clear Logs')]}
         },
 
         'ok': {
             'actions': [clear_logs],
-            'result': {'type':'form','arch':info,'fields':{}, 'state':[('end','Ok')]}
+            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end', 'Ok')]}
                 },
 
          'info': {
             'actions': [],
-            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','Ok')]}
+            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end', 'Ok')]}
                 },
 
       }

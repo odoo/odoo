@@ -51,35 +51,35 @@ class report_custom(report_rml):
                 pricelist_id = prod.seller_ids[0].name.property_product_pricelist_purchase.id
                 if pricelist_id:
                     pricelist_obj = pooler.get_pool(cr.dbname).get('product.pricelist')
-                    price = pricelist_obj.price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
+                    price = pricelist_obj.price_get(cr, uid, [pricelist_id], prod.id, number * prod_qtty or 1.0).setdefault(pricelist_id, 0)
                     price = pooler.get_pool(cr.dbname).get('res.currency').compute(cr, uid, pricelist_obj.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
                 else:
                     price = 0
                 main_sp_price = '%.2f' % price + '\r\n'
-                sum += prod_qtty*price
+                sum += prod_qtty * price
 
             main_strd_price = '%.2f' % prod.standard_price + '\r\n'
-            sum_strd = prod_qtty*prod.standard_price
+            sum_strd = prod_qtty * prod.standard_price
 
             sellers = ''
             sellers_price = ''
             for seller_id in prod.seller_ids:
-                sellers +=  '- <i>'+ seller_id.name.name +'</i>\r\n'
+                sellers += '- <i>' + seller_id.name.name + '</i>\r\n'
                 pricelist_id = seller_id.name.property_product_pricelist_purchase.id
                 if pricelist_id:
                     pricelist_obj = pooler.get_pool(cr.dbname).get('product.pricelist')
-                    price = pricelist_obj.price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
+                    price = pricelist_obj.price_get(cr, uid, [pricelist_id], prod.id, number * prod_qtty or 1.0).setdefault(pricelist_id, 0)
                     price = pooler.get_pool(cr.dbname).get('res.currency').compute(cr, uid, pricelist_obj.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
                 else:
                     price = 0
                 sellers_price += '%.2f' % price + '\r\n'
 
             xml += "<col para='yes'>" + prod_name + '</col>'
-            xml += "<col para='no'>" + main_sp_name +  sellers + '</col>'
+            xml += "<col para='no'>" + main_sp_name + sellers + '</col>'
             xml += "<col para='yes'>" + str(prod_qtty) + '</col>'
             xml += "<col para='yes'>" + prod_uom + '</col>'
             xml += "<col para='yes'>" + main_strd_price + '</col>'
-            xml += "<col para='no'>" + main_sp_price +  sellers_price + '</col>'
+            xml += "<col para='no'>" + main_sp_price + sellers_price + '</col>'
 
 
             xml += '</row>'
@@ -91,15 +91,15 @@ class report_custom(report_rml):
             workcenter = pooler.get_pool(cr.dbname).get('mrp.workcenter').browse(cr, uid, wrk['workcenter_id'])
 
             xml += "<col para='yes'>" + wrk['name'] + '</col>'
-            xml += "<col para='yes'>" +  '</col>'
+            xml += "<col para='yes'>" + '</col>'
             xml += "<col para='no'>" + '</col>'
             xml += "<col/>"
-            xml += "<col para='no'>" + str(wrk['cycle']*workcenter.costs_cycle) + '</col>'
-            xml += "<col para='yes'>" + str(wrk['hour']*workcenter.costs_hour) + '</col>'
+            xml += "<col para='no'>" + str(wrk['cycle'] * workcenter.costs_cycle) + '</col>'
+            xml += "<col para='yes'>" + str(wrk['hour'] * workcenter.costs_hour) + '</col>'
 
 
             xml += '</row>'
-            return xml, wrk['cycle']*workcenter.costs_cycle+wrk['hour']*workcenter.costs_hour
+            return xml, wrk['cycle'] * workcenter.costs_cycle + wrk['hour'] * workcenter.costs_hour
 
 
         xml = ''
@@ -153,7 +153,7 @@ class report_custom(report_rml):
         company_currency = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id.currency_id.id
         first = True
         for prod_id in ids:
-            bom_ids = pooler.get_pool(cr.dbname).get('mrp.bom').search(cr, uid, [('product_id','=',prod_id)])
+            bom_ids = pooler.get_pool(cr.dbname).get('mrp.bom').search(cr, uid, [('product_id', '=', prod_id)])
             prod = pooler.get_pool(cr.dbname).get('product.product').browse(cr, uid, prod_id)
 
             for bom_id in bom_ids:
@@ -166,13 +166,13 @@ class report_custom(report_rml):
                 xml_tmp = ''
                 for sub_bom in (sub_boms and sub_boms[0]) or [parent_bom]:
                     txt, sum, sum_strd = process_bom(sub_bom, company_currency)
-                    xml_tmp +=  txt
+                    xml_tmp += txt
                     total += sum
                     total_strd += sum_strd
                 if not first:
                     xml += prod_header
                 xml += "<lines style='lines'>" + xml_tmp + '</lines>'
-                xml += "<lines style='sub_total'><row><col>%s : </col><col>(" % (_('SUBTOTAL')) + str(number) + " %s)</col><col/><col/><col>" % (_('products')) + '%.2f' % total_strd + '</col><col>' + '%.2f' % total  + '</col></row></lines>'
+                xml += "<lines style='sub_total'><row><col>%s : </col><col>(" % (_('SUBTOTAL')) + str(number) + " %s)</col><col/><col/><col>" % (_('products')) + '%.2f' % total_strd + '</col><col>' + '%.2f' % total + '</col></row></lines>'
                 total2 = 0
                 xml_tmp = ''
                 for wrk in (sub_boms and sub_boms[1]):
@@ -183,11 +183,11 @@ class report_custom(report_rml):
                     xml += workcenter_header
                     xml += "<lines style='lines'>" + xml_tmp + '</lines>'
                     xml += "<lines style='sub_total'><row><col>%s : </col><col>(" % (_('SUBTOTAL')) + str(number) + " %s)</col><col/><col/><col/><col>" % (_('products')) + '%.2f' % total2 + '</col></row></lines>'
-                xml += "<lines style='total'><row><col>%s : </col><col>(" % (_('TOTAL')) + str(number) + " %s)</col><col/><col/><col>" % (_('products')) + '%.2f' % (total_strd+total2) + "</col><col>" + '%.2f' % (total+total2) + '</col></row></lines>'
+                xml += "<lines style='total'><row><col>%s : </col><col>(" % (_('TOTAL')) + str(number) + " %s)</col><col/><col/><col>" % (_('products')) + '%.2f' % (total_strd + total2) + "</col><col>" + '%.2f' % (total + total2) + '</col></row></lines>'
 
                 first = False
 
-        xml = '<?xml version="1.0" ?><report>' + config_start + '<report-header>%s\n\r' % (_('Product Cost Structure')) + prod.name  + '</report-header>'+ config_stop +  header + xml + '</report>'
+        xml = '<?xml version="1.0" ?><report>' + config_start + '<report-header>%s\n\r' % (_('Product Cost Structure')) + prod.name + '</report-header>' + config_stop + header + xml + '</report>'
 
         return xml
 

@@ -33,7 +33,7 @@ class cdr(base_report.base_report):
     def __init__(self, cr, uid, name, context):
         super(cdr, self).__init__(cr, uid, name, context)
 
-report_sxw.report_sxw('report.l10n.fr.cdr', 'account.move.line','addons/l10n_fr/report/cdr.rml', parser=cdr, header=False)
+report_sxw.report_sxw('report.l10n.fr.cdr', 'account.move.line', 'addons/l10n_fr/report/cdr.rml', parser=cdr, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

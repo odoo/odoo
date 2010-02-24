@@ -43,40 +43,40 @@ _states = {
     'draft':'Draft',
     'proforma':'Pro-forma',
     'posted':'Posted',
-    'cancel':'Cancel'  
+    'cancel':'Cancel'
 }
 
 _voucher_fields = {
     'type': {'string':'Voucher Type', 'type':'selection', 'selection':[
-            ('pay_voucher','Cash Payment Voucher'),
-            ('bank_pay_voucher','Bank Payment Voucher'),
-            ('rec_voucher','Cash Receipt Voucher'),
-            ('bank_rec_voucher','Bank Receipt Voucher'),
-            ('cont_voucher','Contra Voucher'),
-            ('journal_sale_vou','Journal Sale Voucher'),
-            ('journal_pur_voucher','Journal Purchase Voucher')], 'required':True},
+            ('pay_voucher', 'Cash Payment Voucher'),
+            ('bank_pay_voucher', 'Bank Payment Voucher'),
+            ('rec_voucher', 'Cash Receipt Voucher'),
+            ('bank_rec_voucher', 'Bank Receipt Voucher'),
+            ('cont_voucher', 'Contra Voucher'),
+            ('journal_sale_vou', 'Journal Sale Voucher'),
+            ('journal_pur_voucher', 'Journal Purchase Voucher')], 'required':True},
     'state': {'string':'State', 'type':'selection', 'selection':[
-                    ('draft','Draft'),
-                    ('proforma','Pro-forma'),
-                    ('posted','Posted'),
-                    ('cancel','Cancel')], 'required':True},
+                    ('draft', 'Draft'),
+                    ('proforma', 'Pro-forma'),
+                    ('posted', 'Posted'),
+                    ('cancel', 'Cancel')], 'required':True},
     'period_ids': {'string':'Periods', 'type':'many2many', 'relation':'account.period'},
 }
 
 def _action_open_window(self, cr, uid, data, context):
     form = data['form']
     periods = []
-    
+
     if not form['period_ids'][0][2]:
         pool = pooler.get_pool(cr.dbname)
         period = pool.get('account.period')
         year = pool.get('account.fiscalyear')
-        
+
         year = year.find(cr, uid)
-        periods = period.search(cr, uid, [('fiscalyear_id','=',year)])
+        periods = period.search(cr, uid, [('fiscalyear_id', '=', year)])
     else:
         periods = form['period_ids'][0][2]
-        
+
     return {
         'domain': "[('type','=','%s'), ('state','=','%s'), ('period_id','in',%s)]" % (form['type'], form['state'], periods),
         'name': "%s - %s" % (_types[form['type']], _states[form['state']]),
@@ -92,7 +92,7 @@ class OpenVoucherEntries(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_voucher_form, 'fields':_voucher_fields, 'state':[('end','Cancel'),('open','Open Voucher Entries')]}
+            'result': {'type': 'form', 'arch':_voucher_form, 'fields':_voucher_fields, 'state':[('end', 'Cancel'), ('open', 'Open Voucher Entries')]}
         },
         'open': {
             'actions': [],

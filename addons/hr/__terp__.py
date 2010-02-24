@@ -47,7 +47,7 @@
         'hr_installer.xml',
         'hr_data.xml'
     ],
-    'demo_xml': ['hr_demo.xml', 
+    'demo_xml': ['hr_demo.xml',
         'hr_department_demo.xml'],
     'installable': True,
     'active': False,

@@ -33,8 +33,8 @@ price_fields = {
 class wizard_price(wizard.interface):
     states = {
         'init': {
-            'actions': [], 
-            'result': {'type':'form', 'arch':price_form, 'fields':price_fields, 'state':[('end','Cancel'),('price','Print product price') ]}
+            'actions': [],
+            'result': {'type':'form', 'arch':price_form, 'fields':price_fields, 'state':[('end', 'Cancel'), ('price', 'Print product price') ]}
         },
         'price': {
             'actions': [],

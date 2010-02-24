@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields, osv, orm
 import crm
 
 AVAILABLE_STATES = [
-    ('draft','New'),
-    ('open','Open'),
+    ('draft', 'New'),
+    ('open', 'Open'),
     ('cancel', 'Lost'),
     ('done', 'Won'),
-    ('pending','Pending')
+    ('pending', 'Pending')
 ]
 
 class crm_opportunity(osv.osv):

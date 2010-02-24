@@ -37,9 +37,9 @@ class order(report_sxw.rml_parse):
     def total(self, repair):
         total = 0.0
         for operation in repair.operations:
-           total+=operation.price_subtotal
+           total += operation.price_subtotal
         for fee in repair.fees_lines:
-           total+=fee.price_subtotal
+           total += fee.price_subtotal
         total = total + repair.amount_tax
         return total
 
@@ -50,7 +50,7 @@ class order(report_sxw.rml_parse):
             adr_id = addresses and addresses[type] or False
             return adr_id and res_partner_address.read(self.cr, self.uid, [adr_id])[0] or False
 
-report_sxw.report_sxw('report.repair.order','mrp.repair','addons/mrp_repair/report/order.rml',parser=order)
+report_sxw.report_sxw('report.repair.order', 'mrp.repair', 'addons/mrp_repair/report/order.rml', parser=order)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

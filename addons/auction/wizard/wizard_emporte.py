@@ -35,11 +35,11 @@ _lot_arch = """<?xml version="1.0"?>
 </form>
 """
 _lot_fields = {
-    'lot_ids': {'string':'Lots Emportes','relation':'auction.lots','type':'many2many'}
+    'lot_ids': {'string':'Lots Emportes', 'relation':'auction.lots', 'type':'many2many'}
 }
 
 def _to_xml(s):
-    return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 
 def _process(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
@@ -57,11 +57,11 @@ class wizard_reprint(wizard.interface):
         'init': {
             'actions': [],
             'result': {
-                'type':'form', 
+                'type':'form',
                 'arch': _lot_arch,
                 'fields': _lot_fields,
                 'state': [
-                    ('valid','       OK       ')
+                    ('valid', '       OK       ')
                 ],
             }
         }

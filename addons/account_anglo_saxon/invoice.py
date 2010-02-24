@@ -25,11 +25,11 @@ from osv import fields, osv
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
-    
+
     def move_line_get(self, cr, uid, invoice_id, context=None):
-        res = super(account_invoice_line,self).move_line_get(cr, uid, invoice_id, context)
+        res = super(account_invoice_line, self).move_line_get(cr, uid, invoice_id, context)
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
-        if inv.type in ('out_invoice','out_refund'):
+        if inv.type in ('out_invoice', 'out_refund'):
             for i_line in inv.invoice_line:
                 if i_line.product_id:
                     if inv.type == 'out_invoice':
@@ -63,20 +63,20 @@ class account_invoice_line(osv.osv):
                             'account_analytic_id':i_line.account_analytic_id.id,
                             'taxes':i_line.invoice_line_tax_id,
                             })
-                        
+
                         res.append({
                             'type':'src',
                             'name': i_line.name[:64],
                             'price_unit':i_line.product_id.product_tmpl_id.standard_price,
                             'quantity':i_line.quantity,
-                            'price': -1 * i_line.product_id.product_tmpl_id.standard_price * i_line.quantity,
+                            'price':-1 * i_line.product_id.product_tmpl_id.standard_price * i_line.quantity,
                             'account_id':cacc,
                             'product_id':i_line.product_id.id,
                             'uos_id':i_line.uos_id.id,
                             'account_analytic_id':i_line.account_analytic_id.id,
                             'taxes':i_line.invoice_line_tax_id,
                             })
-        elif inv.type in ('in_invoice','in_refund'):
+        elif inv.type in ('in_invoice', 'in_refund'):
             for i_line in inv.invoice_line:
                 if i_line.product_id:
                     if i_line.product_id.product_tmpl_id.type != 'service':
@@ -122,18 +122,18 @@ class account_invoice_line(osv.osv):
                                         'product_id':line['product_id'],
                                         'uos_id':line['uos_id'],
                                         'account_analytic_id':line['account_analytic_id'],
-                                        'taxes':line.get('taxes',[]),
+                                        'taxes':line.get('taxes', []),
                                         })
                         res += diff_res
-        return res   
-    
+        return res
+
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
         if not product:
             return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context)
         else:
             res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context)
 
-        if type in ('in_invoice','in_refund'):
+        if type in ('in_invoice', 'in_refund'):
             product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
             if type == 'in_invoice':
                 oa = product_obj.product_tmpl_id.property_stock_account_input and product_obj.product_tmpl_id.property_stock_account_input.id
@@ -146,9 +146,9 @@ class account_invoice_line(osv.osv):
             if oa:
                 fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
-                res['value'].update({'account_id':a})            
+                res['value'].update({'account_id':a})
         return res
-         
+
 account_invoice_line()
 
 class account_invoice(osv.osv):
@@ -157,20 +157,20 @@ class account_invoice(osv.osv):
     def _refund_cleanup_lines(self, cr, uid, lines):
         for line in lines:
             inv_id = line['invoice_id']
-            inv_obj = self.browse(cr,uid,inv_id[0])
+            inv_obj = self.browse(cr, uid, inv_id[0])
             if inv_obj.type == 'in_invoice':
-                if line.get('product_id',False):
-                    product_obj = self.pool.get('product.product').browse(cr,uid,line['product_id'][0])
+                if line.get('product_id', False):
+                    product_obj = self.pool.get('product.product').browse(cr, uid, line['product_id'][0])
                     oa = product_obj.product_tmpl_id.property_stock_account_output and product_obj.product_tmpl_id.property_stock_account_output.id
                     if not oa:
                         oa = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id
                     if oa:
                         fpos = inv_obj.fiscal_position or False
                         a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
-                        account_data = self.pool.get('account.account').read(cr,uid,[a],['name'])[0]
-                        line.update({'account_id': (account_data['id'],account_data['name'])})
-        res = super(account_invoice,self)._refund_cleanup_lines(cr, uid, lines)
+                        account_data = self.pool.get('account.account').read(cr, uid, [a], ['name'])[0]
+                        line.update({'account_id': (account_data['id'], account_data['name'])})
+        res = super(account_invoice, self)._refund_cleanup_lines(cr, uid, lines)
         return res
-    
+
 account_invoice()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

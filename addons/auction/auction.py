@@ -34,7 +34,7 @@ class auction_artists(osv.osv):
     _columns = {
         'name': fields.char('Artist/Author Name', size=64, required=True),
         'pseudo': fields.char('Pseudo', size=64),
-        'birth_death_dates':fields.char('Birth / Death dates',size=64),
+        'birth_death_dates':fields.char('Birth / Death dates', size=64),
         'biography': fields.text('Biography'),
     }
 auction_artists()
@@ -45,21 +45,21 @@ auction_artists()
 class auction_dates(osv.osv):
     _name = "auction.dates"
 
-    def _adjudication_get(self, cr, uid, ids, prop, unknow_none,unknow_dict):
-        tmp={}
+    def _adjudication_get(self, cr, uid, ids, prop, unknow_none, unknow_dict):
+        tmp = {}
         for id in ids:
-            tmp[id]=0.0
+            tmp[id] = 0.0
             cr.execute("select sum(obj_price) from auction_lots where auction_id=%s", (id,))
             sum = cr.fetchone()
             if sum:
-                tmp[id]=sum[0]
+                tmp[id] = sum[0]
         return tmp
 
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
         reads = self.read(cr, uid, ids, ['name', 'auction1'], context)
-        name = [(r['id'],'['+r['auction1']+'] '+ r['name']) for r in reads]
+        name = [(r['id'], '[' + r['auction1'] + '] ' + r['name']) for r in reads]
         return name
 
     _columns = {
@@ -74,14 +74,14 @@ class auction_dates(osv.osv):
         'seller_costs': fields.many2many('account.tax', 'auction_seller_taxes_rel', 'auction_id', 'tax_id', 'Seller Costs'),
         'acc_income': fields.many2one('account.account', 'Income Account', required=True),
         'acc_expense': fields.many2one('account.account', 'Expense Account', required=True),
-        'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication',store=True),
-        'state': fields.selection((('draft','Draft'),('closed','Closed')),'State',select=1, readonly=True,
+        'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication', store=True),
+        'state': fields.selection((('draft', 'Draft'), ('closed', 'Closed')), 'State', select=1, readonly=True,
                                   help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
 
     }
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': lambda * a: 'draft',
     }
     _order = "auction1 desc"
 
@@ -95,15 +95,15 @@ class auction_dates(osv.osv):
         RETURN: True
         """
         # objects vendus mais non factures
-        cr.execute('select count(*) as c from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
+        cr.execute('select count(*) as c from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids, 'draft',))
         nbr = cr.fetchone()[0]
         ach_uids = {}
-        cr.execute('select id from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
-        r=self.pool.get('auction.lots').lots_invoice(cr, uid, [x[0] for x in cr.fetchall()],{},None)
-        cr.execute('select id from auction_lots where auction_id =ANY(%s) and obj_price>0',(ids,))
+        cr.execute('select id from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids, 'draft',))
+        r = self.pool.get('auction.lots').lots_invoice(cr, uid, [x[0] for x in cr.fetchall()], {}, None)
+        cr.execute('select id from auction_lots where auction_id =ANY(%s) and obj_price>0', (ids,))
         ids2 = [x[0] for x in cr.fetchall()]
     #   for auction in auction_ids:
-        c=self.pool.get('auction.lots').seller_trans_create(cr, uid, ids2,{})
+        c = self.pool.get('auction.lots').seller_trans_create(cr, uid, ids2, {})
         self.write(cr, uid, ids, {'state':'closed'}) #close the auction
         return True
 auction_dates()
@@ -113,23 +113,23 @@ auction_dates()
 # Deposits
 #----------------------------------------------------------
 def _inv_uniq(cr, ids):
-    cr.execute('select name from auction_deposit where id =ANY(%s)',(ids,))
+    cr.execute('select name from auction_deposit where id =ANY(%s)', (ids,))
     for datas in cr.fetchall():
         cr.execute('select count(*) from auction_deposit where name=%s', (datas[0],))
-        if cr.fetchone()[0]>1:
+        if cr.fetchone()[0] > 1:
             return False
     return True
 
 class auction_deposit(osv.osv):
     _name = "auction.deposit"
-    _description="Deposit Border"
+    _description = "Deposit Border"
     _order = "id desc"
     _columns = {
         'transfer' : fields.boolean('Transfer'),
         'name': fields.char('Depositer Inventory', size=64, required=True),
         'partner_id': fields.many2one('res.partner', 'Seller', required=True, change_default=True),
         'date_dep': fields.date('Deposit date', required=True),
-        'method': fields.selection((('keep','Keep until sold'),('decease','Decrease limit of 10%'),('contact','Contact the Seller')), 'Withdrawned method', required=True),
+        'method': fields.selection((('keep', 'Keep until sold'), ('decease', 'Decrease limit of 10%'), ('contact', 'Contact the Seller')), 'Withdrawned method', required=True),
         'tax_id': fields.many2one('account.tax', 'Expenses'),
         'create_uid': fields.many2one('res.users', 'Created by', readonly=True),
         'info': fields.char('Description', size=64),
@@ -139,8 +139,8 @@ class auction_deposit(osv.osv):
     }
     _defaults = {
 #       'date_dep': lambda *a: time.strftime('%Y-%m-%d'),
-        'method': lambda *a: 'keep',
-        'total_neg': lambda *a: False,
+        'method': lambda * a: 'keep',
+        'total_neg': lambda * a: False,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'auction.deposit'),
     }
     _constraints = [
@@ -171,57 +171,57 @@ class auction_lot_category(osv.osv):
         'name': fields.char('Category Name', required=True, size=64),
         'priority': fields.float('Priority'),
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the auction lot category without removing it."),
-        'aie_categ' : fields.selection([('41',"Unclassifieds"),
-            ('2',"Antiques"),
-            ('42',"Antique/African Arts"),
-            ('59',"Antique/Argenterie"),
-            ('45',"Antique/Art from the Ivory Coast"),
-            ('46',"Antique/Art from the Ivory Coast/African Arts"),
-            ('12',"Antique/Books, manuscripts, eso."),
-            ('11',"Antique/Carpet and textilles"),
-            ('14',"Antique/Cartoons"),
-            ('26',"Antique/Clocks and watches"),
-            ('31',"Antique/Collectible & art objects"),
-            ('33',"Antique/Engravings"),
-            ('10',"Antique/Furnitures"),
-            ('50',"Antique/Graphic Arts"),
-            ('37',"Antique/Jewelry"),
-            ('9',"Antique/Lightings"),
-            ('52',"Antique/Metal Ware"),
-            ('51',"Antique/Miniatures / Collections"),
-            ('53',"Antique/Musical Instruments"),
-            ('19',"Antique/Old weapons and militaria"),
-            ('43',"Antique/Oriental Arts"),
-            ('47',"Antique/Oriental Arts/Chineese furnitures"),
-            ('24',"Antique/Others"),
-            ('8',"Antique/Painting"),
-            ('25',"Antique/Porcelain, Ceramics, Glassmaking, ..."),
-            ('13',"Antique/Posters"),
-            ('56',"Antique/Religiosa"),
-            ('54',"Antique/Scientific Instruments"),
-            ('18',"Antique/Sculpture, bronze, eso."),
-            ('55',"Antique/Tin / Copper wares"),
-            ('16',"Antique/Toys"),
-            ('57',"Antique/Verreries"),
-            ('17',"Antique/Wine"),
-            ('1',"Contemporary Art"),
-            ('58',"Cont. Art/Arts"),
-            ('27',"Cont. Art/Curiosa"),
-            ('15',"Cont. Art/Jewelry"),
-            ('30',"Cont. Art/Other Media"),
-            ('3',"Cont. Art/Photo"),
-            ('4',"Cont. Art/Painting"),
-            ('5',"Cont. Art/Sculpture"),
-            ('48',"Cont. Art/Shows")],
+        'aie_categ' : fields.selection([('41', "Unclassifieds"),
+            ('2', "Antiques"),
+            ('42', "Antique/African Arts"),
+            ('59', "Antique/Argenterie"),
+            ('45', "Antique/Art from the Ivory Coast"),
+            ('46', "Antique/Art from the Ivory Coast/African Arts"),
+            ('12', "Antique/Books, manuscripts, eso."),
+            ('11', "Antique/Carpet and textilles"),
+            ('14', "Antique/Cartoons"),
+            ('26', "Antique/Clocks and watches"),
+            ('31', "Antique/Collectible & art objects"),
+            ('33', "Antique/Engravings"),
+            ('10', "Antique/Furnitures"),
+            ('50', "Antique/Graphic Arts"),
+            ('37', "Antique/Jewelry"),
+            ('9', "Antique/Lightings"),
+            ('52', "Antique/Metal Ware"),
+            ('51', "Antique/Miniatures / Collections"),
+            ('53', "Antique/Musical Instruments"),
+            ('19', "Antique/Old weapons and militaria"),
+            ('43', "Antique/Oriental Arts"),
+            ('47', "Antique/Oriental Arts/Chineese furnitures"),
+            ('24', "Antique/Others"),
+            ('8', "Antique/Painting"),
+            ('25', "Antique/Porcelain, Ceramics, Glassmaking, ..."),
+            ('13', "Antique/Posters"),
+            ('56', "Antique/Religiosa"),
+            ('54', "Antique/Scientific Instruments"),
+            ('18', "Antique/Sculpture, bronze, eso."),
+            ('55', "Antique/Tin / Copper wares"),
+            ('16', "Antique/Toys"),
+            ('57', "Antique/Verreries"),
+            ('17', "Antique/Wine"),
+            ('1', "Contemporary Art"),
+            ('58', "Cont. Art/Arts"),
+            ('27', "Cont. Art/Curiosa"),
+            ('15', "Cont. Art/Jewelry"),
+            ('30', "Cont. Art/Other Media"),
+            ('3', "Cont. Art/Photo"),
+            ('4', "Cont. Art/Painting"),
+            ('5', "Cont. Art/Sculpture"),
+            ('48', "Cont. Art/Shows")],
             'Aie Category'),
     }
     _defaults = {
-        'active' : lambda *a: 1,
-        'aie_categ' : lambda *a:1,
+        'active' : lambda * a: 1,
+        'aie_categ' : lambda * a:1,
     }
 auction_lot_category()
 
-def _type_get(self, cr, uid,ids):
+def _type_get(self, cr, uid, ids):
     cr.execute('select name, name from auction_lot_category order by name')
     return cr.fetchall()
 
@@ -231,82 +231,82 @@ def _type_get(self, cr, uid,ids):
 def _inv_constraint(cr, ids):
     cr.execute('select id, bord_vnd_id, lot_num from auction_lots where id =ANY(%s)', (ids,))
     for datas in cr.fetchall():
-        cr.execute('select count(*) from auction_lots where bord_vnd_id=%s and lot_num=%s', (datas[1],datas[2]))
-        if cr.fetchone()[0]>1:
+        cr.execute('select count(*) from auction_lots where bord_vnd_id=%s and lot_num=%s', (datas[1], datas[2]))
+        if cr.fetchone()[0] > 1:
             return False
     return True
 
 class auction_lots(osv.osv):
     _name = "auction.lots"
     _order = "obj_num,lot_num,id"
-    _description="Object"
+    _description = "Object"
 
-    def button_not_bought(self,cr,uid,ids,*a):
-        return self.write(cr,uid,ids, {'state':'unsold'})
-    def button_taken_away(self,cr,uid,ids,*a):
-        return self.write(cr,uid,ids, {'state':'taken_away'})
+    def button_not_bought(self, cr, uid, ids, *a):
+        return self.write(cr, uid, ids, {'state':'unsold'})
+    def button_taken_away(self, cr, uid, ids, *a):
+        return self.write(cr, uid, ids, {'state':'taken_away'})
 
-    def button_unpaid(self,cr,uid,ids,*a):
-        return self.write(cr,uid,ids, {'state':'draft'})
+    def button_unpaid(self, cr, uid, ids, *a):
+        return self.write(cr, uid, ids, {'state':'draft'})
 
-    def button_draft(self,cr,uid,ids,*a):
-        return self.write(cr,uid,ids, {'state':'draft'})
+    def button_draft(self, cr, uid, ids, *a):
+        return self.write(cr, uid, ids, {'state':'draft'})
 
-    def button_bought(self,cr,uid,ids,*a):
-        return self.write(cr,uid,ids, {'state':'sold'})
+    def button_bought(self, cr, uid, ids, *a):
+        return self.write(cr, uid, ids, {'state':'sold'})
 
     def _buyerprice(self, cr, uid, ids, name, args, context):
-        res={}
-        lots=self.pool.get('auction.lots').browse(cr,uid,ids)
-        pt_tax=self.pool.get('account.tax')
+        res = {}
+        lots = self.pool.get('auction.lots').browse(cr, uid, ids)
+        pt_tax = self.pool.get('account.tax')
         for lot in lots:
-            amount_total=0.0
+            amount_total = 0.0
     #       if ((lot.obj_price==0) and (lot.state=='draft')):
     #           montant=lot.lot_est1
     #       else:
-            montant=lot.obj_price or 0.0
+            montant = lot.obj_price or 0.0
             taxes = []
             if lot.author_right:
                 taxes.append(lot.author_right)
             if lot.auction_id:
                 taxes += lot.auction_id.buyer_costs
-            tax=pt_tax.compute(cr,uid,taxes,montant,1)
+            tax = pt_tax.compute(cr, uid, taxes, montant, 1)
             for t in tax:
-                amount_total+=t['amount']
+                amount_total += t['amount']
             amount_total += montant
             res[lot.id] = amount_total
         return res
 
 
-    def _sellerprice(self, cr, uid, ids,*a):
-        res={}
-        lots=self.pool.get('auction.lots').browse(cr,uid,ids)
-        pt_tax=self.pool.get('account.tax')
+    def _sellerprice(self, cr, uid, ids, *a):
+        res = {}
+        lots = self.pool.get('auction.lots').browse(cr, uid, ids)
+        pt_tax = self.pool.get('account.tax')
         for lot in lots:
-            amount_total=0.0
+            amount_total = 0.0
         #   if ((lot.obj_price==0) and (lot.state=='draft')):
         #       montant=lot.lot_est1
         #   else:
-            montant=lot.obj_price
+            montant = lot.obj_price
             taxes = []
             if lot.bord_vnd_id.tax_id:
                 taxes.append(lot.bord_vnd_id.tax_id)
             elif lot.auction_id and lot.auction_id.seller_costs:
                 taxes += lot.auction_id.seller_costs
-            tax=pt_tax.compute(cr,uid,taxes,montant,1)
+            tax = pt_tax.compute(cr, uid, taxes, montant, 1)
             for t in tax:
-                amount_total+=t['amount']
-            res[lot.id] =  montant+amount_total
+                amount_total += t['amount']
+            res[lot.id] = montant + amount_total
         return res
 
     def _grossprice(self, cr, uid, ids, name, args, context):
         """gross revenue"""
-        res={}
-        auction_lots_obj = self.read(cr,uid,ids,['seller_price','buyer_price','auction_id'])
+        res = {}
+        auction_lots_obj = self.read(cr, uid, ids, ['seller_price', 'buyer_price', 'auction_id'])
         for auction_data in auction_lots_obj:
             total_tax = 0.0
             if auction_data['auction_id']:
-                total_tax += auction_data['buyer_price']-auction_data['seller_price']
+                total_tax += auction_data['buyer_price'] - auction_data['seller_price']
             res[auction_data['id']] = total_tax
         return res
 
@@ -316,17 +316,17 @@ class auction_lots(osv.osv):
         gross Margin : Gross revenue * 100 / Adjudication
         (state==unsold or obj_ret_price>0): adj_price = 0 (=> gross margin = 0, net margin is negative)
         """
-        res={}
+        res = {}
         for lot in self.browse(cr, uid, ids, context):
-            if ((lot.obj_price==0) and (lot.state=='draft')):
-                montant=lot.lot_est1
+            if ((lot.obj_price == 0) and (lot.state == 'draft')):
+                montant = lot.lot_est1
             else:
-                montant=lot.obj_price
-            if lot.obj_price>0:
-                total=(lot.gross_revenue*100.0) /lot.obj_price
+                montant = lot.obj_price
+            if lot.obj_price > 0:
+                total = (lot.gross_revenue * 100.0) / lot.obj_price
             else:
                 total = 0.0
-            res[lot.id]=round(total,2)
+            res[lot.id] = round(total, 2)
         return res
 
     def onchange_obj_ret(self, cr, uid, ids, obj_ret, *args):
@@ -334,73 +334,73 @@ class auction_lots(osv.osv):
             return {'value': {'obj_price': 0}}
         return {}
 
-    def _costs(self,cr,uid,ids,context,*a):
+    def _costs(self, cr, uid, ids, context, *a):
         """
         costs: Total credit of analytic account
         / # objects sold during this auction
         (excluding analytic lines that are in the analytic journal of the auction date).
         """
-        res={}
-        for lot in self.browse(cr,uid,ids):
-            som=0.0
+        res = {}
+        for lot in self.browse(cr, uid, ids):
+            som = 0.0
             if not lot.auction_id:
                 res[lot.id] = 0.0
                 continue
-            auct_id=lot.auction_id.id
+            auct_id = lot.auction_id.id
             cr.execute('select count(*) from auction_lots where auction_id=%s', (auct_id,))
             nb = cr.fetchone()[0]
             account_analytic_line_obj = self.pool.get('account.analytic.line')
-            line_ids = account_analytic_line_obj.search(cr, uid, [('account_id', '=', lot.auction_id.account_analytic_id.id),('journal_id', '<>', lot.auction_id.journal_id.id),('journal_id', '<>', lot.auction_id.journal_seller_id.id)])
+            line_ids = account_analytic_line_obj.search(cr, uid, [('account_id', '=', lot.auction_id.account_analytic_id.id), ('journal_id', '<>', lot.auction_id.journal_id.id), ('journal_id', '<>', lot.auction_id.journal_seller_id.id)])
             #indir_cost=lot.bord_vnd_id.specific_cost_ids
             #for r in lot.bord_vnd_id.specific_cost_ids:
             #   som+=r.amount
 
-            for line in account_analytic_line_obj.browse(cr,uid,line_ids):
+            for line in account_analytic_line_obj.browse(cr, uid, line_ids):
                 if line.amount:
-                    som-=line.amount
-            res[lot.id]=som/nb
+                    som -= line.amount
+            res[lot.id] = som / nb
         return res
 
     def _netprice(self, cr, uid, ids, name, args, context):
         """This is the net revenue"""
-        res={}
-        auction_lots_obj = self.read(cr,uid,ids,['seller_price','buyer_price','auction_id','costs'])
+        res = {}
+        auction_lots_obj = self.read(cr, uid, ids, ['seller_price', 'buyer_price', 'auction_id', 'costs'])
         for auction_data in auction_lots_obj:
             total_tax = 0.0
             if auction_data['auction_id']:
-                total_tax += auction_data['buyer_price']-auction_data['seller_price']-auction_data['costs']
+                total_tax += auction_data['buyer_price'] - auction_data['seller_price'] - auction_data['costs']
             res[auction_data['id']] = total_tax
         return res
 
     def _netmargin(self, cr, uid, ids, name, args, context):
-        res={}
+        res = {}
         total_tax = 0.0
-        total=0.0
-        montant=0.0
-        auction_lots_obj = self.read(cr,uid,ids,['net_revenue','auction_id','lot_est1','obj_price','state'])
+        total = 0.0
+        montant = 0.0
+        auction_lots_obj = self.read(cr, uid, ids, ['net_revenue', 'auction_id', 'lot_est1', 'obj_price', 'state'])
         for auction_data in auction_lots_obj:
-            if ((auction_data ['obj_price']==0) and (auction_data['state']=='draft')):
-                montant=auction_data['lot_est1']
-            else: montant=auction_data ['obj_price']
-            if montant>0:
-                total_tax += (auction_data['net_revenue']*100)/montant
+            if ((auction_data ['obj_price'] == 0) and (auction_data['state'] == 'draft')):
+                montant = auction_data['lot_est1']
+            else: montant = auction_data ['obj_price']
+            if montant > 0:
+                total_tax += (auction_data['net_revenue'] * 100) / montant
             else:
-                total_tax=0
-            res[auction_data['id']] =  total_tax
+                total_tax = 0
+            res[auction_data['id']] = total_tax
         return res
 
-    def _is_paid_vnd(self,cr,uid,ids,*a):
+    def _is_paid_vnd(self, cr, uid, ids, *a):
         res = {}
-        lots=self.browse(cr,uid,ids)
+        lots = self.browse(cr, uid, ids)
         for lot in lots:
             res[lot.id] = False
             if lot.sel_inv_id:
                 if lot.sel_inv_id.state == 'paid':
                     res[lot.id] = True
         return res
-    def _is_paid_ach(self,cr,uid,ids,*a):
+    def _is_paid_ach(self, cr, uid, ids, *a):
         res = {}
-        lots=self.browse(cr,uid,ids)
+        lots = self.browse(cr, uid, ids)
         for lot in lots:
             res[lot.id] = False
             if lot.ach_inv_id:
@@ -408,19 +408,19 @@ class auction_lots(osv.osv):
                     res[lot.id] = True
         return res
     _columns = {
-        'bid_lines':fields.one2many('auction.bid_line','lot_id', 'Bids'),
+        'bid_lines':fields.one2many('auction.bid_line', 'lot_id', 'Bids'),
         'auction_id': fields.many2one('auction.dates', 'Auction Date', select=1),
         'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True),
-        'name': fields.char('Short Description',size=64, required=True),
-        'name2': fields.char('Short Description (2)',size=64),
+        'name': fields.char('Short Description', size=64, required=True),
+        'name2': fields.char('Short Description (2)', size=64),
         'lot_type': fields.selection(_type_get, 'Object category', size=64),
         'author_right': fields.many2one('account.tax', 'Author rights'),
         'lot_est1': fields.float('Minimum Estimation'),
         'lot_est2': fields.float('Maximum Estimation'),
-        'lot_num': fields.integer('List Number', required=True, select=1 ),
+        'lot_num': fields.integer('List Number', required=True, select=1),
         'create_uid': fields.many2one('res.users', 'Created by', readonly=True),
         'history_ids':fields.one2many('auction.lot.history', 'lot_id', 'Auction history'),
-        'lot_local':fields.char('Location',size=64),
+        'lot_local':fields.char('Location', size=64),
         'artist_id':fields.many2one('auction.artists', 'Artist/Author'),
         'artist2_id':fields.many2one('auction.artists', 'Artist/Author 2'),
         'important':fields.boolean('To be Emphatized'),
@@ -431,41 +431,41 @@ class auction_lots(osv.osv):
         'obj_comm': fields.boolean('Commission'),
         'obj_price': fields.float('Adjudication price'),
         'ach_avance': fields.float('Buyer Advance'),
-        'ach_login': fields.char('Buyer Username',size=64),
+        'ach_login': fields.char('Buyer Username', size=64),
         'ach_uid': fields.many2one('res.partner', 'Buyer'),
         'ach_emp': fields.boolean('Taken Away'),
         'is_ok': fields.boolean('Buyer\'s payment'),
-        'ach_inv_id': fields.many2one('account.invoice','Buyer Invoice', readonly=True, states={'draft':[('readonly',False)]}),
-        'sel_inv_id': fields.many2one('account.invoice','Seller Invoice', readonly=True, states={'draft':[('readonly',False)]}),
+        'ach_inv_id': fields.many2one('account.invoice', 'Buyer Invoice', readonly=True, states={'draft':[('readonly', False)]}),
+        'sel_inv_id': fields.many2one('account.invoice', 'Seller Invoice', readonly=True, states={'draft':[('readonly', False)]}),
         'vnd_lim': fields.float('Seller limit'),
-        'vnd_lim_net': fields.boolean('Net limit ?',readonly=True),
+        'vnd_lim_net': fields.boolean('Net limit ?', readonly=True),
         'image': fields.binary('Image'),
 #       'paid_vnd':fields.function(_is_paid_vnd,string='Seller Paid',method=True,type='boolean',store=True),
         'paid_vnd':fields.boolean('Seller Paid'),
-        'paid_ach':fields.function(_is_paid_ach,string='Buyer invoice reconciled',method=True, type='boolean',store=True),
+        'paid_ach':fields.function(_is_paid_ach, string='Buyer invoice reconciled', method=True, type='boolean', store=True),
         'state': fields.selection((
-            ('draft','Draft'),
-            ('unsold','Unsold'),
-            ('paid','Paid'),
-            ('sold','Sold'),
-            ('taken_away','Taken away')),'State', required=True, readonly=True,
+            ('draft', 'Draft'),
+            ('unsold', 'Unsold'),
+            ('paid', 'Paid'),
+            ('sold', 'Sold'),
+            ('taken_away', 'Taken away')), 'State', required=True, readonly=True,
             help=' * The \'Draft\' state is used when a object is encoding as a new object. \
                 \n* The \'Unsold\' state is used when object does not sold for long time, user can also set it as draft state after unsold. \
                 \n* The \'Paid\' state is used when user pay for the object \
                 \n* The \'Sold\' state is used when user buy the object.'),
-        'buyer_price': fields.function(_buyerprice, method=True, string='Buyer price',store=True),
-        'seller_price': fields.function(_sellerprice, method=True, string='Seller price',store=True),
-        'gross_revenue':fields.function(_grossprice, method=True, string='Gross revenue',store=True),
-        'gross_margin':fields.function(_grossmargin, method=True, string='Gross Margin (%)',store=True),
-        'costs':fields.function(_costs,method=True,string='Indirect costs',store=True),
-        'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel','auction_id', 'statement','Payment'),
-        'net_revenue':fields.function(_netprice, method=True, string='Net revenue',store=True),
-        'net_margin':fields.function(_netmargin, method=True, string='Net Margin (%)',store=True),
+        'buyer_price': fields.function(_buyerprice, method=True, string='Buyer price', store=True),
+        'seller_price': fields.function(_sellerprice, method=True, string='Seller price', store=True),
+        'gross_revenue':fields.function(_grossprice, method=True, string='Gross revenue', store=True),
+        'gross_margin':fields.function(_grossmargin, method=True, string='Gross Margin (%)', store=True),
+        'costs':fields.function(_costs, method=True, string='Indirect costs', store=True),
+        'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment'),
+        'net_revenue':fields.function(_netprice, method=True, string='Net revenue', store=True),
+        'net_margin':fields.function(_netmargin, method=True, string='Net Margin (%)', store=True),
     }
     _defaults = {
-        'state':lambda *a: 'draft',
-        'lot_num':lambda *a:1,
-        'is_ok': lambda *a: False
+        'state':lambda * a: 'draft',
+        'lot_num':lambda * a:1,
+        'is_ok': lambda * a: False
     }
     _constraints = [
 #       (_inv_constraint, 'Twice the same inventory number !', ['lot_num','bord_vnd_id'])
@@ -475,16 +475,16 @@ class auction_lots(osv.osv):
     def name_get(self, cr, user, ids, context={}):
         if not len(ids):
             return []
-        result = [ (r['id'], str(r['obj_num'])+' - '+r['name']) for r in self.read(cr, user, ids, ['name','obj_num'])]
+        result = [ (r['id'], str(r['obj_num']) + ' - ' + r['name']) for r in self.read(cr, user, ids, ['name', 'obj_num'])]
         return result
 
     def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
         try:
-            ids = self.search(cr, user, [('obj_num','=',int(name))]+ args)
+            ids = self.search(cr, user, [('obj_num', '=', int(name))] + args)
         except:
             ids = []
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args)
+            ids = self.search(cr, user, [('name', operator, name)] + args)
         return self.name_get(cr, user, ids)
 
     def _sum_taxes_by_type_and_id(self, taxes):
@@ -507,7 +507,7 @@ class auction_lots(osv.osv):
         lots = self.browse(cr, uid, ids)
 ##CHECKME: est-ce que ca vaudrait la peine de faire des groupes de lots qui ont les memes couts pour passer des listes de lots a compute?
         taxes = []
-        amount=0.0
+        amount = 0.0
     #   pt_tax=pool.get('account.tax')
         for lot in lots:
             taxes = lot.product_id.taxes_id
@@ -515,13 +515,13 @@ class auction_lots(osv.osv):
                 taxes.append(lot.author_right)
             elif lot.auction_id:
                 taxes += lot.auction_id.buyer_costs
-            tax=self.pool.get('account.tax').compute(cr,uid,taxes,lot.obj_price,1)
+            tax = self.pool.get('account.tax').compute(cr, uid, taxes, lot.obj_price, 1)
             for t in tax:
-                amount+=t['amount']
+                amount += t['amount']
             #amount+=lot.obj_price*0.2
             #amount+=lot.obj_price
-        amount_total['value']= amount
-        amount_total['amount']= amount
+        amount_total['value'] = amount
+        amount_total['amount'] = amount
         return amount_total
 
 
@@ -538,7 +538,7 @@ class auction_lots(osv.osv):
 
     def _compute_lot_seller_costs(self, cr, uid, lot, manual_only=False):
         costs = []
-        tax_cost_ids=[]
+        tax_cost_ids = []
 #       tax_cost_ids = [i.id for i in lot.auction_id.seller_costs]
         # if there is a specific deposit cost for this depositer, add it
         border_id = lot.bord_vnd_id
@@ -558,13 +558,13 @@ class auction_lots(osv.osv):
             for c in costs:
                 c.update({'type': 0})
 ######
-        if lot.vnd_lim_net<0 and lot.obj_price>0:
+        if lot.vnd_lim_net < 0 and lot.obj_price > 0:
 #FIXME: la string 'remise lot' devrait passer par le systeme de traductions
             obj_price_wh_costs = reduce(lambda x, y: x + y['amount'], tax_costs, lot.obj_price)
             if obj_price_wh_costs < lot.vnd_lim:
                 costs.append({  'type': 1,
                                 'id': lot.obj_num,
-                                'name': 'Remise lot '+ str(lot.obj_num),
+                                'name': 'Remise lot ' + str(lot.obj_num),
                                 'amount': lot.vnd_lim - obj_price_wh_costs}
                                 #'account_id': lot.auction_id.acc_refund.id
                             )
@@ -599,10 +599,10 @@ class auction_lots(osv.osv):
                     for c in bord_costs:
                         total_cost += c['amount']
                     costs.extend(bord_costs)
-            if (total_adj+total_cost)<0:
+            if (total_adj + total_cost) < 0:
 #FIXME: translate tax name
                 new_id = bord and bord.id or 0
-                c = {'type':3, 'id':new_id, 'amount':-total_cost-total_adj, 'name':'Ristourne'}#, 'account_id':lots[0].auction_id.acc_refund.id}
+                c = {'type':3, 'id':new_id, 'amount':-total_cost - total_adj, 'name':'Ristourne'}#, 'account_id':lots[0].auction_id.acc_refund.id}
                 costs.append(c)
         return self._sum_taxes_by_type_and_id(costs)
 
@@ -628,18 +628,18 @@ class auction_lots(osv.osv):
                 taxes_summed[key] = tax
         return taxes_summed.values()
 
-    def buyer_proforma(self,cr,uid,ids,context):
+    def buyer_proforma(self, cr, uid, ids, context):
         invoices = {}
-        inv_ref=self.pool.get('account.invoice')
+        inv_ref = self.pool.get('account.invoice')
 #       acc_receiv=self.pool.get('account.account').search([cr,uid,[('code','=','4010')]])
-        for lot in self.browse(cr,uid,ids,context):
-            if not lot.obj_price>0:
+        for lot in self.browse(cr, uid, ids, context):
+            if not lot.obj_price > 0:
                 continue
-            partner_r=self.pool.get('res.partner')
+            partner_r = self.pool.get('res.partner')
             if not lot.ach_uid.id:
                 raise orm.except_orm(_('Missed buyer !'), _('The object "%s" has no buyer assigned.') % (lot.name,))
             else:
-                partner_ref =lot.ach_uid.id
+                partner_ref = lot.ach_uid.id
                 lot_name = lot.obj_num
                 res = self.pool.get('res.partner').address_get(cr, uid, [partner_ref], ['contact', 'invoice'])
                 contact_addr_id = res['contact']
@@ -647,35 +647,35 @@ class auction_lots(osv.osv):
                 if not invoice_addr_id:
                     raise orm.except_orm(_('No Invoice Address'), _('The Buyer "%s" has no Invoice Address.') % (contact_addr_id,))
                 inv = {
-                    'name': 'Auction proforma:' +lot.name,
+                    'name': 'Auction proforma:' + lot.name,
                     'journal_id': lot.auction_id.journal_id.id,
                     'partner_id': partner_ref,
                     'type': 'out_invoice',
                 #   'state':'proforma',
                 }
-                inv.update(inv_ref.onchange_partner_id(cr,uid, [], 'out_invoice', partner_ref)['value'])
+                inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', partner_ref)['value'])
                 inv['account_id'] = inv['account_id'] and inv['account_id'][0]
                 inv_id = inv_ref.create(cr, uid, inv, context)
                 invoices[partner_ref] = inv_id
-                self.write(cr,uid,[lot.id],{'ach_inv_id':inv_id,'state':'sold'})
+                self.write(cr, uid, [lot.id], {'ach_inv_id':inv_id, 'state':'sold'})
 
                 #calcul des taxes
                 taxes = map(lambda x: x.id, lot.product_id.taxes_id)
-                taxes+=map(lambda x:x.id, lot.auction_id.buyer_costs)
+                taxes += map(lambda x:x.id, lot.auction_id.buyer_costs)
                 if lot.author_right:
                     taxes.append(lot.author_right.id)
 
-                inv_line= {
+                inv_line = {
                     'invoice_id': inv_id,
                     'quantity': 1,
                     'product_id': lot.product_id.id,
-                    'name': 'proforma'+'['+str(lot.obj_num)+'] '+ lot.name,
-                    'invoice_line_tax_id': [(6,0,taxes)],
+                    'name': 'proforma' + '[' + str(lot.obj_num) + '] ' + lot.name,
+                    'invoice_line_tax_id': [(6, 0, taxes)],
                     'account_analytic_id': lot.auction_id.account_analytic_id.id,
                     'account_id': lot.auction_id.acc_income.id,
                     'price_unit': lot.obj_price,
                 }
-                self.pool.get('account.invoice.line').create(cr, uid, inv_line,context)
+                self.pool.get('account.invoice.line').create(cr, uid, inv_line, context)
             #   inv_ref.button_compute(cr, uid, [inv_id])
             #   wf_service = netsvc.LocalService('workflow')
             #   wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
@@ -687,14 +687,14 @@ class auction_lots(osv.osv):
 
     # creates the transactions between the auction company and the seller
     # this is done by creating a new in_invoice for each
-    def seller_trans_create(self,cr, uid,ids,context):
+    def seller_trans_create(self, cr, uid, ids, context):
         """
             Create a seller invoice for each bord_vnd_id, for selected ids.
         """
         # use each list of object in turn
         invoices = {}
-        inv_ref=self.pool.get('account.invoice')
-        for lot in self.browse(cr,uid,ids,context):
+        inv_ref = self.pool.get('account.invoice')
+        for lot in self.browse(cr, uid, ids, context):
             partner_id = lot.bord_vnd_id.partner_id.id
             if not lot.auction_id.id:
                 continue
@@ -706,17 +706,17 @@ class auction_lots(osv.osv):
                 contact_addr_id = res['contact']
                 invoice_addr_id = res['invoice']
                 inv = {
-                    'name': 'Auction:' +lot.name,
+                    'name': 'Auction:' + lot.name,
                     'journal_id': lot.auction_id.journal_seller_id.id,
                     'partner_id': lot.bord_vnd_id.partner_id.id,
                     'type': 'in_invoice',
                 }
-                inv.update(inv_ref.onchange_partner_id(cr,uid, [], 'in_invoice', lot.bord_vnd_id.partner_id.id)['value'])
+                inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'in_invoice', lot.bord_vnd_id.partner_id.id)['value'])
             #   inv['account_id'] = inv['account_id'] and inv['account_id'][0]
                 inv_id = inv_ref.create(cr, uid, inv, context)
                 invoices[lot.bord_vnd_id.id] = inv_id
 
-            self.write(cr,uid,[lot.id],{'sel_inv_id':inv_id,'state':'sold'})
+            self.write(cr, uid, [lot.id], {'sel_inv_id':inv_id, 'state':'sold'})
 
             taxes = map(lambda x: x.id, lot.product_id.taxes_id)
             if lot.bord_vnd_id.tax_id:
@@ -724,17 +724,17 @@ class auction_lots(osv.osv):
             else:
                 taxes += map(lambda x: x.id, lot.auction_id.seller_costs)
 
-            inv_line= {
+            inv_line = {
                 'invoice_id': inv_id,
                 'quantity': 1,
                 'product_id': lot.product_id.id,
-                'name': '['+str(lot.obj_num)+'] '+lot.auction_id.name,
-                'invoice_line_tax_id': [(6,0,taxes)],
+                'name': '[' + str(lot.obj_num) + '] ' + lot.auction_id.name,
+                'invoice_line_tax_id': [(6, 0, taxes)],
                 'account_analytic_id': lot.auction_id.account_analytic_id.id,
                 'account_id': lot.auction_id.acc_expense.id,
                 'price_unit': lot.obj_price,
             }
-            self.pool.get('account.invoice.line').create(cr, uid, inv_line,context)
+            self.pool.get('account.invoice.line').create(cr, uid, inv_line, context)
             inv_ref.button_compute(cr, uid, invoices.values())
         for inv in inv_ref.browse(cr, uid, invoices.values(), context):
             inv_ref.write(cr, uid, [inv.id], {
@@ -744,7 +744,7 @@ class auction_lots(osv.osv):
             wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_open', cr)
         return invoices.values()
 
-    def lots_invoice(self, cr, uid, ids, context,invoice_number=False):
+    def lots_invoice(self, cr, uid, ids, context, invoice_number=False):
         """(buyer invoice
             Create an invoice for selected lots (IDS) to BUYER_ID.
             Set created invoice to the ACTION state.
@@ -756,24 +756,24 @@ class auction_lots(osv.osv):
             RETURN: id of generated invoice
         """
         dt = time.strftime('%Y-%m-%d')
-        inv_ref=self.pool.get('account.invoice')
-        invoices={}
-        for lot in self.browse(cr, uid, ids,context):
+        inv_ref = self.pool.get('account.invoice')
+        invoices = {}
+        for lot in self.browse(cr, uid, ids, context):
         #   partner_ref = lot.ach_uid.id
             if not lot.auction_id.id:
                 continue
-            partner_r=self.pool.get('res.partner')
+            partner_r = self.pool.get('res.partner')
             if not lot.ach_uid.id:
                 raise orm.except_orm(_('Missed buyer !'), _('The object "%s" has no buyer assigned.') % (lot.name,))
-            if (lot.auction_id.id,lot.ach_uid.id) in invoices:
-                inv_id = invoices[(lot.auction_id.id,lot.ach_uid.id)]
+            if (lot.auction_id.id, lot.ach_uid.id) in invoices:
+                inv_id = invoices[(lot.auction_id.id, lot.ach_uid.id)]
             else:
                 add = partner_r.read(cr, uid, [lot.ach_uid.id], ['address'])[0]['address']
                 if not len(add):
                     raise orm.except_orm(_('Missed Address !'), _('The Buyer has no Invoice Address.'))
                 price = lot.obj_price or 0.0
-                lot_name =lot.obj_num
-                inv={
+                lot_name = lot.obj_num
+                inv = {
                     'name':lot.auction_id.name or '',
                     'reference': lot.ach_login,
                     'journal_id': lot.auction_id.journal_id.id,
@@ -783,35 +783,35 @@ class auction_lots(osv.osv):
                 }
                 if invoice_number:
                     inv['number'] = invoice_number
-                inv.update(inv_ref.onchange_partner_id(cr,uid, [], 'out_invoice', lot.ach_uid.id)['value'])
+                inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', lot.ach_uid.id)['value'])
                 #inv['account_id'] = inv['account_id'] and inv['account_id'][0]
                 inv_id = inv_ref.create(cr, uid, inv, context)
-                invoices[(lot.auction_id.id,lot.ach_uid.id)] = inv_id
-            self.write(cr,uid,[lot.id],{'ach_inv_id':inv_id,'state':'sold'})
+                invoices[(lot.auction_id.id, lot.ach_uid.id)] = inv_id
+            self.write(cr, uid, [lot.id], {'ach_inv_id':inv_id, 'state':'sold'})
             #calcul des taxes
             taxes = map(lambda x: x.id, lot.product_id.taxes_id)
-            taxes+=map(lambda x:x.id, lot.auction_id.buyer_costs)
+            taxes += map(lambda x:x.id, lot.auction_id.buyer_costs)
             if lot.author_right:
                 taxes.append(lot.author_right.id)
 
-            inv_line= {
+            inv_line = {
                 'invoice_id': inv_id,
                 'quantity': 1,
                 'product_id': lot.product_id.id,
-                'name': '['+str(lot.obj_num)+'] '+ lot.name,
-                'invoice_line_tax_id': [(6,0,taxes)],
+                'name': '[' + str(lot.obj_num) + '] ' + lot.name,
+                'invoice_line_tax_id': [(6, 0, taxes)],
                 'account_analytic_id': lot.auction_id.account_analytic_id.id,
                 'account_id': lot.auction_id.acc_income.id,
                 'price_unit': lot.obj_price,
             }
-            self.pool.get('account.invoice.line').create(cr, uid, inv_line,context)
+            self.pool.get('account.invoice.line').create(cr, uid, inv_line, context)
     #   inv_ref.button_compute(cr, uid, [inpq tu dis cav_id])
     #       inv_ref.button_compute(cr, uid, [inv_id])
             inv_ref.button_compute(cr, uid, [inv_id])
         for l in  inv_ref.browse(cr, uid, invoices.values(), context):
             wf_service = netsvc.LocalService('workflow')
         #   wf_service.trg_validate(uid, 'account.invoice',l.id, 'invoice_proforma', cr)
-            wf_service.trg_validate(uid, 'account.invoice',l.id, 'invoice_open', cr)
+            wf_service.trg_validate(uid, 'account.invoice', l.id, 'invoice_open', cr)
         return invoices.values()
 
 
@@ -824,7 +824,7 @@ class auction_lots(osv.osv):
         except:
             max = 0
         for id in ids:
-            max+=1
+            max += 1
             cr.execute('update auction_lots set obj_num=%s where id=%s', (max, id))
         return []
 
@@ -835,12 +835,12 @@ auction_lots()
 #----------------------------------------------------------
 class auction_bid(osv.osv):
     _name = "auction.bid"
-    _description="Bid auctions"
+    _description = "Bid auctions"
     _order = 'id desc'
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Buyer Name', required=True),
-        'contact_tel':fields.char('Contact',size=64),
-        'name': fields.char('Bid ID', size=64,required=True),
+        'contact_tel':fields.char('Contact', size=64),
+        'name': fields.char('Bid ID', size=64, required=True),
         'auction_id': fields.many2one('auction.dates', 'Auction Date', required=True),
         'bid_lines': fields.one2many('auction.bid_line', 'bid_id', 'Bid'),
     }
@@ -852,7 +852,7 @@ class auction_bid(osv.osv):
             return {'value': {'contact_tel':False}}
         contact = self.pool.get('res.partner').browse(cr, uid, partner_id)
         if len(contact.address):
-            v_contact=contact.address[0] and contact.address[0].phone
+            v_contact = contact.address[0] and contact.address[0].phone
         else:
             v_contact = False
         return {'value': {'contact_tel': v_contact}}
@@ -861,21 +861,21 @@ auction_bid()
 
 class auction_lot_history(osv.osv):
     _name = "auction.lot.history"
-    _description="Lot history"
+    _description = "Lot history"
     _columns = {
-        'name': fields.date('Date',size=64),
-        'lot_id': fields.many2one('auction.lots','Object', required=True, ondelete='cascade'),
+        'name': fields.date('Date', size=64),
+        'lot_id': fields.many2one('auction.lots', 'Object', required=True, ondelete='cascade'),
         'auction_id': fields.many2one('auction.dates', 'Auction date', required=True, ondelete='cascade'),
-        'price': fields.float('Withdrawn price', digits=(16,2))
+        'price': fields.float('Withdrawn price', digits=(16, 2))
     }
     _defaults = {
-        'name': lambda *args: time.strftime('%Y-%m-%d')
+        'name': lambda * args: time.strftime('%Y-%m-%d')
     }
 auction_lot_history()
 
 class auction_bid_lines(osv.osv):
     _name = "auction.bid_line"
-    _description="Bid"
+    _description = "Bid"
 
 #   def get_nom(self,cr,uid,ids,*a):
 #       res = {}
@@ -884,22 +884,22 @@ class auction_bid_lines(osv.osv):
 #           res[lot.id] = lot.lot_id.auction_id.name
 #       return res
     _columns = {
-        'name': fields.char('Bid date',size=64),
-        'bid_id': fields.many2one('auction.bid','Bid ID', required=True, ondelete='cascade'),
-        'lot_id': fields.many2one('auction.lots','Object', required=True, ondelete='cascade'),
+        'name': fields.char('Bid date', size=64),
+        'bid_id': fields.many2one('auction.bid', 'Bid ID', required=True, ondelete='cascade'),
+        'lot_id': fields.many2one('auction.lots', 'Object', required=True, ondelete='cascade'),
         'call': fields.boolean('To be Called'),
         'price': fields.float('Maximum Price'),
         'auction': fields.char(string='Auction Name', size=64)
     }
     _defaults = {
-        'name': lambda *args: time.strftime('%Y-%m-%d')
+        'name': lambda * args: time.strftime('%Y-%m-%d')
     }
 
     def onchange_name(self, cr, uid, ids, lot_id):
         if not lot_id:
             return {'value': {'auction':False}}
         auctions = self.pool.get('auction.lots').browse(cr, uid, lot_id)
-        v_auction=auctions.auction_id.name or False
+        v_auction = auctions.auction_id.name or False
         return {'value': {'auction': v_auction}}
 
 
@@ -910,13 +910,13 @@ class report_buyer_auction(osv.osv):
     _description = "Auction Reporting on buyer view"
     _auto = False
     _columns = {
-        'buyer_login': fields.char('Buyer Login',size=64, readonly=True, select=1),
+        'buyer_login': fields.char('Buyer Login', size=64, readonly=True, select=1),
         'buyer':fields.many2one('res.partner', 'Buyer', readonly=True, select=2),
-        'object':fields.integer('No of objects',readonly=True, select=1),
-        'total_price':fields.float('Total Adj.', digits=(16,2), readonly=True, select=2),
-        'avg_price':fields.float('Avg Adj.', digits=(16,2), readonly=True, select=2),
-        'date': fields.date('Create Date',  select=1),
-        'auction': fields.many2one('auction.dates', 'Auction date',readonly=True, select=1),
+        'object':fields.integer('No of objects', readonly=True, select=1),
+        'total_price':fields.float('Total Adj.', digits=(16, 2), readonly=True, select=2),
+        'avg_price':fields.float('Avg Adj.', digits=(16, 2), readonly=True, select=2),
+        'date': fields.date('Create Date', select=1),
+        'auction': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
 
     }
 
@@ -950,14 +950,14 @@ class report_buyer_auction2(osv.osv):
     _description = "Auction Reporting on buyer view"
     _auto = False
     _columns = {
-        'auction': fields.many2one('auction.dates', 'Auction date',readonly=True, select=1),
-        'buyer_login': fields.char('Buyer Login',size=64, readonly=True, select=True),
+        'auction': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
+        'buyer_login': fields.char('Buyer Login', size=64, readonly=True, select=True),
         'buyer':fields.many2one('res.partner', 'Buyer', readonly=True, select=2),
-        'sumadj':fields.float('Sum of adjustication',readonly=True),
+        'sumadj':fields.float('Sum of adjustication', readonly=True),
         'gross_revenue':fields.float('Gross Revenue', readonly=True),
         'net_revenue':fields.float('Net Revenue', readonly=True),
         'net_margin':fields.float('Net Margin', readonly=True),
-        'date': fields.date('Create Date',  required=True)
+        'date': fields.date('Create Date', required=True)
     }
     def init(self, cr):
         cr.execute('''
@@ -992,14 +992,14 @@ class report_seller_auction(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'auction': fields.many2one('auction.dates', 'Auction date',readonly=True, select=1),
-        'seller': fields.many2one('res.partner','Seller',readonly=True, select=1),
-        'object_number':fields.integer('No of Objects',readonly=True),
-        'total_price':fields.float('Total adjudication',readonly=True),
-        'avg_price':fields.float('Avg adjudication',readonly=True),
-        'avg_estimation':fields.float('Avg estimation',readonly=True),
-        'date': fields.date('Create Date',  required=True, select=1),
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('sold','Sold')),'State',readonly=True, select=1)
+        'auction': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
+        'seller': fields.many2one('res.partner', 'Seller', readonly=True, select=1),
+        'object_number':fields.integer('No of Objects', readonly=True),
+        'total_price':fields.float('Total adjudication', readonly=True),
+        'avg_price':fields.float('Avg adjudication', readonly=True),
+        'avg_estimation':fields.float('Avg estimation', readonly=True),
+        'date': fields.date('Create Date', required=True, select=1),
+        'state': fields.selection((('draft', 'Draft'), ('unsold', 'Unsold'), ('sold', 'Sold')), 'State', readonly=True, select=1)
     }
 
     def init(self, cr):
@@ -1033,13 +1033,13 @@ class report_seller_auction2(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'seller': fields.many2one('res.partner','Seller',readonly=True, select=1),
-        'auction': fields.many2one('auction.dates', 'Auction date',readonly=True, select=1),
-        'sum_adj':fields.float('Sum Adjustication',readonly=True, select=2),
-        'gross_revenue':fields.float('Gross revenue',readonly=True, select=2),
-        'net_revenue':fields.float('Net revenue',readonly=True, select=2),
+        'seller': fields.many2one('res.partner', 'Seller', readonly=True, select=1),
+        'auction': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
+        'sum_adj':fields.float('Sum Adjustication', readonly=True, select=2),
+        'gross_revenue':fields.float('Gross revenue', readonly=True, select=2),
+        'net_revenue':fields.float('Net revenue', readonly=True, select=2),
         'net_margin':fields.float('Net margin', readonly=True, select=2),
-        'date': fields.date('Auction date',  required=1),
+        'date': fields.date('Auction date', required=1),
     }
 
     def init(self, cr):
@@ -1069,14 +1069,14 @@ class report_auction_view2(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'auction': fields.many2one('auction.dates', 'Auction date',readonly=True, select=1),
-        'sum_adj':fields.float('Sum of adjudication',readonly=True),
-        'obj_number':fields.integer('# of Objects',readonly=True),
-        'gross_revenue':fields.float('Gross revenue',readonly=True),
-        'net_revenue':fields.float('Net revenue',readonly=True),
+        'auction': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
+        'sum_adj':fields.float('Sum of adjudication', readonly=True),
+        'obj_number':fields.integer('# of Objects', readonly=True),
+        'gross_revenue':fields.float('Gross revenue', readonly=True),
+        'net_revenue':fields.float('Net revenue', readonly=True),
         'obj_margin':fields.float('Avg margin', readonly=True),
         'obj_margin_procent':fields.float('Net margin (%)', readonly=True),
-        'date': fields.date('Auction date',  required=True, select=1)
+        'date': fields.date('Auction date', required=True, select=1)
     }
     def init(self, cr):
         cr.execute('''create or replace view report_auction_view2 as (
@@ -1107,10 +1107,10 @@ class report_auction_view(osv.osv):
     _auto = False
     _rec_name = 'auction_id'
     _columns = {
-        'auction_id': fields.many2one('auction.dates', 'Auction date',readonly=True, select=1),
-        'nobjects':fields.float('No of objects',readonly=True),
-        'nbuyer':fields.float('No of buyers',readonly=True),
-        'nseller':fields.float('No of sellers',readonly=True),
+        'auction_id': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
+        'nobjects':fields.float('No of objects', readonly=True),
+        'nbuyer':fields.float('No of buyers', readonly=True),
+        'nseller':fields.float('No of sellers', readonly=True),
         'min_est':fields.float('Minimum Estimation', readonly=True, select=2),
         'max_est':fields.float('Maximum Estimation', readonly=True, select=2),
         'adj_price':fields.float('Adjudication price', readonly=True, select=2),
@@ -1145,7 +1145,7 @@ class report_auction_object_date(osv.osv):
         'obj_num': fields.integer('# of Objects'),
         'name': fields.date('Created date', select=2),
         'month': fields.date('Month', select=1),
-        'user_id':fields.many2one('res.users', 'User',select=1),
+        'user_id':fields.many2one('res.users', 'User', select=1),
     }
  #l.create_uid as user,
 
@@ -1171,14 +1171,14 @@ class report_auction_estimation_adj_category(osv.osv):
     _name = "report.auction.estimation.adj.category"
     _description = "comparaison estimate/adjudication "
     _auto = False
-    _rec_name='date'
+    _rec_name = 'date'
     _columns = {
-            'lot_est1': fields.float('Minimum Estimation',select=2),
-            'lot_est2': fields.float('Maximum Estimation',select=2),
+            'lot_est1': fields.float('Minimum Estimation', select=2),
+            'lot_est2': fields.float('Maximum Estimation', select=2),
 #            'obj_price': fields.float('Adjudication price'),
-            'date': fields.date('Date', readonly=True,select=1),
+            'date': fields.date('Date', readonly=True, select=1),
             'lot_type': fields.selection(_type_get, 'Object Type', size=64),
-            'adj_total': fields.float('Total Adjudication',select=2),
+            'adj_total': fields.float('Total Adjudication', select=2),
             'user_id':fields.many2one('res.users', 'User', select=1)
     }
 
@@ -1208,11 +1208,11 @@ class report_auction_adjudication(osv.osv):
     _description = "report_auction_adjudication"
     _auto = False
     _columns = {
-            'name': fields.many2one('auction.dates','Auction date',readonly=True,select=1),
-            'state': fields.selection((('draft','Draft'),('close','Closed')),'State', select=1),
+            'name': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
+            'state': fields.selection((('draft', 'Draft'), ('close', 'Closed')), 'State', select=1),
             'adj_total': fields.float('Total Adjudication'),
-            'date': fields.date('Date', readonly=True,select=1),
-            'user_id':fields.many2one('res.users', 'User',select=1)
+            'date': fields.date('Date', readonly=True, select=1),
+            'user_id':fields.many2one('res.users', 'User', select=1)
 
     }
 
@@ -1239,12 +1239,12 @@ class report_auction_adjudication(osv.osv):
 report_auction_adjudication()
 
 class report_attendance(osv.osv):
-    _name="report.attendance"
+    _name = "report.attendance"
     _description = "Report Sign In/Out"
     _auto = False
     #_rec_name='date'
     _columns = {
-        'name': fields.date('Date', readonly=True,select=1),
+        'name': fields.date('Date', readonly=True, select=1),
         'employee_id' : fields.many2one('hr.employee', "Employee's Name", select=1, readonly=True),
         'total_attendance': fields.float('Total', readonly=True),
 }
@@ -1280,13 +1280,13 @@ report_attendance()
 
 
 class report_deposit_border(osv.osv):
-    _name="report.deposit.border"
+    _name = "report.deposit.border"
     _description = "Report deposit border"
     _auto = False
-    _rec_name='bord'
+    _rec_name = 'bord'
     _columns = {
         'bord': fields.char('Depositer Inventory', size=64, required=True),
-        'seller': fields.many2one('res.partner','Seller',select=1),
+        'seller': fields.many2one('res.partner', 'Seller', select=1),
         'moy_est' : fields.float('Avg. Est', select=1, readonly=True),
         'total_marge': fields.float('Total margin', readonly=True),
         'nb_obj':fields.float('# of objects', readonly=True),
@@ -1315,10 +1315,10 @@ class report_object_encoded(osv.osv):
     _description = "Object encoded"
     _auto = False
     _columns = {
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('invoiced','Invoiced')),'State', required=True,select=1),
+        'state': fields.selection((('draft', 'Draft'), ('unsold', 'Unsold'), ('paid', 'Paid'), ('invoiced', 'Invoiced')), 'State', required=True, select=1),
         'user_id':fields.many2one('res.users', 'User', select=1),
-        'estimation': fields.float('Estimation',select=2),
-        'date': fields.date('Create Date',  required=True),
+        'estimation': fields.float('Estimation', select=2),
+        'date': fields.date('Create Date', required=True),
 #        'gross_revenue':fields.float('Gross revenue',readonly=True, select=2),
 #        'net_revenue':fields.float('Net revenue',readonly=True, select=2),
 #        'obj_margin':fields.float('Net margin', readonly=True, select=2),
@@ -1348,10 +1348,10 @@ class report_object_encoded_manager(osv.osv):
     _auto = False
     _columns = {
         'user_id':fields.many2one('res.users', 'User', select=True),
-        'estimation': fields.float('Estimation',select=True),
-        'date': fields.date('Create Date',  required=True),
-        'gross_revenue':fields.float('Gross revenue',readonly=True, select=True),
-        'net_revenue':fields.float('Net revenue',readonly=True, select=True),
+        'estimation': fields.float('Estimation', select=True),
+        'date': fields.date('Create Date', required=True),
+        'gross_revenue':fields.float('Gross revenue', readonly=True, select=True),
+        'net_revenue':fields.float('Net revenue', readonly=True, select=True),
         'obj_margin':fields.float('Net margin', readonly=True, select=True),
         'obj_ret':fields.integer('# obj ret', readonly=True, select=True),
         'adj':fields.integer('Adj.', readonly=True, select=True),
@@ -1381,18 +1381,18 @@ class report_unclassified_objects(osv.osv):
     _description = "Unclassified objects "
     _auto = False
     _columns = {
-        'name': fields.char('Short Description',size=64, required=True),
+        'name': fields.char('Short Description', size=64, required=True),
         'obj_num': fields.integer('Catalog Number'),
         'obj_price': fields.float('Adjudication price'),
-        'lot_num': fields.integer('List Number', required=True, select=1 ),
-        'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('sold','Sold')),'State', required=True, readonly=True),
+        'lot_num': fields.integer('List Number', required=True, select=1),
+        'state': fields.selection((('draft', 'Draft'), ('unsold', 'Unsold'), ('paid', 'Paid'), ('sold', 'Sold')), 'State', required=True, readonly=True),
         'obj_comm': fields.boolean('Commission'),
         'bord_vnd_id': fields.many2one('auction.deposit', 'Depositer Inventory', required=True),
-        'ach_login': fields.char('Buyer Username',size=64),
+        'ach_login': fields.char('Buyer Username', size=64),
         'lot_est1': fields.float('Minimum Estimation'),
         'lot_est2': fields.float('Maximum Estimation'),
         'lot_type': fields.selection(_type_get, 'Object category', size=64),
-        'auction': fields.many2one('auction.dates', 'Auction date',readonly=True, select=1),
+        'auction': fields.many2one('auction.dates', 'Auction date', readonly=True, select=1),
     }
     def init(self, cr):
         cr.execute("""create or replace view report_unclassified_objects as

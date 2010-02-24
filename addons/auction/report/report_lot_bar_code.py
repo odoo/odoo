@@ -29,7 +29,7 @@ class auction_code_produit(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
         })
-report_sxw.report_sxw('report.auction.code_bar_lot', 'auction.lots', 'addons/auction/report/report_lot_bar_code.rml',parser=auction_code_produit,header=False)
+report_sxw.report_sxw('report.auction.code_bar_lot', 'auction.lots', 'addons/auction/report/report_lot_bar_code.rml', parser=auction_code_produit, header=False)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

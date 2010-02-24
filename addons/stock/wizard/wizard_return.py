@@ -28,8 +28,8 @@ import time
 
 from tools.translate import _
 
-arch=UpdateableStr()
-fields={}
+arch = UpdateableStr()
+fields = {}
 
 def make_default(val):
     def fct(obj, cr, uid):
@@ -52,25 +52,25 @@ def _get_returns(self, cr, uid, data, context):
             return_history[m_line.id] += rec.product_qty
 
     fields.clear()
-    arch_lst=['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines'), '<label string="%s" colspan="4"/>' % _('Provide the quantities of the returned products.')]
+    arch_lst = ['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines'), '<label string="%s" colspan="4"/>' % _('Provide the quantities of the returned products.')]
     for m in [line for line in pick.move_lines]:
         quantity = m.product_qty
-        if quantity > return_history[m.id] and (quantity - return_history[m.id])>0:
+        if quantity > return_history[m.id] and (quantity - return_history[m.id]) > 0:
             arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
-            fields['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True, 'default':make_default(quantity - return_history[m.id])}
+            fields['return%s' % m.id] = {'string':m.name, 'type':'float', 'required':True, 'default':make_default(quantity - return_history[m.id])}
             res.setdefault('returns', []).append(m.id)
 
-    if not res.get('returns',False):
-        raise  wizard.except_wizard(_('Warning!'),_('There is no product to return!'))
+    if not res.get('returns', False):
+        raise  wizard.except_wizard(_('Warning!'), _('There is no product to return!'))
 
     arch_lst.append('<field name="invoice_state"/>\n<newline/>')
-    if pick.invoice_state=='invoiced':
-        new_invoice_state='2binvoiced'
+    if pick.invoice_state == 'invoiced':
+        new_invoice_state = '2binvoiced'
     else:
-        new_invoice_state=pick.invoice_state
-    fields['invoice_state']={'string':_('Invoice state'), 'type':'selection', 'default':make_default(new_invoice_state), 'required':True, 'selection':[('2binvoiced', _('to be invoiced')), ('none', _('None'))]}
+        new_invoice_state = pick.invoice_state
+    fields['invoice_state'] = {'string':_('Invoice state'), 'type':'selection', 'default':make_default(new_invoice_state), 'required':True, 'selection':[('2binvoiced', _('to be invoiced')), ('none', _('None'))]}
     arch_lst.append('</form>')
-    arch.string='\n'.join(arch_lst)
+    arch.string = '\n'.join(arch_lst)
     return res
 
 def _create_returns(self, cr, uid, data, context):
@@ -79,23 +79,23 @@ def _create_returns(self, cr, uid, data, context):
     pick_obj = pool.get('stock.picking')
     uom_obj = pool.get('product.uom')
 
-    pick=pick_obj.browse(cr, uid, [data['id']])[0]
-    new_picking=None
-    date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
+    pick = pick_obj.browse(cr, uid, [data['id']])[0]
+    new_picking = None
+    date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
     set_invoice_state_to_none = True
-    for move in move_obj.browse(cr, uid, data['form'].get('returns',[])):
+    for move in move_obj.browse(cr, uid, data['form'].get('returns', [])):
         if not new_picking:
-            if pick.type=='out':
-                new_type='in'
-            elif pick.type=='in':
-                new_type='out'
+            if pick.type == 'out':
+                new_type = 'in'
+            elif pick.type == 'in':
+                new_type = 'out'
             else:
-                new_type='internal'
-            new_picking=pick_obj.copy(cr, uid, pick.id, {'name':'%s (return)' % pick.name,
+                new_type = 'internal'
+            new_picking = pick_obj.copy(cr, uid, pick.id, {'name':'%s (return)' % pick.name,
                     'move_lines':[], 'state':'draft', 'type':new_type,
-                    'date':date_cur, 'invoice_state':data['form']['invoice_state'],})
-        new_location=move.location_dest_id.id
+                    'date':date_cur, 'invoice_state':data['form']['invoice_state'], })
+        new_location = move.location_dest_id.id
 
         new_qty = data['form']['return%s' % move.id]
         returned_qty = move.product_qty
@@ -106,14 +106,14 @@ def _create_returns(self, cr, uid, data, context):
         if returned_qty != new_qty:
             set_invoice_state_to_none = False
 
-        new_move=move_obj.copy(cr, uid, move.id, {
+        new_move = move_obj.copy(cr, uid, move.id, {
             'product_qty': new_qty,
             'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,
                 new_qty, move.product_uos.id),
             'picking_id':new_picking, 'state':'draft',
             'location_id':new_location, 'location_dest_id':move.location_id.id,
-            'date':date_cur, 'date_planned':date_cur,})
-        move_obj.write(cr, uid, [move.id], {'move_stock_return_history':[(4,new_move)]})
+            'date':date_cur, 'date_planned':date_cur, })
+        move_obj.write(cr, uid, [move.id], {'move_stock_return_history':[(4, new_move)]})
 
     if set_invoice_state_to_none:
         pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'})
@@ -126,11 +126,11 @@ def _create_returns(self, cr, uid, data, context):
     return new_picking
 
 def _action_open_window(self, cr, uid, data, context):
-    res=_create_returns(self, cr, uid, data, context)
+    res = _create_returns(self, cr, uid, data, context)
     if not res:
         return {}
     return {
-        'domain': "[('id', 'in', ["+str(res)+"])]",
+        'domain': "[('id', 'in', [" + str(res) + "])]",
         'name': 'Picking List',
         'view_type':'form',
         'view_mode':'tree,form',
@@ -140,10 +140,10 @@ def _action_open_window(self, cr, uid, data, context):
     }
 
 class wizard_return_picking(wizard.interface):
-    states={
+    states = {
         'init':{
             'actions':[_get_returns],
-            'result':{'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel'),('return','Return')]}
+            'result':{'type':'form', 'arch':arch, 'fields':fields, 'state':[('end', 'Cancel'), ('return', 'Return')]}
         },
         'return':{
             'actions':[],

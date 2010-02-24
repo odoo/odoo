@@ -24,7 +24,7 @@ import pooler
 
 def _event_registration(self, cr, uid, data, context):
     event_id = data['id']
-    cr.execute('SELECT section_id FROM event_event WHERE id = %s', (event_id, ))
+    cr.execute('SELECT section_id FROM event_event WHERE id = %s', (event_id,))
     res = cr.fetchone()
     value = {
         'domain': [('section_id', '=', res[0])],

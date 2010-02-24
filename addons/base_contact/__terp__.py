@@ -40,7 +40,7 @@
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base','process'],
+    'depends': ['base', 'process'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',

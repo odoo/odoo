@@ -26,8 +26,8 @@ from report import report_sxw
 from osv import osv
 
 class buyer_form_report(report_sxw.rml_parse):
-    count=0
-    c=0
+    count = 0
+    c = 0
     def __init__(self, cr, uid, name, context):
         super(buyer_form_report, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
@@ -38,24 +38,24 @@ class buyer_form_report(report_sxw.rml_parse):
     })
 
     def sum_taxes(self, lot):
-        amount=0.0
-        taxes=[]
+        amount = 0.0
+        taxes = []
         if lot.author_right:
             taxes.append(lot.author_right)
         if lot.auction_id:
             taxes += lot.auction_id.buyer_costs
-        tax=self.pool.get('account.tax').compute(self.cr,self.uid,taxes,lot.obj_price,1)
+        tax = self.pool.get('account.tax').compute(self.cr, self.uid, taxes, lot.obj_price, 1)
         for t in tax:
-            amount+=t['amount']
+            amount += t['amount']
         return amount
     def buyer_info(self):
         objects = [object for object in self.localcontext.get('objects')]
         ret_dict = {}
         ret_list = []
         for object in objects:
-            partner = ret_dict.get(object.ach_uid.id,False)
+            partner = ret_dict.get(object.ach_uid.id, False)
             if not partner:
-                ret_dict[object.ach_uid.id] = {'partner' : object.ach_uid or False,'lots':[object]}
+                ret_dict[object.ach_uid.id] = {'partner' : object.ach_uid or False, 'lots':[object]}
             else:
                 lots = partner.get('lots')
                 lots.append(object)
@@ -64,10 +64,10 @@ class buyer_form_report(report_sxw.rml_parse):
 
         return ret_dict.values()
 
-    def grand_buyer_total(self,o):
+    def grand_buyer_total(self, o):
         grand_total = 0
         for oo in o:
-            grand_total =grand_total + oo['obj_price'] +self.sum_taxes(oo)
+            grand_total = grand_total + oo['obj_price'] + self.sum_taxes(oo)
         return grand_total
 
 report_sxw.report_sxw('report.buyer_form_report', 'auction.lots', 'addons/auction/report/buyer_form_report.rml', parser=buyer_form_report)

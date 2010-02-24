@@ -24,19 +24,19 @@ import pooler
 import time
 from tools.translate import _
 
-def _action_open_window(self, cr, uid, data, context): 
+def _action_open_window(self, cr, uid, data, context):
     domain = []
     from_date = data['form']['from_date']
     to_date = data['form']['to_date']
     if from_date and to_date:
-        domain = [('date','>=',from_date),('date','<=',to_date)]
+        domain = [('date', '>=', from_date), ('date', '<=', to_date)]
     elif from_date:
-        domain = [('date','>=',from_date)]
+        domain = [('date', '>=', from_date)]
     elif to_date:
-        domain = [('date','<=',to_date)]
+        domain = [('date', '<=', to_date)]
     mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'account', 'view_account_analytic_line_filter')
-    id = mod_obj.read(cr, uid, result, ['res_id'])        
+    id = mod_obj.read(cr, uid, result, ['res_id'])
 
     return {
         'name': _('Analytic Entries'),
@@ -45,7 +45,7 @@ def _action_open_window(self, cr, uid, data, context):
         'res_model': 'account.analytic.line',
         'type': 'ir.actions.act_window',
         'domain': domain,
-        'search_view_id': id['res_id'],}
+        'search_view_id': id['res_id'], }
 
 
 class account_analytic_line(wizard.interface):
@@ -73,7 +73,7 @@ class account_analytic_line(wizard.interface):
     states = {
       'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Entries','gtk-ok')]}
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('open', 'Open Entries', 'gtk-ok')]}
         },
     'open': {
             'actions': [],

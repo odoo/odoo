@@ -46,7 +46,7 @@ class wizard_qty(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':qty1_form, 'fields':qty1_fields, 'state':[('end','Cancel'),('price','Print')]}
+            'result': {'type':'form', 'arch':qty1_form, 'fields':qty1_fields, 'state':[('end', 'Cancel'), ('price', 'Print')]}
         },
         'price': {
             'actions': [],

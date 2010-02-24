@@ -35,11 +35,11 @@ _fields = {}
 
 def _confirm(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    company_id=pool.get('res.users').browse(cr,uid,uid).company_id
+    company_id = pool.get('res.users').browse(cr, uid, uid).company_id
     order_obj = pool.get('pos.order')
     for order_id in order_obj.browse(cr, uid, data['ids'], context=context):
-        if  order_id.state =='paid':
-            order_obj.write(cr,uid,[order_id.id],{'journal_entry':True})
+        if  order_id.state == 'paid':
+            order_obj.write(cr, uid, [order_id.id], {'journal_entry':True})
             order_obj.create_account_move(cr, uid, [order_id.id], context=context)
 
     wf_service = netsvc.LocalService("workflow")
@@ -59,7 +59,7 @@ class pos_confirm(wizard.interface):
                 'type': 'form',
                 'arch': _form,
                 'fields': _fields,
-                'state': (('end', 'No','gtk-cancel'),
+                'state': (('end', 'No', 'gtk-cancel'),
                           ('open', 'Yes', 'gtk-ok', True)
                          )
             }

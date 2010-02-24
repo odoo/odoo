@@ -20,7 +20,7 @@
 ##############################################################################
 
 import netsvc
-from osv import fields,osv
+from osv import fields, osv
 from tools.translate import _
 import tools
 
@@ -50,14 +50,14 @@ class stock_picking(osv.osv):
         for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
             result[line.picking_id.id] = True
         return result.keys()
-    
+
     _columns = {
-        'carrier_id':fields.many2one("delivery.carrier","Carrier"),
+        'carrier_id':fields.many2one("delivery.carrier", "Carrier"),
         'volume': fields.float('Volume'),
-        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight',digits=(16, int(tools.config['price_accuracy'])),
+        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight', digits=(16, int(tools.config['price_accuracy'])),
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
-                 'stock.move': (_get_picking_line, ['product_id','product_uos_qty'], 20),
+                 'stock.move': (_get_picking_line, ['product_id', 'product_uos_qty'], 20),
                  }),
         }
 
@@ -104,7 +104,7 @@ class stock_picking(osv.osv):
 
             taxes = picking.carrier_id.product_id.taxes_id
 
-            partner_id=picking.address_id.partner_id and picking.address_id.partner_id.id or False
+            partner_id = picking.address_id.partner_id and picking.address_id.partner_id.id or False
             taxes_ids = [x.id for x in picking.carrier_id.product_id.taxes_id]
             if partner_id:
                 partner = picking.address_id.partner_id
@@ -119,7 +119,7 @@ class stock_picking(osv.osv):
                 'account_id': account_id,
                 'price_unit': price,
                 'quantity': 1,
-                'invoice_line_tax_id': [(6, 0,taxes_ids)],
+                'invoice_line_tax_id': [(6, 0, taxes_ids)],
             })
         return result
 

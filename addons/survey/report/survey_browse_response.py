@@ -30,41 +30,41 @@ class survey_browse_response(report_rml):
     def create(self, cr, uid, ids, datas, context):
         _divide_columns_for_matrix = 0.7
         _display_ans_in_rows = 5
-        _pageSize = ('29.7cm','21.1cm')
-        if datas.has_key('form') and datas['form']['orientation']=='vertical':
-            if datas['form']['paper_size']=='letter':
-                _pageSize = ('21.6cm','27.9cm')
-            elif datas['form']['paper_size']=='legal':
-                _pageSize = ('21.6cm','35.6cm')
-            elif datas['form']['paper_size']=='a4':
-                _pageSize = ('21.1cm','29.7cm')
-        elif datas.has_key('form') and datas['form']['orientation']=='horizontal':
-            if datas['form']['paper_size']=='letter':
-                _pageSize = ('27.9cm','21.6cm')
-            elif datas['form']['paper_size']=='legal':
-                _pageSize = ('35.6cm','21.6cm')
-            elif datas['form']['paper_size']=='a4':
-                _pageSize = ('29.7cm','21.1cm')
+        _pageSize = ('29.7cm', '21.1cm')
+        if datas.has_key('form') and datas['form']['orientation'] == 'vertical':
+            if datas['form']['paper_size'] == 'letter':
+                _pageSize = ('21.6cm', '27.9cm')
+            elif datas['form']['paper_size'] == 'legal':
+                _pageSize = ('21.6cm', '35.6cm')
+            elif datas['form']['paper_size'] == 'a4':
+                _pageSize = ('21.1cm', '29.7cm')
+        elif datas.has_key('form') and datas['form']['orientation'] == 'horizontal':
+            if datas['form']['paper_size'] == 'letter':
+                _pageSize = ('27.9cm', '21.6cm')
+            elif datas['form']['paper_size'] == 'legal':
+                _pageSize = ('35.6cm', '21.6cm')
+            elif datas['form']['paper_size'] == 'a4':
+                _pageSize = ('29.7cm', '21.1cm')
 
         _frame_width = tools.ustr(_pageSize[0])
-        _frame_height = tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.90))+'cm'
-        _tbl_widths = tools.ustr(float(_pageSize[0].replace('cm','')) - float(2.10))+'cm'
-        rml ="""<document filename="Survey Response Report.pdf">
-                <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Response.pdf' author="Martin Simon" allowSplitting="20" >
+        _frame_height = tools.ustr(float(_pageSize[1].replace('cm', '')) - float(1.90)) + 'cm'
+        _tbl_widths = tools.ustr(float(_pageSize[0].replace('cm', '')) - float(2.10)) + 'cm'
+        rml = """<document filename="Survey Response Report.pdf">
+                <template pageSize="(""" + _pageSize[0] + """,""" + _pageSize[1] + """)" title='Survey Response.pdf' author="Martin Simon" allowSplitting="20" >
                     <pageTemplate id="first">
-                        <frame id="first" x1="0.0cm" y1="1.0cm" width='"""+_frame_width+"""' height='"""+_frame_height+"""'/>
+                        <frame id="first" x1="0.0cm" y1="1.0cm" width='""" + _frame_width + """' height='""" + _frame_height + """'/>
                         <pageGraphics>
                             <lineMode width="1.0"/>
-                            <lines>1.0cm """+tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00))+'cm'+"""</lines>
-                            <lines>1.0cm """+tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00))+'cm'+""" 1.0cm 1.00cm</lines>
-                            <lines>"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" 1.00cm</lines>
-                            <lines>1.0cm 1.00cm """+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" 1.00cm</lines>"""
+                            <lines>1.0cm """ + tools.ustr(float(_pageSize[1].replace('cm', '')) - float(1.00)) + 'cm' + """ """ + tools.ustr(float(_pageSize[0].replace('cm', '')) - float(1.00)) + 'cm' + """ """ + tools.ustr(float(_pageSize[1].replace('cm', '')) - float(1.00)) + 'cm' + """</lines>
+                            <lines>1.0cm """ + tools.ustr(float(_pageSize[1].replace('cm', '')) - float(1.00)) + 'cm' + """ 1.0cm 1.00cm</lines>
+                            <lines>""" + tools.ustr(float(_pageSize[0].replace('cm', '')) - float(1.00)) + 'cm' + """ """ + tools.ustr(float(_pageSize[1].replace('cm', '')) - float(1.00)) + 'cm' + """ """ + tools.ustr(float(_pageSize[0].replace('cm', '')) - float(1.00)) + 'cm' + """ 1.00cm</lines>
+                            <lines>1.0cm 1.00cm """ + tools.ustr(float(_pageSize[0].replace('cm', '')) - float(1.00)) + 'cm' + """ 1.00cm</lines>"""
         if datas.has_key('form') and datas['form']['page_number']:
-            rml +="""
+            rml += """
                     <fill color="gray"/>
                     <setFont name="Helvetica" size="10"/>
-                    <drawRightString x='"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+"""' y="0.6cm">Page : <pageNumber/> </drawRightString>"""
-        rml +="""</pageGraphics>
+                    <drawRightString x='""" + tools.ustr(float(_pageSize[0].replace('cm', '')) - float(1.00)) + 'cm' + """' y="0.6cm">Page : <pageNumber/> </drawRightString>"""
+        rml += """</pageGraphics>
                     </pageTemplate>
                 </template>
                   <stylesheet>
@@ -196,7 +196,7 @@ class survey_browse_response(report_rml):
         for response in surv_resp_obj.browse(cr, uid, response_id):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
                 tbl_width = float(_tbl_widths.replace('cm', ''))
-                colwidth =  "4.6cm,5cm," + str(tbl_width - 16.4) +"cm,4cm,3cm"
+                colwidth = "4.6cm,5cm," + str(tbl_width - 16.4) + "cm,4cm,3cm"
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
                             <td><para style="terp_tblheader_General_Centre">Response Create Date:- </para></td>
@@ -208,8 +208,8 @@ class survey_browse_response(report_rml):
                         </blockTable><para style="P2"></para>"""
                 status = "Not Finished"
                 if response.state == "done": status = "Finished"
-                colwidth =  str(tbl_width - 7) + "cm,"
-                colwidth +=  "7cm"
+                colwidth = str(tbl_width - 7) + "cm,"
+                colwidth += "7cm"
                 rml += """<blockTable colWidths='""" + str(colwidth) + """' style="title_tbl">
                             <tr>
                             <td><para style="title">""" + to_xml(tools.ustr(survey.title)) + """</para><para style="P2"><font></font></para></td>
@@ -234,9 +234,9 @@ class survey_browse_response(report_rml):
                                 <blockTable colWidths='""" + str(_tbl_widths) + """' style="Table5">
                                   <tr><td><para style="question">""" + to_xml(to_xml(que.question)) + """</para></td></tr>
                                 </blockTable>"""
-                        answer = surv_resp_line_obj.browse(cr ,uid, surv_resp_line_obj.search(cr, uid, [('question_id', '=', que.id),('response_id', '=', response.id)]))
+                        answer = surv_resp_line_obj.browse(cr , uid, surv_resp_line_obj.search(cr, uid, [('question_id', '=', que.id), ('response_id', '=', response.id)]))
                         if que.type in ['descriptive_text']:
-                            rml +="""<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
+                            rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                          <tr><td> <para style="response">""" + to_xml(tools.ustr(que.descriptive_text)) + """</para></td> </tr>
                                     </blockTable>"""
                         elif que.type in ['table']:
@@ -249,20 +249,20 @@ class survey_browse_response(report_rml):
                                 colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                                 colWidths = colWidths + 'cm'
                                 matrix_ans = []
-                                rml +="""<para style="P2"></para><blockTable colWidths=" """ + str(colWidths) + """ " style="Table41"><tr>"""
+                                rml += """<para style="P2"></para><blockTable colWidths=" """ + str(colWidths) + """ " style="Table41"><tr>"""
                                 for col in que.column_heading_ids:
                                     if col.title not in matrix_ans:
                                         matrix_ans.append(col.title)
-                                        rml += """<td> <para style="terp_tblheader_Details">""" + to_xml(tools.ustr(col.title)) +"""</para></td>"""
+                                        rml += """<td> <para style="terp_tblheader_Details">""" + to_xml(tools.ustr(col.title)) + """</para></td>"""
                                 rml += """</tr></blockTable>"""
                                 i = 0
                                 for row in range(0, que.no_of_rows):
-                                    if i%2!=0:
-                                        style='tbl_white'
+                                    if i % 2 != 0:
+                                        style = 'tbl_white'
                                     else:
-                                        style='tbl_gainsboro'
-                                    i+=1
-                                    rml += """<blockTable colWidths=" """ + str(colWidths) + """ " style='"""+style+"""'><tr>"""
+                                        style = 'tbl_gainsboro'
+                                    i += 1
+                                    rml += """<blockTable colWidths=" """ + str(colWidths) + """ " style='""" + style + """'><tr>"""
                                     table_data = col_heading.browse(cr, uid, col_heading.search(cr, uid, [('response_table_id', '=', answer[0].id), ('name', '=', row)]))
                                     for column in matrix_ans:
                                         value = False
@@ -270,27 +270,27 @@ class survey_browse_response(report_rml):
                                             if column == col.column_id.title:
                                                 value = col.value
                                         if value:
-                                            rml += """<td> <para style="terp_default_9">""" + to_xml(tools.ustr(value)) +"""</para></td>"""
+                                            rml += """<td> <para style="terp_default_9">""" + to_xml(tools.ustr(value)) + """</para></td>"""
                                         else:
                                             rml += """<td><para style="terp_default_9"><font color ="white"> </font></para></td>"""
                                     rml += """</tr></blockTable>"""
                             else:
-                                rml +="""<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
+                                rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                              <tr><td> <para style="response">No Response</para></td> </tr>
                                         </blockTable>"""
-                        elif que.type in ['multiple_choice_only_one_ans','multiple_choice_multiple_ans']:
+                        elif que.type in ['multiple_choice_only_one_ans', 'multiple_choice_multiple_ans']:
                             if len(answer) and answer[0].state == "done":
                                 ans_list = []
                                 for ans in answer[0].response_answer_ids:
                                     ans_list.append(to_xml(tools.ustr(ans.answer_id.answer)))
-                                answer_choice=[]
+                                answer_choice = []
                                 for ans in que['answer_choice_ids']:
                                     answer_choice.append(to_xml(tools.ustr((ans.answer))))
 
                                 def divide_list(lst, n):
                                     return [lst[i::n] for i in range(n)]
 
-                                divide_list = divide_list(answer_choice,_display_ans_in_rows)
+                                divide_list = divide_list(answer_choice, _display_ans_in_rows)
                                 for lst in divide_list:
                                     if que.type == 'multiple_choice_multiple_ans':
                                         if len(lst) <> 0 and len(lst) <> int(round(float(len(answer_choice)) / _display_ans_in_rows, 0)):
@@ -305,7 +305,7 @@ class survey_browse_response(report_rml):
                                         cols_widhts.append(float(a / len(divide)))
                                         cols_widhts.append(float(b / len(divide)))
                                     colWidths = "cm,".join(map(tools.ustr, cols_widhts))
-                                    colWidths = colWidths +'cm'
+                                    colWidths = colWidths + 'cm'
                                     rml += """<blockTable colWidths=" """ + colWidths + """ " style="simple_table"><tr>"""
                                     for div in range(0, len(divide)):
                                        if divide[div] != '':
@@ -318,7 +318,7 @@ class survey_browse_response(report_rml):
                                                                 </illustration></td>
                                                              <td><para style="answer">""" + divide[div] + """</para></td>"""
                                                else:
-                                                   rml+="""<td><illustration>
+                                                   rml += """<td><illustration>
                                                            <rect x="0.1cm" y="-0.45cm" width="0.5 cm" height="0.5cm" fill="no" stroke="yes"  round="0.1cm"/>
                                                             </illustration></td>
                                                            <td><para style="answer">""" + divide[div] + """</para></td>"""
@@ -347,11 +347,11 @@ class survey_browse_response(report_rml):
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                              <tr><td> <para style="response">No Response</para></td> </tr>
                                           </blockTable>"""
-                        elif que.type in ['multiple_textboxes_diff_type','multiple_textboxes','date','date_and_time','numerical_textboxes','multiple_textboxes_diff_type']:
+                        elif que.type in ['multiple_textboxes_diff_type', 'multiple_textboxes', 'date', 'date_and_time', 'numerical_textboxes', 'multiple_textboxes_diff_type']:
                             if len(answer) and answer[0].state == "done":
                                 cols_widhts = []
-                                cols_widhts.append(float(_tbl_widths.replace('cm',''))/2)
-                                cols_widhts.append(float(_tbl_widths.replace('cm',''))/2)
+                                cols_widhts.append(float(_tbl_widths.replace('cm', '')) / 2)
+                                cols_widhts.append(float(_tbl_widths.replace('cm', '')) / 2)
                                 colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                                 colWidths = tools.ustr(colWidths) + 'cm'
                                 answer_list = {}
@@ -390,21 +390,21 @@ class survey_browse_response(report_rml):
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                          <tr>  <td> <para style="response">No Response</para></td> </tr>
                                         </blockTable>"""
-                        elif que.type in ['matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans', 'rating_scale', 'matrix_of_drop_down_menus']:
+                        elif que.type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'rating_scale', 'matrix_of_drop_down_menus']:
                             if len(answer) and answer[0].state == "done":
                                 if que.type  in ['matrix_of_choices_only_one_ans', 'rating_scale'] and que.comment_column:
                                     pass
                                 cols_widhts = []
                                 if len(que.column_heading_ids):
-                                    cols_widhts.append(float(_tbl_widths.replace('cm','')) / float(2.0))
+                                    cols_widhts.append(float(_tbl_widths.replace('cm', '')) / float(2.0))
                                     for col in que.column_heading_ids:
-                                        cols_widhts.append(float((float(_tbl_widths.replace('cm','')) / float(2.0)) / len(que.column_heading_ids)))
+                                        cols_widhts.append(float((float(_tbl_widths.replace('cm', '')) / float(2.0)) / len(que.column_heading_ids)))
                                 else:
-                                    cols_widhts.append(float(_tbl_widths.replace('cm','')))
+                                    cols_widhts.append(float(_tbl_widths.replace('cm', '')))
                                 tmp = 0.0
-                                sum =  0.0
+                                sum = 0.0
                                 i = 0
-                                if que.type in ['matrix_of_choices_only_one_ans','rating_scale'] and que.comment_column:
+                                if que.type in ['matrix_of_choices_only_one_ans', 'rating_scale'] and que.comment_column:
                                     for col in cols_widhts:
                                         if i == 0:
                                             cols_widhts[i] = cols_widhts[i] / 2.0
@@ -414,7 +414,7 @@ class survey_browse_response(report_rml):
                                     cols_widhts.append(round(tmp, 2))
                                 colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                                 colWidths = colWidths + 'cm'
-                                matrix_ans = [(0, ''),]
+                                matrix_ans = [(0, ''), ]
                                 for col in que.column_heading_ids:
                                     if col.title not in matrix_ans:
                                         matrix_ans.append((col.id, col.title))
@@ -423,17 +423,17 @@ class survey_browse_response(report_rml):
                                     matrix_ans.append(que.column_name)
                                 rml += """<blockTable colWidths=" """ + colWidths + """ " style="simple_table"><tr>"""
                                 for mat_col in range(0, len(matrix_ans)):
-                                    rml+="""<td><para style="response">""" + to_xml(tools.ustr(matrix_ans[mat_col][1])) + """</para></td>"""
-                                rml +="""</tr>"""
-                                rml+="""</blockTable>"""
-                                i=0
+                                    rml += """<td><para style="response">""" + to_xml(tools.ustr(matrix_ans[mat_col][1])) + """</para></td>"""
+                                rml += """</tr>"""
+                                rml += """</blockTable>"""
+                                i = 0
                                 for ans in que.answer_choice_ids:
-                                    if i%2 != 0:
+                                    if i % 2 != 0:
                                         style = 'ans_tbl_white'
                                     else:
                                         style = 'ans_tbl_gainsboro'
                                     i += 1
-                                    rml += """<blockTable colWidths=" """ + colWidths + """ " style='"""+style+"""'>
+                                    rml += """<blockTable colWidths=" """ + colWidths + """ " style='""" + style + """'>
                                             <tr><td><para style="response">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>"""
                                     comment_value = ""
                                     for mat_col in range(1, len_matrix):
@@ -460,7 +460,7 @@ class survey_browse_response(report_rml):
                                             else:
                                                 if que.type in ['matrix_of_drop_down_menus']:
                                                     value = """"""
-                                                elif que.type in ['matrix_of_choices_only_one_ans','rating_scale']:
+                                                elif que.type in ['matrix_of_choices_only_one_ans', 'rating_scale']:
                                                     value = """<illustration><fill color="white"/>
                                                                     <circle x="0.3cm" y="-0.18cm" radius="0.22 cm" fill="yes" stroke="yes"  round="0.1cm"/>
                                                                 </illustration>"""
@@ -468,8 +468,8 @@ class survey_browse_response(report_rml):
                                                     value = """<illustration><fill color="white"/>
                                                                 <rect x="0.1cm" y="-0.45cm" width="0.5 cm" height="0.5cm" fill="yes" stroke="yes"  round="0.1cm"/>
                                                                 </illustration>"""
-                                        rml+= """<td>""" + value + """</td>"""
-                                    if que.type in ['matrix_of_choices_only_one_ans','rating_scale'] and que.comment_column:
+                                        rml += """<td>""" + value + """</td>"""
+                                    if que.type in ['matrix_of_choices_only_one_ans', 'rating_scale'] and que.comment_column:
                                         if comment_value == 'False':
                                             comment_value = ''
                                         rml += """<td><para style="response">""" + to_xml(tools.ustr(comment_value)) + """</para></td>"""
@@ -493,6 +493,6 @@ class survey_browse_response(report_rml):
         pdf = create_doc(rml, title=self.title)
         return (pdf, report_type)
 
-survey_browse_response('report.survey.browse.response', 'survey','','')
+survey_browse_response('report.survey.browse.response', 'survey', '', '')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

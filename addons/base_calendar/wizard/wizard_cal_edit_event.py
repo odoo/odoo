@@ -38,19 +38,19 @@ class event_edit_this(wizard.interface):
                 </form>"""
 
     event_fields = {
-        'name': {'string': 'Title', 'type': 'char', 'size': 64}, 
-        'date': {'string': 'Start Date', 'type': 'datetime'}, 
-        'date_deadline': {'string': 'End Date', 'type': 'datetime'}, 
-        'location': {'string': 'Location', 'type': 'char', 'size': 124}, 
-        'alarm_id': {'string': 'Reminder', 'type': 'many2one', 'relation': 'res.alarm'}, 
+        'name': {'string': 'Title', 'type': 'char', 'size': 64},
+        'date': {'string': 'Start Date', 'type': 'datetime'},
+        'date_deadline': {'string': 'End Date', 'type': 'datetime'},
+        'location': {'string': 'Location', 'type': 'char', 'size': 124},
+        'alarm_id': {'string': 'Reminder', 'type': 'many2one', 'relation': 'res.alarm'},
     }
-    
+
     def _default_values(self, cr, uid, data, context=None):
         model = data.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
         event = model_obj.read(cr, uid, data['id'], ['name', 'location', 'alarm_id'])
         event.update({
-                      'date': context.get('date'), 
+                      'date': context.get('date'),
                       'date_deadline': context.get('date_deadline')
                       })
         return event
@@ -60,24 +60,24 @@ class event_edit_this(wizard.interface):
         model_obj = pooler.get_pool(cr.dbname).get(model)
         new_id = model_obj.modify_this(cr, uid, [datas['id']], datas['form'], context)
         value = {
-                'name': 'New event', 
-                'view_type': 'form', 
-                'view_mode': 'form,tree', 
-                'res_model': model, 
-                'res_id': new_id, 
-                'view_id': False, 
-                'type': 'ir.actions.act_window', 
+                'name': 'New event',
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': model,
+                'res_id': new_id,
+                'view_id': False,
+                'type': 'ir.actions.act_window',
             }
         return value
 
     states = {
         'init': {
-            'actions': [_default_values], 
-            'result': {'type': 'form', 'arch': event_form, 'fields': event_fields, 
+            'actions': [_default_values],
+            'result': {'type': 'form', 'arch': event_form, 'fields': event_fields,
                 'state': [('end', 'Cancel', 'gtk-cancel'), ('edit', '_Save', 'gtk-save')]}
-        }, 
+        },
         'edit': {
-            'actions': [], 
+            'actions': [],
             'result': {'type': 'action', 'action': _modify_this, 'state': 'end'}
         }
     }

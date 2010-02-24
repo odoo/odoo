@@ -30,7 +30,7 @@ class product_category(osv.osv):
             string="Price Difference Account",
             method=True,
             view_load=True,
-            help="This account will be used to value price difference between purchase price and cost price."),                
+            help="This account will be used to value price difference between purchase price and cost price."),
 
     }
 product_category()
@@ -45,7 +45,7 @@ class product_template(osv.osv):
             string="Price Difference Account",
             method=True,
             view_load=True,
-            help="This account will be used to value price difference between purchase price and cost price."),                
+            help="This account will be used to value price difference between purchase price and cost price."),
 
     }
 product_template()

@@ -36,7 +36,7 @@ class bom_structure(report_sxw.rml_parse):
     def get_children(self, object, level=0):
         result = []
 
-        def _get_rec(object,level):
+        def _get_rec(object, level):
             for l in object:
                 res = {}
                 res['name'] = l.name
@@ -47,18 +47,18 @@ class bom_structure(report_sxw.rml_parse):
                 res['level'] = level
                 result.append(res)
                 if l.child_complete_ids:
-                    if level<6:
+                    if level < 6:
                         level += 1
-                    _get_rec(l.child_complete_ids,level)
-                    if level>0 and level<6:
+                    _get_rec(l.child_complete_ids, level)
+                    if level > 0 and level < 6:
                         level -= 1
             return result
-        
-        children = _get_rec(object,level)
-        
+
+        children = _get_rec(object, level)
+
         return children
 
-report_sxw.report_sxw('report.bom.structure','mrp.bom','mrp/report/bom_structure.rml',parser=bom_structure)
+report_sxw.report_sxw('report.bom.structure', 'mrp.bom', 'mrp/report/bom_structure.rml', parser=bom_structure)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

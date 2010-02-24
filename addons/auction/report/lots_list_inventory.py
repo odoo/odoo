@@ -31,7 +31,7 @@ class lots_list_inventory(report_sxw.rml_parse):
             'bid_line' : self.bid_line
         })
     def bid_line(self, lot_id):
-        res = self.pool.get('auction.bid.lines').read(self.cr,self.uid,[lot_id])
+        res = self.pool.get('auction.bid.lines').read(self.cr, self.uid, [lot_id])
         return True
 report_sxw.report_sxw('report.lots.list.inventory', 'auction.lots', 'addons/auction/report/lots_list_inventory.rml', parser=lots_list_inventory)
 

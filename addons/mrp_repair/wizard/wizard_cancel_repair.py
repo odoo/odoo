@@ -37,14 +37,14 @@ def check_state(self, cr, uid, data, context):
     if repair_obj.invoice_id:
         return 'display'
     else:
-        pool.get('mrp.repair').write(cr,uid,data['ids'],{'state':'cancel'})
+        pool.get('mrp.repair').write(cr, uid, data['ids'], {'state':'cancel'})
         return 'end'
-        
-        
+
+
 def _cancel_repair(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     repair_obj = pool.get('mrp.repair').browse(cr, uid, data['ids'])
-    pool.get('mrp.repair').write(cr,uid,data['ids'],{'state':'cancel'})
+    pool.get('mrp.repair').write(cr, uid, data['ids'], {'state':'cancel'})
     mrp_line_obj = pool.get('mrp.repair.line')
     for line in repair_obj:
         mrp_line_obj.write(cr, uid, [l.id for l in line.operations], {'state': 'cancel'})
@@ -62,7 +62,7 @@ class repair_cancel(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : cancel_form,
                     'fields' : cancel_fields,
-                    'state' : [('end', 'No'),('yes', 'Yes') ]}
+                    'state' : [('end', 'No'), ('yes', 'Yes') ]}
         },
         'yes' : {
             'actions' : [],

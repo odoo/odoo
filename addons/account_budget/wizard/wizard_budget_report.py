@@ -32,22 +32,22 @@ dates_form = '''<?xml version="1.0"?>
 </form>'''
 
 dates_fields = {
-    'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-    'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-01-01')},
+    'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda * a: time.strftime('%Y-%m-%d')},
 }
 
 class wizard_report(wizard.interface):
     def _default(self, cr, uid, data, context):
         pool_obj = pooler.get_pool(cr.dbname)
-        data_model = pool_obj.get(data['model']).browse(cr,uid,data['id'])
+        data_model = pool_obj.get(data['model']).browse(cr, uid, data['id'])
         if not data_model.dotation_ids:
-            raise wizard.except_wizard(_('Insufficient Data!'),_('No Depreciation or Master Budget Expenses Found on Budget %s!') % data_model.name)
+            raise wizard.except_wizard(_('Insufficient Data!'), _('No Depreciation or Master Budget Expenses Found on Budget %s!') % data_model.name)
         return data['form']
 
     states = {
         'init': {
             'actions': [_default],
-            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
+            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end', 'Cancel'), ('report', 'Print')]}
         },
         'report': {
             'actions': [],

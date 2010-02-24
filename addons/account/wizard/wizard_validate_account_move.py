@@ -42,7 +42,7 @@ _journal_fields = {
 def _validate_move(self, cr, uid, data, context={}):
     pool = pooler.get_pool(cr.dbname)
     move_obj = pool.get('account.move')
-    ids_move = move_obj.search(cr,uid,[('state','=','draft'),('journal_id','=',data['form']['journal_id']),('period_id','=',data['form']['period_id'])])
+    ids_move = move_obj.search(cr, uid, [('state', '=', 'draft'), ('journal_id', '=', data['form']['journal_id']), ('period_id', '=', data['form']['period_id'])])
     if not ids_move:
         raise wizard.except_wizard(_('Warning'), _('Specified Journal does not have any account move entries in draft state for this period'))
     res = move_obj.button_validate(cr, uid, ids_move, context)
@@ -52,7 +52,7 @@ class validate_account_move(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('validate','Validate')]}
+            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end', 'Cancel'), ('validate', 'Validate')]}
         },
         'validate': {
             'actions': [_validate_move],
@@ -66,9 +66,9 @@ def _validate_move_lines(self, cr, uid, data, context={}):
     pool = pooler.get_pool(cr.dbname)
     move_line_obj = pool.get('account.move.line')
     move_obj = pool.get('account.move')
-    data_line = move_line_obj.browse(cr,uid,data['ids'],context)
+    data_line = move_line_obj.browse(cr, uid, data['ids'], context)
     for line in data_line:
-        if line.move_id.state=='draft':
+        if line.move_id.state == 'draft':
             move_ids.append(line.move_id.id)
     move_ids = list(set(move_ids))
     if not move_ids:

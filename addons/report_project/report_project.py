@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
 import tools
 
 class report_project_task_user(osv.osv):
@@ -27,7 +27,7 @@ class report_project_task_user(osv.osv):
     _description = "Tasks by user and project"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'project_id':fields.many2one('project.project', 'Project', readonly=True),
         'hours_planned': fields.float('Planned Hours', readonly=True),
@@ -35,8 +35,8 @@ class report_project_task_user(osv.osv):
         'hours_delay': fields.float('Avg. Plan.-Eff.', readonly=True),
         'closing_days': fields.char('Avg Closing Delay', size=64, readonly=True),
         'task_closed': fields.integer('Task Closed', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                          ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
 
     }
     _order = 'name desc, project_id'
@@ -71,15 +71,15 @@ class report_project_task(osv.osv):
     _description = "Tasks by project"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'project_id':fields.many2one('project.project', 'Project', readonly=True),
         'hours_planned': fields.float('Planned Hours', readonly=True),
         'hours_effective': fields.float('Effective Hours', readonly=True),
         'hours_delay': fields.float('Avg. Plan.-Eff.', readonly=True),
         'closing_days': fields.char('Avg Closing Delay', size=64, readonly=True),
         'task_closed': fields.integer('Task Closed', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
-                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'month':fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'), ('05', 'May'), ('06', 'June'),
+                  ('07', 'July'), ('08', 'August'), ('09', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
 
     }
     _order = 'name desc, project_id'

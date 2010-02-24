@@ -28,7 +28,7 @@ def migrate(cr, version):
             (employee_id, type, allocation_type, name, holiday_status_id, 
             state, number_of_days, notes, manager_id) VALUES
             (%s, 'add', 'company', 'imported holiday_per_user', %s,
-            'validated', %s, %s, %s) """, (record[1],record[2],record[3],record[4],record[5]))
-        
+            'validated', %s, %s, %s) """, (record[1], record[2], record[3], record[4], record[5]))
+
 
 

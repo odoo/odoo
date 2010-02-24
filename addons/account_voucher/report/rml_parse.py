@@ -40,12 +40,12 @@ class rml_parse(report_sxw.rml_parse):
             'explode_name' : self._explode_name,
         })
 
-    def comma_me(self,amount):
+    def comma_me(self, amount):
         #print "#" + str(amount) + "#"
         if not amount:
             amount = 0.0
         if  type(amount) is float :
-            amount = str('%.2f'%amount)
+            amount = str('%.2f' % amount)
         else :
             amount = str(amount)
         if (amount == '0'):
@@ -56,31 +56,31 @@ class rml_parse(report_sxw.rml_parse):
             return new
         else:
             return self.comma_me(new)
-        
-    def _ellipsis(self, string, maxlen=100, ellipsis = '...'):
+
+    def _ellipsis(self, string, maxlen=100, ellipsis='...'):
         ellipsis = ellipsis or ''
         try:
             return string[:maxlen - len(ellipsis) ] + (ellipsis, '')[len(string) < maxlen]
         except Exception, e:
             return False
-        
+
     def _strip_name(self, name, maxlen=50):
         return self._ellipsis(name, maxlen, '...')
 
-    def _get_and_change_date_format_for_swiss (self,date_to_format):
-        date_formatted=''
+    def _get_and_change_date_format_for_swiss (self, date_to_format):
+        date_formatted = ''
         if date_to_format:
-            date_formatted = strptime (date_to_format,'%Y-%m-%d').strftime('%d.%m.%Y')
+            date_formatted = strptime (date_to_format, '%Y-%m-%d').strftime('%d.%m.%Y')
         return date_formatted
 
-    def _explode_name(self,chaine,length):
+    def _explode_name(self, chaine, length):
         # We will test if the size is less then account
         full_string = ''
         if (len(str(chaine)) <= length):
             return chaine
         #
         else:
-            chaine = unicode(chaine,'utf8').encode('iso-8859-1')
+            chaine = unicode(chaine, 'utf8').encode('iso-8859-1')
             rup = 0
             for carac in chaine:
                 rup = rup + 1
@@ -93,7 +93,7 @@ class rml_parse(report_sxw.rml_parse):
 
         return full_string
 
-    def makeAscii(self,str):
+    def makeAscii(self, str):
         try:
             Stringer = str.encode("utf-8")
         except UnicodeDecodeError:
@@ -107,19 +107,19 @@ class rml_parse(report_sxw.rml_parse):
         else:
             return Stringer
         return Stringer
-    
-    def explode_this(self,chaine,length):
+
+    def explode_this(self, chaine, length):
         #chaine = self.repair_string(chaine)
         chaine = rstrip(chaine)
         ast = list(chaine)
         i = length
         while i <= len(ast):
-            ast.insert(i,'\n')
+            ast.insert(i, '\n')
             i = i + length
         chaine = str("".join(ast))
         return chaine
-    
-    def repair_string(self,chaine):
+
+    def repair_string(self, chaine):
         ast = list(chaine)
         UnicodeAst = []
         _previouslyfound = False
@@ -130,17 +130,17 @@ class rml_parse(report_sxw.rml_parse):
             try:
                 Stringer = elem.encode("utf-8")
             except UnicodeDecodeError:
-                to_reencode = elem + ast[i+1]
+                to_reencode = elem + ast[i + 1]
                 print str(to_reencode)
                 Good_char = to_reencode.decode('utf-8')
                 UnicodeAst.append(Good_char)
-                i += i +2
+                i += i + 2
             else:
                 UnicodeAst.append(elem)
                 i += i + 1
         return "".join(UnicodeAst)
 
-    def ReencodeAscii(self,str):
+    def ReencodeAscii(self, str):
         print sys.stdin.encoding
         try:
             Stringer = str.decode("ascii")
@@ -155,11 +155,11 @@ class rml_parse(report_sxw.rml_parse):
             return Stringer
 
     def _add_header(self, node, header=1):
-        if header==2:
-            rml_head =  self.rml_header2
+        if header == 2:
+            rml_head = self.rml_header2
         else:
-            rml_head =  self.rml_header
-        rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
+            rml_head = self.rml_header
+        rml_head = rml_head.replace('<pageGraphics>', '''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -40,7 +40,7 @@ class account_invoice(osv.osv):
     """Inherit account.invoice in order to add bvr
     printing functionnalites. BVR is a Swiss payment vector"""
     _inherit = "account.invoice"
-    
+
     ## @param self The object pointer.
     ## @param cursor a psycopg cursor
     ## @param user res.user.id that is currently loged
@@ -53,7 +53,7 @@ class account_invoice(osv.osv):
                 context=context)
         res.append(('bvr', 'BVR'))
         return res
-    
+
     ## @param self The object pointer.
     ## @param cursor a psycopg cursor
     ## @param user res.user.id that is currently loged
@@ -91,7 +91,7 @@ class account_invoice(osv.osv):
             help='The amount which should be paid at the current date\n' \
                     'minus the amount which is already in payment order'),
     }
-    
+
     ## @param self The object pointer.
     ## @param cursor a psycopg cursor
     ## @param user res.user.id that is currently loged
@@ -103,7 +103,7 @@ class account_invoice(osv.osv):
         0100054150009>132000000000000000000000014+ 1300132412>
         The validation is based on l10n_ch
         """
-        invoices = self.browse(cr,uid,ids)
+        invoices = self.browse(cr, uid, ids)
         for invoice in invoices:
             if invoice.reference_type == 'bvr':
                 if not invoice.reference:
@@ -142,7 +142,7 @@ class account_invoice(osv.osv):
         (_check_reference_type, 'Error: BVR reference is required.',
             ['reference_type']),
     ]
-    
+
     ## @param self The object pointer.
     ## @param cr a psycopg cursor
     ## @param uid res.user.id that is currently loged
@@ -159,11 +159,11 @@ class account_invoice(osv.osv):
         it will retriev and set the good bank partner bank"""
         res = super(account_invoice, self).onchange_partner_id(
                                                                 cr,
-                                                                 uid, 
-                                                                 ids, 
+                                                                 uid,
+                                                                 ids,
                                                                  type,
-                                                                 partner_id, 
-                                                                 date_invoice, 
+                                                                 partner_id,
+                                                                 date_invoice,
                                                                  payment_term
                                                             )
         bank_id = False
@@ -179,7 +179,7 @@ class account_invoice(osv.osv):
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             res['value'].update(to_update['value'])
         return res
-        
+
     ## @param self The object pointer.
     ## @param cursor a psycopg cursor
     ## @param user res.user.id that is currently loged

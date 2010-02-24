@@ -26,10 +26,10 @@ from report import report_sxw
 class payment_order(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(payment_order, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
 
         })
-report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order,header=False)
+report_sxw.report_sxw('report.payment.order', 'payment.order', 'addons/account_payment/report/payment_order.rml', parser=payment_order, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

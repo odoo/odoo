@@ -37,23 +37,23 @@ class one2many_mod_task(fields.one2many):
             res[id] = []
         for id in ids:
             query = "select project_id from event_event where id = %s"
-            cr.execute(query,(id,))
+            cr.execute(query, (id,))
             project_ids = [ x[0] for x in cr.fetchall()]
-            ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',project_ids),('state','<>','done')], limit=self._limit)
+            ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', project_ids), ('state', '<>', 'done')], limit=self._limit)
             for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-                res[id].append( r['id'] )
+                res[id].append(r['id'])
         return res
 
 class event(osv.osv):
     _inherit = 'event.event'
 
-    def write(self, cr, uid, ids,vals, *args, **kwargs):
+    def write(self, cr, uid, ids, vals, *args, **kwargs):
         if 'date_begin' in vals and vals['date_begin']:
             for eve in self.browse(cr, uid, ids):
                 if eve.project_id:
                     self.pool.get('project.project').write(cr, uid, [eve.project_id.id], {'date_end':eve.date_begin[:10]})
 
-        return super(event,self).write(cr, uid, ids,vals, *args, **kwargs)
+        return super(event, self).write(cr, uid, ids, vals, *args, **kwargs)
 
     _columns = {
         'project_id': fields.many2one('project.project', 'Project', readonly=True),

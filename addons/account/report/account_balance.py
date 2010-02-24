@@ -45,36 +45,36 @@ class account_balance(report_sxw.rml_parse):
             self.context = context
 
         def get_fiscalyear(self, form):
-            res=[]
+            res = []
             if form.has_key('fiscalyear'):
                 fisc_id = form['fiscalyear']
                 if not (fisc_id):
                     return ''
                 self.cr.execute("select name from account_fiscalyear where id = %s" , (int(fisc_id),))
-                res=self.cr.fetchone()
+                res = self.cr.fetchone()
             return res and res[0] or ''
 
         def get_periods(self, form):
-            result=''
+            result = ''
             if form.has_key('periods') and form['periods'][0][2]:
                 period_ids = form['periods'][0][2]
-                self.cr.execute("select name from account_period where id =ANY(%s)" ,(period_ids))
+                self.cr.execute("select name from account_period where id =ANY(%s)" , (period_ids))
                 res = self.cr.fetchall()
                 len_res = len(res)
                 for r in res:
-                    if (r == res[len_res-1]):
-                        result+=r[0]+". "
+                    if (r == res[len_res - 1]):
+                        result += r[0] + ". "
                     else:
-                        result+=r[0]+", "
+                        result += r[0] + ", "
             else:
-                fy_obj = self.pool.get('account.fiscalyear').browse(self.cr,self.uid,form['fiscalyear'])
+                fy_obj = self.pool.get('account.fiscalyear').browse(self.cr, self.uid, form['fiscalyear'])
                 res = fy_obj.period_ids
                 len_res = len(res)
                 for r in res:
-                    if r == res[len_res-1]:
-                        result+=r.name+". "
+                    if r == res[len_res - 1]:
+                        result += r.name + ". "
                     else:
-                        result+=r.name+", "
+                        result += r.name + ", "
 
             return str(result and result[:-1]) or ''
 
@@ -85,24 +85,24 @@ class account_balance(report_sxw.rml_parse):
             if not ids:
                 return []
             if not done:
-                done={}
+                done = {}
             if form.has_key('Account_list') and form['Account_list']:
                 ids = [form['Account_list']]
                 del form['Account_list']
-            res={}
-            result_acc=[]
+            res = {}
+            result_acc = []
             ctx = self.context.copy()
-            ctx['state'] = form['context'].get('state','all')
+            ctx['state'] = form['context'].get('state', 'all')
             ctx['fiscalyear'] = form['fiscalyear']
-            if form['state']=='byperiod' :
+            if form['state'] == 'byperiod' :
                 ctx['periods'] = form['periods'][0][2]
-            elif form['state']== 'bydate':
+            elif form['state'] == 'bydate':
                 ctx['date_from'] = form['date_from']
-                ctx['date_to'] =  form['date_to']
+                ctx['date_to'] = form['date_to']
             elif form['state'] == 'all' :
                 ctx['periods'] = form['periods'][0][2]
                 ctx['date_from'] = form['date_from']
-                ctx['date_to'] =  form['date_to']
+                ctx['date_to'] = form['date_to']
 #            accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
 #            def cmp_code(x, y):
 #                return cmp(x.code, y.code)
@@ -110,7 +110,7 @@ class account_balance(report_sxw.rml_parse):
             child_ids = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, ids, ctx)
             if child_ids:
                 ids = child_ids
-            accounts = self.pool.get('account.account').read(self.cr, self.uid, ids,['type','code','name','debit','credit','balance','parent_id'], ctx)
+            accounts = self.pool.get('account.account').read(self.cr, self.uid, ids, ['type', 'code', 'name', 'debit', 'credit', 'balance', 'parent_id'], ctx)
             for account in accounts:
                 if account['id'] in done:
                     continue

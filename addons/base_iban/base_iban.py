@@ -54,14 +54,14 @@ class res_partner_bank(osv.osv):
         for bank_acc in self.browse(cr, uid, ids):
             if not bank_acc.iban:
                 continue
-            iban =_format_iban(bank_acc.iban) 
+            iban = _format_iban(bank_acc.iban)
             #the four first digits have to be shifted to the end
             iban = iban[4:] + iban[:4]
             #letters have to be transformed into numbers (a = 10, b = 11, ...)
             iban2 = ""
             for char in iban:
                 if char.isalpha():
-                    iban2 += str(ord(char)-87)
+                    iban2 += str(ord(char) - 87)
                 else:
                     iban2 += char
             #iban is correct if modulo 97 == 1
@@ -73,8 +73,8 @@ class res_partner_bank(osv.osv):
         res = []
         to_check_ids = []
         for id in self.browse(cr, uid, ids):
-            if id.state=='iban':
-                res.append((id.id,id.iban))
+            if id.state == 'iban':
+                res.append((id.id, id.iban))
             else:
                 to_check_ids.append(id.id)
         res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context)
@@ -82,16 +82,16 @@ class res_partner_bank(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
     #overwrite the search method in order to search not only on bank type == basic account number but also on type == iban
-        res = super(res_partner_bank,self).search(cr, uid, args, offset, limit, order, context=context, count=count)
-        if filter(lambda x:x[0]=='acc_number' ,args):
+        res = super(res_partner_bank, self).search(cr, uid, args, offset, limit, order, context=context, count=count)
+        if filter(lambda x:x[0] == 'acc_number' , args):
             #get the value of the search
-            iban_value = filter(lambda x:x[0]=='acc_number' ,args)[0][2]
+            iban_value = filter(lambda x:x[0] == 'acc_number' , args)[0][2]
             #get the other arguments of the search
-            args1 =  filter(lambda x:x[0]!='acc_number' ,args)
+            args1 = filter(lambda x:x[0] != 'acc_number' , args)
             #add the new criterion
-            args1 += [('iban','ilike',iban_value)]
+            args1 += [('iban', 'ilike', iban_value)]
             #append the results to the older search
-            res += super(res_partner_bank,self).search(cr, uid, args1, offset, limit,
+            res += super(res_partner_bank, self).search(cr, uid, args1, offset, limit,
                 order, context=context, count=count)
         return res
 

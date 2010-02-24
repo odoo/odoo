@@ -42,7 +42,7 @@ def check_views(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     board = pool.get('board.board').browse(cr, uid, data['id'])
     if not board.line_ids:
-        raise wizard.except_wizard(_('User Error!'),_('Please Insert Dashboard View(s) !'))    
+        raise wizard.except_wizard(_('User Error!'), _('Please Insert Dashboard View(s) !'))
     return data['form']
 
 def board_menu_create(self, cr, uid, data, context):
@@ -60,21 +60,21 @@ def board_menu_create(self, cr, uid, data, context):
         'name': data['form']['menu_name'],
         'parent_id': data['form']['menu_parent_id'],
         'icon': 'STOCK_SELECT_COLOR',
-        'action': 'ir.actions.act_window,'+str(action_id)
+        'action': 'ir.actions.act_window,' + str(action_id)
     }, context)
-        
+
     return {}
 
 class wizard_section_menu_create(wizard.interface):
     states = {
         'init': {
-            'actions': [check_views], 
-            'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end','Cancel'),('create_menu','Create Menu')]}
+            'actions': [check_views],
+            'result': {'type':'form', 'arch':section_form, 'fields':section_fields, 'state':[('end', 'Cancel'), ('create_menu', 'Create Menu')]}
         },
         'create_menu': {
-            'actions': [board_menu_create], 
+            'actions': [board_menu_create],
             'result': {
-                'type':'state', 
+                'type':'state',
                 'state':'end'
             }
         }

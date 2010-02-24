@@ -6,7 +6,7 @@ status codes for DAV services
 """
 
 
-STATUS_CODES={
+STATUS_CODES = {
         102:    "Processing",
         200:    "Ok",
         201:    "Created",

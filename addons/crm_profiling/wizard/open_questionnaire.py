@@ -23,7 +23,7 @@ import wizard
 from tools import UpdateableStr, UpdateableDict
 
 _QUEST_FORM = UpdateableStr()
-_QUEST_FIELDS=UpdateableDict()
+_QUEST_FIELDS = UpdateableDict()
 
 class open_questionnaire(wizard.interface):
 

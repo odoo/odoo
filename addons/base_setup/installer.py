@@ -26,8 +26,8 @@ class base_setup_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     _install_if = {
-        ('sale','crm'): ['sale_crm'],
-        ('sale','project'): ['project_mrp'],
+        ('sale', 'crm'): ['sale_crm'],
+        ('sale', 'project'): ['project_mrp'],
         }
     _columns = {
         # Generic modules

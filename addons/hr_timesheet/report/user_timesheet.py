@@ -22,7 +22,7 @@
 import datetime
 
 from report.interface import report_rml
-from report.interface import toxml 
+from report.interface import toxml
 from tools.translate import _
 
 import pooler
@@ -48,11 +48,11 @@ class report_custom(report_rml):
         eom = som + datetime.timedelta(lengthmonth(som.year, som.month))
 
         date_xml = ['<date month="%s" year="%d" />' % (self.get_month_name(cr, uid, som.month), som.year), '<days>']
-        date_xml += ['<day number="%d" name="%s" weekday="%d" />' % (x, self.get_weekday_name(cr, uid, som.replace(day=x).weekday()+1), som.replace(day=x).weekday()+1) for x in range(1, lengthmonth(som.year, som.month)+1)]
+        date_xml += ['<day number="%d" name="%s" weekday="%d" />' % (x, self.get_weekday_name(cr, uid, som.replace(day=x).weekday() + 1), som.replace(day=x).weekday() + 1) for x in range(1, lengthmonth(som.year, som.month) + 1)]
 
         date_xml.append('</days>')
         date_xml.append('<cols>2.5cm%s,2cm</cols>\n' % (',0.7cm' * lengthmonth(som.year, som.month)))
-        
+
         # Computing the attendence by analytical account
         cr.execute(
             "select line.date, (unit_amount * unit.factor) as amount, account_id, account.name "\
@@ -70,7 +70,7 @@ class report_custom(report_rml):
             day = int(presence['date'][-2:])
             account = accounts.setdefault((presence['account_id'], presence['name']), {})
             account[day] = account.get(day, 0.0) + presence['amount']
-        
+
         xml = '''
         <time-element date="%s">
             <amount>%.2f</amount>

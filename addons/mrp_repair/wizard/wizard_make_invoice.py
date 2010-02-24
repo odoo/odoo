@@ -29,7 +29,7 @@ invoice_form = """<?xml version="1.0"?>
     <field name="group"/>  
 </form>
 """
-invoice_fields = {	
+invoice_fields = {
 	'group': {
 		'string': 'Group by partner invoice address',
 		'type':'boolean'
@@ -44,11 +44,11 @@ ack_form = """<?xml version="1.0"?>
 ack_fields = {}
 
 def _makeInvoices(self, cr, uid, data, context):
-    order_obj = pooler.get_pool(cr.dbname).get('mrp.repair')       
-    newinv = order_obj.action_invoice_create(cr, uid, data['ids'],group=data['form']['group'],context=context)    
-        
+    order_obj = pooler.get_pool(cr.dbname).get('mrp.repair')
+    newinv = order_obj.action_invoice_create(cr, uid, data['ids'], group=data['form']['group'], context=context)
+
     return {
-        'domain': [('id','in', newinv.values())],
+        'domain': [('id', 'in', newinv.values())],
         'name': 'Invoices',
         'view_type': 'form',
         'view_mode': 'tree,form',
@@ -57,7 +57,7 @@ def _makeInvoices(self, cr, uid, data, context):
         'context': "{'type':'out_refund'}",
         'type': 'ir.actions.act_window'
     }
-    
+
 
 class make_invoice(wizard.interface):
     states = {
@@ -66,7 +66,7 @@ class make_invoice(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : invoice_form,
                     'fields' : invoice_fields,
-                    'state' : [('end', 'Cancel'),('invoice', 'Create invoices') ]}
+                    'state' : [('end', 'Cancel'), ('invoice', 'Create invoices') ]}
         },
         'invoice' : {
             'actions' : [],

@@ -43,7 +43,7 @@ _fields = {
         'string': 'Discount percentage',
         'type': 'float',
         'required': True,
-        'default': lambda *args: 5
+        'default': lambda * args: 5
     },
 }
 
@@ -65,17 +65,17 @@ class discount_wizard(wizard.interface):
         for order in order_ref.browse(cr, uid, data['ids'], context=context):
             for line in order.lines :
                 company_discount = order.company_id.company_discount
-                applied_discount =data['form']['discount']
+                applied_discount = data['form']['discount']
                 if applied_discount == 0.00:
                     notice = 'No Discount'
-                elif company_discount >=  applied_discount:
+                elif company_discount >= applied_discount:
                     notice = 'Minimum Discount'
                 else:
                     notice = data['form']['note']
                 if self.check_discount(cr, uid, data, context) == 'apply_discount':
                     order_line_ref.write(cr, uid, [line.id],
                             {'discount': data['form']['discount'],
-                            'price_ded':line.price_unit*line.qty*(data['form']['discount'] or 0)*0.01 or 0.0,
+                            'price_ded':line.price_unit * line.qty * (data['form']['discount'] or 0) * 0.01 or 0.0,
                             'notice':notice
                             },
                             context=context,)
@@ -83,7 +83,7 @@ class discount_wizard(wizard.interface):
                     order_line_ref.write(cr, uid, [line.id],
                             {'discount': data['form']['discount'],
                             'notice': notice,
-                            'price_ded':line.price_unit*line.qty*(data['form']['discount'] or 0)*0.01 or 0.0 
+                            'price_ded':line.price_unit * line.qty * (data['form']['discount'] or 0) * 0.01 or 0.0
                             },
                             context=context,)
         return {}
@@ -115,7 +115,7 @@ class discount_wizard(wizard.interface):
 
         'check_disc': {
             'actions': [],
-            'result': {'type':'choice','next_state':check_discount}
+            'result': {'type':'choice', 'next_state':check_discount}
         },
 
         'disc_discount': {

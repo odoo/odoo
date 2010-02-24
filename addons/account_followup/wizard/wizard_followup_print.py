@@ -45,7 +45,7 @@ _followup_wizard_screen1_form = """<?xml version="1.0"?>
 
 _followup_wizard_screen1_fields = {
     'date': {'string': 'Follow-up Sending Date', 'type': 'date', 'required': True, 'help':"This field allow you to select a forecast date to plan your follow-ups"},
-    'followup_id': {'string': 'Follow-up', 'type':'many2one', 'relation':'account_followup.followup', 'required': True,},
+    'followup_id': {'string': 'Follow-up', 'type':'many2one', 'relation':'account_followup.followup', 'required': True, },
 }
 
 
@@ -134,32 +134,32 @@ class followup_all_print(wizard.interface):
                     data['form']['date'], int(id),))
         return {}
 
-    def _sendmail(self ,cr, uid, data, context):
+    def _sendmail(self , cr, uid, data, context):
         if data['form']['email_conf']:
             mail_notsent = ''
             msg_sent = ''
             msg_unsent = ''
             count = 0
             pool = pooler.get_pool(cr.dbname)
-            data_user = pool.get('res.users').browse(cr,uid,uid)
+            data_user = pool.get('res.users').browse(cr, uid, uid)
             line_obj = pool.get('account_followup.stat')
-            move_lines = line_obj.browse(cr,uid,data['form']['partner_ids'][0][2])
+            move_lines = line_obj.browse(cr, uid, data['form']['partner_ids'][0][2])
             partners = []
             dict_lines = {}
             for line in move_lines:
                 partners.append(line.name)
-                dict_lines[line.name.id] =line
+                dict_lines[line.name.id] = line
             for partner in partners:
-                ids_lines = pool.get('account.move.line').search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
-                data_lines = pool.get('account.move.line').browse(cr,uid,ids_lines)
+                ids_lines = pool.get('account.move.line').search(cr, uid, [('partner_id', '=', partner.id), ('reconcile_id', '=', False), ('account_id.type', 'in', ['receivable'])])
+                data_lines = pool.get('account.move.line').browse(cr, uid, ids_lines)
                 followup_data = dict_lines[partner.id]
                 dest = False
                 if partner.address:
                     for adr in partner.address:
-                        if adr.type=='contact':
+                        if adr.type == 'contact':
                             if adr.email:
                                 dest = [adr.email]
-                        if (not dest) and adr.type=='default':
+                        if (not dest) and adr.type == 'default':
                             if adr.email:
                                 dest = [adr.email]
                 src = tools.config.options['email_from']
@@ -177,7 +177,7 @@ class followup_all_print(wizard.interface):
                 subtotal_maturity = 0.0
                 balance = 0.0
                 l = '--------------------------------------------------------------------------------------------------------------------------'
-                head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Maturity date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
+                head = l + '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Maturity date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
                 for i in data_lines:
                     maturity = 0.00
                     if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
@@ -186,8 +186,8 @@ class followup_all_print(wizard.interface):
                     subtotal_paid = subtotal_paid + i.credit
                     subtotal_maturity = subtotal_maturity + int(maturity)
                     balance = balance + (i.debit - i.credit)
-                    move_line = move_line + (i.date).rjust(10) + '\t'+ (i.name).rjust(10) + '\t'+ (i.ref or '').rjust(10) + '\t' + (i.date_maturity or '').rjust(10) + '\t' + str(i.debit).rjust(10)  + '\t' + str(i.credit).rjust(10)  + '\t' + str(maturity).rjust(10) + '\t' + str(i.blocked).rjust(10) + '\n'
-                move_line = move_line + l + '\n'+ '\t\t\t' + 'Sub total'.rjust(35) + '\t' + (str(subtotal_due) or '').rjust(10) + '\t' + (str(subtotal_paid) or '').rjust(10) + '\t' + (str(subtotal_maturity) or '').rjust(10)+ '\n'
+                    move_line = move_line + (i.date).rjust(10) + '\t' + (i.name).rjust(10) + '\t' + (i.ref or '').rjust(10) + '\t' + (i.date_maturity or '').rjust(10) + '\t' + str(i.debit).rjust(10) + '\t' + str(i.credit).rjust(10) + '\t' + str(maturity).rjust(10) + '\t' + str(i.blocked).rjust(10) + '\n'
+                move_line = move_line + l + '\n' + '\t\t\t' + 'Sub total'.rjust(35) + '\t' + (str(subtotal_due) or '').rjust(10) + '\t' + (str(subtotal_paid) or '').rjust(10) + '\t' + (str(subtotal_maturity) or '').rjust(10) + '\n'
                 move_line = move_line + '\t\t\t' + 'Balance'.rjust(33) + '\t' + str(balance).rjust(10) + '\n' + l
                 val = {
                     'partner_name':partner.name,
@@ -199,11 +199,11 @@ class followup_all_print(wizard.interface):
                     'heading': head,
                     'date':time.strftime('%Y-%m-%d'),
                 }
-                body = body%val
+                body = body % val
                 sub = tools.ustr(data['form']['email_subject'])
                 msg = ''
                 if dest:
-                    tools.email_send(src,dest,sub,body)
+                    tools.email_send(src, dest, sub, body)
                     msg_sent += partner.name + '\n'
                 else:
                     msg += partner.name + '\n'
@@ -255,7 +255,7 @@ class followup_all_print(wizard.interface):
 
         partner_list = []
         to_update = {}
-        for partner_id, followup_line_id, date_maturity,date, id in move_lines:
+        for partner_id, followup_line_id, date_maturity, date, id in move_lines:
             if not partner_id:
                 continue
             if followup_line_id not in fups:
@@ -264,12 +264,12 @@ class followup_all_print(wizard.interface):
                 if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                     if partner_id not in partner_list:
                         partner_list.append(partner_id)
-                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
+                    to_update[str(id)] = {'level': fups[followup_line_id][1], 'partner_id': partner_id}
             elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                 if partner_id not in partner_list:
                     partner_list.append(partner_id)
-                to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
-        
+                to_update[str(id)] = {'level': fups[followup_line_id][1], 'partner_id': partner_id}
+
         message = pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
 
         return {'partner_ids': partner_list, 'to_update': to_update, 'email_body':message}
@@ -299,8 +299,8 @@ class followup_all_print(wizard.interface):
                 'arch': _followup_wizard_all_form,
                 'fields': _followup_wizard_all_fields,
                 'state': [
-                    ('end','Cancel'),
-                    ('print','Print Follow Ups & Send Mails'),
+                    ('end', 'Cancel'),
+                    ('print', 'Print Follow Ups & Send Mails'),
                 ]
             },
         },
@@ -315,7 +315,7 @@ class followup_all_print(wizard.interface):
             'result': {'type': 'form',
                 'arch': _email_summary_form,
                 'fields': _email_summary_fields,
-                'state':[('end','Ok')]
+                'state':[('end', 'Ok')]
             },
         },
     }

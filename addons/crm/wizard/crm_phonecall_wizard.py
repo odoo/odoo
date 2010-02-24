@@ -42,8 +42,8 @@ class phonecall2opportunity(wizard.interface):
 
     partner_fields = {
         'action': {'type':'selection',
-                'selection':[('exist','Link to an existing partner'),('create','Create a new partner')],
-                'string':'Action', 'required':True, 'default': lambda *a:'create'},
+                'selection':[('exist', 'Link to an existing partner'), ('create', 'Create a new partner')],
+                'string':'Action', 'required':True, 'default': lambda * a:'create'},
         'partner_id' : {'type':'many2one', 'relation':'res.partner', 'string':'Partner'},
     }
 
@@ -58,11 +58,11 @@ class phonecall2opportunity(wizard.interface):
 
     case_fields = {
         'name': {'type':'char', 'size':64, 'string':'Opportunity Summary', 'required':True},
-        'planned_revenue': {'type':'float', 'digits':(16,2), 'string': 'Expected Revenue'},
-        'probability': {'type':'float', 'digits':(16,2), 'string': 'Success Probability'},
+        'planned_revenue': {'type':'float', 'digits':(16, 2), 'string': 'Expected Revenue'},
+        'probability': {'type':'float', 'digits':(16, 2), 'string': 'Success Probability'},
         'partner_id' : {'type':'many2one', 'relation':'res.partner', 'string':'Partner'},
     }
-    
+
     def _check_state(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         case_obj = pool.get('crm.phonecall')
@@ -93,7 +93,7 @@ class phonecall2opportunity(wizard.interface):
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
         res = data_obj.read(cr, uid, result, ['res_id'])
-        
+
 
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_oppor')
         id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_oppor')
@@ -104,36 +104,36 @@ class phonecall2opportunity(wizard.interface):
 
         phonecall_case_obj = pool.get('crm.phonecall')
         opportunity_case_obj = pool.get('crm.opportunity')
-        for phonecall in phonecall_case_obj.browse(cr, uid, data['ids']):         
+        for phonecall in phonecall_case_obj.browse(cr, uid, data['ids']):
             #TODO : Take other info from phonecall                   
-            new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
+            new_opportunity_id = opportunity_case_obj.create(cr, uid, {
                 'name': data['form']['name'],
                 'planned_revenue': data['form']['planned_revenue'],
                 'probability': data['form']['probability'],
-                'partner_id': data['form']['partner_id'],                 
+                'partner_id': data['form']['partner_id'],
                 'section_id': phonecall.section_id.id,
-                'description': phonecall.description,         
+                'description': phonecall.description,
                 'phonecall_id': phonecall.id,
-                'priority': phonecall.priority    
+                'priority': phonecall.priority
             })
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
             vals = {
-                'partner_id': data['form']['partner_id'], 
-                'opportunity_id' : new_opportunity_id,                
-                }            
+                'partner_id': data['form']['partner_id'],
+                'opportunity_id' : new_opportunity_id,
+                }
             phonecall_case_obj.write(cr, uid, [phonecall.id], vals)
             phonecall_case_obj.case_close(cr, uid, [phonecall.id])
             opportunity_case_obj.case_open(cr, uid, [new_opportunity_id])
-        value = {            
+        value = {
             'name': _('Opportunity'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'crm.opportunity',
             'res_id': int(new_opportunity_id),
             'view_id': False,
-            'views': [(id2,'form'),(id3,'tree'),(False,'calendar'),(False,'graph')],
+            'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id'] 
+            'search_view_id': res['res_id']
         }
         return value
 
@@ -142,11 +142,11 @@ class phonecall2opportunity(wizard.interface):
         phonecall_case_obj = pool.get('crm.phonecall')
         partner_obj = pool.get('res.partner')
         contact_obj = pool.get('res.partner.address')
-        if data['form']['action']=='create':
+        if data['form']['action'] == 'create':
             for case in phonecall_case_obj.browse(cr, uid, data['ids']):
                 partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])
                 if partner_id:
-                    raise wizard.except_wizard(_('Warning !'),_('A partner is already existing with the same name.'))
+                    raise wizard.except_wizard(_('Warning !'), _('A partner is already existing with the same name.'))
                 else:
                     partner_id = partner_obj.create(cr, uid, {
                         'name': case.partner_name or case.name,
@@ -161,10 +161,10 @@ class phonecall2opportunity(wizard.interface):
                     'email': case.email_from
                 })
         else:
-            partner = partner_obj.browse(cr,uid,data['form']['partner_id'])
-            partner_id=partner.id
-            contact_id=partner.address and partner.address[0].id 
-        
+            partner = partner_obj.browse(cr, uid, data['form']['partner_id'])
+            partner_id = partner.id
+            contact_id = partner.address and partner.address[0].id
+
         phonecall_case_obj.write(cr, uid, data['ids'], {
             'partner_id': partner_id,
             'partner_address_id': contact_id
@@ -174,12 +174,12 @@ class phonecall2opportunity(wizard.interface):
     states = {
         'init': {
             'actions': [_check_state],
-            'result': {'type':'choice','next_state':_selectChoice}
+            'result': {'type':'choice', 'next_state':_selectChoice}
         },
         'create_partner': {
             'actions': [],
             'result': {'type': 'form', 'arch': partner_form, 'fields': partner_fields,
-                'state' : [('end', 'Cancel', 'gtk-cancel'),('create', 'Continue', 'gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'), ('create', 'Continue', 'gtk-go-forward')]}
         },
         'create': {
             'actions': [],
@@ -188,7 +188,7 @@ class phonecall2opportunity(wizard.interface):
         'opportunity': {
             'actions': [_selectopportunity],
             'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
-                'state' : [('end', 'Cancel', 'gtk-cancel'),('confirm', 'Create Opportunity', 'gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'), ('confirm', 'Create Opportunity', 'gtk-go-forward')]}
         },
         'confirm': {
             'actions': [],
@@ -202,7 +202,7 @@ class phonecall2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        phonecall_case_obj = pool.get('crm.phonecall')                   
+        phonecall_case_obj = pool.get('crm.phonecall')
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
@@ -215,14 +215,14 @@ class phonecall2meeting(wizard.interface):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        return {            
+        return {
             'name': _('Meetings'),
-            'domain' : "[('phonecall_id','in',%s)]"%(data['ids']),         
+            'domain' : "[('phonecall_id','in',%s)]" % (data['ids']),
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
             'view_id': False,
-            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree')],
+            'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']
             }
@@ -263,7 +263,7 @@ class partner_create(wizard.interface):
 
     def _makeOrder(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data') 
+        mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
         case_obj = pool.get('crm.phonecall')
@@ -272,7 +272,7 @@ class partner_create(wizard.interface):
         for case in case_obj.browse(cr, uid, data['ids']):
             partner_id = partner_obj.search(cr, uid, [('name', '=', case.name)])
             if partner_id:
-                raise wizard.except_wizard(_('Warning !'),_('A partner is already existing with the same name.'))
+                raise wizard.except_wizard(_('Warning !'), _('A partner is already existing with the same name.'))
             else:
                 partner_id = partner_obj.create(cr, uid, {
                     'name': case.name,
@@ -303,7 +303,7 @@ class partner_create(wizard.interface):
             'res_id': int(partner_id),
             'view_id': False,
             'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id'] 
+            'search_view_id': res['res_id']
         }
         return value
 
@@ -311,7 +311,7 @@ class partner_create(wizard.interface):
         'init': {
             'actions': [_selectPartner],
             'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
-                'state' : [('end', 'Cancel', 'gtk-cancel'),('confirm', 'Create Partner', 'gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'), ('confirm', 'Create Partner', 'gtk-go-forward')]}
         },
         'confirm': {
             'actions': [],

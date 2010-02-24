@@ -29,7 +29,7 @@ _journal_form = '''<?xml version="1.0"?>
 </form>''' % ('Reconciliation',)
 
 _journal_fields = {
-    'account_id': {'string':'Account', 'type':'many2one', 'relation':'account.account','domain': [('reconcile','=',1)], 'required':True},
+    'account_id': {'string':'Account', 'type':'many2one', 'relation':'account.account', 'domain': [('reconcile', '=', 1)], 'required':True},
 }
 
 def _action_open_window(self, cr, uid, data, context):
@@ -47,7 +47,7 @@ class wiz_rec_select(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('open','Open for reconciliation')]}
+            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end', 'Cancel'), ('open', 'Open for reconciliation')]}
         },
         'open': {
             'actions': [],

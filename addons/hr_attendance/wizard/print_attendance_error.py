@@ -34,20 +34,20 @@ _date_form = '''<?xml version="1.0"?>
 </form>'''
 
 _date_fields = {
-    'init_date': {'string':'Starting Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True},
-    'end_date': {'string':'Ending Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True},
-    'max_delay': {'string':'Max. Delay (Min)', 'type':'integer', 'default':lambda *a: 120, 'required':True},
+    'init_date': {'string':'Starting Date', 'type':'date', 'default':lambda * a: time.strftime('%Y-%m-%d'), 'required':True},
+    'end_date': {'string':'Ending Date', 'type':'date', 'default':lambda * a: time.strftime('%Y-%m-%d'), 'required':True},
+    'max_delay': {'string':'Max. Delay (Min)', 'type':'integer', 'default':lambda * a: 120, 'required':True},
 }
 
 def _check_data(self, cr, uid, data, *args):
     date_from = data['form']['init_date']
     date_to = data['form']['end_date']
-    cr.execute("select id from hr_attendance where employee_id =ANY(%s) and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action =ANY(%s) order by name" ,(data['ids'], date_to, date_from, ['sign_in','sign_out']))
+    cr.execute("select id from hr_attendance where employee_id =ANY(%s) and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action =ANY(%s) order by name" , (data['ids'], date_to, date_from, ['sign_in', 'sign_out']))
     attendance_ids = [x[0] for x in cr.fetchall()]
     if not attendance_ids:
         raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))
 
-    attendance_records = pooler.get_pool(cr.dbname).get('hr.attendance').browse(cr,uid,attendance_ids)
+    attendance_records = pooler.get_pool(cr.dbname).get('hr.attendance').browse(cr, uid, attendance_ids)
     emp_ids = []
     for rec in attendance_records:
         if rec.employee_id.id not in emp_ids:
@@ -62,7 +62,7 @@ class wiz_attendance(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print','Print Attendance Report'),('end','Cancel') ]}
+            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print', 'Print Attendance Report'), ('end', 'Cancel') ]}
         },
         'print': {
             'actions': [_check_data],

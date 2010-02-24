@@ -34,19 +34,19 @@ class resource_calendar(osv.osv):
         'manager' : fields.many2one('res.users', 'Workgroup manager'),
     }
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', c)
     }
     def interval_min_get(self, cr, uid, id, dt_from, hours , resource=0):
         dt_leave = []
         if not id:
-            return [(dt_from-mx.DateTime.RelativeDateTime(hours=int(hours)*3), dt_from)]
+            return [(dt_from - mx.DateTime.RelativeDateTime(hours=int(hours) * 3), dt_from)]
         if resource:
-            resource_leave_ids = self.pool.get('resource.calendar.leaves').search(cr,uid,[('resource_id','=',resource)])
+            resource_leave_ids = self.pool.get('resource.calendar.leaves').search(cr, uid, [('resource_id', '=', resource)])
             if resource_leave_ids:
-                res_leaves = self.pool.get('resource.calendar.leaves').read(cr,uid,resource_leave_ids,['date_from','date_to'])
+                res_leaves = self.pool.get('resource.calendar.leaves').read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
                 for i in range(len(res_leaves)):
-                    dtf = mx.DateTime.strptime(res_leaves[i]['date_from'],'%Y-%m-%d %H:%M:%S')
-                    dtt = mx.DateTime.strptime(res_leaves[i]['date_to'],'%Y-%m-%d %H:%M:%S')
+                    dtf = mx.DateTime.strptime(res_leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')
+                    dtt = mx.DateTime.strptime(res_leaves[i]['date_to'], '%Y-%m-%d %H:%M:%S')
                     leave_days = ((dtt - dtf).days) + 1
                     for x in range(int(leave_days)):
                         dt_leave.append((dtf + mx.DateTime.RelativeDateTime(days=x)).strftime('%Y-%m-%d'))
@@ -56,22 +56,22 @@ class resource_calendar(osv.osv):
         result = []
         maxrecur = 100
         current_hour = dt_from.hour
-        while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week,id))
-            for (hour_from,hour_to) in cr.fetchall():
-                    if (hour_to>current_hour) and (todo>0):
+        while (todo > 0) and maxrecur:
+            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week, id))
+            for (hour_from, hour_to) in cr.fetchall():
+                    if (hour_to > current_hour) and (todo > 0):
                         m = max(hour_from, current_hour)
-                        if (hour_to-m)>todo:
-                            hour_to = m+todo
-                        d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
-                        d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
+                        if (hour_to - m) > todo:
+                            hour_to = m + todo
+                        d1 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m % 1) * 60))
+                        d2 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to % 1) * 60))
                         dt1 = d1.strftime('%Y-%m-%d')
                         dt2 = d2.strftime('%Y-%m-%d')
                         for i in range(len(dt_leave)):
                             if dt1 == dt_leave[i]:
                                 dt_from += mx.DateTime.RelativeDateTime(days=1)
-                                d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
-                                d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
+                                d1 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m % 1) * 60))
+                                d2 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to % 1) * 60))
                                 dt1 = d1.strftime('%Y-%m-%d')
                                 dt2 = d2.strftime('%Y-%m-%d')
                         result.append((d1, d2))
@@ -85,14 +85,14 @@ class resource_calendar(osv.osv):
     def interval_get(self, cr, uid, id, dt_from, hours, resource=0, byday=True):
         dt_leave = []
         if not id:
-            return [(dt_from,dt_from+mx.DateTime.RelativeDateTime(hours=int(hours)*3))]
+            return [(dt_from, dt_from + mx.DateTime.RelativeDateTime(hours=int(hours) * 3))]
         if resource:
-            resource_leave_ids = self.pool.get('resource.calendar.leaves').search(cr,uid,[('resource_id','=',resource)])
+            resource_leave_ids = self.pool.get('resource.calendar.leaves').search(cr, uid, [('resource_id', '=', resource)])
             if resource_leave_ids:
-                res_leaves = self.pool.get('resource.calendar.leaves').read(cr,uid,resource_leave_ids,['date_from','date_to'])
+                res_leaves = self.pool.get('resource.calendar.leaves').read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
                 for i in range(len(res_leaves)):
-                    dtf = mx.DateTime.strptime(res_leaves[i]['date_from'],'%Y-%m-%d %H:%M:%S')
-                    dtt = mx.DateTime.strptime(res_leaves[i]['date_to'],'%Y-%m-%d %H:%M:%S')
+                    dtf = mx.DateTime.strptime(res_leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')
+                    dtt = mx.DateTime.strptime(res_leaves[i]['date_to'], '%Y-%m-%d %H:%M:%S')
                     no = dtt - dtf
                     leave_days = no.days + 1
                     for x in range(int(leave_days)):
@@ -103,22 +103,22 @@ class resource_calendar(osv.osv):
         result = []
         maxrecur = 100
         current_hour = dt_from.hour
-        while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week,id))
-            for (hour_from,hour_to) in cr.fetchall():
-                    if (hour_to>current_hour) and (todo>0):
+        while (todo > 0) and maxrecur:
+            cr.execute("select hour_from,hour_to from resource_calendar_week where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.day_of_week, id))
+            for (hour_from, hour_to) in cr.fetchall():
+                    if (hour_to > current_hour) and (todo > 0):
                         m = max(hour_from, current_hour)
-                        if (hour_to-m)>todo:
-                            hour_to = m+todo
-                        d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
-                        d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
+                        if (hour_to - m) > todo:
+                            hour_to = m + todo
+                        d1 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m % 1) * 60))
+                        d2 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to % 1) * 60))
                         dt1 = d1.strftime('%Y-%m-%d')
                         dt2 = d2.strftime('%Y-%m-%d')
                         for i in range(len(dt_leave)):
                             if dt1 == dt_leave[i]:
                                 dt_from += mx.DateTime.RelativeDateTime(days=1)
-                                d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
-                                d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
+                                d1 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m % 1) * 60))
+                                d2 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to % 1) * 60))
                                 dt1 = d1.strftime('%Y-%m-%d')
                                 dt2 = d2.strftime('%Y-%m-%d')
                         result.append((d1, d2))
@@ -136,7 +136,7 @@ class resource_calendar_week(osv.osv):
     _description = "Work Detail"
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
-        'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of week'),
+        'dayofweek': fields.selection([('0', 'Monday'), ('1', 'Tuesday'), ('2', 'Wednesday'), ('3', 'Thursday'), ('4', 'Friday'), ('5', 'Saturday'), ('6', 'Sunday')], 'Day of week'),
         'date_from' : fields.date('Starting date'),
         'hour_from' : fields.float('Work from', size=8, required=True),
         'hour_to' : fields.float("Work to", size=8, required=True),
@@ -149,20 +149,20 @@ class resource_resource(osv.osv):
     _name = "resource.resource"
     _description = "Resource Detail"
     _columns = {
-        'name' : fields.char("Name", size=64, required=True ),
+        'name' : fields.char("Name", size=64, required=True),
         'code': fields.char('Code', size=16),
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the resource record without removing it."),
         'company_id' : fields.many2one('res.company', 'Company', required=True),
-        'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
-        'user_id' : fields.many2one('res.users', 'User',help='Related user name for the resource to manage its access.'),
+        'resource_type': fields.selection([('user', 'Human'), ('material', 'Material')], 'Resource Type', required=True),
+        'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
         'time_efficiency' : fields.float('Efficiency factor', size=8, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
         'calendar_id' : fields.many2one("resource.calendar", "Working time", help="Define the schedule of resource"),
     }
     _defaults = {
-        'resource_type' : lambda *a: 'user',
-        'time_efficiency' : lambda *a: 1,
-        'active' : lambda *a: True,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', c)
+        'resource_type' : lambda * a: 'user',
+        'time_efficiency' : lambda * a: 1,
+        'active' : lambda * a: True,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', c)
     }
 resource_resource()
 
@@ -171,14 +171,14 @@ class resource_calendar_leaves(osv.osv):
     _description = "Leave Detail"
     _columns = {
         'name' : fields.char("Name", size=64),
-        'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company",readonly=True),
+        'company_id' : fields.related('calendar_id', 'company_id', type='many2one', relation='res.company', string="Company", readonly=True),
         'calendar_id' : fields.many2one("resource.calendar", "Working time"),
         'date_from' : fields.datetime('Start Date', required=True),
         'date_to' : fields.datetime('End Date', required=True),
         'resource_id' : fields.many2one("resource.resource", "Resource", help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"),
     }
     def check_dates(self, cr, uid, ids):
-         leave = self.read(cr, uid, ids[0],['date_from','date_to'])
+         leave = self.read(cr, uid, ids[0], ['date_from', 'date_to'])
          if leave['date_from'] and leave['date_to']:
              if leave['date_from'] > leave['date_to']:
                  return False

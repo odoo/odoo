@@ -29,7 +29,7 @@ class mdx_set(object):
     def __repr__(self):
         res = '\tSet: ['
         for l in self.list:
-            res += str(l)+',\n'
+            res += str(l) + ',\n'
         res += '\t]'
         return res
 # vim: ts=4 sts=4 sw=4 si et

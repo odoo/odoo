@@ -46,15 +46,15 @@ class opportunity2phonecall(wizard.interface):
 
     case_fields = {
         'user_id' : {'string' : 'Assign To', 'type' : 'many2one', 'relation' : 'res.users'},
-        'deadline' : {'string' : 'Planned Date', 'type' : 'datetime' ,'required' :True},
+        'deadline' : {'string' : 'Planned Date', 'type' : 'datetime' , 'required' :True},
         'note' : {'string' : 'Goals', 'type' : 'text'},
         'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.case.categ', 'required' :True},
         'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'crm.case.section'},
-        
+
     }
     def _default_values(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')        
-        categ_id = pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])            
+        case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')
+        categ_id = pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name', '=', 'Outbound')])
         case = case_obj.browse(cr, uid, data['id'])
         if case.state != 'open':
             raise wizard.except_wizard(_('Warning !'),
@@ -70,13 +70,13 @@ class opportunity2phonecall(wizard.interface):
     def _doIt(self, cr, uid, data, context):
         form = data['form']
         pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data') 
+        mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
         phonecall_case_obj = pool.get('crm.phonecall')
-        opportunity_case_obj = pool.get('crm.opportunity') 
+        opportunity_case_obj = pool.get('crm.opportunity')
         # Select the view
-        
+
         data_obj = pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
         id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
@@ -94,7 +94,7 @@ class opportunity2phonecall(wizard.interface):
                     'user_id' : form['user_id'],
                     'categ_id' : form['category_id'],
                     'description' : form['note'],
-                    'date' : form['deadline'], 
+                    'date' : form['deadline'],
                     'section_id' : form['section_id'],
                     'partner_id': opportunity.partner_id.id,
                     'partner_address_id':opportunity.partner_address_id.id,
@@ -103,15 +103,15 @@ class opportunity2phonecall(wizard.interface):
             }, context=context)
             vals = {}
 
-            phonecall_case_obj.case_open(cr, uid, [new_case])        
-            
-        value = {            
+            phonecall_case_obj.case_open(cr, uid, [new_case])
+
+        value = {
             'name': _('Phone Call'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'crm.phonecall',
             'res_id' : new_case,
-            'views': [(id3,'form'),(id2,'tree'),(False,'calendar'),(False,'graph')],
+            'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
         }
@@ -121,7 +121,7 @@ class opportunity2phonecall(wizard.interface):
         'init': {
             'actions': [_default_values],
             'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
-                'state' : [('end', 'Cancel','gtk-cancel'),('order', 'Schedule Phone Call','gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'), ('order', 'Schedule Phone Call', 'gtk-go-forward')]}
         },
         'order': {
             'actions': [],
@@ -135,7 +135,7 @@ class opportunity2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        opportunity_case_obj = pool.get('crm.opportunity')                
+        opportunity_case_obj = pool.get('crm.opportunity')
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
@@ -148,14 +148,14 @@ class opportunity2meeting(wizard.interface):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        return {            
+        return {
             'name': _('Meetings'),
-            'domain' : "[('opportunity_id','in',%s)]"%(data['ids']),         
+            'domain' : "[('opportunity_id','in',%s)]" % (data['ids']),
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
             'view_id': False,
-            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree')],
+            'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']
             }
@@ -184,10 +184,10 @@ class partner_opportunity(wizard.interface):
                 </form>"""
 
     case_fields = {
-        'name' : {'type' :'char', 'size' :64, 'string' :'Opportunity Name', 'required' :True}, 
-        'planned_revenue' : {'type' :'float', 'digits' :(16, 2), 'string' : 'Expected Revenue'}, 
-        'probability' : {'type' :'float', 'digits' :(16, 2), 'string' : 'Success Probability'}, 
-        'partner_id' : {'type' :'many2one', 'relation' :'res.partner', 'string' :'Partner'}, 
+        'name' : {'type' :'char', 'size' :64, 'string' :'Opportunity Name', 'required' :True},
+        'planned_revenue' : {'type' :'float', 'digits' :(16, 2), 'string' : 'Expected Revenue'},
+        'probability' : {'type' :'float', 'digits' :(16, 2), 'string' : 'Success Probability'},
+        'partner_id' : {'type' :'many2one', 'relation' :'res.partner', 'string' :'Partner'},
     }
 
     def _select_data(self, cr, uid, data, context):
@@ -200,7 +200,7 @@ class partner_opportunity(wizard.interface):
         pool = pooler.get_pool(cr.dbname)
         data_obj = pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
-        res = data_obj.read(cr, uid, result, ['res_id'])        
+        res = data_obj.read(cr, uid, result, ['res_id'])
 
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_oppor')
         id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_oppor')
@@ -208,45 +208,45 @@ class partner_opportunity(wizard.interface):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        
+
         part_obj = pool.get('res.partner')
         address = part_obj.address_get(cr, uid, data['ids' ])
-        
-        
+
+
         categ_obj = pool.get('crm.case.categ')
-        categ_ids = categ_obj.search(cr, uid, [('name','ilike','Part%')])
+        categ_ids = categ_obj.search(cr, uid, [('name', 'ilike', 'Part%')])
 
         case_obj = pool.get('crm.opportunity')
-        opp_id = case_obj.create(cr, uid, {            
-            'name' : data['form']['name'], 
-            'planned_revenue' : data['form']['planned_revenue'], 
-            'probability' : data['form']['probability'], 
-            'partner_id' : data['form']['partner_id'], 
+        opp_id = case_obj.create(cr, uid, {
+            'name' : data['form']['name'],
+            'planned_revenue' : data['form']['planned_revenue'],
+            'probability' : data['form']['probability'],
+            'partner_id' : data['form']['partner_id'],
             'partner_address_id' : address['default'],
-            'categ_id' : categ_ids[0],            
-            'state' :'draft', 
+            'categ_id' : categ_ids[0],
+            'state' :'draft',
         })
-        value = {            
-            'name' : _('Opportunity'), 
-            'view_type' : 'form', 
-            'view_mode' : 'form,tree', 
-            'res_model' : 'crm.opportunity', 
-            'res_id' : opp_id, 
-            'view_id' : False, 
-            'views' : [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')], 
-            'type' : 'ir.actions.act_window', 
-            'search_view_id' : res['res_id'] 
+        value = {
+            'name' : _('Opportunity'),
+            'view_type' : 'form',
+            'view_mode' : 'form,tree',
+            'res_model' : 'crm.opportunity',
+            'res_id' : opp_id,
+            'view_id' : False,
+            'views' : [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
+            'type' : 'ir.actions.act_window',
+            'search_view_id' : res['res_id']
         }
         return value
 
     states = {
         'init' : {
-            'actions' : [_select_data], 
-            'result' : {'type' : 'form', 'arch' : case_form, 'fields' : case_fields, 
+            'actions' : [_select_data],
+            'result' : {'type' : 'form', 'arch' : case_form, 'fields' : case_fields,
                 'state' : [('end', 'Cancel', 'gtk-cancel'), ('confirm', 'Create Opportunity', 'gtk-go-forward')]}
-        }, 
+        },
         'confirm' : {
-            'actions' : [], 
+            'actions' : [],
             'result' : {'type' : 'action', 'action' : _make_opportunity, 'state' : 'end'}
         }
     }

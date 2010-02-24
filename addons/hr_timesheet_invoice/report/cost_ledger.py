@@ -27,9 +27,9 @@ from report import report_sxw
 class account_analytic_cost_ledger(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_analytic_cost_ledger, self).__init__(cr, uid, name, context=context)
-        self.sum_revenue={}
-        self.account_sum_revenue={}
-        self.localcontext.update( {
+        self.sum_revenue = {}
+        self.account_sum_revenue = {}
+        self.localcontext.update({
             'time': time,
             'lines_g': self._lines_g,
             'lines_a': self._lines_a,
@@ -114,7 +114,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
     def _account_sum_balance(self, account_id, date1, date2):
         debit = self._account_sum_debit(account_id, date1, date2)
         credit = self._account_sum_credit(account_id, date1, date2)
-        return (debit-credit)
+        return (debit - credit)
 
     def _account_sum_qty(self, account_id, date1, date2):
         self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%s AND date>=%s AND date<=%s", (account_id, date1, date2))
@@ -130,7 +130,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
         ids = map(lambda x: x.id, accounts)
         if not len(ids):
             return 0.0
-        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount>0", (ids,date1, date2))
+        self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s AND amount>0", (ids, date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_credit(self, accounts, date1, date2):
@@ -144,14 +144,14 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
     def _sum_balance(self, accounts, date1, date2):
         debit = self._sum_debit(accounts, date1, date2) or 0.0
         credit = self._sum_credit(accounts, date1, date2) or 0.0
-        return (debit-credit)
+        return (debit - credit)
 
     def _sum_qty(self, accounts, date1, date2):
         ids = map(lambda x: x.id, accounts)
         if not len(ids):
             return 0.0
         ids = map(lambda x: x.id, accounts)
-        self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s", (ids,date1, date2))
+        self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id =ANY(%s) AND date>=%s AND date<=%s", (ids, date1, date2))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_revenue(self, accounts):

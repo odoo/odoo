@@ -17,7 +17,7 @@ class axis(object):
         self.name = name
 
     def __repr__(self):
-        res = '\t<olap.axis ['+str(self.name)+']\n'
+        res = '\t<olap.axis [' + str(self.name) + ']\n'
         res += str(self.axis)
         res += '\t>'
         return res

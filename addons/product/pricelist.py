@@ -37,14 +37,14 @@ class price_type(osv.osv):
     """
     def _price_field_get(self, cr, uid, context={}):
         mf = self.pool.get('ir.model.fields')
-        ids = mf.search(cr, uid, [('model','in', (('product.product'),('product.template'))), ('ttype','=','float')], context=context)
+        ids = mf.search(cr, uid, [('model', 'in', (('product.product'), ('product.template'))), ('ttype', '=', 'float')], context=context)
         res = []
         for field in mf.browse(cr, uid, ids, context=context):
             res.append((field.name, field.field_description))
         return res
 
     def _get_currency(self, cr, uid, ctx):
-        comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
+        comp = self.pool.get('res.users').browse(cr, uid, uid).company_id
         if not comp:
             comp_id = self.pool.get('res.company').search(cr, uid, [])[0]
             comp = self.pool.get('res.company').browse(cr, uid, comp_id)
@@ -59,10 +59,10 @@ class price_type(osv.osv):
         "currency_id" : fields.many2one('res.currency', "Currency", required=True, help="The currency the field is expressed in."),
     }
     _defaults = {
-        "active": lambda *args: True,
+        "active": lambda * args: True,
         "currency_id": _get_currency
     }
-    
+
 price_type()
 
 #----------------------------------------------------------
@@ -73,7 +73,7 @@ class product_pricelist_type(osv.osv):
     _name = "product.pricelist.type"
     _description = "Pricelist Type"
     _columns = {
-        'name': fields.char('Name',size=64, required=True, translate=True),
+        'name': fields.char('Name', size=64, required=True, translate=True),
         'key': fields.char('Key', size=64, required=True, help="Used in the code to select specific prices based on the context. Keep unchanged."),
     }
 product_pricelist_type()
@@ -83,12 +83,12 @@ class product_pricelist(osv.osv):
     def _pricelist_type_get(self, cr, uid, context={}):
         pricelist_type_obj = self.pool.get('product.pricelist.type')
         pricelist_type_ids = pricelist_type_obj.search(cr, uid, [], order='name')
-        pricelist_types = pricelist_type_obj.read(cr, uid, pricelist_type_ids, ['key','name'], context=context)
+        pricelist_types = pricelist_type_obj.read(cr, uid, pricelist_type_ids, ['key', 'name'], context=context)
 
         res = []
 
         for type in pricelist_types:
-            res.append((type['key'],type['name']))
+            res.append((type['key'], type['name']))
 
         return res
 #        cr.execute('select key,name from product_pricelist_type order by name')
@@ -96,7 +96,7 @@ class product_pricelist(osv.osv):
     _name = "product.pricelist"
     _description = "Pricelist"
     _columns = {
-        'name': fields.char('Pricelist Name',size=64, required=True, translate=True),
+        'name': fields.char('Pricelist Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the pricelist without removing it."),
         'type': fields.selection(_pricelist_type_get, 'Pricelist Type', required=True),
         'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
@@ -105,12 +105,12 @@ class product_pricelist(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context={}):
-        result= []
+        result = []
         if not all(ids):
             return result
         for pl in self.browse(cr, uid, ids, context):
-            name = pl.name + ' ('+ pl.currency_id.name + ')'
-            result.append((pl.id,name))
+            name = pl.name + ' (' + pl.currency_id.name + ')'
+            result.append((pl.id, name))
         return result
 
 
@@ -122,7 +122,7 @@ class product_pricelist(osv.osv):
         return comp.currency_id.id
 
     _defaults = {
-        'active': lambda *a: 1,
+        'active': lambda * a: 1,
         "currency_id": _get_currency
     }
 
@@ -198,7 +198,7 @@ class product_pricelist(osv.osv):
                 'ORDER BY sequence',
                 (tmpl_id, prod_id, plversion['id'], qty))
             res1 = cr.dictfetchall()
-            
+
             for res in res1:
                 item_id = 0
                 if res:
@@ -213,11 +213,11 @@ class product_pricelist(osv.osv):
                                     res['base_pricelist_id']).currency_id.id
                             price = currency_obj.compute(cr, uid, ptype_src,
                                     res['currency_id'], price_tmp, round=False)
-                            break    
+                            break
                     elif res['base'] == -2:
                         where = []
                         if partner:
-                            where = [('name', '=', partner) ] 
+                            where = [('name', '=', partner) ]
                         sinfo = supplierinfo_obj.search(cr, uid,
                                 [('product_id', '=', tmpl_id)] + where)
                         price = 0.0
@@ -241,23 +241,23 @@ class product_pricelist(osv.osv):
 
                     if price:
                         price_limit = price
-        
-                        price = price * (1.0+(res['price_discount'] or 0.0))
+
+                        price = price * (1.0 + (res['price_discount'] or 0.0))
                         price = rounding(price, res['price_round'])
                         price += (res['price_surcharge'] or 0.0)
                         if res['price_min_margin']:
-                            price = max(price, price_limit+res['price_min_margin'])
+                            price = max(price, price_limit + res['price_min_margin'])
                         if res['price_max_margin']:
-                            price = min(price, price_limit+res['price_max_margin'])
+                            price = min(price, price_limit + res['price_max_margin'])
                         item_id = res['id']
-                        break    
+                        break
 
                 else:
                     # False means no valid line found ! But we may not raise an
                     # exception here because it breaks the search
                     price = False
             result[id] = price
-            result['item_id'] = {id: item_id}    
+            result['item_id'] = {id: item_id}
             if context and ('uom' in context):
                 product = product_obj.browse(cr, uid, prod_id)
                 uom = product.uos_id or product.uom_id
@@ -283,16 +283,16 @@ class product_pricelist_version(osv.osv):
             'price_version_id', 'Price List Items', required=True),
         'date_start': fields.date('Start Date', help="Starting date for this pricelist version to be valid."),
         'date_end': fields.date('End Date', help="Ending date for this pricelist version to be valid."),
-        'company_id': fields.related('pricelist_id','company_id',type='many2one',
+        'company_id': fields.related('pricelist_id', 'company_id', type='many2one',
             readonly=True, relation='res.company', string='Company', store=True)
     }
     _defaults = {
-        'active': lambda *a: 1,
+        'active': lambda * a: 1,
     }
 
     # We desactivate duplicated pricelists, so that dates do not overlap
-    def copy(self, cr, uid, id, default=None,context={}):
-        if not default: default= {}
+    def copy(self, cr, uid, id, default=None, context={}):
+        if not default: default = {}
         default['active'] = False
         return super(product_pricelist_version, self).copy(cr, uid, id, default, context)
 
@@ -308,7 +308,7 @@ class product_pricelist_version(osv.osv):
 
             cursor.execute('SELECT id ' \
                     'FROM product_pricelist_version ' \
-                    'WHERE '+' and '.join(where) + (where and ' and ' or '')+
+                    'WHERE ' + ' and '.join(where) + (where and ' and ' or '') +
                         'pricelist_id = %s ' \
                         'AND active ' \
                         'AND id <> %s', (
@@ -341,10 +341,10 @@ class product_pricelist_item(osv.osv):
     _description = "Pricelist item"
     _order = "sequence, min_quantity desc"
     _defaults = {
-        'base': lambda *a: -1,
-        'min_quantity': lambda *a: 0,
-        'sequence': lambda *a: 5,
-        'price_discount': lambda *a: 0,
+        'base': lambda * a:-1,
+        'min_quantity': lambda * a: 0,
+        'sequence': lambda * a: 5,
+        'price_discount': lambda * a: 0,
     }
 
     def _check_recursion(self, cr, uid, ids):
@@ -365,12 +365,12 @@ class product_pricelist_item(osv.osv):
 
         'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only applies if the partner buys/sells more than this quantity."),
         'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of pricelist items."),
-        'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="The mode for computing the price for this rule."),
+        'base': fields.selection(_price_field_get, 'Based on', required=True, size= -1, help="The mode for computing the price for this rule."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',
             digits=(16, int(config['price_accuracy']))),
-        'price_discount': fields.float('Price Discount', digits=(16,4)),
+        'price_discount': fields.float('Price Discount', digits=(16, 4)),
         'price_round': fields.float('Price Rounding',
             digits=(16, int(config['price_accuracy'])),
             help="Sets the price so that it is a multiple of this value.\n" \
@@ -381,7 +381,7 @@ class product_pricelist_item(osv.osv):
             digits=(16, int(config['price_accuracy']))),
         'price_max_margin': fields.float('Max. Price Margin',
             digits=(16, int(config['price_accuracy']))),
-        'company_id': fields.related('price_version_id','company_id',type='many2one',
+        'company_id': fields.related('price_version_id', 'company_id', type='many2one',
             readonly=True, relation='res.company', string='Company', store=True)
     }
 
@@ -392,7 +392,7 @@ class product_pricelist_item(osv.osv):
     def product_id_change(self, cr, uid, ids, product_id, context={}):
         if not product_id:
             return {}
-        prod = self.pool.get('product.product').read(cr, uid, [product_id], ['code','name'])
+        prod = self.pool.get('product.product').read(cr, uid, [product_id], ['code', 'name'])
         if prod[0]['code']:
             return {'value': {'name': prod[0]['code']}}
         return {}

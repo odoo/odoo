@@ -26,10 +26,10 @@ import time
 from tools.translate import _
 
 def _action_open_window(self, cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname) 
-    mod_obj = pool.get('ir.model.data') 
+    pool = pooler.get_pool(cr.dbname)
+    mod_obj = pool.get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')
-    id = mod_obj.read(cr, uid, result, ['res_id'])    
+    id = mod_obj.read(cr, uid, result, ['res_id'])
     cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.graph', 'graph'))
     view_res3 = cr.fetchone()[0]
     cr.execute('select id,name from ir_ui_view where name=%s and type=%s', ('product.margin.form.inherit', 'form'))
@@ -38,14 +38,14 @@ def _action_open_window(self, cr, uid, data, context):
     view_res = cr.fetchone()[0]
     return {
         'name': _('Product Margins'),
-        'context':{'date_from':data['form']['from_date'],'date_to':data['form']['to_date'],'invoice_state' : data['form']['invoice_state']},
+        'context':{'date_from':data['form']['from_date'], 'date_to':data['form']['to_date'], 'invoice_state' : data['form']['invoice_state']},
         'view_type': 'form',
         "view_mode": 'tree,form,graph',
         'res_model':'product.product',
         'type': 'ir.actions.act_window',
-        'views': [(view_res,'tree'), (view_res2,'form'), (view_res3,'graph')],
+        'views': [(view_res, 'tree'), (view_res2, 'form'), (view_res3, 'graph')],
         'view_id': False,
-        'search_view_id': id['res_id'] 
+        'search_view_id': id['res_id']
     }
 
 
@@ -61,28 +61,28 @@ class product_margins(wizard.interface):
              'from_date': {
                 'string': 'From',
                 'type': 'date',
-                'default': lambda *a:time.strftime('%Y-01-01'),
+                'default': lambda * a:time.strftime('%Y-01-01'),
 
         },
              'to_date': {
                 'string': 'To',
                 'type': 'date',
-                'default': lambda *a:time.strftime('%Y-12-31'),
+                'default': lambda * a:time.strftime('%Y-12-31'),
 
         },
          'invoice_state': {
                 'string': 'Invoice State',
                 'type': 'selection',
-                'selection': [('paid','Paid'),('open_paid','Open and Paid'),('draft_open_paid','Draft, Open and Paid'),],
+                'selection': [('paid', 'Paid'), ('open_paid', 'Open and Paid'), ('draft_open_paid', 'Draft, Open and Paid'), ],
                 'required': True,
-                'default': lambda *a:"open_paid",
+                'default': lambda * a:"open_paid",
         },
     }
 
     states = {
       'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Margins','gtk-ok')]}
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('open', 'Open Margins', 'gtk-ok')]}
         },
     'open': {
             'actions': [],

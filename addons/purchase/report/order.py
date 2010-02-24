@@ -44,7 +44,7 @@ class order(report_sxw.rml_parse):
             tax_ids = res[0]
         res = [tax.name for tax in pooler.get_pool(cr.dbname).get('account.tax').browse(self.cr, self.uid, tax_ids)]
         return ",\n ".join(res)
-    
+
     def _get_tax(self, order_obj):
         self.cr.execute("SELECT DISTINCT tax_id FROM purchase_order_taxe, purchase_order_line, purchase_order \
             WHERE (purchase_order_line.order_id=purchase_order.id) AND (purchase_order.id=%s)", (order_obj.id))
@@ -71,13 +71,13 @@ class order(report_sxw.rml_parse):
                     base += line.price_subtotal
                 res.append({'code':tax.name,
                     'base':base,
-                    'amount':base*tax.amount})
+                    'amount':base * tax.amount})
         return res
     def _get_product_code(self, product_id, partner_id):
-        product_obj=pooler.get_pool(self.cr.dbname).get('product.product')
+        product_obj = pooler.get_pool(self.cr.dbname).get('product.product')
         return product_obj._product_code(self.cr, self.uid, [product_id], name=None, arg=None, context={'partner_id': partner_id})[product_id]
 
-report_sxw.report_sxw('report.purchase.order','purchase.order','addons/purchase/report/order.rml',parser=order)
+report_sxw.report_sxw('report.purchase.order', 'purchase.order', 'addons/purchase/report/order.rml', parser=order)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

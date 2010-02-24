@@ -45,10 +45,10 @@ invoice_fields = {
         #'tax_applied':{'string':'Tax Applied', 'type':'float', 'readonly':True},
 }
 
-def _get_value(self,cr,uid, datas,context={}):
+def _get_value(self, cr, uid, datas, context={}):
     service = netsvc.LocalService("object_proxy")
-    lots = service.execute(cr,uid, 'auction.lots', 'read', datas['ids'])
-    auction = service.execute(cr,uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
+    lots = service.execute(cr, uid, 'auction.lots', 'read', datas['ids'])
+    auction = service.execute(cr, uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
 
     price = 0.0
     price_topay = 0.0
@@ -65,11 +65,11 @@ def _get_value(self,cr,uid, datas,context={}):
         price += price_lot
 
         if lot['ach_uid']:
-            if uid and (lot['ach_uid'][0]<>uid):
+            if uid and (lot['ach_uid'][0] <> uid):
                 raise wizard.except_wizard('UserError', ('Two different buyers for the same invoice !\nPlease correct this problem before invoicing', 'init'))
             uid = lot['ach_uid'][0]
         elif lot['ach_login']:
-            refs = service.execute(uid, 'res.partner', 'search', [('ref','=',lot['ach_login'])])
+            refs = service.execute(uid, 'res.partner', 'search', [('ref', '=', lot['ach_login'])])
             if len(refs):
                 uid = refs[-1]
         if lot['ach_pay_id']:
@@ -92,7 +92,7 @@ class wiz_auc_lots_invoice(wizard.interface):
     states = {
         'init': {
             'actions': [_get_value],
-            'result': {'type': 'form', 'arch':invoice_form, 'fields': invoice_fields, 'state':[('invoice','Create Invoice'), ('end','Cancel')]}
+            'result': {'type': 'form', 'arch':invoice_form, 'fields': invoice_fields, 'state':[('invoice', 'Create Invoice'), ('end', 'Cancel')]}
         },
         'invoice': {
             'actions': [_invoice],

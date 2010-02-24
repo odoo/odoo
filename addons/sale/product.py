@@ -30,12 +30,12 @@ class product_product(osv.osv):
 
     def _pricelist_calculate(self, cr, uid, ids, name, arg, context=None):
         result = {}
-        pricelist_obj=self.pool.get('product.pricelist')
-        if name=='pricelist_purchase':
-            pricelist_ids=pricelist_obj.search(cr,uid,[('type','=','purchase')])
+        pricelist_obj = self.pool.get('product.pricelist')
+        if name == 'pricelist_purchase':
+            pricelist_ids = pricelist_obj.search(cr, uid, [('type', '=', 'purchase')])
         else:
-            pricelist_ids=pricelist_obj.search(cr,uid,[('type','=','sale')])
-        pricelist_browse=pricelist_obj.browse(cr,uid,pricelist_ids)
+            pricelist_ids = pricelist_obj.search(cr, uid, [('type', '=', 'sale')])
+        pricelist_browse = pricelist_obj.browse(cr, uid, pricelist_ids)
         for product in self.browse(cr, uid, ids, context):
             result[product.id] = ""
             for pricelist in pricelist_browse:

@@ -70,14 +70,14 @@ TODO :
     "author" : "Camptocamp SA",
     "category" : "Localisation/Europe",
     "website": "http://www.camptocamp.com",
-    
+
     "depends" : [
-        "base", 
-        "account", 
-        "base_vat", 
+        "base",
+        "account",
+        "base_vat",
         "base_iban",
         "account_payment",
-        "account_tax_include", 
+        "account_tax_include",
     ],
     "init_xml" : [
         "dta_data.xml",

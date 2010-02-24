@@ -56,9 +56,9 @@ form = """<?xml version="1.0"?>
 </form>"""
 
 fields = {
-    'fyear': {'string': 'Fiscal Year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True,},
-    'mand_id':{'string':'MandataireId','type':'char','size':'30','required': True,},
-    'limit_amount':{'string':'Limit Amount','type':'integer','required': True, },
+    'fyear': {'string': 'Fiscal Year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True, },
+    'mand_id':{'string':'MandataireId', 'type':'char', 'size':'30', 'required': True, },
+    'limit_amount':{'string':'Limit Amount', 'type':'integer', 'required': True, },
     'test_xml': {'string':'Test XML file', 'type':'boolean', },
    }
 
@@ -84,10 +84,10 @@ msg_form = """<?xml version="1.0"?>
 
 msg_fields = {
   'name': {'string': 'File name', 'type':'char', 'size':'32'},
-  'msg': {'string':'File created', 'type':'text', 'size':'100','readonly':True},
+  'msg': {'string':'File created', 'type':'text', 'size':'100', 'readonly':True},
   'file_save':{'string': 'Save File',
         'type': 'binary',
-        'readonly': True,},
+        'readonly': True, },
 }
 
 class wizard_vat(wizard.interface):
@@ -95,13 +95,13 @@ class wizard_vat(wizard.interface):
     def _get_partner(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         period = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fyear'])])
-        p_id_list = pool.get('res.partner').search(cr,uid,[('vat_subjected','!=',False)])
+        p_id_list = pool.get('res.partner').search(cr, uid, [('vat_subjected', '!=', False)])
         if not p_id_list:
-             raise wizard.except_wizard(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
+             raise wizard.except_wizard(_('Data Insufficient!'), _('No partner has a VAT Number asociated with him.'))
         partners = []
         records = []
         for obj_partner in pool.get('res.partner').browse(cr, uid, p_id_list):
-        
+
             record = {} # this holds record per partner
 
             #This listing is only for customers located in belgium, that's the
@@ -114,7 +114,7 @@ class wizard_vat(wizard.interface):
                     break
             if not go_ahead:
                 continue
-            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in %s and l.partner_id=%s and l.period_id=ANY(%s) group by b.code',(('produit','tax'),obj_partner.id,period,))
+            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in %s and l.partner_id=%s and l.period_id=ANY(%s) group by b.code', (('produit', 'tax'), obj_partner.id, period,))
             line_info = cr.fetchall()
             if not line_info:
                 continue
@@ -143,7 +143,7 @@ class wizard_vat(wizard.interface):
             record['name'] = obj_partner.name
 
             for item in line_info:
-                if item[0]=='produit':
+                if item[0] == 'produit':
                     record['turnover'] += item[1]
                 else:
                     record['amount'] += item[1]
@@ -154,25 +154,25 @@ class wizard_vat(wizard.interface):
         return {'partners':partners}
 
     def _create_xml(self, cr, uid, data, context):
-        datas=[]
+        datas = []
         pool = pooler.get_pool(cr.dbname)
-        seq_controlref = pool.get('ir.sequence').get(cr, uid,'controlref')
-        seq_declarantnum = pool.get('ir.sequence').get(cr, uid,'declarantnum')
+        seq_controlref = pool.get('ir.sequence').get(cr, uid, 'controlref')
+        seq_declarantnum = pool.get('ir.sequence').get(cr, uid, 'declarantnum')
         obj_cmpny = pool.get('res.users').browse(cr, uid, uid).company_id
         company_vat = obj_cmpny.partner_id.vat
         if not company_vat:
-            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+            raise wizard.except_wizard(_('Data Insufficient'), _('No VAT Number Associated with Main Company!'))
 
         cref = company_vat + seq_controlref
         dnum = cref + seq_declarantnum
 
-        obj_year=pool.get('account.fiscalyear').browse(cr,uid,data['form']['fyear'])
+        obj_year = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fyear'])
         street = zip_city = country = ''
         addr = pool.get('res.partner').address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])
-        if addr.get('invoice',False):
-            ads=pool.get('res.partner.address').browse(cr,uid,[addr['invoice']])[0]
+        if addr.get('invoice', False):
+            ads = pool.get('res.partner.address').browse(cr, uid, [addr['invoice']])[0]
 
-            zip_city = pool.get('res.partner.address').get_city(cr,uid,ads.id)
+            zip_city = pool.get('res.partner.address').get_city(cr, uid, ads.id)
             if not zip_city:
                 zip_city = ''
             if ads.street:
@@ -184,15 +184,15 @@ class wizard_vat(wizard.interface):
 
         sender_date = time.strftime('%Y-%m-%d')
 
-        data_file = '<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="'+ str(company_vat) + '"'
-        data_file +=' ControlRef="'+ cref + '" MandataireId="'+ tools.ustr(data['form']['mand_id']) + '" SenderDate="'+ str(sender_date)+ '"'
+        data_file = '<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="' + str(company_vat) + '"'
+        data_file += ' ControlRef="' + cref + '" MandataireId="' + tools.ustr(data['form']['mand_id']) + '" SenderDate="' + str(sender_date) + '"'
         if data['form']['test_xml']:
             data_file += ' Test="0"'
         data_file += ' VersionTech="1.2">'
-        data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+tools.ustr(obj_cmpny.name)+'</Name>\n\t\t<Street>'+ tools.ustr(street) +'</Street>\n\t\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>'
-        data_file += '\n\t\t<Country>'+ tools.ustr(country) +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
-        data_comp = '\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+tools.ustr(obj_cmpny.name)+'</Name>\n\t<Street>'+ tools.ustr(street) +'</Street>\n\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>\n\t<Country>'+ tools.ustr(country) +'</Country>\n</CompanyInfo>'
-        data_period = '\n<Period>'+ tools.ustr(obj_year.date_stop[:4]) +'</Period>'
+        data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>' + str(company_vat) + '</VATNum>\n\t\t<Name>' + tools.ustr(obj_cmpny.name) + '</Name>\n\t\t<Street>' + tools.ustr(street) + '</Street>\n\t\t<CityAndZipCode>' + tools.ustr(zip_city) + '</CityAndZipCode>'
+        data_file += '\n\t\t<Country>' + tools.ustr(country) + '</Country>\n\t</CompanyInfo>\n</AgentRepr>'
+        data_comp = '\n<CompanyInfo>\n\t<VATNum>' + str(company_vat) + '</VATNum>\n\t<Name>' + tools.ustr(obj_cmpny.name) + '</Name>\n\t<Street>' + tools.ustr(street) + '</Street>\n\t<CityAndZipCode>' + tools.ustr(zip_city) + '</CityAndZipCode>\n\t<Country>' + tools.ustr(country) + '</Country>\n</CompanyInfo>'
+        data_period = '\n<Period>' + tools.ustr(obj_year.date_stop[:4]) + '</Period>'
         error_message = []
 
         for partner in data['form']['partners']:
@@ -202,24 +202,24 @@ class wizard_vat(wizard.interface):
                 client_data = pool.get('vat.listing.clients').read(cr, uid, partner, context=context)
                 datas.append(client_data)
 
-        seq=0
-        data_clientinfo=''
-        sum_tax=0.00
-        sum_turnover=0.00
+        seq = 0
+        data_clientinfo = ''
+        sum_tax = 0.00
+        sum_turnover = 0.00
         if len(error_message):
-            data['form']['msg']='Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
+            data['form']['msg'] = 'Exception : \n' + '-' * 50 + '\n' + '\n'.join(error_message)
             return data['form']
         for line in datas:
             if not line:
                 continue
             if line['turnover'] < data['form']['limit_amount']:
                 continue
-            seq +=1
-            sum_tax +=line['amount']
-            sum_turnover +=line['turnover']
-            data_clientinfo +='\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>'+tools.ustr(line['country']) +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(line['amount'] * 100)) +'</Amount>\n\t<TurnOver>'+str(int(line['turnover'] * 100)) +'</TurnOver>\n</ClientList>'
+            seq += 1
+            sum_tax += line['amount']
+            sum_turnover += line['turnover']
+            data_clientinfo += '\n<ClientList SequenceNum="' + str(seq) + '">\n\t<CompanyInfo>\n\t\t<VATNum>' + line['vat'] + '</VATNum>\n\t\t<Country>' + tools.ustr(line['country']) + '</Country>\n\t</CompanyInfo>\n\t<Amount>' + str(int(line['amount'] * 100)) + '</Amount>\n\t<TurnOver>' + str(int(line['turnover'] * 100)) + '</TurnOver>\n</ClientList>'
 
-        data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(sum_turnover * 100)) +'" TaxSum="'+ str(int(sum_tax * 100)) +'" />'
+        data_decl = '\n<DeclarantList SequenceNum="1" DeclarantNum="' + dnum + '" ClientNbr="' + str(seq) + '" TurnOverSum="' + str(int(sum_turnover * 100)) + '" TaxSum="' + str(int(sum_tax * 100)) + '" />'
         data_file += tools.ustr(data_decl) + tools.ustr(data_comp) + tools.ustr(data_period) + tools.ustr(data_clientinfo) + '\n</VatList>'
 
         data['form']['msg'] = 'Save the File with '".xml"' extension.'
@@ -230,15 +230,15 @@ class wizard_vat(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel'),('go_step','View Clients')]},
+            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('go_step', 'View Clients')]},
         },
         'go_step': {
             'actions': [_get_partner],
-            'result': {'type':'form', 'arch':client_form, 'fields':client_fields, 'state':[('end','Cancel'),('go','Create XML')]},
+            'result': {'type':'form', 'arch':client_form, 'fields':client_fields, 'state':[('end', 'Cancel'), ('go', 'Create XML')]},
         },
         'go': {
             'actions': [_create_xml],
-            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end','Ok')]},
+            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end', 'Ok')]},
         }
 
     }

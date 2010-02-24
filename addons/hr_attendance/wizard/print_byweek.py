@@ -31,15 +31,15 @@ _date_form = '''<?xml version="1.0"?>
 </form>'''
 
 _date_fields = {
-    'init_date': {'string':'Starting Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True},
-    'end_date': {'string':'Ending Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True}
+    'init_date': {'string':'Starting Date', 'type':'date', 'default':lambda * a: time.strftime('%Y-%m-%d'), 'required':True},
+    'end_date': {'string':'Ending Date', 'type':'date', 'default':lambda * a: time.strftime('%Y-%m-%d'), 'required':True}
 }
 
 class wiz_byweek(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print','Print Timesheet'),('end','Cancel') ]}
+            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print', 'Print Timesheet'), ('end', 'Cancel') ]}
         },
         'print': {
             'actions': [],

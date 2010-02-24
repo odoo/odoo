@@ -46,7 +46,7 @@ class project_gtd_context(osv.osv):
         'project_default_id': fields.many2one('project.project', 'Default Project', required=True),
     }
     _defaults = {
-        'sequence': lambda *args: 1
+        'sequence': lambda * args: 1
     }
     _order = "sequence, name"
 
@@ -63,12 +63,12 @@ class project_gtd_timebox(osv.osv):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(project_gtd_timebox,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if (res['type']=='form') and ('record_id' in context):
+        res = super(project_gtd_timebox, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if (res['type'] == 'form') and ('record_id' in context):
             if context['record_id']:
                 rec = self.browse(cr, uid, int(context['record_id']), context)
             else:
-                iids = self.search(cr,uid, [('user_id','=',uid),('parent_id','=',False)], context=context)
+                iids = self.search(cr, uid, [('user_id', '=', uid), ('parent_id', '=', False)], context=context)
                 if len(iids):
                     rec = self.browse(cr, uid, int(iids[0]), context=context)
                 else:
@@ -78,15 +78,15 @@ class project_gtd_timebox(osv.osv):
         <field name="name" readonly="1"/>
         <notebook position="top">
             """
-            for i in range(1,7):
-                if not getattr(rec, 'context%d_id'%i):
+            for i in range(1, 7):
+                if not getattr(rec, 'context%d_id' % i):
                     continue
-                res['arch']+= """
+                res['arch'] += """
             <page string="%s">
                 <field name="%s" colspan="4" nolabel="1">
                     <tree editable="bottom" colors="grey:state in ('done','pending');red:state=='cancelled'" string="Tasks">
                         <field name="name"/>
-                """ % (getattr(rec, 'context%d_id'%(i,)).name.encode('utf-8'), 'task%d_ids'%(i,))
+                """ % (getattr(rec, 'context%d_id' % (i,)).name.encode('utf-8'), 'task%d_ids' % (i,))
                 if rec.col_project:
                     res['arch'] += '<field name="project_id" required="1"/>\n'
                 if rec.col_date_start:
@@ -105,7 +105,7 @@ class project_gtd_timebox(osv.osv):
                 </field>
             </page>
                 """
-            res['arch']+="""
+            res['arch'] += """
         </notebook>
     </form>
             """
@@ -127,11 +127,11 @@ class project_task(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        default['timebox_id']=False
-        default['context_id']=False
-        return super(project_task,self).copy_data(cr, uid, id, default, context)
+        default['timebox_id'] = False
+        default['context_id'] = False
+        return super(project_task, self).copy_data(cr, uid, id, default, context)
 
-    def _get_context(self,cr, uid, ctx):
+    def _get_context(self, cr, uid, ctx):
         ids = self.pool.get('project.gtd.context').search(cr, uid, [], context=ctx)
         return ids and ids[0] or False
     _defaults = {
@@ -139,21 +139,21 @@ class project_task(osv.osv):
     }
     def next_timebox(self, cr, uid, ids, *args):
         timebox_obj = self.pool.get('project.gtd.timebox')
-        timebox_ids = timebox_obj.search(cr,uid,[])
+        timebox_ids = timebox_obj.search(cr, uid, [])
         if not timebox_ids: return True
-        for task in self.browse(cr,uid,ids):
+        for task in self.browse(cr, uid, ids):
             timebox = task.timebox_id.id
             if not timebox:
                 self.write(cr, uid, task.id, {'timebox_id': timebox_ids[0]})
-            elif timebox_ids.index(timebox) != len(timebox_ids)-1:
+            elif timebox_ids.index(timebox) != len(timebox_ids) - 1:
                 index = timebox_ids.index(timebox)
-                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index+1]})
+                self.write(cr, uid, task.id, {'timebox_id': timebox_ids[index + 1]})
         return True
 
     def prev_timebox(self, cr, uid, ids, *args):
         timebox_obj = self.pool.get('project.gtd.timebox')
-        timebox_ids = timebox_obj.search(cr,uid,[])
-        for task in self.browse(cr,uid,ids):
+        timebox_ids = timebox_obj.search(cr, uid, [])
+        for task in self.browse(cr, uid, ids):
             timebox = task.timebox_id.id
             if timebox:
                 if timebox_ids.index(timebox):
@@ -164,12 +164,12 @@ class project_task(osv.osv):
         return True
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(project_task,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        res = super(project_task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         search_extended = False
         timebox_obj = self.pool.get('project.gtd.timebox')
         if res['type'] == 'search':
-            tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
-            search_extended ='''<newline/><group col="%d" expand="1" string="%s" groups="project_gtd.group_project_getting">''' % (len(tt)+7,_('Getting Things Done'))
+            tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr, uid, []))
+            search_extended = '''<newline/><group col="%d" expand="1" string="%s" groups="project_gtd.group_project_getting">''' % (len(tt) + 7, _('Getting Things Done'))
             search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="%s"/>''' % (_('Inbox'),)
             search_extended += '''<filter domain="[]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="%s"/>''' % (_('All'),)
             search_extended += '''<separator orientation="vertical"/>'''
@@ -177,7 +177,7 @@ class project_task(osv.osv):
                 if time.icon:
                     icon = time.icon
                 else :
-                    icon=""
+                    icon = ""
                 search_extended += '''<filter domain="[('timebox_id','=', ''' + str(time.id) + ''')]" icon="''' + icon + '''" string="''' + time.name + '''" context="{'set_visible':True}"/>'''
             search_extended += '''
             <separator orientation="vertical"/>
@@ -186,7 +186,7 @@ class project_task(osv.osv):
             </group>
             </search> '''
         if search_extended:
-            res['arch'] = res['arch'].replace('</search>',search_extended)
+            res['arch'] = res['arch'].replace('</search>', search_extended)
             attrs_sel = self.pool.get('project.gtd.context').name_search(cr, uid, '', [], context=context)
             context_id_info = self.pool.get('project.task').fields_get(cr, uid, ['context_id'])
             context_id_info['context_id']['selection'] = attrs_sel

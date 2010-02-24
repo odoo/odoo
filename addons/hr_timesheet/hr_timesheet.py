@@ -58,15 +58,15 @@ class hr_analytic_timesheet(osv.osv):
 #        if prod_id and unit_amount:
         if prod_id:
             # find company
-            company_id=self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context)
-            res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount,company_id,unit, context)
+            company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context)
+            res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, context)
         return res
 
     def _getEmployeeProduct(self, cr, uid, context):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
         if emp_id:
-            emp=emp_obj.browse(cr, uid, emp_id[0], context)
+            emp = emp_obj.browse(cr, uid, emp_id[0], context)
             if emp.product_id:
                 return emp.product_id.id
         return False
@@ -75,7 +75,7 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
         if emp_id:
-            emp=emp_obj.browse(cr, uid, emp_id[0], context)
+            emp = emp_obj.browse(cr, uid, emp_id[0], context)
             if emp.product_id:
                 return emp.product_id.uom_id.id
         return False
@@ -86,7 +86,7 @@ class hr_analytic_timesheet(osv.osv):
         if emp_id:
             emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0], context=context)
             if bool(emp.product_id):
-                a =  emp.product_id.product_tmpl_id.property_account_expense.id
+                a = emp.product_id.product_tmpl_id.property_account_expense.id
                 if not a:
                     a = emp.product_id.categ_id.property_account_expense_categ.id
                 if a:
@@ -108,25 +108,25 @@ class hr_analytic_timesheet(osv.osv):
         'product_id' : _getEmployeeProduct,
         'general_account_id' : _getGeneralAccount,
         'journal_id' : _getAnalyticJournal,
-        'date' : lambda self,cr,uid,ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
+        'date' : lambda self, cr, uid, ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
         'user_id' : lambda obj, cr, uid, ctx : ctx.get('user_id', uid),
     }
     def on_change_account_id(self, cr, uid, ids, account_id):
         return {'value':{}}
-    
+
     def on_change_date(self, cr, uid, ids, date):
         if ids:
-            new_date = self.read(cr,uid,ids[0],['date'])['date']
+            new_date = self.read(cr, uid, ids[0], ['date'])['date']
             if date != new_date:
-                warning = {'title':'User Alert!','message':'Changing the date will let this entry appear in the timesheet of the new date.'}
-                return {'value':{},'warning':warning}
+                warning = {'title':'User Alert!', 'message':'Changing the date will let this entry appear in the timesheet of the new date.'}
+                return {'value':{}, 'warning':warning}
         return {'value':{}}
-    
+
     def create(self, cr, uid, vals, context={}):
         try:
             res = super(hr_analytic_timesheet, self).create(cr, uid, vals, context)
             return res
-        except Exception,e:
+        except Exception, e:
             if '"journal_id" viol' in e.args[0]:
                 raise except_orm(_('ValidateError'),
                      _('No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal.'))
@@ -140,10 +140,10 @@ class hr_analytic_timesheet(osv.osv):
         if not user_id:
             return {}
         return {'value' : {
-            'product_id' : self._getEmployeeProduct(cr,user_id, context= {}),
-            'product_uom_id' : self._getEmployeeUnit(cr, user_id, context= {}),
-            'general_account_id' :self. _getGeneralAccount(cr, user_id, context= {}),
-            'journal_id' : self._getAnalyticJournal(cr, user_id, context= {}),
+            'product_id' : self._getEmployeeProduct(cr, user_id, context={}),
+            'product_uom_id' : self._getEmployeeUnit(cr, user_id, context={}),
+            'general_account_id' :self. _getGeneralAccount(cr, user_id, context={}),
+            'journal_id' : self._getAnalyticJournal(cr, user_id, context={}),
         }}
 hr_analytic_timesheet()
 

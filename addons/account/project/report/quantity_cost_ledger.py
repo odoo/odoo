@@ -26,7 +26,7 @@ from report import report_sxw
 class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(account_analytic_quantity_cost_ledger, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update( {
+        self.localcontext.update({
             'time': time,
             'lines_g': self._lines_g,
             'lines_a': self._lines_a,
@@ -54,7 +54,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                         AND aa.active \
                         AND (aal.journal_id =ANY(%s) ) \
                     GROUP BY aa.code, aa.name, aa.id ORDER BY aa.code",
-                    (account_id, date1, date2,journal_ids))
+                    (account_id, date1, date2, journal_ids))
         res = self.cr.dictfetchall()
         return res
 
@@ -81,7 +81,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                         AND (aal.date>=%s) AND (aal.date<=%s) \
                         AND (aal.journal_id=aaj.id) AND (aaj.id =ANY(%s)) \
                         ORDER BY aal.date, aaj.code, aal.code",
-                    (general_account_id, account_id, date1, date2,journal_ids,))
+                    (general_account_id, account_id, date1, date2, journal_ids,))
         res = self.cr.dictfetchall()
         return res
 
@@ -97,7 +97,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
                     FROM account_analytic_line \
                     WHERE account_id = %s AND date >= %s AND date <= %s \
                         AND journal_id =ANY(%s)",
-                        (account_id, date1, date2,journal_ids,))
+                        (account_id, date1, date2, journal_ids,))
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_quantity(self, accounts, date1, date2, journals):
@@ -108,13 +108,13 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
                     WHERE account_id =ANY(%s) AND date>=%s AND date<=%s",
-                    (date1, date2,ids,))
+                    (date1, date2, ids,))
         else:
             journal_ids = journals[0][2]
             self.cr.execute("SELECT sum(unit_amount) \
                     FROM account_analytic_line \
                     WHERE account_id =ANY(%s) AND date >= %s AND date <= %s \
-                        AND journal_id =ANY(%s)",(ids,date1, date2,journal_ids))
+                        AND journal_id =ANY(%s)", (ids, date1, date2, journal_ids))
         return self.cr.fetchone()[0] or 0.0
 
 report_sxw.report_sxw('report.account.analytic.account.quantity_cost_ledger',

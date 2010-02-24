@@ -31,12 +31,12 @@ class cal_event_subscribe_wizard(wizard.interface):
         <separator string="Provide path for Remote Calendar"/>
         <field name="url_path" colspan="4" width="300" nolabel="1" widget="url"/>
     </form>'''
-    
+
     form1_fields = {
             'url_path': {
-                'string': 'Provide path for remote calendar', 
-                'type': 'char', 
-                'required': True, 
+                'string': 'Provide path for remote calendar',
+                'type': 'char',
+                'required': True,
                 'size': 124
                 }
             }
@@ -44,12 +44,12 @@ class cal_event_subscribe_wizard(wizard.interface):
     <form string="Message...">
         <field name="msg" colspan="4" width="300" nolabel="1"/>
     </form>'''
-    
+
     display_fields = {
             'msg': {
-                'string': '', 
-                'type': 'text', 
-                'readonly': True, 
+                'string': '',
+                'type': 'text',
+                'readonly': True,
                 }
             }
 
@@ -57,41 +57,41 @@ class cal_event_subscribe_wizard(wizard.interface):
         global cnt
         cnt = 0
         try:
-            f =  urllib.urlopen(data['form']['url_path'])
+            f = urllib.urlopen(data['form']['url_path'])
             caldata = f.fp.read()
             f.close()
-        except Exception,e:
+        except Exception, e:
             raise wizard.except_wizard(_('Error!'), _('Please provide Proper URL !'))
         model = data.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
         context.update({'url': data['form']['url_path'],
                                     'model': data.get('model')})
         vals = model_obj.import_cal(cr, uid, base64.encodestring(caldata), \
-                                            data['id'],  context)
+                                            data['id'], context)
         if vals:
             cnt = vals['count']
         return {}
-    
+
     def _result_set(self, cr, uid, data, context=None):
         return {'msg': 'Import Sucessful.'}
-    
+
     states = {
         'init': {
-            'actions': [], 
+            'actions': [],
             'result': {'type': 'form', 'arch': form1, 'fields': form1_fields, \
                        'state': [('end', '_Cancel', 'gtk-cancel'), ('open', '_Subscribe', 'gtk-ok')]}
-        }, 
+        },
         'open': {
-            'actions': [], 
+            'actions': [],
             'result': {'type': 'action', 'action': _process_imp_ics, 'state': 'display'}
         },
        'display': {
-            'actions': [_result_set], 
+            'actions': [_result_set],
             'result': {'type': 'form', 'arch': display, 'fields': display_fields, \
                        'state': [('end', 'Ok', 'gtk-ok')]}
-        }, 
+        },
     }
-    
+
 cal_event_subscribe_wizard('calendar.event.subscribe')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

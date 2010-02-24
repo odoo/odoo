@@ -34,10 +34,10 @@
     "depends" : ["base", "account"],
     "init_xml" : [
     ],
-    
+
     "demo_xml" : [
     ],
-    
+
     "update_xml" : [
         "voucher_sequence.xml",
         "account_report.xml",
