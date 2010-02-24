@@ -247,7 +247,7 @@ class browse_record(object):
                         new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
                     else:
                         new_data[n] = data[n]
-                self._data[data['id']].update(new_data)                        
+                self._data[data['id']].update(new_data)
         if not name in self._data[self._id]:
             #how did this happen?
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
@@ -1100,7 +1100,7 @@ class orm_template(object):
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
                         dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
-                        context.update(eval(node.get('context','{}')))                        
+                        context.update(eval(node.get('context','{}')))
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
@@ -1186,7 +1186,21 @@ class orm_template(object):
             button.set('readonly', str(int(not can_click)))
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
-        fields = self.fields_get(cr, user, fields_def.keys(), context)
+
+        #code for diagram view.
+        fields={}
+        if node.tag=='diagram':
+            if node.getchildren()[0].tag=='node':
+               node_fields=self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
+            if node.getchildren()[1].tag=='arrow':
+               arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
+            for key,value in node_fields.items():
+                fields[key]=value
+            for key,value in arrow_fields.items():
+                fields[key]=value
+        else:
+            fields = self.fields_get(cr, user, fields_def.keys(), context)
+
         for field in fields_def:
             if field == 'id':
                 # sometime, the view may containt the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
@@ -1202,7 +1216,6 @@ class orm_template(object):
                 msg += "\n\nEither you wrongly customised this view, or some modules bringing those views are not compatible with your current data model"
                 netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
                 raise except_orm('View error', msg)
-
         return arch, fields
 
     def __get_default_calendar_view(self):
@@ -1855,7 +1868,7 @@ class orm(orm_template):
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float','integer'), fields)
         sum = {}
 
-        group_by = groupby       
+        group_by = groupby
         if fget.get(groupby,False) and fget[groupby]['type'] in ('date','datetime'):
             flist = "to_char(%s,'yyyy-mm') as %s "%(groupby,groupby)
             groupby = "to_char(%s,'yyyy-mm')"%(groupby)
@@ -2032,12 +2045,12 @@ class orm(orm_template):
 
                 if isinstance(f, fields.one2many):
                     cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname=%s", (f._obj,))
-                    
+
                     if self.pool.get(f._obj):
                         if f._fields_id not in self.pool.get(f._obj)._columns.keys():
                             if not self.pool.get(f._obj)._inherits or (f._fields_id not in self.pool.get(f._obj)._inherit_fields.keys()):
                                 raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id,f._obj,))
-                    
+
                     if cr.fetchone():
                         cr.execute("SELECT count(1) as c FROM pg_class c,pg_attribute a WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid", (f._obj, f._fields_id))
                         res = cr.fetchone()[0]
