@@ -47,6 +47,7 @@
                     <group col="10" colspan="4">
                         <field name="name" select="1" />
                         <field name="date" select="1" />
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </search>
             </field>
@@ -543,15 +544,15 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="origin"/>
-                    <field name="address_id" select="1"/>
                     <field name="backorder_id"/>
+                    <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
-                    <field name="invoice_state"/>
                     <field name="state"/>
+                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.   Do you want to continue?"/>
                 </tree>
             </field>
         </record>
@@ -697,16 +698,16 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="origin"/>
                     <field name="address_id" select="1"/>
                     <field name="backorder_id"/>
+                    <field name="origin"/>
                     <field name="date" select="1"/>
                     <field name="min_date" select="1"/>
                     <field name="state" select="1"/>
-                    <button name="%(partial_picking)d" states="assigned" string="Products Sent" type="action" icon="gtk-go-forward"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
+                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Delivery"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the delivery.    Do you want to continue?"/>
                 </tree>
             </field>
         </record>
@@ -827,8 +828,8 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Back Order" domain="[('backorder_id','!=',False)]" help="Back Order"/>
                         <separator orientation="vertical"/>
-                        <field name="address_id" select="1"/>
                         <field name="name" select="1"/>
+                        <field name="address_id" select="1"/>
                         <field name="origin" select="1"/>
                     </group>
                     <group expand="1" string="Group By..." colspan="4" col="10">
@@ -878,15 +879,17 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('cancel');grey:state in ('confirmed');blue:state in ('done');black:state not in ('cancel','confirmed','done')" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="origin"/>
                     <field name="address_id"/>
                     <field name="backorder_id"/>
+                    <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="invoice_state"/>
                     <field name="state"/>
+                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.    Do you want to continue?"/>
                 </tree>
             </field>
         </record>
@@ -1054,7 +1057,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel', 'done');black:state in ('confirmed', 'assigned');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="address_id"/>
                     <field name="backorder_id"/>
@@ -1063,8 +1066,8 @@
                     <field name="min_date"/>
                     <field name="invoice_state"/>
                     <field name="state"/>
-                    <button name="%(partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-ok"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="Are you sure to want to cancel this record ?" />
+                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-ok" help="Receive products"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
                 </tree>
             </field>
         </record>
@@ -1232,7 +1235,7 @@
                         <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" default="1" />
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="address_id" select="1"/>
+                        <field name="origin" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
                     </group>
                     <group expand="1" string="Group By..." colspan="4" col="8">
@@ -1383,6 +1386,12 @@
             <field name="search_view_id" ref="view_stock_picking_filter"/>
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
+        </record>
+        <record id="action_picking_out_tree_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_out_tree"/>
+            <field name="act_window_id" ref="action_picking_all"/>
         </record>
         <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 
