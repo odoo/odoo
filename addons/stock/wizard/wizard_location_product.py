@@ -65,7 +65,7 @@ class product_by_location(wizard.interface):
     states = {
       'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Products','gtk-ok')]}
+            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel', 'gtk-cancel'),('open', 'Open Products', 'gtk-apply', True)]}
         },
     'open': {
             'actions': [],

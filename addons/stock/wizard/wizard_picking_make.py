@@ -71,7 +71,7 @@ class stock_picking_make(wizard.interface):
                 'fields': FIELDS,
                 'state': [
                     ('end', 'Cancel', 'gtk-cancel'),
-                    ('make', 'Ok', 'gtk-ok', True)
+                    ('make', 'Ok', 'gtk-apply', True)
                 ],
             },
         },

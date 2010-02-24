@@ -78,8 +78,8 @@ class merge_inventory(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : _form,
                     'fields' : _inventory_fields,
-                    'state' : [('end', 'Cancel'),
-                               ('merge', 'Set to Zero') ]}
+                    'state' : [('end', 'Cancel', 'gtk-cancel'),
+                               ('merge', 'Set to Zero', 'gtk-apply', True) ]}
         },
         'merge' : {
             'actions' : [],

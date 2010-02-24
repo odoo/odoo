@@ -224,8 +224,8 @@ class partial_picking(wizard.interface):
             'actions': [ _get_moves ],
             'result': {'type': 'form', 'arch': _moves_arch, 'fields': _moves_fields,
                 'state' : (
-                    ('end', 'Cancel'),
-                    ('split', 'Make Picking')
+                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('split', 'Make Picking', 'gtk-apply', True)
                 )
             },
         },
