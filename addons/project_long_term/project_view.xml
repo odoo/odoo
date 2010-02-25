@@ -19,9 +19,8 @@
             <field name="type">tree</field>
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
-                <tree string="Project Resource Allocation">
+                <tree editable="bottom" string="Project Resource Allocation">
                     <field name="resource_id"/>
-                    <field name="phase_id"/>
                     <field name="useability"/>
                 </tree>
             </field>
@@ -34,28 +33,54 @@
                 <form string="Project Phase">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
-                        <field name="project_id"/>
+                        <field name="project_id" on_change="onchange_project(project_id)"/>
+                        <field name="responsible_id"/>
                         <field name="date_start"/>
                         <field name="date_end"/>
-                        <field name="constraint_date_start"/>
-                        <field name="constraint_date_end"/>
                         <field name="duration"/>
                         <field name="product_uom"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Task Detail">
-                            <separator colspan="4" string="Project's Tasks"/>
-                            <field colspan="4" name="task_ids" nolabel="1"/>
-                        </page>
-                        <page string="Resource Allocation Detail">
+                    	<page string="Resource Allocation Detail">
                             <separator colspan="4" string="Resource Allocation"/>
-                            <field colspan="4" name="resource_ids" nolabel="1"/>
+                            <field colspan="4" name="resource_ids" nolabel="1">
+                            	 <tree editable="bottom" string="Project Resource Allocation">
+                                    <field name="resource_id" context="{'project_id':parent.project_id}"/>
+                    				<field name="useability"/>
+                                  </tree>
+                                  <form string="Project Resource Allocation">
+                                    <field name="resource_id" context="{'project_id':parent.project_id}"/>
+                    				<field name="useability"/>
+                                  </form>
+                             </field>
+                            <group col="12" colspan="4">
+                            	<field name="state" select="1"/>
+                            	<button string="Draft" name="phase_draft" states="open"/>
+                            	<button string="Start Phase" name="phase_start" states="pending,draft"/>
+                                <button string="Cancel" name="phase_cancel" states="draft,open,pending"/>
+                                <button string="Done" name="phase_done" states="draft,pending,open"/>
+                                <button string="Pending" name="phase_pending" states="open"/>
+                            </group>
                         </page>
                         <page string="Other Info">
+                           <group colspan="2" col="2">
+                                <separator string="Constraints" colspan="2"/>
+                                <field name="constraint_date_start"/>
+                        		<field name="constraint_date_end"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Scheduling" colspan="2"/>
+                                <field name="sequence"/>
+                            </group>
                            <separator colspan="4" string="Next Phases"/>
                            <field colspan="4" name="next_phase_ids" nolabel="1"/>
                            <separator colspan="4" string="Previous Phases"/>
                            <field colspan="4" name="previous_phase_ids" nolabel="1"/>
+                        </page>
+                        <page string="Task Detail">
+                            <separator colspan="4" string="Project's Tasks"/>
+                            <field colspan="4" name="task_ids" nolabel="1"/>
+                           	<button name="%(wizard_schedule_task)d" string="Schedule Tasks" type="action" icon="gtk-jump-to"/>
                         </page>
                     </notebook>
                     <newline/>
@@ -92,7 +117,7 @@
         res_model="project.task"
         src_model="project.phase"
         view_mode="tree,form"
-        domain="[('phase_id','=',active_id)]"/>        
+        domain="[('phase_id','=',active_id)]"/>
 
         <menuitem action="act_project_phase" id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
 
