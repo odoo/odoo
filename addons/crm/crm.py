@@ -155,6 +155,7 @@ class crm_case_stage(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
         'object_id': fields.many2one('ir.model','Object Name'),
         'probability': fields.float('Probability (%)', required=True),
+        'on_change': fields.boolean('Set Onchange'),
     }
     def _find_object_id(self, cr, uid, context=None):
         object_id = context and context.get('object_id', False) or False
