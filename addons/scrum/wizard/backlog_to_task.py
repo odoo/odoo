@@ -49,7 +49,6 @@ def _do_create(self, cr, uid, data, context):
             'description': backlog.note,
             'project_id': backlog.project_id.id,
             'user_id': (backlog.user_id and backlog.user_id.id) or uid,
-            'priority': backlog.priority,
             'planned_hours': backlog.planned_hours
         }))
 
