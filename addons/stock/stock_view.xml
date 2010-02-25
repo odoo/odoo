@@ -118,7 +118,7 @@
             <field name="context">{'full':'1'}</field>
             <field name="search_view_id" ref="view_inventory_filter" />
         </record>
-        <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="2"/>
+        <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
 
         <record id="action_inventory_form_draft" model="ir.actions.act_window">
             <field name="name">Draft Periodical Inventories</field>
@@ -436,7 +436,7 @@
             <field name="view_id" ref="view_location_tree2"/>
             <field name="context">{'full':'1'}</field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_stock_configuration"/>
+        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_stock_configuration" />
 
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
@@ -450,14 +450,14 @@
             </field>
         </record>
         <record id="action_location_tree" model="ir.actions.act_window">
-            <field name="name">Stock Locations Structure</field>
+            <field name="name">Location Structure</field>
             <field name="res_model">stock.location</field>
             <field name="type">ir.actions.act_window</field>
             <field name="domain">[('location_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_location_tree"/>
         </record>
-<!--        <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_root"/>-->
+        <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_inventory_control" sequence="20"/>
 
         <record id="view_warehouse" model="ir.ui.view">
             <field name="name">stock.warehouse</field>
@@ -890,6 +890,9 @@
                     <field name="state"/>
                     <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.    Do you want to continue?"/>
+                    <button name="%(wizard_invoice_onshipping)d" states="done" string="Invoice" type="action" 
+                    			icon="gtk-execute" help="Create invoice" 
+                    			attrs="{'invisible': [('invoice_state', '!=', '2binvoiced')]}" />
                 </tree>
             </field>
         </record>
@@ -1378,7 +1381,7 @@
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="1"/>
 
         <record id="action_picking_all" model="ir.actions.act_window">
-            <field name="name">Picking</field>
+            <field name="name">Picking lists</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
