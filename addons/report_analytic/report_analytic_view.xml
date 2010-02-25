@@ -58,6 +58,86 @@
             <field name="domain">[('state','=','open')]</field>
         </record>
         <menuitem action="action_analytic_account_tree" id="menu_action_analytic_account_tree" parent="account.next_id_40"/>
+
+
+        <record id="account_analytic_line_to_invoice_view_form" model="ir.ui.view">
+            <field name="name">report.account.analytic.line.to.invoice</field>
+            <field name="model">report.account.analytic.line.to.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Lines to Invoice">
+                    <field name="name" select="1"/>
+                    <field name="month" select="1"/>
+                    <field name="account_id" select="1"/>
+                    <newline/>
+                    <field name="product_id" select="1"/>
+                    <field name="product_uom_id"/>
+                    <newline/>
+                    <field colspan="1" name="amount"/>
+                    <field colspan="1" name="unit_amount"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_analytic_line_to_invoice_view_tree" model="ir.ui.view">
+            <field name="name">report.account.analytic.line.to.invoice</field>
+            <field name="model">report.account.analytic.line.to.invoice</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Lines to Invoice">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="product_id"/>
+                    <field name="account_id"/>
+                    <field name="amount"/>
+                    <field name="sale_price"/>
+                    <field name="unit_amount"/>
+                    <field name="product_uom_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_analytic_line_to_invoice_view_graph" model="ir.ui.view">
+            <field name="name">report.account.analytic.line.to.invoice.graph</field>
+            <field name="model">report.account.analytic.line.to.invoice</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Analytic Lines to Invoice" type="bar">
+                    <field name="name"/>
+                    <field name="sale_price" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+		<record id="account_analytic_line_to_invoice_view_filter" model="ir.ui.view">
+            <field name="name">report.account.analytic.line.to.invoice.select</field>
+            <field name="model">report.account.analytic.line.to.invoice</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Analytic Lines to Invoice">
+                   <group col="12" colspan="4">
+                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
+						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.localtime()[1])]"/>
+						<separator orientation="vertical"/>
+						<field name="name" select="1"/>
+						<field name="month" select="1"/>
+	                    <field name="product_id" select="1"/>
+	                    <field name="account_id" select="1"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_line_to_invoice" model="ir.actions.act_window">
+            <field name="name">Analytic Lines to Invoice</field>
+            <field name="res_model">report.account.analytic.line.to.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="account_analytic_line_to_invoice_view_filter"/>
+        </record>
+        <menuitem action="action_account_analytic_line_to_invoice" id="account_analytic_lines_to_invoice_report" parent="account.next_id_40"/>
+
+        <act_window domain="[('account_id', '=', active_id),('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]" id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice" name="Lines to Invoice" res_model="account.analytic.line" src_model="account.analytic.account"/>
         
     </data>
 </openerp>
