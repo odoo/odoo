@@ -134,7 +134,7 @@
             <field name="arch" type="xml">
                 <tree string="Dates of Inventories">
                     <field name="product_id"/>
-                    <field name="create_date" />
+                    <field name="date" />
                 </tree>
             </field>
         </record>
@@ -146,8 +146,7 @@
             <field name="arch" type="xml">
                 <form string="Dates of Inventories">
                     <field name="product_id" select="1"/>
-                    <field name="id" select="2"/>
-                    <field name="create_date" select="1" />
+                    <field name="date" select="1" />
                 </form>
             </field>
         </record>
