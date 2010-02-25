@@ -41,6 +41,7 @@
 
 import time
 import calendar
+import datetime
 import types
 import string
 import netsvc
@@ -54,6 +55,7 @@ from tools.translate import _
 
 import copy
 import sys
+import operator
 
 try:
     from lxml import etree
@@ -66,15 +68,12 @@ from tools.config import config
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
 def last_day_of_current_month():
-    import datetime
-    import calendar
     today = datetime.date.today()
     last_day = str(calendar.monthrange(today.year, today.month)[1])
     return time.strftime('%Y-%m-' + last_day)
 
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
-
 
 class except_orm(Exception):
     def __init__(self, name, value):
@@ -885,6 +884,8 @@ class orm_template(object):
                 data = pickle.load(file(config.get('import_partial')))
                 data[filename] = initial_size - len(datas) + original_value
                 pickle.dump(data, file(config.get('import_partial'),'wb'))
+                if context.get('defer_parent_store_computation'):
+                    self._parent_store_compute(cr)
                 cr.commit()
 
             #except Exception, e:
@@ -898,6 +899,8 @@ class orm_template(object):
         #
         # TODO: Send a request with the result and multi-thread !
         #
+        if context.get('defer_parent_store_computation'):
+            self._parent_store_compute(cr)
         return (done, 0, 0, 0)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
@@ -1658,6 +1661,8 @@ class orm(orm_template):
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count', 'exists']
 
     def _parent_store_compute(self, cr):
+        if not self._parent_store:
+            return
         logger = netsvc.Logger()
         logger.notifyChannel('orm', netsvc.LOG_INFO, 'Computing parent left and right for table %s...' % (self._table, ))
         def browse_rec(root, pos=0):
@@ -1745,7 +1750,7 @@ class orm(orm_template):
                         logger.notifyChannel('orm', netsvc.LOG_ERROR, 'create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)' % (self._table, ))
                     if 'parent_right' not in self._columns:
                         logger.notifyChannel('orm', netsvc.LOG_ERROR, 'create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)' % (self._table, ))
-                    if self._columns[self._parent_name].ondelete<>'cascade':
+                    if self._columns[self._parent_name].ondelete != 'cascade':
                         logger.notifyChannel('orm', netsvc.LOG_ERROR, "The column %s on object %s must be set as ondelete='cascade'" % (self._parent_name, self._name))
                     cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
                     cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
@@ -2074,7 +2079,6 @@ class orm(orm_template):
                 elif field['ttype'] == 'one2many':
                     self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], field['relation_field'], **attrs)
                 elif field['ttype'] == 'many2many':
-                    import random
                     _rel1 = field['relation'].replace('.', '_')
                     _rel2 = field['model'].replace('.', '_')
                     _rel_name = 'x_%s_%s_%s_rel' %(_rel1, _rel2, field['name'])
@@ -2520,6 +2524,24 @@ class orm(orm_template):
 
         self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
 
+        # No direct update of parent_left/right
+        vals.pop('parent_left', None)
+        vals.pop('parent_right', None)
+
+        parents_changed = []
+        if self._parent_store and (self._parent_name in vals):
+            # The parent_left/right computation may take up to
+            # 5 seconds. No need to recompute the values if the
+            # parent is the same. Get the current value of the parent
+            base_query = 'SELECT id FROM %s WHERE id IN %%s AND %s' % \
+                            (self._table, self._parent_name)
+            params = (tuple(ids),)
+            parent_val = vals[self._parent_name]
+            if parent_val:
+                cr.execute(base_query + " != %s", params + (parent_val,))
+            else:
+                cr.execute(base_query + " IS NULL", params)
+            parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
         upd0 = []
         upd1 = []
@@ -2633,41 +2655,48 @@ class orm(orm_template):
             self.pool.get(table).write(cr, user, nids, v, context)
 
         self._validate(cr, user, ids, context)
-# TODO: use _order to set dest at the right position and not first node of parent
-        if self._parent_store and (self._parent_name in vals):
+
+        # TODO: use _order to set dest at the right position and not first node of parent
+        # We can't defer parent_store computation because the stored function
+        # fields that are computer may refer (directly or indirectly) to
+        # parent_left/right (via a child_of domain)
+        if parents_changed:
             if self.pool._init:
                 self.pool._init_parent[self._name]=True
             else:
-                for id in ids:
-                    # Find Position of the element
-                    if vals[self._parent_name]:
-                        cr.execute('select parent_left,parent_right,id from '+self._table+' where '+self._parent_name+'=%s order by '+(self._parent_order or self._order), (vals[self._parent_name],))
-                    else:
-                        cr.execute('select parent_left,parent_right,id from '+self._table+' where '+self._parent_name+' is null order by '+(self._parent_order or self._order))
-                    result_p = cr.fetchall()
-                    position = None
-                    for (pleft,pright,pid) in result_p:
-                        if pid == id:
-                            break
-                        position = pright+1
+                order = self._parent_order or self._order
+                parent_val = vals[self._parent_name]
+                if parent_val:
+                    clause, params = '%s=%%s' % (self._parent_name,), (parent_val,)
+                else:
+                    clause, params = '%s IS NULL' % (self._parent_name,), ()
+                cr.execute('SELECT parent_right, id FROM %s WHERE %s ORDER BY %s' % (self._table, clause, order), params)
+                parents = cr.fetchall()
 
-                    # It's the first node of the parent: position = parent_left+1
-                    if not position:
-                        if not vals[self._parent_name]:
-                            position = 1
-                        else:
-                            cr.execute('select parent_left from '+self._table+' where id=%s', (vals[self._parent_name],))
-                            position = cr.fetchone()[0]+1
-
-                    # We have the new position !
-                    cr.execute('select parent_left,parent_right from '+self._table+' where id=%s', (id,))
-                    pleft,pright = cr.fetchone()
+                for id in parents_changed:
+                    cr.execute('SELECT parent_left, parent_right FROM %s WHERE id=%%s' % (self._table,), (id,))
+                    pleft, pright = cr.fetchone()
                     distance = pright - pleft + 1
 
-                    if position>pleft and position<=pright:
+                    # Find Position of the element
+                    position = None
+                    for (parent_pright, parent_id) in parents:
+                        if parent_id == id:
+                            break
+                        position = parent_pright+1
+
+                    # It's the first node of the parent
+                    if not position:
+                        if not parent_val:
+                            position = 1
+                        else:
+                            cr.execute('select parent_left from '+self._table+' where id=%s', (parent_val,))
+                            position = cr.fetchone()[0]+1
+
+                    if pleft < position <= pright:
                         raise except_orm(_('UserError'), _('Recursivity Detected.'))
 
-                    if pleft<position:
+                    if pleft < position:
                         cr.execute('update '+self._table+' set parent_left=parent_left+%s where parent_left>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_right=parent_right+%s where parent_right>=%s', (distance, position))
                         cr.execute('update '+self._table+' set parent_left=parent_left+%s, parent_right=parent_right+%s where parent_left>=%s and parent_left<%s', (position-pleft,position-pleft, pleft, pright))
@@ -2790,7 +2819,7 @@ class orm(orm_template):
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
-        if self._parent_store:
+        if self._parent_store and not context.get('defer_parent_store_computation'):
             if self.pool._init:
                 self.pool._init_parent[self._name]=True
             else:
