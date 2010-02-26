@@ -362,7 +362,7 @@ class Partner(osv.osv):
                     selection = STATE ,store = {
                         'account.invoice':(_get_invoice_partner,['state'], 10),
                         'membership.membership_line':(_get_partner_id,['state'], 10),
-                        'res.partner':(_get_partners, ['free_member', 'membership_state'], 10)
+                        'res.partner':(_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                         }
                     ),
         'membership_start': fields.function(
