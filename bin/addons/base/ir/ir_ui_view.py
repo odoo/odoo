@@ -140,6 +140,7 @@ class view(osv.osv):
         tres={}
         sig={}
         no_ancester=[]
+        blank_nodes = []
 
         _Model_Obj=self.pool.get(model)
         _Node_Obj=self.pool.get(node_obj)
@@ -165,6 +166,9 @@ class view(osv.osv):
             if a[_Source_Field] or a[_Destination_Field]:
                 nodes_name.append((a['id'],a['name']))
                 nodes.append(a['id'])
+            else:
+                blank_nodes.append({'id': a['id'],'name':a['name']})
+
             if a.has_key('flow_start') and a['flow_start']:
                 start.append(a['id'])
             else:
@@ -184,7 +188,7 @@ class view(osv.osv):
         for node in nodes_name:
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
-        return {'nodes': results, 'transitions': tres, 'signal' : sig}
+        return {'nodes': results, 'transitions': tres, 'signal' : sig, 'blank_nodes': blank_nodes}
 view()
 
 class view_sc(osv.osv):
