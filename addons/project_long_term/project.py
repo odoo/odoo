@@ -78,6 +78,19 @@ class project_phase(osv.osv):
                  return False
          return True
 
+    def _check_constraint_start(self, cr, uid, ids):
+         phase = self.read(cr, uid, ids[0],['date_start','constraint_date_start'])
+         if phase['date_start'] and phase['constraint_date_start']:
+             if phase['date_start'] < phase['constraint_date_start']:
+                 return False
+         return True
+
+    def _check_constraint_end(self, cr, uid, ids):
+         phase = self.read(cr, uid, ids[0],['date_end','constraint_date_end'])
+         if phase['date_end'] and phase['constraint_date_end']:
+             if phase['date_end'] > phase['constraint_date_end']:
+                 return False
+         return True
 
     _columns = {
         'name': fields.char("Phase Name", size=64, required=True),
@@ -110,7 +123,10 @@ class project_phase(osv.osv):
     _order = "name"
     _constraints = [
         (_check_recursion,'Error ! Loops In Phases Not Allowed',['next_phase_ids','previous_phase_ids']),
-        (_check_dates, 'Error! Phase start-date must be lower then Phase end-date.', ['date_start', 'date_end'])
+        (_check_dates, 'Error! Phase start-date must be lower then Phase end-date.', ['date_start', 'date_end']),
+        (_check_constraint_start, 'Error! Phase must start-after Constraint Start Date.', ['date_start', 'constraint_date_start']),
+        (_check_constraint_end, 'Error! Phase must end-before Constraint End Date.', ['date_end', 'constraint_date_end']),
+
     ]
 
     def onchange_project(self,cr,uid,ids,project):
