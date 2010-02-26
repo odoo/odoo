@@ -60,12 +60,18 @@ class wizard_schedule_task(wizard.interface):
         user_pool = pool.get('res.users')
         phase = phase_pool.browse(cr,uid,data['id'])
         task_ids = map(lambda x:x.id,(filter(lambda x:x.state in ['open','draft','pending'] ,phase.task_ids)))
-        task_ids.sort()
-        tasks = task_pool.browse(cr,uid,task_ids)
 
         if task_ids:
+            task_ids.sort()
+            tasks = task_pool.browse(cr,uid,task_ids)
             wktime_cal = []
-            date_start = datetime.datetime.strftime(datetime.datetime.strptime(phase.date_start,"%Y-%m-%d %H:%M:%S"),"%Y-%m-%d %H:%M")
+            start_date = str(phase.date_start)[:-9]
+            if not phase.date_start:
+                if not phase.project_id.date_start:
+                    start_date = datetime.datetime.now().strftime("%Y-%m-%d")
+                else:
+                    start_date = phase.project_id.date_start
+            date_start = datetime.datetime.strftime(datetime.datetime.strptime(start_date,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
             calendar_id = phase.project_id.resource_calendar_id.id
             resource_objs = resource_list(cr,uid,phase)
             priority_dict = {'0':1000,'1':800,'2':500,'3':300,'4':100}

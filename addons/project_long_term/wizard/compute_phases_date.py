@@ -121,7 +121,10 @@ class wizard_compute_phases(wizard.interface):
         phase_ids.sort()
         phase_objs = phase_pool.browse(cr,uid,phase_ids)
         for phase in phase_objs:
-            start_dt = datetime.datetime.strftime((datetime.datetime.strptime(phase.date_start,"%Y-%m-%d %H:%M:%S")),"%Y-%m-%d %H:%M")
+            start_date = phase.project_id.date_start
+            if not phase.project_id.date_start:
+                start_date = datetime.datetime.now().strftime("%Y-%m-%d")
+            start_dt = datetime.datetime.strftime((datetime.datetime.strptime(start_date,"%Y-%m-%d")),"%Y-%m-%d %H:%M")
             calendar_id = phase.project_id.resource_calendar_id.id
             phase_schedule(cr,uid,phase,start_dt,calendar_id or False)
 

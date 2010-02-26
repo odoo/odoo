@@ -58,7 +58,10 @@ class wizard_compute_tasks(wizard.interface):
             task_ids.sort()
             task_obj = task_pool.browse(cr,uid,task_ids)
             calendar_id = project.resource_calendar_id.id
-            date_start = datetime.datetime.strftime(datetime.datetime.strptime(project.date_start,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
+            start_date = project.date_start
+            if not project.date_start:
+                start_date = datetime.datetime.now().strftime("%Y-%m-%d")
+            date_start = datetime.datetime.strftime(datetime.datetime.strptime(start_date,"%Y-%m-%d"),"%Y-%m-%d %H:%M")
 
 #    To create resources which are the Project Members
             resource_objs = []
