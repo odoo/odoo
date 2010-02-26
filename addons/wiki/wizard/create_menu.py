@@ -53,7 +53,7 @@ def wiki_menu_create(self, cr, uid, data, context):
     home = data['form']['page']
     group_id = data['id']
     res = {
-        'home':home,
+        'home': home,
     }
     pool.get('wiki.groups').write(cr, uid, [data['id']], res)
     pool.get('wiki.groups.link').create(cr, uid, {'group_id':group_id, 'action_id':menu_id})
