@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_account_invoice_refund" model="ir.ui.view">
+            <field name="name">account.invoice.refund.form</field>
+            <field name="model">account.invoice.refund</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Credit Note">
+                	<group colspan="4" >
+                    	 <label string="Are you sure you want to refund this invoice ?" colspan="2"/>
+                    	 <newline/>
+                    	 <field name="date"/>
+                    	 <field name="period"/>
+                    	 <field name="description"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+                    	<button  special="cancel" string="Cancel"/>
+                    	<button string="Refund Invoice" name="_invoice_refund" type="object"/>
+                    	<button string="Cancel Invoice" name="_invoice_cancel" type="object"/>
+                    	<button string="Modify Invoice" name="_invoice_modify" type="object"/>
+                   </group>
+               </form>
+            </field>
+    	</record>
+        <record id="wizard_invoice_refund" model="ir.actions.act_window">
+            <field name="name">Credit Note</field>
+            <field name="res_model">account.invoice.refund</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_account_invoice_refund"/> 
+           <field name="target">new</field>
+        </record>
+    </data>
+</openerp>	

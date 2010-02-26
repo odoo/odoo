@@ -35,10 +35,12 @@ class account_move_line_reconcile_select(osv.osv_memory):
     
     def _action_open_window(self, cr, uid, ids, context):
         """
-         cr is the current row, from the database cursor,
-         uid is the current user’s ID for security checks,
-         ID is the account move line reconcile select’s ID or list of IDs if we want more than one
-         This function Open  account move line window for reconcile on given account id
+        This function Open  account move line window for reconcile on given account id
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: account move line reconcile select’s ID or list of IDs if we want more than one
+        @return:dictionary of  Open  account move line window for reconcile on given account id
+        
          """
         for data in  self.read(cr, uid, ids):
             

@@ -41,10 +41,11 @@ class account_chart(osv.osv_memory):
         
     def _account_chart_open_window(self, cr, uid, ids, context):
             """
-            cr is the current row, from the database cursor,
-            uid is the current user’s ID for security checks,
-            ID is the account chart’s ID or list of IDs if we want more than one
-            This function Open  account chart window  on given fiscalyear and all Entries or posted entries
+            
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param id: the account chart’s ID or list of IDs if we want more than one
+            @return: dictionary of Open  account chart window  on given fiscalyear and all Entries or posted entries
             """
             for form in  self.read(cr, uid, ids):
                 mod_obj = self.pool.get('ir.model.data')

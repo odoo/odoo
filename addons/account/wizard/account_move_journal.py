@@ -41,10 +41,12 @@ class account_move_journal(osv.osv_memory):
     
     def _action_open_window(self, cr, uid, ids, context={}):
         """
-        cr is the current row, from the database cursor,
-        uid is the current user’s ID for security checks,
-        ID is the account move journal’s ID or list of IDs if we want more than one
         This function Open action move line window on given period and  Journal/Payment Mode
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: account move journal’s ID or list of IDs if we want more than one
+        @return:dictionary of Open action move line window on given period and  Journal/Payment Mode
+        
         """
         for form in  self.read(cr, uid, ids,['journal_id', 'period_id']):
             cr.execute('select id,name from ir_ui_view where model=%s and type=%s', ('account.move.line', 'form' ))

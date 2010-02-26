@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_period_close" model="ir.ui.view">
+            <field name="name">account.period.close.form</field>
+            <field name="model">account.period.close</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Close Period">
+                	<group colspan="4" >
+                    	 <separator string="Are you sure ?" colspan="4"/>
+                    	 <field name="sure"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+                    	<button  special="cancel" string="Cancel"/>
+                    	<button string="Close Period" name="_data_save" type="object"/>
+                   </group>
+               </form>
+            </field>
+        </record>
+		<record id="wizard_period_close" model="ir.actions.act_window">
+            <field name="name">Close a Period</field>
+            <field name="res_model">account.period.close</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_account_period_close"/> 
+           <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>	

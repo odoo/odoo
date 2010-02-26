@@ -26,33 +26,38 @@ from tools.translate import _
 import tools
 from osv import fields, osv
 
-
-class account_period_close(osv.osv_memory):
-    """close period"""
-    _name = "account.period.close"
-    _description = "period close"
+class account_fiscalyear_close_state(osv.osv_memory):
+    """
+    close  Account Fiscalyear 
+    """
+    _name = "account.fiscalyear.close.state"
+    _description = "Fiscalyear Close state"
     _columns = {
-                  'sure':fields.boolean('Check this box', required=False),
+                'fy_id':fields.many2one('account.fiscalyear',  'Fiscal Year to close', required=True),
+                'sure':fields.boolean('Check this box', required=False)
               }
 
     def _data_save(self, cr, uid, ids, context):
         """
-        This function close period
+        This function close account fiscalyear
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param id:account period close’s ID or list of IDs if we want more than one
-         
-         
-         """
-        
-        mode = 'done'
-        for form in self.read(cr, uid, ids): 
-            if form['sure']:
-                for id in context['active_ids']:
-                    cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
-                    cr.execute('update account_period set state=%s where id=%s', (mode, id))
+        @param id: account fiscalyear close state’s ID or list of IDs if we want more than one
+ 
+        """
+        for form in  self.read(cr, uid, ids):
+            if not form['sure']:
+                raise osv.except_osv(_('UserError'), _('Closing of states cancelled, please check the box !'))
+            fy_id = form['fy_id']
+            
+            cr.execute('UPDATE account_journal_period ' \
+                    'SET state = %s ' \
+                    'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %s)',
+                    ('done',fy_id))
+            cr.execute('UPDATE account_period SET state = %s ' \
+                    'WHERE fiscalyear_id = %s', ('done',fy_id))
+            cr.execute('UPDATE account_fiscalyear ' \
+                    'SET state = %s WHERE id = %s', ('done', fy_id))
             return {}
-
-account_period_close()
-
-
+    
+account_fiscalyear_close_state()

@@ -40,9 +40,9 @@ class account_invoice_refund(osv.osv_memory):
     
     def _compute_refund(self, cr, uid, ids, mode, context):
         """
-        cr is the current row, from the database cursor,
-        uid is the current user’s ID for security checks,
-        ID is the account invoice refund’s ID or list of IDs if we want more than one
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param id: the account invoice refund’s ID or list of IDs if we want more than one
         
         """
         

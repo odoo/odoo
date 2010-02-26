@@ -37,10 +37,10 @@ class account_move_bank_reconcile(osv.osv_memory):
               }
     def _action_open_window(self, cr, uid, ids, context):
              """
-            cr is the current row, from the database cursor,
-            uid is the current user’s ID for security checks,
-            ID is the account move bank reconcile’s ID or list of IDs if we want more than one
-            This function Open  account move line   on given journal_id.
+           @param cr: the current row, from the database cursor,
+           @param uid: the current user’s ID for security checks,
+           @param id: account move bank reconcile’s ID or list of IDs if we want more than one
+           @return:dictionary of  Open  account move line   on given journal_id.
             """
              for form in  self.read(cr, uid, ids):
                  cr.execute('select default_credit_account_id from account_journal where id=%s', (form['journal_id'],))
