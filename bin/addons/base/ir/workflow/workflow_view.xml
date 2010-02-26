@@ -32,8 +32,9 @@
                 <diagram string="Workflow Editor">
 				  <node object="workflow.activity">
 				    <field name="name"/>
+				    <field name="kind"/>
 				  </node>
-				  <arrow object="workflow.transition" source="act_from" destination="act_to">
+				  <arrow object="workflow.transition" source="act_from" destination="act_to" signal="signal">
 				    <field name="act_from"/>
 				    <field name="act_to"/>
 				    <field name="signal"/>
