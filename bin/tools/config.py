@@ -144,8 +144,7 @@ class configmanager(object):
         group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port', type="int")
-        if hasSSL:
-            group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
+        group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
         parser.add_option_group(group)
@@ -220,7 +219,7 @@ class configmanager(object):
             self.options['pidfile'] = False
 
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
+                'db_port', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout', 'smtp_ssl', 
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path']
 
