@@ -1271,6 +1271,20 @@
             <field name="currency_id" ref="INR"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
+        
+        <record id="AUD" model="res.currency">
+            <field name="name">AUD</field>
+            <field name="code">AUD</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateAUD" model="res.currency.rate">
+            <field name="rate">1.5266</field>
+            <field name="currency_id" ref="AUD"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
+        
 
     </data>
 </openerp>
