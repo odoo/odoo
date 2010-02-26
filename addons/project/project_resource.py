@@ -1,6 +1,3 @@
-from tools.translate import _
-from osv import fields, osv
-from tools.translate import _
 import pooler
 import datetime
 
@@ -34,6 +31,8 @@ def leaves_resource(cr,uid,calendar_id,resource_id=False,resource_calendar=False
         return leaves
 
 def compute_working_calendar(cr,uid,calendar_id):
+#     To change the format of working calendar to bring it into 'faces' format
+
         pool = pooler.get_pool(cr.dbname)
         resource_week_pool = pool.get('resource.calendar.week')
         time_range = "8:00-8:00"

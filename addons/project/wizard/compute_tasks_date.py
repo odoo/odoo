@@ -115,6 +115,7 @@ class wizard_compute_tasks(wizard.interface):
                         task = tasks_resource(i,hours,priorty)
                     i += 1
 
+#    Writing back the dates
             project = BalancedProject(Project)
             loop_no = 0
             for t in project:
@@ -126,7 +127,6 @@ class wizard_compute_tasks(wizard.interface):
                     user_id = user_pool.search(cr,uid,[('name','=',t.booked_resource[0].__name__)])
                     task_pool.write(cr,uid,[task_obj[loop_no-1].id],{'date_start':s_date.strftime('%Y-%m-%d %H:%M:%S'),'date_deadline':e_date.strftime('%Y-%m-%d %H:%M:%S'),'user_id':user_id[0]})
                 loop_no +=1
-
         return {}
 
     states = {

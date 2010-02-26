@@ -127,7 +127,6 @@ class wizard_compute_phases(wizard.interface):
             start_dt = datetime.datetime.strftime((datetime.datetime.strptime(start_date,"%Y-%m-%d")),"%Y-%m-%d %H:%M")
             calendar_id = phase.project_id.resource_calendar_id.id
             phase_schedule(cr,uid,phase,start_dt,calendar_id or False)
-
         return {}
 
     states = {

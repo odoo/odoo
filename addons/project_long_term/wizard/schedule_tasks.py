@@ -29,7 +29,6 @@ import operator
 import time
 import project.project_resource as proj
 
-
 success_msg = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
     <label string="Task Scheduling completed successfully."/>
@@ -49,9 +48,7 @@ def resource_list(cr,uid,phase):
             resource_objs.append(classobj(str(res.user_id.name),(Resource,),{'__doc__':res.user_id.name,'__name__':res.user_id.name,'vacation':tuple(leaves),'efficiency':resource_eff}))
         return resource_objs
 
-
 class wizard_schedule_task(wizard.interface):
-
 
     def _compute_date(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -116,6 +113,7 @@ class wizard_schedule_task(wizard.interface):
                         task = tasks_resource(i,hours,priorty)
                     i += 1
 
+#    Writing back the dates
             project = BalancedProject(Project)
             loop_no = 0
             for t in project:
@@ -125,7 +123,6 @@ class wizard_schedule_task(wizard.interface):
                     user_id = user_pool.search(cr,uid,[('name','=',t.booked_resource[0].__name__)])
                     task_pool.write(cr,uid,[tasks[loop_no-1].id],{'date_start':s_date.strftime('%Y-%m-%d %H:%M:%S'),'date_deadline':e_date.strftime('%Y-%m-%d %H:%M:%S'),'user_id':user_id[0]},context={'scheduler':True})
                 loop_no +=1
-
         return {}
 
     states = {
