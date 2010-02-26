@@ -50,7 +50,7 @@ class project_phase(osv.osv):
 
          #iter prev_ids
          while prev_ids:
-             cr.execute('select distinct next_phase_id from project_phase_rel where prv_phase_id in ('+','.join(map(str, prev_ids))+')')
+             cr.execute('select distinct prv_phase_id from project_phase_rel where next_phase_id in ('+','.join(map(str, prev_ids))+')')
              prv_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
              if obj_self.id in prv_phase_ids:
                  return False
@@ -61,7 +61,7 @@ class project_phase(osv.osv):
 
         #iter next_ids
          while next_ids:
-             cr.execute('select distinct prv_phase_id from project_phase_rel where next_phase_id in ('+','.join(map(str, next_ids))+')')
+             cr.execute('select distinct next_phase_id from project_phase_rel where prv_phase_id in ('+','.join(map(str, next_ids))+')')
              next_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
              if obj_self.id in next_phase_ids:
                  return False
@@ -69,6 +69,13 @@ class project_phase(osv.osv):
              if ids:
                  return False
              next_ids = next_phase_ids
+         return True
+
+    def _check_dates(self, cr, uid, ids):
+         phase = self.read(cr, uid, ids[0],['date_start','date_end'])
+         if phase['date_start'] and phase['date_end']:
+             if phase['date_start'] > phase['date_end']:
+                 return False
          return True
 
 
@@ -101,9 +108,100 @@ class project_phase(osv.osv):
     }
 
     _order = "name"
-#    _constraints = [
-#        (_check_recursion,'Error ! Loops In Phases Not Allowed',['next_phase_ids','previous_phase_ids'])
-#    ]
+    _constraints = [
+        (_check_recursion,'Error ! Loops In Phases Not Allowed',['next_phase_ids','previous_phase_ids']),
+        (_check_dates, 'Error! Phase start-date must be lower then Phase end-date.', ['date_start', 'date_end'])
+    ]
+
+    def onchange_project(self,cr,uid,ids,project):
+        result = {}
+        if project:
+          project_pool = self.pool.get('project.project')
+          project_id = project_pool.browse(cr,uid,project)
+          if project_id.date_start:
+              result['date_start'] = mx.DateTime.strptime(project_id.date_start,"%Y-%m-%d").strftime('%Y-%m-%d %H:%M:%S')
+              return {'value':result}
+        return {'value':{'date_start':[]}}
+
+    def constraint_date_start(self,cr,uid,phase,date_end,context=None):
+       # Recursive call for all previous phases if change in date_start < older time
+
+       resource_cal_pool = self.pool.get('resource.calendar')
+       uom_pool = self.pool.get('product.uom')
+       resource_pool = self.pool.get('resource.resource')
+       calendar_id = phase.project_id.resource_calendar_id.id
+       if phase.responsible_id.id:
+            resource_id = resource_pool.search(cr,uid,[('user_id','=',phase.responsible_id.id)])
+            calendar_id = resource_pool.browse(cr,uid,resource_id[0]).calendar_id.id
+       default_uom_id = uom_pool.search(cr,uid,[('name','=','Hour')])[0]
+       avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration,default_uom_id)
+       work_time = resource_cal_pool.interval_min_get(cr, uid, calendar_id or False, date_end, avg_hours or 0.0,resource_id or False)
+       dt_start = work_time[0][0].strftime('%Y-%m-%d %H:%M:%S')
+       self.write(cr,uid,[phase.id],{'date_start':dt_start,'date_end':date_end.strftime('%Y-%m-%d %H:%M:%S')})
+
+    def constraint_date_end(self,cr,uid,phase,date_start,context=None):
+       # Recursive call for all next phases if change in date_end > older time
+
+       resource_cal_pool = self.pool.get('resource.calendar')
+       uom_pool = self.pool.get('product.uom')
+       resource_pool = self.pool.get('resource.resource')
+       calendar_id = phase.project_id.resource_calendar_id.id
+       if phase.responsible_id.id:
+            resource_id = resource_pool.search(cr,uid,[('user_id','=',phase.responsible_id.id)])
+            calendar_id = resource_pool.browse(cr,uid,resource_id[0]).calendar_id.id
+       default_uom_id = uom_pool.search(cr,uid,[('name','=','Hour')])[0]
+       avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration,default_uom_id)
+       work_time = resource_cal_pool.interval_get(cr, uid, calendar_id or False, date_start, avg_hours or 0.0,resource_id or False)
+       dt_end = work_time[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+       self.write(cr,uid,[phase.id],{'date_start':date_start.strftime('%Y-%m-%d %H:%M:%S'),'date_end':dt_end})
+
+    def write(self, cr, uid, ids, vals,context=None):
+
+        if not context:
+            context = {}
+
+        if context.get('scheduler',False):
+            return super(project_phase, self).write(cr, uid, ids, vals, context=context)
+
+# if the phase is performed by a resource then its calendar and efficiency also taken
+# otherwise the project's working calendar considered
+        phase = self.browse(cr,uid,ids[0])
+        resource_cal_pool = self.pool.get('resource.calendar')
+        resource_pool = self.pool.get('resource.resource')
+        uom_pool = self.pool.get('product.uom')
+        resource_id = False
+        calendar_id = phase.project_id.resource_calendar_id.id
+
+        if phase.responsible_id.id:
+            resource_id = resource_pool.search(cr,uid,[('user_id','=',phase.responsible_id.id)])
+            calendar_id = resource_pool.browse(cr,uid,resource_id[0]).calendar_id.id
+        default_uom_id = uom_pool.search(cr,uid,[('name','=','Hour')])[0]
+        avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration,default_uom_id)
+
+# write method changes the date_start and date_end
+#for previous and next phases respectively based on valid condition
+
+        if vals.get('date_start'):
+            if vals['date_start'] < phase.date_start:
+                dt_start = mx.DateTime.strptime(vals['date_start'],'%Y-%m-%d %H:%M:%S')
+                work_times = resource_cal_pool.interval_get(cr, uid, calendar_id or False, dt_start, avg_hours or 0.0,resource_id or False)
+                vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+                super(project_phase, self).write(cr, uid, ids, vals, context=context)
+
+                for prv_phase in phase.previous_phase_ids:
+                   self.constraint_date_start(cr,uid,prv_phase,dt_start)
+
+        if vals.get('date_end'):
+            if vals['date_end'] > phase.date_end:
+                dt_end = mx.DateTime.strptime(vals['date_end'],'%Y-%m-%d %H:%M:%S')
+                work_times = resource_cal_pool.interval_min_get(cr, uid, calendar_id or False, dt_end, avg_hours or 0.0,resource_id or False)
+                vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
+                super(project_phase, self).write(cr, uid, ids, vals, context=context)
+
+                for next_phase in phase.next_phase_ids:
+                   self.constraint_date_end(cr,uid,next_phase,dt_end)
+
+        return super(project_phase, self).write(cr, uid, ids, vals, context=context)
 
     def phase_draft(self, cr, uid, ids,*args):
         self.write(cr, uid, ids, {'state': 'draft'})

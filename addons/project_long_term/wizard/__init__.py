@@ -20,6 +20,7 @@
 ##############################################################################
 
 import compute_phases_date
+import schedule_tasks
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
