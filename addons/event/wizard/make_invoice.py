@@ -92,7 +92,7 @@ def _makeInvoices(self, cr, uid, data, context):
 
         vals = value['value']
         vals.update({
-            'name': reg.name,
+            'name': reg.invoice_label + '-' + reg.name,
             'price_unit': reg.unit_price,
             'quantity': reg.nb_register,
             'product_id':reg.event_id.product_id.id,
@@ -101,7 +101,6 @@ def _makeInvoices(self, cr, uid, data, context):
         inv_line_ids = obj_event_reg._create_invoice_lines(cr, uid, [reg.id], vals)
 
         inv = {
-            'name': reg.invoice_label,
             'origin': reg.invoice_label,
             'type': 'out_invoice',
             'reference': False,
