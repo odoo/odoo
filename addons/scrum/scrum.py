@@ -69,6 +69,28 @@ class scrum_sprint(osv.osv):
             for bl in sprint.backlog_ids:
                 res[sprint.id] += bl.planned_hours
         return res
+    def _calc_expected(self, cr, uid, ids, name, args, context):
+        res = {}
+        for sprint in self.browse(cr, uid, ids):
+            res.setdefault(sprint.id, 0.0)
+            for bl in sprint.backlog_ids:
+                res[sprint.id] += bl.expected_hours
+        return res    
+    def button_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        return True
+    def button_draft(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'draft'}, context=context)
+        return True
+    def button_open(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        return True
+    def button_close(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        return True
+    def button_pending(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        return True
     _columns = {
         'name' : fields.char('Sprint Name', required=True, size=64),
         'date_start': fields.date('Starting Date', required=True),
@@ -83,7 +105,8 @@ class scrum_sprint(osv.osv):
         'progress': fields.function(_calc_progress, method=True, string='Progress (0-100)'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done')], 'State', required=True),
+        'expected_hours': fields.function(_calc_expected, method=True, string='Expected Hours'),
+        'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('cancel','Cancelled'),('done','Done')], 'State', required=True),
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -141,6 +164,23 @@ class scrum_product_backlog(osv.osv):
             for task in bl.tasks_id:
                 res[bl.id] += task.planned_hours
         return res
+
+    def button_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        return True
+    def button_draft(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'draft'}, context=context)
+        return True
+    def button_open(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        return True
+    def button_close(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        return True
+    def button_pending(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        return True
+
     _columns = {
         'name' : fields.char('Feature', size=64, required=True),
         'note' : fields.text('Note'),
@@ -150,10 +190,11 @@ class scrum_product_backlog(osv.osv):
         'sprint_id': fields.many2one('scrum.sprint', 'Sprint'),
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
+        'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
         'progress': fields.function(_calc_progress, method=True, string='Progress'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
-        'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours')
+        'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours'),
+        'expected_hours': fields.float('Expected Hours'),
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -166,6 +207,7 @@ class scrum_task(osv.osv):
     _inherit = 'project.task'
     _columns = {
         'product_backlog_id': fields.many2one('scrum.product.backlog', 'Product Backlog'),
+        'sprint_id': fields.related('product_backlog_id','sprint_id', type='many2one', relation='scrum.sprint', string='Sprint'),#, store=True),
     }
     def onchange_backlog_id(self, cr, uid, backlog_id):
         if not backlog_id:

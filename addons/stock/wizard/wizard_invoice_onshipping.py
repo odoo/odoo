@@ -145,8 +145,8 @@ class make_invoice_onshipping(wizard.interface):
                 'arch': invoice_form,
                 'fields': invoice_fields,
                 'state': [
-                    ('end', 'Cancel'),
-                    ('create_invoice', 'Create invoice')
+                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('create_invoice', 'Create invoice', 'gtk-apply', True)
                 ]
             }
         },

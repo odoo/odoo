@@ -193,8 +193,8 @@ class partial_move(wizard.interface):
             'actions': [ _get_moves ],
             'result': {'type': 'form', 'arch': _moves_arch, 'fields': _moves_fields,
                 'state' : (
-                    ('end', 'Cancel'),
-                    ('split', 'Partial')
+                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('split', 'Partial', 'gtk-apply', True)
                 )
             },
         },

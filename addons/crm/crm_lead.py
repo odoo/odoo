@@ -36,7 +36,7 @@ class crm_lead(osv.osv):
          'name': fields.char('Lead Subject', size=64),
          'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
          'type_id': fields.many2one('crm.case.resource.type', 'Lead Type Name', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
-         'partner_name': fields.char("Lead Name", size=64),
+         'partner_name': fields.char("Partner Name", size=64),
          'partner_name2': fields.char('Contact', size=64),
          'partner_phone': fields.char('Phone', size=32),
          'partner_mobile': fields.char('Mobile', size=32),
@@ -54,6 +54,7 @@ class crm_lead(osv.osv):
                                                                     "the partner mentality in relation to our services.The scale has" \
                                                                     "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
          'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'),
+         'user_id': fields.many2one('res.users', 'Salesman'),
     }
 
 crm_lead()

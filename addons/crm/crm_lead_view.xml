@@ -28,7 +28,7 @@
         <field name="arch" type="xml">
             <form string="Leads Form">
                 <group colspan="4" col="7">
-                    <field name="partner_name" string="Lead Name" required="1"/>
+                    <field name="partner_name" string="Partner Name" required="1"/>
                     <field name="partner_name2"/>
                     <field name="user_id"/>
                     <button
@@ -124,11 +124,9 @@
                 <field name="partner_name2"/>
                 <field name="email_from"/>
                 <field name="partner_phone"/>
-
-                <field name="stage_id" string="Status"/>
                 <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
                 <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
-
+                <field name="section_id"/>
                 <field name="user_id"/>
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
@@ -191,7 +189,7 @@
                 <group expand="1" string="Group By..." colspan="4">
                     <filter string="Stage" icon="terp-crm" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Partner" icon="terp-crm" domain="[]"  context="{'group_by':'partner_id'}"/>
-                    <filter string="Responsible" icon="terp-crm" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Salesman" icon="terp-crm" domain="[]" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Creation" icon="terp-project" domain="[]" context="{'group_by':'create_date'}"/>
                     <filter string="Exp.Closing" icon="terp-project" domain="[]" context="{'group_by':'date_deadline'}"/>

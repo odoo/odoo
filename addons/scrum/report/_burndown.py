@@ -49,7 +49,7 @@ def compute_burndown(cr, uid, tasks_id, date_start, date_stop):
             total += latest[3]
         i = 0
         while i<len(tasks2):
-            if tasks2[i][0][:10]<=current_date:
+            if tasks2[i][0] and tasks2[i][0][:10]<=current_date:
                 t = tasks2.pop(i)
                 done += t[1]
             else:

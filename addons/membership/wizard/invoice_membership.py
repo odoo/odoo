@@ -82,6 +82,9 @@ def _invoice_membership(self, cr, uid, data, context):
             for tax in tax_value:
                 invoice_tax_obj.create(cr, uid, tax, context=context)
 
+    result = pool.get('ir.model.data')._get_id(cr, uid, 'account', 'view_account_invoice_filter')
+    res = pool.get('ir.model.data').read(cr, uid, result, ['res_id'])
+
     value = {
             'domain': [
                 ('id', 'in', invoice_list),
@@ -91,6 +94,8 @@ def _invoice_membership(self, cr, uid, data, context):
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
+            'res_id' : invoice_list,
+            'search_view_id' : res['res_id']
         }
     return value
 

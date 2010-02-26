@@ -62,12 +62,13 @@ class base_setup_config_choice(osv.osv_memory):
             'type': menu.type,
             'view_id': view_id,
             'domain': menu.domain,
-            'res_users': menu.res_model,
+            'res_model': menu.res_model,
             'src_model': menu.src_model,
             'view_type': menu.view_type,
             'view_mode': menu.view_mode,
             'views': menu.views,
         }
+
     def config(self, cr, uid, ids, context=None):
         menu = self.get_default_menu(cr, uid, context=context)
         self.set_default_menu(cr, uid, menu, context=context)

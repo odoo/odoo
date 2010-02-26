@@ -47,6 +47,7 @@
                     <group col="10" colspan="4">
                         <field name="name" select="1" />
                         <field name="date" select="1" />
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </search>
             </field>
@@ -117,7 +118,7 @@
             <field name="context">{'full':'1'}</field>
             <field name="search_view_id" ref="view_inventory_filter" />
         </record>
-        <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="2"/>
+        <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_inventory_control" sequence="30"/>
 
         <record id="action_inventory_form_draft" model="ir.actions.act_window">
             <field name="name">Draft Periodical Inventories</field>
@@ -435,7 +436,7 @@
             <field name="view_id" ref="view_location_tree2"/>
             <field name="context">{'full':'1'}</field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_stock_configuration"/>
+        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_stock_configuration" />
 
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
@@ -449,14 +450,14 @@
             </field>
         </record>
         <record id="action_location_tree" model="ir.actions.act_window">
-            <field name="name">Stock Locations Structure</field>
+            <field name="name">Location Structure</field>
             <field name="res_model">stock.location</field>
             <field name="type">ir.actions.act_window</field>
             <field name="domain">[('location_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_location_tree"/>
         </record>
-<!--        <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_root"/>-->
+        <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_inventory_control" sequence="20"/>
 
         <record id="view_warehouse" model="ir.ui.view">
             <field name="name">stock.warehouse</field>
@@ -543,15 +544,15 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="origin"/>
-                    <field name="address_id" select="1"/>
                     <field name="backorder_id"/>
+                    <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
-                    <field name="invoice_state"/>
                     <field name="state"/>
+                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.   Do you want to continue?"/>
                 </tree>
             </field>
         </record>
@@ -589,12 +590,12 @@
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
                            				type="action" icon="gtk-justify-fill"
-                           				states="done,cancel" />
+                           				states="draft,waiting,confirmed,assigned" />
                            			<button
                            				name="%(stock.move_scrap)d"
                            				string="D" type="action"
                            				icon="gtk-convert"
-                           				states="done,cancel" />
+                           				states="draft,waiting,confirmed,assigned" />
                                 </tree>
                                 <form string="Stock Moves">
                                 	<notebook colspan="4">
@@ -697,16 +698,16 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('cancel');black:state not in ('cancel')" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="origin"/>
                     <field name="address_id" select="1"/>
                     <field name="backorder_id"/>
+                    <field name="origin"/>
                     <field name="date" select="1"/>
                     <field name="min_date" select="1"/>
                     <field name="state" select="1"/>
-                    <button name="%(partial_picking)d" states="assigned" string="Products Sent" type="action" icon="gtk-go-forward"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
+                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Delivery"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the delivery.    Do you want to continue?"/>
                 </tree>
             </field>
         </record>
@@ -744,12 +745,12 @@
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
                            				type="action" icon="gtk-justify-fill"
-                           				states="done,cancel" />
+                           				states="draft,waiting,confirmed,assigned" />
                            			<button
                            				name="%(stock.move_scrap)d"
                            				string="D" type="action"
                            				icon="gtk-convert"
-                           				states="done,cancel" />
+                           				states="draft,waiting,confirmed,assigned" />
                                 </tree>
                                 <form string="Stock Moves">
                                 	<notebook colspan="4">
@@ -827,8 +828,8 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Back Order" domain="[('backorder_id','!=',False)]" help="Back Order"/>
                         <separator orientation="vertical"/>
-                        <field name="address_id" select="1"/>
                         <field name="name" select="1"/>
+                        <field name="address_id" select="1"/>
                         <field name="origin" select="1"/>
                     </group>
                     <group expand="1" string="Group By..." colspan="4" col="10">
@@ -878,15 +879,20 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('cancel');grey:state in ('confirmed');blue:state in ('done');black:state not in ('cancel','confirmed','done')" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="origin"/>
                     <field name="address_id"/>
                     <field name="backorder_id"/>
+                    <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="invoice_state"/>
                     <field name="state"/>
+                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.    Do you want to continue?"/>
+                    <button name="%(wizard_invoice_onshipping)d" states="done" string="Invoice" type="action" 
+                    			icon="gtk-execute" help="Create invoice" 
+                    			attrs="{'invisible': [('invoice_state', '!=', '2binvoiced')]}" />
                 </tree>
             </field>
         </record>
@@ -924,12 +930,12 @@
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
                            				type="action" icon="gtk-justify-fill"
-                           				states="done,cancel" />
+                           				states="draft,waiting,confirmed,assigned" />
                            			<button
                            				name="%(stock.move_scrap)d"
                            				string="D" type="action"
                            				icon="gtk-convert"
-                           				states="done,cancel" />
+                           				states="draft,waiting,confirmed,assigned" />
                                 </tree>
                                 <form string="Stock Moves">
                                 	<notebook colspan="4">
@@ -1054,7 +1060,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel', 'done');black:state in ('confirmed', 'assigned');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state in ('draft');grey:state in ('cancel', 'done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="address_id"/>
                     <field name="backorder_id"/>
@@ -1063,8 +1069,8 @@
                     <field name="min_date"/>
                     <field name="invoice_state"/>
                     <field name="state"/>
-                    <button name="%(partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-ok"/>
-                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" confirm="Are you sure to want to cancel this record ?" />
+                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-ok" help="Receive products"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
                 </tree>
             </field>
         </record>
@@ -1099,12 +1105,12 @@
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
                            				type="action" icon="gtk-justify-fill"
-                           				states="done,cancel" />
+                           				states="draft,waiting,confirmed,assigned" />
                            			<button
                            				name="%(stock.move_scrap)d"
                            				string="D" type="action"
                            				icon="gtk-convert"
-                           				states="done,cancel" />
+                           				states="draft,waiting,confirmed,assigned" />
                                 </tree>                                
                                 <form string="Stock Moves">
                                 	<notebook colspan="4">
@@ -1232,7 +1238,7 @@
                         <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" default="1" />
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="address_id" select="1"/>
+                        <field name="origin" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
                     </group>
                     <group expand="1" string="Group By..." colspan="4" col="8">
@@ -1341,7 +1347,7 @@
         <record id="view_move_search" model="ir.ui.view">
             <field name="name">stock.move.search</field>
             <field name="model">stock.move</field>
-            <field name="type">tree</field>
+            <field name="type">search</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
@@ -1375,7 +1381,7 @@
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="1"/>
 
         <record id="action_picking_all" model="ir.actions.act_window">
-            <field name="name">Picking</field>
+            <field name="name">Picking lists</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1383,6 +1389,12 @@
             <field name="search_view_id" ref="view_stock_picking_filter"/>
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
+        </record>
+        <record id="action_picking_out_tree_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_out_tree"/>
+            <field name="act_window_id" ref="action_picking_all"/>
         </record>
         <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 

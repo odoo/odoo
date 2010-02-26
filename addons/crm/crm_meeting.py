@@ -27,9 +27,13 @@ from datetime import datetime, timedelta
 class crm_opportunity(osv.osv):
     _name = 'crm.opportunity'
 crm_opportunity()    
+
+
 class crm_phonecall(osv.osv):
     _name = 'crm.phonecall'
-crm_phonecall()    
+crm_phonecall()
+
+
 class crm_meeting(osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting Cases"
@@ -44,7 +48,8 @@ class crm_meeting(osv.osv):
         'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),        
         'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),       
         'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'),
-        'date_closed': fields.datetime('Closed', readonly=True),
+        'date_closed': fields.datetime('Closed', readonly=True), 
+        'date_deadline': fields.datetime('Deadline'),
     }
 
 crm_meeting()
