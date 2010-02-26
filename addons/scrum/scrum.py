@@ -204,6 +204,7 @@ class scrum_product_backlog(osv.osv):
 scrum_product_backlog()
 
 class scrum_task(osv.osv):
+    _name = 'project.task'
     _inherit = 'project.task'
     _columns = {
         'product_backlog_id': fields.many2one('scrum.product.backlog', 'Product Backlog'),
