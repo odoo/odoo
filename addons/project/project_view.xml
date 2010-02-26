@@ -247,7 +247,7 @@
                                 name="planned_hours"
                                 widget="float_time"
                                 attrs="{'readonly':[('state','!=','draft')]}"
-                                on_change="onchange_planned(planned_hours,effective_hours,date_start,occupation_rate)"/>
+                                on_change="onchange_planned(project_id,user_id,planned_hours,effective_hours,date_start,occupation_rate)"/>
                                 <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
