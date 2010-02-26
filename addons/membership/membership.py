@@ -482,7 +482,7 @@ class ReportPartnerMemberYear(osv.osv):
     _auto = False
     _rec_name = 'year'
     _columns = {
-        'year': fields.char('Year', size='4', readonly=True, select=1),
+        'year': fields.char('Year', size=4, readonly=True, select=1),
         'canceled_number': fields.integer('Canceled', readonly=True),
         'waiting_number': fields.integer('Waiting', readonly=True),
         'invoiced_number': fields.integer('Invoiced', readonly=True),
@@ -556,7 +556,7 @@ class ReportPartnerMemberYearNew(osv.osv):
     _rec_name = 'year'
 
     _columns = {
-        'year': fields.char('Year', size='4', readonly=True, select=1),
+        'year': fields.char('Year', size=4, readonly=True, select=1),
         'canceled_number': fields.integer('Canceled', readonly=True),
         'waiting_number': fields.integer('Waiting', readonly=True),
         'invoiced_number': fields.integer('Invoiced', readonly=True),
@@ -629,7 +629,7 @@ class ReportPartnerMemberYearNew(osv.osv):
     _auto = False
     _rec_name = 'year'
     _columns = {
-        'year': fields.char('Year', size='4', readonly=True, select=1),
+        'year': fields.char('Year', size=4, readonly=True, select=1),
         'canceled_number': fields.integer('Canceled', readonly=True),
         'waiting_number': fields.integer('Waiting', readonly=True),
         'invoiced_number': fields.integer('Invoiced', readonly=True),
