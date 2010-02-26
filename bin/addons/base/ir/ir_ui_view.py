@@ -162,8 +162,9 @@ class view(osv.osv):
 
         datas = _Model_Obj.read(cr, uid, id, [],context)
         for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
-            nodes_name.append((a['id'],a['name']))
-            nodes.append(a['id'])
+            if a[_Source_Field] or a[_Destination_Field]:
+                nodes_name.append((a['id'],a['name']))
+                nodes.append(a['id'])
             if a.has_key('flow_start') and a['flow_start']:
                 start.append(a['id'])
             else:
