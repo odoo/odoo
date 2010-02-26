@@ -40,9 +40,19 @@
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
+        'wizard/account_invoice_refund_view.xml',
+        'wizard/account_period_close_view.xml',
+        'wizard/account_fiscalyear_close_state.xml',
+        'wizard/account_chart_view.xml',
+        'wizard/account_move_bank_reconcile_view.xml',
+        'wizard/account_move_line_reconcile_select_view.xml',
+        'wizard/account_move_journal_view.xml',
+        
+        
         'account_wizard.xml',
         'account_view.xml',
         'account_end_fy.xml',
+        
         'account_invoice_view.xml',
         'account_report.xml',
         'partner_view.xml',

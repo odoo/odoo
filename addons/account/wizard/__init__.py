@@ -61,6 +61,14 @@ import wizard_central_journal
 import wizard_general_journal
 import wizard_change_currency
 
+import account_invoice_refund
+import account_period_close
+import account_fiscalyear_close_state
+import account_chart
+import account_move_bank_reconcile
+import account_move_line_reconcile_select
+import account_move_journal
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

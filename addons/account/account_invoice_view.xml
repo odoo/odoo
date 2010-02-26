@@ -189,11 +189,13 @@
                                 <field name="amount_total"/>
                                 <field name="state" select="2"/>
                                 <field name="residual"/>
-                                <group col="3" colspan="4">
+                                <group col="6" colspan="4">
                                     <button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-apply"/>
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                     <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
+                                    <!-- <button name='%(wizard_invoice_pay)d' type='action' string='Pay Invoice' states='open,paid,proforma2' icon="STOCK_EXECUTE" /> -->
+                                    <!--  <button name='%(wizard_invoice_refund)d' type='action' string='Credit Note'  icon="STOCK_EXECUTE" />-->
                                 </group>
                             </group>
                         </page>
@@ -279,13 +281,15 @@
                                 <field name="amount_total"/>
                                 <field name="state" select="2"/>
                                 <field name="residual"/>
-                                <group col="3" colspan="4" groups="base.group_user">
+                                <group col="6" colspan="4" groups="base.group_user">
                                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="gtk-print"/>
                                     <button name="invoice_open" states="draft,proforma2" string="Create" icon="gtk-execute"/>
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                     <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
-                                </group>
+                                    <!-- <button name='%(wizard_invoice_pay)d' type='action' string='Pay Invoice' states='open,paid,proforma2' icon="STOCK_EXECUTE" /> -->
+                                    <!-- <button name='%(wizard_invoice_refund)d' type='action' string='Credit Note'  icon="STOCK_EXECUTE" /> -->
+                               </group>
                             </group>
                         </page>
                         <page string="Other Info">
