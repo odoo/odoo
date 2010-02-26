@@ -69,6 +69,7 @@
         'process/service_product_process.xml',
         'process/procurement_process.xml',
         'mrp_installer.xml',
+        'make_procurement.xml',
     ],
     'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
     'installable': True,
