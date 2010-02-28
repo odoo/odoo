@@ -404,7 +404,7 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft','pending'))]" help="Draft, Open and Pending Tasks" icon="terp-project" default="1"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Tasks" icon="terp-project" default="1"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
@@ -583,7 +583,7 @@
             <field name="arch" type="xml">
                 <form string="Messages">
                     <group colspan="6">
-                        <field name="subject" select="1" string="Title"/>
+                        <field name="subject" select="1"/>
                         <field name="project_id"/>
                         <field name="user_id" select="1"/>
                           <field name="date" select="2"/>
@@ -600,11 +600,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Messages">
-                        <field name="subject" select="1"/>
-                        <field name="description" select="1"/>
-                        <field name="project_id" select="1"/>
-                        <field name="date" select="1"/>
-                        <field name="user_id" select="1"/>
+                    <field name="subject" select="1"/>
+                    <field name="user_id" select="1"/>
+                    <field name="project_id" select="1"/>
+                    <field name="date" select="1"/>
                 </tree>
             </field>
        </record>

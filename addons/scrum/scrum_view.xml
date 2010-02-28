@@ -67,10 +67,10 @@
                         <field name="sequence"/>
                         <field name="active" select="1"/>
                         <group colspan="6" col="8">
-	                        <field name="effective_hours" widget="float_time"/>
-	                        <field name="planned_hours" widget="float_time"/>
-	                        <field name="expected_hours" widget="float_time"/>
-	                        <field name="progress" widget="progressbar"/>
+                            <field name="effective_hours" widget="float_time"/>
+                            <field name="planned_hours" widget="float_time"/>
+                            <field name="expected_hours" widget="float_time"/>
+                            <field name="progress" widget="progressbar"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -83,11 +83,11 @@
                     </notebook>
                     <group col="7" colspan="4">
                         <field name="state" select="1" readonly="1"/>
-	                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
-	                    <button type="action" string="Convert to Task" name="%(wizard_scrum_backlog_task)d" states="draft,pending" icon="gtk-execute"/>
-	                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-	                    <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
-	                    <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>                        
+                        <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                        <button type="action" string="Convert to Task" name="%(wizard_scrum_backlog_task)d" states="draft,pending" icon="gtk-execute"/>
+                        <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
+                        <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
+                        <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
                     </group>
                 </form>
             </field>
@@ -124,11 +124,12 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Sprint" icon="terp-project" domain="[]" context="{'group_by':'sprint_id'}"/>
+                        <filter string="Responsible" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
                     </group>
-                    
+
                 </search>
             </field>
         </record>
@@ -163,7 +164,7 @@
                     <field name="progress" widget="progressbar"/>
                     <field name="effective_hours" sum="Effective hours" widget="float_time"/>
                     <field name="planned_hours" sum="Planned hours" widget="float_time"/>
-                    <field name="expected_hours" sum="Expected hours" widget="float_time"/>                    
+                    <field name="expected_hours" sum="Expected hours" widget="float_time"/>
                     <field name="state"/>
                     <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
                     <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
@@ -182,14 +183,23 @@
                     <field name="project_id" on_change="onchange_project_id(project_id)"/>
                     <notebook colspan="4">
                         <page string="Sprint Info">
-                            <field name="date_start" select="1"/>
-                            <field name="date_stop"/>
-                            <field name="product_owner_id"/>
-                            <field name="scrum_master_id"/>
-                            <field name="effective_hours" widget="float_time"/>
-                            <field name="planned_hours" widget="float_time"/>
-                            <field name="expected_hours" widget="float_time"/>
-                            <field name="progress" widget="progressbar"/>                            
+                            <group colspan="2" col="2">
+                                <separator string="Owners"/>
+                                <field name="product_owner_id"/>
+                                <field name="scrum_master_id"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Dates"/>
+                                <field name="date_start" select="1"/>
+                                <field name="date_stop"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Planning"/>
+                                <field name="planned_hours" widget="float_time"/>
+                                <field name="expected_hours" widget="float_time"/>
+                                <field name="effective_hours" widget="float_time"/>
+                                <field name="progress" widget="progressbar"/>
+                            </group>
                         </page>
                         <page string="Daily Meetings">
                             <field colspan="4" name="meeting_ids" nolabel="1" widget="one2many_list"/>
@@ -203,11 +213,11 @@
                     </notebook>
                     <group col="6" colspan="4">
                         <field name="state" readonly="1"/>
-	                    <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
-	                    <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
-	                    <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
+                        <button type="object" string="Open" name="button_open" states="draft,pending" icon="gtk-jump-to"/>
+                        <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
+                        <button type="object" string="Close" name="button_close" states="open,pending" icon="gtk-jump-to"/>
                         <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
-                    </group>                        
+                    </group>
                 </form>
             </field>
         </record>
@@ -235,12 +245,12 @@
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
                         <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Masters" icon="terp-project" domain="[]"  context="{'group_by':'scrum_master_id'}"/>                        
+                        <filter string="Masters" icon="terp-project" domain="[]"  context="{'group_by':'scrum_master_id'}"/>
                         <filter string="Product owner" icon="terp-project" domain="[]" context="{'group_by':'product_owner_id'}"/>
                         <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
-                    </group>                    
+                    </group>
                 </search>
             </field>
         </record>
@@ -299,32 +309,32 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_scrum_meeting_search" model="ir.ui.view">
             <field name="name">scrum.meeting.search</field>
             <field name="model">scrum.meeting</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Scrum Sprint">
-                    <group col="10" colspan="4">                
-	                    <field name="name"/>
-	                    <field name="sprint_id" widget="selection"/>
-	                    <field name="date"/>
-                    </group>                    
+                    <group col="10" colspan="4">
+                        <field name="name"/>
+                        <field name="sprint_id" widget="selection"/>
+                        <field name="date"/>
+                    </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
                         <filter string="Sprint" icon="terp-project" domain="[]" context="{'group_by':'sprint_id'}"/>
                         <filter string="Date" icon="terp-project" domain="[]" context="{'group_by':'date'}"/>
                     </group>
-                </search>                   
+                </search>
             </field>
         </record>
-        
+
         <record id="action_meeting_form" model="ir.actions.act_window">
             <field name="name">Scrum Meetings</field>
             <field name="res_model">scrum.meeting</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>            
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_scrum_meeting_search"/>
         </record>
         <menuitem sequence="30"
@@ -405,10 +415,10 @@
             <field name="name">project.task.tree.scrum</field>
             <field name="model">project.task</field>
             <field name="type">tree</field>
-            <field name="inherit_id" ref="project.view_task_tree2"/>            
+            <field name="inherit_id" ref="project.view_task_tree2"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="sprint_id" invisible="1"/>
+                    <field name="sprint_id" invisible="context.get('sprint_invisible',True)"/>
                     <field name="product_backlog_id" invisible="1"/>
                 </field>
             </field>
@@ -436,7 +446,7 @@
                     <field domain="[('project_id','=',project_id)]" name="product_backlog_id" select="1"/>
                 </xpath>
             </field>
-        </record>                     
+        </record>
 
         <record id="view_task_search_form2" model="ir.ui.view">
             <field name="name">project.task.scrum.search</field>
@@ -445,8 +455,8 @@
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
                 <field name="project_id" position="after">
-                    <field name="sprint_id" widget="selection">
-                        <filter icon="terp-project" string="Current" domain="[('state','=','open')]" help="Current Sprints"/>
+                    <field name="sprint_id" widget="selection" context="{'sprint_invisible':False}">
+                        <filter icon="terp-project" string="Current" context="{'sprint_invisible':False}" domain="[('state','=','open')]" help="Current Sprints"/>
                     </field>
                 </field>
             </field>
@@ -459,9 +469,9 @@
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/search/group[@string='Group By...']/filter[@string='End Date']" position="after">
-<!--                <filter string="Sprint" icon="terp-project" domain="[]" context="{'group_by':'sprint_id'}"/>  -->
+                    <filter string="Sprint" icon="terp-project" domain="[]" context="{'group_by':'sprint_id'}"/>
                     <filter string="Backlog" icon="terp-project" domain="[]" context="{'group_by':'product_backlog_id'}"/>
-                    <separator orientation="vertical"/>                    
+                    <separator orientation="vertical"/>
                 </xpath>
             </field>
         </record>

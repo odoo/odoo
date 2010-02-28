@@ -220,7 +220,7 @@ class crm_case(osv.osv):
         'name': fields.char('Description', size=1024, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Your action'),
-        'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', select=True, help='Sales team to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
         'email_from': fields.char('Partner Email', size=128, help="These people will receive email."),
         'email_cc': fields.char('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
                                                                     " communication between partner and users by email"),

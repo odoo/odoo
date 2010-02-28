@@ -29,7 +29,7 @@
             <form string="Leads Form">
                 <group colspan="4" col="7">
                     <field name="partner_name" string="Partner Name" required="1"/>
-                    <field name="partner_name2"/>
+                    <field name="partner_contact"/>
                     <field name="user_id"/>
                     <button
                         string="Convert to Opportunity" 
@@ -121,7 +121,7 @@
             <tree string="Leads Tree"  colors="blue:state=='pending';grey:state in ('cancel', 'done')">
                 <field name="create_date"/>
                 <field name="partner_name"/>
-                <field name="partner_name2"/>
+                <field name="partner_contact"/>
                 <field name="email_from"/>
                 <field name="partner_phone"/>
                 <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
@@ -145,7 +145,7 @@
             <calendar string="Meeting For Leads Generation" date_start="create_date" color="user_id" date_delay="duration">
                 <field name="name"/>
                 <field name="partner_name"/>
-                <field name="partner_name2"/>
+                <field name="partner_contact"/>
             </calendar>
         </field>
     </record>

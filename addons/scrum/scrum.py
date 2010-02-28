@@ -206,9 +206,19 @@ scrum_product_backlog()
 class scrum_task(osv.osv):
     _name = 'project.task'
     _inherit = 'project.task'
+    def _get_task(self, cr, uid, ids, context={}):
+        result = {}
+        for line in self.pool.get('scrum.product.backlog').browse(cr, uid, ids, context=context):
+            for task in line.tasks_id:
+                result[task.id] = True
+        return result.keys()
     _columns = {
         'product_backlog_id': fields.many2one('scrum.product.backlog', 'Product Backlog'),
-        'sprint_id': fields.related('product_backlog_id','sprint_id', type='many2one', relation='scrum.sprint', string='Sprint'),#, store=True),
+        'sprint_id': fields.related('product_backlog_id','sprint_id', type='many2one', relation='scrum.sprint', string='Sprint',
+            store={
+                'project.task': (lambda self, cr, uid, ids, c={}: ids, ['product_backlog_id'], 10),
+                'scrum.product.backlog': (_get_task, ['sprint_id'], 10)
+            }),
     }
     def onchange_backlog_id(self, cr, uid, backlog_id):
         if not backlog_id:
