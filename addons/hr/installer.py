@@ -35,7 +35,7 @@ class hr_installer(osv.osv_memory):
             help="Tracks and manages employee expenses, and can "
                  "automatically re-invoice clients if the expenses are "
                  "project-related."),
-        'crm_hr':fields.boolean('Recruitment Process',
+        'hr_recruitement':fields.boolean('Recruitment Process',
             help="Helps you manage and streamline your recruitment process."),
         'hr_timesheet_sheet':fields.boolean('Timesheets',
             help="Tracks and helps employees encode and validate timesheets "
