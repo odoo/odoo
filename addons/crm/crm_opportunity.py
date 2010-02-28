@@ -60,5 +60,9 @@ class crm_opportunity(osv.osv):
             return {'value':{}}
         return {'value':{'probability':stage.probability}}
 
+    _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.opportunity', context=c),
+    }
+
 crm_opportunity()
 

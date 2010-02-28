@@ -206,7 +206,7 @@
                         default="1"
                         domain="[('state','in',('draft','open'))]"/>
                 </field>
-                <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
+                <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection">
                     <filter icon="terp-crm"
                         domain="[('section_id','=',context.get('section_id',False))]"
                         help="My section"/>

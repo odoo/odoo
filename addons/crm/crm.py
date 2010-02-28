@@ -62,15 +62,15 @@ icon_lst = {
 
 class crm_case_section(osv.osv):
     _name = "crm.case.section"
-    _description = "Case Section"
+    _description = "Sales Teams"
     _order = "name"
     _columns = {
-        'name': fields.char('Case Section',size=64, required=True, translate=True),
-        'code': fields.char('Section Code',size=8),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case section without removing it."),
+        'name': fields.char('Sales Team',size=64, required=True, translate=True),
+        'code': fields.char('Code',size=8),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the sales team without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'user_id': fields.many2one('res.users', 'Responsible User'),
-        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
+        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
     }
@@ -112,7 +112,7 @@ class crm_case_categ(osv.osv):
 
     _columns = {
         'name': fields.char('Case Category Name', size=64, required=True, translate=True),        
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model','Object Name'),        
     }
     def _find_object_id(self, cr, uid, context=None):
@@ -131,7 +131,7 @@ class crm_case_resource_type(osv.osv):
     _rec_name = "name"
     _columns = {
         'name': fields.char('Case Resource Type', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model','Object Name'),        
     }
     def _find_object_id(self, cr, uid, context=None):
@@ -151,7 +151,7 @@ class crm_case_stage(osv.osv):
     _order = "sequence"
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
         'object_id': fields.many2one('ir.model','Object Name'),
         'probability': fields.float('Probability (%)', required=True),
@@ -221,7 +221,7 @@ class crm_case(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', select=True, help='Sales team to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
-        'email_from': fields.char('Partner Email', size=128, help="These people will receive email."),
+        'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'email_cc': fields.text('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
                                                                     " communication between partner and users by email"),
         'email_last': fields.function(_email_last, method=True,
@@ -278,6 +278,7 @@ class crm_case(osv.osv):
         'state': lambda *a: 'draft',
         'date_deadline': lambda *a:(datetime.today() + timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': _get_section,
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
     }
     _order = 'date_deadline desc, date desc,id desc'
 
