@@ -48,14 +48,14 @@ class job2phonecall(wizard.interface):
         'user_id' : {'string' : 'Assign To', 'type' : 'many2one', 'relation' : 'res.users'},
         'deadline' : {'string' : 'Planned Date', 'type' : 'datetime'},
         'note' : {'string' : 'Goals', 'type' : 'text'},
-        'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.case.categ', 'required' : True},
-        'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'crm.case.section'},
+        'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'hr.case.categ', 'required' : True},
+        'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'hr.case.section'},
 
     }
     def _default_values(self, cr, uid, data, context):
 
-        case_obj = pooler.get_pool(cr.dbname).get('crm.applicant')
-        categ_id=pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])
+        case_obj = pooler.get_pool(cr.dbname).get('hr.applicant')
+        categ_id=pooler.get_pool(cr.dbname).get('hr.case.categ').search(cr, uid, [('name','=','Outbound')])
         case = case_obj.browse(cr, uid, data['id'])
         return {
                 'user_id' : case.user_id and case.user_id.id,
@@ -68,15 +68,15 @@ class job2phonecall(wizard.interface):
         form = data['form']
         pool = pooler.get_pool(cr.dbname)
         mod_obj = pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
+        result = mod_obj._get_id(cr, uid, 'hr', 'view_hr_case_phonecalls_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        phonecall_case_obj = pool.get('crm.phonecall')
-        job_case_obj = pool.get('crm.applicant')
+        phonecall_case_obj = pool.get('hr.phonecall')
+        job_case_obj = pool.get('hr.applicant')
         # Select the view
 
         data_obj = pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
-        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
+        id2 = data_obj._get_id(cr, uid, 'hr', 'hr_case_phone_tree_view')
+        id3 = data_obj._get_id(cr, uid, 'hr', 'hr_case_phone_form_view')
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
@@ -110,7 +110,7 @@ class job2phonecall(wizard.interface):
             'name': _('Phone Call'),
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'crm.phonecall',
+            'res_model': 'hr.phonecall',
             'res_id' : new_phonecall_id,
             'views': [(id3,'form'),(id2,'tree'),(False,'calendar'),(False,'graph')],
             'type': 'ir.actions.act_window',
@@ -130,14 +130,14 @@ class job2phonecall(wizard.interface):
         }
     }
 
-job2phonecall('crm.applicant.reschedule_phone_call')
+job2phonecall('hr.applicant.reschedule_phone_call')
 
 class job2meeting(wizard.interface):
 
     def _makeMeeting(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        job_case_obj = pool.get('crm.applicant')
-        meeting_case_obj = pool.get('crm.meeting')
+        job_case_obj = pool.get('hr.applicant')
+        meeting_case_obj = pool.get('hr.meeting')
         for job in job_case_obj.browse(cr, uid, data['ids']):
             new_meeting_id = meeting_case_obj.create(cr, uid, {
                 'name': job.name,
@@ -151,11 +151,11 @@ class job2meeting(wizard.interface):
             meeting_case_obj.case_open(cr, uid, [new_meeting_id])
 
         data_obj = pool.get('ir.model.data')
-        result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
+        result = data_obj._get_id(cr, uid, 'hr', 'view_hr_case_meetings_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
-        id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
-        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
+        id1 = data_obj._get_id(cr, uid, 'hr', 'hr_case_calendar_view_meet')
+        id2 = data_obj._get_id(cr, uid, 'hr', 'hr_case_form_view_meet')
+        id3 = data_obj._get_id(cr, uid, 'hr', 'hr_case_tree_view_meet')
         if id1:
             id1 = data_obj.browse(cr, uid, id1, context=context).res_id
         if id2:
@@ -166,7 +166,7 @@ class job2meeting(wizard.interface):
             'name': _('Meetings'),
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
-            'res_model': 'crm.meeting',
+            'res_model': 'hr.meeting',
             'view_id': False,
             'views': [(id1,'calendar'),(id2,'form'),(id3,'tree'),(False,'graph')],
             'type': 'ir.actions.act_window',
@@ -184,7 +184,7 @@ class job2meeting(wizard.interface):
         }
     }
 
-job2meeting('crm.applicant.meeting_set')
+job2meeting('hr.applicant.meeting_set')
 
 
 class partner_create(wizard.interface):
@@ -202,7 +202,7 @@ class partner_create(wizard.interface):
 
     def _selectPartner(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        case_obj = pool.get('crm.applicant')
+        case_obj = pool.get('hr.applicant')
         for case in case_obj.browse(cr, uid, data['ids']):
             if case.partner_id:
                 raise wizard.except_wizard(_('Warning !'),
@@ -214,7 +214,7 @@ class partner_create(wizard.interface):
         mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        case_obj = pool.get('crm.applicant')
+        case_obj = pool.get('hr.applicant')
         partner_obj = pool.get('res.partner')
         contact_obj = pool.get('res.partner.address')
         for case in case_obj.browse(cr, uid, data['ids']):
@@ -267,7 +267,7 @@ class partner_create(wizard.interface):
         }
     }
 
-partner_create('crm.applicant.partner_create')
+partner_create('hr.applicant.partner_create')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

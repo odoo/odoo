@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    	<record model="ir.ui.view" id="view_crm_applicant_categ_graph">
-            <field name="name">report.crm.applicant.categ.graph</field>
-            <field name="model">report.crm.applicant.categ</field>
+    	<record model="ir.ui.view" id="view_hr_applicant_categ_graph">
+            <field name="name">report.hr.applicant.categ.graph</field>
+            <field name="model">report.hr.applicant.categ</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Applicants by Sections and Categories" type="bar" orientation="horizontal">
@@ -16,16 +16,16 @@
 
         <act_window name="Applicants Requests Of The Month by Applied Job"
             domain="[('month','=',time.strftime('%%m')),('state','!=','done'),('state','!=','cancel')]"
-            res_model="report.crm.applicant.categ"
+            res_model="report.hr.applicant.categ"
             view_type="form"
             view_mode="graph,tree,form"
-            view_id="view_crm_applicant_categ_graph"
+            view_id="view_hr_applicant_categ_graph"
             id="act_applicants_categ"/>
 
-        <record model="ir.ui.view" id="board_crm_hr_statistical_form">
-            <field name="name">CRM - Statistical Dashboard Form</field>
+        <record model="ir.ui.view" id="board_hr_hr_statistical_form">
+            <field name="name">hr - Statistical Dashboard Form</field>
             <field name="model">board.board</field>
-            <field name="inherit_id" ref="board_crm_configuration.board_crm_statistical_form"/>
+            <field name="inherit_id" ref="board_hr_configuration.board_hr_statistical_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
             	<form string="Statistics Dashboard">
