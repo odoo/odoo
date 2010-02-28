@@ -22,35 +22,33 @@
 from osv import fields,osv,orm
 from crm import crm
 
+AVAILABLE_STATES = [
+    ('draft','New'),
+    ('open','In Progress'),
+    ('cancel', 'Refused'),
+    ('done', 'Hired'),
+    ('pending','Pending')
+]
+
 class crm_applicant(osv.osv):
     _name = "crm.applicant"
     _description = "Applicant Cases"
     _order = "id desc"
     _inherit ='crm.case'
     _columns = {
-            'date_closed': fields.datetime('Closed', readonly=True),
-            'date': fields.datetime('Date'),
-            'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-            'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
-            'planned_revenue': fields.float('Planned Revenue'),
-            'planned_cost': fields.float('Planned Costs'),
-            'probability': fields.float('Probability (%)'),
-            'partner_name': fields.char("Employee's Name", size=64),
-            'partner_name2': fields.char('Employee Email', size=64),
-            'partner_phone': fields.char('Phone', size=32),
-            'partner_mobile': fields.char('Mobile', size=32),
-            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
-            'type_id': fields.many2one('crm.case.resource.type', 'Type Name', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
-            'duration': fields.float('Duration'),            
-            'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-            'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
-            'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
-                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
-            'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
-                                                                       "the partner mentality in relation to our services.The scale has" \
-                                                                       "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-            'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),
-            'department_id':fields.many2one('hr.department','Department'),
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'date': fields.datetime('Date'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Appreciation'),
+        'job_id': fields.many2one('hr.job', 'Applied Job'),
+        'salary_proposed': fields.float('Proposed Salary'),
+        'salary_expected': fields.float('Expected Salary'),
+        'availability': fields.integer('Availability (Days)'),
+        'partner_name': fields.char("Applicant's Name", size=64),
+        'partner_phone': fields.char('Phone', size=32),
+        'partner_mobile': fields.char('Mobile', size=32),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.applicant')]"),
+        'department_id':fields.many2one('hr.department','Department'),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
     }
-
 crm_applicant()

@@ -61,32 +61,32 @@ class hr_employee_marital_status(osv.osv):
     }
 hr_employee_marital_status()
 
-class crm_job(osv.osv):
-
+class hr_job(osv.osv):
     def _no_of_employee(self, cr, uid, ids, name,args,context=None):
         res = {}
         for emp in self.browse(cr, uid, ids):
-            res[emp.id] = str(len(emp.employee_ids))
+            res[emp.id] = len(emp.employee_ids or [])
         return res
 
-    _name = "crm.job"
-    _description = "Job Information"
+    _name = "hr.job"
+    _description = "Job Description"
     _columns = {
-        'name': fields.char('Name', size=128, required=True, select=True),
-        'ref': fields.char('Code', size=64),
+        'name': fields.char('Job Name', size=128, required=True, select=True),
         'expected_employees':fields.integer('Expected Employees'),
-        'no_of_employee': fields.function(_no_of_employee, method=True, string='No of Employee', type='char'),
+        'no_of_employee': fields.function(_no_of_employee, method=True, string='No of Employee', type='integer'),
         'employee_ids':fields.one2many('hr.employee', 'job_id','Employees'),
         'description': fields.text('Job Description'),
         'requirements':fields.text('Requirements'),
-        'department_id':fields.many2one('hr.department','Department')
-
-        }
+        'department_id':fields.many2one('hr.department','Department'),
+        'company_id': fields.many2one('res.company', 'Company'),
+        'state': fields.selection([('open','Open'),('old','Old'),('recruit','In Recruitement')], 'State', required=True),
+    }
     _defaults = {
         'expected_employees': lambda *a: 1,
-        }
-
-crm_job()
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
+        'state': lambda *args: 'open'
+    }
+hr_job()
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
@@ -115,7 +115,7 @@ class hr_employee(osv.osv):
         'child_ids': fields.one2many('hr.employee', 'parent_id','Subordinates'),
         'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
         'coach_id':fields.many2one('res.users','Coach'),
-        'job_id':fields.many2one('crm.job', 'Job'),
+        'job_id':fields.many2one('hr.job', 'Job'),
 
     }
     _defaults = {

@@ -20,13 +20,12 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'CRM Stuff in Job ',
+    'name': 'HR - Recruitement',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-        This module provide  Store the Job
+Manages job position and recruitement process.
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
