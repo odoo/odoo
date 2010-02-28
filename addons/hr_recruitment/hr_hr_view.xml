@@ -8,9 +8,9 @@
 
     <record id="hr_job_categ_action" model="ir.actions.act_window">
         <field name="name">Applicant Categories</field>
-        <field name="res_model">hr.case.categ</field>
+        <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="hr.hr_case_categ_tree-view"/>
+        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
            <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
         <field name="context">{'object_id':'hr.applicant'}</field>
     </record>
@@ -19,19 +19,19 @@
     # ------------------------------------------------------
     <record id="hr_job_stage_act" model="ir.actions.act_window">
         <field name="name">Applicant Stages</field>
-        <field name="res_model">hr.case.stage</field>
+        <field name="res_model">crm.case.stage</field>
         <field name="view_type">form</field>
-        <field name="view_id"  ref="hr.hr_case_stage_tree"/>
+        <field name="view_id"  ref="crm.crm_case_stage_tree"/>
         <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
         <field name="context">{'object_id':'hr.applicant'}</field>
     </record>
-    <menuitem action="hr_job_stage_act" id="menu_hr_job_stage_act" parent="hr.menu_hr_case_stage"/>
+    <menuitem action="hr_job_stage_act" id="menu_hr_job_stage_act" parent="crm.menu_crm_case_stage"/>
 
     # ------------------------------------------------------
     # Jobs
     # ------------------------------------------------------
 
-    <record model="ir.ui.view" id="hr_case_tree_view_job">
+    <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="type">tree</field>
@@ -60,7 +60,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="hr_case_form_view_job">
+    <record model="ir.ui.view" id="crm_case_form_view_job">
         <field name="name">Jobs - Recruitment Form</field>
         <field name="model">hr.applicant</field>
         <field name="type">form</field>
@@ -146,12 +146,12 @@
                                 <field name="email"/>
                                 <button
                                    string="Add a CC"
-                                   name="%(hr.action_view_hr_email_add_cc_wizard)d"
+                                   name="%(crm.action_view_crm_email_add_cc_wizard)d"
                                    icon="gtk-add" type="action"/>
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
-                            <button colspan="4" string="Reply to Last Email" name="%(hr.wizard_hr_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
+                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
                         </form>
                         <tree string="Communication history">
                            <field name="description"/>
@@ -159,7 +159,7 @@
                            <field name="date"/>
                         </tree>
                     </field>
-                    <button colspan="4" string="Send New Email" name="%(hr.wizard_hr_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+                    <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
                  </page>
                 </notebook>
             </form>
@@ -167,7 +167,7 @@
     </record>
 
 
-    <record model="ir.ui.view" id="hr_case_graph_view_job">
+    <record model="ir.ui.view" id="crm_case_graph_view_job">
         <field name="name">Jobs - Recruitment Graph</field>
         <field name="model">hr.applicant</field>
         <field name="type">graph</field>
@@ -180,7 +180,7 @@
         </field>
     </record>
 
-    <record id="view_hr_case_jobs_filter" model="ir.ui.view">
+    <record id="view_crm_case_jobs_filter" model="ir.ui.view">
         <field name="name">Jobs - Recruitment Search</field>
         <field name="model">hr.applicant</field>
         <field name="type">search</field>

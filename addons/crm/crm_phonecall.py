@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 import crm
+import time
 
 class crm_phonecall(osv.osv):
     _name = "crm.phonecall"
