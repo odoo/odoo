@@ -25,7 +25,12 @@
     'version': '1.0',
     'category': 'Generic Modules/HR',
     'description': """
-Manages job position and recruitement process.
+Manages job positions and the recruitement process. It's integrated with the
+survey module to allows you to define interview for different jobs.
+
+This module is integrated with the mail gateway to automatically tracks email
+sent to jobs@YOURCOMPANY.com. It's also integrated with the document management
+system to store and search in your CV base.
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
