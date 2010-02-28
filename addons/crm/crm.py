@@ -219,10 +219,10 @@ class crm_case(osv.osv):
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Description', size=1024, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
-        'description': fields.text('Your action'),
+        'description': fields.text('Description'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', select=True, help='Sales team to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
         'email_from': fields.char('Partner Email', size=128, help="These people will receive email."),
-        'email_cc': fields.char('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
+        'email_cc': fields.text('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
                                                                     " communication between partner and users by email"),
         'email_last': fields.function(_email_last, method=True,
             string='Latest E-Mail', type='text'),
@@ -230,7 +230,6 @@ class crm_case(osv.osv):
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
         'create_date': fields.datetime('Creation Date' ,readonly=True),
         'write_date': fields.datetime('Update Date' ,readonly=True),
-        'partner_phone': fields.char('Phone', size=32),
         'date_deadline': fields.date('Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'history_line': fields.function(_get_log_ids, method=True, type='one2many', multi="history_line", relation="crm.case.history", string="Communication"),
@@ -427,8 +426,7 @@ class crm_case(osv.osv):
         if not part:
             return {'value':{'partner_address_id': False, 
                             'email_from': False,
-                            'partner_phone': False,
-                            'partner_name2': False}}
+                            }}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
         data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
@@ -440,8 +438,6 @@ class crm_case(osv.osv):
             return {'value': {'email_from': False, 'partner_name2': False}}
         address= self.pool.get('res.partner.address').browse(cr, uid, add)
         data['email_from'] = address.email
-        data['partner_phone'] = address.phone or ''
-        data['partner_name2'] = address.name or ''
         return {'value': data}
 
     def case_close(self, cr, uid, ids, *args):
