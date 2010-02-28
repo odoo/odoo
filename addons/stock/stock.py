@@ -1585,10 +1585,12 @@ class stock_inventory(osv.osv):
         'state': lambda *a: 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c)
     }
+    
+    
+    def _inventory_line_hook(self, cr, uid, inventory_line, move_vals):
+        '''Creates a stock move from an inventory line'''
+        return self.pool.get('stock.move').create(cr, uid, move_vals)
 
-    #
-    # Update to support tracking
-    #
     def action_done(self, cr, uid, ids, context=None):
         for inv in self.browse(cr, uid, ids):
             move_ids = []
@@ -1628,7 +1630,7 @@ class stock_inventory(osv.osv):
                             'prodlot_id': lot_id,
                             'product_qty': line.product_qty
                         })
-                    move_ids.append(self.pool.get('stock.move').create(cr, uid, value))
+                    move_ids.append(self._inventory_line_hook(cr, uid, line, value))
             if len(move_ids):
                 self.pool.get('stock.move').action_done(cr, uid, move_ids,
                         context=context)
