@@ -1147,7 +1147,7 @@ class mrp_procurement(osv.osv):
         return res
 
     def action_po_assign(self, cr, uid, ids, context={}):
-        purchase_id = False
+        res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
@@ -1199,8 +1199,9 @@ class mrp_procurement(osv.osv):
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             })
+            res[procurement.id] = purchase_id
             self.write(cr, uid, [procurement.id], {'state':'running', 'purchase_id':purchase_id})
-        return purchase_id
+        return res
 
     def action_cancel(self, cr, uid, ids):
         todo = []
