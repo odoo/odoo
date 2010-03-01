@@ -22,7 +22,8 @@
 import time
 import netsvc
 from osv import fields, osv
-from mx import DateTime
+from datetime import datetime, now
+from dateutil.relativedelta import relativedelta
 from tools import config
 from tools.translate import _
 
@@ -581,8 +582,8 @@ class sale_order(osv.osv):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = DateTime.now() + DateTime.DateTimeDeltaFromDays(line.delay or 0.0)
-                date_planned = (date_planned - DateTime.DateTimeDeltaFromDays(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+                date_planned = datetime.now() + relativedelta(days=line.delay or 0.0)
+                date_planned = (date_planned - relativedelta(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
