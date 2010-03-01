@@ -404,7 +404,8 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft and Open Tasks" icon="terp-project" default="1"/>
+                        <filter string="TODO" domain="[('state','in',('open','draft'))]" help="Draft and Open Tasks" icon="terp-project" default="1"/>
+                        <filter string="Current" domain="[('state','in',('open','draft','pending'))]" help="Draft, Open and Pending Tasks" icon="terp-project" default="1"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
