@@ -399,7 +399,7 @@
                         <filter icon="terp-sale" domain="[('salesman_id','child_of',[uid])]" help="My Departments Sale Order Lines"/>
                     </field>
                     <newline/>
-                    <group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+                    <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
