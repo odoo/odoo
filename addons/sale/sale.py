@@ -22,7 +22,7 @@
 import time
 import netsvc
 from osv import fields, osv
-from datetime import datetime, now
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from tools import config
 from tools.translate import _

@@ -24,7 +24,7 @@ import netsvc
 from osv import fields, osv
 from tools.translate import _
 
-from datetime import now
+from datetime import datetime
 
 import tools
 
@@ -484,7 +484,7 @@ class account_move_line(osv.osv):
         if not partner_id:
             return {'value':val}
         if not date:
-            date = now().strftime('%Y-%m-%d')
+            date = datetime.now().strftime('%Y-%m-%d')
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
 
         if part.property_payment_term and part.property_payment_term.line_ids:

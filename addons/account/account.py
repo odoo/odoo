@@ -48,7 +48,7 @@ class account_payment_term(osv.osv):
 
     def compute(self, cr, uid, id, value, date_ref=False, context={}):
         if not date_ref:
-            date_ref = now().strftime('%Y-%m-%d')
+            date_ref = datetime.now().strftime('%Y-%m-%d')
         pt = self.browse(cr, uid, id, context)
         amount = value
         result = []
