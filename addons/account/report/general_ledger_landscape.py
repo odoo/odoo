@@ -27,7 +27,6 @@
 ##############################################################################
 
 import time
-from mx.DateTime import *
 from report import report_sxw
 import xml
 import rml_parse
