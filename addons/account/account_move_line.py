@@ -24,8 +24,7 @@ import netsvc
 from osv import fields, osv
 from tools.translate import _
 
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
+from datetime import now
 
 import tools
 
