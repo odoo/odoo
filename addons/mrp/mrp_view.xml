@@ -461,8 +461,10 @@
                         <field name="product_id" on_change="product_id_change(product_id)" select="1"/>                        
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
-                            <field name="product_uom"/>
+                        <field name="product_uom"/>
+                        <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production"/>
                         </group>
+                        
                         <label string="" colspan="2"/>                          
                         <field name="product_uos_qty" groups="product.group_uos"/>                        
                         <group colspan="2" col="3" groups="product.group_uos">
@@ -529,21 +531,17 @@
                                        <field name="product_uom" />
                                    </form>
                                </field>                        
-
                             <group col="9" colspan="4">
                                 <field name="state" select="2"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="gtk-execute"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
-                                <button name="button_produce" states="ready" string="Mark as Start" icon="gtk-execute"/>                                
+                                <button name="button_produce" states="ready" string="Mark as Started" icon="gtk-execute"/>                                
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
                                 <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
                                 <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-cancel"/>
                                 <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="gtk-convert"/>
                             </group>
-                        </page>
-                        <page string="Scheduled Products">
-                            <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
-                        </page>
+                        </page>                        
                         <page string="Finished Products">
                             <field colspan="2" name="move_created_ids" nolabel="1" widget="one2many_list"
                                 mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
@@ -609,6 +607,9 @@
                                 </tree>
                             </field>
 
+                        </page>
+                        <page string="Scheduled Products">
+                            <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>

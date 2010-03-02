@@ -46,6 +46,5 @@
     'demo_xml': ['crm_bugs_demo.xml'],
     'installable': True,
     'active': False,
-    'certificate': '',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

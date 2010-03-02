@@ -609,12 +609,40 @@
             </field>
        </record>
 
+        <record id="view_project_message_search" model="ir.ui.view">
+           <field name="name">project.message.search</field>
+           <field name="model">project.message</field>
+           <field name="type">search</field>
+           <field name="arch" type="xml">
+               <search string="Messages">
+                   <group col="20" colspan="4">
+                       <filter domain="[('date','&gt;=',time.strftime('%%Y-%%m-01'))]" icon="terp-project" string="This Month" />
+                       <filter domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" icon="terp-project" string="Today" />
+	                   
+	                   <separator orientation="vertical"/>
+	                   <field name="subject"/>
+	                   <field name="project_id" select="1" widget="selection"/>
+	                   <field name="user_id" select="1" widget="selection">
+	                       <filter domain="[('user_id','=',uid)]" help="My Message" icon="gtk-execute" default="1"/>
+	                   </field>
+                   </group>
+                   <newline/>
+                   <group expand="1" string="Group By..." colspan="4" col="20">                    
+                       <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                       <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
+                       <filter string="Date" icon="terp-project" domain="[]" context="{'group_by':'date'}"/>
+                   </group>
+               </search>
+           </field>
+        </record>
+
         <record id="action_view_project_messages_tree" model="ir.actions.act_window">
             <field name="name">Messages</field>
             <field name="res_model">project.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_project_message_tree"/>
+            <field name="search_view_id" ref="view_project_message_search"/>
        </record>
 
         <!--<menuitem id="menu_message_main" name="Message" parent="base.menu_main_pm"/>-->
