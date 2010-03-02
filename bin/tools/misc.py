@@ -883,23 +883,8 @@ if not hasattr(__builtin__, 'any'):
     __builtin__.any = any
     del any
 
-get_iso = {'ca_ES':'ca',
-'cs_CZ': 'cs',
-'et_EE': 'et',
-'sv_SE': 'sv',
-'sq_AL': 'sq',
-'uk_UA': 'uk',
-'vi_VN': 'vi',
-'af_ZA': 'af',
-'be_BY': 'be',
-'ja_JP': 'ja',
-'ko_KR': 'ko'
-}
-
 def get_iso_codes(lang):
-    if lang in get_iso:
-        lang = get_iso[lang]
-    elif lang.find('_') != -1:
+    if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
             lang = lang.split('_')[0]
     return lang
