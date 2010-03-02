@@ -23,7 +23,7 @@
             </field>
         </record>
 
-        <record id="action_move_journal_line_form" model="ir.actions.act_window">
+        <record id="action_account_move_journal_line_form" model="ir.actions.act_window">
             <field name="name">Making Entries by Line</field>
             <field name="res_model">account.move.journal</field>
             <field name="view_type">form</field>
@@ -31,6 +31,11 @@
            <field name="view_id" ref="view_account_move_journal_form"/> 
            <field name="target">new</field>
         </record>
+
+        <menuitem icon="STOCK_JUSTIFY_FILL"
+        	action="action_account_move_journal_line_form"
+        	id="menu_action_move_journal_line_form"
+        	parent="account.menu_finance_entries" sequence="5" />
 
     </data>
 </openerp>

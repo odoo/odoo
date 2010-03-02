@@ -23,7 +23,7 @@
             </field>
   		</record>
 
-        <record id="wizard_account_chart" model="ir.actions.act_window">
+        <record id="action_account_chart" model="ir.actions.act_window">
             <field name="name">Chart of Accounts</field>
             <field name="res_model">account.chart</field>
             <field name="view_type">form</field>
@@ -31,6 +31,10 @@
            <field name="view_id" ref="view_account_chart"/> 
            <field name="target">new</field>
         </record>
+
+        <menuitem icon="STOCK_INDENT" action="action_account_chart"
+        	id="menu_action_account_tree2"
+        	parent="account.menu_finance_charts" />
 
     </data>
 </openerp>

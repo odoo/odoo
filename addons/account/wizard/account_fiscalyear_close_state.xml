@@ -21,7 +21,8 @@
                </form>
             </field>
         </record>
-        <record id="wizard_fiscalyear_close_state" model="ir.actions.act_window">
+
+        <record id="action_account_fiscalyear_close_state" model="ir.actions.act_window">
             <field name="name">Close a Fiscal Year</field>
             <field name="res_model">account.fiscalyear.close.state</field>
             <field name="view_type">form</field>
@@ -29,8 +30,10 @@
            <field name="view_id" ref="view_account_fiscalyear_close_state"/> 
            <field name="target">new</field>
         </record>
-        
-    	<menuitem action="wizard_fiscalyear_close_state" id="menu_wizard_fy_close_state" parent="menu_account_end_year_treatments" />
+
+        <menuitem action="action_account_fiscalyear_close_state"
+        	id="menu_wizard_fy_close_state"
+        	parent="menu_account_end_year_treatments" />
 
     </data>
 </openerp>
