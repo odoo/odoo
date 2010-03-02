@@ -68,7 +68,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Jobs - Recruitment Form">
-                <group colspan="4" col="7">
+                <group colspan="4" col="8">
                     <field name="name" string="Subject"/>
                     <label string="Stage: " align="1.0"/>
                     <group colspan="1" col="2">
@@ -78,20 +78,15 @@
                     <field name="user_id"/>
                     <button string="Schedule a Phone Call"
                         name="%(wizard_hr_job_reschedule_phone_call)d" icon="gtk-redo" type="action"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
+						icon="gtk-execute" context="{'survey_id': survey, 'response_id': response ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
                     <newline/>
                     <field name="partner_name"/>
                     <field name="job_id"/>
                     <field name="department_id" widget="selection"/>
                     <button name="%(wizard_hr_job_meeting_set)d" string="Schedule Meeting" icon="terp-hr" type="action"/>
-					<label string=" " colspan = "1"/>
-					<label string=" " colspan = "1"/>
-					<label string=" " colspan = "1"/>
-					<label string=" " colspan = "1"/>
-					<label string=" " colspan = "1"/>
-					<button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
-						icon="gtk-execute" context="{'survey_id': survey, 'response_id': response ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
 					<button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
-						icon="gtk-execute" context="{'survey_id': survey, 'response_id' : response,}" attrs="{'readonly':[('survey','=',False)]}"/>
+						icon="gtk-print" context="{'survey_id': survey, 'response_id' : response,}" attrs="{'readonly':[('response','=',False)]}" />
 				</group>
                 <notebook colspan="4">
                     <page string="Job Info">

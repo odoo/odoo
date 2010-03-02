@@ -186,7 +186,7 @@ class survey_browse_response(report_rml):
         surv_resp_obj = pooler.get_pool(cr.dbname).get('survey.response')
         if datas.has_key('form') and datas['form'].has_key('response_ids'):
             response_id = datas['form']['response_ids'][0][2]
-        elif context.has_key('response_id'):
+        elif context.has_key('response_id') and context['response_id']:
             response_id = [int(context['response_id'])]
         else:
             response_id = surv_resp_obj.search(cr, uid, [('survey_id', 'in', ids)])
