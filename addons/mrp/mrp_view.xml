@@ -460,8 +460,10 @@
                         <field name="product_id" on_change="product_id_change(product_id)" select="1"/>                        
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
-                            <field name="product_uom"/>
+                        <field name="product_uom"/>
+                        <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production"/>
                         </group>
+                        
                         <label string="" colspan="2"/>                          
                         <field name="product_uos_qty" groups="product.group_uos"/>                        
                         <group colspan="2" col="3" groups="product.group_uos">
