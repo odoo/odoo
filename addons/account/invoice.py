@@ -309,6 +309,7 @@ class account_invoice(osv.osv):
             help="Remaining amount due."),
         'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
         'move_name': fields.char('Ledger Posting', size=64),
+        'user_id': fields.many2one('res.users', 'Salesman'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position')
     }
     _defaults = {
@@ -320,6 +321,7 @@ class account_invoice(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.invoice', context=c),
         'reference_type': lambda *a: 'none',
         'check_total': lambda *a: 0.0,
+        'user_id': lambda s,cr,u,c: u,
     }
 
     def unlink(self, cr, uid, ids, context=None):
