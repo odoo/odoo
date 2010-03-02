@@ -657,13 +657,13 @@ class stock_picking(osv.osv):
         '''Return comment string for invoice'''
         return picking.note or ''
 
-    def _get_price_unit_invoice(self, cursor, user, move_line, type):
+    def _get_price_unit_invoice(self, cr, users, move_line, type):
         '''Return the price unit for the move line'''
         if type in ('in_invoice', 'in_refund'):
             # Take the user company and pricetype
-            price_type_id=self.pool.get('res.users').browse(cr,users,users).company_id.property_valuation_price_type.id
-            pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)
-            amount_unit=move_line.product_id.price_get(pricetype.field, context)[move_line.product_id.id]
+            price_type_id=self.pool.get('res.users').browse(cr, users, users).company_id.property_valuation_price_type.id
+            pricetype=self.pool.get('product.price.type').browse(cr, users, price_type_id)
+            amount_unit=move_line.product_id.price_get(pricetype.field, context={})[move_line.product_id.id]
             return amount_unit
         else:
             return move_line.product_id.list_price

@@ -81,7 +81,7 @@ class stock_invoice_onshipping(osv.osv_memory):
 
             type = onshipdata_obj['type']
             context['date_inv'] = onshipdata_obj['invoice_date']
-            res = picking_obj.action_invoice_create(cr, uid, [onshipdata_obj['id']],
+            res = picking_obj.action_invoice_create(cr, uid,context['active_ids'],
                   journal_id = onshipdata_obj['journal_id'],
                   group=onshipdata_obj['group'],
                   type=type,

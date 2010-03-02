@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
     	<record id="view_inventory_merge_stock_zero" model="ir.ui.view">
             <field name="name">Set Stock to Zero</field>
             <field name="model">stock.inventory.merge.stock.zero</field>
@@ -8,11 +9,9 @@
             <field name="arch" type="xml">
               <form string="Set Stock to Zero">
              		<separator string="Set Stocks to Zero" colspan="4" />
-             		<group colspan="4">
                 	<field name="location_id"/>
-                	</group>
-    		<newline/>
-    		 <label colspan="4" string="Do you want to set stocks to zero ?"/>
+    				<newline/>
+    				<label colspan="4" string="Do you want to set stocks to zero ?"/>
         	        <separator string="" colspan="4" />
 					<button special="cancel" string="Cancel" />
             	    <button name="do_merge" string="Set Stock to Zero" type="object"/>
@@ -28,5 +27,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+        
     </data>
 </openerp>

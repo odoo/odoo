@@ -32,25 +32,25 @@ class stock_location_product(osv.osv_memory):
     _name = "stock.location.product"
     _description = "Products by Location"
     _columns = {
-                'from_date': fields.datetime('From'),
-                'to_date': fields.datetime('To'),
+                'from_date': fields.datetime('From'), 
+                'to_date': fields.datetime('To'), 
                 }
 
     def _action_open_window(self, cr, uid, ids, context):
         mod_obj = self.pool.get('ir.model.data')
-        for product_obj in self.read(cr, uid, ids, ['from_date', 'to_date']):
+        for location_obj in self.read(cr, uid, ids, ['from_date', 'to_date']):
             result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')
             id = mod_obj.read(cr, uid, result, ['res_id'])
             return {
-                    'name': 'product',
-                    'view_type': 'form',
-                    "view_mode": 'tree,form',
-                    'res_model': 'product.product',
-                    'type': 'ir.actions.act_window',
-                    'context':{'location':product_obj['id'],
-                           'from_date':product_obj['from_date'],
-                           'to_date':product_obj['to_date']},
-                    'domain':[('type', '<>', 'service')],
+                    'name': 'product', 
+                    'view_type': 'form', 
+                    'view_mode': 'tree,form', 
+                    'res_model': 'product.product', 
+                    'type': 'ir.actions.act_window', 
+                    'context': {'location': context['active_ids'][0], 
+                           'from_date': location_obj['from_date'], 
+                           'to_date': location_obj['to_date']}, 
+                    'domain': [('type', '<>', 'service')], 
                     'search_view_id': id['res_id']
                     }
 

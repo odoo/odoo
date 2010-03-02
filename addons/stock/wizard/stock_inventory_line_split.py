@@ -32,20 +32,21 @@ class stock_inventory_line_split(osv.osv_memory):
     _name = "stock.inventory.line.split"
     _description = "Split inventory lines"
     _columns = {
-            'prefix': fields.char('Prefix', size=64),
-            'quantity': fields.float('Quantity per lot'),
+            'prefix': fields.char('Prefix', size=64), 
+            'quantity': fields.float('Quantity per lot'), 
             }
 
     def _check_production_lot(self, cr, uid, context):
-        for inv_obj in self.pool.get('stock.inventory.line').browse(cr, uid, context['active_ids']):
+        for inv_obj in self.pool.get('stock.inventory.line').browse(cr, uid, \
+                            context['active_ids']):
             if not inv_obj.prod_lot_id:
-                raise osv.except_osv(_('Caution!'), _('Before splitting the inventory lines, \
-                             make sure the production lot is assigned to this product.'))
+                raise osv.except_osv(_('Caution!'), _('Before splitting the \
+inventory lines, make sure the production lot is assigned to this product.'))
             return
 
     _defaults = {
-            'quantity': lambda *a: '1',
-            'prefix': _check_production_lot,
+            'quantity': lambda *a: '1', 
+            'prefix': _check_production_lot, 
             }
 
     def _split_lines(self, cr, uid, ids, context):
@@ -59,25 +60,25 @@ class stock_inventory_line_split(osv.osv_memory):
             if not sequence:
                 raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
             if linesplit_obj.prefix:
-                sequence=linesplit_obj.prefix + '/'+(sequence or '')
+                sequence = linesplit_obj.prefix + '/' + (sequence or '')
 
             inv = inv_line_obj.browse(cr, uid, [inv_id])[0]
             quantity = linesplit_obj.quantity
-            prodlot_obj.write(cr, uid, inv.prod_lot_id.id, {'name':sequence})
+            prodlot_obj.write(cr, uid, inv.prod_lot_id.id, {'name': sequence})
 
             if quantity <= 0 or inv.product_qty == 0:
                 return {}
 
-            quantity_rest = inv.product_qty%quantity
+            quantity_rest = inv.product_qty % quantity
 
             update_val = {
-                    'product_qty': quantity,
+                    'product_qty': quantity, 
             }
 
             new_line = []
-            for idx in range(int(inv.product_qty//quantity)):
+            for idx in range(int(inv.product_qty // quantity)):
                 if idx:
-                    current_line = inv_line_obj.copy(cr, uid, inv.id,
+                    current_line = inv_line_obj.copy(cr, uid, inv.id, 
                                  {'prod_lot_id': inv.prod_lot_id.id})
                     new_line.append(current_line)
                 else:
@@ -85,11 +86,11 @@ class stock_inventory_line_split(osv.osv_memory):
                     inv_line_obj.write(cr, uid, [current_line], update_val)
 
             if quantity_rest > 0:
-                idx = int(inv.product_qty//quantity)
-                update_val['product_qty']=quantity_rest
+                idx = int(inv.product_qty // quantity)
+                update_val['product_qty'] = quantity_rest
 
                 if idx:
-                    current_line = inv_line_obj.copy(cr, uid, inv.id,
+                    current_line = inv_line_obj.copy(cr, uid, inv.id, 
                                  {'prod_lot_id': inv.prod_lot_id.id})
                     new_line.append(current_line)
                 else:
