@@ -456,18 +456,13 @@ class sale_order(osv.osv):
         return True
     
     def action_invoice_end(self, cr, uid, ids, context={}):
-        for order in self.browse(cr, uid, ids):
-            val = {'invoiced': True}
-            if order.state == 'invoice_except':
-                val['state'] = 'progress'
-                
+        for order in self.browse(cr, uid, ids, context=context):
             for line in order.order_line:
-                towrite = []
                 if line.state == 'exception':
-                    towrite.append(line.id)
-                if towrite:
-                    self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'confirmed'}, context=context)
-            self.write(cr, uid, [order.id], val)
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'state': 'confirmed'}, context=context)
+            
+            if order.state == 'invoice_except':
+                self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
             
         return True
     
