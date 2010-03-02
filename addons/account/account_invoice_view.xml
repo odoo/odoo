@@ -196,11 +196,11 @@
                                     <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
                                     <!-- Wizard Buttons: To Remove -->
                                     <button name="%(wizard_invoice_pay)d" type="action" string="Pay Invoice" states="open,paid,proforma2" icon="STOCK_EXECUTE" /> 
-							 		<button name="%(wizard_invoice_refund)d" type="action" string="Credit Note"  icon="STOCK_EXECUTE" />
+							 		<button name="%(action_account_invoice_refund)d" type="action" string="Credit Note"  icon="STOCK_EXECUTE" />
                                 </group>
                             </group>
-                             
                         </page>
+                        
                         <page string="Other Info">
                             <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                             <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
@@ -291,7 +291,7 @@
                                     <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert"/>
                                     <!-- Wizard Buttons: To Remove -->
                                     <button name="%(wizard_invoice_pay)d" type="action" string="Pay Invoice" states="open,paid,proforma2" icon="STOCK_EXECUTE" /> 
-							 		<button name="%(wizard_invoice_refund)d" type="action" string="Credit Note"  icon="STOCK_EXECUTE" />
+							 		<button name="%(action_account_invoice_refund)d" type="action" string="Credit Note"  icon="STOCK_EXECUTE" />
                                </group>
                             </group>
                         </page>

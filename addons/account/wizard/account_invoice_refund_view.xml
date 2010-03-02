@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
     	<record id="view_account_invoice_refund" model="ir.ui.view">
             <field name="name">account.invoice.refund.form</field>
             <field name="model">account.invoice.refund</field>
@@ -25,6 +26,7 @@
                </form>
             </field>
     	</record>
+
         <record id="action_account_invoice_refund" model="ir.actions.act_window">
             <field name="name">Credit Note</field>
             <field name="res_model">account.invoice.refund</field>
@@ -33,5 +35,6 @@
            <field name="view_id" ref="view_account_invoice_refund"/> 
            <field name="target">new</field>
         </record>
+
     </data>
 </openerp>	

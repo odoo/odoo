@@ -81,7 +81,10 @@
                     <separator colspan="4" string="States"/>
                     <field name="state" select="1"/>
                     <button name="action_draft" states="done" string="Set to Draft" type="object" icon="gtk-convert"/>
-                    
+                    <!-- Wizard Buttons: To Remove -->
+                    <button name="%(action_account_period_close)d"
+                    	states="draft" string="Close Period" type="action"
+                    	icon="gtk-close" />
                 </form>
             </field>
         </record>
