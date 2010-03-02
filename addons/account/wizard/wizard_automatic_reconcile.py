@@ -218,7 +218,6 @@ def _reconcile(self, cr, uid, data, context):
     max_amount = form.get('max_amount', 0.0)
     power = form['power']
     reconciled = unreconciled = 0
-    print "form",form
     if not form['account_ids'][0][2]:
         raise wizard.except_wizard(_('UserError'), _('You must select accounts to reconcile'))
     for account_id in form['account_ids'][0][2]:

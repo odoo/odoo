@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,84 +15,87 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
+from osv import fields, osv
+from tools.translate import _
 import netsvc
 import pooler
 import time
-from tools.translate import _
 import tools
-from osv import fields, osv
+import wizard
 
 
 class account_move_journal(osv.osv_memory):
-    
+
     def _get_period(self, cr, uid, context={}):
-        """Return  default account period value""" 
-        
+        """Return  default account period value"""
+
         ids = self.pool.get('account.period').find(cr, uid, context=context)
         period_id = False
         if len(ids):
             period_id = ids[0]
         return period_id
-    
+
     def _action_open_window(self, cr, uid, ids, context={}):
         """
         This function Open action move line window on given period and  Journal/Payment Mode
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param id: account move journal’s ID or list of IDs if we want more than one
-        @return:dictionary of Open action move line window on given period and  Journal/Payment Mode
-        
+        @param ids: account move journal’s ID or list of IDs
+        @return: dictionary of Open action move line window on given period and  Journal/Payment Mode
+
         """
-        for form in  self.read(cr, uid, ids,['journal_id', 'period_id']):
-            cr.execute('select id,name from ir_ui_view where model=%s and type=%s', ('account.move.line', 'form' ))
+        for data in  self.read(cr, uid, ids, ['journal_id', 'period_id']):
+            cr.execute('select id,name from ir_ui_view where model=%s and type=%s', ('account.move.line', 'form'))
             view_res = cr.fetchone()
+            journal_id = data['journal_id']
+            period_id = data['period_id']
             jp = self.pool.get('account.journal.period')
-            ids = jp.search(cr, uid, [('journal_id','=',form['journal_id']), ('period_id','=',form['period_id'])])
-            
+            ids = jp.search(cr, uid, [('journal_id', '=', journal_id), \
+                                        ('period_id', '=', period_id)])
+
             if not len(ids):
-                print "ids",ids
-                name = self.pool.get('account.journal').read(cr, uid, [form['journal_id']])[0]['name']
-                state = self.pool.get('account.period').read(cr, uid, [form['period_id']])[0]['state']
+                name = self.pool.get('account.journal').read(cr, uid, [journal_id])[0]['name']
+                state = self.pool.get('account.period').read(cr, uid, [period_id])[0]['state']
                 if state == 'done':
                     raise osv.except_osv(_('UserError'), _('This period is already closed !'))
-                company = self.pool.get('account.period').read(cr, uid, [form['period_id']])[0]['company_id'][0]
-                jp.create(cr, uid, {'name':name, 'period_id': form['period_id'], 'journal_id':form['journal_id'], 'company_id':company})
-            ids = jp.search(cr, uid, [('journal_id','=',form['journal_id']), ('period_id','=',form['period_id'])])
-            print "jp",ids
+                company = self.pool.get('account.period').read(cr, uid, [period_id])[0]['company_id'][0]
+                jp.create(cr, uid, {'name': name, 'period_id': period_id, 'journal_id': journal_id, 'company_id': company})
+
+            ids = jp.search(cr, uid, [('journal_id', '=', journal_id), ('period_id', '=', period_id)])
             jp = jp.browse(cr, uid, ids, context=context)[0]
             name = (jp.journal_id.code or '') + ':' + (jp.period_id.code or '')
             mod_obj = self.pool.get('ir.model.data')
             result = mod_obj._get_id(cr, uid, 'account', 'view_account_move_line_filter')
-            id = mod_obj.read(cr, uid, result, ['res_id']) 
+            res = mod_obj.read(cr, uid, result, ['res_id'])
+
             return {
-                'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (form['journal_id'],form['period_id']),
-                'name': name,
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'account.move.line',
-                'view_id': view_res,
-                'context': "{'journal_id':%d, 'period_id':%d}" % (form['journal_id'],form['period_id']),
-                'type': 'ir.actions.act_window',
-                'search_view_id': id['res_id']        
+                'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (journal_id, period_id), 
+                'name': name, 
+                'view_type': 'form', 
+                'view_mode': 'tree,form', 
+                'res_model': 'account.move.line', 
+                'view_id': view_res, 
+                'context': "{'journal_id': %d, 'period_id': %d}" % (journal_id, period_id), 
+                'type': 'ir.actions.act_window', 
+                'search_view_id': res['res_id']
                 }
-            
+
     _name = "account.move.journal"
     _description = "Move journal"
-    
+
     _columns = {
-                'journal_id':fields.many2one('account.journal',  'Journal/Payment Mode', required=True),
-                'period_id':fields.many2one('account.period', 'Period', required=True),
+                'journal_id': fields.many2one('account.journal', 'Journal/Payment Mode', required=True), 
+                'period_id': fields.many2one('account.period', 'Period', required=True), 
                 }
 
     _defaults = {
-                'period_id':_get_period
+                'period_id': _get_period
                 }
-    
+
 account_move_journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

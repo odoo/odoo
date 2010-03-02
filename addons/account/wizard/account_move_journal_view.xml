@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
   		<record id="view_account_move_journal_form" model="ir.ui.view">
             <field name="name">account.move.journal.form</field>
             <field name="model">account.move.journal</field>
@@ -21,6 +22,7 @@
                </form>
             </field>
         </record>
+
         <record id="action_move_journal_line_form" model="ir.actions.act_window">
             <field name="name">Making Entries by Line</field>
             <field name="res_model">account.move.journal</field>
@@ -29,5 +31,6 @@
            <field name="view_id" ref="view_account_move_journal_form"/> 
            <field name="target">new</field>
         </record>
+
     </data>
 </openerp>

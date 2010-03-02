@@ -18,45 +18,50 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import wizard
+
+from osv import fields, osv
+from tools.translate import _
 import netsvc
 import pooler
 import time
-from tools.translate import _
 import tools
-from osv import fields, osv
-
+import wizard
 
 class account_move_bank_reconcile(osv.osv_memory):
-    
+    """
+        Bank Reconciliation
+    """
     _name = "account.move.bank.reconcile"
     _description = "Move bank reconcile"
     _columns = {
-                'journal_id':fields.many2one('account.journal',  'Journal', required=True),
-                
+                'journal_id': fields.many2one('account.journal', 'Journal', required=True), 
               }
+
     def _action_open_window(self, cr, uid, ids, context):
-             """
+            """
            @param cr: the current row, from the database cursor,
            @param uid: the current user’s ID for security checks,
-           @param id: account move bank reconcile’s ID or list of IDs if we want more than one
-           @return:dictionary of  Open  account move line   on given journal_id.
+           @param ids: account move bank reconcile’s ID or list of IDs
+           @return: dictionary of  Open  account move line   on given journal_id.
             """
-             for form in  self.read(cr, uid, ids):
-                 cr.execute('select default_credit_account_id from account_journal where id=%s', (form['journal_id'],))
+            for data in  self.read(cr, uid, ids):
+                 cr.execute('select default_credit_account_id \
+                                from account_journal where id=%s', (data['journal_id'],))
                  account_id = cr.fetchone()[0]
                  if not account_id:
-                     raise osv.except_osv(_('Error'), _('You have to define the bank account\nin the journal definition for reconciliation.'))
+                     raise osv.except_osv(_('Error'), _('You have to define \
+the bank account\nin the journal definition for reconciliation.'))
                  return {
-                    'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (form['journal_id'],account_id),
-                    'name': _('Standard Encoding'),
-                    
-                    'view_type': 'form',
-                    'view_mode': 'tree,form',
-                    'res_model': 'account.move.line',
-                    'view_id': False,
-                    'context': "{'journal_id':%d}" % (form['journal_id'],),
+                    'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (data['journal_id'], account_id), 
+                    'name': _('Standard Encoding'), 
+                    'view_type': 'form', 
+                    'view_mode': 'tree,form', 
+                    'res_model': 'account.move.line', 
+                    'view_id': False, 
+                    'context': "{'journal_id': %d}" % (data['journal_id'],), 
                     'type': 'ir.actions.act_window'
                      }
 
 account_move_bank_reconcile()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

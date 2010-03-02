@@ -48,7 +48,6 @@
         'wizard/account_move_line_reconcile_select_view.xml',
         'wizard/account_move_journal_view.xml',
         
-        
         'account_wizard.xml',
         'account_view.xml',
         'account_end_fy.xml',

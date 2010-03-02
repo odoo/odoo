@@ -18,40 +18,44 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import wizard
+
+from osv import fields, osv
+from tools.translate import _
 import netsvc
 import pooler
 import time
-from tools.translate import _
 import tools
-from osv import fields, osv
+import wizard
 
 class account_move_line_reconcile_select(osv.osv_memory):
     _name = "account.move.line.reconcile.select"
     _description = "Move line reconcile select"
     _columns = {
-                'account_id':fields.many2one('account.account',  'Account', domain = [('reconcile','=',1)], required=True),
+                'account_id': fields.many2one('account.account', 'Account', \
+                            domain = [('reconcile', '=', 1)], required=True), 
               }
-    
+
     def _action_open_window(self, cr, uid, ids, context):
         """
         This function Open  account move line window for reconcile on given account id
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param id: account move line reconcile select’s ID or list of IDs if we want more than one
-        @return:dictionary of  Open  account move line window for reconcile on given account id
-        
+        @param ids: account move line reconcile select’s ID or list of IDs
+        @return: dictionary of  Open  account move line window for reconcile on given account id
+
          """
         for data in  self.read(cr, uid, ids):
-            
+
             return {
-                'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['account_id'],
-                'name': _('Reconciliation'),
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'view_id': False,
-                'res_model': 'account.move.line',
+                'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['account_id'], 
+                'name': _('Reconciliation'), 
+                'view_type': 'form', 
+                'view_mode': 'tree,form', 
+                'view_id': False, 
+                'res_model': 'account.move.line', 
                 'type': 'ir.actions.act_window'
                 }
-        
+
 account_move_line_reconcile_select()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

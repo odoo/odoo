@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
   		<record id="view_account_chart" model="ir.ui.view">
             <field name="name">account.chart.form</field>
             <field name="model">account.chart</field>
@@ -21,6 +22,7 @@
                </form>
             </field>
   		</record>
+
         <record id="wizard_account_chart" model="ir.actions.act_window">
             <field name="name">Chart of Accounts</field>
             <field name="res_model">account.chart</field>
@@ -29,5 +31,6 @@
            <field name="view_id" ref="view_account_chart"/> 
            <field name="target">new</field>
         </record>
+
     </data>
 </openerp>
