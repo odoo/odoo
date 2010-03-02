@@ -26,55 +26,57 @@ import datetime
 from resource.faces import *
 from new import classobj
 import operator
-import time
 import project_resource as proj
+
+compute_form = """<?xml version="1.0" ?>
+<form string="Compute Scheduling of Tasks">
+    <field name="project_id" colspan="4"/>
+</form>"""
 
 success_msg = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
     <label string="Task Scheduling completed successfully."/>
 </form>"""
 
-def resource_list(cr, uid, phase):
-#    To create resources which are the Project Members
+compute_fields = {
+    'project_id': {'string':'Project', 'type':'many2one', 'relation': 'project.project', 'required':'True'},
+}
 
-        resource_objs = []
-        for resource in phase.resource_ids:
-            res = resource.resource_id
-            leaves = []
-            resource_eff = res.time_efficiency
-            resource_cal = res.calendar_id.id
-            wktime_cal = proj.compute_working_calendar(cr, uid, resource_cal)
-            leaves = proj.leaves_resource(cr, uid, phase.project_id.resource_calendar_id.id or False , res.id, resource_cal)
-            resource_objs.append(classobj(str(res.user_id.name), (Resource,), {'__doc__' : res.user_id.name, '__name__' : res.user_id.name, 'vacation' : tuple(leaves), 'efficiency' : resource_eff}))
-        return resource_objs
-
-class wizard_schedule_task(wizard.interface):
+class wizard_compute_tasks(wizard.interface):
 
     def _compute_date(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        phase_pool = pool.get('project.phase')
+        project_pool = pool.get('project.project')
         task_pool = pool.get('project.task')
+        resource_pool = pool.get('resource.resource')
         user_pool = pool.get('res.users')
-        phase = phase_pool.browse(cr, uid, data['id'])
-        task_ids = map(lambda x : x.id, (filter(lambda x : x.state in ['open','draft','pending'] , phase.task_ids)))
-
+        project_id = data['form']['project_id']
+        project = project_pool.browse(cr, uid, project_id)
+        task_ids = task_pool.search(cr, uid, [('project_id','=',project_id), ('state','in',['draft','open','pending'])])
         if task_ids:
-            task_ids.sort()
-            tasks = task_pool.browse(cr, uid, task_ids)
             wktime_cal = []
-            start_date = str(phase.date_start)[:-9]
-            if not phase.date_start:
-                if not phase.project_id.date_start:
-                    start_date = datetime.datetime.now().strftime("%Y-%m-%d")
-                else:
-                    start_date = phase.project_id.date_start
+            task_ids.sort()
+            task_obj = task_pool.browse(cr, uid, task_ids)
+            calendar_id = project.resource_calendar_id.id
+            start_date = project.date_start
+            if not project.date_start:
+                start_date = datetime.datetime.now().strftime("%Y-%m-%d")
             date_start = datetime.datetime.strftime(datetime.datetime.strptime(start_date, "%Y-%m-%d"), "%Y-%m-%d %H:%M")
-            calendar_id = phase.project_id.resource_calendar_id.id
-            resource_objs = resource_list(cr, uid, phase)
-            priority_dict = {'0' :1000,'1' :800,'2' :500,'3' :300,'4' :100}
+
+#    To create resources which are the Project Members
+            resource_objs = []
+            for resource in project.members:
+                leaves = []
+                resource_id = resource_pool.search(cr, uid, [('user_id','=',resource.id)])
+                if resource_id:
+                    resource_obj = resource_pool.browse(cr, uid, resource_id)[0]
+                    leaves = proj.leaves_resource(cr, uid, calendar_id or False , resource_id, resource_obj.calendar_id.id)
+                    resource_objs.append(classobj(str(resource.name), (Resource,), {'__doc__' : resource.name, '__name__' : resource.name, 'vacation' : tuple(leaves), 'efficiency' : resource_obj.time_efficiency}))
+
+            priority_dict = {'0' :1000, '1' :800, '2' :500, '3' :300,'4' :100}
 
 #     To create dynamic no of tasks with the resource specified
-            def tasks_resource(j, eff, priorty=500, obj=False):
+            def tasks_resource(j, eff, priorty=500, obj=None):
                 def task():
                     """
                     task is a dynamic method!
@@ -89,7 +91,7 @@ class wizard_schedule_task(wizard.interface):
 
 #    Creating the project with all the tasks and resources
             def Project():
-                title = "Test Project"
+                title = project.name
                 start = date_start
                 resource = reduce(operator.or_, resource_objs)
                 minimum_time_unit = 1
@@ -101,7 +103,7 @@ class wizard_schedule_task(wizard.interface):
 
 #    Dynamic Creation of tasks
                 i = 0
-                for each_task in tasks:
+                for each_task in task_obj:
                     hours = str(each_task.planned_hours / each_task.occupation_rate)+ 'H'
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
@@ -119,19 +121,30 @@ class wizard_schedule_task(wizard.interface):
             for t in project:
                 s_date = t.start.to_datetime()
                 e_date = t.end.to_datetime()
-                if loop_no > 0:
+                if loop_no == 0:
+                    project_pool.write(cr, uid, [project_id], {'date' : e_date})
+                else:
                     user_id = user_pool.search(cr, uid, [('name','=',t.booked_resource[0].__name__)])
-                    task_pool.write(cr, uid, [tasks[loop_no-1].id], {'date_start' :s_date.strftime('%Y-%m-%d %H:%M:%S'), 'date_deadline' :e_date.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' :user_id[0]}, context={'scheduler' :True})
+                    task_pool.write(cr, uid, [task_obj[loop_no-1].id], {'date_start' :s_date.strftime('%Y-%m-%d %H:%M:%S'), 'date_deadline' :e_date.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' :user_id[0]}, context={'scheduler' :True})
                 loop_no +=1
         return {}
 
     states = {
         'init': {
+            'actions': [],
+            'result': {'type':'form', 'arch':compute_form, 'fields':compute_fields, 'state':[
+                ('end', 'Cancel'),
+                ('compute', 'Compute')
+            ]},
+        },
+
+
+        'compute': {
             'actions': [_compute_date],
             'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
         }
     }
-wizard_schedule_task('phase.schedule.tasks')
+wizard_compute_tasks('wizard.compute.tasks')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

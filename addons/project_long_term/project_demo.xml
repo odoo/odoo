@@ -34,7 +34,7 @@
             <field name="password">manager1</field>
             <field eval="[(6,0,[])]" name="company_ids"/>
         </record>
- 
+
         <record id="res_users_manager1" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
@@ -49,7 +49,7 @@
             <field name="password">manager2</field>
             <field eval="[(6,0,[])]" name="company_ids"/>
         </record>
-        
+
         <record id="res_users_user0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
@@ -64,7 +64,7 @@
             <field name="password">USER1</field>
             <field eval="[(6,0,[])]" name="company_ids"/>
         </record>
-        
+
         <record id="res_users_user1" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
@@ -79,7 +79,7 @@
             <field name="password">user2</field>
             <field eval="[(6,0,[])]" name="company_ids"/>
         </record>
-        
+
         <record id="res_users_userfinance0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
@@ -94,7 +94,7 @@
             <field name="password">user_finance</field>
             <field eval="[(6,0,[])]" name="company_ids"/>
         </record>
-        
+
         <record id="res_users_userdesign0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
@@ -109,7 +109,7 @@
             <field name="password">user_design1</field>
             <field eval="[(6,0,[])]" name="company_ids"/>
         </record>
-        
+
         <record id="res_users_userdesign1" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name', '=', u'Menu')]"/>
             <field name="context_lang">en_US</field>
@@ -201,16 +201,6 @@
         </record>
 
         <!-- Resources -->
-        <record id="resource_resource_fabienpinckaers0" model="resource.resource">
-            <field eval="1.0" name="time_efficiency"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="name">Fabien Pinckaers</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field eval="1" name="active"/>
-            <field name="calendar_id" ref="hr.timesheet_group1"/>
-            <field name="resource_type">user</field>
-        </record>
-
         <record id="resource_resource_analyst0" model="resource.resource">
             <field eval="1.0" name="time_efficiency"/>
             <field name="user_id" ref="res_users_useranalyst0"/>
@@ -271,7 +261,7 @@
             <field eval="[(6,0,[])]" name="type_ids"/>
             <field name="name">OpenERP Website Development</field>
         </record>
-    
+
         <!-- Project Phases -->
         <record id="project_phase_informationgatheringandunderstanding0" model="project.phase">
             <field eval="[(6,0,[])]" name="previous_phase_ids"/>
@@ -284,7 +274,7 @@
             <field name="responsible_id" ref="res_users_demouser1"/>
             <field eval="10.0" name="duration"/>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start">2010-02-26 15:37:00</field>
+            <field name="constraint_date_start">2010-02-24 15:37:00</field>
             <field name="date_end">2010-03-10 15:33:00</field>
         </record>
 
@@ -293,7 +283,7 @@
             <field name="name">Planning</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
-            <field name="constraint_date_end">2010-02-18 15:49:00</field>
+            <field name="constraint_date_end">2010-03-25 15:49:00</field>
             <field name="date_start">2010-02-18 15:48:00</field>
             <field name="state">draft</field>
             <field name="responsible_id" ref="res_users_manager0"/>
@@ -308,13 +298,13 @@
             <field name="name">Web Design </field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
-            <field name="constraint_date_end">2010-04-10 16:08:00</field>
+            <field name="constraint_date_end">2010-04-15 16:08:00</field>
             <field name="date_start">2010-04-01 16:02:00</field>
             <field name="state">draft</field>
             <field name="responsible_id" ref="res_users_userdesign0"/>
             <field eval="10.0" name="duration"/>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start">2010-04-01 16:08:00</field>
+            <field name="constraint_date_start">2010-03-09 16:00:00</field>
             <field name="date_end">2010-04-10 16:02:00</field>
         </record>
 
@@ -329,7 +319,7 @@
             <field name="responsible_id" ref="res_users_manager0"/>
             <field eval="15.0" name="duration"/>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start">2010-04-14 16:11:00</field>
+            <field name="constraint_date_start">2010-03-10 16:11:00</field>
             <field name="date_end">2010-04-26 16:10:00</field>
         </record>
 
@@ -338,13 +328,13 @@
             <field name="name">Website Deployment</field>
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="10" name="sequence"/>
-            <field name="constraint_date_end">2010-04-28 16:35:00</field>
+            <field name="constraint_date_end">2010-04-30 16:35:00</field>
             <field name="date_start">2010-04-26 16:35:00</field>
             <field name="state">draft</field>
             <field name="responsible_id" ref="res_users_manager0"/>
             <field eval="2.0" name="duration"/>
             <field name="project_id" ref="project_project_openerpwebsitedevelopment0"/>
-            <field name="constraint_date_start">2010-04-27 16:35:00</field>
+            <field name="constraint_date_start">2010-03-10 16:35:00</field>
             <field name="date_end">2010-04-27 16:34:00</field>
         </record>
 
@@ -402,7 +392,7 @@
             <field name="phase_id" ref="project_phase_developmentintegrationandtesting0"/>
             <field eval="50.0" name="useability"/>
         </record>
-    
+
         <!-- Tasks -->
         <record id="project_task_preparerequirementsdocument0" model="project.task">
             <field eval="10" name="sequence"/>

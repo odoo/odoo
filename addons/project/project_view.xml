@@ -247,7 +247,7 @@
                                 name="planned_hours"
                                 widget="float_time"
                                 attrs="{'readonly':[('state','!=','draft')]}"
-                                on_change="onchange_planned(project_id,user_id,planned_hours,effective_hours,date_start,occupation_rate)"/>
+                                on_change="onchange_planned(planned_hours, effective_hours)"/>
                                 <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
                                 <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
@@ -304,7 +304,6 @@
                                 <separator string="Dates" colspan="2"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
-                                <field name="occupation_rate"/>
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
                             <field name="partner_id" select="2"/>
@@ -331,7 +330,7 @@
                 <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
                     <field name="sequence" invisible="1"/>
                     <field name="name"/>
-                    <field name="planned_hours" widget="float_time" on_change="onchange_planned(planned_hours)" invisible="not context.get('set_visible',False)"/>
+                    <field name="planned_hours" widget="float_time" on_change="onchange_planned(planned_hours, effective_hours)" invisible="not context.get('set_visible',False)"/>
                     <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                     <field name="user_id"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
