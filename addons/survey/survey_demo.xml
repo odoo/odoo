@@ -2,12 +2,25 @@
 <openerp>
     <data noupdate="1">
 
+		<record model="survey.type" id="survey_type1">
+		    <field name="name">Human Resources</field>
+		    <field name="code">Human Resources</field>
+		</record>
+		<record model="survey.type" id="survey_type2">
+		    <field name="name">Customer Feeback</field>
+		    <field name="code">Customer Feeback</field>
+		</record>
+		<record model="survey.type" id="survey_type3">
+		    <field name="name">Supplier Selection</field>
+		    <field name="code">Supplier Selection</field>
+		</record>
+
     	<!--  Partner Feedback Demo data -->
         <record model="survey" id="survey_partner_feedback">
 	        <field name="title">Open ERP Partner Feedback</field>
-	        <field name="user_id" ref="base.user_root"/>
-	        <field name="question_prefix">Que</field>
+	        <field name="responsible_id" ref="base.user_root"/>
 	        <field name="max_response_limit">20</field>
+	        <field name="type" ref="survey_type2"/>
    		</record>
 
         <record id="survey_page_who_are_you" model="survey.page">
@@ -476,9 +489,9 @@
     	<!--  Partner Feedback Demo data -->
         <record model="survey" id="survey_odoo_feedback">
 	        <field name="title">Odoo Feedback</field>
-	        <field name="question_prefix">Que</field>
-	        <field name="user_id" ref="base.user_root"/>
+	        <field name="responsible_id" ref="base.user_demo"/>
 	        <field name="max_response_limit">20</field>
+	        <field name="type" ref="survey_type2"/>
    		</record>
 
         <record id="survey_page_odoo_who_are_you" model="survey.page">
@@ -1264,9 +1277,9 @@
    	 <data>
 		<record id="survey_0" model="survey">
 			<field eval="&quot;&quot;&quot;OpenERP Feedback&quot;&quot;&quot;" name="title"/>
-			<field name="user_id" ref="base.user_root"/>
-			<field name="question_prefix">Que</field>
+			<field name="responsible_id" ref="base.user_demo"/>
 	        <field name="max_response_limit">20</field>
+	        <field name="type" ref="survey_type2"/>
 		</record>
 	</data>
 	<data>
@@ -2143,6 +2156,7 @@
 			<field name="responsible_id" ref="base.user_root"/>
 			<field eval="1" name="send_response"/>
 			<field eval="[(6,0,[])]" name="users"/>
+			<field name="type" ref="survey_type3"/>
 		</record>
 	</data>
 	<data>

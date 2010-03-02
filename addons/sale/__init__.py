@@ -27,6 +27,7 @@ import sale
 import stock
 import product
 import mrp
+import sale_report
 
 import wizard
 import report

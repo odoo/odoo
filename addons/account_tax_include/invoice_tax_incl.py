@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -36,7 +36,7 @@ class account_invoice(osv.osv):
     _defaults = {
         'price_type': lambda *a: 'tax_excluded',
     }
-    
+
     def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
         map_old_new = {}
         refund_ids = []
@@ -44,12 +44,12 @@ class account_invoice(osv.osv):
             new_id = super(account_invoice,self).refund(cr, uid, ids, date=date, period_id=period_id, description=description)
             refund_ids += new_id
             map_old_new[old_inv_id] = new_id[0]
-        
+
         for old_inv_id in map_old_new.keys():
             old_inv_record = self.read(cr, uid, [old_inv_id], ['price_type'])[0]['price_type']
             self.write(cr, uid, [map_old_new[old_inv_id]], {'price_type' : old_inv_record})
         return refund_ids
-    
+
 account_invoice()
 
 class account_invoice_line(osv.osv):
@@ -156,16 +156,16 @@ class account_invoice_line(osv.osv):
         else:
             return super(account_invoice_line, self).product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         # note: will call product_id_change_unit_price_inv with context...
 
-        # Temporary trap, for bad context that came from koo: 
+        # Temporary trap, for bad context that came from koo:
         # if isinstance(context, str):
         #       print "str context:", context
 
         ctx = (context and context.copy()) or {}
         ctx.update({'price_type': ctx.get('price_type','tax_excluded')})
-        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context=ctx)
+        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id=currency_id, context=ctx)
 account_invoice_line()
 
 class account_invoice_tax(osv.osv):
@@ -180,7 +180,7 @@ class account_invoice_tax(osv.osv):
         cur_obj = self.pool.get('res.currency')
         cur = inv.currency_id
         company_currency = inv.company_id.currency_id.id
-        
+
         for line in inv.invoice_line:
             data = self.pool.get('account.invoice.line')._amount_line2(cr, uid, [line.id], [], [], context)[line.id]
             for tax in data['data']:
@@ -218,7 +218,7 @@ class account_invoice_tax(osv.osv):
             t['amount'] = cur_obj.round(cr, uid, cur, t['amount'])
             t['base_amount'] = cur_obj.round(cr, uid, cur, t['base_amount'])
             t['tax_amount'] = cur_obj.round(cr, uid, cur, t['tax_amount'])
-        
+
         return tax_grouped
 account_invoice_tax()
 

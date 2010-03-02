@@ -65,7 +65,7 @@
                     <page string="History" groups="base.group_extended">
                         <field name="id" select="1"/>
                         <field name="active" select="2"/>
-                        <field name="categ_id" on_change="onchange_categ_id(categ_id)" select="2"/>
+                        <field name="categ_id" select="2"/>
                         <field name="som" select="2"/>
                         <separator colspan="4" string="Dates"/>
                         <field name="create_date"/>
@@ -160,34 +160,31 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Helpdesk">
-                <group col="6" colspan="1">
-                    <filter icon="gtk-home" string="Today"
-                        separator="1"
-                        domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
-                        help="Todays's Helpdesk Requests"
-                        />
-                    <filter icon="gtk-media-rewind"
-                        string="7 Days" separator="1"
-                        help="Helpdesk requests during last 7 days"
-                        domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                        />
-                </group>
+                <filter icon="gtk-home" string="Today"
+                    separator="1"
+                    domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                    help="Todays's Helpdesk Requests"
+                    />
+                <filter icon="gtk-media-rewind"
+                    string="7 Days" separator="1"
+                    help="Helpdesk requests during last 7 days"
+                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                    />
                 <separator orientation="vertical"/>
-                <group col="6" colspan="2">
-                    <field name="name" select='1' string="Query"/>
-                    <field name="user_id" select="1" widget="selection">
-                        <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Helpdesk Requests" default="1"/>
-                    </field>
-                    <field name="state" select="1">
-                        <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current " default="1"/>
-                    </field>
-                    <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
-                        <filter icon="terp-crm"
-                            domain="[('section_id','=',context.get('section_id',False))]"
-                            help="My section"/>
-                    </field>
-                </group>
-                <group expand="1" string="Group By..." colspan="4" col="20">
+                <field name="name" select='1' string="Query"/>
+                <field name="user_id" select="1" widget="selection">
+                    <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Helpdesk Requests" default="1"/>
+                </field>
+                <field name="state" select="1">
+                    <filter icon="gtk-index" domain="[('state','in',('open','draft' ))]" help="Current " default="1"/>
+                </field>
+                <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
+                    <filter icon="terp-crm"
+                        domain="[('section_id','=',context.get('section_id',False))]"
+                        help="My section"/>
+                </field>
+                <newline/>
+                <group expand="1" string="Group By..." colspan="12" col="20">
                     <filter string="Customer" icon="terp-crm" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-crm" domain="[]"  context="{'group_by':'state'}"/>
                     <filter string="Priority" icon="terp-crm" domain="[]"  context="{'group_by':'priority'}"/>

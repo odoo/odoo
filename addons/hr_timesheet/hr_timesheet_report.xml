@@ -6,6 +6,11 @@
             name="Reporting"
             parent="hr.menu_hr_root"
             sequence="40" />
+         <menuitem
+            id="menu_hr_reporting_timesheet"
+            name="Timesheet"
+            parent="hr.menu_hr_reporting"
+            sequence="1" />
         <report auto="False" id="report_user_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet" string="Employee timesheet" xsl="hr_timesheet/report/user_timesheet.xsl"/>
 
         <wizard id="wizard_hr_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet" string="Employee Timesheet"/>
@@ -13,7 +18,7 @@
         <!--<menuitem id="next_id_48" name="Timesheet" parent="hr.menu_hr_reporting"/>-->
        <!-- <menuitem action="wizard_hr_timesheet" id="menu_wizard_hr_timesheet" parent="next_id_48" type="wizard"
             groups="hr.group_hr_manager"/>-->
-        <menuitem action="wizard_hr_timesheet" id="menu_wizard_hr_timesheet" parent="hr.menu_hr_reporting" type="wizard"
+        <menuitem action="wizard_hr_timesheet" id="menu_wizard_hr_timesheet" parent="menu_hr_reporting_timesheet" type="wizard"
 
             groups="hr.group_hr_manager"
             />
@@ -21,7 +26,7 @@
         <menuitem
             action="wizard_hr_timesheet_my"
             id="menu_wizard_hr_timesheet_my"
-            parent="hr.menu_hr_reporting"
+            parent="menu_hr_reporting_timesheet"
             type="wizard"
             groups="hr.group_hr_user"
             />
@@ -33,7 +38,7 @@
             action="wizard_hr_timesheet_users"
             id="menu_wizard_hr_timesheet_users"
             groups="hr.group_hr_manager"
-            parent="hr.menu_hr_reporting" type="wizard"/>
+            parent="menu_hr_reporting_timesheet" type="wizard"/>
 
     </data>
 </openerp>

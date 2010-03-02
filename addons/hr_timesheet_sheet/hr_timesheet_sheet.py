@@ -246,6 +246,7 @@ class hr_timesheet_sheet(osv.osv):
         'period_ids': fields.one2many('hr_timesheet_sheet.sheet.day', 'sheet_id', 'Period', readonly=True),
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
+        'department_id':fields.many2one('hr.department','Department'),
     }
 
     def _default_date_from(self,cr, uid, context={}):

@@ -54,7 +54,7 @@
         </record>
 
         <record id="action_stock_report_prodlots_form" model="ir.actions.act_window">
-            <field name="name">Locations</field>
+            <field name="name">Inventory by Location</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.report.prodlots</field>
             <field name="view_type">form</field>
@@ -91,7 +91,7 @@
         <menuitem
             action="action_stock_report_prodlots_form"
             id="menu_stock_report_prodlots"
-            parent="stock.menu_stock_inventory_control" sequence="1"/>
+            parent="stock.menu_stock_inventory_control" sequence="10"/>
 
         <act_window
             context="{'product_id': active_id}"
@@ -134,8 +134,7 @@
             <field name="arch" type="xml">
                 <tree string="Dates of Inventories">
                     <field name="product_id"/>
-                    <field name="id"/>
-                    <field name="create_date" />
+                    <field name="date" />
                 </tree>
             </field>
         </record>
@@ -147,8 +146,7 @@
             <field name="arch" type="xml">
                 <form string="Dates of Inventories">
                     <field name="product_id" select="1"/>
-                    <field name="id" select="2"/>
-                    <field name="create_date" select="1" />
+                    <field name="date" select="1" />
                 </form>
             </field>
         </record>

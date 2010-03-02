@@ -24,12 +24,17 @@
     'name': 'Analytic lines - Reporting',
     'version': '1.0',
     'category': 'Generic Modules/Accounting',
-    'description': """A report on analytic lines, costs by products, months and accounts.""",
+    'description': """A report on analytic lines, costs by products, months and accounts.
+    
+
+     ATTENTION:
+        This Module is merged into report_analytic module. so It will be removed in future""",
+
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['account', 'hr_timesheet_invoice'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'report_analytic_line_view.xml'],
+    'update_xml': [],
     'demo_xml': [],
     'installable': True,
     'active': False,

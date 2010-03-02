@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-18 05:52+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-02-26 17:56+0000\n"
+"Last-Translator: Grzegorz Grzelak (Cirrus) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-02-27 04:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -44,13 +44,13 @@ msgstr ""
 #. module: stock
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
 #: model:ir.ui.menu,name:stock.menu_stock_root
 msgid "Inventory Management"
-msgstr ""
+msgstr "Inwentaryzacja"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -571,7 +571,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,parent_left:0
 msgid "Left Parent"
-msgstr ""
+msgstr "Lewy nadrzędny"
 
 #. module: stock
 #: field:report.stock.lines.date,create_date:0
@@ -656,6 +656,11 @@ msgstr "Data wykonania"
 #: rml:stock.picking.list:0
 msgid "Expected Shipping Date"
 msgstr "Spodziewana data wysyłki"
+
+#. module: stock
+#: rml:stock.picking.list:0
+msgid "Shipping Address :"
+msgstr "Adres wysyłki:"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -1370,7 +1375,7 @@ msgstr "Stan faktury"
 #. module: stock
 #: rml:lot.location:0
 msgid "Units"
-msgstr ""
+msgstr "Jednostki"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1625,7 +1630,7 @@ msgstr "Incoterms"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Total:"
-msgstr ""
+msgstr "Suma:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1680,7 +1685,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_workshop
 msgid "Workshop"
-msgstr ""
+msgstr "Sklep"
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -2075,7 +2080,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
 msgid "Configuration"
-msgstr "Ustawienia"
+msgstr "Konfiguracja"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2266,6 +2271,8 @@ msgid ""
 "Scheduled date for the movement of the products or real date if the move is "
 "done."
 msgstr ""
+"Planowana data przesunięcia produktów lub rzeczywista data, jeśli "
+"przesunięcie już nastąpiło."
 
 #. module: stock
 #: view:stock.picking:0
@@ -2306,7 +2313,7 @@ msgstr "Podziel"
 #. module: stock
 #: field:stock.location,account_id:0
 msgid "Inventory Account"
-msgstr "Konto inwentaryzacji"
+msgstr "Konto księgowe"
 
 #. module: stock
 #: wizard_view:inventory.merge.stock.zero,init:0

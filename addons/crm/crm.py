@@ -62,15 +62,15 @@ icon_lst = {
 
 class crm_case_section(osv.osv):
     _name = "crm.case.section"
-    _description = "Case Section"
+    _description = "Sales Teams"
     _order = "name"
     _columns = {
-        'name': fields.char('Case Section',size=64, required=True, translate=True),
-        'code': fields.char('Section Code',size=8),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case section without removing it."),
+        'name': fields.char('Sales Team',size=64, required=True, translate=True),
+        'code': fields.char('Code',size=8),
+        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the sales team without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'user_id': fields.many2one('res.users', 'Responsible User'),
-        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"),
+        'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
     }
@@ -111,17 +111,15 @@ class crm_case_categ(osv.osv):
     _description = "Category of case"
 
     _columns = {
-        'name': fields.char('Case Category Name', size=64, required=True, translate=True),
-        'probability': fields.float('Probability (%)', required=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'name': fields.char('Case Category Name', size=64, required=True, translate=True),        
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model','Object Name'),        
     }
     def _find_object_id(self, cr, uid, context=None):
         object_id = context and context.get('object_id', False) or False
         ids =self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
         return ids and ids[0] 
-    _defaults = {
-        'probability': lambda *args: 0.0,
+    _defaults = {        
         'object_id' : _find_object_id
     }
 #               
@@ -133,7 +131,7 @@ class crm_case_resource_type(osv.osv):
     _rec_name = "name"
     _columns = {
         'name': fields.char('Case Resource Type', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model','Object Name'),        
     }
     def _find_object_id(self, cr, uid, context=None):
@@ -153,9 +151,11 @@ class crm_case_stage(osv.osv):
     _order = "sequence"
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Case Section'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of case stages."),
         'object_id': fields.many2one('ir.model','Object Name'),
+        'probability': fields.float('Probability (%)', required=True),
+        'on_change': fields.boolean('Set Onchange'),
     }
     def _find_object_id(self, cr, uid, context=None):
         object_id = context and context.get('object_id', False) or False
@@ -163,6 +163,7 @@ class crm_case_stage(osv.osv):
         return ids and ids[0]     
     _defaults = {
         'sequence': lambda *args: 1,
+        'probability': lambda *args: 0.0,
         'object_id' : _find_object_id
     }
     
@@ -218,21 +219,22 @@ class crm_case(osv.osv):
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Description', size=1024, required=True),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the case without removing it."),
-        'description': fields.text('Your action'),
-        'section_id': fields.many2one('crm.case.section', 'Section', select=True, help='Section to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
-        'email_from': fields.char('Partner Email', size=128, help="These people will receive email."),
-        'email_cc': fields.char('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
+        'description': fields.text('Description'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team', select=True, help='Sales team to which Case belongs to. Define Responsible user and Email account for mail gateway.'),
+        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'email_cc': fields.text('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
                                                                     " communication between partner and users by email"),
         'email_last': fields.function(_email_last, method=True,
             string='Latest E-Mail', type='text'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
-        'date': fields.datetime('Date'),
-        'create_date': fields.datetime('Created' ,readonly=True),
-        'date_deadline': fields.datetime('Deadline'),
+        'create_date': fields.datetime('Creation Date' ,readonly=True),
+        'write_date': fields.datetime('Update Date' ,readonly=True),
+        'date_deadline': fields.date('Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'history_line': fields.function(_get_log_ids, method=True, type='one2many', multi="history_line", relation="crm.case.history", string="Communication"),
         'log_ids': fields.function(_get_log_ids, method=True, type='one2many', multi="log_ids", relation="crm.case.log", string="Logs History"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
@@ -274,9 +276,9 @@ class crm_case(osv.osv):
         'partner_address_id': _get_default_partner_address,
         'email_from': _get_default_email,
         'state': lambda *a: 'draft',
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_deadline': lambda *a:(datetime.today() + timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S'),
         'section_id': _get_section,
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
     }
     _order = 'date_deadline desc, date desc,id desc'
 
@@ -318,13 +320,8 @@ class crm_case(osv.osv):
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
-        return True
+        return True  
     
-    def onchange_categ_id(self, cr, uid, ids, categ, context={}):
-        if not categ:
-            return {'value':{}}
-        cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
-        return {'value':{'probability':cat}}
 
     def onchange_case_id(self, cr, uid, ids, case_id, name, partner_id, context={}):
         if not case_id:
@@ -430,7 +427,7 @@ class crm_case(osv.osv):
         if not part:
             return {'value':{'partner_address_id': False, 
                             'email_from': False,
-                            'partner_name2': False}}
+                            }}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
         data = {'partner_address_id': addr['contact']}
         data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
@@ -442,7 +439,6 @@ class crm_case(osv.osv):
             return {'value': {'email_from': False, 'partner_name2': False}}
         address= self.pool.get('res.partner.address').browse(cr, uid, add)
         data['email_from'] = address.email
-        data['partner_name2'] = address.name or ''
         return {'value': data}
 
     def case_close(self, cr, uid, ids, *args):

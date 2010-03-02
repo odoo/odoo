@@ -20,6 +20,7 @@
 ##############################################################################
 
 import backlog_to_task
+import assign_backlog_to_sprint
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

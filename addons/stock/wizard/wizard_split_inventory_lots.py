@@ -87,7 +87,7 @@ class wizard_split_inventory_lots(wizard.interface):
     states = {
         'init': {
             'actions': [_check_production_lot],
-            'result': {'type': 'form', 'arch': inv_form, 'fields': inv_fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('split', 'Ok', 'gtk-ok')]},
+            'result': {'type': 'form', 'arch': inv_form, 'fields': inv_fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('split', 'Ok', 'gtk-apply', True)]},
             },
         'split': {
             'actions': [_split_lines],
