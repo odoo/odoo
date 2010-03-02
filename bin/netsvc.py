@@ -211,12 +211,14 @@ def init_logger():
 class Logger(object):
     def __init__(self):
         warnings.warn("The netsvc.Logger API shouldn't be used anymore, please "
-                      "use the standard `logging.getLogger` API instead")
+                      "use the standard `logging.getLogger` API instead",
+                      PendingDeprecationWarning, stacklevel=2)
         super(Logger, self).__init__()
 
     def notifyChannel(self, name, level, msg):
         warnings.warn("notifyChannel API shouldn't be used anymore, please use "
-                      "the standard `logging` module instead")
+                      "the standard `logging` module instead",
+                      PendingDeprecationWarning, stacklevel=2)
         from service.web_services import common
 
         log = logging.getLogger(tools.ustr(name))
