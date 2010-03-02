@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -30,11 +30,11 @@
     "description": """Long Term Project management module that track planning, scheduling, resources allocation.
     """,
     "init_xml" : [],
-    "demo_xml" : [#"project_demo.xml"
-],
-    "update_xml": [        
+    "demo_xml" : ["project_demo.xml"],
+    "update_xml": [
+        "project_wizard.xml" ,
         "project_view.xml",
-        "project_wizard.xml" 
+        "project_phase_workflow.xml"
     ],
     'installable': True,
     'active': False,

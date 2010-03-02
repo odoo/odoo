@@ -46,6 +46,7 @@ class crm_opportunity(osv.osv):
         'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
         'date_closed': fields.datetime('Closed', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesman'),
+        'phone': fields.char("Phone", size=64),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
@@ -59,6 +60,10 @@ class crm_opportunity(osv.osv):
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability':stage.probability}}
+
+    _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.opportunity', context=c),
+    }
 
 crm_opportunity()
 

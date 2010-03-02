@@ -8,10 +8,12 @@
         
         <record id="mrp_workcenter_0" model="mrp.workcenter">
             <field name="name">Assembly workshop</field>
+            <field name="calendar_id" ref="hr.timesheet_group1"/>
             <field name="type">hr</field>
         </record>
         <record id="mrp_workcenter_1" model="mrp.workcenter">
             <field name="name">Repairs workshop</field>
+            <field name="calendar_id" ref="hr.timesheet_group1"/>
             <field name="type">hr</field>
         </record>
         

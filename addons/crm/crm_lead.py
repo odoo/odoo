@@ -22,39 +22,25 @@
 from osv import fields,osv,orm
 import crm
 
-class crm_opportunity(osv.osv):
-    _name = "crm.opportunity"
-    _description = "Opportunity Cases"
-crm_opportunity()
-    
 class crm_lead(osv.osv):
     _name = "crm.lead"
     _description = "Leads Cases"
-    _order = "id desc"
-    _inherit = 'crm.case'
+    _order = "priority desc, id desc"
+    _inherit = ['res.partner.address','crm.case']
     _columns = {
-         'name': fields.char('Lead Subject', size=64),
-         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-         'type_id': fields.many2one('crm.case.resource.type', 'Lead Type Name', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
-         'partner_name': fields.char("Partner Name", size=64),
-         'partner_name2': fields.char('Contact', size=64),
-         'partner_phone': fields.char('Phone', size=32),
-         'partner_mobile': fields.char('Mobile', size=32),
-         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-         'probability': fields.float('Probability (%)'),
-         'date_closed': fields.datetime('Closed', readonly=True),
-         'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-         'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
-         'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
-                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
-         'planned_revenue': fields.float('Planned Revenue'),
-         'planned_cost': fields.float('Planned Costs'),
-         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
-         'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
-                                                                    "the partner mentality in relation to our services.The scale has" \
-                                                                    "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-         'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'),
-         'user_id': fields.many2one('res.users', 'Salesman'),
-    }
+        'categ_id': fields.many2one('crm.case.categ', 'Lead Source', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
+        'partner_name': fields.char("Lead Name", size=64),
 
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
+        'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'),
+
+        'user_id': fields.many2one('res.users', 'Salesman'),
+        'referred': fields.char('Referred By', size=32),
+    }
+    _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
+    }
 crm_lead()

@@ -58,7 +58,7 @@
                         <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
                         <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
                         <field name="email_from" string="Email"/>
-                        <field name="partner_phone"/>
+                        <field name="phone"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Categorization"/>
@@ -206,7 +206,7 @@
                         default="1"
                         domain="[('state','in',('draft','open'))]"/>
                 </field>
-                <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
+                <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection">
                     <filter icon="terp-crm"
                         domain="[('section_id','=',context.get('section_id',False))]"
                         help="My section"/>

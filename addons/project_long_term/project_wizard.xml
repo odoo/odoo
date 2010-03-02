@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-       <!-- <wizard id="wizard_close_task" menu="False" model="project.task" name="project.task.close" string="Close Task"/>
-        <wizard id="wizard_delegate_task" menu="False" model="project.task" name="project.task.delegate" string="Delegate Task"/>
-        <wizard id="wizard_attachment_task" model="project.task" name="project.task.attachment" string="All Attachments"/> -->
         <wizard id="wizard_compute_phase" menu="False" model="project.phase" name="wizard.compute.phases" string="Compute Phase Scheduling"/>
-        <menuitem icon="terp-project" id="menu_main" name="Project Management"/>
+        <wizard id="wizard_schedule_task" menu="False" model="project.phase" name="phase.schedule.tasks" string="Schedule Tasks"/>
+        <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main" sequence="3"/>
 		<menuitem
             action="wizard_compute_phase"
             id="menu_wizard_compute_phase"
-            parent="menu_main"
+            parent="base.menu_pm_planning"
             type="wizard"
             sequence="1"/>
     </data>

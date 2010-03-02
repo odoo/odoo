@@ -37,6 +37,9 @@ months = {
         10:"October", 11:"November", 12:"December"}
 
 def get_recurrent_dates(rrulestring, exdate, startdate=None):
+    def todate(date):
+        val = parser.parse(''.join((re.compile('\d')).findall(date)) + 'Z')
+        return val
     if not startdate:
         startdate = datetime.now()
     rset1 = rrule.rrulestr(rrulestring, dtstart=startdate, forceset=True)

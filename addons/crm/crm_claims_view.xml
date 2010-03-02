@@ -8,25 +8,25 @@
         <field name="name">Claim Categories</field>
         <field name="res_model">crm.case.categ</field>
         <field name="view_type">form</field>
- 		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-       	<field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-		<field name="context">{'object_id':'crm.claim'}</field>
+         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+           <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
+        <field name="context">{'object_id':'crm.claim'}</field>
     </record>
     <menuitem action="crm_claim_categ_action" id="menu_crm_case_claim-act" parent="crm.menu_crm_case_categ"/>
     # ------------------------------------------------------
     # Stages
     # ------------------------------------------------------
-	    <record id="crm_claim_stage_act" model="ir.actions.act_window">
-	        <field name="name">Claim Stages</field>
-	        <field name="res_model">crm.case.stage</field>
-	        <field name="view_type">form</field>
-	        <field name="view_id" ref="crm.crm_case_stage_tree"/>
-	       <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-	      <field name="context">{'object_id':'crm.claim'}</field>
-	    </record>
-	  <menuitem action="crm_claim_stage_act" id="menu_crm_claim_stage_act" parent="crm.menu_crm_case_stage"/>
+        <record id="crm_claim_stage_act" model="ir.actions.act_window">
+            <field name="name">Claim Stages</field>
+            <field name="res_model">crm.case.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_stage_tree"/>
+           <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
+          <field name="context">{'object_id':'crm.claim'}</field>
+        </record>
+      <menuitem action="crm_claim_stage_act" id="menu_crm_claim_stage_act" parent="crm.menu_crm_case_stage"/>
 
-	<!-- Claims	-->
+    <!-- Claims    -->
     <record model="ir.ui.view" id="crm_case_claims_tree_view">
         <field name="name">CRM - Claims Tree</field>
         <field name="model">crm.claim</field>
@@ -59,35 +59,35 @@
                 <group colspan="4" col="4">
                 <notebook>
                 <page string="Claim Info">
-                	<separator colspan="4" string="Communication"/>
-                	<group colspan="4" col="4">
-                		<field name="partner_id" string="Partner"
-                        	on_change="onchange_partner_id(partner_id)" />
-	                    <field name="partner_address_id" string="Contact"
-	                    	on_change="onchange_partner_address_id(partner_address_id, email_from)" />
-	                    <field name="partner_phone"/>
-	                    <field name="partner_mobile"/>
-	                    <field name="email_from"/>
-	                </group>
+                    <separator colspan="4" string="Communication"/>
+                    <group colspan="4" col="4">
+                        <field name="partner_id" string="Partner"
+                            on_change="onchange_partner_id(partner_id)" />
+                        <field name="partner_address_id" string="Contact"
+                            on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                        <field name="partner_phone"/>
+                        <field name="partner_mobile"/>
+                        <field name="email_from"/>
+                    </group>
                     <separator colspan="4" string="Status and Categorization"/>
                     <group colspan="4" col="6">
-                    	<field name="user_id" string="Responsible" select="2"/>
-                    	<field name="section_id" widget="selection"/>
-                    	<label string="Stage: " align="1.0"/>
-                    	<group colspan="1" col="2">
-	                        <field name="stage_id" select="1" nolabel="1"/>
-	                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-	                    </group>
-                    	<field name="categ_id" select="1" widget="selection"                    		
-                    		domain="[('object_id.model', '=', 'crm.claim')]" />
-                    	<field name="type_id" string="Type of Action" select="1"
-                    		domain="[('object_id.model', '=', 'crm.claim')]" />
-                    	<field name="priority"/>
+                        <field name="user_id" string="Responsible" select="2"/>
+                        <field name="section_id" widget="selection"/>
+                        <label string="Stage: " align="1.0"/>
+                        <group colspan="1" col="2">
+                            <field name="stage_id" select="1" nolabel="1"/>
+                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                        </group>
+                        <field name="categ_id" select="1" widget="selection"                            
+                            domain="[('object_id.model', '=', 'crm.claim')]" />
+                        <field name="type_id" string="Type of Action" select="1"
+                            domain="[('object_id.model', '=', 'crm.claim')]" />
+                        <field name="priority"/>
                     </group>
                     <separator colspan="4" string="References"/>
                     <group colspan="4" col="4">
-	                    <field name="ref"/>
-	                    <field name="ref2"/>
+                        <field name="ref"/>
+                        <field name="ref2"/>
                     </group>
                     <separator colspan="4" string="Claim/Action Description"/>
                     <field name="description" colspan="4" nolabel="1"/>
@@ -131,9 +131,9 @@
                                 <field name="email"/>
                                 <field name="canal_id"/>
                                 <button
-								   string="Add a CC"
-								    name="%(crm.action_view_crm_email_add_cc_wizard)d"
-								    icon="gtk-add" type="action"/>
+                                   string="Add a CC"
+                                    name="%(crm.action_view_crm_email_add_cc_wizard)d"
+                                    icon="gtk-add" type="action"/>
                             </group>
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
@@ -167,17 +167,17 @@
         </field>
     </record>
 
-	<record model="ir.ui.view" id="crm_case_graph_view_stage_cost">
-	    <field name="name">CRM -Graph</field>
-	    <field name="model">crm.claim</field>
-	    <field name="type">graph</field>
-	    <field name="arch" type="xml">
-	        <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
-	            <field name="stage_id"/>
-	            <field name="planned_cost" operator="+"/>
-	            <field name="planned_revenue" operator="+"/>
-	        </graph>
-	    </field>
+    <record model="ir.ui.view" id="crm_case_graph_view_stage_cost">
+        <field name="name">CRM -Graph</field>
+        <field name="model">crm.claim</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
+                <field name="stage_id"/>
+                <field name="planned_cost" operator="+"/>
+                <field name="planned_revenue" operator="+"/>
+            </graph>
+        </field>
     </record>
 
    <record id="view_crm_case_claims_filter" model="ir.ui.view">
@@ -186,35 +186,32 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <group col="4" colspan="1">
-                       <filter icon="gtk-new" string="Current Claims"
-                       	domain="[('state','in',('draft', 'open'))]"
-                       	separator="1" help="Current Claims" default="1"
-                       />
-                       <filter icon="gtk-execute"
-                       	string="In Progress Claims"
-                       	domain="[('state','=','open')]"
-                       	separator="1" help="In Progress Claims"
-                       />
-                       <filter icon="gtk-media-pause"
-                       	string="Pending Claims"
-                       	domain="[('state','=','pending')]"
-                       	separator="1" help="All pending Claims"
-                       />
-                   </group>
+                   <filter icon="gtk-new" string="Current Claims"
+                       domain="[('state','in',('draft', 'open'))]"
+                       separator="1" help="Current Claims" default="1"
+                   />
+                   <filter icon="gtk-execute"
+                       string="In Progress Claims"
+                       domain="[('state','=','open')]"
+                       separator="1" help="In Progress Claims"
+                   />
+                   <filter icon="gtk-media-pause"
+                       string="Pending Claims"
+                       domain="[('state','=','pending')]"
+                       separator="1" help="All pending Claims"
+                   />
                    <separator orientation="vertical"/>
-                   <group col="4" colspan="2">
-                       <field name="name" select='1'/>
-                       <field name="partner_id" select="1"/>
-                       <field name="user_id" select="1" widget="selection"/>
-                   </group>
+                   <field name="name" select='1'/>
+                   <field name="partner_id" select="1"/>
+                   <field name="user_id" select="1" widget="selection"/>
                    <field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
                        <filter icon="terp-crm"
                            domain="[('section_id','=',context.get('section_id',False))]"
                            help="My section"
                            />
                    </field>
-                   <group expand="1" string="Group By..." colspan="4" col="20">
+                   <newline/>
+                   <group expand="1" string="Group By..." colspan="10" col="20">
                        <filter string="Deadline" icon="terp-crm" domain="[]" context="{'group_by':'date_deadline'}"/>
                        <filter string="Closure" icon="terp-crm" domain="[]"  context="{'group_by':'date_closed'}"/>
                    </group>

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 11:09+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-02-26 17:55+0000\n"
+"Last-Translator: Grzegorz Grzelak (Cirrus) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-02-27 04:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -120,7 +120,7 @@ msgstr "Metoda nabycia"
 #. module: product
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: product
 #: model:process.process,name:product.process_process_productprocess0
@@ -698,6 +698,8 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"'Na Zapas': Kiedy potrzeba pobierz z zapasu lub poczekaj na dostawę. 'Na "
+"Zamówienie': Kiedy potrzeba kup lub wyprodukuj na zamówienie nabycia."
 
 #. module: product
 #: view:product.product:0
@@ -723,6 +725,9 @@ msgid ""
 "not overlaps with original version. You should change the dates and "
 "reactivate the pricelist"
 msgstr ""
+"Kiedy wersja jest duplikowana, to duplikat jest ustawiony na nie aktywny, "
+"aby daty nie pokrywały się z pierwotną wersją. Powinieneś zmienić daty i "
+"uaktywnić cennik."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -978,6 +983,10 @@ msgid ""
 "management. For example, in food industries, you will manage a stock of ham "
 "but invoice in Kg. Keep empty to use the default UOM."
 msgstr ""
+"Stosowane przez firmy, które stosują dwie jednostki miary: jedną do "
+"fakturowania, a drugą do gospodarki magazynowej. Np. w przemyśle spożywczym "
+"będziesz magazynował w kilogramach a sprzedawał w sztukach. Pozostaw puste, "
+"aby stosować domyślne jednostki miary."
 
 #. module: product
 #: view:product.product:0
@@ -1425,6 +1434,8 @@ msgid ""
 "products with infinite stock, or for use when you have no inventory "
 "management in the system."
 msgstr ""
+"Zmienia sposób nabycia. Materiały pomocnicze to produkty o nieskończonym "
+"zapasie lub stosowane bez gospodarki magazynowej w systemie."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -1490,7 +1501,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product uom categ"
-msgstr ""
+msgstr "Kategoria jm"
 
 #. module: product
 #: wizard_field:product.price_list,init,qty3:0
@@ -1520,7 +1531,7 @@ msgstr "Dopłata do ceny"
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "Nie możesz mieć 2 cenników, które na siebie zachodzą !"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -1642,6 +1653,8 @@ msgid ""
 "The coefficient for the formula:\n"
 "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
 msgstr ""
+"Współczynnik w wyrażeniu:\n"
+"1 (jednostka podst.) = współcz. (ta jednostka). Przelicznik = 1 / współcz."
 
 #. module: product
 #: help:product.template,weight_net:0
