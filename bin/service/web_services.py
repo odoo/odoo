@@ -383,7 +383,8 @@ class common(_ObjectService):
                 auth.logout(params[1])
             logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
             return True
-        elif method in ['about', 'timezone_get', 'get_server_environment', 'login_message', 'get_stats' ]:
+        elif method in ['about', 'timezone_get', 'get_server_environment',
+                        'login_message','get_stats', 'check_connectivity']:
             pass
         elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel']:
             passwd = params[0]
@@ -564,7 +565,8 @@ GNU Public Licence.
         res = "OpenERP server: %d threads\n" % threading.active_count()
         res += netsvc.Server.allStats()
         return res
-    def check_connectivity(self):
+
+    def exp_check_connectivity(self):
         return bool(sql_db.db_connect('template1'))
 
 common()

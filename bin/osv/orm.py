@@ -1849,7 +1849,7 @@ class orm(orm_template):
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
         if not fields:
             fields = self._columns.keys()
-            
+
         (where_clause, where_params, tables) = self._where_calc(cr, uid, domain, context=context)
         dom = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
         where_clause = where_clause + dom[0]
@@ -1857,10 +1857,10 @@ class orm(orm_template):
         for t in dom[2]:
             if t not in tables:
                 tables.append(t)
-      
+
         # Take care of adding join(s) if groupby is an '_inherits'ed field
-        tables, where_clause = self._inherits_join_calc(groupby,tables,where_clause) 
-                
+        tables, where_clause = self._inherits_join_calc(groupby,tables,where_clause)
+
         if len(where_clause):
             where_clause = ' where '+string.join(where_clause, ' and ')
         else:
@@ -1889,7 +1889,7 @@ class orm(orm_template):
                     flist += ',avg('+f+') as '+f
                 else:
                     flist += ',sum('+f+') as '+f
-    
+
         cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + ' group by '+ groupby + limit_str + offset_str, where_params)
         alldata = {}
         groupby = group_by
@@ -1914,7 +1914,7 @@ class orm(orm_template):
                    d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
                                     (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
                 elif fget[groupby]['type'] == 'many2one':
-                    d[groupby] = d[groupby] and d[groupby][1] or ''
+                    d[groupby] = d[groupby] and ((type(d[groupby])==type(1)) and d[groupby] or d[groupby][1])  or ''
 
             del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
@@ -1922,10 +1922,10 @@ class orm(orm_template):
         return data
 
     def _inherits_join_calc(self, field, tables, where_clause):
-        """ Adds missing table select and join clause(s) for reaching 
+        """ Adds missing table select and join clause(s) for reaching
             the field coming from an '_inherits' parent table.
             @param tables: list of table._table names enclosed in double quotes as returned
-                           by _where_calc() 
+                           by _where_calc()
         """
         current_table = self
         while field in current_table._inherit_fields and not field in current_table._columns:

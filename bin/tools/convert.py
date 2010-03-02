@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+
 import cStringIO
 import csv
 import logging
@@ -62,7 +63,6 @@ def _eval_xml(self,node, pool, cr, uid, idref, context=None):
                 f_search = node.get("search",'').encode('utf-8')
                 f_use = node.get("use",'id').encode('ascii')
                 f_name = node.get("name",'').encode('utf-8')
-
                 q = eval(f_search, idref)
                 ids = pool.get(f_model).search(cr, uid, q)
                 if f_use != 'id':
@@ -190,7 +190,6 @@ class assertion_report(object):
         return res
 
 class xml_import(object):
-
     @staticmethod
     def nodeattr2bool(node, attr, default=False):
         if not node.get(attr):
@@ -865,20 +864,4 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate)
     obj.parse(doc.getroot())
     return True
-
-def convert_xml_export(res):
-    uid=1
-    pool=pooler.get_pool(cr.dbname)
-    cr=pooler.db.cursor()
-    idref = {}
-    page = etree.Element ( 'terp' )
-    doc = etree.ElementTree ( page )
-    data = etree.SubElement ( page, 'data' )
-    text_node = etree.SubElement ( page, 'text' )
-    text_node.text = 'Some textual content.'
-    cr.commit()
-    cr.close()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
