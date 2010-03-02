@@ -138,7 +138,9 @@ LOG_CRITICAL = 'critical'
 
 # add new log level below DEBUG
 logging.DEBUG2 = logging.DEBUG - 1
+logging.addLevelName(logging.DEBUG2, 'DEBUG2')
 logging.DEBUG_RPC = logging.DEBUG2 - 1
+logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
 
 def init_logger():
     import os
