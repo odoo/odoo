@@ -31,7 +31,6 @@ except:
         LOG_NOTSET = 'notset'
         LOG_DEBUG_RPC = 'debug_rpc'
         LOG_DEBUG = 'debug'
-        LOG_DEBUG2 = 'debug2'
         LOG_INFO = 'info'
         LOG_WARNING = 'warn'
         LOG_ERROR = 'error'
