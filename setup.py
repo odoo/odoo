@@ -54,7 +54,6 @@ py_short_version = '%s.%s' % sys.version_info[:2]
 
 required_modules = [
     ('psycopg2', 'PostgreSQL module'),
-    ('xml', 'XML Tools for python'),
     ('reportlab', 'reportlab module'),
     ('pychart', 'pychart module'),
     ('pydot', 'pydot module'),
@@ -145,8 +144,8 @@ options = {
         "optimize": 2,
         "dist_dir": 'dist',
         "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-                     "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
-                     "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing",
+                     "lxml.objectify", "decimal", "xml", "encodings",
+                     "mx.DateTime","wizard","pychart","PIL", "pyparsing",
                      "pydot","asyncore","asynchat", "reportlab", "vobject",
                      "HTMLParser", "select"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
