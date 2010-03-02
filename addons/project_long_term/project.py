@@ -187,7 +187,6 @@ class project_phase(osv.osv):
         uom_pool = self.pool.get('product.uom')
         resource_id = False
         calendar_id = phase.project_id.resource_calendar_id.id
-
         resource_id = resource_pool.search(cr, uid, [('user_id','=',phase.responsible_id.id)])
         if resource_id:
                 calendar_id = resource_pool.browse(cr, uid, resource_id[0]).calendar_id.id
@@ -373,6 +372,7 @@ class task(osv.osv):
 
                 for next_task in tasks.child_ids:
                    self.constraint_date_end(cr, uid, next_task, dt_end)
+
         return super(task, self).write(cr, uid, ids, vals, context=context)
 
 task()
