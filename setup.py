@@ -171,10 +171,10 @@ options = {
         "optimize": 2,
         "dist_dir": 'dist',
         "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-                     "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
-                     "encodings","dateutil","wizard","pychart","PIL",
-                     "pyparsing", "pydot","asyncore","asynchat", "reportlab",
-                     "vobject", "HTMLParser", "select"],
+                     "lxml.objectify", "decimal", "xml", "encodings",
+                     "dateutil", "wizard", "pychart", "PIL", "pyparsing",
+                     "pydot", "asyncore","asynchat", "reportlab", "vobject",
+                     "HTMLParser", "select"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }
