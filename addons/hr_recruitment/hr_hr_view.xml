@@ -43,6 +43,8 @@
                 <field name="partner_phone"/>
                 <field name="job_id"/>
                 <field name="stage_id"/>
+                <field name="survey" invisible="1"/>
+                <field name="response" invisible="1"/>
                 <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
                 <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
                 <field name="priority"/>
@@ -81,7 +83,16 @@
                     <field name="job_id"/>
                     <field name="department_id" widget="selection"/>
                     <button name="%(wizard_hr_job_meeting_set)d" string="Schedule Meeting" icon="terp-hr" type="action"/>
-                </group>
+					<label string=" " colspan = "1"/>
+					<label string=" " colspan = "1"/>
+					<label string=" " colspan = "1"/>
+					<label string=" " colspan = "1"/>
+					<label string=" " colspan = "1"/>
+					<button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
+						icon="gtk-execute" context="{'survey_id': survey, 'response_id': response ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
+					<button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
+						icon="gtk-execute" context="{'survey_id': survey, 'response_id' : response,}" attrs="{'readonly':[('survey','=',False)]}"/>
+				</group>
                 <notebook colspan="4">
                     <page string="Job Info">
                         <group col="2" colspan="2">
@@ -109,7 +120,6 @@
                            <field name="write_date"/>
                            <field name="date_closed"/>
                         </group>
-
                         <separator colspan="4" string="Status"/>
                         <group col="8" colspan="4">
                             <field name="state"/>
@@ -232,6 +242,22 @@
                     <filter string="Date" icon="terp-project" domain="[]" context="{'group_by':'create_date'}"/>
                 </group>
            </search>
+        </field>
+    </record>
+
+    # ------------------------------------------------------
+    # HR Job
+    # ------------------------------------------------------
+
+    <record id="hr_job_survey" model="ir.ui.view">
+        <field name="name">hr.job.form1</field>
+        <field name="model">hr.job</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <field name="no_of_employee" position="after">
+                <field name="survey_id"/>
+            </field>
         </field>
     </record>
 

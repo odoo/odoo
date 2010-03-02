@@ -58,5 +58,16 @@ class hr_applicant(osv.osv):
         'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
         'department_id':fields.many2one('hr.department','Department'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
+        'response' : fields.integer("Response"),
     }
 hr_applicant()
+
+class hr_job(osv.osv):
+    _inherit = "hr.job"
+    _name = "hr.job"
+    _columns = {
+        'survey_id': fields.many2one('survey', 'Survey'),
+    }
+
+hr_job()
