@@ -171,7 +171,7 @@ class project_task(osv.osv):
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
             search_extended ='''<newline/><group col="%d" expand="1" string="%s" groups="project_gtd.group_project_getting">''' % (len(tt)+7,_('Getting Things Done'))
             search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="%s"/>''' % (_('Inbox'),)
-            search_extended += '''<filter domain="[]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="%s"/>''' % (_('All'),)
+            search_extended += '''<filter domain="[('state', 'in', ('draft','open','pending'))]" context="{'set_editable':True,'set_visible':True}" icon="gtk-new" string="%s"/>''' % (_('All'),)
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
                 if time.icon:
@@ -192,9 +192,6 @@ class project_task(osv.osv):
             context_id_info['context_id']['selection'] = attrs_sel
             res['fields'].update(context_id_info)
         return res
-
-    # Override read for using this method if context set !!!
-    #_order = "((55-ascii(coalesce(priority,'2')))*2 +  coalesce((date_start::date-current_date)/2,8))"
 project_task()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

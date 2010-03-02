@@ -203,7 +203,7 @@ class survey_browse_response(report_rml):
                             <td><para style="terp_tblheader_General_Centre_simple">""" + to_xml(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S'))) + """</para></td>
                             <td><para style="terp_tblheader_General_Centre"></para></td>
                             <td><para style="terp_tblheader_General_right">Response By:- </para></td>
-                            <td><para style="terp_tblheader_General_right_simple">""" + to_xml(response.user_id.name) + """</para></td>
+                            <td><para style="terp_tblheader_General_right_simple">""" + to_xml(response.user_id.login) + """</para></td>
                           </tr>
                         </blockTable><para style="P2"></para>"""
                 status = "Not Finished"
@@ -232,7 +232,7 @@ class survey_browse_response(report_rml):
                     for que in page.question_ids:
                         rml += """<para style="P2"></para>
                                 <blockTable colWidths='""" + str(_tbl_widths) + """' style="Table5">
-                                  <tr><td><para style="question">Que : """ + to_xml(to_xml(que.question)) + """</para></td></tr>
+                                  <tr><td><para style="question">""" + to_xml(to_xml(que.question)) + """</para></td></tr>
                                 </blockTable>"""
                         answer = surv_resp_line_obj.browse(cr ,uid, surv_resp_line_obj.search(cr, uid, [('question_id', '=', que.id),('response_id', '=', response.id)]))
                         if que.type in ['descriptive_text']:

@@ -35,7 +35,7 @@ class lead2opportunity(wizard.interface):
         <label string="You may have to verify that this partner does not exist already." colspan="4"/>
         <newline />
         <field name="action"/>
-        <group attrs="{'invisible':[('action','=','create')]}">
+        <group attrs="{'invisible':[('action','!=','exist')]}">
             <field name="partner_id" attrs="{'required':[('action','=','exist')]}"/>
         </group>
     </form>"""
@@ -75,11 +75,9 @@ class lead2opportunity(wizard.interface):
     def _selectopportunity(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         case_obj = pool.get('crm.lead')
-        for case in case_obj.browse(cr, uid, data['ids']):
-            if not case.partner_id:
-                return 'create_partner'
-        return {'name': case.name, 'probability': case.probability or 20.0,
-                'planned_revenue':case.planned_revenue, 'partner_id':case.partner_id.id}
+        case = case_obj.browse(cr, uid, data['id'])
+        return {'name': case.name, 'probability': case.probability,
+                'planned_revenue':case.planned_revenue, 'partner_id':case.partner_id and case.partner_id.id or False}
 
     def _selectChoice(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
@@ -116,7 +114,6 @@ class lead2opportunity(wizard.interface):
                 'date_deadline': lead.date_deadline,
                 'partner_address_id':lead.partner_address_id.id, 
                 'priority': lead.priority,
-                'date': lead.date,
                 'partner_phone': lead.partner_phone,
                 'canal_id': lead.canal_id,
                 'som': lead.som,
@@ -152,7 +149,7 @@ class lead2opportunity(wizard.interface):
         pool = pooler.get_pool(cr.dbname)
         lead_case_obj = pool.get('crm.lead')
         partner_obj = pool.get('res.partner')
-        contact_obj = pool.get('res.partner.address')
+        contact_obj = pool.get('res.partner.address')        
         if data['form']['action'] == 'create':
             for case in lead_case_obj.browse(cr, uid, data['ids']):
                 partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])
@@ -190,7 +187,7 @@ class lead2opportunity(wizard.interface):
         'create_partner': {
             'actions': [],
             'result': {'type': 'form', 'arch': partner_form, 'fields': partner_fields,
-                'state' : [('end', 'Cancel', 'gtk-cancel'),('create', 'Continue', 'gtk-go-forward')]}
+                'state' : [('end', 'Cancel', 'gtk-cancel'),('opportunity', 'Skip', 'gtk-goto-last'), ('create', 'Continue', 'gtk-go-forward')]}
         },
         'create': {
             'actions': [],

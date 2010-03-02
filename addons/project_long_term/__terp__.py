@@ -30,8 +30,7 @@
     "description": """Long Term Project management module that track planning, scheduling, resources allocation.
     """,
     "init_xml" : [],
-    "demo_xml" : [#"project_demo.xml"
-],
+    "demo_xml" : ["project_demo.xml"],
     "update_xml": [
         "project_wizard.xml" ,
         "project_view.xml",

@@ -52,6 +52,7 @@
         'sale_data.xml',
         'sale_wizard.xml',
         'sale_view.xml',
+        'sale_report_view.xml',
         'sale_report.xml',
         'sale_wizard.xml',
         'stock_view.xml',

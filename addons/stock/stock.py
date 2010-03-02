@@ -20,11 +20,12 @@
 ##############################################################################
 
 from mx import DateTime
-import time
-import netsvc
 from osv import fields, osv
 from tools import config
 from tools.translate import _
+import math
+import netsvc
+import time
 import tools
 
 
@@ -355,7 +356,7 @@ class stock_tracking(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the tracking lots without removing it."),
         'serial': fields.char('Reference', size=64),
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves Tracked'),
-        'date': fields.datetime('Date Created', required=True),
+        'date': fields.datetime('Created Date', required=True),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -856,12 +857,15 @@ class stock_production_lot(osv.osv):
     def name_get(self, cr, uid, ids, context={}):
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['name', 'ref'], context)
+        reads = self.read(cr, uid, ids, ['name', 'prefix', 'ref'], context)
         res = []
         for record in reads:
             name = record['name']
+            prefix = record['prefix']
+            if prefix:
+                name = prefix + '/' + name
             if record['ref']:
-                name = name + '/' + record['ref']
+                name = '%s [%s]' % (name, record['ref'])
             res.append((record['id'], name))
         return res
 
@@ -905,7 +909,8 @@ class stock_production_lot(osv.osv):
 
     _columns = {
         'name': fields.char('Serial', size=64, required=True),
-        'ref': fields.char('Internal Reference', size=64),
+        'ref': fields.char('Internal Reference', size=256),
+        'prefix': fields.char('Prefix', size=64),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'date': fields.datetime('Created Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select="2"),
@@ -922,72 +927,6 @@ class stock_production_lot(osv.osv):
     ]
 
 stock_production_lot()
-
-class stock_split_production_lots(osv.osv_memory):
-    _name = "stock.split.production.lots"
-    _description = "Split Production Lots"
-
-    def _quantity_default_get(self, cr, uid, object=False, field=False, context=None):
-        cr.execute("select %s from %s where id=%s" %(field,object,context.get('active_id')))
-        res = cr.fetchone()[0]
-        return res
-
-    _columns = {
-        'name': fields.char('Lot Number/Prefix', size=64, required=True),
-        'qty': fields.float('Total Quantity'),
-        'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
-    }
-    _defaults = {
-                 'qty': lambda self,cr,uid,c: self.pool.get('stock.split.production.lots')._quantity_default_get(cr, uid, 'stock_move', 'product_qty',context=c) or 1,
-    }
-
-    def split_lines(self, cr, uid, ids, context={}):
-        data = self.read(cr, uid, ids[0])
-        prodlot_obj = self.pool.get('stock.production.lot')
-        move_obj = self.pool.get('stock.move')
-        move_browse = move_obj.browse(cr, uid, context['active_id'])
-
-        quantity = data['qty']
-        if quantity <= 0 or move_browse.product_qty == 0:
-            return {}
-        uos_qty = quantity/move_browse.product_qty*move_browse.product_uos_qty
-
-        quantity_rest = move_browse.product_qty%quantity
-        uos_qty_rest = quantity_rest/move_browse.product_qty*move_browse.product_uos_qty
-
-        update_val = {
-            'product_qty': quantity,
-            'product_uos_qty': uos_qty,
-        }
-
-        new_move = []
-        for idx in range(int(move_browse.product_qty//quantity)):
-            if idx:
-                current_move = move_obj.copy(cr, uid, move_browse.id, {'state': move_browse.state})
-                new_move.append(current_move)
-            else:
-                current_move = move_browse.id
-            new_prodlot = prodlot_obj.create(cr, uid, {'name': data['name'], 'ref': '%d'%idx}, {'product_id': move_browse.product_id.id})
-            update_val['prodlot_id'] = new_prodlot
-            move_obj.write(cr, uid, [current_move], update_val)
-
-        if quantity_rest > 0:
-            idx = int(move_browse.product_qty//quantity)
-            update_val['product_qty'] = quantity_rest
-            update_val['product_uos_qty'] = uos_qty_rest
-            if idx:
-                current_move = move_obj.copy(cr, uid, move_browse.id, {'state': move_browse.state})
-                new_move.append(current_move)
-            else:
-                current_move = move_browse.id
-            new_prodlot = prodlot_obj.create(cr, uid, {'name': data['name'], 'ref': '%d'%idx}, {'product_id': move_browse.product_id.id})
-            update_val['prodlot_id'] = new_prodlot
-            move_obj.write(cr, uid, [current_move], update_val)
-
-        return {}
-
-stock_split_production_lots()
-
 
 class stock_production_lot_revision(osv.osv):
     _name = 'stock.production.lot.revision'
@@ -1054,7 +993,7 @@ class stock_move(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
 
-        'date': fields.datetime('Date Created'),
+        'date': fields.datetime('Created Date'),
         'date_planned': fields.datetime('Date', required=True, help="Scheduled date for the movement of the products or real date if the move is done."),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
@@ -1491,7 +1430,140 @@ class stock_move(osv.osv):
                 raise osv.except_osv(_('UserError'),
                         _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
-            cr, uid, ids, context=context)
+            cr, uid, ids, context=context)    
+
+    def _create_lot(self, cr, uid, ids, product_id, prefix=False):
+        prodlot_obj = self.pool.get('stock.production.lot')
+        ir_sequence_obj = self.pool.get('ir.sequence')
+        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+        if not sequence:
+            raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
+        prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix': prefix}, {'product_id': product_id})
+        prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
+        ref = ','.join(map(lambda x:str(x),ids))
+        if prodlot.ref:
+            ref = '%s, %s' % (prodlot.ref, ref) 
+        prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
+        return prodlot_id
+
+    def split_lines(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
+        
+
+        if quantity <= 0:
+            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+
+        res = []
+
+        for move in self.browse(cr, uid, ids):            
+            if split_by_qty <= 0 or quantity == 0:
+                return res
+
+            uos_qty = split_by_qty / move.product_qty * move.product_uos_qty
+
+            quantity_rest = quantity % split_by_qty
+            uos_qty_rest = split_by_qty / move.product_qty * move.product_uos_qty
+
+            update_val = {
+                'product_qty': split_by_qty,
+                'product_uos_qty': uos_qty,
+            }                         
+            for idx in range(int(quantity//split_by_qty)):                 
+                if not idx and move.product_qty<=quantity:
+                    current_move = move.id
+                else:
+                    current_move = self.copy(cr, uid, move.id, {'state': move.state})
+                res.append(current_move)
+                if with_lot:
+                    update_val['prodlot_id'] = self._create_lot(cr, uid, [current_move], move.product_id.id)
+
+                self.write(cr, uid, [current_move], update_val)
+        
+            
+            if quantity_rest > 0:    
+                idx = int(quantity//split_by_qty)            
+                update_val['product_qty'] = quantity_rest
+                update_val['product_uos_qty'] = uos_qty_rest    
+                if not idx and move.product_qty<=quantity:        
+                    current_move = move.id                    
+                else:
+                    current_move = self.copy(cr, uid, move.id, {'state': move.state}) 
+                                                    
+                res.append(current_move)
+                 
+                
+                if with_lot:             
+                    update_val['prodlot_id'] = self._create_lot(cr, uid, [current_move], move.product_id.id)
+
+                self.write(cr, uid, [current_move], update_val)
+        return res    
+
+    def consume_moves(self, cr, uid, ids, quantity, location_id=False, location_dest_id=False, consume=True, context=None):        
+        if not context:
+            context = {}
+                
+        if quantity <= 0:
+            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+
+        res = []       
+        for move in self.browse(cr, uid, ids, context=context):            
+            move_qty = move.product_qty
+            quantity_rest = move.product_qty
+
+            quantity_rest -= quantity            
+            uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
+            if quantity_rest <= 0:
+                quantity_rest = 0 
+                uos_qty_rest = 0
+                quantity = move.product_qty
+ 
+            uos_qty = quantity / move_qty * move.product_uos_qty
+
+            if quantity_rest > 0:  
+                default_val = {
+                    'product_qty': quantity, 
+                    'product_uos_qty': uos_qty, 
+                    'state': move.state, 
+                }
+                if location_dest_id:
+                   default_val.update({'location_dest_id': location_dest_id}) 
+                if location_id:
+                   default_val.update({'location_id': location_id}) 
+                
+                if move.product_id.track_production and location_id:
+                    res += self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
+                else:
+                    current_move = self.copy(cr, uid, move.id, default_val)
+                    res += [current_move]
+
+                update_val = {}                                  
+                update_val['product_qty'] = quantity_rest
+                update_val['product_uos_qty'] = uos_qty_rest                          
+                self.write(cr, uid, [move.id], update_val) 
+
+            else: 
+                quantity_rest = quantity    
+                uos_qty_rest =  uos_qty
+                
+                if move.product_id.track_production and location_id:
+                    res += self.split_lines(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
+                else:                     
+                    res += [move.id] 
+                    update_val = {}                                  
+                    update_val['product_qty'] = quantity_rest
+                    update_val['product_uos_qty'] = uos_qty_rest
+                    if location_dest_id:
+                       update_val.update({'location_dest_id': location_dest_id}) 
+                    if location_id:
+                       update_val.update({'location_id': location_id}) 
+
+                    self.write(cr, uid, [move.id], update_val)
+
+        if consume:
+            self.action_done(cr, uid, res)        
+        return res
+
+    def scrap_moves(self, cr, uid, ids, quantity, location_dest_id, context=None):
+        return self.consume_moves(cr, uid, ids, quantity, location_id=False, location_dest_id=location_dest_id, consume=False, context=context)
 
 stock_move()
 

@@ -511,7 +511,7 @@ class task(osv.osv):
        dt_end = work_time[-1][1].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr,uid,[task.id],{'date_start':date_start.strftime('%Y-%m-%d %H:%M:%S'),'date_end':dt_end})
 
-    def write(self, cr, uid, ids, vals,context=None):
+    def write_old(self, cr, uid, ids, vals,context=None):
 
         if not context:
             context = {}
@@ -622,14 +622,13 @@ config_compute_remaining()
 class message(osv.osv):
     _name = "project.message"
     _description = "Message"
-
     _columns = {
         'subject': fields.char('Subject', size=128, required="True"),
-        'description': fields.text('Description'),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
-        'date': fields.date('Date'),
+        'date': fields.date('Date', required=1),
         'user_id': fields.many2one('res.users', 'User', required="True"),
-        }
+        'description': fields.text('Description'),
+    }
 
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
@@ -638,7 +637,9 @@ class message(osv.osv):
 
     _defaults = {
         'user_id' : lambda self,cr,uid,ctx : uid,
-        'project_id':_default_project}
+        'date' : lambda self,cr,uid,ctx : time.strftime('%Y-%m-%d'),
+        'project_id':_default_project
+    }
 
 message()
 

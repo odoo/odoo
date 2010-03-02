@@ -127,8 +127,7 @@ class report_crm_case_service_dashboard(osv.osv):
     _name = "report.crm.case.service.dashboard"
     _description = "Report of Closed and Open CRM Cases within past 15 days"
     _auto = False
-    _columns = {
-        'date': fields.datetime('Date', readonly=True),
+    _columns = {        
         'date_deadline': fields.datetime('Deadline', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
         'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
@@ -140,7 +139,7 @@ class report_crm_case_service_dashboard(osv.osv):
     def init(self, cr):
         cr.execute("""create or replace view report_crm_case_service_dashboard as (
             select
-                cse.id as id, cse.date as date, cse.date_deadline as date_deadline,
+                cse.id as id, cse.date_deadline as date_deadline,
                 cse.name as name, cse.user_id as user_id,
                  cse.state as state,
                 cse.create_date as create_date

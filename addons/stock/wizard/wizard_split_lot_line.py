@@ -66,7 +66,7 @@ class wizard_split_move(wizard.interface):
     states = {
         'init': {
             'actions': [_get_moves],
-            'result': {'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel'),('split','Split')]}
+            'result': {'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel','gtk-cancel'),('split','Split','gtk-apply',True)]}
         },
         'split': {
             'actions': [_split_lines],

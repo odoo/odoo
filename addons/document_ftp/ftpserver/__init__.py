@@ -24,11 +24,15 @@ import ftpserver
 import authorizer
 import abstracted_fs
 import netsvc
-
 from tools import config
 from tools.misc import detect_ip_addr
-HOST = ''
-PORT = 8021
+
+if detect_ip_addr:
+    HOST = config.get('ftp_server_host', detect_ip_addr())
+else:
+    HOST = config.get('ftp_server_host', '127.0.0.1')
+
+PORT = int(config.get('ftp_server_port', '8021'))
 PASSIVE_PORTS = None
 pps = config.get('ftp_server_passive_ports', '').split(':')
 if len(pps) == 2:
@@ -52,14 +56,15 @@ class ftp_server(threading.Thread):
         ftpserver.logline = lambda msg: None
         ftpserver.logerror = lambda msg: self.log(netsvc.LOG_ERROR, msg)
 
-        HOST = config.get('ftp_server_address', detect_ip_addr())
-        PORT = int(config.get('ftp_server_port', '8021'))        
-        address = (HOST, PORT)
-        ftpd = ftpserver.FTPServer(address, ftpserver.FTPHandler)
+        ftpd = ftpserver.FTPServer((HOST, PORT), ftpserver.FTPHandler)
         ftpd.serve_forever()
 
-ds = ftp_server()
-ds.start()
+if HOST.lower() == 'none':
+    netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Server FTP Not Started\n")
+else:
+    netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Serving FTP on %s:%s\n" % (HOST, PORT))
+    ds = ftp_server()
+    ds.start()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

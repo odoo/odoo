@@ -29,6 +29,7 @@ class crm_fundraising(osv.osv):
     _inherit ='crm.case'
     _columns = {        
             'date_closed': fields.datetime('Closed', readonly=True),
+            'date': fields.datetime('Date'),
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),            
             'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]"),
             'planned_revenue': fields.float('Planned Revenue'),

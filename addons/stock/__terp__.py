@@ -45,6 +45,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "stock_data.xml",
         "stock_incoterms.xml",
         "stock_wizard.xml",
+        "stock_wizard_view.xml", 
         "stock_view.xml",
         "stock_report.xml",
         "stock_sequence.xml",

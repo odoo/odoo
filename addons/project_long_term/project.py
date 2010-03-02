@@ -190,7 +190,8 @@ class project_phase(osv.osv):
 
         if phase.responsible_id.id:
             resource_id = resource_pool.search(cr,uid,[('user_id','=',phase.responsible_id.id)])
-            calendar_id = resource_pool.browse(cr,uid,resource_id[0]).calendar_id.id
+            if resource_id:
+                calendar_id = resource_pool.browse(cr,uid,resource_id[0]).calendar_id.id
         default_uom_id = uom_pool.search(cr,uid,[('name','=','Hour')])[0]
         avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration,default_uom_id)
 

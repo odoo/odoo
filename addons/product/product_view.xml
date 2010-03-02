@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-<!--        <menuitem icon="terp-product" id="menu_main_product" name="Products"/>-->
-<!--        <menuitem-->
-<!--            id="menu_config_product"-->
-<!--            name="Configuration"-->
-<!--            parent="product.menu_main_product"-->
-<!--            sequence="1"-->
-<!--            groups="group_product_manager"/>-->
-		<menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="50"/>
+        <menuitem groups="base.group_extended" id="prod_config_main" name="Product" parent="base.menu_base_config" sequence="50"/>
         <record id="product_search_form_view" model="ir.ui.view">
             <field name="name">product.search.form</field>
             <field name="model">product.product</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                    <group col='8' colspan='4'>
-                        <filter string="Services" icon="terp-stock" domain="[('type','=','service')]"/>
-                        <filter string="Stockable" icon="terp-stock" domain="['|',('type','=','product'),('type','=','consu')]"/>
-                        <field name="default_code" select="1"/>
-                        <field name="name" select="1"/>
-                        <field name="categ_id" select="1" widget="selection"/>
-                   </group>
+                   <filter string="Services" icon="terp-stock" domain="[('type','=','service')]"/>
+                   <filter string="Stockable" icon="terp-stock" domain="['|',('type','=','product'),('type','=','consu')]"/>
+                   <separator orientation="vertical"/>
+                   <filter string="Can be sold" icon="terp-stock" domain="[('sale_ok','=',1)]"/>
+                   <filter string="Can be Purchased" icon="terp-stock" domain="[('purchase_ok', '=', 1)]" />
+                   <separator orientation="vertical"/>
+                   <field name="default_code" select="1"/>
+                   <field name="name" select="1"/>
+                   <field name="categ_id" select="1" widget="selection"/>
                    <newline/>
-                   <group col='8' colspan='4'>
-                          <field name="pricelist_id" select="1" widget="selection" context="{'pricelist': self}" />
-                    </group>
+                   <group col='8' colspan='4' expand='1' string='Group by...'>
+                       <filter string='Category' icon="terp-stock" domain="[]" context="{'group_by' : 'categ_id'}" />
+                   </group>
+                   <group col='8' colspan='7' expand="1" string="Extended options...">
+                       <field name="pricelist_id" select="1" widget="selection" context="{'pricelist': self}" />
+                   </group>
                 </search>
             </field>
         </record>
@@ -36,15 +34,17 @@
             <field name="type">tree</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-            <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
+                <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
+                    <field name="categ_id" />
                     <field name="variants" groups="product.group_product_variant"/>
                     <field name="uom_id"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
                     <field name="standard_price"/>
+                    <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -68,7 +68,7 @@
                         <field groups="base.group_extended" name="ean13" select="2"/>
                     </group>
                     <group colspan="1" col="2">
-                        <separator string="Product Type" colspan="2"/>
+                        <separator string="Product Characteristics" colspan="2"/>
                         <field name="sale_ok" select="2"/>
                         <field name="purchase_ok" select="2"/>
                         <field groups="base.group_extended" name="rental" select="2"/>
@@ -78,7 +78,7 @@
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
-                                <separator string="	Requisition" colspan="2"/>
+                                <separator string="    Requisition" colspan="2"/>
                                 <field name="type" select="2"/>
                                 <field name="procure_method"/>
                                 <field name="supply_method"/>
@@ -188,8 +188,8 @@
             <field name="search_view_id" ref="product_search_form_view"/>
         </record>
 
-		<menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="4"/>
-		<menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="4"/>
+        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
 <!--        <menuitem action="product_normal_action" id="menu_products" parent="product.menu_main_product" sequence="1"/>-->
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
@@ -255,7 +255,7 @@
             <field name="view_id" ref="product_category_list_view"/>
         </record>
 <!--        <menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="product.menu_config_product" sequence="1"/>-->
-		<menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="prod_config_main" sequence="60"/>
+        <menuitem action="product_category_action_form" id="menu_product_category_action_form" parent="prod_config_main" sequence="60"/>
 
 
         <record id="product_normal_action_tree" model="ir.actions.act_window">
@@ -316,7 +316,7 @@
             <field name="view_id" ref="product_uom_tree_view"/>
         </record>
         <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="65"/>
-		<menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
+        <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
 
         <record id="product_uom_categ_form_view" model="ir.ui.view">
             <field name="name">product.uom.categ.form</field>
@@ -367,7 +367,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 <!--        <menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="product.menu_config_product" sequence="4"/>-->
-		<menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="65"/>
+        <menuitem action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="65"/>
 
         <record id="product_packaging_tree_view" model="ir.ui.view">
             <field name="name">product.packaging.tree.view</field>

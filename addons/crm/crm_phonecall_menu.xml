@@ -50,12 +50,13 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
+        <field name="context">{'set_editable':True}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_incoming0">
         <field name="sequence" eval="1"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="crm_case_phone_incomming_tree_view"/>
+        <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="act_window_id" ref="crm_case_categ_phone_incoming0"/>
     </record>
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_phone_incoming0">

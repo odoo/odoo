@@ -97,7 +97,7 @@ class fill_inventory(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : inventory_form,
                     'fields' : inventory_fields,
-                    'state' : [('end', 'Cancel'),('fill_inventory', 'Fill Inventory') ]}
+                    'state' : [('end', 'Cancel', 'gtk-cancel'),('fill_inventory', 'Fill Inventory', 'gtk-apply', True) ]}
         },
         'fill_inventory' : {
             'actions' : [],

@@ -283,7 +283,10 @@ class account_move_line(osv.osv):
                 result.append((line.id, line.name))
         return result
 
-    def _balance_search(self, cursor, user, obj, name, args):
+    def _balance_search(self, cursor, user, obj, name, args, domain=None, context=None):
+        if context is None:
+            context = {}
+
         if not len(args):
             return []
         where = ' and '.join(map(lambda x: '(abs(sum(debit-credit))'+x[1]+str(x[2])+')',args))

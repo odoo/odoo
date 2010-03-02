@@ -143,7 +143,7 @@ class wizard_return_picking(wizard.interface):
     states={
         'init':{
             'actions':[_get_returns],
-            'result':{'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel'),('return','Return')]}
+            'result':{'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel','gtk-cancel'),('return','Return','gtk-apply',True)]}
         },
         'return':{
             'actions':[],

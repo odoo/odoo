@@ -37,6 +37,9 @@ months = {
         10:"October", 11:"November", 12:"December"}
 
 def get_recurrent_dates(rrulestring, exdate, startdate=None):
+    def todate(date):
+        val = parser.parse(''.join((re.compile('\d')).findall(date)) + 'Z')
+        return val
     if not startdate:
         startdate = datetime.now()
     rset1 = rrule.rrulestr(rrulestring, dtstart=startdate, forceset=True)
@@ -394,7 +397,7 @@ request was delegated to"),
         'language':  fields.function(_compute_data, method=True, string='Language', type="selection", selection=_lang_get, multi='language', store=True, help="To specify the language for text values in a property or property parameter."), 
         'user_id': fields.many2one('res.users', 'User'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
-        'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'), 
+        'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', help="Partner related to contact"), 
         'email': fields.char('Email', size=124, required=True, help="Email of Invited Person"), 
         'event_date': fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'), 
         'event_end_date': fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'), 
