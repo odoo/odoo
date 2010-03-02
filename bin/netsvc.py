@@ -130,16 +130,12 @@ class ExportService(object):
 LOG_NOTSET = 'notset'
 LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
-LOG_DEBUG2 = 'debug2'
 LOG_INFO = 'info'
 LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
 
-# add new log level below DEBUG
-logging.DEBUG2 = logging.DEBUG - 1
-logging.addLevelName(logging.DEBUG2, 'DEBUG2')
-logging.DEBUG_RPC = logging.DEBUG2 - 1
+logging.DEBUG_RPC = logging.DEBUG - 2
 logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
 
 def init_logger():
@@ -200,7 +196,6 @@ def init_logger():
 
         mapping = {
             'DEBUG_RPC': ('blue', 'white'),
-            'DEBUG2': ('green', 'white'),
             'DEBUG': ('blue', 'default'),
             'INFO': ('green', 'default'),
             'WARNING': ('yellow', 'default'),
@@ -225,10 +220,6 @@ class Logger(object):
         from service.web_services import common
 
         log = logging.getLogger(tools.ustr(name))
-
-        if level == LOG_DEBUG2 and not hasattr(log, level):
-            fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG2, msg, *args, **kwargs)
-            setattr(log, LOG_DEBUG2, fct)
 
         if level == LOG_DEBUG_RPC and not hasattr(log, level):
             fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG_RPC, msg, *args, **kwargs)

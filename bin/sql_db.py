@@ -61,7 +61,7 @@ re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
 re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 
 
-def log(msg, lvl=netsvc.LOG_DEBUG2):
+def log(msg, lvl=netsvc.LOG_DEBUG):
     logger = netsvc.Logger()
     logger.notifyChannel('sql', lvl, msg)
 
