@@ -120,8 +120,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main" sequence="3"/>
-        <menuitem action="action_resource_resource_tree" id="base.menu_resource_resource_tree" parent="base.menu_pm_planning" />
+        <menuitem action="action_resource_resource_tree" id="base.menu_resource_resource_tree" parent="base.menu_pm_resources" />
 
         <record id="resource_calendar_leave_form" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.form</field>
@@ -161,17 +160,5 @@
 
         <menuitem action="action_resource_calendar_leave_tree" id="menu_resource_calendar_leave_tree" parent="base.menu_pm_resources"/>
 
-		<!-- project member -->
-        <record id="view_project_member_tree" model="ir.ui.view">
-            <field name="name">project.member.tree</field>
-            <field name="model">resource.resource</field>
-            <field name="type">tree</field>
-            <field eval="99" name="priority"/>
-            <field name="arch" type="xml">
-                <tree string="Project's Members">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
     </data>
 </openerp>
