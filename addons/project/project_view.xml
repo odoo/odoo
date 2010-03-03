@@ -507,15 +507,6 @@
 
         <act_window
             domain="[('project_id', '=', active_id)]"
-            id="act_project_project_2_project_task_new"
-            name="Create a Task"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="form,tree,calendar,graph"
-            view_type="form"/>
-
-        <act_window
-            domain="[('project_id', '=', active_id)]"
             id="act_project_project_2_project_task_all"
             name="Tasks"
             res_model="project.task"
@@ -524,15 +515,15 @@
             view_type="form"/>
 
          <act_window
-            domain="[('project_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]"
-            id="act_project_project_2_project_task_opened"
-            name="Tasks in Progress"
-            res_model="project.task"
+            domain="[('project_id', '=', active_id)]"
+            id="act_project_phases"
+            name="Phases"
+            res_model="project.phase"
             src_model="project.project"
-            view_mode="tree,form,calendar,graph"
+            view_mode="tree,form"
             view_type="form"/>
 
-        <record id="task_company" model="ir.ui.view">
+         <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
             <field name="model">res.company</field>
             <field name="type">form</field>
