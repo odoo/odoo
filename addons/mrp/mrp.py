@@ -1175,10 +1175,10 @@ class stock_warehouse_orderpoint(osv.osv):
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active'),
         'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','=','product')]),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True ),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
+        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','=','product')], ondelete="cascade"),
+        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_min_qty': fields.float('Min Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
@@ -1187,7 +1187,7 @@ class stock_warehouse_orderpoint(osv.osv):
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order')
+        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order', ondelete="set null")
     }
     _defaults = {
         'active': lambda *a: 1,
