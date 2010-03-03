@@ -30,7 +30,7 @@ from tools.translate import _
 class partner_create(wizard.interface):
 
     case_form = """<?xml version="1.0"?>
-    <form string="Convert To Partner">
+    <form string="Create a Partner">
         <label string="Are you sure you want to create a partner based on this phonecall ?" colspan="4"/>
         <label string="You may have to verify that this partner does not exist already." colspan="4"/>
         <!--field name="close"/-->
@@ -41,7 +41,7 @@ class partner_create(wizard.interface):
     }
 
     partner_form = """<?xml version="1.0"?>
-    <form string="Convert To Partner">
+    <form string="Create a Partner">
         <label string="Are you sure you want to create a partner based on this lead ?" colspan="4"/>
         <label string="You may have to verify that this partner does not exist already." colspan="4"/>
         <newline />
