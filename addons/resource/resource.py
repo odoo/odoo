@@ -37,16 +37,16 @@ class resource_calendar(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', c)
     }
 
-    def interval_min_get(self, cr, uid, id, dt_from, hours,resource=False):
+    def interval_min_get(self, cr, uid, id, dt_from, hours, resource=False):
         resource_cal_leaves = self.pool.get('resource.calendar.leaves')
         dt_leave = []
         if not id:
-            return [(dt_from-mx.DateTime.RelativeDateTime(hours=int(hours)*3), dt_from)]
-        resource_leave_ids = resource_cal_leaves.search(cr,uid,[('calendar_id','=',id),'|',('resource_id','=',False),('resource_id','=',resource)])
-        res_leaves = resource_cal_leaves.read(cr,uid,resource_leave_ids,['date_from','date_to'])
+            return [(dt_from - mx.DateTime.RelativeDateTime(hours=int(hours)*3), dt_from)]
+        resource_leave_ids = resource_cal_leaves.search(cr, uid, [('calendar_id','=',id), '|', ('resource_id','=',False), ('resource_id','=',resource)])
+        res_leaves = resource_cal_leaves.read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
         for leave in res_leaves:
-            dtf = mx.DateTime.strptime(leave['date_from'],'%Y-%m-%d %H:%M:%S')
-            dtt = mx.DateTime.strptime(leave['date_to'],'%Y-%m-%d %H:%M:%S')
+            dtf = mx.DateTime.strptime(leave['date_from'], '%Y-%m-%d %H:%M:%S')
+            dtt = mx.DateTime.strptime(leave['date_to'], '%Y-%m-%d %H:%M:%S')
             no = dtt - dtf
             [dt_leave.append((dtf + mx.DateTime.RelativeDateTime(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
             dt_leave.sort()
@@ -72,8 +72,8 @@ class resource_calendar(osv.osv):
                     if leave_flag:
                         break
                     else:
-                        d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_from)),int((hour_from%1) * 60))
-                        d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
+                        d1 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_from)), int((hour_from%1) * 60))
+                        d2 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
                         result.append((d1, d2))
                         current_hour = hour_from
                         todo -= (m-hour_from)
@@ -87,16 +87,15 @@ class resource_calendar(osv.osv):
         resource_cal_leaves = self.pool.get('resource.calendar.leaves')
         dt_leave = []
         if not id:
-            return [(dt_from,dt_from+mx.DateTime.RelativeDateTime(hours=int(hours)*3))]
-        resource_leave_ids = resource_cal_leaves.search(cr,uid,[('calendar_id','=',id),'|',('resource_id','=',False),('resource_id','=',resource)])
-        res_leaves = resource_cal_leaves.read(cr,uid,resource_leave_ids,['date_from','date_to'])
+            return [(dt_from,dt_from + mx.DateTime.RelativeDateTime(hours=int(hours)*3))]
+        resource_leave_ids = resource_cal_leaves.search(cr, uid, [('calendar_id','=',id), '|', ('resource_id','=',False), ('resource_id','=',resource)])
+        res_leaves = resource_cal_leaves.read(cr, uid, resource_leave_ids, ['date_from', 'date_to'])
         for leave in res_leaves:
-            dtf = mx.DateTime.strptime(leave['date_from'],'%Y-%m-%d %H:%M:%S')
-            dtt = mx.DateTime.strptime(leave['date_to'],'%Y-%m-%d %H:%M:%S')
+            dtf = mx.DateTime.strptime(leave['date_from'], '%Y-%m-%d %H:%M:%S')
+            dtt = mx.DateTime.strptime(leave['date_to'], '%Y-%m-%d %H:%M:%S')
             no = dtt - dtf
             [dt_leave.append((dtf + mx.DateTime.RelativeDateTime(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
             dt_leave.sort()
-        print 'dtLevae',dt_leave
         todo = hours
         cycle = 0
         result = []
@@ -113,13 +112,13 @@ class resource_calendar(osv.osv):
                         dt_check = dt_from.strftime('%Y-%m-%d')
                         for leave in dt_leave:
                             if dt_check == leave:
-                                dt_check = mx.DateTime.strptime(dt_check,"%Y-%m-%d") + mx.DateTime.RelativeDateTime(days=1)
+                                dt_check = mx.DateTime.strptime(dt_check, "%Y-%m-%d") + mx.DateTime.RelativeDateTime(days=1)
                                 leave_flag = True
                         if leave_flag:
                             break
                         else:
-                            d1 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
-                            d2 = mx.DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
+                            d1 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
+                            d2 = mx.DateTime.DateTime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
                             result.append((d1, d2))
                             current_hour = hour_to
                             todo -= (hour_to - m)
@@ -170,11 +169,11 @@ class resource_resource(osv.osv):
 
         if context.get('project_id',False):
             project_pool = self.pool.get('project.project')
-            project_rec = project_pool.browse(cr,uid,context['project_id'])
+            project_rec = project_pool.browse(cr, uid, context['project_id'])
             user_ids = [user_id.id for user_id in project_rec.members]
             args.append(('user_id','in',user_ids))
 
-        return super(resource_resource, self).search(cr, uid, args, offset, limit,order, context, count)
+        return super(resource_resource, self).search(cr, uid, args, offset, limit, order, context, count)
 resource_resource()
 
 class resource_calendar_leaves(osv.osv):
@@ -189,7 +188,7 @@ class resource_calendar_leaves(osv.osv):
         'resource_id' : fields.many2one("resource.resource", "Resource", help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"),
     }
     def check_dates(self, cr, uid, ids):
-         leave = self.read(cr, uid, ids[0],['date_from','date_to'])
+         leave = self.read(cr, uid, ids[0], ['date_from', 'date_to'])
          if leave['date_from'] and leave['date_to']:
              if leave['date_from'] > leave['date_to']:
                  return False
@@ -203,9 +202,9 @@ class resource_calendar_leaves(osv.osv):
         result = {}
         if resource:
             resource_pool = self.pool.get('resource.resource')
-            result['calendar_id'] = resource_pool.browse(cr,uid,resource).calendar_id.id
-            return {'value':result}
-        return {'value':{'calendar_id':[]}}
+            result['calendar_id'] = resource_pool.browse(cr, uid, resource).calendar_id.id
+            return {'value': result}
+        return {'value': {'calendar_id': []}}
 
 resource_calendar_leaves()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

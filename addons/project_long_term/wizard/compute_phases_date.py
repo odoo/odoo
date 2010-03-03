@@ -25,7 +25,7 @@ from tools.translate import _
 import datetime
 from resource.faces import *
 from new import classobj
-import project.project_resource as proj
+import project_resource as proj
 
 compute_form = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Phases">
@@ -44,7 +44,7 @@ success_msg = """<?xml version="1.0" ?>
     <label string="Phase Scheduling completed successfully."/>
 </form>"""
 
-def phase_schedule(cr,uid,phase,start_date,calendar_id=False):
+def phase_schedule(cr, uid, phase, start_date, calendar_id=False):
        pool = pooler.get_pool(cr.dbname)
        phase_pool = pool.get('project.phase')
        resource_pool = pool.get('resource.resource')
@@ -53,13 +53,13 @@ def phase_schedule(cr,uid,phase,start_date,calendar_id=False):
        resource_cal = False
        phase_resource = False
        if phase:
-            resource_id = resource_pool.search(cr,uid,[('user_id','=',phase.responsible_id.id)])
+            resource_id = resource_pool.search(cr, uid, [('user_id','=',phase.responsible_id.id)])
             if resource_id:
-                resource_obj = resource_pool.browse(cr,uid,resource_id)[0]
-                leaves = proj.leaves_resource(cr,uid,calendar_id or False ,resource_id,resource_obj.calendar_id.id)
-                phase_resource = classobj(str(resource_obj.name),(Resource,),{'__doc__':resource_obj.name,'__name__':resource_obj.name,'vacation':tuple(leaves),'efficiency':resource_obj.time_efficiency})
-            default_uom_id = uom_pool.search(cr,uid,[('name','=','Hour')])[0]
-            avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration,default_uom_id)
+                resource_obj = resource_pool.browse(cr, uid, resource_id)[0]
+                leaves = proj.leaves_resource(cr, uid, calendar_id or False , resource_id, resource_obj.calendar_id.id)
+                phase_resource = classobj(str(resource_obj.name), (Resource,), {'__doc__' : resource_obj.name, '__name__' : resource_obj.name, 'vacation' : tuple(leaves), 'efficiency' : resource_obj.time_efficiency})
+            default_uom_id = uom_pool.search(cr, uid, [('name','=','Hour')])[0]
+            avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
             duration = str(avg_hours) + 'H'
 
             #    Creating a new project for each phase
@@ -69,8 +69,8 @@ def phase_schedule(cr,uid,phase,start_date,calendar_id=False):
                 resource = phase_resource
                 #    If project has working calendar else the default one would be considered
                 if calendar_id:
-                    working_days = proj.compute_working_calendar(cr,uid,calendar_id)
-                    vacation = tuple(proj.leaves_resource(cr,uid,calendar_id))
+                    working_days = proj.compute_working_calendar(cr, uid, calendar_id)
+                    vacation = tuple(proj.leaves_resource(cr, uid, calendar_id))
 
                 def phase():
                     effort = duration
@@ -78,26 +78,25 @@ def phase_schedule(cr,uid,phase,start_date,calendar_id=False):
             project = BalancedProject(Project)
             s_date = project.phase.start.to_datetime()
             e_date = project.phase.end.to_datetime()
-
             #    According to constraints on date start and date end on phase recalculation done
             if phase.constraint_date_start and str(s_date) < phase.constraint_date_start:
-                start_date = datetime.datetime.strptime(phase.constraint_date_start,'%Y-%m-%d %H:%M:%S')
+                start_date = datetime.datetime.strptime(phase.constraint_date_start, '%Y-%m-%d %H:%M:%S')
             else:
                 start_date = s_date
             if phase.constraint_date_end and str(e_date) > phase.constraint_date_end:
-                end_date= datetime.datetime.strptime(phase.constraint_date_end,'%Y-%m-%d %H:%M:%S')
+                end_date= datetime.datetime.strptime(phase.constraint_date_end, '%Y-%m-%d %H:%M:%S')
                 date_start = phase.constraint_date_end[:-3]
             else:
                 end_date = e_date
                 date_start = end_date
 
             #    Writing the dates back
-            phase_pool.write(cr,uid,[phase.id],{'date_start':start_date.strftime('%Y-%m-%d %H:%M:%S'),'date_end':end_date.strftime('%Y-%m-%d %H:%M:%S')},context={'scheduler':True})
+            phase_pool.write(cr, uid, [phase.id], {'date_start' :start_date.strftime('%Y-%m-%d %H:%M:%S'), 'date_end' :end_date.strftime('%Y-%m-%d %H:%M:%S')}, context={'scheduler' :True})
 
             #    Recursive calling the next phases till all the phases are scheduled
             for phase in phase.next_phase_ids:
                if phase.state in ['draft','open','pending']:
-                   phase_schedule(cr,uid,phase,date_start,phase.project_id.resource_calendar_id.id or False)
+                   phase_schedule(cr, uid, phase, date_start, phase.project_id.resource_calendar_id.id or False)
                else:
                    continue
 
@@ -111,22 +110,22 @@ class wizard_compute_phases(wizard.interface):
 
         # if project mentioned
         if data['form']['project_id']:
-            project_id = project_pool.browse(cr,uid,data['form']['project_id'])
-            phase_ids = phase_pool.search(cr,uid,[('project_id','=',project_id.id),('state','in',['draft','open','pending']),('previous_phase_ids','=',False)])
+            project_id = project_pool.browse(cr, uid, data['form']['project_id'])
+            phase_ids = phase_pool.search(cr, uid, [('project_id','=',project_id.id), ('state','in',['draft','open','pending']), ('previous_phase_ids','=',False)])
 
         # else all the draft,open,pending states phases taken
         else:
-            phase_ids = phase_pool.search(cr,uid,[('state','in',['draft','open','pending']),('previous_phase_ids','=',False)])
+            phase_ids = phase_pool.search(cr, uid,[('state','in',['draft','open','pending']), ('previous_phase_ids','=',False)])
 
         phase_ids.sort()
-        phase_objs = phase_pool.browse(cr,uid,phase_ids)
+        phase_objs = phase_pool.browse(cr, uid, phase_ids)
         for phase in phase_objs:
             start_date = phase.project_id.date_start
             if not phase.project_id.date_start:
                 start_date = datetime.datetime.now().strftime("%Y-%m-%d")
-            start_dt = datetime.datetime.strftime((datetime.datetime.strptime(start_date,"%Y-%m-%d")),"%Y-%m-%d %H:%M")
+            start_dt = datetime.datetime.strftime((datetime.datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d %H:%M")
             calendar_id = phase.project_id.resource_calendar_id.id
-            phase_schedule(cr,uid,phase,start_dt,calendar_id or False)
+            phase_schedule(cr, uid, phase, start_dt, calendar_id or False)
         return {}
 
     states = {
