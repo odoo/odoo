@@ -82,7 +82,7 @@
         </record>
         
         <record id="action_report_crm_phonecall" model="ir.actions.act_window">
-            <field name="name">Phone calls by User and Section</field>
+            <field name="name">Phone calls</field>
             <field name="res_model">report.crm.phonecall</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
@@ -96,59 +96,8 @@
 	        <field name="view_id" ref="view_crm_phonecall_tree"/>
 	        <field name="act_window_id" ref="action_report_crm_phonecall"/>
 	    </record>        
-              
-        <menuitem name="Phone Calls" id="menu_crm_phonecalls_tree" parent="crm.next_id_52"/>
-        <menuitem action="action_report_crm_phonecall" id="menu_crm_phonecall_tree" parent="menu_crm_phonecalls_tree"/>
         
-<!--           Phone calls by Section  
-
-        <record id="view_report_crm_phonecall_section_tree" model="ir.ui.view">
-            <field name="name">report.crm.phonecall.section.tree</field>
-            <field name="model">report.crm.phonecall.section</field>
-            <field name="inherit_id" ref="view_report_crm_case_section_tree"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <field name="nbr_cases" position="after">
-	                <field name="avg_answers"/>
-	                <field name="perc_done" select="2"/>
-                    <field name="perc_cancel" select="2"/>
-                    <field name="delay_close"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_report_crm_phonecall_section_graph" model="ir.ui.view">
-            <field name="name">report.crm.phonecall.section.graph</field>
-            <field name="model">report.crm.phonecall.section</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Phone calls by Section" type="bar">
-                    <field name="name"/>
-                    <field name="nbr_cases" operator="+"/>
-                </graph>
-            </field>
-        </record>
-
-		<record id="view_report_crm_phonecall_section_filter" model="ir.ui.view">
-            <field name="name">report.crm.phonecall.section.select</field>
-            <field name="model">report.crm.phonecall.section</field>
-            <field name="inherit_id" ref="view_report_crm_case_section_filter"/>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <field name="nbr_cases" position="before">
-                </field>
-            </field>
-        </record>
-
-        <record id="action_report_crm_phonecall_section_tree" model="ir.actions.act_window">
-            <field name="name">Phone calls by Section</field>
-            <field name="res_model">report.crm.phonecall.section</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_report_crm_phonecall_section_graph"/>
-            <field name="search_view_id" ref="view_report_crm_phonecall_section_filter"/>
-        </record>
-        <menuitem action="action_report_crm_phonecall_section_tree" id="menu_crm_phonecall_section_tree" parent="menu_crm_phonecalls_tree"/>-->-->
+        <menuitem  name="Phone Calls" action="action_report_crm_phonecall" id="menu_crm_phonecall_tree" parent="crm.next_id_52"/>
         
   </data>
 </openerp>

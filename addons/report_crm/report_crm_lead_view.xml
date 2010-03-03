@@ -69,6 +69,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_crm_lead_graph"/>
             <field name="search_view_id" ref="view_crm_lead_filter"/>
+           
         </record>
                	
        	<record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
@@ -86,59 +87,6 @@
 	    </record>        
 
             
-   
-        
-       <!--   Leads by Section  
-
-        <record id="view_report_crm_lead_section_tree" model="ir.ui.view">
-            <field name="name">report.crm.lead.section.tree</field>
-            <field name="model">report.crm.lead.section</field>
-            <field name="inherit_id" ref="view_report_crm_case_section_tree"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <field name="nbr_cases" position="after">
-	                <field name="avg_answers"/>
-	                <field name="perc_done" select="2"/>
-                    <field name="perc_cancel" select="2"/>
-                    <field name="delay_close"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_report_crm_lead_section_graph" model="ir.ui.view">
-            <field name="name">report.crm.lead.section.graph</field>
-            <field name="model">report.crm.lead.section</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Leads by Section" type="bar">
-                    <field name="name"/>
-                    <field name="nbr_cases" operator="+"/>
-                </graph>
-            </field>
-        </record>
-
-		<record id="view_report_crm_lead_section_filter" model="ir.ui.view">
-            <field name="name">report.crm.lead.section.select</field>
-            <field name="model">report.crm.lead.section</field>
-            <field name="inherit_id" ref="view_report_crm_case_section_filter"/>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <field name="nbr_cases" position="before">
-                </field>
-            </field>
-        </record>
-
-        <record id="action_report_crm_lead_section_tree" model="ir.actions.act_window">
-            <field name="name">Leads by Section</field>
-            <field name="res_model">report.crm.lead.section</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_report_crm_lead_section_graph"/>
-            <field name="search_view_id" ref="view_report_crm_lead_section_filter"/>
-        </record>
-        <menuitem action="action_report_crm_lead_section_tree" id="menu_crm_lead_section_tree" parent="menu_crm_leads_tree"/>
-      -->
-     
         <menuitem name="Leads" id="menu_crm_leads_tree" parent="crm.next_id_52" action="action_report_crm_lead"/>       
   </data>
 </openerp>
