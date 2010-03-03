@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-
-        <!--
-		Cases by user and section
-		-->
+    <data>       
 
         <record id="view_crm_case_tree" model="ir.ui.view">
             <field name="name">report.crm.case.tree</field>
             <field name="model">report.crm.case</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Cases and Section">
+                <tree string="Cases">
                     <field name="name" />
                     <field name="month"/>
                     <field name="user_id"/>
@@ -26,7 +22,7 @@
             <field name="model">report.crm.case</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Cases by User and Section">
+                <form string="Cases">
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
                     <field name="user_id" select="1"/>
@@ -55,7 +51,7 @@
             <field name="model">report.crm.case</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Cases by User">
+                <search string="Search">
                   <group col="16" colspan="8">
                    		<filter string="My Cases" icon="terp-hr" domain="[('user_id','=',uid)]" help="My cases by section"/>
                    		<separator orientation="vertical"/>
@@ -90,7 +86,7 @@
 
 
         <record id="action_report_crm_case_tree" model="ir.actions.act_window">
-            <field name="name">Cases by User and Section</field>
+            <field name="name">Cases</field>
             <field name="res_model">report.crm.case</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
@@ -106,62 +102,7 @@
 
         <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_categ" name="Monthly cases by section" res_model="report.crm.case" src_model="crm.case.section"/>
 
-        <!-- Cases by Section  -->
-
-        <record id="view_report_crm_case_section_tree" model="ir.ui.view">
-            <field name="name">report.crm.case.section.tree</field>
-            <field name="model">report.crm.case.section</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Cases by Section">
-                    <field name="name" select="1"/>
- 					<field name="section_id" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="nbr_cases" select="1"/>
-                    <field name="avg_answers"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_report_crm_case_section_graph" model="ir.ui.view">
-            <field name="name">report.crm.case.section.graph</field>
-            <field name="model">report.crm.case.section</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Cases by Section" type="bar">
-                    <field name="name"/>
-                    <field name="nbr_cases" operator="+"/>
-                </graph>
-            </field>
-        </record>
-
-		<record id="view_report_crm_case_section_filter" model="ir.ui.view">
-            <field name="name">report.crm.case.section.select</field>
-            <field name="model">report.crm.case.section</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Cases by Section">
-                   <group col="8" colspan="4">
-                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
-						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]"/>
-						<separator orientation="vertical"/>
-						<field name="name" select="1"/>
-						<field name="section_id" select="1"/>
-	                    <field name="month" select="1"/>
-	                    <field name="nbr_cases" select="1"/>
-                   </group>
-               </search>
-            </field>
-        </record>
-
-
-        <record id="action_report_crm_case_section_tree" model="ir.actions.act_window">
-            <field name="name">Cases by Section</field>
-            <field name="res_model">report.crm.case.section</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="search_view_id" ref="view_report_crm_case_section_filter"/>
-        </record>
+        
 
 
         <!-- Closed & Open CRM Case view for Random Activities dashboard  -->

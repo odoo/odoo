@@ -259,8 +259,8 @@ class project(osv.osv):
     _inherit = "project.project"
 
     _columns = {
-        'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases")
-
+        'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
     }
 
 project()
@@ -290,7 +290,7 @@ class task(osv.osv):
                 hrs = planned / (float(occupation_rate) * resource_obj.time_efficiency)
                 calendar_id = resource_obj.calendar_id.id
             else:
-                hrs = float(planned / occupation_rate)
+                hrs = float(planned / float(occupation_rate))
                 calendar_id = project_pool.browse(cr, uid, project).resource_calendar_id .id
             work_times = resource_calendar.interval_get(cr, uid, calendar_id or False, dt_start, hrs or 0.0, resource_id or False)
             result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
