@@ -51,7 +51,7 @@ class make_procurement(osv.osv_memory):
     def make_procurement(self, cr, uid, ids, context=None):
         '''Create procurement'''
         for proc in self.browse(cr, uid, ids):
-            wh = self.pool.get('stock.warehouse').browse(cr, uid, proc.id, context)
+            wh = self.pool.get('stock.warehouse').browse(cr, uid, proc.warehouse_id.id, context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             procure_id = self.pool.get('mrp.procurement').create(cr, uid, {
                 'name':'INT:'+str(user.login),
