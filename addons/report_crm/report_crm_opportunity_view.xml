@@ -14,11 +14,12 @@
 	              	<field name="name" />
 					<field name="month"/>
                 	<field name="nbr" string="#Opportunities"/>
-                	<field name="delay_close"/>
                     <field name="amount_revenue"/>
-                    <field name="amount_revenue_prob"/>
                     <field name="probability"/>
-                    <field name="state"/>
+                    <field name="amount_revenue_prob"/>
+                    <field name="delay_close"/>
+                    <field name="state" invisible="1"/>
+                    <field name="section_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="stage_id"  invisible="1"/>
                     <field name="categ_id" invisible="1"/>
@@ -66,7 +67,7 @@
         </record>
         
         <record id="action_report_crm_opportunity" model="ir.actions.act_window">
-            <field name="name">Opportunity</field>
+            <field name="name">Opportunities</field>
             <field name="res_model">report.crm.opportunity</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
@@ -85,6 +86,7 @@
 	        <field name="view_id" ref="view_crm_opportunity_graph"/>
 	        <field name="act_window_id" ref="action_report_crm_opportunity"/>
 	    </record>  
-        <menuitem name="Opportinities" action="action_report_crm_opportunity" id="menu_crm_opportunity_tree" parent="crm.next_id_52"/>        
+
+        <menuitem name="Opportunities" action="action_report_crm_opportunity" id="menu_crm_opportunity_tree" parent="base.next_id_64"/>        
 	</data>
 </openerp>

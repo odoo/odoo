@@ -11,10 +11,11 @@
                 	<field name="name" />
 					<field name="month"/>
                 	<field name="nbr" string="#Claim"/>
-                	<field name="delay_close"/>
                     <field name="amount_revenue"/>
-                    <field name="amount_revenue_prob"/>
                     <field name="probability"/>
+                    <field name="amount_revenue_prob"/>
+                    <field name="delay_close"/>
+                    <field name="section_id" invisible="1"/>
                     <field name="stage_id"  invisible="1"/>
                     <field name="categ_id" invisible="1"/>
                 </tree>
@@ -86,7 +87,7 @@
 	    </record>        
       
         
-        <menuitem name="Claim" id="menu_crm_claim_tree" action="action_report_crm_claim" parent="crm.next_id_52"/>       
+        <menuitem name="Claims" id="menu_crm_claim_tree" action="action_report_crm_claim" parent="base.next_id_64"/>       
 
 
   </data>
