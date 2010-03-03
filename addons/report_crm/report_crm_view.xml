@@ -53,20 +53,26 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="8">
-                   		<filter string="My Cases" icon="terp-hr" domain="[('user_id','=',uid)]" help="My cases by section"/>
-                   		<separator orientation="vertical"/>
                    		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]"/>
+                        <separator orientation="vertical"/>	
 						<filter string="Current" icon="terp-hr" domain="[('state','=','draft')]"/>
 						<filter string="Won" icon="terp-hr" domain="[('state','=','done')]"/>
-						<filter string="Lost" icon="terp-hr" domain="[('state','=','cancel')]"/>						
-						<separator orientation="vertical"/>
-						<field name="name" select="1"/>
-	                    <field name="month" select="1"/>
-	                    <field name="user_id" select="1"/>
-						<field name="section_id" select="1"/>
-	                    <field name="nbr" select="1"/>
-	                    <field name="state" select="1"/>
+						<filter string="Lost" icon="terp-hr" domain="[('state','=','cancel')]"/>
+						<separator orientation="vertical"/>	
+						<field name="section_id" default="context.get('section_id', False)" widget="selection"
+                    				context="{'invisible_section': False}">
+                   		 <filter icon="terp-crm"
+                        context="{'invisible_section': False}"
+                        domain="[('section_id.user_id','=',uid)]"
+                        help="My section"/>
+                        </field>
+                         <field name="user_id" widget="selection">
+                    	<filter icon="terp-partner"
+                        	domain="[('user_id','=',uid)]"
+                        	help="My " default="1"
+                    	/>
+                </field>
                    </group>
                    <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="8">
@@ -75,6 +81,7 @@
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
                     	<filter string="Month" icon="terp-sale" domain="[]" context="{'group_by':'month'}"/>
+                    	<filter string="Year" icon="terp-sale" domain="[]" context="{'group_by':'name'}"/>
                     	<filter string="Category" icon="terp-sale" domain="[]" context="{'group_by':'categ_id'}"/>
                    </group>
                    
