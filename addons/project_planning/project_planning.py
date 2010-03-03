@@ -286,7 +286,7 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
         cr.execute(""" CREATE OR REPLACE VIEW report_account_analytic_planning_user AS (
         SELECT
             planning.id AS planning_id,
-            planning.id::varchar(32) || '-' || COALESCE(users.id,0)::varchar(32) AS id,
+            (1000*(planning.id) + users.id)::integer AS id,
             planning.business_days,
             users.id AS user_id,
             (SELECT sum(line1.amount_in_base_uom)
@@ -330,7 +330,7 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
 
         SELECT
             planning.id AS planning_id,
-            planning.id::varchar(32) || '-' || '0' AS id,
+            (1000*(planning.id) - 1)::integer AS id,
             planning.business_days,
             line.user_id,
             (SELECT SUM(line1.amount_in_base_uom)
