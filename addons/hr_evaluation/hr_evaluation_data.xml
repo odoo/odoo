@@ -1577,13 +1577,23 @@ Once the form had been filled, the employee send it to his supervisor.
             <field eval="1" name="wait"/>
         </record>
     </data>
+    
+    <data noupdate="1">
+        <record id="hr_evaluation_interview_1" model="hr.evaluation.interview">
+            <field name="state">waiting_answer</field>
+            <field name="survey_id" ref="hr_evaluation.survey_2"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="email">fp@tinyerp.com</field>
+            <field name="date_deadline">2010-02-21</field>
+        </record>
+    </data>
     <data noupdate="1">
         <record id="hr_evaluation_evaluation_0" model="hr_evaluation.evaluation">
             <field name="rating">0</field>
             <field name="employee_id" ref="hr.employee1"/>
             <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
             <field name="state">draft</field>
-            <field eval="[(6,0,[ref('survey_request_1')])]" name="survey_request_ids"/>
+            <field eval="[(6,0,[ref('hr_evaluation_interview_1')])]" name="survey_request_ids"/>
             <field name="date">2010-01-21</field>
             <field name="phase_id" ref="hr_evaluation_plan_phase_sendtomanagers0"/>
             <field name="manager_id" ref="base.user_root"/>

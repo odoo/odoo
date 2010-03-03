@@ -1579,7 +1579,7 @@ class survey_request(osv.osv):
         'user_id' : fields.many2one("res.users", "User"),
         'email' : fields.char("E-mail", size=64),
         'survey_id' : fields.many2one("survey", "Survey", required=1),
-        'answer_ids' : fields.one2many('survey.answer', 'question_id', 'Answer'),
+        'response' : fields.many2one('survey.response', 'Answer'),
         'state' : fields.selection([('waiting_answer', 'Wating Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
     }
     _defaults = {
