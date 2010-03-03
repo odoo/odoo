@@ -10,14 +10,15 @@
             <field name="model">report.crm.claim</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-               <tree string="Leads">
+               <tree string="Claim">
                 	<field name="name" />
 					<field name="month"/>
                 	<field name="nbr" string="#Claim"/>
-                	<field name="delay_close"/>
                     <field name="amount_revenue"/>
-                    <field name="amount_revenue_prob"/>
                     <field name="probability"/>
+                    <field name="amount_revenue_prob"/>
+                    <field name="delay_close"/>
+                    <field name="section_id" invisible="1"/>
                     <field name="stage_id"  invisible="1"/>
                     <field name="categ_id" invisible="1"/>
                 </tree>
