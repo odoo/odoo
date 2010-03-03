@@ -204,15 +204,29 @@
                             </group>
                         </page>
                         <page string="Other data">
-                            <field groups="base.group_extended" name="incoterm"/>
-                            <field groups="base.group_extended" name="picking_policy" required="True"/>
-                            <field name="user_id"/>
-                            <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
-                            <field groups="base.group_extended" name="origin"/>
-                            <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
-                            <field name="payment_term" widget="selection"/>
-                            <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <group colspan="2" col="2">
+                                <separator string="Logistic" colspan="2"/>
+                                <field groups="base.group_extended" name="incoterm"/>
+                                <field groups="base.group_extended" name="picking_policy" required="True"/>
+                                <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
+                                <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="References" colspan="2"/>
+                                <field name="user_id"/>
+                                <field groups="base.group_extended" name="origin"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Conditions" colspan="2"/>
+                                <field name="payment_term" widget="selection"/>
+                                <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Dates" colspan="2"/>
+                                <field name="create_date"/>
+                                <field name="date_confirm"/>
+                            </group>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
