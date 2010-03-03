@@ -94,30 +94,30 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Address">
-                	<field name="partner_id" select="1"  colspan="2"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
-                    <newline/>
                     <group colspan="4" col="6">
-						<field name="name" select="2"/>
-						<field domain="[('domain', '=', 'contact')]" name="title"/>
-						<field name="function"/>
-					</group>
+                        <field name="partner_id" colspan="2"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
+                        <newline/>
+                        <field name="name"/>
+                        <field domain="[('domain', '=', 'contact')]" name="title"/>
+                        <field name="function"/>
+                    </group>
                       <group colspan="2" col="2">
-                      	<separator string="Postal Address" colspan="4" col="4"/>
-                        <field name="street" select="2"/>
+                        <separator string="Postal Address" colspan="4" col="4"/>
+                        <field name="street"/>
                         <field name="street2"/>
-                        <field name="zip" select="2"/>
-                        <field name="city" select="2"/>
-                        <field name="country_id" select="2" completion="1"/>
-                        <field name="state_id" select="2"/>
+                        <field name="zip"/>
+                        <field name="city"/>
+                        <field name="country_id"/>
+                        <field name="state_id"/>
                       </group>
                       <group colspan="2" col="2">
-                      	<separator string="Communication" colspan="4" col="4"/>
-                        <field name="type" select="2" />
+                        <separator string="Communication" colspan="4" col="4"/>
+                        <field name="type"/>
                         <field name="phone"/>
                         <field name="fax"/>
-                        <field name="mobile" select="2"/>
-                        <field name="email"  select="2" widget="email"/>
+                        <field name="mobile"/>
+                        <field name="email" widget="email"/>
                      </group>
                 </form>
             </field>
@@ -158,15 +158,15 @@
                     <field domain="[('domain', '=', 'contact')]" name="title"/>
                     <field name="street"/>
                     <field name="street2"/>
-                    <field name="type" select="2"/>
+                    <field name="type"/>
                     <field name="function"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
-                    <field name="zip" select="2"/>
-                    <field name="city" select="2"/>
+                    <field name="zip"/>
+                    <field name="city"/>
                     <newline/>
                     <field completion="1" name="country_id" select="1"/>
-                    <field name="state_id" select="2"/>
+                    <field name="state_id"/>
                     <newline/>
                     <field name="phone"/>
                     <field name="fax"/>
@@ -238,8 +238,8 @@
                     <field name="name"/>
                     <field name="title"/>
                     <field name="ref"/>
-                    <field name="city" select="2"/>
-                    <field name="country" select="2"/>
+                    <field name="city"/>
+                    <field name="country"/>
                     <field name="lang"/>
                 </tree>
             </field>
@@ -256,11 +256,11 @@
                             <field name="name" select="1" colspan="6"/>
                             <field name="ref" select="1"/>
                             <field domain="[('domain', '=', 'partner')]" name="title"/>
-                            <field name="lang" select="2"/>
+                            <field name="lang"/>
                         </group>
                         <group colspan="1" col="2">
                             <field name="customer" select="1"/>
-                            <field name="supplier" select="2"/>
+                            <field name="supplier"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -268,27 +268,27 @@
                             <field colspan="4" mode="form,tree" name="address" nolabel="1" select="1" height="260">
                                 <form string="Partner Contacts">
                                     <group colspan="4" col="6">
-                                        <field name="name" select="2"/>
+                                        <field name="name"/>
                                         <field domain="[('domain', '=', 'contact')]" name="title" size="0"/>
                                         <field name="function"/>
                                     </group>
                                     <newline/>
                                       <group colspan="2" col="4">
                                         <separator string="Postal Address" colspan="4" col="4" />
-                                        <field name="street" select="2" colspan="4"/>
+                                        <field name="street" colspan="4"/>
                                         <field name="street2" colspan="4"/>
-                                        <field name="zip" select="2"/>
-                                        <field name="city" select="2"/>
-                                        <field name="country_id" select="2" completion="1"/>
-                                        <field name="state_id" select="2"/>
+                                        <field name="zip"/>
+                                        <field name="city"/>
+                                        <field name="country_id" completion="1"/>
+                                        <field name="state_id"/>
                                      </group>
                                      <group colspan="2" col="2">
                                         <separator string="Communication" colspan="2" col="2" />
-                                        <field name="type" select="2" string="Type" />
+                                        <field name="type" string="Type" />
                                         <field name="phone"/>
                                         <field name="mobile"/>
                                         <field name="fax"/>
-                                        <field name="email" select="2" widget="email"/>
+                                        <field name="email" widget="email"/>
                                      </group>
                                 </form>
                                 <tree string="Partner Contacts">
@@ -301,14 +301,14 @@
                                 </tree>
                             </field>
                             <separator colspan="4" string="Categories"/>
-                            <field colspan="4" name="category_id" nolabel="1" select="2" height="90"/>
+                            <field colspan="4" name="category_id" nolabel="1" height="90"/>
                         </page>
                         <page string="Sales &amp; Purchases">
                             <separator string="General Information" colspan="4"/>
-                            <field name="user_id" select="2"/>
-                            <field name="active" select="2"/>
+                            <field name="user_id"/>
+                            <field name="active"/>
                             <field name="website" widget="url"/>
-                            <field name="date" select="2"/>
+                            <field name="date"/>
                             <field name="parent_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <newline/>
@@ -457,7 +457,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Bank account">
-                    <field name="state" select="2"/>
+                    <field name="state"/>
                     <field name="partner_id" select="1"/>
                     <newline/>
                     <field name="acc_number" select="1"/>
@@ -467,12 +467,12 @@
                     <field name="sequence"/>
                     <field colspan="4" name="name"/>
                     <separator colspan="4" string="Bank Account Owner"/>
-                    <field colspan="4" name="owner_name" select="2"/>
+                    <field colspan="4" name="owner_name"/>
                     <field colspan="4" name="street"/>
                     <field name="city"/>
                     <field name="zip"/>
-                    <field completion="1" name="country_id" select="2"/>
-                    <field name="state_id" select="2"/>
+                    <field completion="1" name="country_id"/>
+                    <field name="state_id"/>
                 </form>
             </field>
         </record>
@@ -539,7 +539,7 @@
                     <field name="active" select="1"/>
                     <field name="parent_id"/>
                     <separator colspan="4" string="Partners"/>
-                    <field colspan="4" name="partner_ids" nolabel="1" select="2"/>
+                    <field colspan="4" name="partner_ids" nolabel="1"/>
                 </form>
             </field>
         </record>

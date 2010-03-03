@@ -327,23 +327,23 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     ## (c) Fry-IT, www.fry-it.com, 2007
     ## <peter@fry-it.com>
     ## download here: http://www.peterbe.com/plog/html2plaintext
-    
-    
+
+
     """ from an HTML text, convert the HTML to plain text.
-    If @body_id is provided then this is the tag where the 
+    If @body_id is provided then this is the tag where the
     body (not necessarily <body>) starts.
     """
     try:
         from BeautifulSoup import BeautifulSoup, SoupStrainer, Comment
     except:
         return html
-            
+
     urls = []
     if body_id is not None:
         strainer = SoupStrainer(id=body_id)
     else:
         strainer = SoupStrainer('body')
-    
+
     soup = BeautifulSoup(html, parseOnlyThese=strainer, fromEncoding=encoding)
     for link in soup.findAll('a'):
         title = link.renderContents()
@@ -351,7 +351,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             urls.append(dict(url=url, tag=str(link), title=title))
 
     html = soup.__str__()
-            
+
     url_index = []
     i = 0
     for d in urls:
@@ -368,11 +368,11 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace('<h2>','**').replace('</h2>','**')
     html = html.replace('<h1>','**').replace('</h1>','**')
     html = html.replace('<em>','/').replace('</em>','/')
-    
 
-    # the only line breaks we respect is those of ending tags and 
+
+    # the only line breaks we respect is those of ending tags and
     # breaks
-    
+
     html = html.replace('\n',' ')
     html = html.replace('<br>', '\n')
     html = html.replace('<tr>', '\n')
@@ -381,7 +381,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     html = html.replace(' ' * 2, ' ')
 
 
-    # for all other tags we failed to clean up, just remove then and 
+    # for all other tags we failed to clean up, just remove then and
     # complain about them on the stderr
     def desperate_fixer(g):
         #print >>sys.stderr, "failed to clean up %s" % str(g.group())
@@ -501,8 +501,8 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             return True
         except Exception,e:
             netsvc.Logger().notifyChannel('email_send (maildir)', netsvc.LOG_ERROR, e)
-            return False    
-    
+            return False
+
     try:
         oldstderr = smtplib.stderr
         s = smtplib.SMTP()
@@ -511,7 +511,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             if debug:
                 smtplib.stderr = WriteToLogger()
 
-            s.set_debuglevel(int(bool(debug)))  # 0 or 1            
+            s.set_debuglevel(int(bool(debug)))  # 0 or 1
             s.connect(smtp_server, config['smtp_port'])
             if ssl:
                 s.ehlo()
@@ -519,7 +519,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                 s.ehlo()
 
             if config['smtp_user'] or config['smtp_password']:
-                s.login(config['smtp_user'], config['smtp_password'])            
+                s.login(config['smtp_user'], config['smtp_password'])
             s.sendmail(email_from,
                        flatten([email_to, email_cc, email_bcc]),
                        msg.as_string()
@@ -754,10 +754,10 @@ class cache(object):
         else:
             kwargs2 = self._unify_args(*args, **kwargs)
             keys_to_del = [key for key, _ in self._generate_keys(dbname, kwargs2) if key in self.cache.keys()]
-        
+
         for key in keys_to_del:
             self.cache.pop(key)
-    
+
     @classmethod
     def clean_caches_for_db(cls, dbname):
         for c in cls.__caches:
@@ -883,29 +883,15 @@ if not hasattr(__builtin__, 'any'):
     __builtin__.any = any
     del any
 
-get_iso = {'ca_ES':'ca',
-'cs_CZ': 'cs',
-'et_EE': 'et',
-'sv_SE': 'sv',
-'sq_AL': 'sq',
-'uk_UA': 'uk',
-'vi_VN': 'vi',
-'af_ZA': 'af',
-'be_BY': 'be',
-'ja_JP': 'ja',
-'ko_KR': 'ko'
-}
-
 def get_iso_codes(lang):
-    if lang in get_iso:
-        lang = get_iso[lang]
-    elif lang.find('_') != -1:
+    if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
             lang = lang.split('_')[0]
     return lang
 
 def get_languages():
     languages={
+        'ab_RU': u'Abkhazian (RU)',
         'ar_AR': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български',
         'bs_BS': u'Bosnian / bosanski jezik',
@@ -920,29 +906,48 @@ def get_languages():
         'es_AR': u'Spanish (AR) / Español (AR)',
         'es_ES': u'Spanish / Español',
         'et_EE': u'Estonian / Eesti keel',
+        'fa_IR': u'Persian / Iran, Islamic Republic of',
         'fi_FI': u'Finland / Suomi',
         'fr_BE': u'French (BE) / Français (BE)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
+        'gl_ES': u'Galician / Spain',
+        'gu_IN': u'Gujarati / India',
+        'hi_IN': u'Hindi / India',
         'hr_HR': u'Croatian / hrvatski jezik',
         'hu_HU': u'Hungarian / Magyar',
         'id_ID': u'Indonesian / Bahasa Indonesia',
         'it_IT': u'Italian / Italiano',
+        'iu_CA': u'Inuktitut / Canada',
+        'ja_JP': u'Japanese / Japan',
+        'ko_KP': u'Korean / Korea, Democratic Peoples Republic of',
+        'ko_KR': u'Korean / Korea, Republic of',
         'lt_LT': u'Lithuanian / Lietuvių kalba',
+        'lv_LV': u'Latvian / Latvia',
+        'ml_IN': u'Malayalam / India',
+        'mn_MN': u'Mongolian / Mongolia',
+        'nb_NO': u'Norwegian Bokmål / Norway',
         'nl_NL': u'Dutch / Nederlands',
         'nl_BE': u'Dutch (Belgium) / Nederlands (Belgïe)',
+        'oc_FR': u'Occitan (post 1500) / France',
         'pl_PL': u'Polish / Język polski',
         'pt_BR': u'Portugese (BR) / português (BR)',
         'pt_PT': u'Portugese / português',
         'ro_RO': u'Romanian / limba română',
         'ru_RU': u'Russian / русский язык',
+        'si_LK': u'Sinhalese / Sri Lanka',
+        'sk_SK': u'Slovak / Slovakia',
         'sl_SL': u'Slovenian / slovenščina',
         'sq_AL': u'Albanian / Shqipëri',
+        'sr_RS': u'Serbian / Serbia',
         'sv_SE': u'Swedish / svenska',
+        'te_IN': u'Telugu / India',
         'tr_TR': u'Turkish / Türkçe',
         'vi_VN': u'Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam',
         'uk_UA': u'Ukrainian / украї́нська мо́ва',
+        'ur_PK': u'Urdu / Pakistan',
         'zh_CN': u'Chinese (CN) / 简体中文',
+        'zh_HK': u'Chinese (HK)',
         'zh_TW': u'Chinese (TW) / 正體字',
         'th_TH': u'Thai / ภาษาไทย',
         'tlh_TLH': u'Klingon',
@@ -1181,9 +1186,9 @@ def detect_ip_addr():
 # RATIONALE BEHIND TIMESTAMP CALCULATIONS AND TIMEZONE MANAGEMENT:
 #  The server side never does any timestamp calculation, always
 #  sends them in a naive (timezone agnostic) format supposed to be
-#  expressed within the server timezone, and expects the clients to 
+#  expressed within the server timezone, and expects the clients to
 #  provide timestamps in the server timezone as well.
-#  It stores all timestamps in the database in naive format as well, 
+#  It stores all timestamps in the database in naive format as well,
 #  which also expresses the time in the server timezone.
 #  For this reason the server makes its timezone name available via the
 #  common/timezone_get() rpc method, which clients need to read

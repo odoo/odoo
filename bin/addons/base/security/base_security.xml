@@ -17,8 +17,8 @@
         <field name="name">Employee</field>
     </record>
 
-    <record model="res.groups" id="group_multi_company">
-        <field name="name">Useability / Multi Company</field>
+    <record model="res.groups" context="{'noadmin':True}" id="group_multi_company">
+        <field name="name">Multi Companies</field>
     </record>
 
     <record model="res.groups" context="{'noadmin':True}" id="group_extended">
@@ -27,10 +27,6 @@
 
     <record model="res.groups" id="group_no_one" context="{'noadmin':True}">
         <field name="name">Useability / No One</field>
-    </record>
-
-    <record model="res.groups" id="group_multi_company">
-        <field name="name">Multi Companies</field>
     </record>
 
 <!--

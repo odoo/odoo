@@ -21,8 +21,8 @@
 ##############################################################################
 
 name = 'openerp-server'
-version = '5.0.7'
-major_version = '5.0'
+version = '5.2dev'
+major_version = '5.2'
 description = 'OpenERP Server'
 long_desc = '''\
 OpenERP is a complete ERP and CRM. The main features are accounting (analytic

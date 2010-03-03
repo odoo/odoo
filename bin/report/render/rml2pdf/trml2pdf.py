@@ -135,7 +135,7 @@ class _rml_styles(object,):
                 sys.stderr.write('Warning: style not found, %s - setting default!\n' % (node.get('style'),) )
         if not style:
             styles = reportlab.lib.styles.getSampleStyleSheet()
-            style = copy.deepcopy(styles['Normal'])
+            style = styles['Normal']
         style.__dict__.update(self._para_style_update(node))
         return style
 

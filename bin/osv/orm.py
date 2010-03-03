@@ -247,7 +247,7 @@ class browse_record(object):
                         new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
                     else:
                         new_data[n] = data[n]
-                self._data[data['id']].update(new_data)                        
+                self._data[data['id']].update(new_data)
         if not name in self._data[self._id]:
             #how did this happen?
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
@@ -1100,7 +1100,7 @@ class orm_template(object):
                         if column._domain and not isinstance(column._domain, (str, unicode)):
                             dom = column._domain
                         dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
-                        context.update(eval(node.get('context','{}')))                        
+                        context.update(eval(node.get('context','{}')))
                         attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
                         if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
@@ -1837,17 +1837,21 @@ class orm(orm_template):
         if not fields:
             fields = self._columns.keys()
 
-        (qu1, qu2, tables) = self._where_calc(cr, uid, domain, context=context)
+        (where_clause, where_params, tables) = self._where_calc(cr, uid, domain, context=context)
         dom = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
-        qu1 = qu1 + dom[0]
-        qu2 = qu2 + dom[1]
+        where_clause = where_clause + dom[0]
+        where_params = where_params + dom[1]
         for t in dom[2]:
             if t not in tables:
                 tables.append(t)
-        if len(qu1):
-            qu1 = ' where '+string.join(qu1, ' and ')
+
+        # Take care of adding join(s) if groupby is an '_inherits'ed field
+        tables, where_clause = self._inherits_join_calc(groupby,tables,where_clause)
+
+        if len(where_clause):
+            where_clause = ' where '+string.join(where_clause, ' and ')
         else:
-            qu1 = ''
+            where_clause = ''
         limit_str = limit and ' limit %d' % limit or ''
         offset_str = offset and ' offset %d' % offset or ''
 
@@ -1855,7 +1859,7 @@ class orm(orm_template):
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float','integer'), fields)
         sum = {}
 
-        group_by = groupby       
+        group_by = groupby
         if fget.get(groupby,False) and fget[groupby]['type'] in ('date','datetime'):
             flist = "to_char(%s,'yyyy-mm') as %s "%(groupby,groupby)
             groupby = "to_char(%s,'yyyy-mm')"%(groupby)
@@ -1872,7 +1876,8 @@ class orm(orm_template):
                     flist += ',avg('+f+') as '+f
                 else:
                     flist += ',sum('+f+') as '+f
-        cr.execute('select min(id) as id,'+flist+' from ' + self._table +qu1+' group by '+ groupby + limit_str + offset_str,qu2)
+
+        cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + ' group by '+ groupby + limit_str + offset_str, where_params)
         alldata = {}
         groupby = group_by
         for r in cr.dictfetchall():
@@ -1888,20 +1893,32 @@ class orm(orm_template):
                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
                    days = calendar.monthrange(dt.year, dt.month)[1]
 
-                   if d[groupby][:7] == today.strftime('%Y-%m'):
-                       d[groupby] = 'This Month'
-                   else:
-                       d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
-
+                   d[groupby] = datetime.datetime.strptime(d[groupby][:10],'%Y-%m-%d').strftime('%B %Y')
                    d['__domain'] = [(groupby,'>=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01','%Y-%m-%d').strftime('%Y-%m-%d') or False),\
                                     (groupby,'<=',alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days),'%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
                 elif fget[groupby]['type'] == 'many2one':
-                    d[groupby] = d[groupby] and d[groupby][1] or ''
+                    d[groupby] = d[groupby] and ((type(d[groupby])==type(1)) and d[groupby] or d[groupby][1])  or ''
 
             del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
         return data
+
+    def _inherits_join_calc(self, field, tables, where_clause):
+        """ Adds missing table select and join clause(s) for reaching
+            the field coming from an '_inherits' parent table.
+            @param tables: list of table._table names enclosed in double quotes as returned
+                           by _where_calc()
+        """
+        current_table = self
+        while field in current_table._inherit_fields and not field in current_table._columns:
+            parent_table = self.pool.get(current_table._inherit_fields[field][0])
+            parent_table_name = parent_table._table
+            if '"%s"'%parent_table_name not in tables:
+                tables.append('"%s"'%parent_table_name)
+                where_clause.append('(%s.%s = %s.id)' % (current_table._table, current_table._inherits[parent_table._name], parent_table_name))
+            current_table = parent_table
+        return (tables, where_clause)
 
     def _parent_store_compute(self, cr):
         logger = netsvc.Logger()
@@ -2032,12 +2049,12 @@ class orm(orm_template):
 
                 if isinstance(f, fields.one2many):
                     cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname=%s", (f._obj,))
-                    
+
                     if self.pool.get(f._obj):
                         if f._fields_id not in self.pool.get(f._obj)._columns.keys():
                             if not self.pool.get(f._obj)._inherits or (f._fields_id not in self.pool.get(f._obj)._inherit_fields.keys()):
                                 raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id,f._obj,))
-                    
+
                     if cr.fetchone():
                         cr.execute("SELECT count(1) as c FROM pg_class c,pg_attribute a WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid", (f._obj, f._fields_id))
                         res = cr.fetchone()[0]
