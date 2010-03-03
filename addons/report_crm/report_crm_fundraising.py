@@ -6,8 +6,8 @@ class report_crm_fundraising(osv.osv):
     _auto = False
     _inherit = "report.crm.case"
     _columns = {
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]", readonly=True),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]"),
+        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]", readonly=True),
         'probability': fields.float('Avg. Probability', readonly=True),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'amount_costs': fields.float('Est.Cost', readonly=True),
