@@ -41,6 +41,7 @@
 import calendar
 import copy
 import datetime
+import logging
 import pickle
 import random
 import re
@@ -139,6 +140,8 @@ class browse_record(object):
         self._id = id
         self._table = table
         self._table_name = self._table._name
+        self.__logger = logging.getLogger(
+            'osv.browse_record.' + self._table_name)
         self._context = context
         self._fields_process = fields_process
 
@@ -210,9 +213,8 @@ class browse_record(object):
 
             if not datas:
                 # Where did those ids come from? Perhaps old entries in ir_model_dat?
-                self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING,
-                    "No datas found for ids %s in %s \n%s" % (
-                        ids, self, ''.join(traceback.format_exc())))
+                self.__logger.warn("No datas found for ids %s in %s",
+                                   ids, self)
                 raise KeyError('Field %s not found in %s'%(name,self))
             # create browse records for 'remote' objects
             for data in datas:
