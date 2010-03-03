@@ -2990,6 +2990,7 @@ class orm(orm_template):
             context=None, count=False):
         if not context:
             context = {}
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
 
