@@ -413,6 +413,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="project_id" select="1" widget="selection" default="context.get('project_id', False)">
+                             <filter domain="[('manager_id','=',uid)]" help="My Projects" icon="terp-project"/>
                              <filter domain="[('manager_id','=',False)]" help="Unassigned Project" icon="terp-project"/>
                         </field>
                         <field name="user_id" select="1" widget="selection">
