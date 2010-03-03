@@ -30,7 +30,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['crm'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 
+    'update_xml': [#'security/ir.model.access.csv', 
                    'report_crm_view.xml', 
                    'report_crm_lead_view.xml',
                    'report_crm_claim_view.xml',
