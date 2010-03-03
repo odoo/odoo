@@ -28,5 +28,6 @@ import company
 import schedulers
 
 import make_procurement
+import orderpoint_procurement
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
