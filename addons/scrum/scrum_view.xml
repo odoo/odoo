@@ -103,7 +103,7 @@
                         <filter default="1"
                             icon="terp-project"
                             string="Current"
-                            domain="[('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open'])]"
+                            domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open'])]"
                             help="Current Backlogs"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-project" string="Draft" domain="[('state','=','draft')]" help="Draft Backlogs"/>
@@ -456,7 +456,7 @@
             <field name="arch" type="xml">
                 <field name="project_id" position="after">
                     <field name="sprint_id" widget="selection" context="{'sprint_invisible':False}">
-                        <filter icon="terp-project" string="Current" context="{'sprint_invisible':False}" domain="[('state','=','open')]" help="Current Sprints"/>
+                        <filter icon="terp-project" string="Current" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                     </field>
                 </field>
             </field>
