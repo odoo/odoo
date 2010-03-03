@@ -1038,5 +1038,12 @@
             res_model="mrp.bom"
             src_model="product.product"/>
 
+		<!-- Menu for Resource for MRP-->
+		<menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="3"/>
+        <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root" sequence="2"/>
+		<menuitem action="resource.action_resource_resource_tree" id="menu_resource_resource_tree" parent="menu_pm_resources_mrp" />
+		<menuitem action="resource.action_resource_calendar_form" id="menu_resource_calendar_form" parent="menu_pm_resources_mrp"/>
+		<menuitem action="resource.action_resource_calendar_leave_tree" id="menu_resource_calendar_leave_tree" parent="menu_pm_resources_mrp"/>
+
     </data>
 </openerp>
