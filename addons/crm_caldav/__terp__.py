@@ -36,11 +36,10 @@
                 'crm_caldav_data.xml',                 
     ], 
 
-    'update_xml': [        
-        'crm_caldav_wizard.xml',               
-    ],
+    'update_xml': [],
     'demo_xml': [], 
     'installable': True, 
     'active': False,     
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
