@@ -602,6 +602,15 @@
             <field name="view_id" ref="product_template_tree_view"/>
         </record>
 
+        <record model="ir.values" id="action_wizard_pricelist_report">
+                <field name="object" eval="1" />
+                <field name="name">Price List</field>
+                <field name="key2">client_print_multi</field>
+                <field name="value" eval="'ir.actions.act_window,' + str(ref('action_product_price_view'))" />
+                <field name="key">action</field>
+                <field name="model">product.product</field>
+         </record>
+
         <!--
         <menuitem action="product_template_action_tree" id="menu_templates" parent="product.menu_products" sequence="2"
                   groups="product.group_product_variant" />
