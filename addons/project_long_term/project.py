@@ -259,8 +259,8 @@ class project(osv.osv):
     _inherit = "project.project"
 
     _columns = {
-        'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases")
-
+        'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
+        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
     }
 
 project()
