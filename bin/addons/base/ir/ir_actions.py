@@ -419,7 +419,7 @@ class actions_server(osv.osv):
         'type': lambda *a: 'ir.actions.server',
         'sequence': lambda *a: 5,
         'code': lambda *a: """# You can use the following variables
-#    - object
+#    - object or obj
 #    - time
 #    - cr
 #    - uid
@@ -526,7 +526,8 @@ class actions_server(osv.osv):
                     'ids': ids,
                     'cr': cr,
                     'uid': uid,
-                    'object':obj
+                    'object':obj,
+                    'obj': obj,
                 }
                 exec action.code in localdict
                 if 'action' in localdict:
