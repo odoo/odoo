@@ -23,7 +23,7 @@
                 </tree>
             </field>
         </record>
-        <record id="view_crm_claim_user_form" model="ir.ui.view">
+        <record id="view_crm_claim_form" model="ir.ui.view">
             <field name="name">report.crm.claim.form</field>
             <field name="model">report.crm.claim</field>
             <field name="inherit_id" ref="view_crm_case_form"/>
@@ -40,11 +40,11 @@
         </record>
         
         <record id="view_crm_claim_graph" model="ir.ui.view">
-            <field name="name">report.crm.claim..graph</field>
+            <field name="name">report.crm.claim.graph</field>
             <field name="model">report.crm.claim</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Claims by User and Section" type="bar">
+                <graph orientation="horizontal" string="Claims" type="bar">
                     <field name="state"/>
                     <field name="nbr" operator="+"/>
                     <field group="True" name="user_id"/>
@@ -63,13 +63,15 @@
             </field>
         </record>
         
-        <record id="action_report_crm_claim" model="ir.actions.act_window">
-            <field name="name">Claim by User and Section</field>
+
+        <record id="action_report_crm_claim_tree" model="ir.actions.act_window">
+            <field name="name">Claim</field>
             <field name="res_model">report.crm.claim</field>
             <field name="view_type">form</field>
   			<field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_crm_claim_graph"/>
             <field name="search_view_id" ref="view_crm_claim_filter"/>
+
         </record>
                        	
        	<record model="ir.actions.act_window.view" id="action_report_crm_claim_tree">
@@ -89,6 +91,7 @@
         
         <menuitem name="Claim" id="menu_crm_claim_tree" parent="crm.next_id_52"/>
         <menuitem action="action_report_crm_claim" id="menu_crm_claim_user_tree" parent="menu_crm_claim_tree"/>
+
 
   </data>
 </openerp>

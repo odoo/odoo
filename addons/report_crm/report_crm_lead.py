@@ -3,7 +3,6 @@ import tools
 
 class report_crm_lead(osv.osv):
     _name = "report.crm.lead"
-    _description = "Leads by user and section"
     _auto = False
     _inherit = "report.crm.case"
     _columns = {
@@ -89,4 +88,5 @@ report_crm_lead()
 #report_crm_lead_section()
 #
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:=======
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,0 +1,57 @@
+<openerp>
+  <data>
+    <record id="view_base_setup_installer" model="ir.ui.view">
+      <field name="name">base.setup.installer.view</field>
+      <field name="model">base.setup.installer</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="arch" type="xml">
+        <data>
+          <form position="attributes">
+            <attribute name="string">Base Setup Modules Installation</attribute>
+          </form>
+          <separator string="title" position="attributes">
+            <attribute name="string">Install Modules</attribute>
+          </separator>
+          <xpath expr="//label[@string='description']"
+                 position="attributes">
+            <attribute name="string"
+                       >Now that OpenERP is installed, we have selected applications commonly useful to users which you can install directly, as well as sets of applications for more specific types or groups of businesses (the vertical modules).
+
+If you don't think you need any of these right now, you can easily install them later on.</attribute>
+          </xpath>
+          <group colspan="8">
+            <separator string="Generic Modules" colspan="4"/>
+            <field name="crm"/> <field name="sale"/>
+            <field name="project"/> <field name="knowledge"/>
+            <field name="stock"/> <field name="mrp"/>
+            <field name="account"/> <field name="purchase"/>
+            <field name="hr"/> <field name="point_of_sale"/>
+            <field name="marketing"/> <field name="misc_tools"/>
+            <field name="report_designer"/>
+            <separator string="Vertical Modules" colspan="4"/>
+            <field name="profile_association"/>
+            <field name="profile_training"/>
+            <field name="profile_auction"/>
+            <field name="profile_bookstore"/>
+          </group>
+        </data>
+      </field>
+    </record>
+
+    <record id="action_base_setup_installer" model="ir.actions.act_window">
+      <field name="name">Base Setup Modules Installation</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">base.setup.installer</field>
+      <field name="view_id" ref="view_base_setup_installer"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="base_setup_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="action_base_setup_installer"/>
+      <field name="sequence">2</field>
+    </record>
+  </data>
+</openerp>

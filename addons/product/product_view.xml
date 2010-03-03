@@ -16,13 +16,14 @@
                    <separator orientation="vertical"/>
                    <field name="default_code" select="1"/>
                    <field name="name" select="1"/>
-                   <field name="categ_id" select="1" widget="selection"/>
+                   <field name="categ_id" select="1" widget="selection" operator="child_of"/>
                    <newline/>
-                   <group col='8' colspan='4' expand='1' string='Group by...'>
-                       <filter string='Category' icon="terp-stock" domain="[]" context="{'group_by' : 'categ_id'}" />
-                   </group>
-                   <group col='8' colspan='7' expand="1" string="Extended options...">
+                   <group col='8' colspan='14' expand="1" string="Extended options...">
                        <field name="pricelist_id" select="1" widget="selection" context="{'pricelist': self}" />
+                   </group>
+                   <newline/>
+                   <group col='8' colspan='15' expand='1' string='Group by...'>
+                       <filter string='Category' icon="terp-stock" domain="[]" context="{'group_by' : 'categ_id'}" />
                    </group>
                 </search>
             </field>

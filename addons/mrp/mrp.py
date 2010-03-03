@@ -689,7 +689,7 @@ class mrp_production(osv.osv):
 
     def action_in_production(self, cr, uid, ids):
         move_ids = []        
-        self.write(cr, uid, ids, {'state': 'in_production'})
+        self.write(cr, uid, ids, {'state': 'in_production','date_start':time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def test_if_product(self, cr, uid, ids):

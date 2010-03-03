@@ -25,7 +25,7 @@
                </tree>
             </field>	
         </record>
-        <record id="view_crm_opportunity_user_form" model="ir.ui.view">
+        <record id="view_crm_opportunity_form" model="ir.ui.view">
             <field name="name">report.crm.opportunity.form</field>
             <field name="model">report.crm.opportunity</field>
             <field name="inherit_id" ref="view_crm_case_form"/>
@@ -46,7 +46,7 @@
             <field name="model">report.crm.opportunity</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Opportunity by User and Section" type="bar">
+                <graph orientation="horizontal" string="Opportunity" type="bar">
                     <field name="state"/>
                     <field name="nbr" operator="+"/>
                     <field group="True" name="user_id"/>
@@ -65,8 +65,8 @@
             </field>
         </record>
         
-        <record id="action_report_crm_opportunity" model="ir.actions.act_window">
-            <field name="name">Opportunity by User and Section</field>
+        <record id="action_report_crm_opportunity_tree" model="ir.actions.act_window">
+            <field name="name">Opportunity</field>
             <field name="res_model">report.crm.opportunity</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
@@ -79,9 +79,7 @@
 	        <field name="view_id" ref="view_crm_opportunity_tree"/>
 	        <field name="act_window_id" ref="action_report_crm_opportunity"/>
 	    </record>                
-        <menuitem name="Opportinities" id="menu_crm_opportunity_tree" parent="crm.next_id_52"/>
-        <menuitem action="action_report_crm_opportunity" id="menu_crm_opportunity_user_tree" parent="menu_crm_opportunity_tree"/>
-        
+
         
 <!--       Opportunity by Section  
 
@@ -133,5 +131,6 @@
         </record>
         <menuitem action="action_report_crm_opportunity_section_tree" id="menu_crm_opportunity_section_tree" parent="menu_crm_opportunity_tree"/>
         -->
-      </data>
+        <menuitem name="Opportinities" action="action_report_crm_opportunity_tree" id="menu_crm_opportunity_tree" parent="crm.next_id_52"/>        
+	</data>
 </openerp>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="1">
+    <record id="view_base_setup" model="ir.ui.view">
+      <field name="name">Setup</field>
+      <field name="model">base.setup.config</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Setup">
+          <group colspan="4">
+            <image name="gtk-dialog-info"/>
+            <group colspan="2" col="4">
+              <separator colspan="4" string="Installation Done"/>
+              <label align="0.0" colspan="4"
+                     string="Your new database is now fully installed."/>
+              <label align="0.0" colspan="4"
+                     string="You can start configuring the system or connect directly to the database using the default setup."/>
+            </group>
+          </group>
+          <button name="menu" icon="gtk-ok" type="object"
+                  string="Use Directly"/>
+          <button name="config" icon="gtk-go-forward" type="object"
+                  string="Start Configuration"/>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_base_setup" model="ir.actions.act_window">
+      <field name="name">Setup</field>
+      <field name="res_model">base.setup.config</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_id" ref="view_base_setup"/>
+      <field name="target">new</field>
+    </record>
+
+    <record id="base.user_root" model="res.users">
+      <field name="action_id" ref="action_base_setup"/>
+      <field name="menu_id" ref="action_base_setup"/>
+    </record>
+  </data>
+</openerp>
