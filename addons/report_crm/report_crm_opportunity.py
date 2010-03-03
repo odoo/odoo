@@ -4,14 +4,15 @@ import tools
 class report_crm_opportunity(osv.osv):
     _name = "report.crm.opportunity"    
     _auto = False
-    _inherit = "report.crm.case.user"
+    _inherit = "report.crm.case"    
+    
     _columns = {
         'probability': fields.float('Avg. Probability', readonly=True),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),        
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]", readonly=True),
+        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]", readonly=True),        
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_crm_opportunity')
@@ -27,6 +28,9 @@ class report_crm_opportunity(osv.osv):
                     c.categ_id,
                     c.stage_id,
                     count(*) as nbr,
+                    0 as avg_answers,
+                    0.0 as perc_done,
+                    0.0 as perc_cancel,
                     sum(planned_revenue) as amount_revenue,                    
                     sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
                     avg(probability)::decimal(16,2) as probability,
