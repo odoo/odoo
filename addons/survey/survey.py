@@ -681,7 +681,7 @@ class survey_question_wiz(osv.osv_memory):
             total_pages = len(p_id)
             pre_button = False
             readonly = 0
-            if context.has_key('response_id'):
+            if context.has_key('response_id') and context['response_id']:
                 readonly = 1
             if not sur_name_rec['page_no'] + 1 :
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'store_ans':{}})
@@ -693,7 +693,7 @@ class survey_question_wiz(osv.osv_memory):
                 fields = {}
                 if sur_name_read['page'] == "next" or sur_name_rec['page_no'] == - 1 :
                     if len(p_id) > sur_name_rec['page_no'] + 1 :
-                        if not context.has_key('active') and not sur_name_rec['page_no'] + 1:
+                        if ((context.has_key('active') and not context['active']) or not context.has_key('active')) and not sur_name_rec['page_no'] + 1:
                             cr.execute('select count(id) from survey_history where user_id=%s\
                                                     and survey_id=%s' % (uid,survey_id))
                             res = cr.fetchone()[0]
@@ -735,12 +735,12 @@ class survey_question_wiz(osv.osv_memory):
                         que_rec = que_obj.read(cr, uid, que)
                         descriptive_text = ""
                         separator_string = tools.ustr(qu_no) + "." + tools.ustr(que_rec['question'])
-                        if not context.has_key('active') and que_rec['is_require_answer']:
-                            star='*'
+                        if ((context.has_key('active') and not context['active']) or not context.has_key('active')) and que_rec['is_require_answer']:
+                            star = '*'
                         else:
-                            star=''
+                            star = ''
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '4'})
-                        if context.has_key('active') and context.has_key('edit'):
+                        if context.has_key('active') and context['active'] and context.has_key('edit'):
                             xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '2'})
                             etree.SubElement(xml_group, 'separator', {'string': star+to_xml(separator_string), 'colspan': '3'})
                             xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
@@ -902,11 +902,11 @@ class survey_question_wiz(osv.osv_memory):
                     but_string = "Next"
                     if int(page_number) + 1 == total_pages:
                         but_string = "Done"
-                    if context.has_key('active') and int(page_number) + 1 == total_pages:
+                    if context.has_key('active') and context['active'] and int(page_number) + 1 == total_pages:
                         etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'string': "Done" ,'special':"cancel",'context' : tools.ustr(context)})
                     else:
                         etree.SubElement(xml_group, 'button', {'icon': "gtk-go-forward", 'name':"action_next",'string': tools.ustr(but_string) ,'type':"object",'context' : tools.ustr(context)})
-                    if context.has_key('active') and context.has_key('edit'):
+                    if context.has_key('active') and context['active'] and context.has_key('edit'):
                         etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
                         context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec['page_no'] , 'transfer' : sur_name_read['transfer']})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
@@ -985,8 +985,8 @@ class survey_question_wiz(osv.osv_memory):
                 tot_page_id = self.pool.get('survey').browse(cr, uid, context['survey_id'])
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
-        if context.has_key('response_id'):
-            response_obj = self.pool.get('survey.response')
+        response_obj = self.pool.get('survey.response')
+        if context.has_key('response_id') and context['response_id']:
             response_ans = response_obj.browse(cr, uid, context['response_id'])
             fields_list.sort()
             for que in response_ans.question_ids:
@@ -1066,6 +1066,9 @@ class survey_question_wiz(osv.osv_memory):
             survey_obj = self.pool.get('survey')
             sur_rec = survey_obj.read(cr, uid, sur_name_read['survey_id'])
             survey_obj.write(cr, uid, sur_name_read['survey_id'],  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
+            if context.has_key('cur_id'):
+                self.pool.get(context['object']).write(cr, uid, [int(context['cur_id'])], {'response' : response_id})
+            
         for key,val in sur_name_read['store_ans'].items():
             for field in vals:
                 if field.split('_')[0] == val['question_id']:

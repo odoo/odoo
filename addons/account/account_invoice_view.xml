@@ -115,19 +115,21 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft');black:state not in ('draft')" string="Invoice">
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="number"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="partner_id" groups="base.group_user"/>
-                    <field name="amount_untaxed" sum="Untaxed amount"/>
-                    <field name="amount_total" sum="Total amount"/>
-                    <field name="currency_id"/>
                     <field name="date_invoice" select="1"/>
-                    <field name="date_due" select="1"/>
-                    <field name="residual"/>
-                    <field name="state"/>
+                    <field name="number"/>
+                    <field name="partner_id" groups="base.group_user"/>
+                    <field name="name"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="period_id" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="user_id"/>
+                    <field name="date_due"/>
                     <field name="origin"/>
+                    <field name="currency_id"/>
+                    <field name="residual" sum="Residual Amount"/>
+                    <field name="amount_untaxed" sum="Untaxed Amount"/>
+                    <field name="amount_total" sum="Total Amount"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -299,7 +301,8 @@
                             <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection"  groups="base.group_multi_company"/>
                             <field name="fiscal_position" groups="base.group_extended,base.group_user" widget="selection"/>
                             <newline/>
-                            <field name="date_due" select="1"/>
+                            <field name="date_due"/>
+                            <field name="user_id"/>
                             <newline/>
                             <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank" select="2"/>
                             <field name="origin" select="2"/>
@@ -336,18 +339,28 @@
                    <group col="10" colspan="4">
                         <filter icon="terp-account" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                         <filter icon="terp-account" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
-                        <filter icon="terp-account" string="Unpaid" domain="[('state','in',('open','cancel'))]" help="Unpaid Invoices"/>
+                        <filter icon="terp-account" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>
-                        <field name="number" select='1'/>
-                        <field name="partner_id" select='1'/>
-                        <field name="amount_total" string="Price" select='1'/>
-                        <field name="origin" select='1'/>
- 					</group>                
-                    <group expand="context.get('report',False)" string="Group By..." colspan="4" col="10">
+                        <field name="number"/>
+                        <field name="partner_id"/>
+                        <field name="user_id">
+                            <filter string="My Invoices" icon="terp-account" domain="[('user_id','=',uid)]"/>
+                        </field>
+                        <field name="origin"/>
+                        <field name="amount_total"/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="12" col="10">
+                        <filter string="Journal" icon="terp-account" domain="[]" context="{'group_by':'journal_id'}"/>
+                        <filter string="Period" icon="terp-account" domain="[]" context="{'group_by':'period_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Partner" icon="terp-account" domain="[]" context="{'group_by':'partner_id'}"/>
-						<filter string="State" icon="terp-account" domain="[]"  context="{'group_by':'state'}"/>
-						<filter string="Date Invoice" icon="terp-account" domain="[]" context="{'group_by':'date_invoice'}"/>
-                  	   </group>   
+                        <filter string="Salesman" icon="terp-account" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="State" icon="terp-account" domain="[]"  context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Invoice Date" icon="terp-account" domain="[]"  context="{group_by':'date_invoice'}"/>
+                        <filter string="Due Date" icon="terp-account" domain="[]"  context="{group_by':'date_due'}"/>
+                    </group>
                </search>
             </field>
         </record>
