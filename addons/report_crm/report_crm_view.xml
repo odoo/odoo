@@ -56,7 +56,7 @@
                    		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]"/>
                         <separator orientation="vertical"/>	
-						<filter string="Current" icon="terp-hr" domain="[('state','=','draft')]"/>
+						<filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
 						<filter string="Won" icon="terp-hr" domain="[('state','=','done')]"/>
 						<filter string="Lost" icon="terp-hr" domain="[('state','=','cancel')]"/>
 						<separator orientation="vertical"/>	
