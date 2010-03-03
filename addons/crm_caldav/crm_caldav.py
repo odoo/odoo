@@ -23,10 +23,9 @@ from osv import fields, osv
 from crm import crm
 from caldav import caldav
 from base_calendar import base_calendar
+
 class crm_meeting(osv.osv):   
     _inherit = 'crm.meeting'
-
-    
 
     def export_cal(self, cr, uid, ids, context={}):
         ids = map(lambda x: base_calendar.base_calendar_id2real_id(x), ids)
@@ -39,29 +38,7 @@ class crm_meeting(osv.osv):
         event_obj = self.pool.get('basic.calendar.event')
         vals = event_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
-    
-    def check_import(self, cr, uid, vals, context={}):
-        ids = []
-        for val in vals:
-            exists, r_id = caldav.uid2openobjectid(cr, val['id'], \
-                                    self._name, val.get('recurrent_id'))
-            if val.has_key('create_date'): val.pop('create_date')
-            val['base_calendar_url'] = context.get('url') or ''
-            val.pop('id')
-            if exists and r_id:
-                val.update({'recurrent_uid': exists})
-                self.write(cr, uid, [r_id], val)
-                ids.append(r_id)
-            elif exists:
-                self.write(cr, uid, [exists], val)
-                ids.append(exists)
-            else:
-                event_id = self.create(cr, uid, val)
-                ids.append(event_id)
-        return ids
 
 crm_meeting()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

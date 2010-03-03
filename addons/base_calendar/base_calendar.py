@@ -38,7 +38,7 @@ months = {
 
 def get_recurrent_dates(rrulestring, exdate, startdate=None):
     def todate(date):
-        val = parser.parse(''.join((re.compile('\d')).findall(date)) + 'Z')
+        val = parser.parse(''.join((re.compile('\d')).findall(date)))
         return val
     if not startdate:
         startdate = datetime.now()
@@ -778,13 +778,15 @@ rule or repeating pattern for anexception to a recurrence set"),
         
     def modify_this(self, cr, uid, ids, defaults, context=None, *args):
         datas = self.read(cr, uid, ids[0], context=context)
-        date = datas.get('date')
         defaults.update({
                'recurrent_uid': base_calendar_id2real_id(datas['id']), 
                'recurrent_id': defaults.get('date'), 
                'rrule_type': 'none', 
                'rrule': ''
                     })
+        exdate = datas['exdate'] and datas['exdate'].split(',') or []
+        exdate.append(defaults.get('date'))
+        self.write(cr, uid, ids, {'exdate': ','.join(exdate)}, context=context)
         new_id = self.copy(cr, uid, ids[0], default=defaults, context=context)
         return new_id
 
