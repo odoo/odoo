@@ -22,7 +22,6 @@
 __all__ = ['db_connect', 'close_db']
 
 import logging
-import netsvc
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE
 from psycopg2.psycopg1 import cursor as psycopg1cursor
 from psycopg2.pool import PoolError
@@ -119,8 +118,7 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            logger= netsvc.Logger()
-            logger.notifyChannel('sql_db', netsvc.LOG_ERROR, "Programming error: %s, in query %s" % (pe, query))
+            self.__logger.error("Programming error: %s, in query %s" % (pe, query))
             raise
         except Exception:
             self.__logger.exception("bad query: %s", self._obj.query)
@@ -212,6 +210,8 @@ class Cursor(object):
 
 class ConnectionPool(object):
 
+    __logger = logging.getLogger('db.connection_pool')
+
     def locked(fun):
         @wraps(fun)
         def _locked(self, *args, **kwargs):
@@ -227,7 +227,6 @@ class ConnectionPool(object):
         self._connections = []
         self._maxconn = max(maxconn, 1)
         self._lock = threading.Lock()
-        self._logger = netsvc.Logger()
 
     def __repr__(self):
         used = len([1 for c, u in self._connections[:] if u])
@@ -235,8 +234,8 @@ class ConnectionPool(object):
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
     def _debug(self, msg):
-        self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, repr(self))
-        self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, msg)
+        self.__logger.debug(repr(self))
+        self.__logger.debug(msg)
 
     @locked
     def borrow(self, dsn):
@@ -292,17 +291,15 @@ class ConnectionPool(object):
 
 
 class Connection(object):
-    def _debug(self, msg):
-        self._logger.notifyChannel('Connection', netsvc.LOG_DEBUG, msg)
+    __logger = logging.getLogger('db.connection')
 
     def __init__(self, pool, dbname):
         self.dbname = dbname
         self._pool = pool
-        self._logger = netsvc.Logger()
 
     def cursor(self, serialized=False):
         cursor_type = serialized and 'serialized ' or ''
-        self._debug('create %scursor to "%s"' % (cursor_type, self.dbname,))
+        self.__logger.debug('create %scursor to "%s"' % (cursor_type, self.dbname,))
         return Cursor(self._pool, self.dbname, serialized=serialized)
 
     def serialized_cursor(self):
