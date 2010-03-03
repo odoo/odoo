@@ -48,48 +48,18 @@
                     <field group="True" name="user_id"/>
                 </graph>
             </field>
-        </record>
+        </record> 
 
         <record id="view_crm_phonecall_filter" model="ir.ui.view">
             <field name="name">report.crm.phonecall.select</field>
             <field name="model">report.crm.phonecall</field>
+            <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-				<search string="Search">
-                  <group col="16" colspan="8">
-                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
-						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]"/>
-						<filter string="Current" icon="terp-hr" domain="[('state','=','draft')]"/>
-						<filter string="Won" icon="terp-hr" domain="[('state','=','done')]"/>
-						<filter string="Lost" icon="terp-hr" domain="[('state','=','cancel')]"/>
-						<separator orientation="vertical"/>	
-						<field name="section_id" default="context.get('section_id', False)" widget="selection"
-                    				context="{'invisible_section': False}">
-                   		 <filter icon="terp-crm"
-                        context="{'invisible_section': False}"
-                        domain="[('section_id.user_id','=',uid)]"
-                        help="My section"/>
-                        </field>
-                         <field name="user_id" widget="selection">
-                    	<filter icon="terp-partner"
-                        	domain="[('user_id','=',uid)]"
-                        	help="My " default="1"
-                    	/>
-                </field>						
-                   </group>
-                   <newline/>
-                  <group expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="User" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Section" icon="terp-sale" domain="[]" context="{'group_by':'section_id'}"/>
-                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
-                    	<filter string="Month" icon="terp-sale" domain="[]" context="{'group_by':'month'}"/>
-                    	<filter string="Year" icon="terp-sale" domain="[]" context="{'group_by':'name'}"/>
-                    	<filter string="Category" icon="terp-sale" domain="[]" context="{'group_by':'categ_id'}"/>
-                   </group>
-               </search>
-            
+                <field name="user_id" position="before">
+               </field>
             </field>
-        </record>
+        </record>       
         
         <record id="action_report_crm_phonecall" model="ir.actions.act_window">
             <field name="name">Phone Calls</field>

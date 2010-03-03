@@ -55,6 +55,7 @@
                   <group col="16" colspan="8">
                    		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]"/>
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]"/>
+                        <separator orientation="vertical"/>	
 						<filter string="Current" icon="terp-hr" domain="[('state','=','draft')]"/>
 						<filter string="Won" icon="terp-hr" domain="[('state','=','done')]"/>
 						<filter string="Lost" icon="terp-hr" domain="[('state','=','cancel')]"/>
@@ -71,9 +72,7 @@
                         	domain="[('user_id','=',uid)]"
                         	help="My " default="1"
                     	/>
-                </field>						
-						<separator orientation="vertical"/>
-				        <field name="state" select="1"/>
+                </field>
                    </group>
                    <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="8">
