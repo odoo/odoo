@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <!--  Compute Schedulers -->
+        
+		<record id="view_compute_schedulers_wizard" model="ir.ui.view">
+            <field name="name">Compute Schedulers</field>
+            <field name="model">mrp.procurement.compute.all</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Scheduler Parameters">
+				    <field name="automatic"/>
+				    <separator colspan="4"/>
+				    <group col="2" colspan="4">
+                		<button icon='gtk-cancel' special="cancel"
+                			string="Cancel" />
+                		<button name="procure_calculation" string="Compute Schedulers"
+                			colspan="1" type="object" icon="gtk-ok" />
+                	</group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_compute_schedulers" model="ir.actions.act_window">
+            <field name="name">Compute Schedulers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.procurement.compute.all</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'record_id' : active_id}</field>
+        </record>
+        
+       <record model="ir.values" id="compute_all_schedulers">
+            <field name="model_id" ref="mrp.model_mrp_procurement" />
+            <field name="object" eval="1" />
+            <field name="name">Compute Schedulers</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_compute_schedulers'))" />
+            <field name="key">action</field>
+            <field name="model">mrp.procurement</field>
+        </record>
+        
+        <menuitem id="menu_mrp_scheduler" name="Schedulers" parent="menu_mrp_root" sequence="4"/>
+        <menuitem action="action_compute_schedulers" id="mrp_Sched_all" parent="mrp.menu_mrp_scheduler" sequence="90"/>
+		
+	</data>
+</openerp>	

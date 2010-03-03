@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-import wizard_orderpoint_procurement
+import make_procurement_product
+import orderpoint_procurement
+import schedulers_all
 import wizard_procurement
-import wizard_schedulers_all
 import wizard_price
 import wizard_workcenter_load
 import wizard_track_prod
