@@ -24,18 +24,13 @@
 #
 ##############################################################################
 
-import SimpleXMLRPCServer
-import SocketServer
 import logging
 import logging.handlers
-import os
-import signal
-import socket
 import sys
 import threading
 import time
-import xmlrpclib
 import release
+from pprint import pformat
 import warnings
 
 class Service(object):
@@ -78,6 +73,7 @@ class LocalService(object):
         Any instance of this class will behave like the single instance
         of Service(name)
     """
+    __logger = logging.getLogger('service')
     def __init__(self, name):
         self.__name = name
         try:
@@ -85,8 +81,9 @@ class LocalService(object):
             for method_name, method_definition in self._service._methods.items():
                 setattr(self, method_name, method_definition)
         except KeyError, keyError:
-            Logger().notifyChannel('module', LOG_ERROR, 'This service does not exist: %s' % (str(keyError),) )
+            self.__logger.error('This service does not exist: %s' % (str(keyError),) )
             raise
+
     def __call__(self, method, *params):
         return getattr(self, method)(*params)
 
@@ -234,7 +231,7 @@ class Logger(object):
 
         try:
             msg = tools.ustr(msg).strip()
-            if level in (LOG_ERROR,LOG_CRITICAL) and tools.config.get_misc('debug','env_info',False):
+            if level in (LOG_ERROR, LOG_CRITICAL) and tools.config.get_misc('debug','env_info',False):
                 msg = common().exp_get_server_environment() + "\n" + msg
 
             result = msg.split('\n')
@@ -270,10 +267,12 @@ class Agent(object):
     _timers = {}
     _logger = Logger()
 
+    __logger = logging.getLogger('timer')
+
     def setAlarm(self, fn, dt, db_name, *args, **kwargs):
         wait = dt - time.time()
         if wait > 0:
-            self._logger.notifyChannel('timers', LOG_DEBUG, "Job scheduled in %.3g seconds for %s.%s" % (wait, fn.im_class.__name__, fn.func_name))
+            self.__logger.debug("Job scheduled in %.3g seconds for %s.%s" % (wait, fn.im_class.__name__, fn.func_name))
             timer = threading.Timer(wait, fn, args, kwargs)
             timer.start()
             self._timers.setdefault(db_name, []).append(timer)
@@ -300,25 +299,26 @@ import traceback
 class Server:
     """ Generic interface for all servers with an event loop etc.
         Override this to impement http, net-rpc etc. servers.
-        
+
         Servers here must have threaded behaviour. start() must not block,
         there is no run().
     """
     __is_started = False
     __servers = []
-    
+
+
+    __logger = logging.getLogger('server')
+
     def __init__(self):
         if Server.__is_started:
             raise Exception('All instances of servers must be inited before the startAll()')
         Server.__servers.append(self)
 
     def start(self):
-        print "called stub Server.start"
-        pass
-        
+        self.__logger.debug("called stub Server.start")
+
     def stop(self):
-        print "called stub Server.stop"
-        pass
+        self.__logger.debug("called stub Server.stop")
 
     def stats(self):
         """ This function should return statistics about the server """
@@ -328,35 +328,25 @@ class Server:
     def startAll(cls):
         if cls.__is_started:
             return
-        Logger().notifyChannel("services", LOG_INFO, 
-            "Starting %d services" % len(cls.__servers))
+        cls.__logger.info("Starting %d services" % len(cls.__servers))
         for srv in cls.__servers:
             srv.start()
         cls.__is_started = True
-    
+
     @classmethod
     def quitAll(cls):
         if not cls.__is_started:
             return
-        Logger().notifyChannel("services", LOG_INFO, 
-            "Stopping %d services" % len(cls.__servers))
+        cls.__logger.info("Stopping %d services" % len(cls.__servers))
         for srv in cls.__servers:
             srv.stop()
         cls.__is_started = False
 
     @classmethod
     def allStats(cls):
-        res = ''
-        if cls.__is_started:
-            res += "Servers started\n"
-        else:
-            res += "Servers stopped\n"
-        for srv in cls.__servers:
-            try:
-                res += srv.stats() + "\n"
-            except:
-                pass
-        return res
+        res = ["Servers %s" % ('stopped', 'started')[cls.__is_started]]
+        res.extend(srv.stats() for srv in cls.__servers)
+        return '\n'.join(res)
 
 class OpenERPDispatcherException(Exception):
     def __init__(self, exception, traceback):
@@ -365,7 +355,6 @@ class OpenERPDispatcherException(Exception):
 
 class OpenERPDispatcher:
     def log(self, title, msg):
-        from pprint import pformat
         Logger().notifyChannel('%s' % title, LOG_DEBUG_RPC, pformat(msg))
 
     def dispatch(self, service_name, method, params):
