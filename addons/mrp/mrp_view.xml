@@ -2,15 +2,15 @@
 <openerp>
     <data>
 
-        <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager" sequence="3"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
-		<menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="menu_mrp_root" sequence="1"/>
+		<menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
-        <menuitem name="Control" id="menu_mrp_control" parent="menu_mrp_root"  sequence="3" />
+        <menuitem name="Control" id="menu_mrp_control" parent="base.menu_mrp_root"  sequence="3" />
      	<menuitem name="Master Data"
                   id="menu_mrp_bom"
-                  parent="menu_mrp_root"
+                  parent="base.menu_mrp_root"
                   sequence="5" />
         <!--
         Property / Property Group
@@ -38,7 +38,7 @@
         <menuitem
             id="menu_mrp_configuration"
             name="Configuration"
-            parent="menu_mrp_root"
+            parent="base.menu_mrp_root"
             groups="group_mrp_manager"
             sequence="50" />
 
@@ -446,7 +446,7 @@
             id="mrp.wizard_change_production_qty"
             keyword="client_action_multi"
             multi="True"/>
-	
+
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
@@ -457,17 +457,17 @@
                         <field name="name" select="1" string="Reference"/>
                         <field name="date_planned" select="1"/>
                         <field name="origin" select="1"/>
-                        <field name="product_id" on_change="product_id_change(product_id)" select="1"/>                        
+                        <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
                             <field name="product_uom"/>
                         </group>
-                        <label string="" colspan="2"/>                          
-                        <field name="product_uos_qty" groups="product.group_uos"/>                        
+                        <label string="" colspan="2"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
                         <group colspan="2" col="3" groups="product.group_uos">
                             <field name="product_uos"/>
-                            <label string=""/> 
-                        </group>                        
+                            <label string=""/>
+                        </group>
                     </group>
 
                     <notebook colspan="4">
@@ -510,7 +510,7 @@
                            			<field name="product_uom" readonly="1" />
                            			<field name="state" invisible="1" />
                            			<field name="location_id" readonly="1"/>
-                           			<field name="prodlot_id" />                           			
+                           			<field name="prodlot_id" />
                            			<button
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
@@ -527,13 +527,13 @@
                            			<field name="product_qty" />
                            			<field name="product_uom" />
                            		</form>
-                           	</field>						
+                           	</field>
 
                             <group col="9" colspan="4">
                                 <field name="state" select="2"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="gtk-execute"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
-                                <button name="button_produce" states="ready" string="Mark as Start" icon="gtk-execute"/>                                
+                                <button name="button_produce" states="ready" string="Mark as Start" icon="gtk-execute"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
                                 <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
                                 <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-cancel"/>
@@ -576,11 +576,11 @@
                            			<field name="product_uom" readonly="1" />
                            			<field name="state" invisible="1" />
                            			<field name="location_id" readonly="1"/>
-                           			<field name="prodlot_id" />                           			
-                           			<button name="%(stock.track_line)d" 
+                           			<field name="prodlot_id" />
+                           			<button name="%(stock.track_line)d"
                                             string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                            			<button name="%(stock.move_scrap)d"
-                           				string="D" type="action" icon="gtk-go-forward" 
+                           				string="D" type="action" icon="gtk-go-forward"
                            				states="done,cancel" />
                            		</tree>
                            		<form string="Finished Products">
@@ -867,7 +867,7 @@
                        	help="Procurement started late" />
                        <separator orientation="vertical"/>
                        <field name="name"/>
-                       <field name="origin"/> 
+                       <field name="origin"/>
                        <field name="product_id" />
                        <field name="date_planned" widget="date"/>
                        <field name="state" />
@@ -898,12 +898,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
-            <field name="domain">[]</field> 
-            <field name="context">{}</field>            
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
         </record>
 
       <menuitem action="mrp_procurement_action3" id="menu_procurement_requisitions" parent="purchase.menu_procurement_management"
-                  name="Requisitions" sequence="5" />	
+                  name="Requisitions" sequence="5" />
 
 
 
@@ -968,7 +968,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="view_warehouse_orderpoint_form" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.form</field>
             <field name="model">stock.warehouse.orderpoint</field>
@@ -1037,5 +1037,6 @@
             name="Bill of Materials"
             res_model="mrp.bom"
             src_model="product.product"/>
+
     </data>
 </openerp>

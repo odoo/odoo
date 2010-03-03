@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-project" id="base.menu_main" name="Project Management" sequence="1"/>
-        <menuitem id="base.menu_pm_resources" name="Resources" parent="base.menu_main" sequence="2"/>
-
         <record id="resource_calendar_form" model="ir.ui.view">
             <field name="name">resource.calendar.form</field>
             <field name="model">resource.calendar</field>
@@ -24,7 +21,6 @@
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
         </record>
-        <menuitem string="Resource Calendar" action="action_resource_calendar_form" id="menu_resource_calendar_form" parent="base.menu_pm_resources"/>
 
         <record id="view_resource_calendar_week_tree" model="ir.ui.view">
             <field name="name">resource.calendar.week.tree</field>
@@ -65,7 +61,6 @@
             </field>
         </record>
 
-
         <act_window
         id="resource_calendar_closing_days"
         name="Closing Days"
@@ -81,7 +76,6 @@
         src_model="resource.calendar"
         view_mode="calendar,tree,form"
         domain="[('calendar_id','=',active_id), ('resource_id','!=',False)]"/>
-
 
         <record id="resource_resource_form" model="ir.ui.view">
             <field name="name">resource.resource.form</field>
@@ -120,8 +114,6 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_resource_resource_tree" id="base.menu_resource_resource_tree" parent="base.menu_pm_resources" />
-
         <record id="resource_calendar_leave_form" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.form</field>
             <field name="model">resource.calendar.leaves</field>
@@ -158,7 +150,19 @@
             <field name="view_mode">tree,form,calendar</field>
         </record>
 
-        <menuitem action="action_resource_calendar_leave_tree" id="menu_resource_calendar_leave_tree" parent="base.menu_pm_resources"/>
+		<!-- Menu for Resource for Long Term Project -->
+		<menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+        <menuitem id="menu_pm_resources_project1" name="Resources" parent="base.menu_main_pm" sequence="2"/>
+		<menuitem action="action_resource_resource_tree" id="menu_resource_resource_tree1" parent="menu_pm_resources_project1"/>
+		<menuitem action="action_resource_calendar_form" id="menu_resource_calendar_form1" parent="menu_pm_resources_project1"/>
+		<menuitem action="action_resource_calendar_leave_tree" id="menu_resource_calendar_leave_tree1" parent="menu_pm_resources_project1"/>
+
+		 <!-- Menu for Resource for MRP-->
+		<menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="3"/>
+        <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root" sequence="2"/>
+		<menuitem action="action_resource_resource_tree" id="menu_resource_resource_tree" parent="menu_pm_resources_mrp" />
+		<menuitem action="action_resource_calendar_form" id="menu_resource_calendar_form" parent="menu_pm_resources_mrp"/>
+		<menuitem action="action_resource_calendar_leave_tree" id="menu_resource_calendar_leave_tree" parent="menu_pm_resources_mrp"/>
 
     </data>
 </openerp>
