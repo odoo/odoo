@@ -6,8 +6,8 @@ class report_crm_fundraising(osv.osv):
     _auto = False
     _inherit = "report.crm.case"
     _columns = {
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]", readonly=True),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]"),
+        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]", readonly=True),
         'probability': fields.float('Avg. Probability', readonly=True),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'amount_costs': fields.float('Est.Cost', readonly=True),
@@ -31,8 +31,7 @@ class report_crm_fundraising(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
-                    sum(planned_revenue) as amount_revenue,
-                    sum(planned_cost) as amount_costs,
+                    sum(planned_revenue) as amount_revenue,                    
                     sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
                     avg(probability)::decimal(16,2) as probability,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
