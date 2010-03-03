@@ -112,6 +112,19 @@
             <field name="view_type">form</field>
         </record>
 
+        <record id="view_phase_project_form1" model="ir.ui.view">
+			<field name="name">phase.project.form1</field>
+			<field name="model">project.project</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="project.edit_project"/>
+			<field name="arch" type="xml">
+				<field name="priority" position="before">
+					<field name="resource_calendar_id"/>
+				</field>
+
+			</field>
+	   </record>
+
     	<record id="view_project_phase_task_form1" model="ir.ui.view">
 			<field name="name">project.phase.task.form1</field>
 			<field name="model">project.task</field>
