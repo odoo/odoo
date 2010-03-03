@@ -5,7 +5,7 @@ class report_crm_claim(osv.osv):
     _name = "report.crm.claim"
     _description = "Claim by user and section"
     _auto = False
-    _inherit = "report.crm.case.user"
+    _inherit = "report.crm.case"
     _columns = {
         'probability': fields.float('Avg. Probability', readonly=True),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
