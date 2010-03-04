@@ -16,11 +16,12 @@
                     <group colspan="4" col="6">
                        	<label string ="" colspan="2"/>
                     	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button string="Open Voucher Entries" name="_action_open_window" type="object"/>
+                    	<button icon="gtk-open" string="Open Voucher Entries" name="_action_open_window" type="object"/>
                    	</group>
                </form>
             </field>
         </record>
+        
         <record id="action_account_voucher_open" model="ir.actions.act_window">
             <field name="name">Open a Voucher Entry</field>
             <field name="res_model">account.voucher.open</field>
@@ -29,6 +30,7 @@
            <field name="view_id" ref="view_account_voucher_open_form"/> 
            <field name="target">new</field>
         </record>
+        
         <menuitem 
 	     	action="action_account_voucher_open" 
 	     	id="menu_wizard_account_voucher_open" 

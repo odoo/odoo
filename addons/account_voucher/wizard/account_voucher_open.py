@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-import time
-import netsvc
-from osv import fields, osv
-import ir
-import pooler
-import mx.DateTime
 from mx.DateTime import RelativeDateTime
+from osv import fields, osv
 from tools import config
+import ir
+import mx.DateTime
+import netsvc
+import pooler
+import time
 
 class account_voucher_open(osv.osv_memory):
     """
@@ -47,7 +47,7 @@ class account_voucher_open(osv.osv_memory):
         Open account voucher form.
         @param cr: the current row, from the database cursor.
         @param uid: the current user’s ID for security checks.
-        @param id: account voucher open’s ID or list of IDs if we want more than one.
+        @param id: List of account voucher open’s IDs.
         @param return:dictionary of account voucher on  given state ,type and account period id.
          """
         
