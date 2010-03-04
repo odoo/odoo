@@ -20,9 +20,33 @@
 #
 ##############################################################################
 
-import wizard_survey
-import wizard_print_survey
-import wizard_browse_answer
-import wizard_print_survey_statistics
+import wizard
+import time
+import pooler
+from random import choice
+import string
+import tools
+from tools.translate import _
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+_survey_form = '''<?xml version="1.0"?>
+<form string="Print Survey Statistics">
+    <field name="survey_ids" colspan="4" nolabel="1"/>
+</form>'''
+
+_survey_fields = {
+    'survey_ids': {'string': 'Survey', 'type': 'many2many', 'relation': 'survey','required':'1'},
+    }
+
+class print_survey_statistics_wizard(wizard.interface):
+    states = {
+        'init' : {
+            'actions' : [],
+            'result' : {'type' : 'form', 'arch' :_survey_form, 'fields' :_survey_fields,\
+                             'state' : [('end', 'Cancel', 'gtk-cancel'), ('print', 'Print', 'gtk-print')]}
+                },
+        'print': {
+            'actions': [],
+            'result': {'type':'print', 'report':'survey.analysis', 'state':'end'}
+        }
+    }
+print_survey_statistics_wizard('wizard.print.survey.statistics')

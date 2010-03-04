@@ -30,7 +30,7 @@ from tools.translate import _
 
 _survey_form = '''<?xml version="1.0"?>
 <form string="Browse Answer">
-    <separator string="Responses" colspan="4"/>
+    <separator string="Answer" colspan="4"/>
      <field name="response_ids" colspan="4" nolabel="1"/>
     <separator string="Print Option" colspan="4"/>
     <field name="orientation" colspan="4"/>
