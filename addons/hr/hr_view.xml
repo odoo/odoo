@@ -377,11 +377,10 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem icon="terp-hr" id="base.menu_hr" name="Human Resources"/>
         <menuitem
             name="Recruitment"
             id="base.menu_crm_case_job_req_main"
-            parent="base.menu_hr"/>
+            parent="menu_hr_root"/>
         <menuitem parent="base.menu_crm_case_job_req_main" id="menu_hr_job" action="action_hr_job" sequence="2"/>
 
     </data>

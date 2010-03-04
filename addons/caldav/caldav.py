@@ -192,7 +192,12 @@ class CalDAV(object):
                 vals = alarm.import_cal(cr, uid, cal_data, context=ctx)
                 self.ical_set(cal_data.name.lower(), vals, 'value')
                 continue
+            if cal_data.name.lower() == 'exdate':
+                exval = map(lambda x: str(x), cal_data.value)
+                self.ical_set(cal_data.name.lower(), ','.join(exval), 'value')
+                continue
             if cal_data.name.lower() in self.__attribute__:
+                
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
                     self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
