@@ -53,6 +53,10 @@ class crm_fundraising(osv.osv):
    
     _defaults = {
                  'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+                 'probability':lambda *a:0.0,       
+                 'planned_cost':lambda *a:0.0,    
+                 'planned_revenue':lambda *a:0.0,    
+                       
     }
 
 crm_fundraising()    

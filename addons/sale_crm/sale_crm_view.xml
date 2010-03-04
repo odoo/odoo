@@ -9,7 +9,8 @@
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
             <xpath expr="/form[@string='Opportunities']/group/button[@string='Schedule Call']" position="after">
-                <button string="Quotation" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/> 
+            	<button string="Convert to Quote" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/>
+                <label colspan="6"  string=""/>
             </xpath>           
         </field>
     </record>
@@ -20,7 +21,7 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="/form/notebook/page[@string='Other data']/field[@name='company_id']" position="after">
+            <xpath expr="/form/notebook/page/field['company_id']" position="after">
                 <field name="section_id" widget='selection'/>
             </xpath>
         </field>
