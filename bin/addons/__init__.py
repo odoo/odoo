@@ -644,6 +644,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                             new_query = ' '.join(query.split())
                             if new_query:
                                 cr.execute(new_query)
+                    elif ext == '.yaml':
+                        tools.convert_yaml_import(cr, m, fp, idref, mode=mode, **kwargs)
                     else:
                         tools.convert_xml_import(cr, m, fp, idref, mode=mode, **kwargs)
                     fp.close()
