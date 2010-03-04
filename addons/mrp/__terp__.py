@@ -72,7 +72,7 @@
         'process/service_product_process.xml',
         'process/procurement_process.xml'
     ],
-    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
+    'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml', 'mrp_test.xml'],
     'installable': True,
     'active': False,
     'certificate': '0032052481373',
