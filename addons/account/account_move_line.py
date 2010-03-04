@@ -523,12 +523,14 @@ class account_move_line(osv.osv):
             if line.reconcile_partial_id:
                 for line2 in line.reconcile_partial_id.line_partial_ids:
                     if not line2.reconcile_id:
-                        merges.append(line2.id)
+                        if line2.id not in merges:
+                            merges.append(line2.id)
                         total += (line2.debit or 0.0) - (line2.credit or 0.0)
                 merges_rec.append(line.reconcile_partial_id.id)
             else:
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
+
         if not total:
             res = self.reconcile(cr, uid, merges+unmerge, context=context)
             return res
