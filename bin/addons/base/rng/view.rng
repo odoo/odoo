@@ -12,7 +12,7 @@
                 <rng:choice>
                     <rng:ref name="notebook"/>
                     <rng:ref name="field"/>
-		    <rng:ref name="shortcut"/>
+		    		<rng:ref name="shortcut"/>
                     <rng:ref name="group"/>
                     <rng:ref name="button"/>
                     <rng:ref name="hpaned" />
@@ -23,6 +23,7 @@
                     <rng:ref name="vpaned"/>
                     <rng:ref name="attribute"/>
                     <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                     <rng:element name="properties"><rng:empty/></rng:element>
                 </rng:choice>
@@ -46,13 +47,14 @@
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
-		    <rng:ref name="shortcut"/>
+		    		<rng:ref name="shortcut"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="tree"/>
                     <rng:ref name="group"/>
                     <rng:ref name="button"/>
                     <rng:ref name="attribute"/>
                     <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
             </rng:zeroOrMore>
@@ -74,6 +76,7 @@
                     <rng:ref name="separator"/>
                     <rng:ref name="filter"/>
                     <rng:ref name="search"/>
+                    <rng:ref name="html"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                     <rng:element name="properties"><rng:empty/></rng:element>
                 </rng:choice>
@@ -84,6 +87,12 @@
     <rng:define name="image">
         <rng:element name="image">
             <rng:attribute name="name"/>
+        </rng:element>
+    </rng:define>
+    
+    <rng:define name="html">
+        <rng:element name="html">
+            <rng:text/>
         </rng:element>
     </rng:define>
 
@@ -111,6 +120,7 @@
                     <rng:ref name="form"/>
                     <rng:ref name="vpaned"/>
                     <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                     <rng:element name="properties"><rng:empty/></rng:element>
                 </rng:choice>
@@ -125,6 +135,7 @@
             <rng:optional><rng:attribute name="domain"/></rng:optional>
             <rng:oneOrMore>
                 <rng:optional><rng:ref name="field"/></rng:optional>
+                <rng:ref name="html"/>
             </rng:oneOrMore>
         </rng:element>
     </rng:define>
@@ -140,6 +151,7 @@
             <rng:zeroOrMore>
                 <rng:optional><rng:ref name="level"/></rng:optional>
                 <rng:optional><rng:ref name="field"/></rng:optional>
+                <rng:ref name="html"/>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -149,6 +161,7 @@
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="any" />
+                <rng:ref name="html"/>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -158,6 +171,7 @@
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="any" />
+                <rng:ref name="html"/>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -190,7 +204,7 @@
                     <rng:ref name="attribute" />
                     <rng:ref name="label" />
                     <rng:ref name="field"/>
-		    <rng:ref name="shortcut"/>
+		    		<rng:ref name="shortcut"/>
                     <rng:ref name="group"/>
                     <rng:ref name="separator"/>
                     <rng:ref name="button"/>
@@ -200,6 +214,7 @@
                     <rng:ref name="hpaned"/>
                     <rng:ref name="vpaned"/>
                     <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
@@ -230,10 +245,11 @@
                     <rng:ref name="separator"/>
                     <rng:ref name="button"/>
                     <rng:ref name="field"/>
-		    <rng:ref name="shortcut"/>
+		    		<rng:ref name="shortcut"/>
                     <rng:ref name="label" />
                     <rng:ref name="group" />
                     <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
                     <rng:element name="properties"><rng:empty/></rng:element>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
@@ -249,6 +265,7 @@
                 <rng:choice>
                     <rng:ref name="any"/>
                     <rng:ref name="button"/>
+                    <rng:ref name="html"/>
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
@@ -269,6 +286,7 @@
                     <rng:ref name="button"/>
                     <rng:ref name="group"/>
                     <rng:ref name="graph"/>
+                    <rng:ref name="html"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
             </rng:zeroOrMore>
@@ -349,6 +367,7 @@
                     <rng:ref name="graph"/>
                     <rng:ref name="filter"/>
                     <rng:ref name="notebook"/>
+                    <rng:ref name="html"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
             </rng:zeroOrMore>
@@ -376,7 +395,7 @@
                     <rng:ref name="separator"/>
                     <rng:ref name="button"/>
                     <rng:ref name="field"/>
-		    <rng:ref name="shortcut"/>
+		    		<rng:ref name="shortcut"/>
                     <rng:ref name="label" />
                     <rng:ref name="group" />
                     <rng:ref name="filter"/>
@@ -386,6 +405,7 @@
                     <rng:ref name="notebook"/>
                     <rng:ref name="hpaned"/>
                     <rng:ref name="vpaned"/>
+                    <rng:ref name="html"/>
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>
@@ -403,6 +423,7 @@
             <rng:optional><rng:attribute name="mode" /></rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
+                <rng:ref name="html"/>
             </rng:oneOrMore>
         </rng:element>
     </rng:define>
@@ -415,6 +436,7 @@
             <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
+                <rng:ref name="html"/>
             </rng:oneOrMore>
         </rng:element>
     </rng:define>
@@ -454,6 +476,7 @@
                     <rng:ref name="button"/>
                     <rng:ref name="group"/>
                     <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
                     <rng:element name="properties"><rng:empty/></rng:element>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
@@ -493,6 +516,7 @@
                     <rng:ref name="separator"/>
                     <rng:ref name="button"/>
                     <rng:ref name="filter"/>
+                    <rng:ref name="html"/>
                     <rng:element name="properties"><rng:empty/></rng:element>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
@@ -528,6 +552,7 @@
             <rng:ref name="button"/>
             <rng:ref name="filter"/>
             <rng:ref name="label" />
+            <rng:ref name="html"/>
         </rng:choice>
     </rng:start>
 </rng:grammar>
