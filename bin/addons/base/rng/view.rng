@@ -92,7 +92,10 @@
     
     <rng:define name="html">
         <rng:element name="html">
-            <rng:text/>
+        	<rng:zeroOrMore>
+        			<rng:text/>
+        			<rng:ref name="any"/>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -135,8 +138,10 @@
             <rng:optional><rng:attribute name="domain"/></rng:optional>
             <rng:oneOrMore>
                 <rng:optional><rng:ref name="field"/></rng:optional>
-                <rng:ref name="html"/>
             </rng:oneOrMore>
+            <rng:zeroOrMore>                
+                <rng:optional><rng:ref name="html"/></rng:optional>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -151,7 +156,7 @@
             <rng:zeroOrMore>
                 <rng:optional><rng:ref name="level"/></rng:optional>
                 <rng:optional><rng:ref name="field"/></rng:optional>
-                <rng:ref name="html"/>
+                <rng:optional><rng:ref name="html"/></rng:optional>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -161,7 +166,7 @@
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="any" />
-                <rng:ref name="html"/>
+                <rng:optional><rng:ref name="html"/></rng:optional>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -170,8 +175,8 @@
         <rng:element name="vpaned">
             <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:zeroOrMore>
-                <rng:ref name="any" />
-                <rng:ref name="html"/>
+                <rng:optional><rng:ref name="any"/></rng:optional>
+                <rng:optional><rng:ref name="html"/></rng:optional>
             </rng:zeroOrMore>
         </rng:element>
     </rng:define>
@@ -423,8 +428,10 @@
             <rng:optional><rng:attribute name="mode" /></rng:optional>
             <rng:oneOrMore>
                 <rng:ref name="field"/>
-                <rng:ref name="html"/>
             </rng:oneOrMore>
+            <rng:zeroOrMore>                
+                <rng:optional><rng:ref name="html"/></rng:optional>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -435,9 +442,11 @@
             <rng:optional><rng:attribute name="type" /></rng:optional>
             <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:oneOrMore>
-                <rng:ref name="field"/>
-                <rng:ref name="html"/>
+                <rng:ref name="field"/>               
             </rng:oneOrMore>
+            <rng:zeroOrMore>                
+                <rng:optional><rng:ref name="html"/></rng:optional>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
