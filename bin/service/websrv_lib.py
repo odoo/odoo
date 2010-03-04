@@ -40,7 +40,7 @@ class AuthRequiredExc(Exception):
         Exception.__init__(self)
         self.atype = atype
         self.realm = realm
-        
+
 class AuthRejectedExc(Exception):
     pass
 
@@ -55,7 +55,7 @@ class AuthProvider:
 
     def authenticate(self, user, passwd, client_address):
         return False
-        
+
     def log(self, msg):
         print msg
 
@@ -63,7 +63,7 @@ class BasicAuthProvider(AuthProvider):
     def setupAuth(self, multi, handler):
         if not multi.sec_realms.has_key(self.realm):
             multi.sec_realms[self.realm] = BasicAuthProxy(self)
-            
+
 
 class AuthProxy:
     """ This class will hold authentication information for a handler,
@@ -109,15 +109,15 @@ class HTTPHandler(SimpleHTTPRequestHandler):
         # print "Handler for %s inited" % str(client_address)
         self.protocol_version = 'HTTP/1.1'
         self.connection = dummyconn()
-    
+
     def handle(self):
         """ Classes here should NOT handle inside their constructor
         """
         pass
-    
+
     def finish(self):
         pass
-    
+
     def setup(self):
         pass
 
@@ -128,7 +128,7 @@ class HTTPDir:
         self.path = path
         self.handler = handler
         self.auth_provider = auth_provider
-        
+
     def matches(self, request):
         """ Test if some request matches us. If so, return
             the matched path. """
@@ -175,14 +175,14 @@ class FixSendError:
 class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
     """ this is a multiple handler, that will dispatch each request
         to a nested handler, iff it matches
-    
+
         The handler will also have *one* dict of authentication proxies,
         groupped by their realm.
     """
 
     protocol_version = "HTTP/1.1"
     default_request_version = "HTTP/0.9"    # compatibility with py2.5
-    
+
     auth_required_msg = """ <html><head><title>Authorization required</title></head>
     <body>You must authenticate to use this service</body><html>\r\r"""
 
@@ -311,7 +311,7 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
         if not self.parse_rawline():
             self.log_message("Could not parse rawline.")
             return
-        # self.parse_request(): # Do NOT parse here. the first line should be the only 
+        # self.parse_request(): # Do NOT parse here. the first line should be the only
         for vdir in self.server.vdirs:
             p = vdir.matches(self.path)
             if p == False:
@@ -350,11 +350,11 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
 class SecureMultiHTTPHandler(MultiHTTPHandler):
     def getcert_fnames(self):
         """ Return a pair with the filenames of ssl cert,key
-        
+
             Override this to direct to other filenames
         """
         return ('server.cert','server.key')
-    
+
     def setup(self):
         import ssl
         certfile, keyfile = self.getcert_fnames()
@@ -384,7 +384,7 @@ class SecureMultiHTTPHandler(MultiHTTPHandler):
 import threading
 class ConnThreadingMixIn:
     """Mix-in class to handle each _connection_ in a new thread.
-    
+
        This is necessary for persistent connections, where multiple
        requests should be handled synchronously at each connection, but
        multiple connections can run in parallel.
@@ -400,7 +400,7 @@ class ConnThreadingMixIn:
         if self.daemon_threads:
             t.setDaemon (1)
         t.start()
-    
+
     def _handle_request2(self):
         """Handle one request, without blocking.
 

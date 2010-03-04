@@ -27,7 +27,7 @@
 
 """ This file contains instance of the http server.
 
-    
+
 """
 from websrv_lib import *
 import netsvc
@@ -43,7 +43,7 @@ try:
     import fcntl
 except ImportError:
     fcntl = None
-    
+
 try:
     from ssl import SSLError
 except ImportError:
@@ -51,7 +51,7 @@ except ImportError:
 
 class ThreadedHTTPServer(ConnThreadingMixIn, SimpleXMLRPCDispatcher, HTTPServer):
     """ A threaded httpd server, with all the necessary functionality for us.
-    
+
         It also inherits the xml-rpc dispatcher, so that some xml-rpc functions
         will be available to the request handler
     """
@@ -191,20 +191,20 @@ def reg_http_service(hts, secure_only = False):
     global httpd, httpsd
     if not isinstance(hts, HTTPDir):
         raise Exception("Wrong class for http service")
-    
+
     if httpd and not secure_only:
         httpd.server.vdirs.append(hts)
-    
+
     if httpsd:
         httpsd.server.vdirs.append(hts)
-    
+
     if (not httpd) and (not httpsd):
         netsvc.Logger().notifyChannel('httpd',netsvc.LOG_WARNING,"No httpd available to register service %s" % hts.path)
     return
 
 import SimpleXMLRPCServer
 class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
-    rpc_paths = [] 
+    rpc_paths = []
     protocol_version = 'HTTP/1.1'
     def _dispatch(self, method, params):
         try:
@@ -235,13 +235,13 @@ def init_xmlrpc():
     reg_http_service(HTTPDir('/xmlrpc/',XMLRPCRequestHandler))
     # Example of http file serving:
     # reg_http_service(HTTPDir('/test/',HTTPHandler))
-    netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
+    netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO,
             "Registered XML-RPC over HTTP")
-            
+
 
 class OerpAuthProxy(AuthProxy):
     """ Require basic authentication..
-    
+
         This is a copy of the BasicAuthProxy, which however checks/caches the db
         as well.
     """
@@ -303,7 +303,7 @@ class OpenERPAuthProvider(AuthProvider):
         except Exception,e:
             netsvc.Logger().notifyChannel("auth",netsvc.LOG_DEBUG,"Fail auth:"+ str(e))
             return False
-        
+
     def log(self, msg):
         netsvc.Logger().notifyChannel("auth",netsvc.LOG_INFO,msg)
 

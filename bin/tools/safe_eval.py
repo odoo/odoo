@@ -30,8 +30,8 @@ import sys
 
 def __init_ebis():
     global __export_bis
-    
-    _evars = [ 'abs', 'all', 'any', 'basestring' , 'bool', 
+
+    _evars = [ 'abs', 'all', 'any', 'basestring' , 'bool',
         'chr', 'cmp','complex', 'dict', 'divmod', 'enumerate',
         'float', 'frozenset', 'getattr', 'hasattr', 'hash',
         'hex', 'id','int', 'iter', 'len', 'list', 'long', 'map', 'max',
@@ -39,12 +39,12 @@ def __init_ebis():
         'reversed', 'round', 'set', 'setattr', 'slice','sorted', 'str',
         'sum', 'tuple','type', 'unichr','unicode', 'xrange',
         'True','False', 'None', 'NotImplemented', 'Ellipsis', ]
-        
+
     if sys.version_info[0:2] >= (2,6):
         _evars.extend(['bin', 'format', 'next'])
     for v in _evars:
         __export_bis[v] = __builtins__[v]
-    
+
 
 __init_ebis()
 
@@ -53,14 +53,14 @@ def safe_eval(expr,sglobals,slocals = None):
     """ A little safer version of eval().
         This one, will use fewer builtin functions, so that only
         arithmetic and logic expressions can really work """
-    
+
     global __export_bis
 
     if not sglobals.has_key('__builtins__'):
         # we copy, because we wouldn't want successive calls to safe_eval
         # to be able to alter the builtins.
         sglobals['__builtins__'] = __export_bis.copy()
-        
+
     return eval(expr,sglobals,slocals)
-    
+
 #eof
