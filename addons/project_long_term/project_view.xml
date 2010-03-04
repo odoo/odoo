@@ -158,6 +158,15 @@
         view_mode="tree,form"
         domain="[('phase_id','=',active_id)]"/>
 
+        <act_window
+        domain="[('project_id', '=', active_id)]"
+        id="act_project_phases"
+        name="Phases"
+        res_model="project.phase"
+        src_model="project.project"
+        view_mode="tree,form"
+        view_type="form" />
+
         <menuitem action="act_project_phase" id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
 
 		<!-- Menu for Resource for Long Term Project -->

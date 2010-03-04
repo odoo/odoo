@@ -514,15 +514,6 @@
             view_mode="tree,form,calendar,graph"
             view_type="form"/>
 
-         <act_window
-            domain="[('project_id', '=', active_id)]"
-            id="act_project_phases"
-            name="Phases"
-            res_model="project.phase"
-            src_model="project.project"
-            view_mode="tree,form"
-            view_type="form"/>
-
          <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
             <field name="model">res.company</field>
