@@ -97,6 +97,7 @@
                 <tree string="Project Phases">
                     <field name="name"/>
                     <field name="project_id" on_change="onchange_project(project_id)"/>
+                    <field name="responsible_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="duration"/>
@@ -105,11 +106,64 @@
             </field>
         </record>
 
+        <record id="view_project_phase_calendar" model="ir.ui.view">
+            <field name="name">project.phase.calendar</field>
+            <field name="model">project.phase</field>
+            <field name="type">calendar</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="responsible_id" date_start="date_start" date_stop="date_end" day_length="12" string="Phases">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="view_project_phase_gantt" model="ir.ui.view">
+            <field name="name">project.phase.gantt</field>
+            <field name="model">project.phase</field>
+            <field name="type">gantt</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <gantt color="responsible_id" date_stop="date_end" date_start="date_start" string="Phases">
+                    <level object="project.project" link="project_id" domain="[]">
+                        <field name="name"/>
+                    </level>
+                </gantt>
+            </field>
+        </record>
+
+        <record id="view_project_phase_search" model="ir.ui.view">
+            <field name="name">project.phase.search</field>
+            <field name="model">project.phase</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Project Phases">
+                    <group colspan="4" col="20">
+	                    <field name="name"/>
+	                    <field name="project_id" widget="selection"/>
+	                    <field name="responsible_id">
+                            <filter domain="[('responsible_id','=',uid)]" help="My Phase" icon="gtk-execute" default="1"/>
+                        </field>	                    
+	                    <field name="date_start"/>
+	                    <field name="date_end"/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'responsible_id'}"/>
+                        <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
+                    </group>                    
+                </search>
+            </field>
+        </record>
 
         <record id="act_project_phase" model="ir.actions.act_window">
             <field name="name">Project phases</field>
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,gantt</field>
+            <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
         <record id="view_phase_project_form1" model="ir.ui.view">
