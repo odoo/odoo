@@ -76,15 +76,6 @@
             <field name="fn">field</field>
         </record>
 
-        <record model="basic.calendar.fields" id="map_event_8">
-			<field name="name" ref="caldav.field_event_priority"/>
-		    <field name="type_id" ref="base_calendar.calendar_lines_event" />
-			<field name="field_id" search="[('name','=','priority'),('model_id.model','=','crm.meeting')]" />
-		    <field name="fn">field</field>
-		    <field name="mapping">{'1': '1', '2': '2', '3': '2','4': '2', '5': '3', '6': '4', '7': '4', '8': '4', '9': '5'}</field>
-		</record>	
-		
-
         <record model="basic.calendar.fields" id="map_event_9">
             <field name="name" ref="caldav.field_event_location"/>
             <field name="type_id" ref="base_calendar.calendar_lines_event" />

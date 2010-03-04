@@ -24,30 +24,70 @@
         <field name="model">crm.meeting</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Meetings">            	
+            <form string="Meetings">
             	<group col="6" colspan="4">
                     <field name="name" select="1" string="Summary"
-            			colspan="4" />   
-                    <field name="categ_id" widget="selection" string="Meeting Type" domain="[('object_id.model', '=', 'crm.meeting')]"/>                 
+            			colspan="4" />
+                    <field name="categ_id" widget="selection" string="Meeting Type" domain="[('object_id.model', '=', 'crm.meeting')]"/>
             		<field name="date" string="Start Date" required="1" on_change="onchange_dates(date,duration,False)"/>
             		<field name="duration" widget="float_time" on_change="onchange_dates(date,duration,False)"/>
             		<field name="date_deadline" string="End Date" required="1" on_change="onchange_dates(date,False,date_deadline)"/>
                     <field name="location" />
                     <field name="alarm_id" string="Reminder" widget="selection" />
                     <group colspan="2" col="4" >
-                            <field name="rrule_type" string="Recurrency"
-                            	on_change="onchange_rrule_type(rrule_type)"
+                           <field name="rrule_type" string="Recurrency"
                             	colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
-                            <button string="Custom"
-            					name="%(base_calendar.action_calendar_custom_rrule_wizard)d"
-            					icon="gtk-save-as" type="action" context="{'model' : 'crm.meeting'}"
-                                attrs="{'invisible': [('rrule_type','!=','custom')]}"
-                                />
-                            <button string="Edit" help="Edit only this Occurrency Meeting" attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
-                			name="%(wizard_edit_this_event)d" icon="gtk-save"
+                            <button string="Edit All" help="Edit all Ourrences of recurrent Meeting" attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
+                			name="%(wizard_edit_this_event)d" icon="gtk-edit"
                 			type="action" context="{'model' : 'crm.meeting', 'date': date, 'date_deadline': date_deadline}" />
                     </group>
-                        
+
+            	</group>
+            	<group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
+            		<separator string="Select data for Custom Rule" colspan="8"/>
+                    <group col="8" colspan="4">
+            			<field name="freq" />
+            			<field name="interval" />
+            			<field name="count"
+            				attrs="{'required' : [('end_date','=',False)]}" />
+            			<field name="end_date"
+            				attrs="{'required' : [('count','&lt;=',0), ('freq', '!=', 'None')]}" />
+            		</group>
+            		<group col="14" colspan="4" name="Select weekdays"
+            			attrs="{'invisible' : [('freq','!=','weekly')]}">
+            			<field name="mo" colspan="1" />
+            			<field name="tu" colspan="1" />
+            			<field name="we" colspan="1" />
+            			<field name="th" colspan="1" />
+            			<field name="fr" colspan="1" />
+            			<field name="sa" colspan="1" />
+            			<field name="su" colspan="1" />
+            			<newline />
+            		</group>
+            		<group col="10" colspan="4"
+            			attrs="{'invisible' : [('freq','!=','monthly'), ('freq','!=','yearly')]}">
+            			<group col="2" colspan="1">
+            				<field name="select1" />
+            			</group>
+            			<group col="2" colspan="1"
+            				attrs="{'invisible' : [('select1','=','day')]}">
+            				<field name="day"
+            					attrs="{'required' : [('select1','=','date')]}" />
+            			</group>
+            			<group col="3" colspan="1"
+            				attrs="{'invisible' : [('select1','=','date')]}">
+            				<field name="byday" string="The"
+            					attrs="{'required' : [('select1','=','day')]}" />
+            				<field name="week_list" nolabel="1"
+            					attrs="{'required' : [('select1','=','day')]}" />
+            			</group>
+            			<group col="1" colspan="1"
+            				attrs="{'invisible' : [('freq','!=','yearly')]}">
+            				<field name="month_list" string="of"
+            					colspan="1"
+            					attrs="{'required' : [('freq','=','yearly')]}" />
+            			</group>
+            		</group>
             	</group>
             	<notebook colspan="4">
             		<page string="Meeting">
@@ -62,11 +102,11 @@
                         <group colspan="4" col="4">
 							 <field name="user_id" />
 	                        <field name="section_id" widget="selection" />
-                            <field name="show_as" string="Show time as"/>            			
+                            <field name="show_as" string="Show time as"/>
                 			<field name="class" string="Privacy"/>
                 			<field name="recurrent_id" invisible="1" />
                 			<field name="recurrent_uid" invisible="1" />
-                			<field name="rrule" invisible="1" />            	
+                			<field name="rrule" groups="base.group_extended" />
 	                    </group>
             			<separator string="Description" colspan="4" />
             			<field name="description" nolabel="1" colspan="4" />
@@ -129,10 +169,8 @@
             					</notebook>
             				</form>
             			</field>
-        		    </page>            		
+        		    </page>
             	</notebook>
-    
-                            	
             </form>
         </field>
     </record>
@@ -145,12 +183,12 @@
             <tree string="Meetings"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id" widget="char"/>
                 <field name="name" string="Subject"/>
-                <field name="partner_id" string="Partner"/>               
+                <field name="partner_id" string="Partner"/>
                 <field name="section_id" />
-                <field name="date" string="Meeting Date"/>                
+                <field name="date" string="Meeting Date"/>
                 <field name="categ_id"/>
                 <field name="user_id"/>
-                <field name="state"/>                
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -210,7 +248,7 @@
                 <field name="name">calendar.attendee.form.inherit</field>
                 <field name="model">calendar.attendee</field>
                 <field name="type">form</field>
-                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_form_view"/>                
+                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_form_view"/>
                 <field name="arch" type="xml">
                     <field name="language" position="after">
                         <field name="categ_id" string="Event Type"/>
@@ -222,7 +260,7 @@
                 <field name="name">calendar.attendee.tree.inherit</field>
                 <field name="model">calendar.attendee</field>
                 <field name="type">tree</field>
-                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_tree_view"/>                
+                <field name="inherit_id" ref="base_calendar.base_calendar_attendee_tree_view"/>
                 <field name="arch" type="xml">
                     <field name="role" position="after">
                         <field name="categ_id" string="Event Type"/>
