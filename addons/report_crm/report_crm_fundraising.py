@@ -7,7 +7,6 @@ class report_crm_fundraising(osv.osv):
     _inherit = "report.crm.case"
     _columns = {
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]"),
-        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]", readonly=True),
         'probability': fields.float('Avg. Probability', readonly=True),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
@@ -25,7 +24,6 @@ class report_crm_fundraising(osv.osv):
                     c.user_id,
                     c.section_id,
                     c.categ_id,
-                    c.stage_id,
                     count(*) as nbr,
                     0 as avg_answers,
                     0.0 as perc_done,
@@ -36,7 +34,7 @@ class report_crm_fundraising(osv.osv):
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     crm_fundraising c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.categ_id,c.stage_id
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.categ_id
             )""")
 report_crm_fundraising()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
