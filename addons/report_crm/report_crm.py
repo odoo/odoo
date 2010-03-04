@@ -45,7 +45,7 @@ class report_crm_case(osv.osv):
                 state = field_name[5:]
                 cr.execute("select count(*) from crm_opportunity where section_id =%s and state='%s'"%(case.section_id.id,state))
                 state_cases = cr.fetchone()[0]
-                perc_state = (state_cases / float(case.nbr_cases) ) * 100
+                perc_state = (state_cases / float(case.nbr) ) * 100
                 
                 res[case.id] = perc_state
             else:
@@ -58,7 +58,7 @@ class report_crm_case(osv.osv):
                     cr.execute("select count(*) from crm_case_log l, ir_model m  where l.model_id=m.id and m.model = '%s'" , model_name)
                     logs = cr.fetchone()[0]
                     
-                    avg_ans = logs / case.nbr_cases
+                    avg_ans = logs / case.nbr
                     res[case.id] = avg_ans       
         
         return res
@@ -68,7 +68,7 @@ class report_crm_case(osv.osv):
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),        
         'nbr': fields.integer('# of Cases', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'avg_answers': fields.function(_get_data,string='Avg. Answers', method=True,type="integer"),
         'perc_done': fields.function(_get_data,string='%Done', method=True,type="float"),
         'perc_cancel': fields.function(_get_data,string='%Cancel', method=True,type="float"),
