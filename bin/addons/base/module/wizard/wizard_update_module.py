@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -27,11 +27,11 @@ class wizard_update_module(wizard.interface):
 
     arch = '''<?xml version="1.0"?>
     <form string="Scan for new modules">
-        <label string="This function will check for new modules in the 'addons' path and on module repositories:" colspan="4" align="0.0"/>
-        <field name="repositories" colspan="4" nolabel="1"/>
+        <label string="This function will check for new modules in the 'addons' path" colspan="4" align="0.0"/>
+        
     </form>'''
     fields = {
-        'repositories': {'type': 'text', 'string': 'Repositories', 'readonly': True},
+        
     }
 
     arch_module = '''<?xml version="1.0"?>
@@ -60,16 +60,11 @@ class wizard_update_module(wizard.interface):
             'type': 'ir.actions.act_window'
         }
 
-    def _get_repositories(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        repository_obj = pool.get('ir.module.repository')
-        ids = repository_obj.search(cr, uid, [])
-        res = repository_obj.read(cr, uid, ids, ['name', 'url'], context)
-        return {'repositories': '\n'.join(map(lambda x: x['name']+': '+x['url'], res))}
+
 
     states = {
         'init': {
-            'actions': [_get_repositories],
+            'actions': [],
             'result': {'type': 'form', 'arch': arch, 'fields': fields,
                 'state': [
                     ('end', 'Cancel', 'gtk-cancel'),

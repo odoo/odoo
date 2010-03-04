@@ -188,7 +188,7 @@ class users(osv.osv):
         'rules_id': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules'),
         'company_id': fields.many2one('res.company', 'Company', required=True,
             help="The company this user is currently working for."),
-        'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Accepted Companies'),
+        'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
             help="Sets the language for the user's user interface, when UI "
                  "translations are available"),

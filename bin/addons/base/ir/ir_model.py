@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
+import logging
+from operator import itemgetter
 from osv import fields,osv
 import ir, re
 import netsvc
@@ -417,6 +418,7 @@ ir_model_access()
 
 class ir_model_data(osv.osv):
     _name = 'ir.model.data'
+    __logger = logging.getLogger('addons.base.'+_name)
     _columns = {
         'name': fields.char('XML Identifier', required=True, size=128),
         'model': fields.char('Object', required=True, size=64),
@@ -599,22 +601,37 @@ class ir_model_data(osv.osv):
             wf_service.trg_write(uid, model, id, cr)
 
         cr.commit()
-        if not config.get('import_partial', False):
-            logger = netsvc.Logger()
+        if not config.get('import_partial'):
             for (model, res_id) in self.unlink_mark.keys():
                 if self.pool.get(model):
-                    logger.notifyChannel('init', netsvc.LOG_INFO, 'Deleting %s@%s' % (res_id, model))
+                    self.__logger.info('Deleting %s@%s', res_id, model)
                     try:
                         self.pool.get(model).unlink(cr, uid, [res_id])
-                        id = self.unlink_mark[(model, res_id)]
                         if id:
-                            self.unlink(cr, uid, [id])
-                            cr.execute('DELETE FROM ir_values WHERE value=%s', ('%s,%s' % (model, res_id),))
+                            ids = self.search(cr, uid, [('res_id','=',res_id),
+                                                        ('model','=',model)])
+                            self.__logger.debug('=> Deleting %s: %s',
+                                                self._name, ids)
+                            if len(ids) > 1 and \
+                               self.__logger.isEnabledFor(logging.WARNING):
+                                self.__logger.warn(
+                                    'Got %d %s for (%s, %d): %s',
+                                    len(ids), self._name, model, res_id,
+                                    map(itemgetter('module','name'),
+                                        self.read(cr, uid, ids,
+                                                  ['name', 'module'])))
+                            self.unlink(cr, uid, ids)
+                            cr.execute(
+                                'DELETE FROM ir_values WHERE value=%s',
+                                ('%s,%s'%(model, res_id),))
                         cr.commit()
-                    except Exception, e:
+                    except Exception:
                         cr.rollback()
-                        logger.notifyChannel('init', netsvc.LOG_ERROR, e)
-                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\nThere should be some relation that points to this resource\nYou should manually fix this and restart --update=module' % (res_id, model))
+                        self.__logger.exception(
+                            'Could not delete id: %d of model %s\nThere '
+                            'should be some relation that points to this '
+                            'resource\nYou should manually fix this and '
+                            'restart with --update=module', res_id, model)
         return True
 ir_model_data()
 

@@ -634,7 +634,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                     name, ext = os.path.splitext(filename)
                     fp = tools.file_open(opj(m, filename))
                     if ext == '.csv':
-                        tools.convert_csv_import(cr, m, os.path.basename(filename), fp.read(), idref, mode=mode)
+                        noupdate=False
+                        if kind == 'init':
+                            noupdate=True
+                        tools.convert_csv_import(cr, m, os.path.basename(filename), fp.read(), idref, mode=mode, noupdate=noupdate)
                     elif ext == '.sql':
                         queries = fp.read().split(';')
                         for query in queries:

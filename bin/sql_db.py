@@ -21,7 +21,7 @@
 
 __all__ = ['db_connect', 'close_db']
 
-import netsvc
+import logging
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE
 from psycopg2.psycopg1 import cursor as psycopg1cursor
 from psycopg2.pool import PoolError
@@ -60,15 +60,11 @@ import re
 re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
 re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 
-
-def log(msg, lvl=netsvc.LOG_DEBUG2):
-    logger = netsvc.Logger()
-    logger.notifyChannel('sql', lvl, msg)
-
 sql_counter = 0
 
 class Cursor(object):
     IN_MAX = 1000
+    __logger = logging.getLogger('db.cursor')
 
     def check(f):
         @wraps(f)
@@ -102,15 +98,16 @@ class Cursor(object):
             # pool, preventing some operation on the database like dropping it.
             # This can also lead to a server overload.
             msg = "Cursor not closed explicitly\n"  \
-                  "Cursor was created at %s:%s" % self.__caller
-            log(msg, netsvc.LOG_WARNING)
+                  "Cursor was created at %s:%s"
+            self.__logger.warn(msg, *self.__caller)
             self.close()
 
     @check
     def execute(self, query, params=None):
         if '%d' in query or '%f' in query:
-            log(query, netsvc.LOG_WARNING)
-            log("SQL queries cannot contain %d or %f anymore. Use only %s", netsvc.LOG_WARNING)
+            self.__logger.warn(query)
+            self.__logger.warn("SQL queries cannot contain %d or %f anymore. "
+                               "Use only %s")
             if params:
                 query = query.replace('%d', '%s').replace('%f', '%s')
 
@@ -121,19 +118,17 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            logger= netsvc.Logger()
-            logger.notifyChannel('sql_db', netsvc.LOG_ERROR, "Programming error: %s, in query %s" % (pe, query))
+            self.__logger.error("Programming error: %s, in query %s" % (pe, query))
             raise
-        except Exception, e:
-            log("bad query: %s" % self._obj.query)
-            log(e)
+        except Exception:
+            self.__logger.exception("bad query: %s", self._obj.query)
             raise
 
         if self.sql_log:
             delay = mdt.now() - now
             delay = delay.seconds * 1E6 + delay.microseconds
 
-            log("query: %s" % self._obj.query)
+            self.__logger.debug("query: %s", self._obj.query)
             self.sql_log_count+=1
             res_from = re_from.match(query.lower())
             if res_from:
@@ -158,14 +153,16 @@ class Cursor(object):
             if sqllogs[type]:
                 sqllogitems = sqllogs[type].items()
                 sqllogitems.sort(key=lambda k: k[1][1])
-                log("SQL LOG %s:" % (type,))
+                self.__logger.debug("SQL LOG %s:", type)
                 for r in sqllogitems:
                     delay = timedelta(microseconds=r[1][1])
-                    log("table: %s: %s/%s" %(r[0], str(delay), r[1][0]))
+                    self.__logger.debug("table: %s: %s/%s",
+                                        r[0], delay, r[1][0])
                     sum+= r[1][1]
                 sqllogs[type].clear()
             sum = timedelta(microseconds=sum)
-            log("SUM %s:%s/%d [%d]" % (type, str(sum), self.sql_log_count, sql_counter))
+            self.__logger.debug("SUM %s:%s/%d [%d]",
+                                type, sum, self.sql_log_count, sql_counter)
             sqllogs[type].clear()
         process('from')
         process('into')
@@ -213,6 +210,8 @@ class Cursor(object):
 
 class ConnectionPool(object):
 
+    __logger = logging.getLogger('db.connection_pool')
+
     def locked(fun):
         @wraps(fun)
         def _locked(self, *args, **kwargs):
@@ -228,7 +227,6 @@ class ConnectionPool(object):
         self._connections = []
         self._maxconn = max(maxconn, 1)
         self._lock = threading.Lock()
-        self._logger = netsvc.Logger()
 
     def __repr__(self):
         used = len([1 for c, u in self._connections[:] if u])
@@ -236,8 +234,8 @@ class ConnectionPool(object):
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
     def _debug(self, msg):
-        self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, repr(self))
-        self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, msg)
+        self.__logger.debug(repr(self))
+        self.__logger.debug(msg)
 
     @locked
     def borrow(self, dsn):
@@ -293,17 +291,15 @@ class ConnectionPool(object):
 
 
 class Connection(object):
-    def _debug(self, msg):
-        self._logger.notifyChannel('Connection', netsvc.LOG_DEBUG, msg)
+    __logger = logging.getLogger('db.connection')
 
     def __init__(self, pool, dbname):
         self.dbname = dbname
         self._pool = pool
-        self._logger = netsvc.Logger()
 
     def cursor(self, serialized=False):
         cursor_type = serialized and 'serialized ' or ''
-        self._debug('create %scursor to "%s"' % (cursor_type, self.dbname,))
+        self.__logger.debug('create %scursor to "%s"' % (cursor_type, self.dbname,))
         return Cursor(self._pool, self.dbname, serialized=serialized)
 
     def serialized_cursor(self):

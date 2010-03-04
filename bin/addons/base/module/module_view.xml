@@ -38,7 +38,7 @@
         <menuitem action="action_module_category_tree" id="menu_action_module_category_tree" parent="base.menu_management"/>
 
         <!-- Click on a category -->
-        
+
         <record id="view_module_filter" model="ir.ui.view">
             <field name="name">ir.module.module.list.select</field>
             <field name="model">ir.module.module</field>
@@ -51,14 +51,14 @@
                         <filter icon="terp-sale" string="To be upgraded" domain="[('state','in', ['to upgrade', 'to remove', 'to install'])]"/>
                         <separator orientation="vertical"/>
                        <field name="name" select="1"/>
-                       <field name="state" readonly="1" select="1"/> 
-    
+                       <field name="state" readonly="1" select="1"/>
+
 					</group>
-	              
+
                </search>
             </field>
         </record>
-        
+
 
         <record id="action_module_open_categ" model="ir.actions.act_window">
             <field name="name">Modules</field>
@@ -66,7 +66,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('category_id','=',active_id)]</field>
-           
+
         </record>
         <record id="ir_action_module_category" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
@@ -154,43 +154,7 @@
             <field name="domain"/>
              <field name="search_view_id" ref="view_module_filter"/>
         </record>
-        <menuitem action="open_module_tree" id="menu_module_tree" parent="base.menu_management"/>
-
-        <record id="repository_form" model="ir.ui.view">
-            <field name="name">ir.module.repository.form</field>
-            <field name="model">ir.module.repository</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Repository">
-                    <field name="name" select="1"/>
-                    <field name="sequence"/>
-                    <field name="url" select="1" widget="url"/>
-                    <field name="active" select="1"/>
-                    <field colspan="4" name="filter"/>
-                </form>
-            </field>
-        </record>
-        <record id="repository_tree" model="ir.ui.view">
-            <field name="name">ir.module.repository.tree</field>
-            <field name="model">ir.module.repository</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Repository list">
-                    <field name="sequence"/>
-                    <field name="active"/>
-                    <field name="name"/>
-                    <field name="url"/>
-                </tree>
-            </field>
-        </record>
-        <record id="open_repository_tree" model="ir.actions.act_window">
-            <field name="name">Repository list</field>
-            <field name="res_model">ir.module.repository</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'active_test': False}</field>
-        </record>
-        <menuitem action="open_repository_tree" id="menu_module_repository_tree" parent="base.menu_management"/>
+        <menuitem action="open_module_tree" id="menu_module_tree" parent="base.menu_management"/>       
 
     </data>
 </openerp>

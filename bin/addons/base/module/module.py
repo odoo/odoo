@@ -37,29 +37,6 @@ import netsvc
 from tools.parse_version import parse_version
 from tools.translate import _
 
-
-class module_repository(osv.osv):
-    _name = "ir.module.repository"
-    _description = "Module Repository"
-    _columns = {
-        'name': fields.char('Name', size=128),
-        'url': fields.char('URL', size=256, required=True),
-        'sequence': fields.integer('Sequence', required=True),
-        'filter': fields.char('Filter', size=128, required=True,
-            help='Regexp to search module on the repository webpage:\n'
-            '- The first parenthesis must match the name of the module.\n'
-            '- The second parenthesis must match the whole version number.\n'
-            '- The last parenthesis must match the extension of the module.'),
-        'active': fields.boolean('Active'),
-    }
-    _defaults = {
-        'sequence': lambda *a: 5,
-        'filter': lambda *a: 'href="([a-zA-Z0-9_]+)-('+release.major_version+'.(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?)(\.zip)"',
-        'active': lambda *a: 1,
-    }
-    _order = "sequence"
-module_repository()
-
 class module_category(osv.osv):
     _name = "ir.module.category"
     _description = "Module Category"
@@ -298,7 +275,6 @@ class module(osv.osv):
 
     # update the list of available packages
     def update_list(self, cr, uid, context={}):
-        robj = self.pool.get('ir.module.repository')
         res = [0, 0] # [update, add]
 
         # iterate through installed modules and mark them as being so
@@ -345,50 +321,6 @@ class module(osv.osv):
                 self._update_dependencies(cr, uid, id, terp.get('depends', []))
                 self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
 
-        for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
-            try:
-                index_page = urllib.urlopen(repository.url).read()
-            except IOError, e:
-                if e.errno == 21:
-                    raise orm.except_orm(_('Error'),
-                            _("This url '%s' must provide an html file with links to zip modules") % (repository.url))
-                else:
-                    raise
-            modules = re.findall(repository.filter, index_page, re.I+re.M)
-            mod_sort = {}
-            for m in modules:
-                name, version, extension = m[0], m[1], m[-1]
-                if not version or version == 'x': # 'x' version was a mistake
-                    version = '0'
-                if name in mod_sort:
-                    if parse_version(version) <= parse_version(mod_sort[name][0]):
-                        continue
-                mod_sort[name] = [version, extension]
-            for name in mod_sort.keys():
-                version, extension = mod_sort[name]
-                url = repository.url+'/'+name+'-'+version+extension
-                ids = self.search(cr, uid, [('name','=',name)])
-                if not ids:
-                    self.create(cr, uid, {
-                        'name': name,
-                        'published_version': version,
-                        'url': url,
-                        'state': 'uninstalled',
-                    })
-                    res[1] += 1
-                else:
-                    id = ids[0]
-                    installed_version = self.read(cr, uid, id, ['latest_version'])['latest_version']
-                    if not installed_version or installed_version == 'x': # 'x' version was a mistake
-                        installed_version = '0'
-                    if parse_version(version) > parse_version(installed_version):
-                        self.write(cr, uid, id, { 'url': url })
-                        res[0] += 1
-                    published_version = self.read(cr, uid, id, ['published_version'])['published_version']
-                    if published_version == 'x' or not published_version:
-                        published_version = '0'
-                    if parse_version(version) > parse_version(published_version):
-                        self.write(cr, uid, id, {'published_version': version})
         return res
 
     def download(self, cr, uid, ids, download=True, context=None):
