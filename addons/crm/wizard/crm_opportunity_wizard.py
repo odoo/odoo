@@ -150,9 +150,15 @@ class opportunity2meeting(wizard.interface):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        opportunity = opportunity_case_obj.browse(cr, uid, data['id'], context=context)
+        partner_id = opportunity.partner_id and opportunity.partner_id.id or False
+        name = opportunity.name
+        email = opportunity.email_from
+        section_id = opportunity.section_id and opportunity.section_id.id or False        
         return {            
             'name': _('Meetings'),
-            'domain' : "[('opportunity_id','in',%s)]"%(data['ids']),         
+            'domain' : "[('user_id','=',%s)]"%(uid),  
+            'context': {'default_partner_id': partner_id, 'default_section_id': section_id, 'default_email_from': email, 'default_state':'open', 'default_name':name},
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
