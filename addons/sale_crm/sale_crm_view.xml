@@ -9,7 +9,10 @@
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
             <xpath expr="/form[@string='Opportunities']/group/button[@string='Schedule Call']" position="after">
-                <button string="Quotation" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/> 
+             	<group colspan="7" col="7">
+             	<label colspan="6"  string=""/>
+                	<button string="Convert to Quote" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/>
+                </group>
             </xpath>           
         </field>
     </record>
