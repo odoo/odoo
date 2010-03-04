@@ -130,7 +130,6 @@ class hr_evaluation(osv.osv):
             'survey_id',
             'Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
-        'phase_id': fields.many2one('hr_evaluation.plan.phase', 'Phase'),
         'state': fields.selection([
             ('draft','Draft'),
             ('wait','Plan In Progress'),
