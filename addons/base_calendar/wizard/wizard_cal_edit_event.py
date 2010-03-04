@@ -22,9 +22,9 @@
 import wizard
 import pooler
 
-class event_edit_this(wizard.interface):
+class event_edit_all(wizard.interface):
     event_form = """<?xml version="1.0"?>
-                <form string="Edit this Occurence">
+                <form string="Edit all Occurrences">
                     <separator string="" colspan="4" />
                     <newline />
                     <field name='name' colspan="4" />
@@ -38,9 +38,9 @@ class event_edit_this(wizard.interface):
                 </form>"""
 
     event_fields = {
-        'name': {'string': 'Title', 'type': 'char', 'size': 64}, 
-        'date': {'string': 'Start Date', 'type': 'datetime'}, 
-        'date_deadline': {'string': 'End Date', 'type': 'datetime'}, 
+        'name': {'string': 'Title', 'type': 'char', 'size': 64, 'required': True}, 
+        'date': {'string': 'Start Date', 'type': 'datetime', 'required': True}, 
+        'date_deadline': {'string': 'End Date', 'type': 'datetime', 'required': True}, 
         'location': {'string': 'Location', 'type': 'char', 'size': 124}, 
         'alarm_id': {'string': 'Reminder', 'type': 'many2one', 'relation': 'res.alarm'}, 
     }
@@ -58,17 +58,8 @@ class event_edit_this(wizard.interface):
     def _modify_this(self, cr, uid, datas, context=None):
         model = datas.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
-        new_id = model_obj.modify_this(cr, uid, [datas['id']], datas['form'], context)
-        value = {
-                'name': 'New event', 
-                'view_type': 'form', 
-                'view_mode': 'form,tree', 
-                'res_model': model, 
-                'res_id': new_id, 
-                'view_id': False, 
-                'type': 'ir.actions.act_window', 
-            }
-        return value
+        model_obj.modify_all(cr, uid, [datas['id']], datas['form'], context)
+        return {}
 
     states = {
         'init': {
@@ -82,6 +73,6 @@ class event_edit_this(wizard.interface):
         }
     }
 
-event_edit_this('calendar.event.edit.this')
+event_edit_all('calendar.event.edit.all')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

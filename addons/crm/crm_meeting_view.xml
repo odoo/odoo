@@ -38,7 +38,7 @@
                            <field name="rrule_type" string="Recurrency"
                             	colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
                             <button string="Edit All" help="Edit all Ourrences of recurrent Meeting" attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
-                			name="%(wizard_edit_this_event)d" icon="gtk-edit"
+                			name="%(wizard_edit_all_events)d" icon="gtk-edit"
                 			type="action" context="{'model' : 'crm.meeting', 'date': date, 'date_deadline': date_deadline}" />
                     </group>
 

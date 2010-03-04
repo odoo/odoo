@@ -806,12 +806,13 @@ rule or repeating pattern for anexception to a recurrence set"),
     _defaults = {
          'class': lambda *a: 'public', 
          'show_as': lambda *a: 'busy', 
-         'freq':  lambda *x: 'daily', 
+         'freq':  lambda *x: 'None', 
          'select1':  lambda *x: 'date', 
          'interval':  lambda *x: 1, 
     }
     
     def modify_this(self, cr, uid, ids, defaults, context=None, *args):
+        ids = map(lambda x: base_calendar_id2real_id(x), ids)
         datas = self.read(cr, uid, ids[0], context=context)
         defaults.update({
                'recurrent_uid': base_calendar_id2real_id(datas['id']), 
@@ -820,10 +821,26 @@ rule or repeating pattern for anexception to a recurrence set"),
                'rrule': ''
                     })
         exdate = datas['exdate'] and datas['exdate'].split(',') or []
-        exdate.append(defaults.get('date'))
+        if defaults.get('date'):
+            exdate.append(defaults.get('date'))
         self.write(cr, uid, ids, {'exdate': ','.join(exdate)}, context=context)
         new_id = self.copy(cr, uid, ids[0], default=defaults, context=context)
         return new_id
+
+    def modify_all(self, cr, uid, ids, defaults, context=None, *args):
+        ids = map(lambda x: base_calendar_id2real_id(x), ids)
+        defaults.pop('id')
+        defaults.update({'table': self._table})
+
+        qry = "UPDATE %(table)s set name='%(name)s', \
+                        date='%(date)s', date_deadline='%(date_deadline)s'"
+        if defaults.get('alarm_id'):
+            qry += ", alarm_id=%(alarm_id)s"
+        if defaults.get('location'):
+            qry += ", location='%(location)s'"
+        qry += "WHERE id=%s" % (ids[0])
+        cr.execute(qry % (defaults))
+        return True
 
     def get_recurrent_ids(self, cr, uid, select, base_start_date, base_until_date, limit=100):
         if not limit:
@@ -968,6 +985,10 @@ rule or repeating pattern for anexception to a recurrence set"),
             select = ids
         new_ids = []
         for id in select:
+            if len(str(id).split('-')) > 1:
+                data = self.read(cr, uid, id, ['date', 'date_deadline'])
+                self.modify_this(cr, uid, [id], vals, context)
+                continue
             id = base_calendar_id2real_id(id)
             if not id in new_ids:
                 new_ids.append(id)
