@@ -29,24 +29,37 @@ class repair_cancel(osv.osv_memory):
     
     _columns = {
         'repair_id': fields.many2one('mrp.repair', 'Repair ID', readonly=True),
-        'cancel': fields.boolean('Cancel Repair'),
     }
     
-    _defaults = {
-        'cancel': lambda *a: False,
-    }
-            
     def cancel_repair(self, cr, uid, ids, context):
-        repair_cancel = self.browse(cr, uid, ids[0])
-        repair_obj = self.pool.get('mrp.repair').browse(cr, uid, [repair_cancel.repair_id.id])
-        if repair_obj[0].invoice_id and repair_cancel.cancel:
-            self.pool.get('mrp.repair').write(cr, uid, repair_cancel.repair_id.id, {'state':'cancel'})
+        cancel = self.browse(cr, uid, ids[0])
+        repair_obj = self.pool.get('mrp.repair').browse(cr, uid, [cancel.repair_id.id])
+        
+        if repair_obj[0].invoiced or repair_obj[0].invoice_method == 'none':
+            self.pool.get('mrp.repair').write(cr, uid, cancel.repair_id.id, {'state':'cancel'})
             mrp_line_obj = self.pool.get('mrp.repair.line')
             for line in repair_obj:
                 mrp_line_obj.write(cr, uid, [l.id for l in line.operations], {'state': 'cancel'})
         else:
             raise osv.except_osv(_('Warning!'),_('Repair is not cancelled. It is not invoiced.'))
         return {}
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        record_id = context and context.get('record_id', False) or False
+        res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if record_id:
+            repair_obj = self.pool.get('mrp.repair').browse(cr, uid, [record_id])[0]
+            if not repair_obj.invoice_id:
+                res['arch'] = """ <form string="Cancel Repair" colspan="4">
+                                <field name="repair_id" invisible="1"/>
+                                <newline/>
+                                <group col="2" colspan="2">
+                                    <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
+                                    <button name="cancel_repair" string="Yes" type="object" icon="gtk-ok"/>
+                                </group>
+                            </form>                             
+                        """
+        return res
     
     def default_get(self, cr, uid, fields, context=None):
         record_id = context and context.get('record_id', False) or False
