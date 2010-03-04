@@ -5,43 +5,43 @@
 	Leads by user and section
 	-->
 
-        <record id="view_crm_lead_user_tree" model="ir.ui.view">
-            <field name="name">report.crm.lead.user.tree</field>
-            <field name="model">report.crm.lead.user</field>
-            <field name="inherit_id" ref="view_crm_case_user_tree"/>
+        <record id="view_crm_lead_tree" model="ir.ui.view">
+            <field name="name">report.crm.lead.tree</field>
+            <field name="model">report.crm.lead</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <field name="nbr" position="after">
-                	<field name="delay_close"/>
-                    <field name="amount_revenue"/>
-                    <field name="amount_costs"/>
-                    <field name="amount_revenue_prob"/>
-                    <field name="probability"/>
-                </field>
+            <tree string="Leads">
+				<field name="name" />
+				<field name="month"/>
+				<field name="nbr" string="#Leads"/>
+                <field name="delay_close"/>
+                <field name="section_id" invisible="1"/>
+                <field name="state"  invisible="1"/>
+                <field name="user_id" invisible="1"/>
+				<field name="stage_id"  invisible="1"/>
+                <field name="categ_id" invisible="1"/>
+             </tree>
             </field>
         </record>
-        <record id="view_crm_lead_user_form" model="ir.ui.view">
-            <field name="name">report.crm.lead.user.form</field>
-            <field name="model">report.crm.lead.user</field>
-            <field name="inherit_id" ref="view_crm_case_user_form"/>
+        <record id="view_crm_lead_form" model="ir.ui.view">
+            <field name="name">report.crm.lead.form</field>
+            <field name="model">report.crm.lead</field>
+            <field name="inherit_id" ref="view_crm_case_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="nbr" position="after">
                 	<field name="delay_close"/>
-                    <field name="amount_revenue"/>
-                    <field name="amount_costs"/>
-                    <field name="amount_revenue_prob"/>
-                    <field name="probability"/>
+                	<field name="stage_id"/>
                 </field>
             </field>
         </record>
         
-        <record id="view_crm_lead_user_graph" model="ir.ui.view">
-            <field name="name">report.crm.lead.user.graph</field>
-            <field name="model">report.crm.lead.user</field>
+        <record id="view_crm_lead_graph" model="ir.ui.view">
+            <field name="name">report.crm.lead.graph</field>
+            <field name="model">report.crm.lead</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Leads by User and Section" type="bar">
+                <graph orientation="horizontal" string="Leads" type="bar">
                     <field name="state"/>
                     <field name="nbr" operator="+"/>
                     <field group="True" name="user_id"/>
@@ -49,437 +49,41 @@
             </field>
         </record>
 
-        <record id="view_crm_lead_user_filter" model="ir.ui.view">
-            <field name="name">report.crm.lead.user.select</field>
-            <field name="model">report.crm.lead.user</field>
-            <field name="inherit_id" ref="view_crm_case_user_filter"/>
+        <record id="view_crm_lead_filter" model="ir.ui.view">
+            <field name="name">report.crm.lead.select</field>
+            <field name="model">report.crm.lead</field>
+            <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <field name="state" position="before">
-               </field>
+                  <field name="user_id" position="before"/>
             </field>
         </record>
-        
-        <record id="action_report_crm_lead_user_tree" model="ir.actions.act_window">
-            <field name="name">Leads by User and Section</field>
-            <field name="res_model">report.crm.lead.user</field>
+       	
+  
+        <record id="action_report_crm_lead" model="ir.actions.act_window">
+            <field name="name">Leads</field>
+            <field name="res_model">report.crm.lead</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_crm_lead_user_graph"/>
-            <field name="search_view_id" ref="view_crm_lead_user_filter"/>
+            <field name="view_id" ref="view_crm_lead_graph"/>
+            <field name="search_view_id" ref="view_crm_lead_filter"/>
+           
         </record>
-        <menuitem name="Leads" id="menu_crm_leads_tree" parent="crm.next_id_52"/>
-        <menuitem action="action_report_crm_lead_user_tree" id="menu_crm_lead_user_tree" parent="menu_crm_leads_tree"/>
-        
-        <!-- # Leads by section and category of case -->
+               	
+       	<record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_crm_lead_tree"/>
+	        <field name="act_window_id" ref="action_report_crm_lead"/>
+	    </record>        
+                     	
+       	<record model="ir.actions.act_window.view" id="action_report_crm_lead_graph">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">graph</field>
+	        <field name="view_id" ref="view_crm_lead_graph"/>
+	        <field name="act_window_id" ref="action_report_crm_lead"/>
+	    </record>        
 
-        <record id="view_crm_lead_categ_tree" model="ir.ui.view">
-            <field name="name">report.crm.lead.categ.tree</field>
-            <field name="model">report.crm.lead.categ</field>
-            <field name="inherit_id" ref="view_crm_case_categ_tree"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <field name="nbr" position="after">
-                    <field name="delay_close"/>
-                    <field name="amount_revenue"/>
-                    <field name="amount_costs"/>
-                    <field name="amount_revenue_prob"/>
-                    <field name="probability"/>
-                </field>
-            </field>
-        </record>
-        <record id="view_crm_lead_categ_form" model="ir.ui.view">
-            <field name="name">report.crm.lead.categ.form</field>
-            <field name="model">report.crm.lead.categ</field>
-            <field name="inherit_id" ref="view_crm_case_categ_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <field name="nbr" position="after">
-                    <field name="delay_close"/>
-                    <field name="amount_revenue"/>
-                    <field name="amount_costs"/>
-                    <field name="amount_revenue_prob"/>
-                    <field name="probability"/>
-                </field>
-            </field>
-        </record>
-
-		<record id="view_crm_lead_categ_graph" model="ir.ui.view">
-            <field name="name">report.crm.lead.categ.graph</field>
-            <field name="model">report.crm.lead.categ</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Leads by Section and Categories" type="bar">
-                    <field name="state"/>
-                    <field name="nbr" operator="+"/>
-                    <field group="True" name="categ_id"/>
-                </graph>
-            </field>
-        </record>
-
-		<record id="view_crm_lead_categ_filter" model="ir.ui.view">
-            <field name="name">report.crm.lead.categ.select</field>
-            <field name="model">report.crm.lead.categ</field>
-			<field name="inherit_id" ref="view_crm_case_categ_filter"/>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <field name="state" position="before">
-                </field>
-            </field>
-        </record>
-
-        <record id="action_report_crm_lead_categ_tree" model="ir.actions.act_window">
-            <field name="name">Leads by Categories and Section</field>
-            <field name="res_model">report.crm.lead.categ</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_crm_lead_categ_graph"/>
-            <field name="search_view_id" ref="view_crm_lead_categ_filter"/>
-        </record>
-        <menuitem action="action_report_crm_lead_categ_tree" id="menu_crm_lead_categ_tree" parent="menu_crm_leads_tree"/>
-        
-        <!-- Leads by Section  -->
-
-        <record id="view_report_crm_lead_section_tree" model="ir.ui.view">
-            <field name="name">report.crm.lead.section.tree</field>
-            <field name="model">report.crm.lead.section</field>
-            <field name="inherit_id" ref="view_report_crm_case_section_tree"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <field name="nbr_cases" position="after">
-	                <field name="avg_answers"/>
-	                <field name="perc_done" select="2"/>
-                    <field name="perc_cancel" select="2"/>
-                    <field name="delay_close"/>
-                </field>
-            </field>
-        </record>
-
-        <record id="view_report_crm_lead_section_graph" model="ir.ui.view">
-            <field name="name">report.crm.lead.section.graph</field>
-            <field name="model">report.crm.lead.section</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Leads by Section" type="bar">
-                    <field name="name"/>
-                    <field name="nbr_cases" operator="+"/>
-                </graph>
-            </field>
-        </record>
-
-		<record id="view_report_crm_lead_section_filter" model="ir.ui.view">
-            <field name="name">report.crm.lead.section.select</field>
-            <field name="model">report.crm.lead.section</field>
-            <field name="inherit_id" ref="view_report_crm_case_section_filter"/>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <field name="nbr_cases" position="before">
-                </field>
-            </field>
-        </record>
-
-        <record id="action_report_crm_lead_section_tree" model="ir.actions.act_window">
-            <field name="name">Leads by Section</field>
-            <field name="res_model">report.crm.lead.section</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_report_crm_lead_section_graph"/>
-            <field name="search_view_id" ref="view_report_crm_lead_section_filter"/>
-        </record>
-        <menuitem action="action_report_crm_lead_section_tree" id="menu_crm_lead_section_tree" parent="menu_crm_leads_tree"/>
-     
-     
-	<!--  Cases by section and stage   -->
-	   <record model="ir.ui.view" id="view_crm_lead_section_stage_tree">
-	        <field name="name">Leads Report - Sections and Stage(Tree)</field>
-	        <field name="model">report.crm.lead.section.stage</field>
-	        <field name="inherit_id" ref="view_crm_case_section_stage_tree"/>
-	        <field name="type">tree</field>
-	        <field name="arch" type="xml">
-	            <field name="nbr" position="after">
-	            	<field name="categ_id"/>
-	            	<field name="stage_id" select="2"/>
-	               	<field name="amount_revenue" select="2"/>
-	               	<field name="delay_close"/>
-	           </field>
-	        </field>
-	    </record>
-	    <record model="ir.ui.view" id="view_crm_lead_section_stage_form">
-	        <field name="name">Leads Report - Sections and Stage(Form)</field>
-	        <field name="model">report.crm.lead.section.stage</field>
-	        <field name="type">form</field>
-	        <field name="arch" type="xml">
-	            <field name="nbr" position="after">
-	            	<field name="categ_id"/>
-	            	<field name="stage_id" select="2"/>
-	               	<field name="amount_revenue" select="2"/>
-	               	<field name="delay_close"/>
-	           </field>
-	        </field>
-	    </record>
-	    <record model="ir.ui.view" id="view_crm_lead_section_stage_graph">
-	        <field name="name">Leads Report - Sections and Stage(Graph)</field>
-	        <field name="model">report.crm.lead.section.stage</field>
-	        <field name="type">graph</field>
-	        <field name="arch" type="xml">
-	            <graph string="Leads by Section and Stage" type="bar" orientation="horizontal">
-	                <field name="stage_id"/>
-	                <field name="amount_revenue" operator="+"/>
-	                <field name="section_id" group="True"/>
-	            </graph>
-	        </field>
-	    </record>
-		<record id="view_crm_lead_section_stage_filter" model="ir.ui.view">
-	            <field name="name">Leads Report - Sections and Stage(Select)</field>
-	            <field name="model">report.crm.lead.section.stage</field>
-	            <field name="type">search</field>
-	            <field name="arch" type="xml">
-	                <field name="state" position="before">
-	                </field>
-	            </field>
-	        </record>
-	
-	    <record model="ir.actions.act_window" id="action_report_crm_lead_section_stage_tree">
-	        <field name="res_model">report.crm.lead.section.stage</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">graph,tree</field>
-	        <field name="view_id" ref="view_crm_lead_section_stage_tree"/>
-	        <field name="search_view_id" ref="view_crm_lead_section_stage_filter"/>
-	    </record>
-	    
-	    #
-	    # Leads by section and type
-	    #
-
-	    <record model="ir.ui.view" id="view_crm_lead_section_categ_tree">
-	        <field name="name">CRM Report - Sections and Type(Tree)</field>
-	        <field name="model">report.crm.lead.section.type</field>
-	        <field name="inherit_id" ref="view_crm_case_section_categ_tree"/>
-	        <field name="type">tree</field>
-	        <field name="arch" type="xml">
-	            <field name="user_id" position="after">
-	                <field name="type_id"/>
-	                <field name="stage_id"/>
-	                <field name="amount_revenue"/>
-	                <field name="delay_close"/>
-	            </field>
-	        </field>
-	    </record>
-	    <record model="ir.ui.view" id="view_crm_lead_section_categ_form">
-	        <field name="name">CRM Report - Sections and Type(Form)</field>
-	        <field name="model">report.crm.lead.section.type</field>
-	        <field name="inherit_id" ref="view_crm_case_section_categ_form"/>
-	        <field name="type">form</field>
-	        <field name="arch" type="xml">
-	            <field name="user_id" position="after">
-	                <field name="type_id"/>
-	                <field name="stage_id"/>
-	                <field name="amount_revenue"/>
-	                <field name="delay_close"/>
-	            </field>
-	        </field>
-	    </record>
-	    
-	    <record model="ir.ui.view" id="view_crm_lead_section_categ_graph">
-	        <field name="name">CRM Report - Sections and Type(Graph)</field>
-	        <field name="model">report.crm.lead.section.type</field>
-	        <field name="type">graph</field>
-	        <field name="arch" type="xml">
-	            <graph string="Leads by Section and Type" type="bar" orientation="horizontal">
-	                <field name="type_id"/>
-	                <field name="amount_revenue" operator="+"/>
-	                <field name="section_id" group="True"/>
-	            </graph>
-	        </field>
-	    </record>
-	    <record id="view_crm_lead_section_categ_filter" model="ir.ui.view">
-	            <field name="name">CRM Report - Sections and Type(Select)</field>
-	            <field name="model">report.crm.lead.section.type</field>
-	            <field name="inherit_id" ref="view_crm_case_section_categ_filter"/>
-	            <field name="type">search</field>
-	            <field name="arch" type="xml">
-	                <field name="section_id" position="after">
-		                <field name="type_id"/>
-		            </field>
-	            </field>
-	        </record>
-	
-	    <record model="ir.actions.act_window" id="action_report_crm_lead_section_categ_tree">
-	        <field name="res_model">report.crm.lead.section.type</field>
-	        <field name="name">Leads by section and type</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">graph,tree</field>
-	        <field name="search_view_id" ref="view_crm_lead_section_categ_filter"/>
-	    </record>
-	    <record model="ir.actions.act_window.view" id="action_crm_lead_section_categ_graph">
-	       	<field name="sequence" eval="1"/>
-	       	<field name="view_mode">graph</field>
-	   		<field name="view_id" ref="view_crm_lead_section_categ_graph"/>
-	   		<field name="act_window_id" ref="action_report_crm_lead_section_categ_tree"/>
-	    </record>
-	    <record model="ir.actions.act_window.view" id="action_crm_lead_section_categ_tree">
-	       <field name="sequence" eval="2"/>
-	       <field name="view_mode">tree</field>
-	       <field name="view_id" ref="view_crm_lead_section_categ_tree"/>
-	       <field name="act_window_id" ref="action_report_crm_lead_section_categ_tree"/>
-	    </record>
-        <menuitem action="action_report_crm_lead_section_categ_tree" id="menu_crm_lead_section_categ_tree" parent="menu_crm_leads_tree"/>
-        
-        #
-	    # Leads by section, category and stage
-	    #
-
-	    <record model="ir.ui.view" id="view_crm_lead_section_categ_stage_tree">
-	        <field name="name">CRM Report - Section, Category and Stage(Tree)</field>
-	        <field name="model">report.crm.lead.section.categ.stage</field>
-	        <field name="inherit_id" ref="view_crm_case_section_categ_stage_tree"/>
-	        <field name="type">tree</field>
-	        <field name="arch" type="xml">
-	            <field name="user_id" position="after">
-	                <field name="categ_id"/>
-	                <field name="stage_id"/>
-	                <field name="delay_close"/>
-	            </field>
-	        </field>
-	    </record>
-	    <record model="ir.ui.view" id="view_crm_lead_section_categ_stage_form">
-	        <field name="name">CRM Report - Section, Category and Stage(Form)</field>
-	        <field name="model">report.crm.lead.section.categ.stage</field>
-	        <field name="inherit_id" ref="view_crm_case_section_categ_stage_form"/>
-	        <field name="type">form</field>
-	        <field name="arch" type="xml">
-	            <field name="user_id" position="after">
-	                <field name="categ_id"/>
-	                <field name="stage_id"/>
-	                <field name="delay_close"/>
-	            </field>
-	        </field>
-	    </record>
-	    
-	    <record model="ir.ui.view" id="view_crm_lead_section_categ_stage_graph">
-	        <field name="name">CRM Report - Section, Category and Stage(Select)</field>
-	        <field name="model">report.crm.lead.section.categ.stage</field>
-	        <field name="type">graph</field>
-	        <field name="arch" type="xml">
-	            <graph string="Leads by Section, Category and Stage" type="bar" orientation="horizontal">
-	                <field name="categ_id"/>
-	                <field name="nbr" operator="+"/>
-	                <field name="section_id" group="True"/>
-	            </graph>
-	        </field>
-	    </record>
-	    <record id="view_crm_lead_section_categ_stage_filter" model="ir.ui.view">
-	            <field name="name">CRM Report - Section, Category and Stage(Select)</field>
-	            <field name="model">report.crm.lead.section.categ.stage</field>
-	            <field name="inherit_id" ref="view_crm_case_section_categ_filter"/>
-	            <field name="type">search</field>
-	            <field name="arch" type="xml">
-	                <field name="section_id" position="after">
-		                <field name="categ_id"/>
-		                <field name="stage_id"/>
-		            </field>
-	            </field>
-	        </record>
-	
-	    <record model="ir.actions.act_window" id="action_report_crm_lead_section_categ_stage_tree">
-	        <field name="res_model">report.crm.lead.section.categ.stage</field>
-	        <field name="name">Leads by section, category and stage</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">graph,tree</field>
-	        <field name="search_view_id" ref="view_crm_lead_section_categ_stage_filter"/>
-	    </record>
-	    <record model="ir.actions.act_window.view" id="action_crm_lead_section_categ_stage_graph">
-	       	<field name="sequence" eval="1"/>
-	       	<field name="view_mode">graph</field>
-	   		<field name="view_id" ref="view_crm_lead_section_categ_stage_graph"/>
-	   		<field name="act_window_id" ref="action_report_crm_lead_section_categ_stage_tree"/>
-	    </record>
-	    <record model="ir.actions.act_window.view" id="action_crm_lead_section_categ_stage_tree">
-	       <field name="sequence" eval="2"/>
-	       <field name="view_mode">tree</field>
-	       <field name="view_id" ref="view_crm_lead_section_categ_stage_tree"/>
-	       <field name="act_window_id" ref="action_report_crm_lead_section_categ_stage_tree"/>
-	    </record>
-        <menuitem action="action_report_crm_lead_section_categ_stage_tree" id="menu_crm_lead_section_categ_stage_tree" parent="menu_crm_leads_tree"/>
-        
-        #
-	    # Leads by section, category and type
-	    #
-
-	    <record model="ir.ui.view" id="view_crm_lead_section_categ_type_tree">
-	        <field name="name">CRM Report - Section, Category and Type(Tree)</field>
-	        <field name="model">report.crm.lead.section.categ.type</field>
-	        <field name="inherit_id" ref="view_crm_case_section_categ_type_tree"/>
-	        <field name="type">tree</field>
-	        <field name="arch" type="xml">
-	            <field name="user_id" position="after">
-	                <field name="categ_id"/>
-	                <field name="type_id"/>
-	                <field name="stage_id"/>
-	                <field name="delay_close"/>
-	            </field>
-	        </field>
-	    </record>
-	    <record model="ir.ui.view" id="view_crm_lead_section_categ_type_form">
-	        <field name="name">CRM Report - Section, Category and Type(Form)</field>
-	        <field name="model">report.crm.lead.section.categ.type</field>
-	        <field name="inherit_id" ref="view_crm_case_section_categ_type_form"/>
-	        <field name="type">form</field>
-	        <field name="arch" type="xml">
-	            <field name="user_id" position="after">
-	                <field name="categ_id"/>
-	                <field name="type_id"/>
-	                <field name="stage_id"/>
-	                <field name="delay_close"/>
-	            </field>
-	        </field>
-	    </record>
-	    
-	    <record model="ir.ui.view" id="view_crm_lead_section_categ_type_graph">
-	        <field name="name">CRM Report - Section, Category and Type(Select)</field>
-	        <field name="model">report.crm.lead.section.categ.type</field>
-	        <field name="type">graph</field>
-	        <field name="arch" type="xml">
-	            <graph string="Leads by Section, Category and Type" type="bar" orientation="horizontal">
-	                <field name="type_id"/>
-	                <field name="nbr" operator="+"/>
-	                <field name="section_id" group="True"/>
-	            </graph>
-	        </field>
-	    </record>
-	    <record id="view_crm_lead_section_categ_type_filter" model="ir.ui.view">
-	            <field name="name">CRM Report - Section, Category and Type(Select)</field>
-	            <field name="model">report.crm.lead.section.categ.type</field>
-	            <field name="inherit_id" ref="view_crm_case_section_categ_type_filter"/>
-	            <field name="type">search</field>
-	            <field name="arch" type="xml">
-	                <field name="section_id" position="after">
-		                <field name="categ_id" select="1"/>
-		                <field name="type_id" select="1"/>
-		                <field name="stage_id" select="1"/>
-		            </field>
-	            </field>
-	        </record>
-	
-	    <record model="ir.actions.act_window" id="action_report_crm_lead_section_categ_type_tree">
-	        <field name="res_model">report.crm.lead.section.categ.type</field>
-	        <field name="name">Leads by section, category and type</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">graph,tree</field>
-	        <field name="search_view_id" ref="view_crm_lead_section_categ_type_filter"/>
-	    </record>
-	    <record model="ir.actions.act_window.view" id="action_crm_lead_section_categ_type_graph">
-	       	<field name="sequence" eval="1"/>
-	       	<field name="view_mode">graph</field>
-	   		<field name="view_id" ref="view_crm_lead_section_categ_type_graph"/>
-	   		<field name="act_window_id" ref="action_report_crm_lead_section_categ_type_tree"/>
-	    </record>
-	    <record model="ir.actions.act_window.view" id="action_crm_lead_section_categ_type_tree">
-	       <field name="sequence" eval="2"/>
-	       <field name="view_mode">tree</field>
-	       <field name="view_id" ref="view_crm_lead_section_categ_type_tree"/>
-	       <field name="act_window_id" ref="action_report_crm_lead_section_categ_type_tree"/>
-	    </record>
-        <menuitem action="action_report_crm_lead_section_categ_type_tree" id="menu_crm_lead_section_categ_type_tree" parent="menu_crm_leads_tree"/>
+        <menuitem name="Leads" id="menu_crm_leads_tree" parent="base.next_id_64" action="action_report_crm_lead"/>       
   </data>
 </openerp>

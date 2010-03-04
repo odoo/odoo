@@ -78,7 +78,7 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="Tasks">
-                            <field colspan="4" name="tasks_id" nolabel="1" widget="one2many_list"/>
+                            <field colspan="4" name="tasks_id" nolabel="1" widget="one2many_list" context="{'default_project_id':project_id, 'default_sprint_id':sprint_id, 'default_product_backlog_id':active_id}"/>
                         </page>
                     </notebook>
                     <group col="7" colspan="4">
@@ -103,7 +103,7 @@
                         <filter default="1"
                             icon="terp-project"
                             string="Current"
-                            domain="[('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open'])]"
+                            domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open'])]"
                             help="Current Backlogs"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-project" string="Draft" domain="[('state','=','draft')]" help="Draft Backlogs"/>
@@ -184,17 +184,17 @@
                     <notebook colspan="4">
                         <page string="Sprint Info">
                             <group colspan="2" col="2">
-                                <separator string="Owners"/>
+                                <separator string="Owners" colspan="2"/>
                                 <field name="product_owner_id"/>
                                 <field name="scrum_master_id"/>
                             </group>
                             <group colspan="2" col="2">
-                                <separator string="Dates"/>
+                                <separator string="Dates" colspan="2"/>
                                 <field name="date_start" select="1"/>
                                 <field name="date_stop"/>
                             </group>
                             <group colspan="2" col="2">
-                                <separator string="Planning"/>
+                                <separator string="Planning" colspan="2"/>
                                 <field name="planned_hours" widget="float_time"/>
                                 <field name="expected_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time"/>
@@ -456,7 +456,7 @@
             <field name="arch" type="xml">
                 <field name="project_id" position="after">
                     <field name="sprint_id" widget="selection" context="{'sprint_invisible':False}">
-                        <filter icon="terp-project" string="Current" context="{'sprint_invisible':False}" domain="[('state','=','open')]" help="Current Sprints"/>
+                        <filter icon="terp-project" string="Current" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                     </field>
                 </field>
             </field>

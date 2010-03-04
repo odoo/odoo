@@ -192,7 +192,12 @@ class CalDAV(object):
                 vals = alarm.import_cal(cr, uid, cal_data, context=ctx)
                 self.ical_set(cal_data.name.lower(), vals, 'value')
                 continue
+            if cal_data.name.lower() == 'exdate':
+                exval = map(lambda x: str(x), cal_data.value)
+                self.ical_set(cal_data.name.lower(), ','.join(exval), 'value')
+                continue
             if cal_data.name.lower() in self.__attribute__:
+                
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
                     self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
@@ -248,15 +253,15 @@ class CalDAV(object):
                                      data[map_field], ical, context=context)
                     elif data[map_field]:
                         if map_type in ("char", "text"):
-                            vevent.add(field).value = tools.ustr(data[map_field]) 
-                        elif map_type in ('datetime', 'date') and data[map_field]:
                             if field in ('exdate'):
-                                vevent.add(field).value = [parser.parse(data[map_field])]
+                                vevent.add(field).value = map(parser.parse, (data[map_field]).split(','))
                             else:
-                                dtfield = vevent.add(field)
-                                dtfield.value = parser.parse(data[map_field])
-                                if tzval:
-                                    dtfield.params['TZID'] = [tzval.title()]
+                                vevent.add(field).value = tools.ustr(data[map_field]) 
+                        elif map_type in ('datetime', 'date') and data[map_field]:
+                            dtfield = vevent.add(field)
+                            dtfield.value = parser.parse(data[map_field])
+                            if tzval:
+                                dtfield.params['TZID'] = [tzval.title()]
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
@@ -275,11 +280,13 @@ class CalDAV(object):
     def check_import(self, cr, uid, vals, context={}):
         ids = []
         model_obj = self.pool.get(context.get('model'))
+        recur_pool = {}
         try:
             for val in vals:
                 exists, r_id = uid2openobjectid(cr, val['id'], context.get('model'), \
                                                                  val.get('recurrent_id'))
                 if val.has_key('create_date'): val.pop('create_date')
+                u_id = val.get('id', None)
                 val.pop('id')
                 if exists and r_id:
                     val.update({'recurrent_uid': exists})
@@ -289,8 +296,14 @@ class CalDAV(object):
                     model_obj.write(cr, uid, [exists], val)
                     ids.append(exists)
                 else:
-                    event_id = model_obj.create(cr, uid, val)
-                    ids.append(event_id)
+                    if u_id in recur_pool and val.get('recurrent_id'):
+                        val.update({'recurrent_uid': recur_pool[u_id]})
+                        revent_id = model_obj.create(cr, uid, val)
+                        ids.append(revent_id)
+                    else:
+                        event_id = model_obj.create(cr, uid, val)
+                        recur_pool[u_id] = event_id
+                        ids.append(event_id)
         except Exception, e:
             raise osv.except_osv(('Error !'), (str(e)))
         return ids
@@ -369,6 +382,7 @@ class Calendar(CalDAV, osv.osv):
     def import_cal(self, cr, uid, content, data_id=None, context=None):
         if not context:
             context = {}
+        vals = []
         ical_data = base64.decodestring(content)
         parsedCal = vobject.readOne(ical_data)
         if not data_id:
@@ -385,11 +399,12 @@ class Calendar(CalDAV, osv.osv):
                                 })
                 self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower(), context=context)
                 val = self.parse_ics(cr, uid, child, cal_children=cal_children, context=context)
+                vals.append(val)
                 obj = self.pool.get(cal_children[child.name.lower()])
-                if hasattr(obj, 'check_import'):
-                    obj.check_import(cr, uid, [val], context=context)
-                else:
-                    self.check_import(cr, uid, [val], context=context)
+        if hasattr(obj, 'check_import'):
+            obj.check_import(cr, uid, vals, context=context)
+        else:
+            self.check_import(cr, uid, vals, context=context)
         return {}
 Calendar()
     

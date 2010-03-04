@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,7 +29,7 @@
     "description": """
     Module for resource management. You can manage:
     * Leave/Holidays or Days off of the company
-    
+
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
@@ -37,11 +37,11 @@
     'init_xml': [],
     'update_xml': [
         #'security/resource_security.xml',
-#        'security/ir.model.access.csv',        
-        'resource_view.xml',        
+#        'security/ir.model.access.csv',
+        'resource_view.xml',
     ],
-    'demo_xml': [#'resource_demo.xml'
-                ],
+    'demo_xml': ['resource_demo.xml'
+    ],
     'installable': True,
     'active': False,
     'certificate': None,

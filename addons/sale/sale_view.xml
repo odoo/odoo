@@ -408,6 +408,25 @@
             </field>
         </record>
 
+        <record id="view_sales_order_uninvoiced_line_filter" model="ir.ui.view">
+            <field name="name">sale.order.uninvoiced.line</field>
+            <field name="model">sale.order.line</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Uninvoiced Lines">
+                    <field name="order_id" select="1"/>
+                    <field name="product_id" select="1"/>
+                    <newline />
+                    <group expand="1" string="Group By..." colspan="9" col="8">
+                        <filter string="Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
+                        <!--
+                        <filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'order_partner_id'}"/>
+                        -->
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_order_line_tree2" model="ir.actions.act_window">
             <field name="name">Uninvoiced Lines</field>
             <field name="type">ir.actions.act_window</field>
@@ -415,6 +434,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
+            <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="filter" eval="True"/>
         </record>
 

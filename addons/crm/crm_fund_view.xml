@@ -37,7 +37,7 @@
         <field name="arch" type="xml">
             <tree string="Funds Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
-                <field name="name" string="Funds"/>
+                <field name="name" string="Fund Description"/>
                 <field name="categ_id"/>
                 <field name="type_id" string="Payment Mode"/>
                 <field name="planned_cost" string="Amount"/>
@@ -197,7 +197,7 @@
                            <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Funds"/>
                            <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Funds"/>
                        </field>
-                       <field name="name" select='1'/>
+                       <field name="name" select='1' string="Fund Description"/>
                        <field name="user_id" select="1" widget="selection"/>
 					   <field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
 							<filter icon="terp-crm"

@@ -134,10 +134,6 @@ class project(osv.osv):
         'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."),
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed."),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."),
-        'resource_calendar_id': fields.many2one('resource.calendar', 'Working Time', help="Timetable working hours to adjust the gantt diagram report"),
-#        'state': fields.selection([('template', 'Template'), ('open', 'Running'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True,
-#                                  help='The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
-#                                 \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages'),
      }
     _order = "sequence"
@@ -256,25 +252,8 @@ class task(osv.osv):
             res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
         return res
 
-    def onchange_planned(self, cr, uid, ids, project, user_id = False,planned=0.0, effective=0.0,date_start=None,occupation_rate=0.0):
-        result = {}
-        if date_start:
-            resource_pool = self.pool.get('resource.resource')
-            project_pool = self.pool.get('project.project')
-            resource_calendar = self.pool.get('resource.calendar')
-            dt_start = mx.DateTime.strptime(date_start,'%Y-%m-%d %H:%M:%S')
-            resource_id = resource_pool.search(cr,uid,[('user_id','=',user_id)])
-            if resource_id:
-                resource_obj = resource_pool.browse(cr,uid,resource_id)[0]
-                hrs = planned/(float(occupation_rate) * resource_obj.time_efficiency)
-                calendar_id = resource_obj.calendar_id.id
-            else:
-                hrs = float(planned / occupation_rate)
-                calendar_id = project_pool.browse(cr,uid,project).resource_calendar_id .id
-            work_times = resource_calendar.interval_get(cr, uid, calendar_id or False, dt_start, hrs or 0.0,resource_id or False)
-            result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-        result['remaining_hours'] = planned-effective
-        return {'value':result}
+    def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
+       return {'value':{'remaining_hours' : planned - effective}}
 
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
@@ -315,7 +294,6 @@ class task(osv.osv):
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
-        'occupation_rate': fields.float('Occupation Rate', help='The occupation rate fields indicates how much of his time a user is working on a task. A 100% occupation rate means the user works full time on the tasks. The ending date of a task is computed like this: Starting Date + Duration / Occupation Rate.'),
         'planned_hours': fields.float('Planned Hours', required=True, help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
         'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True, help="Computed using the sum of the task work done."),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,4), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
@@ -339,7 +317,6 @@ class task(osv.osv):
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'project_id': _default_project,
-        'occupation_rate':lambda *a: '1',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
     _order = "sequence, priority, date_start, id"
@@ -478,83 +455,6 @@ class task(osv.osv):
                     index = types.index(typeid)
                     self.write(cr, uid, typ.id, {'type': index and types[index-1] or False})
         return True
-
-    def constraint_date_start(self,cr,uid,task,date_end,context=None):
-       # Recursive call for all previous tasks if change in date_start < older time
-
-       resource_cal_pool = self.pool.get('resource.calendar')
-       resource_pool = self.pool.get('resource.resource')
-       calendar_id = task.project_id.resource_calendar_id.id
-       hours = task.remaining_hours / task.occupation_rate
-       resource_id = resource_pool.search(cr,uid,[('user_id','=',task.user_id.id)])
-       if resource_id:
-            resource_obj = resource_pool.browse(cr,uid,resource_id[0])
-            calendar_id = resource_obj.calendar_id.id
-            hours = task.planned_hours/(float(task.occupation_rate) * resource_obj.time_efficiency)
-       work_time = resource_cal_pool.interval_min_get(cr, uid, calendar_id or False, date_end, hours or 0.0,resource_id or False)
-       dt_start = work_time[0][0].strftime('%Y-%m-%d %H:%M:%S')
-       self.write(cr,uid,[task.id],{'date_start':dt_start,'date_end':date_end.strftime('%Y-%m-%d %H:%M:%S')})
-
-    def constraint_date_end(self,cr,uid,task,date_start,context=None):
-       # Recursive call for all next tasks if change in date_end > older time
-
-       resource_cal_pool = self.pool.get('resource.calendar')
-       resource_pool = self.pool.get('resource.resource')
-       calendar_id = task.project_id.resource_calendar_id.id
-       hours = task.remaining_hours / task.occupation_rate
-       resource_id = resource_pool.search(cr,uid,[('user_id','=',task.user_id.id)])
-       if resource_id:
-            resource_obj = resource_pool.browse(cr,uid,resource_id[0])
-            calendar_id = resource_obj.calendar_id.id
-            hours = task.planned_hours/(float(task.occupation_rate) * resource_obj.time_efficiency)
-       work_time = resource_cal_pool.interval_get(cr, uid, calendar_id or False, date_start, hours or 0.0,resource_id or False)
-       dt_end = work_time[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-       self.write(cr,uid,[task.id],{'date_start':date_start.strftime('%Y-%m-%d %H:%M:%S'),'date_end':dt_end})
-
-    def write_old(self, cr, uid, ids, vals,context=None):
-
-        if not context:
-            context = {}
-
-        if context.get('scheduler',False):
-            return super(task, self).write(cr, uid, ids, vals, context=context)
-
-# if the task is performed by a resource then its calendar and efficiency also taken
-# otherwise the project's working calendar considered
-        tasks = self.browse(cr,uid,ids[0])
-        resource_cal_pool = self.pool.get('resource.calendar')
-        resource_pool = self.pool.get('resource.resource')
-        calendar_id = tasks.project_id.resource_calendar_id.id
-        hrs = tasks.remaining_hours / tasks.occupation_rate
-        resource_id = resource_pool.search(cr,uid,[('user_id','=',tasks.user_id.id)])
-        if resource_id:
-            resource_obj = resource_pool.browse(cr,uid,resource_id[0])
-            calendar_id = resource_obj.calendar_id.id
-            hrs = tasks.planned_hours/(float(tasks.occupation_rate) * resource_obj.time_efficiency)
-
-# write method changes the date_start and date_end
-# for previous and next tasks respectively based on valid condition
-        if vals.get('date_start'):
-            if vals['date_start'] < tasks.date_start:
-                dt_start = mx.DateTime.strptime(vals['date_start'],'%Y-%m-%d %H:%M:%S')
-                work_times = resource_cal_pool.interval_get(cr, uid, calendar_id or False, dt_start, hrs or 0.0,resource_id or False)
-                vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-                super(task, self).write(cr, uid, ids, vals, context=context)
-
-                for prv_task in tasks.parent_ids:
-                   self.constraint_date_start(cr,uid,prv_task,dt_start)
-
-        if vals.get('date_end'):
-            if vals['date_end'] > tasks.date_end:
-                dt_end = mx.DateTime.strptime(vals['date_end'],'%Y-%m-%d %H:%M:%S')
-                hrs = tasks.remaining_hours / tasks.occupation_rate
-                work_times = resource_cal_pool.interval_min_get(cr, uid, calendar_id or False, dt_end, hrs or 0.0,resource_id or False)
-                vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
-                super(task, self).write(cr, uid, ids, vals, context=context)
-
-                for next_task in tasks.child_ids:
-                   self.constraint_date_end(cr,uid,next_task,dt_end)
-        return super(task, self).write(cr, uid, ids, vals, context=context)
 
 task()
 

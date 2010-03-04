@@ -126,6 +126,10 @@ class base_action_rule(osv.osv):
             obj.state = action.act_state
             write['state'] = action.act_state
 
+        if hasattr(obj, 'categ_id') and action.act_categ_id:
+            obj.categ_id = action.act_categ_id
+            write['categ_id'] = action.act_categ_id.id
+
         if hasattr(obj, 'priority') and action.act_priority:
             obj.priority = action.act_priority
             write['priority'] = action.act_priority

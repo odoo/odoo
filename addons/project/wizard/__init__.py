@@ -21,9 +21,7 @@
 
 import close_task
 import task_delegate
-import compute_tasks_date
 import duplicate_template_wizard
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

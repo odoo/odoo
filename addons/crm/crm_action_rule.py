@@ -188,6 +188,7 @@ class base_action_rule_line(osv.osv):
         'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),        
         'regex_history' : fields.char('Regular Expression on Case History', size=128),
         'act_section_id': fields.many2one('crm.case.section', 'Set section to'),        
+        'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
         'act_mail_to_partner': fields.boolean('Mail to partner',help="Check this if you want the rule to send an email to the partner."),        
     }
 

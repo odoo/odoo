@@ -21,6 +21,7 @@
 
 import time
 from osv import fields, osv
+from mx import DateTime as dt
 
 class hr_evaluation_plan(osv.osv):
     _name = "hr_evaluation.plan"
@@ -75,12 +76,35 @@ class hr_employee(osv.osv):
     _inherit="hr.employee"
     _columns = {
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Evaluation Plan'),
-        'evaluation_date': fields.date('Next Evaluation', help="Date of the next evaluation"),
+        'evaluation_date': fields.date('Next Evaluation', help="Date of the next evaluation",readonly=True),
     }
-    def onchange_evaluation_plan_id(self, *args):
-        # return the right evaluation date
-        pass
+    
+    def onchange_evaluation_plan_id(self,cr,uid,ids,evaluation_plan_id,context={}):
+        evaluation_date = self.browse(cr, uid, ids)[0].evaluation_date or ''
+        evaluation_plan_obj=self.pool.get('hr_evaluation.plan')
+        if evaluation_plan_id:
+            for evaluation_plan in evaluation_plan_obj.browse(cr,uid,[evaluation_plan_id]):
+                if not evaluation_date:
+                   evaluation_date=(dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d'))+ dt.RelativeDateTime(months=+evaluation_plan.month_first)).strftime('%Y-%m-%d')
+                else:
+                   evaluation_date=(dt.ISO.ParseAny(evaluation_date)+ dt.RelativeDateTime(months=+evaluation_plan.month_next)).strftime('%Y-%m-%d')
+        return {'value': {'evaluation_date':evaluation_date}}
 hr_employee()
+
+class hr_evaluation_interview(osv.osv):
+    _name = "hr.evaluation.interview"
+    _inherit = "survey.request"
+    
+    def default_get(self, cr, uid, fields, context={}):
+        data = super(hr_evaluation_interview, self).default_get(cr, uid, fields, context)
+        if context.has_key('phase_id'):
+            data['survey_id'] =self.pool.get('hr_evaluation.plan.phase').browse(cr, uid, context['phase_id']).survey_id.id
+        return data
+
+    _columns = {
+        'user_to_review_id': fields.many2one('hr.employee', 'Employee'),
+    }
+hr_evaluation_interview()
 
 class hr_evaluation(osv.osv):
     _name = "hr_evaluation.evaluation"
@@ -89,7 +113,6 @@ class hr_evaluation(osv.osv):
     _columns = {
         'date': fields.date("Evaluation Deadline", required=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
-        'manager_id': fields.many2one('res.users', "Manager", required=True),
         'note_summary': fields.text('Evaluation Summary'),
         'note_action': fields.text('Action Plan',
             help="If the evaluation does not meet the expectations, you can propose"+
@@ -101,7 +124,7 @@ class hr_evaluation(osv.osv):
             ('3','Exceeds expectations'),
             ('4','Significantly exceeds expectations'),
         ], "Overall Rating", help="This is the overall rating on that summarize the evaluation"),
-        'survey_request_ids': fields.many2many('survey.request',
+        'survey_request_ids': fields.many2many('hr.evaluation.interview',
             'hr_evaluation_evaluation_requests',
             'evaluation_id',
             'survey_id',
@@ -138,5 +161,4 @@ class hr_evaluation(osv.osv):
         return True
 
 hr_evaluation()
-
 

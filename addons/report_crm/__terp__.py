@@ -24,13 +24,13 @@
     'name': 'CRM Management - Reporting',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
-    'description': """A module that adds new reports based on CRM cases.
-    Case By section, Case By category""",
+    'description': """A module that adds new reports based on Leads, Opportunities, Phonecalls, Claims, FunRising.
+    """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['crm'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 
+    'update_xml': [#'security/ir.model.access.csv', 
                    'report_crm_view.xml', 
                    'report_crm_lead_view.xml',
                    'report_crm_claim_view.xml',
