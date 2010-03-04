@@ -19,41 +19,31 @@
 #
 ##############################################################################
 
+from osv import fields, osv
+from service import web_services
+import time
 import wizard
+import pooler
 
-qty1_form = '''<?xml version="1.0"?>
-<form string="Price list">
-    <field name="price_list" />
-    <field name="qty1" colspan="2" />
-    <field name="qty2" colspan="2" />
-    <field name="qty3" colspan="2" />
-    <field name="qty4" colspan="2" />
-    <field name="qty5" colspan="2" />
+class product_price_list(osv.osv_memory):
+    _name = "product.price.list"
+    _description = "Product Price List"
 
-</form>'''
-qty1_fields = {
-        'price_list' : {'string' : 'PriceList', 'type' : 'many2one', 'relation' : 'product.pricelist', 'required':True },
-        'qty1': {'string':'Quantity-1', 'type':'integer', 'default':0},
-        'qty2': {'string':'Quantity-2', 'type':'integer', 'default':0},
-        'qty3': {'string':'Quantity-3', 'type':'integer', 'default':0},
-        'qty4': {'string':'Quantity-4', 'type':'integer', 'default':0},
-        'qty5': {'string':'Quantity-5', 'type':'integer', 'default':0},
+    _columns = {
+        'price_list': fields.many2one('product.pricelist', 'PriceList', required=True), 
+        'qty1':fields.integer('Quantity-1'),
+	'qty2':fields.integer('Quantity-2'),
+        'qty3':fields.integer('Quantity-3'),
+        'qty4':fields.integer('Quantity-4'),
+        'qty5':fields.integer('Quantity-5'),
 }
 
-
-class wizard_qty(wizard.interface):
-
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type':'form', 'arch':qty1_form, 'fields':qty1_fields, 'state':[('end','Cancel'),('price','Print')]}
-        },
-        'price': {
-            'actions': [],
-            'result': {'type':'print', 'report':'product.pricelist', 'state':'end'}
-        }
-
-    }
-wizard_qty('product.price_list')
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _defaults = {
+        'qty1': lambda *a:'0',
+	'qty2': lambda * a:'0',
+	'qty3': lambda *a:'0',
+	'qty4': lambda *a:'0',
+	'qty5': lambda *a:'0',
+     }
+product_price_list()
 
