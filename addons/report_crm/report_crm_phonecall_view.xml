@@ -52,12 +52,12 @@
         <record id="view_crm_phonecall_filter" model="ir.ui.view">
             <field name="name">report.crm.phonecall.select</field>
             <field name="model">report.crm.phonecall</field>
+            <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
                  <field name="user_id" position="before">
                </field>
             </field>
-
         </record>       
         
         <record id="action_report_crm_phonecall" model="ir.actions.act_window">

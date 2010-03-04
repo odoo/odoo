@@ -97,7 +97,11 @@ class crm_project_bug(osv.osv):
         return {'value':{'probability':stage.probability}}
 
     _defaults = {
-          'project_id':_get_project,          
+          'project_id':_get_project,    
+           'probability':lambda *a:0.0,       
+           'planned_cost':lambda *a:0.0,    
+           'planned_revenue':lambda *a:0.0,    
           }
+
 crm_project_bug()
 
