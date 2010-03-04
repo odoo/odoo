@@ -130,16 +130,28 @@ class make_sale(wizard.interface):
 
         if data['form']['close']:
             case_obj.case_close(cr, uid, data['ids'])
-
-        value = {
-            'domain': str([('id', 'in', new_ids)]),
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'sale.order',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'search_view_id': id['res_id']
-        }
+            
+        if len(new_ids)<=1:
+            value = {
+                'domain': str([('id', 'in', new_ids)]),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'sale.order',
+                'view_id': False,
+                'type': 'ir.actions.act_window',
+                'res_id': new_ids and new_ids[0]
+            }
+        else:
+            value = {
+                'domain': str([('id', 'in', new_ids)]),
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'sale.order',
+                'view_id': False,
+                'type': 'ir.actions.act_window',
+                'res_id':new_ids
+                }
+                
         return value
 
     states = {
