@@ -128,6 +128,17 @@ class wizard_compute_phases(wizard.interface):
             phase_schedule(cr, uid, phase, start_dt, calendar_id or False)
         return {}
 
+    def phases_open_list(self, cr, uid, data, context):
+        mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+        result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_project_phase')
+        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        if data['form']['project_id']:
+            result['domain'] = [('project_id', '=', data['form']['project_id'])]
+        result['domain'] = [('state', 'not in', ['cancelled','done'])]
+        return result
+
     states = {
         'init': {
             'actions': [],
@@ -139,9 +150,10 @@ class wizard_compute_phases(wizard.interface):
         },
         'compute': {
             'actions': [_compute_date],
-            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
-        }
+            'result': {'type': 'action', 'action':phases_open_list, 'state':'end'},
+        },
     }
+
 wizard_compute_phases('wizard.compute.phases')
 
 

@@ -32,6 +32,7 @@
     "init_xml" : [],
     "demo_xml" : ["project_demo.xml"],
     "update_xml": [
+        'security/ir.model.access.csv',
         "project_wizard.xml" ,
         "project_view.xml",
         "project_phase_workflow.xml"
