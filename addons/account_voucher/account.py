@@ -29,7 +29,7 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime
 from tools import config
 
-class Account(osv.osv):
+class account_account(osv.osv):
     _inherit = "account.account"
     
     def _get_level(self, cr, uid, ids, field_name, arg, context={}):
@@ -64,38 +64,12 @@ class Account(osv.osv):
         'type1':fields.selection([('dr','Debit'),('cr','Credit'),('none','None')], 'Dr/Cr',store=True),
     }
     
-    def compute_total(self, cr, uid, ids, yr_st_date, yr_end_date, st_date, end_date, field_names, context={}, query=''):
-        #compute the balance/debit/credit accordingly to the value of field_name for the given account ids
-        mapping = {
-            'credit': "COALESCE(SUM(l.credit), 0) as credit ",
-            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance ",
-            'debit': "COALESCE(SUM(l.debit), 0) as debit ",
-        }
-        #get all the necessary accounts
-        ids2 = self._get_children_and_consol(cr, uid, ids, context)
-        acc_set = ",".join(map(str, ids2))
-        #compute for each account the balance/debit/credit from the move lines
+    def compute_total(self, cr, uid, ids, yr_st_date, yr_end_date, st_date, end_date, field_names, context={}):
         if not (st_date >= yr_st_date and end_date <= yr_end_date):
             return {}
-        accounts = {}
-        if ids2:
-            query = self.pool.get('account.move.line')._query_get(cr, uid,
-                    context=context)
-            cr.execute("SELECT l.account_id as id, "  \
-                    +  ' , '.join(map(lambda x: mapping[x], field_names.keys() ))  + \
-                    "FROM account_move_line l " \
-                    "WHERE l.account_id IN ("+ acc_set +") " \
-                        "AND " + query + " " \
-                        " AND l.date >= "+"'"+ st_date +"'"+" AND l.date <= "+"'"+ end_date +""+"'"" " \
-                    "GROUP BY l.account_id ")
-            for res in cr.dictfetchall():
-                accounts[res['id']] = res
-        #for the asked accounts, get from the dictionnary 'accounts' the value of it
-        res = {}
-        for id in ids:
-            res[id] = self._get_account_values(cr, uid, id, accounts, field_names, context)
-        return res
-
+        query = "l.date >= '%s' AND l.date <= '%s'" (st_date, end_date)
+        return self.__compute(cr, uid, ids, field_names, context=context, query=query)
+        
     def create(self, cr, uid, vals, context={}):
         name=self.search(cr,uid,[('name','ilike',vals['name']),('company_id','=',vals['name'])])
         if name:
@@ -109,7 +83,7 @@ class Account(osv.osv):
              vals['type1'] = 'none'
         journal_ids=self.pool.get('account.journal').search(cr,uid,[('name','=','Opening Journal')])
         vals['journal_id'] = journal_ids and journal_ids[0] or False
-        account_id = super(Account, self).create(cr, uid, vals, context)
+        account_id = super(account_account, self).create(cr, uid, vals, context)
         if vals.get('type1', False) != False:
             journal_id = vals.get('journal_id',False)
             if journal_id and vals.has_key('open_bal'):
@@ -158,7 +132,7 @@ class Account(osv.osv):
                  vals['type1'] = 'cr'
             else:
                  vals['type1'] = 'none'
-        super(Account, self).write(cr, uid,ids, vals, context)
+        super(account_account, self).write(cr, uid,ids, vals, context)
         if vals.has_key('open_bal'):
             self_obj= self.browse(cr,uid,ids)
             move_pool=self.pool.get('account.move')
@@ -214,26 +188,16 @@ class Account(osv.osv):
         return {
             'value' : {'type1' : type1}
     }
-Account()
+account_account()
 
-class AccountMove(osv.osv):
+class account_move(osv.osv):
     _inherit = "account.move"
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'voucher_type': fields.selection([
-            ('pay_voucher','Cash Payment Voucher'),
-            ('bank_pay_voucher','Bank Payment Voucher'),
-            ('rec_voucher','Cash Receipt Voucher'),
-            ('bank_rec_voucher','Bank Receipt Voucher'),
-            ('cont_voucher','Contra Voucher'),
-            ('journal_sale_vou','Journal Sale Voucher'),
-            ('journal_pur_voucher','Journal Purchase Voucher'),
-            ('journal_voucher','Journal Voucher'),
-            ],'Voucher Type', readonly=True, select=True, states={'draft':[('readonly',False)]}),
-        'narration':fields.text('Narration'),
+        'narration':fields.text('Narration', readonly=True, select=True, states={'draft':[('readonly',False)]}),
     }
 
-AccountMove()
+account_move()
 
 class res_currency(osv.osv):
     _inherit = "res.currency"

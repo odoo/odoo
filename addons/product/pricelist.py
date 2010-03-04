@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -81,8 +81,18 @@ product_pricelist_type()
 
 class product_pricelist(osv.osv):
     def _pricelist_type_get(self, cr, uid, context={}):
-        cr.execute('select key,name from product_pricelist_type order by name')
-        return cr.fetchall()
+        pricelist_type_obj = self.pool.get('product.pricelist.type')
+        pricelist_type_ids = pricelist_type_obj.search(cr, uid, [], order='name')
+        pricelist_types = pricelist_type_obj.read(cr, uid, pricelist_type_ids, ['key','name'], context=context)
+
+        res = []
+
+        for type in pricelist_types:
+            res.append((type['key'],type['name']))
+
+        return res
+#        cr.execute('select key,name from product_pricelist_type order by name')
+#        return cr.fetchall()
     _name = "product.pricelist"
     _description = "Pricelist"
     _columns = {
@@ -92,7 +102,7 @@ class product_pricelist(osv.osv):
         'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
     }
-    
+
     def name_get(self, cr, uid, ids, context={}):
         result= []
         if not all(ids):
@@ -101,7 +111,7 @@ class product_pricelist(osv.osv):
             name = pl.name + ' ('+ pl.currency_id.name + ')'
             result.append((pl.id,name))
         return result
-    
+
 
     def _get_currency(self, cr, uid, ctx):
         comp = self.pool.get('res.users').browse(cr, uid, uid).company_id
@@ -201,7 +211,7 @@ class product_pricelist(osv.osv):
                 elif res['base'] == -2:
                     where = []
                     if partner:
-                        where = [('name', '=', partner) ] 
+                        where = [('name', '=', partner) ]
                     sinfo = supplierinfo_obj.search(cr, uid,
                             [('product_id', '=', tmpl_id)] + where)
                     price = 0.0
@@ -220,7 +230,7 @@ class product_pricelist(osv.osv):
                     price = currency_obj.compute(cr, uid,
                             price_type.currency_id.id, res['currency_id'],
                             product_obj.price_get(cr, uid, [prod_id],
-                                price_type.field)[prod_id], round=False)
+                                price_type.field)[prod_id], round=False, context=context)
 
                 price_limit = price
 
@@ -235,12 +245,12 @@ class product_pricelist(osv.osv):
                 # False means no valid line found ! But we may not raise an
                 # exception here because it breaks the search
                 price = False
-            result[id] = price            
+            result[id] = price
             if context and ('uom' in context):
                 product = product_obj.browse(cr, uid, prod_id)
                 uom = product.uos_id or product.uom_id
                 result[id] = self.pool.get('product.uom')._compute_price(cr,
-                        uid, uom.id, result[id], context['uom'])                
+                        uid, uom.id, result[id], context['uom'])
         return result
 
 product_pricelist()
@@ -251,7 +261,7 @@ class product_pricelist_version(osv.osv):
     _description = "Pricelist Version"
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Price List',
-            required=True, select=True),
+            required=True, select=True, ondelete='cascade'),
         'name': fields.char('Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active',
             help="When a version is duplicated it is set to non active, so that the " \
@@ -322,9 +332,19 @@ class product_pricelist_item(osv.osv):
         'sequence': lambda *a: 5,
         'price_discount': lambda *a: 0,
     }
+
+    def _check_recursion(self, cr, uid, ids):
+        for obj_list in self.browse(cr, uid, ids):
+            if obj_list.base == -1:
+                main_pricelist = obj_list.price_version_id.pricelist_id.id
+                other_pricelist = obj_list.base_pricelist_id.id
+                if main_pricelist == other_pricelist:
+                    return False
+        return True
+
     _columns = {
         'name': fields.char('Rule Name', size=64, help="Explicit rule name for this pricelist line."),
-        'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True),
+        'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Set a template if this rule only apply to a template of product. Keep empty for all products"),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Set a product if this rule only apply to one product. Keep empty for all products"),
         'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Set a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"),
@@ -348,6 +368,11 @@ class product_pricelist_item(osv.osv):
         'price_max_margin': fields.float('Max. Price Margin',
             digits=(16, int(config['price_accuracy']))),
     }
+
+    _constraints = [
+        (_check_recursion, _('Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!'), ['base_pricelist_id'])
+    ]
+
     def product_id_change(self, cr, uid, ids, product_id, context={}):
         if not product_id:
             return {}

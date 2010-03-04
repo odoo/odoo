@@ -398,8 +398,24 @@
             <field name="name">All Tasks</field>
             <field name="res_model">scrum.task</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="domain">[('scrum','=',1)]</field>
         </record>
+        
+        <record id="action_view_scrum_task_tree_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="project.view_task_tree2"/>
+            <field name="act_window_id" ref="action_view_task"/>
+        </record>
+        
+        <record id="action_view_scrum_task_form_view" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_task_form2"/>
+            <field name="act_window_id" ref="action_view_task"/>
+        </record>
+        
         <menuitem action="action_view_task" id="menu_action_view_task" parent="scrum.next_id_67"/>
         
         <record id="action_view_task4" model="ir.actions.act_window">

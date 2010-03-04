@@ -31,7 +31,7 @@ class third_party_ledger(rml_parse.rml_parse):
 	def __init__(self, cr, uid, name, context):
 		self.date_lst = []
 		self.date_lst_string = ''
-		super(third_party_ledger, self).__init__(cr, uid, name, context)
+		super(third_party_ledger, self).__init__(cr, uid, name, context=context)
 		self.localcontext.update( {
 			'time': time,
 			'lines': self.lines,

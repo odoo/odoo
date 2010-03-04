@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:40:25+0000\n"
-"PO-Revision-Date: 2009-08-28 15:40:25+0000\n"
+"POT-Creation-Date: 2010-02-22 14:34:34+0000\n"
+"PO-Revision-Date: 2010-02-22 14:34:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 #. module: delivery
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
 
 #. module: delivery
 #: field:delivery.grid,state_ids:0
@@ -58,12 +58,12 @@ msgstr "Staaten"
 #. module: delivery
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packing."
-msgstr ""
+msgstr "Diese Liefermethode wird verwendet, wenn die Rechnungslegung aufgrund der Lieferscheine erfolgt"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -81,6 +81,12 @@ msgid "Fixed"
 msgstr "Fest"
 
 #. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "The order state have to be draft to add delivery lines."
+msgstr "Der Auftrags Status muss 'Entwurf' sein, um Versandpositionen hinzuzufügen."
+
+#. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
 msgstr "Grid Zeile"
@@ -96,6 +102,18 @@ msgstr "Preisliste Auslieferungen"
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree5
 msgid "Generate Draft Invoices On Receptions"
 msgstr "Erzeuge Rechnung im Entwurf aus Reservierung"
+
+#. module: delivery
+#: selection:delivery.grid.line,price_type:0
+#: field:delivery.grid.line,type:0
+msgid "Variable"
+msgstr "Variabel"
+
+#. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid matching for this carrier !"
+msgstr "Kein Netz passend zu diesem Frachtführer!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -120,7 +138,7 @@ msgstr "Grid"
 #. module: delivery
 #: view:res.partner:0
 msgid "Deliveries Properties"
-msgstr ""
+msgstr "Lieferungen Eigenschaften"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -195,10 +213,10 @@ msgid "Variable Factor"
 msgstr "Variabl. Faktor"
 
 #. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
-msgid "Variable"
-msgstr "Variabel"
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid avaible !"
+msgstr "Kein Netz verfügbar!"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -228,7 +246,7 @@ msgstr "Max. Wert"
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,delivery:0
 msgid "Add Delivery Costs"
-msgstr ""
+msgstr "Lieferkosten Hinzufügen"
 
 #. module: delivery
 #: wizard_field:delivery.sale.order,init,carrier_id:0
@@ -241,7 +259,7 @@ msgstr "Auslieferungsmethode"
 #. module: delivery
 #: field:sale.order,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -251,7 +269,13 @@ msgstr "Operator"
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
 msgid "Carriers and deliveries"
-msgstr ""
+msgstr "Frächter und Lieferungen"
+
+#. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "Order not in draft state !"
+msgstr "Auftrag nicht im Entwurf Stadium!"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -278,7 +302,7 @@ msgstr "Frachtführer Partner"
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
 msgid "Allows you to add delivery methods in sales orders and packing. You can define your own carrier and delivery grids for prices. When creating invoices from picking, Open ERP is able to add and compute the shipping line."
-msgstr ""
+msgstr "Erlaubt Liefermethoden für Verkäufe und Lieferungen zu definieren. Sie können Ihre eigenen Matrizen für Fächter und Preise festlegen. Wenn die Rechnungslegung vom Lieferschein erfolgt, kann OpenERP die Liefermethode festlegen."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -286,15 +310,27 @@ msgid "To Zip"
 msgstr "Zu PLZ"
 
 #. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No line matched this order in the choosed delivery grids !"
+msgstr "Keine Auftragsposition passend zu der Auswahl aus der Auslieferungstabelle."
+
+#. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packing to be invoiced"
-msgstr ""
+msgstr "Lieferungen zu verrechnen"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No price available !"
+msgstr "Kien Preis verfügbar!"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid "Complete this field if you plan to invoice the shipping based on packing."
-msgstr ""
+msgstr "Dieses Feld ausfüllen, wenn die Rechnungslegung aufgrund der Lieferung erfolgen soll"
 
 #. module: delivery
 #: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
@@ -317,9 +353,21 @@ msgid "Delivery grids"
 msgstr "Auslieferungsnetze"
 
 #. module: delivery
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "The carrier %s (id: %d) has no delivery grid!"
+msgstr "Der Frachtführer %s (id: %d) hat kein Auslieferungsnetz!"
+
+#. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
 msgid "Cancel"
 msgstr "Abbrechen"
+
+#. module: delivery
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "Warning"
+msgstr "Warnung"
 
 #. module: delivery
 #: field:sale.order,carrier_id:0

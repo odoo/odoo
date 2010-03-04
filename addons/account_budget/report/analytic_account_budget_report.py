@@ -26,7 +26,7 @@ import datetime
 
 class analytic_account_budget_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(analytic_account_budget_report, self).__init__(cr, uid, name, context)
+        super(analytic_account_budget_report, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
             'funct': self.funct,
             'funct_total': self.funct_total,

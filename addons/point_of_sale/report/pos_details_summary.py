@@ -109,7 +109,7 @@ class pos_details_summary(report_sxw.rml_parse):
             return '%s - %s' % (min_date, max_date)
 
     def __init__(self, cr, uid, name, context):
-        super(pos_details_summary, self).__init__(cr, uid, name, context)
+        super(pos_details_summary, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.localcontext.update({
             'time': time,

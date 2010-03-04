@@ -40,6 +40,12 @@ class subscription_document(osv.osv):
     _defaults = {
         'active' : lambda *a: True,
     }
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'model' in vals:
+            raise osv.except_osv(_('Error !'),_('You cannot modify the Object linked to the Document Type!\nCreate another Document instead !'))
+        return super(subscription_document, self).write(cr, uid, ids, vals, context=context)
+    
 subscription_document()
 
 class subscription_document_fields(osv.osv):
@@ -98,6 +104,8 @@ class subscription_subscription(osv.osv):
 
     def model_copy(self, cr, uid, ids, context={}):
         for row in self.read(cr, uid, ids):
+            if not row.get('cron_id',False):
+                continue
             cron_ids = [row['cron_id'][0]]
             remaining = self.pool.get('ir.cron').read(cr, uid, cron_ids, ['numbercall'])[0]['numbercall']
             try:

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:35:24+0000\n"
-"PO-Revision-Date: 2009-08-28 15:35:24+0000\n"
+"POT-Creation-Date: 2010-02-22 14:31:31+0000\n"
+"PO-Revision-Date: 2010-02-22 14:31:31+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,show_columns:0
 msgid "Show Debit/Credit Information"
-msgstr "Toon Debet/Credit informatie"
+msgstr "Toon debet-/credit informatie"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,account_choice:0
@@ -28,7 +28,7 @@ msgstr "Alle rekeningen"
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,period_manner:0
 msgid "Entries Selection Based on"
-msgstr "Selectie gebaseerd op"
+msgstr "Keuze gebaseerd op"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -67,7 +67,7 @@ msgstr "Afdrukken"
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Select Period(s)"
-msgstr "Kies periode(s)"
+msgstr "Kies periode(n)"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,compare_pattern:0
@@ -110,17 +110,24 @@ msgid "Account Balance Module is an added functionality to the Financial Managem
 "\n"
 "    5. You have an option to print the desired report in Landscape format.\n"
 "    "
-msgstr ""
+msgstr "Account Balans is een uitbreiding van de Financieel Beheer module.\n"
+"    Deze module geeft u meerder mogelijkheden om een balans af te drukken.\n"
+"    1. U kunt de balans van verschillende boekjaren met elkaar vergelijken\n"
+"    2. U kunt een vergelijking uitdrukken in percentages of bedragen.\n"
+"    3. U kunt referentierekeningen gebruiken voor de vergelijking van specifieke boekjaren.\n"
+"    4. U kunt perioden kiezen op basis van effectieve datum of op basis van aanmaakdatum.\n"
+"    5. U krijgt een optie om het gewenste overzicht in liggend formaat af te drukken.\n"
+"    "
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You have to select 'Landscape' option. Please Check it."
-msgstr "U moet de 'Liggend' afdrukstand kiezen. Controleer dit."
+msgstr "U dient de 'Liggend' afdrukstand te kiezen. Controleer dit alstublieft."
 
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,landscape:0
 msgid "Show Report in Landscape Form"
-msgstr "Toon rapport in liggend formaat"
+msgstr "Toon overzicht in liggend formaat"
 
 #. module: account_balance
 #: help:account.balance.account.balance.report,init,periods:0
@@ -157,12 +164,12 @@ msgstr "Kies periode"
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Report Options"
-msgstr "Rapportage opties"
+msgstr "Opties overzicht"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,account_choice:0
 msgid "With movements"
-msgstr "Met mutaties"
+msgstr "Met boekingen"
 
 #. module: account_balance
 #: wizard_button:account.balance.account.balance.report,backtoinit,end:0
@@ -173,7 +180,7 @@ msgstr "Ok"
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,compare_pattern:0
 msgid "Cash"
-msgstr "Kas"
+msgstr "Contanten"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,compare_pattern:0
@@ -194,12 +201,12 @@ msgstr ""
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "1. You have selected more than 3 years in any case."
-msgstr "1. U hebt meer dan 3 boekjaren geselecteerd"
+msgstr "1. U heeft meer dan 3 boekjaren gekozen"
 
 #. module: account_balance
 #: model:ir.module.module,shortdesc:account_balance.module_meta_information
 msgid "Accounting and financial management-Compare Accounts"
-msgstr ""
+msgstr "Boekhouding en financieel beheer-Vergelijk rekeningen"
 
 #. module: account_balance
 #: rml:account.account.balance.landscape:0
@@ -210,7 +217,7 @@ msgstr ""
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You can select maximum 3 years. Please check again."
-msgstr "U  kunt maximaal 3 boekjaren selecteren. Probeer opnieuw."
+msgstr "U  kunt maximaal 3 boekjaren kiezen. Probeer opnieuw."
 
 #. module: account_balance
 #: rml:account.account.balance.landscape:0
@@ -226,7 +233,7 @@ msgstr "3. U heeft de 'Percentage' optie gebruikt met meer dan 2 boekjaren, maar
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You might have done following mistakes. Please correct them and try again."
-msgstr "Het kan zijn dat u 1 van onderstaande vergissingen hebt gemaakt. Corrigeer en probeer het dan opnieuw."
+msgstr "Het kan zijn dat u één van onderstaande vergissingen hebt gemaakt. Corrigeer deze alstublieft en probeer het dan opnieuw."
 
 #. module: account_balance
 #: help:account.balance.account.balance.report,init,select_account:0
@@ -251,7 +258,7 @@ msgstr "2. U heeft de 'Percentage' optie niet gekozen, maar u hebt meer dan 2 bo
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,periods:0
 msgid "Periods"
-msgstr "Periodes"
+msgstr "Perioden"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,zero_years:0
@@ -271,5 +278,5 @@ msgstr "U dient tenminste 1 boekjaar te selecteren. Probeer opnieuw."
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
 msgid "Customize Report"
-msgstr "Rapport aanpassen"
+msgstr "Overzicht aanpassen"
 

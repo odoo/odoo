@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:45:27+0000\n"
-"PO-Revision-Date: 2009-08-28 15:45:27+0000\n"
+"POT-Creation-Date: 2010-02-22 14:37:42+0000\n"
+"PO-Revision-Date: 2010-02-22 14:37:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: audittrail
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
@@ -43,7 +43,7 @@ msgstr ""
 #. module: audittrail
 #: selection:audittrail.log,method:0
 msgid "Create"
-msgstr ""
+msgstr "Sukurti"
 
 #. module: audittrail
 #: wizard_view:audittrail.view.log,init:0
@@ -53,12 +53,12 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.rule,state:0
 msgid "State"
-msgstr ""
+msgstr "Būsena"
 
 #. module: audittrail
 #: selection:audittrail.rule,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Juodraštis"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value:0
@@ -129,7 +129,7 @@ msgstr ""
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
-msgstr ""
+msgstr "Objektas"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -155,12 +155,18 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log,timestamp:0
 msgid "Date"
+msgstr "Data"
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING:audittrail is not part of the pool"
 msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Naudotojas"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -170,11 +176,12 @@ msgstr ""
 #. module: audittrail
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Netinkamas XML peržiūros architektūrai!"
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr ""
 
 #. module: audittrail
@@ -190,7 +197,7 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
 msgid "Fields"
-msgstr ""
+msgstr "Laukai"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -220,7 +227,7 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
-msgstr ""
+msgstr "Laukelio aprašymas"
 
 #. module: audittrail
 #: selection:audittrail.log,method:0
@@ -240,7 +247,7 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.rule,name:0
 msgid "Rule Name"
-msgstr ""
+msgstr "Taisyklės pavadinimas"
 
 #. module: audittrail
 #: field:audittrail.rule,log_read:0
@@ -275,7 +282,7 @@ msgstr ""
 #. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
 msgid "Rules"
-msgstr ""
+msgstr "Taisyklės"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -285,7 +292,7 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.rule,user_id:0
 msgid "Users"
-msgstr ""
+msgstr "Naudotojai"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
@@ -295,10 +302,15 @@ msgstr ""
 #. module: audittrail
 #: wizard_button:audittrail.view.log,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Atšaukti"
 
 #. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log deletes"
 msgstr ""
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Name"
+msgstr "Pavadinimas"
 

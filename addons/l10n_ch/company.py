@@ -34,17 +34,17 @@
 import netsvc
 from osv import fields, osv
 class res_company(osv.osv):
-	"""override company in order to add bvr vertical and 
-	Horizontal print delta"""
-	_inherit = "res.company"
-	_columns = {
-		### horiz. delta in mm 1.2 will print the bvz 1.2mm lefter
-		'bvr_delta_horz': fields.float('BVR Horz. Delta (mm)',
-			help='horiz. delta in mm 1.2 will print the bvz 1.2mm lefter'),
-		### vert. delta in mm 1.2 will print the bvz 1.2mm lefter
-		'bvr_delta_vert': fields.float('BVR Vert. Delta (mm)',
-			help='vert. delta in mm 1.2 will print the bvz 1.2mm lefter'),
-	}
+    """override company in order to add bvr vertical and 
+    Horizontal print delta"""
+    _inherit = "res.company"
+    _columns = {
+        ### horiz. delta in mm 1.2 will print the bvz 1.2mm lefter
+        'bvr_delta_horz': fields.float('BVR Horz. Delta (mm)',
+            help='horiz. delta in mm 1.2 will print the bvz 1.2mm lefter'),
+        ### vert. delta in mm 1.2 will print the bvz 1.2mm lefter
+        'bvr_delta_vert': fields.float('BVR Vert. Delta (mm)',
+            help='vert. delta in mm 1.2 will print the bvz 1.2mm lefter'),
+    }
 res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

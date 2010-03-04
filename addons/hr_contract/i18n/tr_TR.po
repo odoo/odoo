@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:58:05+0000\n"
-"PO-Revision-Date: 2009-08-28 15:58:05+0000\n"
+"POT-Creation-Date: 2010-02-22 14:45:46+0000\n"
+"PO-Revision-Date: 2010-02-22 14:45:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr ""
 #: view:hr.contract:0
 #: view:hr.employee:0
 msgid "Generalities"
-msgstr ""
+msgstr "Genel Bilgi"
 
 #. module: hr_contract
 #: field:hr.employee,children:0
@@ -49,7 +49,7 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
 msgid "Wage Types"
-msgstr ""
+msgstr "Ücret Tipleri"
 
 #. module: hr_contract
 #: constraint:ir.actions.act_window:0
@@ -59,7 +59,7 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.contract,employee_id:0
 msgid "Employee"
-msgstr ""
+msgstr "Personel"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -69,7 +69,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.module.module,shortdesc:hr_contract.module_meta_information
 msgid "Human Resources Contracts"
-msgstr ""
+msgstr "İnsan Kaynakları Sözleşmeleri"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,factor_days:0
@@ -79,45 +79,42 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.contract,function:0
 msgid "Function"
-msgstr ""
+msgstr "Pozisyon"
 
 #. module: hr_contract
-#: field:hr.employee,marital_status:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
-#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
-msgid "Marital Status"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Contract Wage Type"
+msgstr "Sözleşme Ücret Tipi"
 
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Miscelleanous"
-msgstr ""
+msgstr "Muhtelif Bilgi"
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 msgid "Contracts"
-msgstr ""
+msgstr "Sözleşmeler"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,type:0
 msgid "Type"
-msgstr ""
+msgstr "Tipi"
 
 #. module: hr_contract
 #: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
 #: model:ir.model,name:hr_contract.model_hr_contract_wage_type
 msgid "Wage Type"
-msgstr ""
+msgstr "Ücret Tipi"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,name:0
 msgid "Period Name"
-msgstr ""
+msgstr "Dönem Adı"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee_marital_status
@@ -127,17 +124,17 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
 msgid "Medical examination date"
-msgstr ""
+msgstr "Sağlık muayenesi tarihi"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,name:0
 msgid "Wage Type Name"
-msgstr ""
+msgstr "Ücret Tipi Adı"
 
 #. module: hr_contract
 #: field:hr.contract,working_hours_per_day:0
 msgid "Working hours per day"
-msgstr ""
+msgstr "Günlük Çalışma Saati"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -147,7 +144,7 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.contract,date_end:0
 msgid "End Date"
-msgstr ""
+msgstr "Bitiş Tarihi"
 
 #. module: hr_contract
 #: constraint:ir.ui.view:0
@@ -159,7 +156,7 @@ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 #: field:hr.contract,notes:0
 #: view:hr.employee:0
 msgid "Notes"
-msgstr ""
+msgstr "Notlar"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -169,18 +166,18 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
 msgid "Contract"
-msgstr ""
+msgstr "Sözleşme"
 
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Contract Type"
-msgstr ""
+msgstr "Sözleşme Türü"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,period_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
 msgid "Wage Period"
-msgstr ""
+msgstr "Ücret Dönemi"
 
 #. module: hr_contract
 #: field:hr.employee,audiens_num:0
@@ -195,13 +192,16 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.contract,name:0
 msgid "Contract Name"
-msgstr ""
+msgstr "Sözleşme Adı"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Contract Wage Type"
-msgstr ""
+#: field:hr.employee,marital_status:0
+#: view:hr.employee.marital.status:0
+#: field:hr.employee.marital.status,name:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
+#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
+msgid "Marital Status"
+msgstr "Medeni Durumu"
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
@@ -211,14 +211,14 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.employee,manager:0
 msgid "Manager"
-msgstr ""
+msgstr "Yönetici"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type.period:0
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
 msgid "Wage period"
-msgstr ""
+msgstr "Ücret Dönemi"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -229,21 +229,21 @@ msgstr ""
 #. module: hr_contract
 #: field:hr.contract,wage:0
 msgid "Wage"
-msgstr ""
+msgstr "Ücret"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Baş. Tarihi"
 
 #. module: hr_contract
 #: field:hr.employee.marital.status,description:0
 msgid "Status Description"
-msgstr ""
+msgstr "Durum Açıklaması"
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: view:hr.employee:0
 msgid "Contract Duration"
-msgstr ""
+msgstr "Sözleşme Süresi"
 

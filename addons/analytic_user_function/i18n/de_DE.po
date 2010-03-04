@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:40:25+0000\n"
-"PO-Revision-Date: 2009-08-28 15:40:25+0000\n"
+"POT-Creation-Date: 2010-02-22 14:34:34+0000\n"
+"PO-Revision-Date: 2010-02-22 14:34:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,15 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Relation table between users and products on a analytic account"
-msgstr "Relation zwischen Benutzern und Produkten"
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "Error !"
+msgstr "Fehler !"
+
+#. module: analytic_user_function
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,product_id:0
@@ -33,6 +39,13 @@ msgstr "Produkt"
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
 msgid "Analytic Account"
+msgstr "Analytisches Konto"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define ' \\n"
+"                                    'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: analytic_user_function
@@ -47,13 +60,20 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: analytic_user_function
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Relation table between users and products on a analytic account"
+msgstr "Relation zwischen Benutzern und Produkten"
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
+msgstr "Analytische Benutzer Funktion"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define ' \\n"
+"                                'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: analytic_user_function

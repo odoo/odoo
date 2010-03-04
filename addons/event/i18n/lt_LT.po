@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:45:27+0000\n"
-"PO-Revision-Date: 2009-08-28 15:45:27+0000\n"
+"POT-Creation-Date: 2010-02-22 14:37:41+0000\n"
+"PO-Revision-Date: 2010-02-22 14:37:41+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,7 +49,7 @@ msgstr ""
 #. module: event
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive sections."
-msgstr ""
+msgstr "Klaida! Negalite kurti rekursinių sekcijų."
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -87,8 +87,9 @@ msgid "Ticket for Opera"
 msgstr ""
 
 #. module: event
-#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
-msgid "Invoice Rejected"
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: event
@@ -242,9 +243,15 @@ msgid "Configuration"
 msgstr "Nustatymai"
 
 #. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
+msgstr ""
+
+#. module: event
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Netinkamas XML peržiūros architektūrai!"
 
 #. module: event
 #: wizard_button:event.confirm_registration,split,confirm:0
@@ -362,7 +369,7 @@ msgstr ""
 #. module: event
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
 #. module: event
 #: field:event.registration,event_id:0
@@ -582,6 +589,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_view_draft
 #: model:ir.ui.menu,name:event.menu_event_event_draft
 msgid "Draft Events"
+msgstr ""
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
+msgid "Invoice Rejected"
 msgstr ""
 
 #. module: event

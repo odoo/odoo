@@ -28,7 +28,7 @@ from osv import osv
 
 class seller_form_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(seller_form_report, self).__init__(cr, uid, name, context)
+        super(seller_form_report, self).__init__(cr, uid, name, context=context)
         lot=self.pool.get('auction.lots').browse(cr,uid,uid)
         #address=lot.bord_vnd_id.address_get(self.cr,self.uid,[partner.id])
     #   partner=lot.bord_vnd_id.partner_id

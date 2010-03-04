@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:24:55+0000\n"
-"PO-Revision-Date: 2009-08-28 15:24:55+0000\n"
+"POT-Creation-Date: 2010-02-22 14:24:54+0000\n"
+"PO-Revision-Date: 2010-02-22 14:24:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Invoice Date:"
+msgid "Note:"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -49,11 +49,6 @@ msgstr ""
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "(Incl. taxes):"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -88,6 +83,16 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
+msgid "VAT :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Document"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "PRO-FORMA"
 msgstr ""
 
@@ -107,13 +112,13 @@ msgid "Notification Message"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
+#: selection:account.invoice.line,state:0
+msgid "Product"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid ")"
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "account_invoice_layout"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -128,7 +133,7 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "/ ("
+msgid "Invoice Date"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -152,8 +157,8 @@ msgid "Base"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
+#: selection:account.invoice.line,state:0
+msgid "Page Break"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -168,7 +173,7 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Tel. :"
+msgid "Partner Ref."
 msgstr ""
 
 #. module: account_invoice_layout
@@ -177,13 +182,13 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Page Break"
+#: rml:account.invoice.layout:0
+msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Document:"
+msgid "Total:"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -194,11 +199,6 @@ msgstr ""
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Messages"
-msgstr ""
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -218,7 +218,7 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Description/Taxes"
+msgid "Tel. :"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -242,11 +242,6 @@ msgid "Refund"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
-msgstr ""
-
-#. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
 msgstr ""
@@ -258,22 +253,12 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Note :"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr ""
 
 #. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
-msgstr ""
-
-#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (Excl. taxes):"
+msgid "Net Total:"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -294,11 +279,6 @@ msgstr ""
 #. module: account_invoice_layout
 #: wizard_field:wizard.notify_message,init,message:0
 msgid "Message"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
 msgstr ""
 
 #. module: account_invoice_layout

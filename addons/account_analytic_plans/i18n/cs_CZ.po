@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:33:04+0000\n"
-"PO-Revision-Date: 2009-08-28 15:33:04+0000\n"
+"POT-Creation-Date: 2010-02-22 14:30:01+0000\n"
+"PO-Revision-Date: 2010-02-22 14:30:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,11 @@ msgstr ""
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date2:0
 msgid "End Date"
+msgstr "Koncové datum"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -56,6 +61,18 @@ msgid "Analytic Plan"
 msgstr ""
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+msgstr ""
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
 msgid "Analytic Instance Line"
 msgstr ""
@@ -68,7 +85,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,print:0
 msgid "Print"
-msgstr ""
+msgstr "Tisk"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -88,7 +105,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Account Name"
-msgstr ""
+msgstr "Název účtu"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -103,7 +120,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Špatný název modelu v definici akce"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
@@ -131,8 +148,9 @@ msgid "Select Information"
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "A model having this name and code already exists !"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -144,7 +162,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
-msgstr ""
+msgstr "100.00%"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,ref:0
@@ -162,6 +180,12 @@ msgid "Analytic Plan Line"
 msgstr ""
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "No analytic plan defined !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
 msgstr ""
@@ -169,11 +193,18 @@ msgstr ""
 #. module: account_analytic_plans
 #: model:ir.actions.wizard,name:account_analytic_plans.create_model
 msgid "Create Model"
-msgstr ""
+msgstr "Vytvořit model"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
 msgid "Default Entries"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -182,6 +213,12 @@ msgstr ""
 #: field:account.journal,plan_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "User Error"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -278,9 +315,15 @@ msgid "Account2 Id"
 msgstr ""
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Please put a name and a code before saving the model !"
+msgstr ""
+
+#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Amount"
-msgstr ""
+msgstr "Množství"
 
 #. module: account_analytic_plans
 #: help:account.analytic.plan.line,root_analytic_id:0
@@ -295,7 +338,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
-msgstr ""
+msgstr "Počet"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account_ids:0
@@ -305,12 +348,12 @@ msgstr ""
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Code"
-msgstr ""
+msgstr "Kód"
 
 #. module: account_analytic_plans
 #: wizard_button:create.model,info,end:0
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
@@ -325,12 +368,12 @@ msgstr ""
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvence"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analytický účet"
 
 #. module: account_analytic_plans
 #: field:account.analytic.default,analytics_id:0
@@ -339,6 +382,18 @@ msgstr ""
 #: field:account.invoice.line,analytics_id:0
 #: field:account.move.line,analytics_id:0
 msgid "Analytic Distribution"
+msgstr "Analytická distribuce"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "Value Error"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -349,17 +404,17 @@ msgstr ""
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date1:0
 msgid "Start Date"
-msgstr ""
+msgstr "Počáteční datum"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "at"
-msgstr ""
+msgstr "v"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0

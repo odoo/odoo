@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:59:21+0000\n"
-"PO-Revision-Date: 2009-08-28 15:59:21+0000\n"
+"POT-Creation-Date: 2010-02-22 14:46:36+0000\n"
+"PO-Revision-Date: 2010-02-22 14:46:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -76,9 +76,9 @@ msgid "Futur stock for this product according to the selected location or all in
 msgstr ""
 
 #. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "Ширина"
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "Поле продукту"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -111,11 +111,18 @@ msgid "Standard Price"
 msgstr "Стандартна ціна"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Products: "
+msgstr ""
+
+#. module: product
 #: help:product.packaging,height:0
 msgid "The height of the package"
 msgstr ""
 
 #. module: product
+#: rml:product.pricelist:0
 #: view:product.pricelist:0
 msgid "Products Price List"
 msgstr "Прескурант продуктів"
@@ -177,8 +184,9 @@ msgid "Base price for computing the customer price. Sometimes called the catalog
 msgstr ""
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-msgid "Quantity"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Partner section of the product form"
 msgstr ""
 
 #. module: product
@@ -244,19 +252,8 @@ msgid "If Other Pricelist"
 msgstr "Якщо інший прейскурант"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_tree
-#: model:ir.ui.menu,name:product.menu_main_product
-#: model:ir.ui.menu,name:product.menu_products
-#: view:product.product:0
-msgid "Products"
-msgstr "Продукти"
-
-#. module: product
-#: help:product.pricelist.item,price_round:0
-msgid "Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+#: rml:product.pricelist:0
+msgid "Price List Name:"
 msgstr ""
 
 #. module: product
@@ -312,6 +309,11 @@ msgstr ""
 #: model:ir.ui.menu,name:product.menu_config_product
 msgid "Configuration"
 msgstr "Налаштування"
+
+#. module: product
+#: field:product.packaging,width:0
+msgid "Width"
+msgstr "Ширина"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -378,6 +380,15 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr ""
+
+#. module: product
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Активний"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -523,9 +534,9 @@ msgid "PC"
 msgstr ""
 
 #. module: product
-#: help:product.template,seller_delay:0
-msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
-msgstr "Середня затримка у днях між підтвердженням заявки на придбання та отриманням вантажу для цього продукту і для типового постачальника. Це використовується планувальником для впорядкування повторюваних запитів."
+#: field:pricelist.partnerinfo,min_quantity:0
+msgid "Quantity"
+msgstr ""
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -574,6 +585,12 @@ msgid "The currency the field is expressed in."
 msgstr ""
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Other Pricelist"
+msgstr ""
+
+#. module: product
 #: help:product.template,weight:0
 msgid "The gross weight in Kg."
 msgstr ""
@@ -592,6 +609,11 @@ msgstr "Неправильний XML для Архітектури Вигляд�
 #: help:product.template,sale_ok:0
 msgid "Determine if the product can be visible in the list of product within a selection from a sale order line."
 msgstr "Визначити, чи цей продукт може бути видимим у списку продуктів усередині вибору з рядка заявки на продаж."
+
+#. module: product
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Збут та постачання"
 
 #. module: product
 #: constraint:product.template:0
@@ -708,8 +730,8 @@ msgid "Weight"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor on demand"
+#: rml:product.pricelist:0
+msgid "Currency :"
 msgstr ""
 
 #. module: product
@@ -731,13 +753,6 @@ msgstr ""
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
 msgstr ""
-
-#. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "Послідовність"
 
 #. module: product
 #: view:product.supplierinfo:0
@@ -774,6 +789,11 @@ msgstr "Описи"
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Suppliers of Product"
+msgstr ""
+
+#. module: product
+#: model:ir.model,name:product.model_pricelist_partnerinfo
+msgid "pricelist.partnerinfo"
 msgstr ""
 
 #. module: product
@@ -887,9 +907,11 @@ msgid "Used by companies that manages two unit of measure: invoicing and stock m
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Could not resolve product category, ' \\n"
+"                                    'you have defined cyclic categories ' \\n"
+"                                    'of products!"
 msgstr ""
 
 #. module: product
@@ -932,9 +954,9 @@ msgid "Max. Price Margin"
 msgstr ""
 
 #. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Збут та постачання"
+#: model:ir.actions.report.xml,name:product.report_product_pricelist
+msgid "Product Pricelist"
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_10
@@ -950,6 +972,11 @@ msgstr "Вага порожньої ЛО"
 #: help:product.packaging,code:0
 msgid "The code of the transport unit."
 msgstr "Код транспортного засобу"
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+msgid "Processor on demand"
+msgstr ""
 
 #. module: product
 #: field:product.template,uom_po_id:0
@@ -982,13 +1009,9 @@ msgid "Information about a product supplier"
 msgstr "Інформація про постачальника продукту"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Активний"
+#: help:product.product,packaging:0
+msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+msgstr "Надає різні способи пакування того самого продукту. Це не впливає на порядок пакування і загалом використовується для модуля EDI."
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -1006,8 +1029,8 @@ msgid "Medium PC"
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
+#: rml:product.pricelist:0
+msgid "Printing Date :"
 msgstr ""
 
 #. module: product
@@ -1028,6 +1051,11 @@ msgstr "Опис закупівлі"
 #: view:product.template:0
 msgid "Second UoM"
 msgstr ""
+
+#. module: product
+#: help:product.template,seller_delay:0
+msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
+msgstr "Середня затримка у днях між підтвердженням заявки на придбання та отриманням вантажу для цього продукту і для типового постачальника. Це використовується планувальником для впорядкування повторюваних запитів."
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -1061,9 +1089,9 @@ msgid "Gross weight"
 msgstr "Вага"
 
 #. module: product
-#: help:product.product,packaging:0
-msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
-msgstr "Надає різні способи пакування того самого продукту. Це не впливає на порядок пакування і загалом використовується для модуля EDI."
+#: field:product.packaging,weight_ul:0
+msgid "Empty Package Weight"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1072,9 +1100,11 @@ msgid "Product Category"
 msgstr "Категорія продукту"
 
 #. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "Поле продукту"
+#: code:addons/product/pricelist.py:0
+#: constraint:product.pricelist.item:0
+#, python-format
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
@@ -1340,6 +1370,7 @@ msgstr "Об'єм"
 #. module: product
 #: field:pricelist.partnerinfo,name:0
 #: field:product.packaging,name:0
+#: rml:product.pricelist:0
 #: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description:0
@@ -1400,6 +1431,11 @@ msgstr "Надбавка"
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr ""
+
+#. module: product
+#: rml:product.pricelist:0
+msgid "units"
 msgstr ""
 
 #. module: product
@@ -1468,6 +1504,13 @@ msgid "Can be Purchased"
 msgstr "Можна купувати"
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "No active version for the selected pricelist !\n' \\n"
+"                                'Please create or activate one."
+msgstr ""
+
+#. module: product
 #: field:product.template,uos_coeff:0
 msgid "UOM -> UOS Coeff"
 msgstr "Коеф. ОВ -> ОП"
@@ -1494,6 +1537,17 @@ msgid "Palletization"
 msgstr ""
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
+
+#. module: product
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr ""
+
+#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Prices & Suppliers"
@@ -1502,6 +1556,13 @@ msgstr ""
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full of products palet or box."
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid "Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
 
 #. module: product
@@ -1543,9 +1604,11 @@ msgid "Pricelist Versions"
 msgstr "Версії прейскурантів"
 
 #. module: product
-#: field:product.packaging,weight_ul:0
-msgid "Empty Package Weight"
-msgstr ""
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "Послідовність"
 
 #. module: product
 #: field:product.template,list_price:0
@@ -1570,6 +1633,12 @@ msgstr "Довжина"
 #. module: product
 #: model:product.category,name:product.cat2
 msgid "Private"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
 msgstr ""
 
 #. module: product
@@ -1603,9 +1672,13 @@ msgid "Products Labels"
 msgstr ""
 
 #. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr ""
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
+#: model:ir.ui.menu,name:product.menu_main_product
+#: model:ir.ui.menu,name:product.menu_products
+#: view:product.product:0
+msgid "Products"
+msgstr "Продукти"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box

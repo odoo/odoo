@@ -35,7 +35,7 @@ theme.use_color = 1
 random.seed(0)
 
 #
-# Pinky: Bad code, seems buggy, TO CHECK !
+# TODO: Bad code, seems buggy, TO CHECK !
 #
 
 class external_pdf(render):
@@ -101,7 +101,7 @@ class report_custom(report_int):
         colors = choice_colors(len(ids))
         ids_str = ','.join(map(str, ids))
         cr.execute(
-            "SELECT MAX(date_planned) AS stop "\
+            "SELECT MAX(mrp_production.date_planned) AS stop,MIN(mrp_production.date_planned) AS start "\
             "FROM mrp_workcenter, mrp_production, mrp_production_workcenter_line "\
             "WHERE mrp_production_workcenter_line.production_id=mrp_production.id "\
             "AND mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id "\
@@ -109,8 +109,10 @@ class report_custom(report_int):
             "AND mrp_workcenter.id IN (%s)" % ids_str)
         res = cr.dictfetchone()
         if not res['stop']:
-            res['stop'] = time.strftime('%Y-%m-%d')
-        dates = self._compute_dates(datas['form']['time_unit'], time.strftime('%Y-%m-%d'), res['stop'][:10])
+            res['stop'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        if not res['start']:
+            res['start'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        dates = self._compute_dates(datas['form']['time_unit'], res['start'][:10], res['stop'][:10])
         dates_list = dates.keys()
         dates_list.sort()
         x_index = []
@@ -174,8 +176,8 @@ class report_custom(report_int):
             workcenter_num += 1
 
         #plot = bar_plot.T(label=workcenter['name'], data=data, hcol=1, fill_style=fill_style.white, cluster=(color_index,len(ids)))
-        if (len(data[0]) <= 1):
-            ar = self._empty_graph(data[0][0])
+        if (not data) or (len(data[0]) <= 1):
+            ar = self._empty_graph(time.strftime('%Y-%m-%d'))
         ar.draw(can)
         # close canvas so that the file is written to "disk"
         can.close()

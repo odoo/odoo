@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:55:34+0000\n"
-"PO-Revision-Date: 2009-08-28 15:55:34+0000\n"
+"POT-Creation-Date: 2010-02-22 14:44:07+0000\n"
+"PO-Revision-Date: 2010-02-22 14:44:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Usuario responsable"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -29,18 +29,18 @@ msgstr "% rendimiento"
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
-msgstr ""
+msgstr "Posiciones presupuestarias"
 
 #. module: account_budget
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "Printed at:"
-msgstr ""
+msgstr "Impreso el:"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -61,6 +61,12 @@ msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún caráct
 #: selection:crossovered.budget,state:0
 msgid "Confirmed"
 msgstr "Confirmado"
+
+#. module: account_budget
+#: code:addons/account_budget/wizard/wizard_budget_report.py:0
+#, python-format
+msgid "Insufficient Data!"
+msgstr "¡Datos Insuficientes!"
 
 #. module: account_budget
 #: field:account.budget.post.dotation,period_id:0
@@ -150,7 +156,25 @@ msgid "This module allows accountants to manage analytic and crossovered budgets
 "    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.\n"
 "\n"
 ""
-msgstr ""
+msgstr "Este módulo permite a los contables gestionar presupuestos analíticos (costes) y cruzados.\n"
+"\n"
+"Una vez que se han definido los presupuestos principales y los presupuestos (en Gestión\n"
+"financiera/Presupuestos/), los gestores de proyecto pueden establecer el importe previsto en\n"
+"cada cuenta analítica.\n"
+"\n"
+"El contable tiene la posibilidad de ver el total del importe previsto para cada\n"
+"presupuesto y presupuesto principal a fin de garantizar el total previsto no es\n"
+"mayor/menor que lo que había previsto para este presupuesto / presupuesto principal.\n"
+"Cada lista de datos también puede cambiarse a una vista gráfica de la misma.\n"
+"\n"
+"Están disponibles tres informes:\n"
+"    1. El primero está disponible desde una lista de presupuestos. Proporciona la difusión, para estos presupuestos, de las cuentas analíticas por presupuestos principales.\n"
+"\n"
+"    2. El segundo es un resumen del anterior. Sólo indica la difusión, para los presupuestos seleccionados, de las cuentas analíticas.\n"
+"\n"
+"    3. El último está disponible desde un plan de cuentas analítico. Indica la difusión, para las cuentas analíticas seleccionadas, de los presupuestos principales por presupuestos.\n"
+"\n"
+""
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -167,15 +191,14 @@ msgstr "Descripción"
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
 msgid "Analytic Account :"
-msgstr ""
+msgstr "Cuenta analítica:"
 
 #. module: account_budget
-#: wizard_button:account.budget.report,init,report:0
-#: wizard_button:wizard.analytic.account.budget.report,init,report:0
-#: wizard_button:wizard.crossovered.budget,init,report:0
-#: wizard_button:wizard.crossovered.budget.summary,init,report:0
-msgid "Print"
-msgstr "Imprimir"
+#: rml:account.analytic.account.budget:0
+#: field:crossovered.budget.lines,practical_amount:0
+#: rml:crossovered.budget.report:0
+msgid "Practical Amount"
+msgstr "Importe real"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -204,10 +227,10 @@ msgid "Planned Amount"
 msgstr "Importe previsto"
 
 #. module: account_budget
-#: rml:account.analytic.account.budget:0
-#: rml:crossovered.budget.report:0
-msgid "Perc(%)"
-msgstr "Porc(%)"
+#: code:addons/account_budget/wizard/wizard_budget_report.py:0
+#, python-format
+msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
+msgstr "¡No se han encontrado dotaciones o presupuestos principales de gasto en el presupuesto %s!"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -231,17 +254,26 @@ msgid "Validate"
 msgstr "Validar"
 
 #. module: account_budget
+#: wizard_view:account.budget.report,init:0
+msgid "Select period"
+msgstr "Seleccionar período"
+
+#. module: account_budget
 #: wizard_view:wizard.crossovered.budget,init:0
 #: wizard_view:wizard.crossovered.budget.summary,init:0
 msgid "Select Options"
 msgstr "Seleccionar opciones"
 
 #. module: account_budget
+#: wizard_view:wizard.analytic.account.budget.report,init:0
+msgid "Select Dates Period"
+msgstr "Seleccione fechas del período"
+
+#. module: account_budget
 #: rml:account.analytic.account.budget:0
-#: field:crossovered.budget.lines,practical_amount:0
 #: rml:crossovered.budget.report:0
-msgid "Practical Amount"
-msgstr "Importe real"
+msgid "Perc(%)"
+msgstr "Porc(%)"
 
 #. module: account_budget
 #: field:crossovered.budget,date_to:0
@@ -294,9 +326,10 @@ msgid "Budget"
 msgstr "Presupuesto"
 
 #. module: account_budget
-#: field:account.budget.post.dotation,post_id:0
-msgid "Item"
-msgstr "Item"
+#: code:addons/account_budget/crossovered_budget.py:0
+#, python-format
+msgid "Error!"
+msgstr "¡Error!"
 
 #. module: account_budget
 #: field:account.budget.post.dotation,amount:0
@@ -317,6 +350,12 @@ msgid "Budgets"
 msgstr "Presupuestos"
 
 #. module: account_budget
+#: code:addons/account_budget/crossovered_budget.py:0
+#, python-format
+msgid "The General Budget '%s' has no Accounts!"
+msgstr "¡El presupuesto general '%s' no tiene cuentas!"
+
+#. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
@@ -325,24 +364,24 @@ msgstr "Cancelado"
 #: view:account.budget.post.dotation:0
 #: model:ir.model,name:account_budget.model_account_budget_post_dotation
 msgid "Budget Dotation"
-msgstr ""
+msgstr "Dotación presupuestaria"
 
 #. module: account_budget
 #: view:account.budget.post.dotation:0
 msgid "Budget Dotations"
-msgstr ""
+msgstr "Dotaciones presupuestarias"
 
 #. module: account_budget
 #: rml:account.budget:0
 msgid "Budget Item Detail"
-msgstr ""
+msgstr "Detalle de elemento presupuestario"
 
 #. module: account_budget
 #: view:account.budget.post:0
 #: field:crossovered.budget.lines,general_budget_id:0
 #: model:ir.model,name:account_budget.model_account_budget_post
 msgid "Budgetary Position"
-msgstr ""
+msgstr "Posición presupuestaria"
 
 #. module: account_budget
 #: wizard_field:account.budget.report,init,date1:0
@@ -358,7 +397,7 @@ msgstr "Inicio del período"
 #: model:ir.actions.wizard,name:account_budget.account_analytic_account_budget_report
 #: model:ir.actions.wizard,name:account_budget.wizard_crossovered_budget_menu
 msgid "Print Budgets"
-msgstr ""
+msgstr "Imprimir presupuestos"
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -372,14 +411,22 @@ msgid "Total Planned Amount"
 msgstr "Importe total previsto"
 
 #. module: account_budget
-#: wizard_view:wizard.analytic.account.budget.report,init:0
-msgid "Select Dates Period"
-msgstr "Seleccione fechas del período"
+#: field:account.budget.post.dotation,post_id:0
+msgid "Item"
+msgstr "Item"
+
+#. module: account_budget
+#: wizard_button:account.budget.report,init,report:0
+#: wizard_button:wizard.analytic.account.budget.report,init,report:0
+#: wizard_button:wizard.crossovered.budget,init,report:0
+#: wizard_button:wizard.crossovered.budget.summary,init,report:0
+msgid "Print"
+msgstr "Imprimir"
 
 #. module: account_budget
 #: field:account.budget.post,dotation_ids:0
 msgid "Spreading"
-msgstr ""
+msgstr "Difusión"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
@@ -395,7 +442,7 @@ msgstr "Ejercicio fiscal"
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Cuenta analítica"
 
 #. module: account_budget
 #: rml:crossovered.budget.report:0
@@ -449,7 +496,7 @@ msgstr "Cancelar"
 #. module: account_budget
 #: model:ir.module.module,shortdesc:account_budget.module_meta_information
 msgid "Budget Management"
-msgstr ""
+msgstr "Gestión presupuestaria"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
@@ -467,9 +514,4 @@ msgstr "Análisis desde"
 #: selection:crossovered.budget,state:0
 msgid "Validated"
 msgstr "Validado"
-
-#. module: account_budget
-#: wizard_view:account.budget.report,init:0
-msgid "Select period"
-msgstr "Seleccionar período"
 

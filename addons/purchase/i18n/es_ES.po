@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:55:35+0000\n"
-"PO-Revision-Date: 2009-08-28 15:55:35+0000\n"
+"POT-Creation-Date: 2010-02-22 14:44:07+0000\n"
+"PO-Revision-Date: 2010-02-22 14:44:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgstr "Validado por"
 #. module: purchase
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: purchase
 #: field:purchase.order,partner_id:0
@@ -56,14 +56,20 @@ msgid "Delivery"
 msgstr "Entrega"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "No Pricelist !"
+msgstr "¡No tarifa!"
+
+#. module: purchase
 #: field:purchase.order.line,product_qty:0
 msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: purchase
-#: selection:purchase.order,invoice_method:0
-msgid "From Order"
-msgstr "Desde pedido"
+#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
+msgid "Packing"
+msgstr "Empaquetado/Albarán"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
@@ -147,6 +153,7 @@ msgstr "Notas"
 #. module: purchase
 #: rml:purchase.order:0
 #: field:purchase.order,amount_tax:0
+#: view:purchase.order.line:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
 msgstr "Impuestos"
@@ -161,9 +168,9 @@ msgid "Purchase Order"
 msgstr "Pedido de compra"
 
 #. module: purchase
-#: rml:purchase.quotation:0
-msgid "Regards,"
-msgstr "Recuerdos,"
+#: field:purchase.order,name:0
+msgid "Order Reference"
+msgstr "Referencia del pedido"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -191,15 +198,20 @@ msgid "Incoming Products"
 msgstr "Productos entrantes"
 
 #. module: purchase
-#: rml:purchase.order:0
-#: rml:purchase.quotation:0
-msgid "Qty"
-msgstr "Ctdad"
+#: model:process.node,note:purchase.process_node_confirmpurchaseorder0
+msgid "Purchase order is confirmed by the user."
+msgstr "Pedido de compra es confirmado por el usuario."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
 msgstr "Corregido manualmente"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You must first cancel all invoices attached to this purchase order."
+msgstr "Primero debe cancelar todas las facturas asociadas a este pedido de compra."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -256,6 +268,18 @@ msgid "Order Line"
 msgstr "Línea del pedido"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Wrong Product UOM !"
+msgstr "¡UdM del producto errónea!"
+
+#. module: purchase
 #: selection:purchase.order,state:0
 msgid "Confirmed"
 msgstr "Confirmado"
@@ -279,7 +303,7 @@ msgstr "Control factura"
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
-msgstr ""
+msgstr "Petición presupuesto"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -327,10 +351,10 @@ msgid "Shipping address :"
 msgstr "Dirección de envío :"
 
 #. module: purchase
-#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
-#: field:res.partner,property_product_pricelist_purchase:0
-msgid "Purchase Pricelist"
-msgstr "Tarifa de compra"
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Error !"
+msgstr "¡Error!"
 
 #. module: purchase
 #: field:purchase.order,minimum_planned_date:0
@@ -343,9 +367,9 @@ msgid "Approved by Supplier"
 msgstr "Aprobado por proveedor"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
-msgid "Packing"
-msgstr "Empaquetado/Albarán"
+#: selection:purchase.order,invoice_method:0
+msgid "From Order"
+msgstr "Desde pedido"
 
 #. module: purchase
 #: model:ir.actions.wizard,name:purchase.purchase_order_merge
@@ -358,9 +382,10 @@ msgid "Reservation Destination"
 msgstr "Destinación de la reserva"
 
 #. module: purchase
-#: field:purchase.order,name:0
-msgid "Order Reference"
-msgstr "Referencia del pedido"
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Invalid action !"
+msgstr "¡Acción no válida!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -371,6 +396,11 @@ msgstr "Realizado"
 #: field:purchase.order,pricelist_id:0
 msgid "Pricelist"
 msgstr "Tarifa"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+msgid "Request for quotation is proposed by the system."
+msgstr "La solicitud de presupuesto es propuesta por el sistema."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -386,6 +416,11 @@ msgstr "¡XML inválido para la definición de la vista!"
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "Pre-generated supplier invoice to control based on order"
 msgstr "Factura de proveedor pre-generada para control basada en pedido"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+msgid "Product purchases"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
@@ -423,6 +458,12 @@ msgid "Encoded manually by the user."
 msgstr "Codificación manual del usuario."
 
 #. module: purchase
+#: rml:purchase.order:0
+#: rml:purchase.quotation:0
+msgid "Qty"
+msgstr "Ctdad"
+
+#. module: purchase
 #: help:purchase.order,minimum_planned_date:0
 msgid "This is computed as the minimum scheduled date of all purchase order lines' products."
 msgstr "Ésto se calcula como la mínima fecha planificada para todos los productos de las líneas del pedido de compra."
@@ -430,7 +471,7 @@ msgstr "Ésto se calcula como la mínima fecha planificada para todos los produc
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr "Compras"
+msgstr "Pedidos de compra"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -461,7 +502,7 @@ msgstr "Ésta es la lista de albaranes generados por esta compra"
 #: model:ir.module.module,shortdesc:purchase.module_meta_information
 #: model:ir.ui.menu,name:purchase.menu_purchase_root
 msgid "Purchase Management"
-msgstr "Gestión de compras"
+msgstr "Compras"
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
@@ -479,6 +520,12 @@ msgid "Invoiced"
 msgstr "Facturado"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a product UOM in the same category than the purchase UOM of the product"
+msgstr "Debe seleccionar una UdM del producto de la misma categoría que la UdM de compra del producto"
+
+#. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Destination Address"
 msgstr "Dirección destinatario"
@@ -488,6 +535,12 @@ msgstr "Dirección destinatario"
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
 msgstr "Línea pedido de compra"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -516,9 +569,14 @@ msgid "Purchase order"
 msgstr "Pedido de compra"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-msgid "Request for quotation is proposed by the system."
-msgstr "La solicitud de presupuesto es propuesta por el sistema."
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!' % s['state']))\n"
+"\n"
+"        # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support \n"
+"        # automatically sending subflow.delete upon deletion\n"
+"        wf_service = netsvc.LocalService(\"workflow"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -546,9 +604,15 @@ msgid "Date"
 msgstr ""
 
 #. module: purchase
-#: help:purchase.order,origin:0
-msgid "Reference of the document that generated this purchase order request."
-msgstr "Referencia al documento que ha generado esta solicitud de pedido de compra."
+#: model:process.node,name:purchase.process_node_approvepurchaseorder0
+msgid "Approved Purchase"
+msgstr "Compra aprobada"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+msgstr "No hay cuenta de gastos definida para este producto: \"%s\" (id:%d)"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -583,7 +647,7 @@ msgstr "Calcular"
 #. module: purchase
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "¡No puede tener 2 versiones de tarifa que se solapen!"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -601,6 +665,11 @@ msgid "Total :"
 msgstr "Total :"
 
 #. module: purchase
+#: constraint:product.pricelist.item:0
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr ""
+
+#. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "When purchase order is approved , it creates its packing list."
 msgstr "Cuando el pedido de compra es aprobado, crea su albarán."
@@ -616,6 +685,11 @@ msgid "Order Status"
 msgstr "Estado del pedido"
 
 #. module: purchase
+#: help:purchase.order,origin:0
+msgid "Reference of the document that generated this purchase order request."
+msgstr "Referencia al documento que ha generado esta solicitud de pedido de compra."
+
+#. module: purchase
 #: field:purchase.order.line,price_subtotal:0
 msgid "Subtotal"
 msgstr "Subtotal"
@@ -623,7 +697,7 @@ msgstr "Subtotal"
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr ""
+msgstr "Versión tarifa de compra por defecto"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -652,6 +726,12 @@ msgstr "Factura"
 #: wizard_button:purchase.order.merge,init,end:0
 msgid "Cancel"
 msgstr "Cancelar"
+
+#. module: purchase
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+msgid "Purchase Order Lines"
+msgstr ""
 
 #. module: purchase
 #: view:res.partner:0
@@ -719,10 +799,17 @@ msgid "Date Approved"
 msgstr "Fecha aprobación"
 
 #. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Could not cancel this purchase order !"
+msgstr "¡No se puede cancelar este pedido de compra!"
+
+#. module: purchase
 #: model:ir.module.module,description:purchase.module_meta_information
 msgid "Module for purchase management\n"
 "    Request for quotation, Create Supplier Invoice, Print Order..."
-msgstr ""
+msgstr "Módulo para la gestión de compras\n"
+"    Solicitud de presupuesto, crear pedido de compra, crear factura de proveedor, imprimir pedido de compra..."
 
 #. module: purchase
 #: field:purchase.order.line,product_id:0
@@ -730,11 +817,15 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: purchase
-#: rml:purchase.order:0
-#: field:purchase.order.line,name:0
-#: rml:purchase.quotation:0
-msgid "Description"
-msgstr "Descripción"
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "No Partner!"
+msgstr "¡Falta empresa!"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Invoicing"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
@@ -763,19 +854,31 @@ msgid "Product UOM"
 msgstr "UdM del producto"
 
 #. module: purchase
-#: field:purchase.order.line,move_ids:0
-msgid "Reservation"
-msgstr ""
+#: rml:purchase.quotation:0
+msgid "Regards,"
+msgstr "Recuerdos,"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_confirmpurchaseorder0
-msgid "Purchase order is confirmed by the user."
-msgstr "Pedido de compra es confirmado por el usuario."
+#: field:purchase.order.line,move_ids:0
+msgid "Reservation"
+msgstr "Reserva"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Could not cancel purchase order !"
+msgstr "¡No se puede cancelar el pedido de compra!"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "Purchase Invoice"
 msgstr "Factura de compra"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this purchase order."
+msgstr "Primero debe cancelar todos los albaranes asociados a este pedido de compra."
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -809,6 +912,12 @@ msgid "Request For Quotations"
 msgstr "Pedir presupuestos"
 
 #. module: purchase
+#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
+#: field:res.partner,property_product_pricelist_purchase:0
+msgid "Purchase Pricelist"
+msgstr "Tarifa de compra"
+
+#. module: purchase
 #: field:purchase.order,invoice_method:0
 msgid "Invoicing Control"
 msgstr "Método facturación"
@@ -819,9 +928,11 @@ msgid "Approve"
 msgstr "Aprobar"
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_approvepurchaseorder0
-msgid "Approved Purchase"
-msgstr "Compra aprobada"
+#: rml:purchase.order:0
+#: field:purchase.order.line,name:0
+#: rml:purchase.quotation:0
+msgid "Description"
+msgstr "Descripción"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0

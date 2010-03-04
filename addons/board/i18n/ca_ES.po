@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:28:23+0000\n"
-"PO-Revision-Date: 2009-08-28 15:28:23+0000\n"
+"POT-Creation-Date: 2010-02-22 14:27:03+0000\n"
+"PO-Revision-Date: 2010-02-22 14:27:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,13 @@ msgstr "Autor"
 #. module: board
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
-msgstr ""
+msgstr "Mòdul principal per a taulells"
+
+#. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "User Error!"
+msgstr "Error d'usuari!"
 
 #. module: board
 #: view:board.note:0
@@ -49,7 +55,7 @@ msgstr "Amplada"
 #. module: board
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #. module: board
 #: field:board.board.line,name:0
@@ -119,6 +125,12 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Per favor inseriu vista(s) del taulell!"
+
+#. module: board
 #: model:ir.model,name:board.model_board_note_type
 msgid "board.note.type"
 msgstr "board.note.type"
@@ -133,7 +145,7 @@ msgstr "Taullell"
 #. module: board
 #: model:ir.module.module,description:board.module_meta_information
 msgid "Base module for all dashboards."
-msgstr ""
+msgstr "Mòdul base per tots els taulells."
 
 #. module: board
 #: field:board.board.line,position:0

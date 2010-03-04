@@ -24,5 +24,31 @@
 				</field>
 			</field>
 		</record>
+
+        <record model="ir.ui.view" id="l10nch_view_res_partner_bank">
+			<field name="name">res.partner_bank.form</field>
+			<field name="model">res.partner.bank</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="base.view_partner_bank_form"/>
+			<field name="arch" type="xml">
+				<field name="country_id" position="after">
+					<field name="printBank" select="2"/>
+                    <field name="printAccount" select="2"/>
+				</field>
+			</field>
+		</record>
+         <record model="ir.ui.view" id="l10nch_view_res_partner_bank">
+			<field name="name">res.partner_partner_bank.form</field>
+			<field name="model">res.partner</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="account.view_partner_property_form"/>
+			<field name="arch" type="xml">
+				<field name="bank" position="after">
+                    <newline />
+					<field name="printBank" select="2"/>
+                    <field name="printAccount" select="2"/>
+				</field>
+			</field>
+		</record>
 	</data>
 </openerp>

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:35:24+0000\n"
-"PO-Revision-Date: 2009-08-28 15:35:24+0000\n"
+"POT-Creation-Date: 2010-02-22 14:31:31+0000\n"
+"PO-Revision-Date: 2010-02-22 14:31:31+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,13 +22,13 @@ msgstr "Subtotaal"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Invoice Date:"
-msgstr "Factuurdatum:"
+msgid "Note:"
+msgstr ""
 
 #. module: account_invoice_layout
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -50,11 +50,6 @@ msgstr "Facturen met layout en bericht"
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
 msgstr "Korting (%)"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "(Incl. taxes):"
-msgstr ""
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -79,12 +74,22 @@ msgstr "Eenheidsprijs"
 #. module: account_invoice_layout
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_notify_message
 msgid "Notify By Messages"
 msgstr "Opmerkzaam maken met bericht"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "VAT :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Document"
+msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -107,14 +112,14 @@ msgid "Notification Message"
 msgstr "Bericht"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
-msgstr "Klant ref:"
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Product"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid ")"
-msgstr ""
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "account_invoice_layout"
+msgstr "account_invoice_layout"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -128,7 +133,7 @@ msgstr "Prijs"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "/ ("
+msgid "Invoice Date"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -152,9 +157,9 @@ msgid "Base"
 msgstr "Basis"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
-msgstr "Fax:"
+#: selection:account.invoice.line,state:0
+msgid "Page Break"
+msgstr "Pagina-einde"
 
 #. module: account_invoice_layout
 #: field:notify.message,msg:0
@@ -168,22 +173,22 @@ msgstr "Schrijf een opmerking of een hoopvol bericht."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Tel. :"
-msgstr "Tel. :"
+msgid "Partner Ref."
+msgstr ""
 
 #. module: account_invoice_layout
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Page Break"
-msgstr "Pagina-einde"
+msgstr "Ongeldige XML voor weergave!"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Document:"
+msgid "Fax :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Total:"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -195,11 +200,6 @@ msgstr "Kies bericht"
 #: view:notify.message:0
 msgid "Messages"
 msgstr "Berichten"
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr "Product"
 
 #. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
@@ -218,7 +218,7 @@ msgstr "Bedrag"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Description/Taxes"
+msgid "Tel. :"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -242,11 +242,6 @@ msgid "Refund"
 msgstr "Crediteer"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
-msgstr "BTW:"
-
-#. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
 msgstr "Scheidingslijn"
@@ -258,22 +253,12 @@ msgstr "Inkoopfactuur"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Note :"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "BTW"
 
 #. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
-msgstr "account_invoice_layout"
-
-#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (Excl. taxes):"
+msgid "Net Total:"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -295,11 +280,6 @@ msgstr "Credit inkoopfactuur"
 #: wizard_field:wizard.notify_message,init,message:0
 msgid "Message"
 msgstr "Bericht"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
-msgstr "Totaal"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form

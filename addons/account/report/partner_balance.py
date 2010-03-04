@@ -28,7 +28,7 @@ from report import report_sxw
 
 class partner_balance(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(partner_balance, self).__init__(cr, uid, name, context)
+        super(partner_balance, self).__init__(cr, uid, name, context=context)
         self.date_lst = []
         self.date_lst_string = ''
         self.account_ids = ''
@@ -217,6 +217,7 @@ class partner_balance(report_sxw.rml_parse):
                 "JOIN account_account ac ON (l.account_id = ac.id)" \
                 "WHERE ac.type IN " + self.ACCOUNT_TYPE + " " \
                     "AND l.date IN (" + self.date_lst_string + ") " \
+                    "AND ac.company_id = "+ str(data['form']['company_id']) +" " \
                 "GROUP BY p.id, p.ref, p.name,l.account_id,ac.name,ac.code " \
                 "ORDER BY l.account_id,p.name")
             res = self.cr.dictfetchall()

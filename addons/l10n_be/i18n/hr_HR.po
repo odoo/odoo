@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:31:55+0000\n"
-"PO-Revision-Date: 2009-08-28 15:31:55+0000\n"
+"POT-Creation-Date: 2010-02-22 14:29:17+0000\n"
+"PO-Revision-Date: 2010-02-22 14:29:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: l10n_be
 #: selection:vat.intra.xml,init,trimester:0
 msgid "Oct/Nov/Dec"
-msgstr ""
+msgstr "Lis/Stu/Pro"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_receiv
@@ -30,11 +30,12 @@ msgstr ""
 #: wizard_view:vat.intra.xml,go:0
 #: wizard_view:wizard.account.xml.vat.declaration,go:0
 msgid "Notification"
-msgstr ""
+msgstr "Obavijest"
 
 #. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_1
-msgid "Régime National"
+#: code:addons/l10n_be/wizard/partner_vat_listing.py:0
+#, python-format
+msgid "No partner has a VAT Number asociated with him."
 msgstr ""
 
 #. module: l10n_be
@@ -48,38 +49,44 @@ msgid "Tiers"
 msgstr ""
 
 #. module: l10n_be
+#: wizard_field:wizard.account.xml.vat.declaration,init,period:0
+msgid "Period"
+msgstr "Period"
+
+#. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_charge
 msgid "Charge"
 msgstr ""
 
 #. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
-msgid "Régime Intra-Communautaire"
-msgstr ""
+#: code:addons/l10n_be/wizard/partner_vat_listing.py:0
+#, python-format
+msgid "Data Insufficient!"
+msgstr "Nedovoljni Podaci!"
 
 #. module: l10n_be
 #: wizard_button:list.vat.detail,init,go:0
 #: wizard_button:vat.intra.xml,init,go:0
 #: wizard_button:wizard.account.xml.vat.declaration,init,go:0
 msgid "Create XML"
-msgstr ""
+msgstr "Kreiraj XML"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_capitaux
 msgid "Capital"
-msgstr ""
+msgstr "Kapital"
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,go,msg:0
 #: wizard_field:vat.intra.xml,go,msg:0
 #: wizard_field:wizard.account.xml.vat.declaration,go,msg:0
 msgid "File created"
-msgstr ""
+msgstr "Kreirana datoteka"
 
 #. module: l10n_be
 #: selection:vat.intra.xml,init,trimester:0
 msgid "Apr/May/Jun"
-msgstr ""
+msgstr "Tra/Svi/Lip"
 
 #. module: l10n_be
 #: constraint:account.account.template:0
@@ -89,7 +96,7 @@ msgstr ""
 #. module: l10n_be
 #: selection:vat.intra.xml,init,trimester:0
 msgid "Jul/Aug/Sep"
-msgstr ""
+msgstr "Srp/Kol/Ruj"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_immo
@@ -101,7 +108,7 @@ msgstr ""
 #: wizard_field:vat.intra.xml,go,file_save:0
 #: wizard_field:wizard.account.xml.vat.declaration,go,file_save:0
 msgid "Save File"
-msgstr ""
+msgstr "Spremi Datoteku"
 
 #. module: l10n_be
 #: wizard_view:vat.intra.xml,init:0
@@ -116,7 +123,7 @@ msgstr ""
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
 msgid "Select Fiscal Year"
-msgstr ""
+msgstr "Odaberi Fiskalnu Godinu"
 
 #. module: l10n_be
 #: wizard_view:vat.intra.xml,init:0
@@ -140,14 +147,19 @@ msgid "Tiers - Payable"
 msgstr ""
 
 #. module: l10n_be
+#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_1
+msgid "Régime National"
+msgstr ""
+
+#. module: l10n_be
 #: wizard_view:wizard.account.xml.vat.declaration,init:0
 msgid "Select Period"
-msgstr ""
+msgstr "Odaberite Period"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_produit
 msgid "Produit"
-msgstr ""
+msgstr "Proizvod"
 
 #. module: l10n_be
 #: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
@@ -157,14 +169,14 @@ msgstr ""
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_view
 msgid "Vue"
-msgstr ""
+msgstr "Pogled"
 
 #. module: l10n_be
 #: wizard_button:list.vat.detail,go,end:0
 #: wizard_button:vat.intra.xml,go,end:0
 #: wizard_button:wizard.account.xml.vat.declaration,go,end:0
 msgid "Ok"
-msgstr ""
+msgstr "U redu"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
@@ -174,7 +186,7 @@ msgstr ""
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,limit_amount:0
 msgid "Limit Amount"
-msgstr ""
+msgstr "Ograniči Iznos"
 
 #. module: l10n_be
 #: model:ir.actions.wizard,name:l10n_be.partner_wizard_vat
@@ -186,17 +198,24 @@ msgstr ""
 #: wizard_field:list.vat.detail,init,fyear:0
 #: wizard_field:vat.intra.xml,init,fyear:0
 msgid "Fiscal Year"
-msgstr ""
+msgstr "Fiskalna Godina"
 
 #. module: l10n_be
 #: wizard_view:wizard.account.xml.vat.declaration,go:0
 msgid "XML Flie has been Created."
-msgstr ""
+msgstr "XML Datoteka je Kreirana."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_stock
 msgid "Stock et Encours"
 msgstr ""
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
+#: code:addons/l10n_be/wizard/partner_vat_listing.py:0
+#, python-format
+msgid "Data Insufficient"
+msgstr "Nedovoljni Podaci"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.menu_finance_belgian_statement
@@ -207,7 +226,7 @@ msgstr ""
 #: wizard_field:list.vat.detail,init,test_xml:0
 #: wizard_field:vat.intra.xml,init,test_xml:0
 msgid "Test XML file"
-msgstr ""
+msgstr "Testiraj XML datoteku"
 
 #. module: l10n_be
 #: model:ir.actions.todo,note:l10n_be.config_call_account_template
@@ -227,26 +246,28 @@ msgid "Tax"
 msgstr ""
 
 #. module: l10n_be
-#: wizard_field:wizard.account.xml.vat.declaration,init,period:0
-msgid "Period"
+#: code:addons/l10n_be/wizard/account_vat_declaration.py:0
+#: code:addons/l10n_be/wizard/partner_vat_listing.py:0
+#, python-format
+msgid "No VAT Number Associated with Main Company!"
 msgstr ""
 
 #. module: l10n_be
 #: wizard_view:vat.intra.xml,init:0
 #: wizard_field:vat.intra.xml,init,country_ids:0
 msgid "European Countries"
-msgstr ""
+msgstr "Europske Zemlje"
 
 #. module: l10n_be
 #: wizard_view:vat.intra.xml,init:0
 msgid "General Information"
-msgstr ""
+msgstr "Opće Informacije"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,go:0
 #: wizard_view:vat.intra.xml,go:0
 msgid "XML File has been Created."
-msgstr ""
+msgstr "XML Datoteka je Kreirana."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_financiers
@@ -258,6 +279,11 @@ msgstr ""
 #: wizard_button:vat.intra.xml,init,end:0
 #: wizard_button:wizard.account.xml.vat.declaration,init,end:0
 msgid "Cancel"
+msgstr "Poništi"
+
+#. module: l10n_be
+#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
+msgid "Régime Intra-Communautaire"
 msgstr ""
 
 #. module: l10n_be
@@ -269,5 +295,5 @@ msgstr ""
 #. module: l10n_be
 #: selection:vat.intra.xml,init,trimester:0
 msgid "Jan/Feb/Mar"
-msgstr ""
+msgstr "Sij/Velj/Ožu"
 

@@ -19,7 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from xml import dom
+from lxml import etree
 
 from mx import DateTime
 from mx.DateTime import now
@@ -163,7 +163,7 @@ class account_analytic_plan_instance(osv.osv):
                 <newline/>"""%(i,tools.to_xml(line.name),tools.to_xml(line.name),line.root_analytic_id and line.root_analytic_id.id or 0)
                     i+=1
                 res['arch'] += "</form>"
-                doc = dom.minidom.parseString(res['arch'])
+                doc = etree.fromstring(res['arch'].encode('utf8'))
                 xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
                 res['arch'] = xarch
                 res['fields'] = xfields
@@ -374,5 +374,26 @@ class analytic_default(osv.osv):
         'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
     }
 analytic_default()
+
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+
+    # Method overridden to set the analytic account by default on criterion match
+    def invoice_line_create(self, cr, uid, ids, context={}):
+        create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
+        if ids:
+            sale_line_obj = self.browse(cr, uid, ids[0], context)
+            pool_inv_line = self.pool.get('account.invoice.line')
+
+            for line in pool_inv_line.browse(cr, uid, create_ids, context):
+                rec = self.pool.get('account.analytic.default').account_get(cr, uid, line.product_id.id, sale_line_obj.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
+
+                if rec:
+                    pool_inv_line.write(cr, uid, [line.id], {'analytics_id':rec.analytics_id.id}, context=context)
+                    cr.commit()
+        return create_ids
+
+sale_order_line()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

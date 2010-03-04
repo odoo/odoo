@@ -26,6 +26,7 @@ import wizard
 import netsvc
 import ir
 import pooler
+from tools.translate import _
 
 sale_form = """<?xml version="1.0"?>
 <form string="Convert to Quote">
@@ -91,7 +92,7 @@ class make_sale(wizard.interface):
 
             if False in partner_addr.values():
                 raise wizard.except_wizard(_('Data Insufficient!'),_('Customer has no addresses defined!'))
-            
+
             vals = {
                 'origin': 'CRM:%s' % str(case.id),
                 'picking_policy': data['form']['picking_policy'],
@@ -103,8 +104,13 @@ class make_sale(wizard.interface):
                 'partner_shipping_id': partner_addr['delivery'],
                 'order_policy': 'manual',
                 'date_order': now(),
-                'fiscal_position': fpos
+                'fiscal_position': fpos,
             }
+
+            if partner_id:
+                partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                vals['user_id'] = partner.user_id and partner.user_id.id or uid
+
             if data['form']['analytic_account']:
                 vals['project_id'] = data['form']['analytic_account']
             new_id = sale_obj.create(cr, uid, vals)
@@ -116,7 +122,7 @@ class make_sale(wizard.interface):
                 value['tax_id'] = [(6,0,value['tax_id'])]
                 sale_line_obj.create(cr, uid, value)
 
-            case_obj.write(cr, uid, case.id, {'ref': 'sale.order,%s' % new_id})
+            case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
             new_ids.append(new_id)
 
         if data['form']['close']:

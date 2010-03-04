@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:39:07+0000\n"
-"PO-Revision-Date: 2009-08-28 15:39:07+0000\n"
+"POT-Creation-Date: 2010-02-22 14:33:48+0000\n"
+"PO-Revision-Date: 2010-02-22 14:33:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,7 +36,9 @@ msgid "Author"
 msgstr "Auteur"
 
 #. module: wiki
+#: code:addons/wiki/wizard/open_page.py:0
 #: model:ir.actions.wizard,name:wiki.wizard_open_page
+#, python-format
 msgid "Open Page"
 msgstr "Ouvrir la Page"
 
@@ -186,6 +188,12 @@ msgid "Pages"
 msgstr "Pages"
 
 #. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
+msgstr ""
+
+#. module: wiki
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "XML non valide pour l'architecture de la vue"
@@ -253,6 +261,12 @@ msgstr "wiki: Différences"
 #: field:wiki.wiki.history,wiki_id:0
 msgid "Wiki Id"
 msgstr "ID Wiki"
+
+#. module: wiki
+#: code:addons/wiki/wizard/open_page.py:0
+#, python-format
+msgid "No action found"
+msgstr "Aucune Action trouvée"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_name:0
@@ -323,6 +337,12 @@ msgstr "Modifié par"
 #: field:wiki.wiki,toc:0
 msgid "Table of Contents"
 msgstr "Table des matières"
+
+#. module: wiki
+#: code:addons/wiki/wizard/show_diff.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
 
 #. module: wiki
 #: wizard_button:wiki.create.menu,init,end:0

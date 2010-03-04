@@ -110,7 +110,9 @@ class wiz_refund(wizard.interface):
             # we compute due date
             #!!!due date = date inv date on formdate
             pool.get('account.invoice').write(cr, uid, [refund.id],{'date_due':date,'check_total':inv.check_total})
-
+            # to make the taxes calculated
+            pool.get('account.invoice').button_compute(cr, uid, refund_id)
+            
             created_inv.append(refund_id[0])
             #if inv is paid we unreconcile
             if mode in ('cancel','modify'):
@@ -152,10 +154,10 @@ class wiz_refund(wizard.interface):
                     invoice = invoice[0]
                     del invoice['id']
                     invoice_lines = pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
-                    invoice_lines = pool.get('account.invoice')._refund_cleanup_lines(invoice_lines)
+                    invoice_lines = pool.get('account.invoice')._refund_cleanup_lines(cr, uid, invoice_lines)
                     tax_lines = pool.get('account.invoice.tax').read(
                         cr, uid, invoice['tax_line'])
-                    tax_lines = pool.get('account.invoice')._refund_cleanup_lines(tax_lines)
+                    tax_lines = pool.get('account.invoice')._refund_cleanup_lines(cr, uid, tax_lines)
 
                     invoice.update({
                         'type': inv.type,

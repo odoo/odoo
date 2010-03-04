@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:44:14+0000\n"
-"PO-Revision-Date: 2009-08-28 15:44:14+0000\n"
+"POT-Creation-Date: 2010-02-22 14:36:54+0000\n"
+"PO-Revision-Date: 2010-02-22 14:36:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,9 +27,16 @@ msgid "Object"
 msgstr "Oggetto"
 
 #. module: subscription
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri speciali!"
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "Please provide another source document.\nThis one does not exist !"
+msgstr ""
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
+msgstr ""
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -59,7 +66,12 @@ msgstr "Data attuale"
 #. module: subscription
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome di modulo non valido nella definizione dell'azione."
+
+#. module: subscription
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri speciali!"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -70,6 +82,12 @@ msgstr "Settimane"
 #: field:subscription.subscription,state:0
 msgid "Status"
 msgstr "Stato"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
@@ -236,6 +254,12 @@ msgstr "Abbonamenti"
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
 msgstr "Tipo Documento"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "Wrong Source Document !"
+msgstr ""
 
 #. module: subscription
 #: view:subscription.document.fields:0

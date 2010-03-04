@@ -31,6 +31,11 @@ class ir_sequence_fiscalyear(osv.osv):
         "sequence_main_id": fields.many2one("ir.sequence", 'Main Sequence', required=True, ondelete='cascade'),
         "fiscalyear_id": fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, ondelete='cascade')
     }
+
+    _sql_constraints = [
+        ('main_id', 'CHECK (sequence_main_id != sequence_id)',  'Main Sequence must be different from current !'),
+    ]
+
 ir_sequence_fiscalyear()
 
 class ir_sequence(osv.osv):
@@ -39,6 +44,8 @@ class ir_sequence(osv.osv):
         'fiscal_ids' : fields.one2many('account.sequence.fiscalyear', 'sequence_main_id', 'Sequences')
     }
     def get_id(self, cr, uid, sequence_id, test='id=%s', context={}):
+        if test not in ('id=%s', 'code=%s'):
+            raise ValueError('invalid test')
         cr.execute('select id from ir_sequence where '+test+' and active=%s', (sequence_id, True,))
         res = cr.dictfetchone()
         if res:

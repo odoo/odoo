@@ -26,6 +26,7 @@ import cStringIO
 import wizard
 from osv import osv
 import pooler
+from tools.translate import _
 
 form_rep = '''<?xml version="1.0"?>
 <form string="Standard entries">
@@ -36,7 +37,7 @@ form_rep = '''<?xml version="1.0"?>
 
 
 fields_rep = {
-  'name': {'string': 'File name', 'type': 'char', 'required': True, 'help': 'Save report as .html format'},
+  'name': {'string': 'File name', 'type': 'char', 'required': True, 'help': 'Save report as .html format', 'size':64},
   'module_file': {'string': 'Save report', 'type': 'binary', 'required': True},
 }
 

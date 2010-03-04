@@ -26,7 +26,7 @@ from report import report_sxw
 
 class workcenter_code(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(workcenter_code, self).__init__(cr, uid, name, context)
+        super(workcenter_code, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
         })

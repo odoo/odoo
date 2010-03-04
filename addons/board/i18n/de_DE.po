@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:40:25+0000\n"
-"PO-Revision-Date: 2009-08-28 15:40:25+0000\n"
+"POT-Creation-Date: 2010-02-22 14:34:34+0000\n"
+"PO-Revision-Date: 2010-02-22 14:34:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,13 @@ msgstr "Autor"
 #. module: board
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
-msgstr ""
+msgstr "Anzeige Tafel Hauptmodul"
+
+#. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "User Error!"
+msgstr "Benutzerfehler!"
 
 #. module: board
 #: view:board.note:0
@@ -49,7 +55,7 @@ msgstr "Breite"
 #. module: board
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #. module: board
 #: field:board.board.line,name:0
@@ -119,6 +125,12 @@ msgid "Notes"
 msgstr "Bemerkungen"
 
 #. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Bitte Ansichten in Anzeigetafel einfügen"
+
+#. module: board
 #: model:ir.model,name:board.model_board_note_type
 msgid "board.note.type"
 msgstr "board.note.type"
@@ -133,7 +145,7 @@ msgstr "Anzeigetafel"
 #. module: board
 #: model:ir.module.module,description:board.module_meta_information
 msgid "Base module for all dashboards."
-msgstr ""
+msgstr "Basis Module für Anzeigetafeln"
 
 #. module: board
 #: field:board.board.line,position:0

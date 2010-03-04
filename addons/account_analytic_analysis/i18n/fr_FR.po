@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:39:07+0000\n"
-"PO-Revision-Date: 2009-08-28 15:39:07+0000\n"
+"POT-Creation-Date: 2010-02-22 14:33:48+0000\n"
+"PO-Revision-Date: 2010-02-22 14:33:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,7 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Calculé selon la formule : Quantité maximum - Total des heures"
 
 #. module: account_analytic_analysis
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all
 msgid "All Analytic Accounts"
 msgstr "Tous les comptes analytiques"
@@ -287,6 +288,12 @@ msgstr "Revenus par heure (réel)"
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
 msgstr "Temps Total"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#, python-format
+msgid "You try to bypass an access rule (Document type: %s)."
+msgstr "Vous essayez d'outrepasser une règle d'accès (Type de Document: %s)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0

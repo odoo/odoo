@@ -300,9 +300,12 @@ class hr_timesheet_sheet(osv.osv):
                     context, load='_classic_write')]
 
     def unlink(self, cr, uid, ids, context=None):
-        sheets = self.read(cr, uid, ids, ['state'])
-        if any(s['state'] in ('confirm', 'done') for s in sheets):
-            raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which are already confirmed !'))
+        sheets = self.read(cr, uid, ids, ['state','total_attendance'])
+        for sheet in sheets:
+            if sheet['state'] in ('confirm', 'done'):
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which are already confirmed !'))
+            elif sheet['total_attendance'] <> 0.00:
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which have attendance entries encoded !'))
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
 hr_timesheet_sheet()
@@ -343,7 +346,7 @@ class hr_timesheet_line(osv.osv):
                 res[line_id] = False
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args):
+    def _sheet_search(self, cursor, user, obj, name, args, context):
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')

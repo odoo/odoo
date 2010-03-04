@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:55:35+0000\n"
-"PO-Revision-Date: 2009-08-28 15:55:35+0000\n"
+"POT-Creation-Date: 2010-02-22 14:44:07+0000\n"
+"PO-Revision-Date: 2010-02-22 14:44:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,6 +47,7 @@ msgid "Warnings"
 msgstr "Avisos"
 
 #. module: warning
+#: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
@@ -83,7 +84,7 @@ msgstr "Factura"
 #. module: warning
 #: model:ir.module.module,shortdesc:warning.module_meta_information
 msgid "Module for Warnings form onchange Event"
-msgstr ""
+msgstr "Módulo para configuración de avisos en eventos"
 
 #. module: warning
 #: view:product.product:0
@@ -116,12 +117,14 @@ msgid "Message for Purchase Order"
 msgstr "Mensaje para el pedido de compra"
 
 #. module: warning
+#: code:addons/warning/warning.py:0
 #: help:product.product,purchase_line_warn:0
 #: help:product.product,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
+#, python-format
 msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
 msgstr "Si selecciona la opción \"Aviso\" se notificará a los usuarios con el mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción con el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el siguiente campo."
 
@@ -133,7 +136,7 @@ msgstr "Mensaje para factura"
 #. module: warning
 #: model:ir.module.module,description:warning.module_meta_information
 msgid "Module for Warnings form onchange Event."
-msgstr ""
+msgstr "Módulo para configuración de avisos en eventos"
 
 #. module: warning
 #: view:res.partner:0
@@ -144,6 +147,12 @@ msgstr "Aviso en los albaranes"
 #: view:res.partner:0
 msgid "Warning on the Purchase Order"
 msgstr "Aviso en el pedido de compra"
+
+#. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr ""
 
 #. module: warning
 #: view:res.partner:0

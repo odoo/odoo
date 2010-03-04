@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:37:49+0000\n"
-"PO-Revision-Date: 2009-08-28 15:37:49+0000\n"
+"POT-Creation-Date: 2010-02-22 14:33:02+0000\n"
+"PO-Revision-Date: 2010-02-22 14:33:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,22 +20,22 @@ msgstr ""
 #: selection:account.report.report,type:0
 #: model:ir.model,name:account_report.model_account_report_history
 msgid "Indicator"
-msgstr ""
+msgstr "Indikaattori"
 
 #. module: account_report
 #: wizard_field:print.indicators.pdf,init,file:0
 msgid "Select a PDF File"
-msgstr ""
+msgstr "Valitse PDF -tiedosto"
 
 #. module: account_report
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Operators:"
-msgstr ""
+msgstr "Operaattorit:"
 
 #. module: account_report
 #: field:account.report.report,parent_id:0
@@ -45,7 +45,7 @@ msgstr ""
 #. module: account_report
 #: field:account.report.report,disp_graph:0
 msgid "Display As Graph"
-msgstr ""
+msgstr "Näytä kuvaajana"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -65,6 +65,12 @@ msgstr ""
 #. module: account_report
 #: rml:print.indicators:0
 msgid "Tabular Summary"
+msgstr "Taulukko yhteenveto"
+
+#. module: account_report
+#: code:addons/account_report/wizard/wizard_print_indicators.py:0
+#, python-format
+msgid "Please select maximum 8 records to fit the page-width."
 msgstr ""
 
 #. module: account_report
@@ -75,12 +81,12 @@ msgstr ""
 #. module: account_report
 #: view:account.report.report:0
 msgid "= Goodness Indicator Limit:"
-msgstr ""
+msgstr "Hyvyyden ilmaisimen raja:"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "Very bad"
-msgstr ""
+msgstr "Todella huono"
 
 #. module: account_report
 #: field:account.report.history,val:0
@@ -91,7 +97,7 @@ msgstr ""
 #. module: account_report
 #: view:account.report.report:0
 msgid "= Badness Indicator Limit:"
-msgstr ""
+msgstr "Huonouden ilmaisimen raja:"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -102,7 +108,7 @@ msgstr ""
 #. module: account_report
 #: wizard_view:print.indicators.pdf,init:0
 msgid "Select the PDF file on which Indicators will be printed."
-msgstr ""
+msgstr "Valitse PDF -tiedosto mihin ilmaisimet tulostetaan"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -117,12 +123,12 @@ msgstr ""
 #. module: account_report
 #: selection:account.report.report,status:0
 msgid "Very Bad"
-msgstr ""
+msgstr "Todella huono"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.account_report_history_record_structure
 msgid "Indicator history"
-msgstr ""
+msgstr "Ilmaisinhistoria"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -168,12 +174,18 @@ msgstr ""
 #. module: account_report
 #: view:account.report.report:0
 msgid "Account Tax Code:"
-msgstr ""
+msgstr "Tilin verokoodi"
 
 #. module: account_report
 #: view:account.report.report:0
 #: selection:account.report.report,status:0
 msgid "Good"
+msgstr ""
+
+#. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: account_report
@@ -184,17 +196,17 @@ msgstr ""
 #. module: account_report
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Virheellinen XML näkymäarkkitehtuurille!"
 
 #. module: account_report
 #: help:account.report.report,badness_limit:0
 msgid "This Value sets the limit of badness."
-msgstr ""
+msgstr "Tämä arvo määrittää huonouden rajan"
 
 #. module: account_report
 #: wizard_field:print.indicators,init,select_base:0
 msgid "Choose Criteria"
-msgstr ""
+msgstr "Valitse kriteeri"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -213,6 +225,11 @@ msgstr ""
 
 #. module: account_report
 #: view:account.report.report:0
+msgid "report('REPORT_CODE')"
+msgstr ""
+
+#. module: account_report
+#: view:account.report.report:0
 msgid "< Badness Indicator Limit:"
 msgstr ""
 
@@ -220,7 +237,7 @@ msgstr ""
 #: view:account.report.report:0
 #: selection:account.report.report,status:0
 msgid "Very Good"
-msgstr ""
+msgstr "Todella hyvä"
 
 #. module: account_report
 #: field:account.report.report,note:0
@@ -241,7 +258,7 @@ msgstr ""
 #. module: account_report
 #: help:account.report.report,disp_tree:0
 msgid "When the indicators are printed, if one indicator is set with this field to True, then it will display one more graphs with all its children in tree"
-msgstr ""
+msgstr "Kun ilmaisimia tulostetaan ja jos jonkin ilmaisimen tämän kentän arvoksi on asetettu \"Tosi\", näytetään kuvaaja enemmän, jossa näkyy periytymät puu -muodossa"
 
 #. module: account_report
 #: selection:account.report.report,status:0
@@ -261,7 +278,7 @@ msgstr ""
 #. module: account_report
 #: field:account.report.report,disp_tree:0
 msgid "Display Tree"
-msgstr ""
+msgstr "Näytä puu"
 
 #. module: account_report
 #: selection:print.indicators,init,select_base:0
@@ -281,11 +298,16 @@ msgstr ""
 #. module: account_report
 #: rml:print.indicators:0
 msgid "Expression :"
+msgstr "Määritelmä:"
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "COL 2"
 msgstr ""
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "report('REPORT_CODE')"
+#: rml:print.indicators:0
+msgid "COL 1"
 msgstr ""
 
 #. module: account_report
@@ -302,7 +324,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_report.action_account_report_form
 #: model:ir.ui.menu,name:account_report.menu_action_account_report_form
 msgid "New Reporting Item Formula"
-msgstr ""
+msgstr "Uuden raportointikohdan kaava"
 
 #. module: account_report
 #: field:account.report.report,code:0
@@ -313,7 +335,7 @@ msgstr ""
 #. module: account_report
 #: field:account.report.history,tmp:0
 msgid "temp"
-msgstr ""
+msgstr "väliaikainen"
 
 #. module: account_report
 #: field:account.report.history,period_id:0
@@ -328,7 +350,7 @@ msgstr ""
 #. module: account_report
 #: view:account.report.report:0
 msgid "Legend of operators"
-msgstr ""
+msgstr "Operaattoreiden historia"
 
 #. module: account_report
 #: wizard_button:print.indicators,init,end:0
@@ -345,12 +367,12 @@ msgstr ""
 #. module: account_report
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
 
 #. module: account_report
 #: help:account.report.report,goodness_limit:0
 msgid "This Value sets the limit of goodness."
-msgstr ""
+msgstr "Tämä arvo määrittää hyvyyden rajan"
 
 #. module: account_report
 #: model:ir.actions.wizard,name:account_report.wizard_print_indicators
@@ -358,12 +380,12 @@ msgstr ""
 #: wizard_view:print.indicators,init:0
 #: wizard_view:print.indicators,next:0
 msgid "Print Indicators"
-msgstr ""
+msgstr "Tulosta ilmaisimet"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "+ - * / ( )"
-msgstr ""
+msgstr "+ - * / ( )"
 
 #. module: account_report
 #: rml:accounting.report:0
@@ -396,7 +418,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_other
 #: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view_other
 msgid "Other reports"
-msgstr ""
+msgstr "Muut raportit"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -423,7 +445,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account_report.report_print_indicators
 #: rml:print.indicators:0
 msgid "Indicators"
-msgstr ""
+msgstr "Ilmaisimet"
 
 #. module: account_report
 #: wizard_view:print.indicators.pdf,init:0
@@ -446,6 +468,12 @@ msgstr ""
 #. module: account_report
 #: wizard_field:print.indicators,next,base_selection:0
 msgid "Select Criteria"
+msgstr "Valitse kriteeri"
+
+#. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
 msgstr ""
 
 #. module: account_report
@@ -464,6 +492,12 @@ msgstr ""
 #: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_define
 #: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view
 msgid "Custom reporting"
+msgstr "Omaehtoinen raportointi"
+
+#. module: account_report
+#: code:addons/account_report/wizard/wizard_print_indicators.py:0
+#, python-format
+msgid "User Error!"
 msgstr ""
 
 #. module: account_report
@@ -484,7 +518,7 @@ msgstr ""
 #. module: account_report
 #: help:account.report.report,disp_graph:0
 msgid "If the field is set to True, information will be printed as a Graph, otherwise as an array."
-msgstr ""
+msgstr "Jos tämän kentän arvo on tosi, tiedot tulostetaan kuvaajana, muutoin rivinä"
 
 #. module: account_report
 #: view:account.report.report:0

@@ -31,8 +31,8 @@
 #
 ##############################################################################
 {
-	"name" : "Switzerland localisation corrected by Camptocamp",
-	"description" : """
+    "name" : "Switzerland localisation corrected by Camptocamp",
+    "description" : """
 Swiss localisation :
  - DTA generation for a lot of paiment types
  - BVR management (number generation, report, etc..)
@@ -43,9 +43,9 @@ You can also add with this module one of the following account plan:
  - l10n_ch_c2c_pcg
 
 
-	
+    
 ------------------------------------------------------------------------
-	
+    
 Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version 
 comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement) 
 et l'import du relevé de compte depuis la banque de manière automatisée. 
@@ -66,45 +66,39 @@ TODO :
 
 
 """,
-	"version" : "5.0",
-	"author" : "Camptocamp SA",
-	"category" : "Localisation/Europe",
-	"website": "http://www.camptocamp.com",
-	
-	"depends" : [
-		"base", 
-		"account", 
-		"base_vat", 
-		"base_iban",
-		"account_payment",
-		"account_tax_include", 
-	],
-	"init_xml" : [
-		"dta_data.xml",
-		"vaudtax_data.xml",
-        #these data will soon be part of an other modules but if you want 
-        #them now uncomment the two lines
-		#"zip_code_default.xml",
-		#"bank_ch.xml",
-	],
-	"demo_xml" : [
-		"demo/vaudtax_data_demo.xml",
-	],
-	"update_xml" : [
-		"dta_view.xml",
-		"dta_wizard.xml",
-		#this file as been move to the account chart 
-        # "account_vat.xml",
-		"bvr_report.xml",
-		"bvr_wizard.xml",
-		"bvr_view.xml",
-		"company_view.xml",
-		"account_invoice.xml",
-		"bank_view.xml",
-		"account_journal_view.xml",
-		"security/ir.model.access.csv",
-	],
-	"active": False,
-	"installable": True,
+    "version" : "5.0",
+    "author" : "Camptocamp SA",
+    "category" : "Localisation/Europe",
+    "website": "http://www.camptocamp.com",
+    
+    "depends" : [
+        "base", 
+        "account", 
+        "base_vat", 
+        "base_iban",
+        "account_payment",
+        "account_tax_include", 
+    ],
+    "init_xml" : [
+        "dta_data.xml",
+        "vaudtax_data.xml",
+    ],
+    "demo_xml" : [
+        "demo/vaudtax_data_demo.xml",
+    ],
+    "update_xml" : [
+        "dta_view.xml",
+        "dta_wizard.xml",
+        "bvr_report.xml",
+        "bvr_wizard.xml",
+        "bvr_view.xml",
+        "company_view.xml",
+        "account_invoice.xml",
+        "bank_view.xml",
+        "account_journal_view.xml",
+        "security/ir.model.access.csv",
+    ],
+    "active": False,
+    "installable": True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

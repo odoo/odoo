@@ -34,13 +34,13 @@ import netsvc
 from osv import fields, osv
 
 class res_partner(osv.osv):
-	_inherit = 'res.partner'
+    _inherit = 'res.partner'
 
-	_columns = {
-		'ref_companies': fields.one2many('res.company', 'partner_id',
-		'Companies that refers to partner'),
-	}
-	
+    _columns = {
+        'ref_companies': fields.one2many('res.company', 'partner_id',
+        'Companies that refers to partner'),
+    }
+    
 
 
 res_partner()
@@ -48,52 +48,50 @@ res_partner()
 
 
 class res_partner_bank(osv.osv):
-	_inherit = "res.partner.bank"
-	_columns = {
-		'name': fields.char('Description', size=128, required=True),
-		'post_number': fields.char('Post number', size=64),
-		'bvr_number': fields.char('BVR account number', size=11),
-		'bvr_adherent_num': fields.char('BVR adherent number', size=11),
-		'dta_code': fields.char('DTA code', size=5),
-	}
-	
-	def _default_value(self, cursor, user, field, context=None):
-		if field in ('country_id', 'state_id'):
-			value = False
-		else:
-			value = ''
-		if not context.get('address', False):
-			return value
-		for ham, spam, address in context['address']:
-			if 'type' in address.keys() :
-				if address['type'] == 'default':
-					return address.get(field,False)
-				elif not address['type']:
-					value = address.get(field,False)
-			else :
-				value = False
-		return value
-		
-		
-	def name_get(self, cr, uid, ids, context=None):
-		if not len(ids):
-			return []
-		bank_type_obj = self.pool.get('res.partner.bank.type')
+    _inherit = "res.partner.bank"
+    _columns = {
+        'name': fields.char('Description', size=128, required=True),
+        'post_number': fields.char('Post number', size=64),
+        'bvr_number': fields.char('BVR account number', size=11),
+        'bvr_adherent_num': fields.char('BVR adherent number', size=11),
+        'dta_code': fields.char('DTA code', size=5),
+    }
+    
+#   def _default_value(self, cursor, user, field, context=None):
+#       if field in ('country_id', 'state_id'):
+#           value = False
+#       else:
+#           value = ''
+#       if not context.get('address', False):
+#           return value
+#       for ham, spam, address in context['address']:
+#           if 'type' in address.keys() :
+#               if address['type'] == 'default':
+#                   return address[field]
+#               elif not address['type']:
+#                   value = address[field]
+#           else :
+#               value = False
+#       return value
+        
+        
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        bank_type_obj = self.pool.get('res.partner.bank.type')
 
-		type_ids = bank_type_obj.search(cr, uid, [])
-		bank_type_names = {}
-		for bank_type in bank_type_obj.browse(cr, uid, type_ids,
-				context=context):
-			bank_type_names[bank_type.code] = bank_type.name
-		res = []
-		for r in self.read(cr, uid, ids, ['name','state'], context):
-			res.append((r['id'], r['name']+' : '+bank_type_names[r['state']]))
-		return res
-	
-	_sql_constraints = [
-		('bvr_adherent_uniq', 'unique (bvr_adherent_num)', 'The BVR adherent number must be unique !')
-	]
-
-	
+        type_ids = bank_type_obj.search(cr, uid, [])
+        bank_type_names = {}
+        for bank_type in bank_type_obj.browse(cr, uid, type_ids,
+                context=context):
+            bank_type_names[bank_type.code] = bank_type.name
+        res = []
+        for r in self.read(cr, uid, ids, ['name','state'], context):
+            res.append((r['id'], r['name']+' : '+bank_type_names[r['state']]))
+        return res
+    
+    _sql_constraints = [
+        ('bvr_adherent_uniq', 'unique (bvr_adherent_num)', 'The BVR adherent number must be unique !')
+    ]
 res_partner_bank()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

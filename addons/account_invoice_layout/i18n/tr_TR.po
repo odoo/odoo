@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:58:05+0000\n"
-"PO-Revision-Date: 2009-08-28 15:58:05+0000\n"
+"POT-Creation-Date: 2010-02-22 14:45:46+0000\n"
+"PO-Revision-Date: 2010-02-22 14:45:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Invoice Date:"
+msgid "Note:"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -39,7 +39,7 @@ msgstr ""
 #: selection:account.invoice.line,state:0
 #: field:notify.message,name:0
 msgid "Title"
-msgstr ""
+msgstr "Ünvan"
 
 #. module: account_invoice_layout
 #: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
@@ -52,19 +52,14 @@ msgid "Disc. (%)"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "(Incl. taxes):"
-msgstr ""
-
-#. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Note"
-msgstr ""
+msgstr "Not"
 
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,print:0
 msgid "Print"
-msgstr ""
+msgstr "Yazdır"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
@@ -74,7 +69,7 @@ msgstr ""
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Birim Fiyat"
 
 #. module: account_invoice_layout
 #: constraint:ir.actions.act_window:0
@@ -88,18 +83,28 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
+msgid "VAT :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Document"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "PRO-FORMA"
 msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Fatura Kalemleri"
 
 #. module: account_invoice_layout
 #: view:account.invoice.line:0
 msgid "Seq."
-msgstr ""
+msgstr "Sıra"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_finan_config_notify_message
@@ -107,34 +112,34 @@ msgid "Notification Message"
 msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
-msgstr ""
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Ürün"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid ")"
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "account_invoice_layout"
 msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
 msgid "Type"
-msgstr ""
+msgstr "Tipi"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Price"
-msgstr ""
+msgstr "Fiyat"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "/ ("
+msgid "Invoice Date"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Vergi:"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
@@ -149,11 +154,11 @@ msgstr ""
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Base"
-msgstr ""
+msgstr "Matrah"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
+#: selection:account.invoice.line,state:0
+msgid "Page Break"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -168,7 +173,7 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Tel. :"
+msgid "Partner Ref."
 msgstr ""
 
 #. module: account_invoice_layout
@@ -177,28 +182,23 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Page Break"
+#: rml:account.invoice.layout:0
+msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Document:"
+msgid "Total:"
 msgstr ""
 
 #. module: account_invoice_layout
 #: wizard_view:wizard.notify_message,init:0
 msgid "Select Message"
-msgstr ""
+msgstr "Mesaj Seç"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Messages"
-msgstr ""
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -214,17 +214,17 @@ msgstr ""
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Amount"
-msgstr ""
+msgstr "Miktar"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Description/Taxes"
+msgid "Tel. :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Taslak Fatura"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,sequence:0
@@ -234,16 +234,11 @@ msgstr ""
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Quantity"
-msgstr ""
+msgstr "Miktar"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Refund"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -254,55 +249,40 @@ msgstr ""
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Supplier Invoice"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Note :"
-msgstr ""
+msgstr "Tedarikçi Faturası"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Tax"
-msgstr ""
-
-#. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
-msgstr ""
+msgstr "Vergi"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (Excl. taxes):"
+msgid "Net Total:"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Tedarikçi İade Faturası"
 
 #. module: account_invoice_layout
 #: wizard_field:wizard.notify_message,init,message:0
 msgid "Message"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
-msgstr ""
+msgstr "Mesaj"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
-msgstr ""
+msgstr "Tüm Bildirim Mesajları"
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:33:04+0000\n"
-"PO-Revision-Date: 2009-08-28 15:33:04+0000\n"
+"POT-Creation-Date: 2010-02-22 14:30:01+0000\n"
+"PO-Revision-Date: 2010-02-22 14:30:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,21 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_daily.py:0
+#, python-format
+msgid "No timebox of the type \"%s\" defined !"
+msgstr ""
+
+#. module: project_gtd
+#: code:addons/project_gtd/project_gtd.py:0
+#, python-format
+msgid "Eff. Hours"
+msgstr ""
+
+#. module: project_gtd
 #: view:project.gtd.timebox:0
 msgid "Visible Columns"
-msgstr ""
+msgstr "Viditelné sloupce"
 
 #. module: project_gtd
 #: constraint:ir.model:0
@@ -51,8 +63,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: project_gtd
-#: wizard_field:project.gtd.timebox.fill,init,task_ids:0
-msgid "Tasks selection"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#, python-format
+msgid "No timebox child of this one !"
 msgstr ""
 
 #. module: project_gtd
@@ -62,6 +75,7 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_inbox
+#: model:ir.actions.act_window,name:project_gtd.open_gtd_task_inbox
 #: model:ir.ui.menu,name:project_gtd.menu_open_time_myinbox
 msgid "My Inbox"
 msgstr ""
@@ -74,7 +88,7 @@ msgstr ""
 #. module: project_gtd
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Špatný název modelu v definici akce"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,context4_id:0
@@ -87,13 +101,13 @@ msgid "Set to Timebox"
 msgstr ""
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,type:0
-msgid "Other"
+#: field:project.gtd.timebox,type:0
+msgid "Type"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.open_gtd_task_inbox
-msgid "Inbox Tasks"
+#: field:project.gtd.timebox,col_effective_hours:0
+msgid "Effective Hours"
 msgstr ""
 
 #. module: project_gtd
@@ -114,18 +128,15 @@ msgid "Timebox Tasks"
 msgstr ""
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_daily.py:0
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: project_gtd
 #: wizard_view:project.gtd.timebox.fill,init:0
 msgid "Timebox tasks selection"
-msgstr ""
-
-#. module: project_gtd
-#: field:project.gtd.timebox,type:0
-msgid "Type"
-msgstr ""
-
-#. module: project_gtd
-#: field:project.gtd.timebox,col_effective_hours:0
-msgid "Effective Hours"
 msgstr ""
 
 #. module: project_gtd
@@ -152,11 +163,6 @@ msgstr ""
 #: model:ir.actions.wizard,name:project_gtd.open_gtd_timebox_daily
 #: model:ir.ui.menu,name:project_gtd.menu_open_time_daily_inbox
 msgid "My Daily Timebox"
-msgstr ""
-
-#. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_context
-msgid "project.gtd.context"
 msgstr ""
 
 #. module: project_gtd
@@ -191,6 +197,7 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
+#: model:ir.model,name:project_gtd.model_project_gtd_context
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
 #: view:project.gtd.timebox:0
 msgid "Contexts"
@@ -215,6 +222,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_all
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree_my
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_my_timeboxes
+#: model:ir.ui.menu,name:project_gtd.menu_open_time_allinbox
 msgid "My Timeboxes"
 msgstr ""
 
@@ -243,6 +251,11 @@ msgid "My Open Tasks"
 msgstr ""
 
 #. module: project_gtd
+#: wizard_field:project.gtd.timebox.fill,init,task_ids:0
+msgid "Tasks selection"
+msgstr ""
+
+#. module: project_gtd
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time
 #: model:ir.ui.menu,name:project_gtd.menu_open_time
 msgid "Time Management"
@@ -266,6 +279,11 @@ msgid "Tasks"
 msgstr ""
 
 #. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.project_normal_action_tree
+msgid "TimeBox"
+msgstr ""
+
+#. module: project_gtd
 #: field:project.gtd.context,sequence:0
 msgid "Sequence"
 msgstr ""
@@ -276,13 +294,18 @@ msgid "Child Timeboxes"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.ui.menu,name:project_gtd.menu_open_time_allinbox
-msgid "All My Timeboxes"
+#: selection:project.gtd.timebox,type:0
+msgid "Other"
 msgstr ""
 
 #. module: project_gtd
 #: field:project.gtd.timebox,col_deadline:0
 msgid "Deadline"
+msgstr ""
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "TimeBox Configuration"
 msgstr ""
 
 #. module: project_gtd

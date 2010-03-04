@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:42:56+0000\n"
-"PO-Revision-Date: 2009-08-28 15:42:56+0000\n"
+"POT-Creation-Date: 2010-02-22 14:36:08+0000\n"
+"PO-Revision-Date: 2010-02-22 14:36:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,8 +22,8 @@ msgstr "Sub Total"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Invoice Date:"
-msgstr "Tanggal Invoice:"
+msgid "Note:"
+msgstr ""
 
 #. module: account_invoice_layout
 #: constraint:ir.model:0
@@ -50,11 +50,6 @@ msgstr "Invoice dengan layout dan catatan"
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
 msgstr "Potongan (%)"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "(Incl. taxes):"
-msgstr ""
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -88,6 +83,16 @@ msgstr "diumumkan melalui pesan"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
+msgid "VAT :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Document"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
 msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
 
@@ -107,13 +112,13 @@ msgid "Notification Message"
 msgstr "Pesan Pemberitahuan"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
-msgstr "Ref. Pelanggan"
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Produk"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid ")"
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "account_invoice_layout"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -128,7 +133,7 @@ msgstr "Harga"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "/ ("
+msgid "Invoice Date"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -152,9 +157,9 @@ msgid "Base"
 msgstr "Dasar"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
-msgstr "Fax :"
+#: selection:account.invoice.line,state:0
+msgid "Page Break"
+msgstr "Batas Halaman"
 
 #. module: account_invoice_layout
 #: field:notify.message,msg:0
@@ -168,8 +173,8 @@ msgstr "Tulis pengumuman atau himbauan"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Tel. :"
-msgstr "Tel."
+msgid "Partner Ref."
+msgstr ""
 
 #. module: account_invoice_layout
 #: constraint:ir.ui.view:0
@@ -177,13 +182,13 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Page Break"
-msgstr "Batas Halaman"
+#: rml:account.invoice.layout:0
+msgid "Fax :"
+msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Document:"
+msgid "Total:"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -195,11 +200,6 @@ msgstr "Pilih pesan"
 #: view:notify.message:0
 msgid "Messages"
 msgstr "Pesan-pesan"
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr "Produk"
 
 #. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
@@ -218,7 +218,7 @@ msgstr "Jumlah"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Description/Taxes"
+msgid "Tel. :"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -242,11 +242,6 @@ msgid "Refund"
 msgstr "Refund"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
-msgstr "PPN  :"
-
-#. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
 msgstr "Baris Pemisah"
@@ -258,22 +253,12 @@ msgstr "Faktur Pembelian"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Note :"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
 msgid "Tax"
 msgstr "Pajak"
 
 #. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
-msgstr ""
-
-#. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (Excl. taxes):"
+msgid "Net Total:"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -295,11 +280,6 @@ msgstr "Supplier Refund"
 #: wizard_field:wizard.notify_message,init,message:0
 msgid "Message"
 msgstr "Pesan"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
-msgstr "Total"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form

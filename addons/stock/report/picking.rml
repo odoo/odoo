@@ -132,7 +132,9 @@
         </td>
         <td>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]][[ picking.address_id and picking.address_id.zip or '' ]]</para>
+          <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]]</para>
+          <para style="terp_default_9">[[ picking.address_id and picking.address_id.zip or '' ]] [[ picking.address_id and picking.address_id.city or '']]</para>
+          
           <para style="terp_default_2">
             <font color="white"> </font>
           </para>
@@ -190,7 +192,7 @@
           <para style="terp_tblheader_General_Centre">Expected Shipping Date </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">weight</para>
+          <para style="terp_tblheader_General_Centre">Weight</para>
         </td>
       </tr>
     </blockTable>

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:26:04+0000\n"
-"PO-Revision-Date: 2009-08-28 15:26:04+0000\n"
+"POT-Creation-Date: 2010-02-22 14:25:36+0000\n"
+"PO-Revision-Date: 2010-02-22 14:25:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
-msgstr ""
+msgstr "Šifra računa4"
 
 #. module: account_analytic_plans
 #: constraint:ir.model:0
@@ -29,22 +29,27 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
 #: model:ir.actions.wizard,name:account_analytic_plans.account_analytic_account_inverted_balance_report
 msgid "Crossovered Analytic"
-msgstr ""
+msgstr "Križna analitika"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
 msgid "Account5 Id"
-msgstr ""
+msgstr "Šifra računa5"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date2:0
 msgid "End Date"
-msgstr ""
+msgstr "Završni datum"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "Šifra računa3"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
 msgid "Rate (%)"
-msgstr ""
+msgstr "Stopa (%)"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan:0
@@ -53,12 +58,24 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
 msgid "Analytic Plan"
+msgstr "Analitički plan"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
 msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
 msgid "Analytic Instance Line"
-msgstr ""
+msgstr "Redak analitičke instance"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -68,7 +85,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,print:0
 msgid "Print"
-msgstr ""
+msgstr "Štampaj"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -78,27 +95,27 @@ msgstr ""
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,plan_id:0
 msgid "Plan Id"
-msgstr ""
+msgstr "Šifra plana"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
 msgid "Analytic Distribution's Models"
-msgstr ""
+msgstr "Modeli analitičke raspodjele"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Account Name"
-msgstr ""
+msgstr "Naziv konta"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Line"
-msgstr ""
+msgstr "Redak analitičke raspodjele"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,code:0
 msgid "Distribution Code"
-msgstr ""
+msgstr "Šifra raspodjele"
 
 #. module: account_analytic_plans
 #: constraint:ir.actions.act_window:0
@@ -108,7 +125,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
 msgid "Plan Name"
-msgstr ""
+msgstr "Naziv plana"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -118,38 +135,39 @@ msgstr ""
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Percentage"
-msgstr ""
+msgstr "Postotak"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,empty_line:0
 msgid "Dont show empty lines"
-msgstr ""
+msgstr "Ne prikazuj prazne retke"
 
 #. module: account_analytic_plans
 #: wizard_view:wizard.crossovered.analytic,init:0
 msgid "Select Information"
-msgstr ""
+msgstr "Odaberi informacije"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "A model having this name and code already exists !"
 msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
 msgid "Analytic Journal"
-msgstr ""
+msgstr "Analitička knjiženja"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
-msgstr ""
+msgstr "100.00%"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,ref:0
 msgid "Analytic Account Ref."
-msgstr ""
+msgstr "Veza analitičkog konta"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -159,21 +177,34 @@ msgstr ""
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Line"
+msgstr "Redak analitičkog plana"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "No analytic plan defined !"
 msgstr ""
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
-msgstr ""
+msgstr "Veza analitičkog konta:"
 
 #. module: account_analytic_plans
 #: model:ir.actions.wizard,name:account_analytic_plans.create_model
 msgid "Create Model"
-msgstr ""
+msgstr "Stvori model"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
 msgid "Default Entries"
+msgstr "Uobičajene stavke"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -182,32 +213,38 @@ msgstr ""
 #: field:account.journal,plan_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
+msgstr "Analitički planovi"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "User Error"
 msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
-msgstr ""
+msgstr "Minimalno dozvoljeno (%)"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
 msgid "Account1 Id"
-msgstr ""
+msgstr "Šifra računa1"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,max_required:0
 msgid "Maximum Allowed (%)"
-msgstr ""
+msgstr "Maksimalno dozvoljeno (%)"
 
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
 msgid "Distribution Model Saved"
-msgstr ""
+msgstr "Model raspodjele je spremljen"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
-msgstr ""
+msgstr "Instanca analitičkog plana"
 
 #. module: account_analytic_plans
 #: constraint:ir.ui.view:0
@@ -217,7 +254,7 @@ msgstr "Neodgovarajući XML za arhitekturu prikaza!"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
 msgid "Distribution Models"
-msgstr ""
+msgstr "Modeli raspodjele"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,description:account_analytic_plans.module_meta_information
@@ -260,7 +297,7 @@ msgstr ""
 #: view:account.analytic.plan.line:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Lines"
-msgstr ""
+msgstr "Retci analitičkog plana"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -270,67 +307,73 @@ msgstr ""
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
-msgstr ""
+msgstr "Plan modela"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
+msgstr "Šifra računa2"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Please put a name and a code before saving the model !"
 msgstr ""
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. module: account_analytic_plans
 #: help:account.analytic.plan.line,root_analytic_id:0
 msgid "Root account of this plan."
-msgstr ""
+msgstr "Korijenski konto ovog plana."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
 msgid "Account6 Id"
-msgstr ""
+msgstr "Šifra računa6"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
-msgstr ""
+msgstr "Količina"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account_ids:0
 msgid "Account Id"
-msgstr ""
+msgstr "Šifra konta"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Code"
-msgstr ""
+msgstr "Šifra"
 
 #. module: account_analytic_plans
 #: wizard_button:create.model,info,end:0
 msgid "OK"
-msgstr ""
+msgstr "U redu"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
 msgid "Root Account"
-msgstr ""
+msgstr "Korijensko konto"
 
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
 msgid "This distribution model has been saved. You will be able to reuse it later."
-msgstr ""
+msgstr "Model raspodjele je spremljen. Možete ga koristiti kasnije."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Redoslijed"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitičko konto"
 
 #. module: account_analytic_plans
 #: field:account.analytic.default,analytics_id:0
@@ -339,27 +382,39 @@ msgstr ""
 #: field:account.invoice.line,analytics_id:0
 #: field:account.move.line,analytics_id:0
 msgid "Analytic Distribution"
+msgstr "Analitička raspodjela"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "Value Error"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
 msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
-msgstr ""
+msgstr "Modeli analitičke raspodjele"
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Poništi"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date1:0
 msgid "Start Date"
-msgstr ""
+msgstr "Početni datum"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "at"
-msgstr ""
+msgstr "kod"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0

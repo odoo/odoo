@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:47:59+0000\n"
-"PO-Revision-Date: 2009-08-28 15:47:59+0000\n"
+"POT-Creation-Date: 2010-02-22 14:39:18+0000\n"
+"PO-Revision-Date: 2010-02-22 14:39:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -78,7 +78,7 @@ msgstr ""
 #. module: document_ics
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome de modelo inválido na definição da ação"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
@@ -96,13 +96,20 @@ msgid "dtend"
 msgstr ""
 
 #. module: document_ics
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "You can not set negative Duration."
+msgstr ""
+
+#. module: document_ics
 #: help:document.ics.crm.wizard,jobs:0
 msgid "Help you to organise the jobs hiring process: evaluation, meetings, email integration..."
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "description"
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: document_ics
@@ -131,6 +138,11 @@ msgid "Fund Raising Operations"
 msgstr ""
 
 #. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "description"
+msgstr ""
+
+#. module: document_ics
 #: field:document.directory.content,ics_object_id:0
 msgid "Object"
 msgstr ""
@@ -138,7 +150,7 @@ msgstr ""
 #. module: document_ics
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive sections."
-msgstr ""
+msgstr "Erro ! Você não pode criar seções recursivas."
 
 #. module: document_ics
 #: model:ir.module.module,shortdesc:document_ics.module_meta_information

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:40:24+0000\n"
-"PO-Revision-Date: 2009-08-28 15:40:24+0000\n"
+"POT-Creation-Date: 2010-02-22 14:34:34+0000\n"
+"PO-Revision-Date: 2010-02-22 14:34:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,7 @@ msgstr "Warenbewegung"
 #. module: mrp_repair
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -328,6 +328,12 @@ msgstr "Ja"
 #: field:mrp.repair.line,invoiced:0
 msgid "Invoiced"
 msgstr "Abgerechnet"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner in the repair form !"
+msgstr "Sie müssen einen Partner für den Reparaturauftrag auswählen"
 
 #. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,end:0
@@ -650,4 +656,10 @@ msgstr "Summe"
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
 msgstr "Fertig zur Reparatur"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No partner !"
+msgstr "Kein Partner"
 

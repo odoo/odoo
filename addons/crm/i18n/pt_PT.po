@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:49:14+0000\n"
-"PO-Revision-Date: 2009-08-28 15:49:14+0000\n"
+"POT-Creation-Date: 2010-02-22 14:40:06+0000\n"
+"PO-Revision-Date: 2010-02-22 14:40:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,7 +51,7 @@ msgstr ""
 #. module: crm
 #: field:crm.case.rule,act_remind_partner:0
 msgid "Remind Partner"
-msgstr "Lebrar terceiro"
+msgstr "Alertar Parceiro"
 
 #. module: crm
 #: wizard_view:crm.case.section.menu,init:0
@@ -67,7 +67,7 @@ msgstr "Categoria do terceiro"
 #. module: crm
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome de modelo inválido na definição da acção"
 
 #. module: crm
 #: field:crm.segmentation,sales_purchase_active:0
@@ -117,6 +117,12 @@ msgid "Button Pressed"
 msgstr "Botão pressionado"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Aviso!"
+
+#. module: crm
 #: view:crm.case:0
 msgid "Planned costs"
 msgstr "Custos previstos"
@@ -139,7 +145,7 @@ msgstr "%(case_user)s = Responsible name"
 #. module: crm
 #: field:crm.case.section,allow_unlink:0
 msgid "Allow Delete"
-msgstr ""
+msgstr "Permite Eliminar"
 
 #. module: crm
 #: field:crm.case.rule,act_email_cc:0
@@ -155,6 +161,7 @@ msgstr "Meu "
 #. module: crm
 #: view:crm.case:0
 #: view:crm.case.history:0
+#: model:ir.actions.act_window,name:crm.crm_case_section_open_act
 #: model:ir.ui.menu,name:crm.next_id_51
 msgid "Cases"
 msgstr "Processos"
@@ -175,6 +182,12 @@ msgstr "<"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_description)s = Case description"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "You can not escalate this case.\nYou are already at the top level."
 msgstr ""
 
 #. module: crm
@@ -207,6 +220,12 @@ msgstr "Custos previstos"
 #: model:ir.model,name:crm.model_crm_case_history
 msgid "Case history"
 msgstr "Histórico do processo"
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "Error!"
+msgstr "Erro!"
 
 #. module: crm
 #: field:crm.case.rule,act_state:0
@@ -258,7 +277,7 @@ msgstr "Nome da regra"
 #. module: crm
 #: help:crm.case.rule,act_remind_partner:0
 msgid "Check this if you want the rule to send a reminder by email to the partner."
-msgstr ""
+msgstr "Marque, se quer que a regra envie um lembrete por email ao parceiro"
 
 #. module: crm
 #: field:crm.case.rule,trg_priority_to:0
@@ -266,10 +285,15 @@ msgid "Maximim Priority"
 msgstr "Prioridade máxima"
 
 #. module: crm
+#: help:crm.segmentation,som_interval_decrease:0
+msgid "If the partner has not purchased (or bought) during a period, decrease the state of mind by this factor. It's a multiplication"
+msgstr ""
+
+#. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu17:0
 #: wizard_field:crm.case.section.menu,design_menu,menu17_option:0
 msgid "New "
-msgstr ""
+msgstr "Novo "
 
 #. module: crm
 #: view:res.partner.events:0
@@ -303,17 +327,19 @@ msgid "Operator"
 msgstr "Operador"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Draft"
 msgstr "Esboço"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_log
 msgid "Case Communication History"
-msgstr ""
+msgstr "Histórico de comunicaçções do caso"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_categ
@@ -371,7 +397,7 @@ msgstr "Selecionar Visualizações (vazio por omissão)"
 #. module: crm
 #: field:crm.case.rule,trg_state_from:0
 msgid "Case State"
-msgstr ""
+msgstr "Estado do Processo"
 
 #. module: crm
 #: field:crm.case,section_id:0
@@ -389,6 +415,12 @@ msgstr "Enviar a esses endereços de emails"
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "Send"
+msgstr "Enviar"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -409,7 +441,7 @@ msgstr "Expressão opcional"
 #: model:ir.actions.act_window,name:crm.crm_case_history_my-act
 #: model:ir.ui.menu,name:crm.menu_crm_case_history_my-act
 msgid "My Histories"
-msgstr "Meus históricos"
+msgstr ""
 
 #. module: crm
 #: field:crm.segmentation,segmentation_line:0
@@ -459,12 +491,18 @@ msgstr "Mais Baixo"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "E-Mail Reminders (includes the content of the case)"
-msgstr ""
+msgstr "Lembretes por Email (incluem o conteúdo do caso)"
 
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Profiling"
 msgstr "Definição de perfil"
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "Error !"
+msgstr "Erro !"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -557,6 +595,11 @@ msgid "Categories"
 msgstr "Categorias"
 
 #. module: crm
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr ""
+
+#. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu2:0
 #: wizard_field:crm.case.section.menu,design_menu,menu2_option:0
 msgid "My Unclosed "
@@ -637,7 +680,7 @@ msgstr "Definir responsável como"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab."
-msgstr ""
+msgstr "A regra usa o operador \"E\". O caso tem de corresponder com todos os campos não vazios, para que a regra execute a acção descrita no separador 'Acções'."
 
 #. module: crm
 #: field:crm.case,history_line:0
@@ -686,6 +729,18 @@ msgid "Segmentation"
 msgstr "Segmentação"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "You can not delete this case. You should better cancel it."
+msgstr "Não pode eliminar este processo. O melhor a fazer é cancela-lo."
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "done"
+msgstr "concluído"
+
+#. module: crm
 #: field:crm.segmentation,som_interval:0
 msgid "Days per Periode"
 msgstr "Dias por período"
@@ -709,7 +764,19 @@ msgstr "Dias por período"
 #: selection:crm.case.section.menu,design_menu,menu8_option:0
 #: selection:crm.case.section.menu,design_menu,menu9_option:0
 msgid "Calendar"
-msgstr "Calendário"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "No E-Mail ID Found for the Responsible Partner or missing reply address in section!"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "No E-Mail ID Found for your Company address or missing reply address in section!"
+msgstr ""
 
 #. module: crm
 #: field:crm.case,ref:0
@@ -740,10 +807,12 @@ msgstr "Registo"
 #. module: crm
 #: help:crm.case.rule,act_email_cc:0
 msgid "These people will receive a copy of the futur communication between partner and users by email"
-msgstr ""
+msgstr "Estas pessoas vão receber uma cópia das futuras comunicações por email entre o parceiro e os utilizadores."
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
+#, python-format
 msgid "Historize"
 msgstr "Arquivar"
 
@@ -849,11 +918,13 @@ msgid "Open Cases"
 msgstr "Abrir processos"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Pending"
 msgstr "Pendente"
 
@@ -865,12 +936,13 @@ msgstr ""
 #. module: crm
 #: field:crm.case,state:0
 msgid "Status"
-msgstr "Estados"
+msgstr ""
 
 #. module: crm
-#: field:crm.case.rule,act_remind_user:0
-msgid "Remind responsible"
-msgstr "Lembrar o responsável"
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "No E-Mail ID Found for your Company address!"
+msgstr ""
 
 #. module: crm
 #: field:crm.case.rule,act_section_id:0
@@ -896,16 +968,24 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Escalate"
 msgstr "Encaminhar"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "You must put a Partner eMail to use this action!"
+msgstr "Você deve inserir um email do terceiro para usar esta acção!"
+
+#. module: crm
 #: model:ir.module.module,shortdesc:crm.module_meta_information
 msgid "Customer & Supplier Relationship Management"
-msgstr ""
+msgstr "Gestão da relação com clientes e fornecedores"
 
 #. module: crm
 #: field:crm.case.rule,trg_priority_from:0
@@ -928,6 +1008,12 @@ msgid "Planned Revenue"
 msgstr "Receita planificada"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "draft"
+msgstr "Rascunho"
+
+#. module: crm
 #: field:crm.case,active:0
 #: field:crm.case.rule,active:0
 #: field:crm.case.section,active:0
@@ -943,12 +1029,18 @@ msgstr "Todos sem registos "
 #. module: crm
 #: help:crm.case.rule,act_remind_attach:0
 msgid "Check this if you want that all documents attached to the case be attached to the reminder email sent."
-msgstr ""
+msgstr "Marque, se quiser que todos os documentos anexados ao caso sejam enviados no email de alerta."
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
 msgid "Mandatory Expression"
 msgstr "Expressão obrigatória"
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "cancel"
+msgstr "cancelar"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_operator:0
@@ -969,6 +1061,12 @@ msgstr "Menu pai"
 #: field:crm.segmentation,exclusif:0
 msgid "Exclusive"
 msgstr "Exclusivo"
+
+#. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "Can not send mail with empty body,you should have description in the body"
+msgstr ""
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1014,7 +1112,7 @@ msgstr "Nome do menu base"
 #. module: crm
 #: field:crm.case.section,child_ids:0
 msgid "Child Sections"
-msgstr ""
+msgstr "Secções dependentes"
 
 #. module: crm
 #: field:crm.case,date:0
@@ -1031,7 +1129,7 @@ msgstr "Menus criados"
 #. module: crm
 #: field:crm.case.log,name:0
 msgid "Action"
-msgstr "Acção"
+msgstr ""
 
 #. module: crm
 #: view:crm.case.categ:0
@@ -1049,6 +1147,12 @@ msgid "Partner Segmentation Lines"
 msgstr "Linhas de segmentação do terceiro"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "You must define a responsible user for this case in order to use this action!"
+msgstr "Tem de definir o utilizador responsável para este caso a fim de utilizar esta acção!"
+
+#. module: crm
 #: view:crm.case:0
 msgid "History"
 msgstr "Histórico"
@@ -1063,6 +1167,11 @@ msgstr "Contacto do terceiro"
 #: wizard_field:crm.case.section.menu,design_menu,menu12_option:0
 msgid "All Unclosed "
 msgstr "Todos não fechados "
+
+#. module: crm
+#: wizard_field:crm.case.section.menu,init,view_tree:0
+msgid "Tree View"
+msgstr "Vista em Árvore"
 
 #. module: crm
 #: field:crm.case.rule,sequence:0
@@ -1101,6 +1210,7 @@ msgid "Communication history"
 msgstr "Histórico de comunicação"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
@@ -1108,15 +1218,18 @@ msgstr "Histórico de comunicação"
 #: selection:crm.case.rule,trg_state_to:0
 #: wizard_button:crm.case.section.menu,design_menu,end:0
 #: wizard_button:crm.case.section.menu,init,end:0
+#, python-format
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Close"
 msgstr "Fechar"
 
@@ -1126,23 +1239,25 @@ msgid "Business Opportunities"
 msgstr "Oportunidades de negócio"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Open"
 msgstr "Aberto"
 
 #. module: crm
-#: wizard_field:crm.case.section.menu,init,view_tree:0
-msgid "Tree View"
-msgstr "Vista em Árvore"
+#: field:crm.case.rule,act_remind_user:0
+msgid "Remind responsible"
+msgstr "Lembrar o responsável"
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on Case Partner"
-msgstr ""
+msgstr "Condições do Parceiro do Caso"
 
 #. module: crm
 #: field:crm.case.section,code:0
@@ -1152,7 +1267,7 @@ msgstr "Código da secção"
 #. module: crm
 #: field:crm.case.section,user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Utilizador Responsável"
 
 #. module: crm
 #: constraint:ir.model:0
@@ -1218,6 +1333,12 @@ msgid "Description"
 msgstr "Descrição"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
+#, python-format
+msgid "open"
+msgstr "abrir"
+
+#. module: crm
 #: field:crm.case.rule,trg_max_history:0
 msgid "Maximum Communication History"
 msgstr ""
@@ -1247,7 +1368,7 @@ msgstr ""
 #: field:crm.case,probability:0
 #: field:crm.case.categ,probability:0
 msgid "Probability (%)"
-msgstr ""
+msgstr "Probabilidade (%)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_segmentation-act
@@ -1289,9 +1410,11 @@ msgid "="
 msgstr "="
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: field:crm.case.log,case_id:0
 #: model:ir.model,name:crm.model_crm_case
 #: model:res.request.link,name:crm.req_link_case
+#, python-format
 msgid "Case"
 msgstr "Processo"
 
@@ -1311,11 +1434,6 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: crm
-#: help:crm.segmentation,som_interval_decrease:0
-msgid "If the partner has not purchased (or buied) during a period, decrease the state of mind by this factor. It's a multiplication"
-msgstr "Se o terceiro não adquirir (ou comprar) durante o período, diminuir o estado da mente por esse factor. É uma multiplicação"
-
-#. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu8:0
 #: wizard_field:crm.case.section.menu,design_menu,menu8_option:0
 msgid "All "
@@ -1324,7 +1442,7 @@ msgstr "Todos "
 #. module: crm
 #: view:crm.case.rule:0
 msgid "E-Mail Actions"
-msgstr ""
+msgstr "Acções do E-mail"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1371,7 +1489,7 @@ msgstr "Todos os históricos"
 #. module: crm
 #: help:crm.case.section,allow_unlink:0
 msgid "Allows to delete non draft cases"
-msgstr ""
+msgstr "Permite apagar casos confirmados."
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu4:0
@@ -1412,7 +1530,7 @@ msgstr "Vista em formulários"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on Timing"
-msgstr ""
+msgstr "Condições no Agendamento"
 
 #. module: crm
 #: view:crm.case:0
@@ -1433,11 +1551,6 @@ msgstr "Descrição do Processo"
 #: field:crm.case.rule,act_mail_to_watchers:0
 msgid "Mail to watchers (Cc)"
 msgstr "Enviar e-mail ao observador (como copia)"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_section_open_act
-msgid "crm.case.section.open"
-msgstr "crm.case.section.open"
 
 #. module: crm
 #: view:crm.case:0

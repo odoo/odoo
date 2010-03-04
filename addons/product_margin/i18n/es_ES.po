@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:55:34+0000\n"
-"PO-Revision-Date: 2009-08-28 15:55:34+0000\n"
+"POT-Creation-Date: 2010-02-22 14:44:07+0000\n"
+"PO-Revision-Date: 2010-02-22 14:44:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -65,7 +65,7 @@ msgstr "Precio unidad promedio"
 #. module: product_margin
 #: model:ir.module.module,shortdesc:product_margin.module_meta_information
 msgid "Margins in Product"
-msgstr ""
+msgstr "Márgenes en productos"
 
 #. module: product_margin
 #: help:product.product,total_cost:0
@@ -86,7 +86,7 @@ msgstr "Pagado"
 #. module: product_margin
 #: help:product.product,sales_gap:0
 msgid "Excepted Sale - Turn Over"
-msgstr ""
+msgstr "Venta excluida - Volumen de negocio"
 
 #. module: product_margin
 #: field:product.product,sale_expected:0
@@ -112,7 +112,7 @@ msgstr "Suma de multiplicaciones del precio de coste y cantidad de facturas de p
 #: view:product.product:0
 #: field:product.product,turnover:0
 msgid "Turnover"
-msgstr ""
+msgstr "Volumen de negocio"
 
 #. module: product_margin
 #: field:product.product,purchase_num_invoiced:0
@@ -134,7 +134,7 @@ msgstr "¡XML inválido para la definición de la vista!"
 #. module: product_margin
 #: help:product.product,expected_margin:0
 msgid "Excepted Sale - Normal Cost"
-msgstr ""
+msgstr "Venta excluida - Coste normal"
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -144,7 +144,7 @@ msgstr "Margen previsto"
 #. module: product_margin
 #: help:product.product,total_margin:0
 msgid "Turnorder - Total Cost"
-msgstr ""
+msgstr "Volumen de negocio - Coste total"
 
 #. module: product_margin
 #: view:product.product:0
@@ -211,7 +211,7 @@ msgstr "Margen total"
 #. module: product_margin
 #: help:product.product,total_margin_rate:0
 msgid "Total margin * 100 / Turnover"
-msgstr ""
+msgstr "Margen total * 100 / Volumen de negocio"
 
 #. module: product_margin
 #: view:product.product:0
@@ -230,9 +230,11 @@ msgid "Sales"
 msgstr "Ventas"
 
 #. module: product_margin
+#: code:addons/product_margin/wizard/wizard_product_margin.py:0
 #: model:ir.actions.wizard,name:product_margin.action_open_margin
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: view:product.product:0
+#, python-format
 msgid "Product Margins"
 msgstr "Márgenes de producto"
 

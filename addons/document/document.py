@@ -492,7 +492,7 @@ class ir_action_report_xml(osv.osv):
                     res[data.get('id')] = False
         return res
 
-    def _model_search(self, cr, uid, obj, name, args):
+    def _model_search(self, cr, uid, obj, name, args, context):
         if not len(args):
             return []
         model_id= args[0][2]
@@ -531,17 +531,21 @@ class document_file(osv.osv):
                 result[id] = base64.encodestring(value)
             except:
                 result[id]=''
-
-            if context.get('bin_size', False):
-                result[id] = tools.human_size(len(result[id]))
-
+#            if context.get('bin_size', False):
+#                result[id] = tools.human_size(result[id])
         return result
 
     #
     # This code can be improved
     #
-    def _data_set(self, cr, obj, id, name, value, uid=None, context={}):
+    def _data_set(self, cr, uid, id, name, value, args=None, context={}):
         if not value:
+            filename = self.browse(cr, uid, id, context).store_fname
+            try:
+                os.unlink(os.path.join(self._get_filestore(cr), filename))
+            except:
+                pass
+            cr.execute('update ir_attachment set store_fname=NULL WHERE id=%s', (id,) )
             return True
         #if (not context) or context.get('store_method','fs')=='fs':
         try:
@@ -655,6 +659,7 @@ class document_file(osv.osv):
             vals['res_id']=context.get('default_res_id',False)
         if not vals.get('res_model', False) and context.get('default_res_model',False):
             vals['res_model']=context.get('default_res_model',False)
+
         if vals.get('res_id', False) and vals.get('res_model',False):
             obj_model=self.pool.get(vals['res_model'])
             result = obj_model.read(cr, uid, [vals['res_id']], context=context)
@@ -693,7 +698,7 @@ class document_file(osv.osv):
         try:
             res = content_index(base64.decodestring(datas), vals['datas_fname'], vals.get('content_type', None))
             super(document_file,self).write(cr, uid, [result], {
-                'index_content': res,
+                'index_content' : res,
             })
             cr.commit()
         except:

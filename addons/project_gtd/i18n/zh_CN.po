@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:29:32+0000\n"
-"PO-Revision-Date: 2009-08-28 15:29:32+0000\n"
+"POT-Creation-Date: 2010-02-22 14:27:47+0000\n"
+"PO-Revision-Date: 2010-02-22 14:27:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,14 +16,26 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_daily.py:0
+#, python-format
+msgid "No timebox of the type \"%s\" defined !"
+msgstr ""
+
+#. module: project_gtd
+#: code:addons/project_gtd/project_gtd.py:0
+#, python-format
+msgid "Eff. Hours"
+msgstr ""
+
+#. module: project_gtd
 #: view:project.gtd.timebox:0
 msgid "Visible Columns"
-msgstr ""
+msgstr "可见列"
 
 #. module: project_gtd
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
@@ -33,48 +45,50 @@ msgstr ""
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_deadline_open
 msgid "My Deadlines"
-msgstr ""
+msgstr "我的截止日期"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,type:0
 msgid "Monthly"
-msgstr ""
+msgstr "每月"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,parent_id:0
 msgid "Parent Timebox"
-msgstr ""
+msgstr "上级时间盒"
 
 #. module: project_gtd
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "无效XML视图结构!"
 
 #. module: project_gtd
-#: wizard_field:project.gtd.timebox.fill,init,task_ids:0
-msgid "Tasks selection"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#, python-format
+msgid "No timebox child of this one !"
 msgstr ""
 
 #. module: project_gtd
 #: field:project.gtd.timebox,col_priority:0
 msgid "Priority"
-msgstr ""
+msgstr "优先级"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_inbox
+#: model:ir.actions.act_window,name:project_gtd.open_gtd_task_inbox
 #: model:ir.ui.menu,name:project_gtd.menu_open_time_myinbox
 msgid "My Inbox"
-msgstr ""
+msgstr "我的收件箱"
 
 #. module: project_gtd
 #: field:project.gtd.context,project_default_id:0
 msgid "Default Project"
-msgstr ""
+msgstr "默认项目"
 
 #. module: project_gtd
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "在行动定义中的模式名称无效"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,context4_id:0
@@ -87,14 +101,14 @@ msgid "Set to Timebox"
 msgstr ""
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,type:0
-msgid "Other"
-msgstr ""
+#: field:project.gtd.timebox,type:0
+msgid "Type"
+msgstr "类型"
 
 #. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.open_gtd_task_inbox
-msgid "Inbox Tasks"
-msgstr ""
+#: field:project.gtd.timebox,col_effective_hours:0
+msgid "Effective Hours"
+msgstr "有效时间"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -114,18 +128,15 @@ msgid "Timebox Tasks"
 msgstr ""
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_daily.py:0
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: project_gtd
 #: wizard_view:project.gtd.timebox.fill,init:0
 msgid "Timebox tasks selection"
-msgstr ""
-
-#. module: project_gtd
-#: field:project.gtd.timebox,type:0
-msgid "Type"
-msgstr ""
-
-#. module: project_gtd
-#: field:project.gtd.timebox,col_effective_hours:0
-msgid "Effective Hours"
 msgstr ""
 
 #. module: project_gtd
@@ -136,7 +147,7 @@ msgstr ""
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_pending
 msgid "My Pending Tasks"
-msgstr ""
+msgstr "我的未决任务列表"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -146,17 +157,12 @@ msgstr ""
 #. module: project_gtd
 #: field:project.gtd.timebox,user_id:0
 msgid "User"
-msgstr ""
+msgstr "用户"
 
 #. module: project_gtd
 #: model:ir.actions.wizard,name:project_gtd.open_gtd_timebox_daily
 #: model:ir.ui.menu,name:project_gtd.menu_open_time_daily_inbox
 msgid "My Daily Timebox"
-msgstr ""
-
-#. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_context
-msgid "project.gtd.context"
 msgstr ""
 
 #. module: project_gtd
@@ -191,6 +197,7 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
+#: model:ir.model,name:project_gtd.model_project_gtd_context
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
 #: view:project.gtd.timebox:0
 msgid "Contexts"
@@ -199,7 +206,7 @@ msgstr ""
 #. module: project_gtd
 #: selection:project.gtd.timebox,type:0
 msgid "Daily"
-msgstr ""
+msgstr "每日"
 
 #. module: project_gtd
 #: model:ir.actions.wizard,name:project_gtd.open_gtd_timebox_fill
@@ -209,12 +216,13 @@ msgstr ""
 #. module: project_gtd
 #: field:project.gtd.timebox,col_project:0
 msgid "Project"
-msgstr ""
+msgstr "项目"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_all
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree_my
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_my_timeboxes
+#: model:ir.ui.menu,name:project_gtd.menu_open_time_allinbox
 msgid "My Timeboxes"
 msgstr ""
 
@@ -228,7 +236,7 @@ msgstr ""
 #. module: project_gtd
 #: view:project.task:0
 msgid "Planned"
-msgstr ""
+msgstr "已计划"
 
 #. module: project_gtd
 #: view:project.gtd.context:0
@@ -240,13 +248,18 @@ msgstr ""
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_open
 msgid "My Open Tasks"
-msgstr ""
+msgstr "我进行中的任务列表"
+
+#. module: project_gtd
+#: wizard_field:project.gtd.timebox.fill,init,task_ids:0
+msgid "Tasks selection"
+msgstr "选择任务"
 
 #. module: project_gtd
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time
 #: model:ir.ui.menu,name:project_gtd.menu_open_time
 msgid "Time Management"
-msgstr ""
+msgstr "时间管理"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -266,9 +279,14 @@ msgid "Tasks"
 msgstr "任务"
 
 #. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.project_normal_action_tree
+msgid "TimeBox"
+msgstr ""
+
+#. module: project_gtd
 #: field:project.gtd.context,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "顺序"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,child_ids:0
@@ -276,13 +294,18 @@ msgid "Child Timeboxes"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.ui.menu,name:project_gtd.menu_open_time_allinbox
-msgid "All My Timeboxes"
-msgstr ""
+#: selection:project.gtd.timebox,type:0
+msgid "Other"
+msgstr "其他"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,col_deadline:0
 msgid "Deadline"
+msgstr "截止日期"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "TimeBox Configuration"
 msgstr ""
 
 #. module: project_gtd
@@ -293,20 +316,20 @@ msgstr ""
 #. module: project_gtd
 #: wizard_button:project.gtd.timebox.fill,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,col_date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "开始时间"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,col_planned_hours:0
 msgid "Planned Hours"
-msgstr ""
+msgstr "计划小时数"
 
 #. module: project_gtd
 #: selection:project.gtd.timebox,type:0
 msgid "Weekly"
-msgstr ""
+msgstr "每周"
 

@@ -306,12 +306,14 @@ class task(osv.osv):
     # Override view according to the company definition
     #
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
-        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode
+        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode or False
         f = self.pool.get('res.company').fields_get(cr, uid, ['project_time_mode'], context)
-        word = dict(f['project_time_mode']['selection'])[tm]
+        word = 'Hours'
+        if tm:
+            word = dict(f['project_time_mode']['selection'])[tm]
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
-        if tm=='hours':
+        if (not tm) or (tm=='hours'):
             return res
         eview = etree.fromstring(res['arch'])
         def _check_rec(eview, tm):

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:37:49+0000\n"
-"PO-Revision-Date: 2009-08-28 15:37:49+0000\n"
+"POT-Creation-Date: 2010-02-22 14:33:02+0000\n"
+"PO-Revision-Date: 2010-02-22 14:33:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -76,9 +76,9 @@ msgid "Futur stock for this product according to the selected location or all in
 msgstr "Tuleva varasto tuotteelle valitun paikan mukaisesti, tai kokonaisuudessaan jos paikkoja ei ole valittu. Lasketaan seuraavasti: todellinen varasto - lähtevät + saapuvat."
 
 #. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "Leveys"
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "Tuotekenttä"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -93,7 +93,7 @@ msgstr "Hankintatapa"
 #. module: product
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
 
 #. module: product
 #: model:process.process,name:product.process_process_productprocess0
@@ -111,11 +111,18 @@ msgid "Standard Price"
 msgstr "Standardihinta"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Products: "
+msgstr "Tuotteet: "
+
+#. module: product
 #: help:product.packaging,height:0
 msgid "The height of the package"
 msgstr "Pakkauksen korkeus"
 
 #. module: product
+#: rml:product.pricelist:0
 #: view:product.pricelist:0
 msgid "Products Price List"
 msgstr "Tuotteiden hinnastot"
@@ -177,9 +184,10 @@ msgid "Base price for computing the customer price. Sometimes called the catalog
 msgstr "Perushinta josta asiakkaan hinta lasketaan."
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-msgid "Quantity"
-msgstr "Määrä"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Partner section of the product form"
+msgstr "Tuotelomakkeen kumppaniosio"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -244,22 +252,9 @@ msgid "If Other Pricelist"
 msgstr "Jos muu hinnasto"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_tree
-#: model:ir.ui.menu,name:product.menu_main_product
-#: model:ir.ui.menu,name:product.menu_products
-#: view:product.product:0
-msgid "Products"
-msgstr "Tuotteet"
-
-#. module: product
-#: help:product.pricelist.item,price_round:0
-msgid "Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "Asettaa hinnan siten että se on tämän arvon kerrannainen.\n"
-"Pyöristys tehdään alennuksen jälkeen ja ennen hinnanlisiä.\n"
-"Saadaksesi hintoja jotka päättyvät 9.99, aseta pyöristys 10 ja hinnanlisä -0.01"
+#: rml:product.pricelist:0
+msgid "Price List Name:"
+msgstr ""
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -313,7 +308,12 @@ msgstr "Säännön nimi"
 #. module: product
 #: model:ir.ui.menu,name:product.menu_config_product
 msgid "Configuration"
-msgstr ""
+msgstr "Konfiguraatio"
+
+#. module: product
+#: field:product.packaging,width:0
+msgid "Width"
+msgstr "Leveys"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -381,6 +381,15 @@ msgstr "Standardihinta: kustannushinta on kiinteä ja se lasketaan uudelleen jak
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "Hinnaston nimi"
+
+#. module: product
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Aktiivinen"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -526,9 +535,9 @@ msgid "PC"
 msgstr "PC"
 
 #. module: product
-#: help:product.template,seller_delay:0
-msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
-msgstr "Tämä on keskimääräinen viive päivissä ostotilauksen vahvistamisen ja tavaroiden vastaanottamisen välillä tuotteen oletustoimittajalle. Tätä käytetään tilauspyyntöjen aikataulutukseen."
+#: field:pricelist.partnerinfo,min_quantity:0
+msgid "Quantity"
+msgstr "Määrä"
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -577,6 +586,12 @@ msgid "The currency the field is expressed in."
 msgstr "Valutta jossa kenttä on ilmoitettu."
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Other Pricelist"
+msgstr "Muu hinnasto"
+
+#. module: product
 #: help:product.template,weight:0
 msgid "The gross weight in Kg."
 msgstr "Bruttopaino kilogrammoissa."
@@ -589,7 +604,7 @@ msgstr "Laatikko"
 #. module: product
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Virheellinen XML näkymäarkkitehtuurille!"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -597,9 +612,14 @@ msgid "Determine if the product can be visible in the list of product within a s
 msgstr "Määrittää onko tuote näkyvissä tuotelistassa myyntitilausta tehtäessä."
 
 #. module: product
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Myynnit & Ostot"
+
+#. module: product
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
+msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -711,9 +731,9 @@ msgid "Weight"
 msgstr "Paino"
 
 #. module: product
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor on demand"
-msgstr "Prosessori vaadittaessa"
+#: rml:product.pricelist:0
+msgid "Currency :"
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -734,13 +754,6 @@ msgstr "IT komponenttipaketit"
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
 msgstr "Mittayksikköjen kategoriat"
-
-#. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "Sarja"
 
 #. module: product
 #: view:product.supplierinfo:0
@@ -778,6 +791,11 @@ msgstr "Kuvaukset"
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Suppliers of Product"
 msgstr "Tuotteen toimittajat"
+
+#. module: product
+#: model:ir.model,name:product.model_pricelist_partnerinfo
+msgid "pricelist.partnerinfo"
+msgstr "pricelist.partnerinfo"
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -852,7 +870,7 @@ msgstr "Kokonainen PC lisälaitteineen"
 #. module: product
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgstr "Virhe: Oletusmittayksikkö ja ostojen mittayksikkö on oltava samassa kategoriassa."
 
 #. module: product
 #: model:product.template,name:product.product_product_mb2_product_template
@@ -890,10 +908,12 @@ msgid "Used by companies that manages two unit of measure: invoicing and stock m
 msgstr "Käytetään yrityksissä joissa tarvitaan kahta mittayksikköä (laskutukseen ja varastonhallintaan). Esimerkiksi elintarviketeollisuudessa voidaan pitää varastoa kappaleissa, mutta laskuttaa painon perusteella. Jätä tyhjäksi käyttääksesi oletus mittayksikköä."
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Hankinta ja paikat"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Could not resolve product category, ' \\n"
+"                                    'you have defined cyclic categories ' \\n"
+"                                    'of products!"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -935,8 +955,8 @@ msgid "Max. Price Margin"
 msgstr "Maksimi hinta kate"
 
 #. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
+#: model:ir.actions.report.xml,name:product.report_product_pricelist
+msgid "Product Pricelist"
 msgstr ""
 
 #. module: product
@@ -953,6 +973,11 @@ msgstr "Tyhjän pakkauksen paino"
 #: help:product.packaging,code:0
 msgid "The code of the transport unit."
 msgstr "Lähetysyksikön koodi."
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+msgid "Processor on demand"
+msgstr "Prosessori vaadittaessa"
 
 #. module: product
 #: field:product.template,uom_po_id:0
@@ -985,13 +1010,9 @@ msgid "Information about a product supplier"
 msgstr "Tuotteen toimittajan tiedot"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Aktiivinen"
+#: help:product.product,packaging:0
+msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+msgstr "Eri tavat pakata sama tuote. Tällä ei ole vaikutusta pakkausmääräykseen. Näitä tietoja käytetään pääasiassa EDI-moduulin kanssa."
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -1009,9 +1030,9 @@ msgid "Medium PC"
 msgstr "Keskitason PC"
 
 #. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
-msgstr "pricelist.partnerinfo"
+#: rml:product.pricelist:0
+msgid "Printing Date :"
+msgstr ""
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
@@ -1031,6 +1052,11 @@ msgstr "Ostojen kuvaus"
 #: view:product.template:0
 msgid "Second UoM"
 msgstr "Toinen mittayksikkö"
+
+#. module: product
+#: help:product.template,seller_delay:0
+msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
+msgstr "Tämä on keskimääräinen viive päivissä ostotilauksen vahvistamisen ja tavaroiden vastaanottamisen välillä tuotteen oletustoimittajalle. Tätä käytetään tilauspyyntöjen aikataulutukseen."
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -1064,9 +1090,9 @@ msgid "Gross weight"
 msgstr "Bruttopaino"
 
 #. module: product
-#: help:product.product,packaging:0
-msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
-msgstr "Eri tavat pakata sama tuote. Tällä ei ole vaikutusta pakkausmääräykseen. Näitä tietoja käytetään pääasiassa EDI-moduulin kanssa."
+#: field:product.packaging,weight_ul:0
+msgid "Empty Package Weight"
+msgstr "Tyhjän pakkauksen paino"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1075,9 +1101,11 @@ msgid "Product Category"
 msgstr "Tuotteen kategoria"
 
 #. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "Tuotekenttä"
+#: code:addons/product/pricelist.py:0
+#: constraint:product.pricelist.item:0
+#, python-format
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
@@ -1241,7 +1269,7 @@ msgstr "Määrä 2"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Information"
-msgstr "Tiedot"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1251,7 +1279,7 @@ msgstr "Koodit"
 #. module: product
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
 
 #. module: product
 #: wizard_field:product.price_list,init,qty4:0
@@ -1344,6 +1372,7 @@ msgstr "Tilavuus"
 #. module: product
 #: field:pricelist.partnerinfo,name:0
 #: field:product.packaging,name:0
+#: rml:product.pricelist:0
 #: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description:0
@@ -1404,6 +1433,11 @@ msgstr "Hintalisä"
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
+msgstr ""
+
+#. module: product
+#: rml:product.pricelist:0
+msgid "units"
 msgstr ""
 
 #. module: product
@@ -1472,6 +1506,13 @@ msgid "Can be Purchased"
 msgstr "Voidaan ostaa"
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "No active version for the selected pricelist !\n' \\n"
+"                                'Please create or activate one."
+msgstr ""
+
+#. module: product
 #: field:product.template,uos_coeff:0
 msgid "UOM -> UOS Coeff"
 msgstr "Munnoskerroin"
@@ -1498,6 +1539,17 @@ msgid "Palletization"
 msgstr "Lavoitus"
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Varoitus!"
+
+#. module: product
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr "Tilavuus kuutiometreinä."
+
+#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Prices & Suppliers"
@@ -1507,6 +1559,15 @@ msgstr "Hinnat ja toimittajat"
 #: help:product.packaging,weight:0
 msgid "The weight of a full of products palet or box."
 msgstr "Tuotteilla täytetyn lavan tai laatikon paino."
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid "Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr "Asettaa hinnan siten että se on tämän arvon kerrannainen.\n"
+"Pyöristys tehdään alennuksen jälkeen ja ennen hinnanlisiä.\n"
+"Saadaksesi hintoja jotka päättyvät 9.99, aseta pyöristys 10 ja hinnanlisä -0.01"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1548,9 +1609,11 @@ msgid "Pricelist Versions"
 msgstr "Hinnaston versiot"
 
 #. module: product
-#: field:product.packaging,weight_ul:0
-msgid "Empty Package Weight"
-msgstr "Tyhjän pakkauksen paino"
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "Sarja"
 
 #. module: product
 #: field:product.template,list_price:0
@@ -1578,6 +1641,12 @@ msgid "Private"
 msgstr "Yksityinen"
 
 #. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Hankinta ja paikat"
+
+#. module: product
 #: help:product.supplierinfo,delay:0
 msgid "Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
 msgstr "Viive päivinä ostotilauksen vahvistuksen ja tuotteiden vastaanoton välillä. Tätä käytetään ostotilausten aikataulujen automaattiseen laskentaan."
@@ -1590,7 +1659,7 @@ msgstr "Mittayksikkö ostotilauksille. Sen on oltava samassa kategoriassa kuin t
 #. module: product
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Virhe: Virheellinen EAN-koodi"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
@@ -1608,9 +1677,13 @@ msgid "Products Labels"
 msgstr "Tuotteen nimilaput"
 
 #. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr "Tilavuus kuutiometreinä."
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
+#: model:ir.ui.menu,name:product.menu_main_product
+#: model:ir.ui.menu,name:product.menu_products
+#: view:product.product:0
+msgid "Products"
+msgstr "Tuotteet"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box

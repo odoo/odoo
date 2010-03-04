@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:51:44+0000\n"
-"PO-Revision-Date: 2009-08-28 15:51:44+0000\n"
+"POT-Creation-Date: 2010-02-22 14:41:42+0000\n"
+"PO-Revision-Date: 2010-02-22 14:41:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,12 +28,18 @@ msgstr ""
 #. module: project
 #: help:project.task.delegate,init,name:0
 msgid "New title of the task delegated to the user."
-msgstr ""
+msgstr "Новое название задания, порученного пользователю."
+
+#. module: project
+#: code:addons/project/wizard/close_task.py:0
+#, python-format
+msgid "Couldn't send mail because the contact for this task (%s) has no email address!"
+msgstr "Невозможно отправить письмо, потому что у того, кто связан с этим заданием (%s), нет электронного адреса!"
 
 #. module: project
 #: view:config.compute.remaining:0
 msgid "Change Remaining Hours"
-msgstr ""
+msgstr "Изменить оставшееся время"
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_close_task
@@ -46,8 +52,15 @@ msgid "Project Tasks"
 msgstr ""
 
 #. module: project
-#: model:process.transition,name:project.process_transition_opendonetask0
-msgid "Open Done Task"
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Operation Not Permitted !"
+msgstr "Недопустимая операция!"
+
+#. module: project
+#: code:addons/project/wizard/task_delegate.py:0
+#, python-format
+msgid "CHECK: "
 msgstr ""
 
 #. module: project
@@ -69,7 +82,7 @@ msgstr "Выполнение"
 #: help:config.compute.remaining,remaining_hours:0
 #: help:project.task,remaining_hours:0
 msgid "Total remaining time, can be re-estimated periodically by the assignee of the task."
-msgstr ""
+msgstr "Общее количество оставшегося времени может быть переодически переоценено тем, кто отвечает за это задание."
 
 #. module: project
 #: field:project.project,child_id:0
@@ -79,7 +92,7 @@ msgstr "Подпроект"
 #. module: project
 #: field:project.project,members:0
 msgid "Project Members"
-msgstr ""
+msgstr "Участники проекта"
 
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
@@ -90,7 +103,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.open_view_my_project_my_run
 #: model:ir.ui.menu,name:project.menu_open_view_my_project_my_run
 msgid "My Running Projects"
-msgstr ""
+msgstr "Мои текущие проекты"
 
 #. module: project
 #: field:project.task,child_ids:0
@@ -110,17 +123,17 @@ msgstr "Важность"
 #. module: project
 #: view:config.compute.remaining:0
 msgid "Update"
-msgstr ""
+msgstr "Обновить"
 
 #. module: project
 #: help:project.task.delegate,init,user_id:0
 msgid "User you want to delegate this task to."
-msgstr ""
+msgstr "Пользователь, которому вы хотите поручить эту задачу."
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_attachment_task
 msgid "All Attachments"
-msgstr ""
+msgstr "Все вложенные файлы"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
@@ -128,9 +141,15 @@ msgid "Set pending"
 msgstr "Поставить в ожидание"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.action_view_task7
+#: model:ir.ui.menu,name:project.menu_action_view_task7
+msgid "Unassigned Tasks"
+msgstr "Неназначенные задания"
+
+#. module: project
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
-msgstr ""
+msgstr "Определить требования и установить запланированное время."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -141,7 +160,7 @@ msgstr "Типы заданий"
 #. module: project
 #: view:project.project:0
 msgid "New Project Based on Template"
-msgstr ""
+msgstr "Новый проект на основе шаблона"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -179,10 +198,9 @@ msgstr ""
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
 msgid "Draft task"
-msgstr ""
+msgstr "Черновик задания"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task
 #: field:project.task.work,task_id:0
 msgid "Task"
 msgstr "Задание"
@@ -190,7 +208,7 @@ msgstr "Задание"
 #. module: project
 #: help:project.task.delegate,init,planned_hours_me:0
 msgid "Estimated time for you to validate the work done by the user to whom you delegate this task."
-msgstr ""
+msgstr "Предположительное время, необходимое вам для подтверждения работы, выполненной пользователем, которому было поручено это задание."
 
 #. module: project
 #: view:project.project:0
@@ -198,17 +216,17 @@ msgstr ""
 #: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
-msgstr "Примечания"
+msgstr "Записи"
 
 #. module: project
 #: selection:res.company,project_time_mode:0
 msgid "Days"
-msgstr ""
+msgstr "Дней"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_analysis
 msgid "Analysis"
-msgstr ""
+msgstr "Анализ"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -221,13 +239,13 @@ msgstr "Проект"
 #. module: project
 #: view:project.task:0
 msgid "Start Task"
-msgstr ""
+msgstr "Запуск задания"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog_draft
 #: model:ir.ui.menu,name:project.menu_tasks_yours_prog_draft
 msgid "My Draft Tasks"
-msgstr ""
+msgstr "Мои Черновики заданий"
 
 #. module: project
 #: view:project.project:0
@@ -244,7 +262,7 @@ msgstr "Отменено"
 #: view:project.project:0
 #: field:project.project,warn_header:0
 msgid "Mail Header"
-msgstr ""
+msgstr "Заголовок письма"
 
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
@@ -254,7 +272,7 @@ msgstr ""
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
 msgid "Task is Completed"
-msgstr ""
+msgstr "Задание завершено"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
@@ -262,19 +280,25 @@ msgid "Delegates tasks to the other user"
 msgstr ""
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "A new project has been created !\nWe suggest you to close this one and work on this new project."
+msgstr ""
+
+#. module: project
 #: help:project.task,effective_hours:0
 msgid "Computed using the sum of the task work done."
-msgstr ""
+msgstr "Рассчитывается на основе объёма выполненных заданий."
 
 #. module: project
 #: help:project.project,warn_customer:0
 msgid "If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer."
-msgstr ""
+msgstr "Если вы выберете эту опцию, то при закрытии задания пользователь будет получать сообщение с предложением послать клиенту письмо по электронной почте."
 
 #. module: project
 #: help:project.task.delegate,init,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user."
-msgstr ""
+msgstr "Повторно включать описание задания в задание пользователя."
 
 #. module: project
 #: field:project.project,category_id:0
@@ -296,7 +320,7 @@ msgstr "Все задания"
 #. module: project
 #: view:project.task:0
 msgid "Planning"
-msgstr ""
+msgstr "Планирование"
 
 #. module: project
 #: view:project.task:0
@@ -307,7 +331,7 @@ msgstr "Доп. информация"
 #: field:project.project,partner_id:0
 #: field:project.task,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Партнер"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -323,7 +347,7 @@ msgstr "Задание: %(name)s"
 #. module: project
 #: view:project.project:0
 msgid "Reset as Project"
-msgstr ""
+msgstr "Сбросить как проект"
 
 #. module: project
 #: view:project.task:0
@@ -333,7 +357,7 @@ msgstr "Делегированные"
 #. module: project
 #: help:project.project,members:0
 msgid "Project's member. Not used in any computation, just for information purpose."
-msgstr ""
+msgstr "Участников проекта. Не использовать в расчетах, только в информационных целях."
 
 #. module: project
 #: view:project.project:0
@@ -344,17 +368,17 @@ msgstr "Мои проекты"
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 msgid "All projects"
-msgstr ""
+msgstr "Все проекты"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
 msgid "From draft state, it will come into the open state."
-msgstr ""
+msgstr "Задание будет переведено из статуса \"Черновик\" в статус \"Открытое\"."
 
 #. module: project
 #: wizard_view:project.task.delegate,init:0
 msgid "Delegated Task"
-msgstr "Делегированная задание"
+msgstr "Порученное задание"
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -364,22 +388,22 @@ msgstr ""
 #. module: project
 #: wizard_field:project.task.delegate,init,new_task_description:0
 msgid "New Task Description"
-msgstr ""
+msgstr "Новое описание задания"
 
 #. module: project
 #: help:project.project,notes:0
 msgid "Internal description of the project."
-msgstr ""
+msgstr "Внутреннее описание проекта."
 
 #. module: project
 #: field:project.project,parent_id:0
 msgid "Parent Project"
-msgstr ""
+msgstr "Основной проект"
 
 #. module: project
 #: help:project.task,total_hours:0
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr ""
+msgstr "Вычисляется по формуле: Затраченное время + Оставшееся время."
 
 #. module: project
 #: field:project.task,type:0
@@ -396,13 +420,13 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_view_task5_prog
 #: model:ir.ui.menu,name:project.menu_tasks_yours_prog
 msgid "My Current Tasks"
-msgstr ""
+msgstr "Мои текущие задания"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project
 #: model:ir.ui.menu,name:project.menu_open_view_project
 msgid "New Project"
-msgstr ""
+msgstr "Новый проект"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -414,7 +438,7 @@ msgstr "Средний"
 #: field:config.compute.remaining,remaining_hours:0
 #: field:project.task,remaining_hours:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Оставшееся время"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -424,7 +448,7 @@ msgstr "Тип проектного задания"
 #. module: project
 #: field:project.project,planned_hours:0
 msgid "Planned Time"
-msgstr ""
+msgstr "Запланированное время"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
@@ -436,7 +460,7 @@ msgstr "Работа по заданию"
 #. module: project
 #: selection:res.company,project_time_mode:0
 msgid "Hours"
-msgstr ""
+msgstr "Часов"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_pending
@@ -452,31 +476,31 @@ msgid "Tasks in Progress"
 msgstr "Задачи в процессе выполнения"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_view_task7
-#: model:ir.ui.menu,name:project.menu_action_view_task7
-msgid "Unassigned Tasks"
-msgstr "Неназначенные задания"
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Operation Done"
+msgstr ""
 
 #. module: project
 #: wizard_field:project.task.delegate,init,name:0
 msgid "Delegated Title"
-msgstr ""
+msgstr "Название поручения"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_my_project
 #: model:ir.ui.menu,name:project.menu_open_view_my_project
 msgid "My Projects"
-msgstr ""
+msgstr "Мои проекты"
 
 #. module: project
 #: help:project.task.delegate,init,planned_hours:0
 msgid "Estimated time to close this task by the delegated user."
-msgstr ""
+msgstr "Время, предположительно необходимое для завершения этого задания пользователем, которому оно было поручено."
 
 #. module: project
 #: selection:project.project,state:0
 msgid "Template"
-msgstr ""
+msgstr "Шаблон"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_definitions
@@ -488,7 +512,7 @@ msgstr "Настройки"
 #: field:project.project,date_start:0
 #: field:project.task,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Дата начала"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_all_project
@@ -509,7 +533,7 @@ msgstr "Описание задания"
 #. module: project
 #: model:process.node,name:project.process_node_triggerinvoice0
 msgid "Trigger Invoice"
-msgstr ""
+msgstr "Триггер счета"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
@@ -524,7 +548,7 @@ msgstr "Польователь: %(user_id)s"
 #. module: project
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
-msgstr ""
+msgstr "Время отсрочки"
 
 #. module: project
 #: field:project.project,contact_id:0
@@ -553,9 +577,10 @@ msgstr "Управление проектами"
 #: field:project.project,effective_hours:0
 #: field:project.task.work,hours:0
 msgid "Time Spent"
-msgstr ""
+msgstr "Затраченное время"
 
 #. module: project
+#: model:ir.model,name:project.model_project_task
 #: model:ir.ui.menu,name:project.menu_tasks
 #: view:project.task:0
 msgid "Tasks"
@@ -578,6 +603,12 @@ msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr ""
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' set in progress"
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 msgid "Project's members"
 msgstr "Участники проекта"
@@ -590,7 +621,7 @@ msgstr ""
 #. module: project
 #: help:project.task,progress:0
 msgid "Computed as: Time Spent / Total Time."
-msgstr ""
+msgstr "Вычисляется по формуле: Затраченное время / Общее время."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task4
@@ -604,14 +635,20 @@ msgid "Status: %(state)s"
 msgstr "Статус: %(state)s"
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' cancelled"
+msgstr "Задание '%s' отменено"
+
+#. module: project
 #: view:project.task:0
 msgid "Planned"
-msgstr ""
+msgstr "Запланировано"
 
 #. module: project
 #: help:project.project,total_hours:0
 msgid "Sum of total hours of all tasks related to this project."
-msgstr ""
+msgstr "Общее время всех заданий, связанных с этим проектом."
 
 #. module: project
 #: view:project.task:0
@@ -701,6 +738,7 @@ msgid "Total Time"
 msgstr ""
 
 #. module: project
+#: field:project.project,active:0
 #: field:project.task,active:0
 msgid "Active"
 msgstr "Активен"
@@ -723,7 +761,7 @@ msgstr "Редакция задания"
 #. module: project
 #: help:project.task,delay_hours:0
 msgid "Computed as: Total Time - Estimated Time. It gives the difference of the time estimated by the project manager and the real time to close the task."
-msgstr ""
+msgstr "Вычисляется по формуле: Общее время - Предположительное время. Позволяет увидеть разницу между предположительной оценкой необходимого времени, сделанной руководителем проекта, и реальным временем, затраченным на завершение задания."
 
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
@@ -743,7 +781,7 @@ msgstr ""
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
 msgid "When task is completed, it will come into the done state."
-msgstr ""
+msgstr "После завершения задания установить для него статус \"Выполнено\"."
 
 #. module: project
 #: field:project.task.work,date:0
@@ -754,6 +792,12 @@ msgstr "Дата"
 #: help:res.company,project_time_mode:0
 msgid "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), don't forget to setup the right unit of measure in your employees."
+msgstr ""
+
+#. module: project
+#: code:addons/project/wizard/close_task.py:0
+#, python-format
+msgid "Error"
 msgstr ""
 
 #. module: project
@@ -770,6 +814,12 @@ msgstr ""
 #: selection:project.task,priority:0
 msgid "Urgent"
 msgstr "Срочно"
+
+#. module: project
+#: code:addons/project/wizard/close_task.py:0
+#, python-format
+msgid "Couldn't send mail because your email address is not configured!"
+msgstr ""
 
 #. module: project
 #: wizard_view:project.task.delegate,init:0
@@ -794,22 +844,22 @@ msgstr "Назначено на"
 #. module: project
 #: help:project.task,planned_hours:0
 msgid "Estimated time to do the task, usually set by the project manager when the task is in draft state."
-msgstr ""
+msgstr "Предположительное время, необходимое для завершения задания. Обычно устанавливается руководителем проекта, когда задание находится в статусе \"Черновик\"."
 
 #. module: project
 #: help:project.project,effective_hours:0
 msgid "Sum of spent hours of all tasks related to this project."
-msgstr ""
+msgstr "Общее количество времени, затраченного на все задания, связанные с этим проектом."
 
 #. module: project
 #: help:project.task,project_id:0
 msgid "If you have [?] in the project name, it means there are no analytic account linked to this project."
-msgstr ""
+msgstr "Если рядом с названием проекта стоит знак [?], значит этот проект не связан ни с одним аналитическим отчётом."
 
 #. module: project
 #: help:project.project,planned_hours:0
 msgid "Sum of planned hours of all tasks related to this project."
-msgstr ""
+msgstr "Общее количество времени, запланированного для выполнения всех заданий, связанных с этим проектом."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
@@ -878,6 +928,12 @@ msgid "Open"
 msgstr "Открыть"
 
 #. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "You can not delete a project with tasks. I suggest you to deactivate it."
+msgstr "Вы не можете удалить проект с заданиями, но можете деактивировать этот проект."
+
+#. module: project
 #: view:project.project:0
 msgid "ID: %(task_id)s"
 msgstr "ID: %(task_id)s"
@@ -905,7 +961,7 @@ msgstr "Задание-предок"
 #. module: project
 #: view:project.task:0
 msgid "Delay"
-msgstr ""
+msgstr "Отсрочка"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -952,7 +1008,7 @@ msgstr "Описание"
 #. module: project
 #: model:process.transition,name:project.process_transition_taskinvoice0
 msgid "Task invoice"
-msgstr ""
+msgstr "Счёт этого задания"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_my_project_open
@@ -978,7 +1034,7 @@ msgstr ""
 #. module: project
 #: help:project.project,parent_id:0
 msgid "If you have [?] in the name, it means there are no analytic account linked to project."
-msgstr ""
+msgstr "Если в названии стоит знак [?], значит с этим проектом не связано ни одного аналитического отчёта."
 
 #. module: project
 #: model:ir.actions.wizard,name:project.wizard_delegate_task
@@ -993,12 +1049,18 @@ msgstr "Задания проекта"
 #. module: project
 #: help:project.project,warn_manager:0
 msgid "If you check this field, the project manager will receive a request each time a task is completed by his team."
-msgstr ""
+msgstr "Если вы выберете эту опцию, руководитель проекта каждый раз при завершении задания его командой будет получать запрос."
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_feature
 msgid "New Feature"
-msgstr ""
+msgstr "Новая Функция"
+
+#. module: project
+#: code:addons/project/project.py:0
+#, python-format
+msgid "Task '%s' closed"
+msgstr "Задание '%s' завершено"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -1018,6 +1080,11 @@ msgstr "Задание проекта"
 #. module: project
 #: field:project.task,effective_hours:0
 msgid "Hours Spent"
+msgstr "Затраченное время"
+
+#. module: project
+#: model:process.transition,name:project.process_transition_opendonetask0
+msgid "Open Done Task"
 msgstr ""
 
 #. module: project
@@ -1040,7 +1107,7 @@ msgstr "Последовательность"
 #. module: project
 #: help:project.project,warn_footer:0
 msgid "Footer added at the beginning of the email for the warning message sent to the customer when a task is closed."
-msgstr ""
+msgstr "В начало письма добавлена сноска, чтобы при завершении задания клиент получал предупреждение."
 
 #. module: project
 #: view:project.project:0
@@ -1050,7 +1117,7 @@ msgstr "Информация партнера"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_compute_remaining
 msgid "Compute Remaining Hours"
-msgstr ""
+msgstr "Вычислить оставшееся время"
 
 #. module: project
 #: wizard_field:project.task.delegate,init,state:0
@@ -1085,22 +1152,22 @@ msgstr "Дата остановки: %(date_stop)s"
 #. module: project
 #: field:project.project,date_end:0
 msgid "Expected End"
-msgstr ""
+msgstr "Предположительное окончание"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
 msgid "Delegate your task to the other user"
-msgstr ""
+msgstr "Поручить ваше задание другому пользователю"
 
 #. module: project
 #: view:project.project:0
 #: field:project.project,warn_footer:0
 msgid "Mail Footer"
-msgstr ""
+msgstr "Нижняя часть письма"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_open
 #: model:ir.ui.menu,name:project.menu_open_view_project_open
 msgid "Running projects"
-msgstr ""
+msgstr "Запущенные проекты"
 

@@ -27,7 +27,7 @@ from report import report_sxw
 
 class account_analytic_cost_ledger(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(account_analytic_cost_ledger, self).__init__(cr, uid, name, context)
+        super(account_analytic_cost_ledger, self).__init__(cr, uid, name, context=context)
         self.sum_revenue={}
         self.account_sum_revenue={}
         self.localcontext.update( {
@@ -88,7 +88,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
             revenue = 0.0
             if lines[id].amount < 0 and lines[id].product_id and lines[id].product_uom_id and lines[id].account_id.pricelist_id:
                 ctx = {'uom': lines[id].product_uom_id.id}
-                price = price_obj.price_get(self.cr, self.uid, [lines[id].pricelist_id.id], lines[id].product_id.id, lines[id].unit_amount, ctx)[lines[id].pricelist_id.id]
+                price = price_obj.price_get(self.cr, self.uid, [lines[id].account_id.pricelist_id.id], lines[id].product_id.id, lines[id].unit_amount, ctx)[lines[id].account_id.pricelist_id.id]
                 revenue = round(price * lines[id].unit_amount, 2)
             r['revenue'] = revenue
             self.sum_revenue[account_id] += revenue

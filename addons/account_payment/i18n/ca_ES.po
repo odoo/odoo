@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:28:23+0000\n"
-"PO-Revision-Date: 2009-08-28 15:28:23+0000\n"
+"POT-Creation-Date: 2010-02-22 14:27:03+0000\n"
+"PO-Revision-Date: 2010-02-22 14:27:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgstr "Seleccioneu la forma de pagament a aplicar."
 #. module: account_payment
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nom de model no vàlid en la definició de l'acció."
 
 #. module: account_payment
 #: view:payment.line:0
@@ -82,7 +82,7 @@ msgstr "Data venciment"
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr "Línia de l'assentament comptable"
+msgstr "Apunt comptable"
 
 #. module: account_payment
 #: wizard_button:populate_payment,search,create:0
@@ -114,7 +114,7 @@ msgstr "Cancel·lat"
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form_new
 msgid "New Payment Order"
-msgstr "Nova ordre de pagament"
+msgstr "Nova ordre de pagament/cobrament"
 
 #. module: account_payment
 #: rml:payment.order:0
@@ -210,6 +210,12 @@ msgid "Choose an option for the Payment Order:'Fixed' stands for a date specifie
 msgstr "Seleccioneu una opció per l'ordre de pagament: 'Data fixa' per una data que heu especificat. 'Directament' per l'execució directa. 'Data venciment' per la data programada d'execució."
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "Error !"
+msgstr "Error!"
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Total deure"
@@ -253,6 +259,11 @@ msgid "Created"
 msgstr "Creat"
 
 #. module: account_payment
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Selecciona factures a pagar"
+
+#. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
 msgstr "Import total monetari"
@@ -270,12 +281,7 @@ msgstr "Tipus de comunicació"
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
 msgid "Payment Management"
-msgstr ""
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Comunicació"
+msgstr "Gestió de pagaments"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -323,6 +329,12 @@ msgstr "Empresa"
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "El missatge de pagament realitzat a comunicar."
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "No partner defined on entry line"
+msgstr "No s'ha definit l'empresa en la línia d'entrada"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -432,9 +444,9 @@ msgid "Done"
 msgstr "Realitzat"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Selecciona factures a pagar"
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Comunicació"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -531,7 +543,7 @@ msgstr "Línia de l'assentament"
 #. module: account_payment
 #: help:payment.line,communication:0
 msgid "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"
-msgstr ""
+msgstr "S'utilitza com a missatge entre el client i la companyia actual. Què voleu dir al receptor sobre aquesta ordre?"
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -549,6 +561,12 @@ msgstr "_Cerca"
 #: view:payment.order:0
 msgid "Entry Information"
 msgstr "Informació de l'assentament"
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
+msgstr "Empresa '+ line.partner_id.name+ ' no té una compte bancària definida"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement

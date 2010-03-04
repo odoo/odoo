@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:33:04+0000\n"
-"PO-Revision-Date: 2009-08-28 15:33:04+0000\n"
+"POT-Creation-Date: 2010-02-22 14:30:01+0000\n"
+"PO-Revision-Date: 2010-02-22 14:30:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "uid"
-msgstr ""
+msgstr "uid"
 
 #. module: document_ics
 #: constraint:document.directory:0
@@ -53,12 +53,12 @@ msgstr ""
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "Next"
-msgstr ""
+msgstr "Dále"
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
 msgid "Content"
-msgstr ""
+msgstr "Obsah"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,meeting:0
@@ -73,12 +73,12 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "url"
-msgstr ""
+msgstr "url"
 
 #. module: document_ics
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Špatný název modelu v definici akce"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,bugs:0
@@ -93,6 +93,12 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtend"
+msgstr "dtend"
+
+#. module: document_ics
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "You can not set negative Duration."
 msgstr ""
 
 #. module: document_ics
@@ -101,8 +107,9 @@ msgid "Help you to organise the jobs hiring process: evaluation, meetings, email
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "description"
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: document_ics
@@ -131,9 +138,14 @@ msgid "Fund Raising Operations"
 msgstr ""
 
 #. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "description"
+msgstr "popis"
+
+#. module: document_ics
 #: field:document.directory.content,ics_object_id:0
 msgid "Object"
-msgstr ""
+msgstr "Objekt"
 
 #. module: document_ics
 #: constraint:crm.case.section:0
@@ -148,7 +160,7 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "location"
-msgstr ""
+msgstr "lokace"
 
 #. module: document_ics
 #: view:document.directory:0
@@ -158,7 +170,7 @@ msgstr ""
 #. module: document_ics
 #: field:document.directory.ics.fields,name:0
 msgid "ICS Value"
-msgstr ""
+msgstr "Hodnota ICS"
 
 #. module: document_ics
 #: model:ir.module.module,description:document_ics.module_meta_information
@@ -178,7 +190,7 @@ msgstr ""
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
 msgid "Name"
-msgstr ""
+msgstr "Jméno"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,meeting:0
@@ -188,7 +200,7 @@ msgstr ""
 #. module: document_ics
 #: field:document.directory.content,ics_domain:0
 msgid "Domain"
-msgstr ""
+msgstr "Doména"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,claims:0
@@ -213,7 +225,7 @@ msgstr ""
 #. module: document_ics
 #: field:document.ics.crm.wizard,document_ics:0
 msgid "Shared Calendar"
-msgstr ""
+msgstr "Sdílený kalendář"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,claims:0
@@ -238,17 +250,17 @@ msgstr ""
 #. module: document_ics
 #: field:document.ics.crm.wizard,bugs:0
 msgid "Bug Tracking"
-msgstr ""
+msgstr "Záznam chyb"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "categories"
-msgstr ""
+msgstr "kategorie"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
 msgid "Prospect"
-msgstr ""
+msgstr "Prospekt"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
@@ -258,17 +270,17 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "created"
-msgstr ""
+msgstr "vytvořeno"
 
 #. module: document_ics
 #: field:crm.case,code:0
 msgid "Calendar Code"
-msgstr ""
+msgstr "Kód kalendáře"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "summary"
-msgstr ""
+msgstr "shrnutí"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_ics_crm_wizard
@@ -293,7 +305,7 @@ msgstr ""
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "Cancel"
-msgstr ""
+msgstr "Zrušit"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,opportunity:0

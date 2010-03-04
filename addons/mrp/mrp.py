@@ -129,7 +129,7 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': fields.float('Number of Cycle', required=True,
             help="A cycle is defined in the workcenter definition."),
         'hour_nbr': fields.float('Number of Hours', required=True),
-        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True),
+        'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade'),
         'note': fields.text('Description')
     }
     _defaults = {
@@ -362,6 +362,8 @@ class mrp_production(osv.osv):
                 parent_move_line=get_parent_move(production['move_prod_id'][0])
                 if parent_move_line:
                     move = move_obj.browse(cr,uid,parent_move_line)
+                    #TODO: fix me sale module can not be used here, 
+                    #as may be mrp can be installed without sale module
                     if field_name=='name':
                         res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.name or False
                     if field_name=='client_order_ref':
@@ -547,7 +549,7 @@ class mrp_production(osv.osv):
 
     #TODO Review materials in function in_prod and prod_end.
     def action_production_end(self, cr, uid, ids):
-        move_ids = []
+#        move_ids = []
         for production in self.browse(cr, uid, ids):
             for res in production.move_lines:
                 for move in production.move_created_ids:
@@ -555,7 +557,7 @@ class mrp_production(osv.osv):
                     cr.execute('INSERT INTO stock_move_history_ids \
                             (parent_id, child_id) VALUES (%s,%s)',
                             (res.id, move.id))
-                move_ids.append(res.id)
+#                move_ids.append(res.id)
             vals= {'state':'confirmed'}
             new_moves = [x.id for x in production.move_created_ids]
             self.pool.get('stock.move').write(cr, uid, new_moves, vals)
@@ -565,7 +567,7 @@ class mrp_production(osv.osv):
             self.pool.get('stock.move').check_assign(cr, uid, new_moves)
             self.pool.get('stock.move').action_done(cr, uid, new_moves)
             self._costs_generate(cr, uid, production)
-        self.pool.get('stock.move').action_done(cr, uid, move_ids)
+#        self.pool.get('stock.move').action_done(cr, uid, move_ids)
         self.write(cr,  uid, ids, {'state': 'done'})
         return True
 
@@ -976,6 +978,8 @@ class mrp_procurement(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
+            if procurement.product_qty <= 0.00:
+                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Procurement Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -993,13 +997,12 @@ class mrp_procurement(osv.osv):
                     })
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move':1})
                 else:
-                    # TODO: check this
-                    if procurement.procure_method=='make_to_stock' and procurement.move_id.state in ('waiting',):
+                    if procurement.procure_method=='make_to_stock' and procurement.move_id.state in ('draft','waiting',):
                         id = self.pool.get('stock.move').write(cr, uid, [procurement.move_id.id], {'state':'confirmed'})
         self.write(cr, uid, ids, {'state':'confirmed','message':''})
         return True
 
-    def action_move_assigned(self, cr, uid, ids):
+    def action_move_assigned(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'running','message':_('from stock: products assigned.')})
         return True
 
@@ -1074,11 +1077,13 @@ class mrp_procurement(osv.osv):
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
             newdate = newdate - procurement.product_id.seller_ids[0].delay
 
-            context.update({'lang':partner.lang})
+            #Passing partner_id to context for purchase order line integrity of Line name
+            context.update({'lang':partner.lang, 'partner_id':partner_id})
+            
             product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
 
             line = {
-                'name': product.name,
+                'name': product.partner_ref,
                 'product_qty': qty,
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,

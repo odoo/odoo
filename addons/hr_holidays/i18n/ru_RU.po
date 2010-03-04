@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:51:44+0000\n"
-"PO-Revision-Date: 2009-08-28 15:51:44+0000\n"
+"POT-Creation-Date: 2010-02-22 14:41:42+0000\n"
+"PO-Revision-Date: 2010-02-22 14:41:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,20 +51,16 @@ msgid "Brown"
 msgstr ""
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "of the"
-msgstr ""
-
-#. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Off-Days' Summary"
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 #: view:hr.holidays.per.user:0
 #: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
 msgid "Employee Holidays"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: hr_holidays
@@ -78,11 +74,6 @@ msgstr ""
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 #: model:process.node,name:hr_holidays.process_node_holidays0
 msgid "Holidays"
-msgstr ""
-
-#. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "to"
 msgstr ""
 
 #. module: hr_holidays
@@ -124,8 +115,9 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: model:process.transition.action,name:hr_holidays.process_transition_action_reufse0
 msgid "Refuse"
-msgstr ""
+msgstr "Отклонить"
 
 #. module: hr_holidays
 #: wizard_button:hr.holidays.summary,notify,end:0
@@ -159,11 +151,6 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Holidays Management"
-msgstr ""
-
-#. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Analyze from"
 msgstr ""
 
 #. module: hr_holidays
@@ -469,6 +456,12 @@ msgid "Ivory"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "Either there is no Employee defined, or no User attached with it."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday
 msgid "My Holidays Request"
 msgstr ""
@@ -486,11 +479,6 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays.per.user,leaves_taken:0
 msgid "Leaves Already Taken"
-msgstr ""
-
-#. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "holidays."
 msgstr ""
 
 #. module: hr_holidays
@@ -514,13 +502,14 @@ msgid "Date"
 msgstr ""
 
 #. module: hr_holidays
-#: model:process.transition.action,name:hr_holidays.process_transition_action_reufse0
-msgid "Reufse"
+#: field:hr.holidays.status,section_id:0
+msgid "Section"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays.status,section_id:0
-msgid "Section"
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "Attention!"
 msgstr ""
 
 #. module: hr_holidays
@@ -537,6 +526,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
 msgid "My Holidays Request Draft"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "You can not cancel this holiday request. first You have to make its case in draft state."
 msgstr ""
 
 #. module: hr_holidays
@@ -705,5 +700,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:process.node,note:hr_holidays.process_node_refused0
 msgid "His manager refuses the request"
+msgstr ""
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "You Cannot Validate leaves while available leaves are less than asked leaves."
 msgstr ""
 

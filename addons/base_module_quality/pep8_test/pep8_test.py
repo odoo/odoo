@@ -271,10 +271,11 @@ PEP-8 Test , copyright of py files check, method can not call from loops
         return ""
 
     def get_result_general(self, dict_obj):
-        str_html = '''<html><strong>Result</strong><head></head><body><table>'''
-        header = ('<tr><th>%s</th><th>%s</th><th>%s</th></tr>', [_('Object Name'), _('Line number'), _('Suggestion')])
+        str_html = '''<html><strong>Result</strong><head>%s</head><body><table class="tablestyle">'''%(self.get_style())
+        header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Object Name'), _('Line number'), _('Suggestion')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_obj) + '</table></body></html>'
+            res = res.replace('''<td''', '''<td class="tdatastyle" ''')
             return res
         return ""
 

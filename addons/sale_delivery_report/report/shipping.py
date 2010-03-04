@@ -27,7 +27,7 @@ import pooler
 
 class shipping(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
-        super(shipping, self).__init__(cr, uid, name, context)
+        super(shipping, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
 #            'get_address': self._get_address,

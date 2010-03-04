@@ -20,33 +20,6 @@
 #
 ##############################################################################
 
-##############################################################################
-#
-# Copyright (c) 2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
-#
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-#
-##############################################################################
-
 from osv import fields,osv
 from osv import orm
 import time
@@ -98,12 +71,51 @@ account_analytic_default()
 class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
     _description = 'account invoice line'
+    
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition=False, price_unit=False, address_invoice_id=False, context={}):
         res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition, price_unit, address_invoice_id, context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context)
         if rec:
             res_prod['value'].update({'account_analytic_id':rec.analytic_id.id})
+        else:
+            res_prod['value'].update({'account_analytic_id':False})       
         return res_prod
 account_invoice_line()
+
+
+class stock_picking(osv.osv):
+    _inherit = "stock.picking"
+    
+    def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
+        partner_id = picking.address_id and picking.address_id.partner_id or False
+        rec = self.pool.get('account.analytic.default').account_get(cursor, user, move_line.product_id.id, partner_id and partner_id.id, user, time.strftime('%Y-%m-%d'), context={})
+        
+        if rec:
+            return rec.analytic_id.id
+        
+        return super(stock_picking, self)._get_account_analytic_invoice(cursor,
+                user, picking, move_line)
+        
+stock_picking()
+
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+    
+    # Method overridden to set the analytic account by default on criterion match
+    def invoice_line_create(self, cr, uid, ids, context={}):
+        create_ids = super(sale_order_line,self).invoice_line_create(cr, uid, ids, context)
+        sale_line_obj = self.browse(cr, uid, ids[0], context)
+        pool_inv_line = self.pool.get('account.invoice.line')
+        
+        for line in pool_inv_line.browse(cr, uid, create_ids, context):
+            rec = self.pool.get('account.analytic.default').account_get(cr, uid, line.product_id.id, sale_line_obj.order_id.partner_id.id, uid, time.strftime('%Y-%m-%d'), context)
+            
+            if rec:
+                pool_inv_line.write(cr, uid, [line.id], {'account_analytic_id':rec.analytic_id.id}, context=context)
+        return create_ids
+    
+sale_order_line()    
+     
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:27:14+0000\n"
-"PO-Revision-Date: 2009-08-28 15:27:14+0000\n"
+"POT-Creation-Date: 2010-02-22 14:26:19+0000\n"
+"PO-Revision-Date: 2010-02-22 14:26:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Отговорен потребител"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -29,7 +29,7 @@ msgstr "% производителност"
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
-msgstr ""
+msgstr "Бюджетни позиции"
 
 #. module: account_budget
 #: constraint:ir.actions.act_window:0
@@ -40,17 +40,17 @@ msgstr ""
 #: rml:account.analytic.account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "Printed at:"
-msgstr ""
+msgstr "Отпечатано в:"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Confirm"
-msgstr ""
+msgstr "Потвърждаване"
 
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
-msgstr ""
+msgstr "Проверка на потребител"
 
 #. module: account_budget
 #: constraint:ir.model:0
@@ -60,7 +60,13 @@ msgstr "Името на обекта трябва да започва с \"x_\" 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Потвърдено"
+
+#. module: account_budget
+#: code:addons/account_budget/wizard/wizard_budget_report.py:0
+#, python-format
+msgid "Insufficient Data!"
+msgstr "Недостатъчни данни!"
 
 #. module: account_budget
 #: field:account.budget.post.dotation,period_id:0
@@ -83,7 +89,7 @@ msgstr "Дата на отпечатване:"
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Проект"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
@@ -117,7 +123,7 @@ msgstr "От"
 #. module: account_budget
 #: field:crossovered.budget.lines,percentage:0
 msgid "Percentage"
-msgstr ""
+msgstr "Процент"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -127,7 +133,7 @@ msgstr "Резултати"
 #. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
-msgstr ""
+msgstr "Състояние"
 
 #. module: account_budget
 #: model:ir.module.module,description:account_budget.module_meta_information
@@ -150,7 +156,25 @@ msgid "This module allows accountants to manage analytic and crossovered budgets
 "    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.\n"
 "\n"
 ""
-msgstr ""
+msgstr "Този модул позволява на счетоводителите да управляват аналитични и кръстосани бюджети.\n"
+"\n"
+"Веднъж когато Основния Бюджет е зададен (в Финансово Управление\n"
+"/Бюджети), ръководителя на проекта може да зададе планираната сума във всяка\n"
+"Аналитична Сметка\n"
+"\n"
+"Счетоводителя може да види общата сума планирана за всеки \n"
+"бюджет или главен бюджет за да се увери че общо планираната не е \n"
+"по-голяма/по-малка от тази която е планирал за този бюджет/главен бюджет. Всеки списък\n"
+"от записи може да бъде превключен към графичен изглед.\n"
+"\n"
+"Налични са три справки:\n"
+"    1. Първият е наличен като списък от бюджети. Дава разпределението за тези бюджети, на аналитични сметки по главен бюджет.\n"
+"\n"
+"    2. Вторият е обобщение на предния, Той само представя разпределнието са избраните бюджети, на аналичтни сметки\n"
+"\n"
+"    3. Последният е наличен за аналитична графика за сметки. Той представя разпределнието за избраните аналитчини сметки, на основните бюджети по бюджет.\n"
+"\n"
+""
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -162,25 +186,24 @@ msgstr "%"
 #: rml:account.analytic.account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
 msgid "Analytic Account :"
-msgstr ""
+msgstr "Аналитична сметка :"
 
 #. module: account_budget
-#: wizard_button:account.budget.report,init,report:0
-#: wizard_button:wizard.analytic.account.budget.report,init,report:0
-#: wizard_button:wizard.crossovered.budget,init,report:0
-#: wizard_button:wizard.crossovered.budget.summary,init,report:0
-msgid "Print"
-msgstr "Печат"
+#: rml:account.analytic.account.budget:0
+#: field:crossovered.budget.lines,practical_amount:0
+#: rml:crossovered.budget.report:0
+msgid "Practical Amount"
+msgstr "Практическо количество"
 
 #. module: account_budget
 #: rml:account.budget:0
 msgid "A/c No."
-msgstr ""
+msgstr "Сметка No."
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
@@ -194,19 +217,19 @@ msgstr "до"
 #: rml:account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "Total :"
-msgstr ""
+msgstr "Общо :"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
 #: field:crossovered.budget.lines,planned_amount:0
 #: rml:crossovered.budget.report:0
 msgid "Planned Amount"
-msgstr ""
+msgstr "Планирано количество"
 
 #. module: account_budget
-#: rml:account.analytic.account.budget:0
-#: rml:crossovered.budget.report:0
-msgid "Perc(%)"
+#: code:addons/account_budget/wizard/wizard_budget_report.py:0
+#, python-format
+msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
 msgstr ""
 
 #. module: account_budget
@@ -223,31 +246,40 @@ msgstr "Анализи на бюджет"
 #: view:crossovered.budget:0
 #: selection:crossovered.budget,state:0
 msgid "Done"
-msgstr ""
+msgstr "Готов"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Validate"
-msgstr ""
+msgstr "Проверка"
+
+#. module: account_budget
+#: wizard_view:account.budget.report,init:0
+msgid "Select period"
+msgstr "Избери период"
 
 #. module: account_budget
 #: wizard_view:wizard.crossovered.budget,init:0
 #: wizard_view:wizard.crossovered.budget.summary,init:0
 msgid "Select Options"
-msgstr ""
+msgstr "Избери опция"
+
+#. module: account_budget
+#: wizard_view:wizard.analytic.account.budget.report,init:0
+msgid "Select Dates Period"
+msgstr "Избор на дати на период"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
-#: field:crossovered.budget.lines,practical_amount:0
 #: rml:crossovered.budget.report:0
-msgid "Practical Amount"
-msgstr ""
+msgid "Perc(%)"
+msgstr "Проц.(%)"
 
 #. module: account_budget
 #: field:crossovered.budget,date_to:0
 #: field:crossovered.budget.lines,date_to:0
 msgid "End Date"
-msgstr ""
+msgstr "Крайна дата"
 
 #. module: account_budget
 #: constraint:ir.ui.view:0
@@ -257,7 +289,7 @@ msgstr "Невалиден XML за преглед на архитектурат
 #. module: account_budget
 #: field:crossovered.budget.lines,theoritical_amount:0
 msgid "Theoritical Amount"
-msgstr ""
+msgstr "Теоритично количество"
 
 #. module: account_budget
 #: field:account.budget.post,name:0
@@ -269,12 +301,12 @@ msgstr "Име"
 #. module: account_budget
 #: model:ir.actions.wizard,name:account_budget.wizard_crossovered_budget_menu_1
 msgid "Print Summary of Budgets"
-msgstr ""
+msgstr "Печат на обобщение на бюджети"
 
 #. module: account_budget
 #: model:ir.actions.wizard,name:account_budget.wizard_budget_spread
 msgid "Spread amount"
-msgstr ""
+msgstr "Разпределние на сума"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -294,9 +326,10 @@ msgid "Budget"
 msgstr "Бюджет"
 
 #. module: account_budget
-#: field:account.budget.post.dotation,post_id:0
-msgid "Item"
-msgstr "Обект"
+#: code:addons/account_budget/crossovered_budget.py:0
+#, python-format
+msgid "Error!"
+msgstr "Грешка!"
 
 #. module: account_budget
 #: field:account.budget.post.dotation,amount:0
@@ -307,42 +340,48 @@ msgstr "Сума"
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
 msgid "Paid Date"
-msgstr ""
+msgstr "Дата на плащане"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_post_tree
 #: model:ir.ui.menu,name:account_budget.menu_action_account_budget_post_tree
 #: model:ir.ui.menu,name:account_budget.next_id_31
 msgid "Budgets"
+msgstr "Бюджети"
+
+#. module: account_budget
+#: code:addons/account_budget/crossovered_budget.py:0
+#, python-format
+msgid "The General Budget '%s' has no Accounts!"
 msgstr ""
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Отказан"
 
 #. module: account_budget
 #: view:account.budget.post.dotation:0
 #: model:ir.model,name:account_budget.model_account_budget_post_dotation
 msgid "Budget Dotation"
-msgstr ""
+msgstr "Парично дарение"
 
 #. module: account_budget
 #: view:account.budget.post.dotation:0
 msgid "Budget Dotations"
-msgstr ""
+msgstr "Парични дарения"
 
 #. module: account_budget
 #: rml:account.budget:0
 msgid "Budget Item Detail"
-msgstr ""
+msgstr "Детайли за елемент от бюджет"
 
 #. module: account_budget
 #: view:account.budget.post:0
 #: field:crossovered.budget.lines,general_budget_id:0
 #: model:ir.model,name:account_budget.model_account_budget_post
 msgid "Budgetary Position"
-msgstr ""
+msgstr "Бюджетна позиция"
 
 #. module: account_budget
 #: wizard_field:account.budget.report,init,date1:0
@@ -358,7 +397,7 @@ msgstr "Начало на период"
 #: model:ir.actions.wizard,name:account_budget.account_analytic_account_budget_report
 #: model:ir.actions.wizard,name:account_budget.wizard_crossovered_budget_menu
 msgid "Print Budgets"
-msgstr ""
+msgstr "Печат на бюджети"
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -369,23 +408,31 @@ msgstr "Код"
 #. module: account_budget
 #: field:account.budget.post.dotation,tot_planned:0
 msgid "Total Planned Amount"
-msgstr ""
+msgstr "Общо планирана сума"
 
 #. module: account_budget
-#: wizard_view:wizard.analytic.account.budget.report,init:0
-msgid "Select Dates Period"
-msgstr ""
+#: field:account.budget.post.dotation,post_id:0
+msgid "Item"
+msgstr "Обект"
+
+#. module: account_budget
+#: wizard_button:account.budget.report,init,report:0
+#: wizard_button:wizard.analytic.account.budget.report,init,report:0
+#: wizard_button:wizard.crossovered.budget,init,report:0
+#: wizard_button:wizard.crossovered.budget.summary,init,report:0
+msgid "Print"
+msgstr "Печат"
 
 #. module: account_budget
 #: field:account.budget.post,dotation_ids:0
 msgid "Spreading"
-msgstr ""
+msgstr "Разпределение"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "Theoretical Amount"
-msgstr ""
+msgstr "Теоритично количество"
 
 #. module: account_budget
 #: wizard_field:account.budget.spread,init,fiscalyear:0
@@ -395,12 +442,12 @@ msgstr "Финансова година"
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Аналитична сметка"
 
 #. module: account_budget
 #: rml:crossovered.budget.report:0
 msgid "Budget :"
-msgstr ""
+msgstr "Буджет :"
 
 #. module: account_budget
 #: rml:account.budget:0
@@ -419,7 +466,7 @@ msgstr "Сметки"
 #. module: account_budget
 #: model:ir.actions.report.xml,name:account_budget.account_budget
 msgid "Print Budget"
-msgstr ""
+msgstr "Отпечатване на бюджет"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -449,27 +496,22 @@ msgstr "Отказ"
 #. module: account_budget
 #: model:ir.module.module,shortdesc:account_budget.module_meta_information
 msgid "Budget Management"
-msgstr ""
+msgstr "Управление на бюджет"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
 #: field:crossovered.budget.lines,date_from:0
 msgid "Start Date"
-msgstr ""
+msgstr "Начална дата"
 
 #. module: account_budget
 #: rml:account.analytic.account.budget:0
 #: rml:crossovered.budget.report:0
 msgid "Analysis from"
-msgstr ""
+msgstr "Аналитичен от"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
-msgstr ""
-
-#. module: account_budget
-#: wizard_view:account.budget.report,init:0
-msgid "Select period"
-msgstr "Избери период"
+msgstr "Проверен"
 

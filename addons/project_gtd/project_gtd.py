@@ -20,8 +20,6 @@
 #
 ##############################################################################
 
-from xml import dom
-
 
 from mx import DateTime
 from mx.DateTime import now
@@ -31,6 +29,14 @@ import netsvc
 from osv import fields, osv
 import ir
 
+import sys
+from tools.translate import _
+
+try:
+    from lxml import etree
+except ImportError:
+    sys.stderr.write("ERROR: Import lxml module\n")
+    sys.stderr.write("ERROR: Try to install the python-lxml package\n")
 
 class one2many_mod(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
@@ -137,7 +143,7 @@ class project_gtd_timebox(osv.osv):
         </notebook>
     </form>
             """
-        doc = dom.minidom.parseString(res['arch'])
+        doc = etree.fromstring(res['arch'])
         xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
         res['arch'] = xarch
         res['fields'] = xfields

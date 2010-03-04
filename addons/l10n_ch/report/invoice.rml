@@ -1,41 +1,40 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
   <docinit>
-    <registerFont fontName="ocrb" fontFile="addons/l10n_ch/report/ocrbb.ttf"/>
+     <registerFont fontFile="/tmp/ocrbb.ttf"  expr="{'fontFile':str(police_absolute_path('addons/l10n_ch/report/ocrbb.ttf'))}"  fontName="ocrb"   />
+
   </docinit>
 
   <template pageSize="(210.0mm,297.0mm)" title="Test" author="Martin Simon" allowSplitting="20">
   	<pageTemplate id="first">
 		<pageGraphics>
-			<!--logo-->
-			<setFont name="Helvetica" size="30"/>
-			<fill color="darkblue"/>
-			<stroke color="darkblue"/>
-			<drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString>
-			<lines>1cm 27.7cm 20cm 27.7cm</lines>
+            <!-- You Logo - Change X,Y,Width and Height -->
+        <image x="1.3cm" y="27.6cm" height="40.0" >[[company.logo or removeParentNode('image')]]</image>
+            <setFont name="Helvetica" size="8"/>
+            <fill color="black"/>
+            <stroke color="black"/>
+            <lines>1.3cm 27.7cm 20cm 27.7cm</lines>
 
-			<setFont name="Helvetica" size="10"/>
-			<drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
+            <drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
 
 
-			<drawString x="1cm" y="27.1cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
-			<drawString x="1cm" y="26.7cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
-				<drawString x="17cm" y="27.1cm">TVA:</drawString>
-				<drawString x="18cm" y="27.1cm">[[ company.partner_id.vat ]]</drawString>
-			<drawString x="1cm" y="26.2cm">Phone:</drawString>
-			<drawRightString x="7cm" y="26.2cm">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</drawRightString>
-			<drawString x="1cm" y="25.8cm">Mail:</drawString>
-			<drawRightString x="7cm" y="25.8cm">[[ company.partner_id.address and company.partner_id.address[0].email ]]</drawRightString>
-			<lines>1cm 25.7cm 7cm 25.7cm</lines>
-			</pageGraphics>
-		<!-- end of header -->
+            <drawString x="1.3cm" y="27.2cm">[[ company.partner_id.name ]]</drawString>
+            <drawString x="1.3cm" y="26.8cm">[[ company.partner_id.address and company.partner_id.address[0].street or  '' ]]</drawString>
+            <drawString x="1.3cm" y="26.4cm">[[ company.partner_id.address and company.partner_id.address[0].zip or '' ]] [[ company.partner_id.address and company.partner_id.address[0].city or '' ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '']]</drawString>
+            <drawString x="1.3cm" y="26.0cm">Phone:</drawString>
+            <drawRightString x="7cm" y="26.0cm">[[ company.partner_id.address and company.partner_id.address[0].phone or '' ]]</drawRightString>
+            <drawString x="1.3cm" y="25.6cm">Mail:</drawString>
+            <drawRightString x="7cm" y="25.6cm">[[ company.partner_id.address and company.partner_id.address[0].email or '' ]]</drawRightString>
+            <lines>1.3cm 25.5cm 7cm 25.5cm</lines>
+            <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
+        </pageGraphics>		<!-- end of header -->
 		<frame id="first" x1="24.0" y1="111.5mm" width="190mm" height="142mm" last="1"/>
       <frame id="Frame1"
 		expr="{'height':str(111+(company.bvr_delta_vert or 0.0))+'mm', 'x1': str((company.bvr_delta_horz or 0.0))+'mm'}"
 		x1="0mm"
-		y1="0mm"
+		y1="-5"
 		width="210mm"
-		height="106mm"/>
+		height="111mm"/>
 </pageTemplate>
  </template>
 <!-- begin of core -->
@@ -189,7 +188,7 @@
     </para>
     <para style="P21">
       <font face="Helvetica">Invoice Date: </font>
-      <font face="Helvetica">[[format_date(o.date_invoice)]]</font>
+      <font face="Helvetica">[[ o.date_invoice and format_date(o.date_invoice) or '']]</font>
     </para>
     <para style="P21">
       <font face="Helvetica">Remarque:</font>
@@ -248,19 +247,18 @@
           </td>
         </tr>
       </blockTable>
-      <blockTable colWidths="28.0,499.0" style="Table4">
+      <blockTable colWidths="28.0, 499.0" style="Table4">
         <tr>
           <td>
-            <para style="P16">[[ repeatIn((l.note and l.note.splitlines()) or [], 'note') ]]</para>
+           <para style="P9">[[ note or removeParentNode('blockTable') ]]</para>            
           </td>
           <td>
-            <para style="P9">[[ note or removeParentNode('table') ]]</para>
+            <xpre style="P16">[[ l.note  ]]</xpre>
           </td>
         </tr>
       </blockTable>
     </section>
     <para style="P18">
-      <font color="white"> </font>
     </para>
     <blockTable colWidths="215.0,313.0" style="Table5">
       <tr>
@@ -328,6 +326,11 @@
 	-->
 	<illustration width="210mm" height="106mm">
 		<setFont name="Helvetica" size="11"/>
+        <drawString x="2mm" y="93mm">[[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.name or '' ]]</drawString>
+		<drawString x="2mm" y="88mm">[[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.zip or '']] [[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.city or '']]</drawString>
+
+		<drawString x="62mm" y="93mm">[[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.name or '' ]]</drawString>
+		<drawString x="62mm" y="88mm">[[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.zip or '']] [[ o.partner_bank and o.partner_bank.printBank and o.partner_bank.bank and o.partner_bank.bank.city or '']]</drawString>
 		<drawString x="2mm" y="78mm"> [[user.company_id.name]]</drawString>
 		<drawString x="2mm" y="73mm"> [[ user.company_id.partner_id.address[0].street ]]</drawString>
 		<drawString x="2mm" y="68mm"> [[ (user.company_id.partner_id.address[0].street2 or '')]]</drawString>
@@ -354,10 +357,12 @@
 
 
 		<setFont name="ocrb" size="11"/>
+        
 		<drawString x="124mm" y="67mm">[[ _space(_get_ref(o)) ]]</drawString>
 
 		<setFont name="ocrb" size="12"/>
-
+        <drawRightString x="52 mm" y="59.3mm">[[ o.partner_bank and o.partner_bank.printAccount and o.partner_bank.bvr_number or '' ]]</drawRightString>
+        <drawRightString x="112mm" y="59.3mm">[[ o.partner_bank and o.partner_bank.printAccount and o.partner_bank.bvr_number or '' ]]</drawRightString>
 		<drawRightString x="42mm" y="50mm">[[ _space(('%.2f' % o.amount_total)[:-3], 1) + ' ' ]]</drawRightString>
 		<drawRightString x="104mm" y="50mm">[[ _space(('%.2f' % o.amount_total)[:-3], 1) + ' ' ]]</drawRightString>
 

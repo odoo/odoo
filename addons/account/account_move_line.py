@@ -104,9 +104,10 @@ class account_move_line(osv.osv):
 
             total_new=0.00
             for i in context['lines']:
-                total_new +=(i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
-                for item in i[2]:
-                        data[item]=i[2][item]
+                if i[2]:
+                    total_new +=(i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
+                    for item in i[2]:
+                            data[item]=i[2][item]
             if context['journal']:
                 journal_obj=self.pool.get('account.journal').browse(cr,uid,context['journal'])
                 if journal_obj.type == 'purchase':
@@ -283,7 +284,7 @@ class account_move_line(osv.osv):
                 result.append((line.id, line.name))
         return result
 
-    def _invoice_search(self, cursor, user, obj, name, args):
+    def _invoice_search(self, cursor, user, obj, name, args, context):
         if not len(args):
             return []
         invoice_obj = self.pool.get('account.invoice')
@@ -346,7 +347,7 @@ class account_move_line(osv.osv):
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
         'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", states={'valid':[('readonly',True)]}, help="The move of this entry line.", select=2),
 
-        'ref': fields.char('Ref.', size=32),
+        'ref': fields.char('Ref.', size=64),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
@@ -616,6 +617,7 @@ class account_move_line(osv.osv):
                     'debit':debit,
                     'credit':credit,
                     'account_id':writeoff_acc_id,
+                    'analytic_account_id': context.get('analytic_id', False),
                     'date':date,
                     'partner_id':partner_id
                 })
@@ -624,7 +626,7 @@ class account_move_line(osv.osv):
             writeoff_move_id = self.pool.get('account.move').create(cr, uid, {
                 'period_id': writeoff_period_id,
                 'journal_id': writeoff_journal_id,
-
+                'date':date,
                 'state': 'draft',
                 'line_id': writeoff_lines
             })
@@ -869,7 +871,7 @@ class account_move_line(osv.osv):
                         'amount': vals['debit'] or vals['credit'],
                         'general_account_id': vals['account_id'],
                         'journal_id': journal.analytic_journal_id.id,
-                        'ref': vals['ref'],
+                        'ref': vals.get('ref', False),
                     })]
             #else:
             #    raise osv.except_osv(_('No analytic journal !'), _('Please set an analytic journal on this financial journal !'))

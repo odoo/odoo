@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:45:27+0000\n"
-"PO-Revision-Date: 2009-08-28 15:45:27+0000\n"
+"POT-Creation-Date: 2010-02-22 14:37:42+0000\n"
+"PO-Revision-Date: 2010-02-22 14:37:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,17 +18,17 @@ msgstr ""
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Tarpinė suma"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Invoice Date:"
+msgid "Note:"
 msgstr ""
 
 #. module: account_invoice_layout
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -44,37 +44,32 @@ msgstr ""
 #. module: account_invoice_layout
 #: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
 msgid "Invoices with Layout and Message"
-msgstr ""
+msgstr "Sąskaitos-faktūros su maketavimu ir pranešimu"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Disc. (%)"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "(Incl. taxes):"
-msgstr ""
+msgstr "Nuol. (%)"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Note"
-msgstr ""
+msgstr "Pastaba"
 
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,print:0
 msgid "Print"
-msgstr ""
+msgstr "Spausdinti"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
 msgid "This notification will appear at the bottom of the Invoices when printed."
-msgstr ""
+msgstr "Atspausdinus, šis pranešimas atsiras sąskaitos-faktūros apačioje."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Vieneto kaina"
 
 #. module: account_invoice_layout
 #: constraint:ir.actions.act_window:0
@@ -88,123 +83,128 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "PRO-FORMA"
+msgid "VAT :"
 msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Document"
+msgstr ""
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "PRO-FORMA"
+msgstr "Išankstinė sąskaita"
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Sąskaitos faktūros eilutės"
 
 #. module: account_invoice_layout
 #: view:account.invoice.line:0
 msgid "Seq."
-msgstr ""
+msgstr "Seka"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_finan_config_notify_message
 msgid "Notification Message"
-msgstr ""
+msgstr "Pranešimas"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
-msgstr ""
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Produktas"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid ")"
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "account_invoice_layout"
 msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
 msgid "Type"
-msgstr ""
+msgstr "Тipas"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Price"
-msgstr ""
+msgstr "Kaina"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "/ ("
+msgid "Invoice Date"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Mokesčiai:"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
 msgid "Source Account"
-msgstr ""
+msgstr "Pirminė sąskaita"
 
 #. module: account_invoice_layout
 #: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
 msgid "Write Messages"
-msgstr ""
+msgstr "Rašyti pranešimus"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Base"
-msgstr ""
+msgstr "Bazė"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
-msgstr ""
+#: selection:account.invoice.line,state:0
+msgid "Page Break"
+msgstr "Puslapio lūžis"
 
 #. module: account_invoice_layout
 #: field:notify.message,msg:0
 msgid "Special Message"
-msgstr ""
+msgstr "Specialus pranešimas"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Write a notification or a wishful message."
-msgstr ""
+msgstr "Parašykite perspėjimą arba norimą pranešimą"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Tel. :"
+msgid "Partner Ref."
 msgstr ""
 
 #. module: account_invoice_layout
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Netinkamas XML peržiūros architektūrai!"
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Page Break"
+#: rml:account.invoice.layout:0
+msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Document:"
+msgid "Total:"
 msgstr ""
 
 #. module: account_invoice_layout
 #: wizard_view:wizard.notify_message,init:0
 msgid "Select Message"
-msgstr ""
+msgstr "Pasirinkti pranešimą"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Messages"
-msgstr ""
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr ""
+msgstr "Pranešimai"
 
 #. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoices with Layout"
-msgstr ""
+msgstr "Sąskaitos-faktūros su maketavimu"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -214,95 +214,75 @@ msgstr ""
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Amount"
-msgstr ""
+msgstr "Suma"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Description/Taxes"
+msgid "Tel. :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Sąskaitos faktūros juodraštis"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,sequence:0
 msgid "Sequence Number"
-msgstr ""
+msgstr "Sekos numeris"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Quantity"
-msgstr ""
+msgstr "Kiekis"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Refund"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
-msgstr ""
+msgstr "Grąžinimas"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
-msgstr ""
+msgstr "Skirtuvo linija"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Supplier Invoice"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Note :"
-msgstr ""
+msgstr "Tiekėjo sąskaita faktūra"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Tax"
-msgstr ""
-
-#. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
-msgstr ""
+msgstr "Mokesčiai"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (Excl. taxes):"
+msgid "Net Total:"
 msgstr ""
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Invoice"
-msgstr ""
+msgstr "Sąskaita faktūra"
 
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Atšaukti"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Grąžinimas tiekėjui"
 
 #. module: account_invoice_layout
 #: wizard_field:wizard.notify_message,init,message:0
 msgid "Message"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
-msgstr ""
+msgstr "Žinutė"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
-msgstr ""
+msgstr "Visi pranešimai"
 

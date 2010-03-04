@@ -137,7 +137,16 @@ class mrp_production_workcenter_line(osv.osv):
         return True
 
     def action_done(self, cr, uid, ids):
-        self.write(cr, uid, ids, {'state':'done', 'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
+        delay = 0.0
+        date_now = time.strftime('%Y-%m-%d %H:%M:%S')
+        obj_line = self.browse(cr, uid, ids[0])
+        
+        date_start = datetime.datetime.strptime(obj_line.date_start,'%Y-%m-%d %H:%M:%S')
+        date_finished = datetime.datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
+        delay += (date_finished-date_start).days * 24
+        delay += (date_finished-date_start).seconds / float(60*60)
+        
+        self.write(cr, uid, ids, {'state':'done', 'date_finnished': date_now,'delay':delay})
         self.modify_production_order_state(cr,uid,ids,'done')
         return True
 
@@ -330,10 +339,10 @@ class mrp_operations_operation(osv.osv):
                 if not i: continue
                 if code_lst[i-1] not in ('resume','start'):
                    continue
-                a = datetime.datetime.strptime(time_lst[i-1],'%Y:%m:%d %H:%M:%S')
-                b = datetime.datetime.strptime(time_lst[i],'%Y:%m:%d %H:%M:%S')
+                a = datetime.datetime.strptime(time_lst[i-1],'%Y-%m-%d %H:%M:%S')
+                b = datetime.datetime.strptime(time_lst[i],'%Y-%m-%d %H:%M:%S')
                 diff += (b-a).days * 24
-                diff += (b-a).seconds / (60*60)
+                diff += (b-a).seconds / float(60*60)
         return diff
 
     def check_operation(self,cr,uid,vals):
@@ -408,6 +417,7 @@ class mrp_operations_operation(osv.osv):
             if code.start_stop=='start':
                 tmp=self.pool.get('mrp.production.workcenter.line').action_start_working(cr,uid,wc_op_id)
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_start_working', cr)
+                
 
             if code.start_stop=='done':
                 tmp=self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,wc_op_id)
@@ -429,9 +439,17 @@ class mrp_operations_operation(osv.osv):
         if not self.check_operation(cr, uid, vals):
             return
         delay=self.calc_delay(cr, uid, vals)
-        self.pool.get('mrp.production.workcenter.line').write(cr,uid,wc_op_id,{'delay':delay})
+        line_vals = {}
+        line_vals['delay'] = delay
+        if vals.get('date_start',False):
+            if code.start_stop == 'done':
+                line_vals['date_finnished'] = vals['date_start']
+            elif code.start_stop == 'start':    
+                line_vals['date_start'] = vals['date_start']
 
-        return super(mrp_operations_operation, self).create(cr, uid, vals,  context=context)
+        self.pool.get('mrp.production.workcenter.line').write(cr, uid, wc_op_id, line_vals, context=context)
+
+        return super(mrp_operations_operation, self).create(cr, uid, vals, context=context)
 
     _columns={
         'production_id':fields.many2one('mrp.production','Production',required=True),

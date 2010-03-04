@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:46:41+0000\n"
-"PO-Revision-Date: 2009-08-28 15:46:41+0000\n"
+"POT-Creation-Date: 2010-02-22 14:38:29+0000\n"
+"PO-Revision-Date: 2010-02-22 14:38:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,22 +28,22 @@ msgstr "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
 msgid "Log"
-msgstr ""
+msgstr "Log"
 
 #. module: audittrail
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
-msgstr ""
+msgstr "Subskrybowane"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Old Value : "
-msgstr ""
+msgstr "Poprzednia wartość : "
 
 #. module: audittrail
 #: selection:audittrail.log,method:0
 msgid "Create"
-msgstr ""
+msgstr "Utwórz"
 
 #. module: audittrail
 #: wizard_view:audittrail.view.log,init:0
@@ -53,17 +53,17 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.rule,state:0
 msgid "State"
-msgstr ""
+msgstr "Stan"
 
 #. module: audittrail
 #: selection:audittrail.rule,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Projekt"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
-msgstr ""
+msgstr "Poprzednia wartość"
 
 #. module: audittrail
 #: constraint:ir.actions.act_window:0
@@ -73,7 +73,7 @@ msgstr ""
 #. module: audittrail
 #: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
 msgid "View log"
-msgstr ""
+msgstr "Wyświetl dziennik"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log_line
@@ -83,7 +83,7 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log,method:0
 msgid "Method"
-msgstr ""
+msgstr "Metoda"
 
 #. module: audittrail
 #: wizard_field:audittrail.view.log,init,from:0
@@ -103,7 +103,7 @@ msgstr ""
 #. module: audittrail
 #: selection:audittrail.log,method:0
 msgid "Write"
-msgstr ""
+msgstr "Zapisz"
 
 #. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail
@@ -118,18 +118,18 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Subscribe"
-msgstr ""
+msgstr "Subskrybuj"
 
 #. module: audittrail
 #: selection:audittrail.log,method:0
 msgid "Read"
-msgstr ""
+msgstr "Odczyt"
 
 #. module: audittrail
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
-msgstr ""
+msgstr "Obiekt"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -144,28 +144,35 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value Text: "
-msgstr ""
+msgstr "Tekst nowej wartości: "
 
 #. module: audittrail
 #: model:ir.module.module,description:audittrail.module_meta_information
 msgid "Allows the administrator to track every user operations on all objects of the system.\n"
 "    Subscribe Rules for read, write, create and delete on objects and check logs"
-msgstr ""
+msgstr "Pozwala administratorowi śledzić wszystkie operacje użytkownika na wszystkich obiektach systemu.\n"
+"    Reguły zapisu dla odczytu, zapisu, tworzenia i usuwania w obiektach i zapisywanie w logach."
 
 #. module: audittrail
 #: field:audittrail.log,timestamp:0
 msgid "Date"
+msgstr "Data"
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING:audittrail is not part of the pool"
 msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Użytkownik"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Old Value Text : "
-msgstr ""
+msgstr "Tekst poprzedniej wartości : "
 
 #. module: audittrail
 #: constraint:ir.ui.view:0
@@ -173,14 +180,15 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
-msgstr ""
+msgstr "Wiersze logu"
 
 #. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
@@ -190,7 +198,7 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
 msgid "Fields"
-msgstr ""
+msgstr "Pola"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -205,12 +213,12 @@ msgstr ""
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "UnSubscribe"
-msgstr ""
+msgstr "Zaprzestań subskrybcji"
 
 #. module: audittrail
 #: field:audittrail.rule,log_write:0
 msgid "Log writes"
-msgstr ""
+msgstr "Loguj zapisy"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
@@ -220,12 +228,12 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
-msgstr ""
+msgstr "Opis pola"
 
 #. module: audittrail
 #: selection:audittrail.log,method:0
 msgid "Delete"
-msgstr ""
+msgstr "Usuń"
 
 #. module: audittrail
 #: wizard_button:audittrail.view.log,init,open:0
@@ -235,37 +243,37 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,new_value_text:0
 msgid "New value Text"
-msgstr ""
+msgstr "Tekst nowej wartości"
 
 #. module: audittrail
 #: field:audittrail.rule,name:0
 msgid "Rule Name"
-msgstr ""
+msgstr "Nazwa reguły"
 
 #. module: audittrail
 #: field:audittrail.rule,log_read:0
 msgid "Log reads"
-msgstr ""
+msgstr "Loguj odczyty"
 
 #. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Logs"
-msgstr ""
+msgstr "Zdarzenia (logi)"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
-msgstr ""
+msgstr "Nowa wartość"
 
 #. module: audittrail
 #: model:ir.ui.menu,name:audittrail.menu_action_log_tree2
 msgid "View Logs"
-msgstr ""
+msgstr "Przeglądaj logi"
 
 #. module: audittrail
 #: field:audittrail.rule,log_create:0
 msgid "Log creates"
-msgstr ""
+msgstr "Loguj utworzenia"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -280,25 +288,30 @@ msgstr "Reguły"
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value : "
-msgstr ""
+msgstr "Nowa wartość : "
 
 #. module: audittrail
 #: field:audittrail.rule,user_id:0
 msgid "Users"
-msgstr ""
+msgstr "Użytkownicy"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
-msgstr ""
+msgstr "Tekst poprzedniej wartości"
 
 #. module: audittrail
 #: wizard_button:audittrail.view.log,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log deletes"
-msgstr ""
+msgstr "Loguj usunięcia"
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Name"
+msgstr "Nazwa"
 

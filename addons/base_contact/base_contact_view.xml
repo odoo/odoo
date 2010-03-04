@@ -44,7 +44,7 @@
                         <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
                                 <field name="function_id"/>
-                                <field name="address_id"/>
+                                <field name="address_id" context="{'address_partner_id': name}"/>
                                 <field name="name"/>
                                 <field name="sequence_contact"/>
                                 <field name="phone"/>
@@ -281,7 +281,7 @@
         <field name="inherit_id" ref="base.view_partner_address_form1"/>
         <field name='type'>form</field>
         <field name='arch' type='xml'>
-            <field name="email" position="replace">
+            <field name="email" position="after">
                 <field name="job_ids" mode="tree,form" colspan="4">
                     <tree string="Contacts" editable="top">
                         <field name="contact_id"/>
@@ -333,7 +333,7 @@
                 <notebook>
                     <page string="General">
                         <field name="name" select="1"/>
-                        <field name="address_id" select="1"/>
+                        <field name="address_id" select="1" context="{'address_partner_id': name}"/>
                         <field name="contact_id" select="1"/>
                         <field name="function_id" select="1"/>
                         <field name="email" select="2" widget="email"/>
@@ -359,8 +359,8 @@
         <field name="view_type">form</field>
     </record>
     <menuitem
-        name="Partners/Contact's Jobs" 
-        action="action_res_partner_job" 
+        name="Partners/Contact's Jobs"
+        action="action_res_partner_job"
         id="menu_action_res_partner_job"
         groups="base.group_extended"/>
 

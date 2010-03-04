@@ -45,7 +45,7 @@ _types = {
     'rec_voucher':'Cash Receipt Voucher',
     'bank_rec_voucher':'Bank Receipt Voucher',
     'cont_voucher':'Contra Voucher',
-    'journal_sale_voucher':'Journal Sale Voucher',
+    'journal_sale_vou':'Journal Sale Voucher',
     'journal_pur_voucher':'Journal Purchase Voucher'
 }
 _states = {
@@ -62,7 +62,7 @@ _voucher_fields = {
             ('rec_voucher','Cash Receipt Voucher'),
             ('bank_rec_voucher','Bank Receipt Voucher'),
             ('cont_voucher','Contra Voucher'),
-            ('journal_sale_voucher','Journal Sale Voucher'),
+            ('journal_sale_vou','Journal Sale Voucher'),
             ('journal_pur_voucher','Journal Purchase Voucher')], 'required':True},
     'state': {'string':'State', 'type':'selection', 'selection':[
                     ('draft','Draft'),

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:45:27+0000\n"
-"PO-Revision-Date: 2009-08-28 15:45:27+0000\n"
+"POT-Creation-Date: 2010-02-22 14:37:42+0000\n"
+"PO-Revision-Date: 2010-02-22 14:37:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: document_ics
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
@@ -96,13 +96,20 @@ msgid "dtend"
 msgstr ""
 
 #. module: document_ics
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "You can not set negative Duration."
+msgstr ""
+
+#. module: document_ics
 #: help:document.ics.crm.wizard,jobs:0
 msgid "Help you to organise the jobs hiring process: evaluation, meetings, email integration..."
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "description"
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: document_ics
@@ -131,6 +138,11 @@ msgid "Fund Raising Operations"
 msgstr ""
 
 #. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "description"
+msgstr ""
+
+#. module: document_ics
 #: field:document.directory.content,ics_object_id:0
 msgid "Object"
 msgstr ""
@@ -138,7 +150,7 @@ msgstr ""
 #. module: document_ics
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive sections."
-msgstr ""
+msgstr "Klaida! Negalite kurti rekursinių sekcijų."
 
 #. module: document_ics
 #: model:ir.module.module,shortdesc:document_ics.module_meta_information
@@ -168,7 +180,7 @@ msgstr ""
 #. module: document_ics
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Netinkamas XML peržiūros architektūrai!"
 
 #. module: document_ics
 #: help:document.ics.crm.wizard,lead:0

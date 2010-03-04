@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:51:44+0000\n"
-"PO-Revision-Date: 2009-08-28 15:51:44+0000\n"
+"POT-Creation-Date: 2010-02-22 14:41:42+0000\n"
+"PO-Revision-Date: 2010-02-22 14:41:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -68,7 +68,7 @@ msgstr "Вес нетто"
 #. module: product
 #: help:product.product,incoming_qty:0
 msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
-msgstr ""
+msgstr "Объемы продукции, которые планируется достичь в выбранных местах или все внутренние, если никакие не были выбраны."
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -76,9 +76,9 @@ msgid "Futur stock for this product according to the selected location or all in
 msgstr ""
 
 #. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "Ширина"
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "Поле продукции"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -111,11 +111,18 @@ msgid "Standard Price"
 msgstr "Стандартная цена"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Products: "
+msgstr ""
+
+#. module: product
 #: help:product.packaging,height:0
 msgid "The height of the package"
 msgstr ""
 
 #. module: product
+#: rml:product.pricelist:0
 #: view:product.pricelist:0
 msgid "Products Price List"
 msgstr "Каталог продукции"
@@ -177,14 +184,15 @@ msgid "Base price for computing the customer price. Sometimes called the catalog
 msgstr ""
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-msgid "Quantity"
-msgstr "Количество"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Partner section of the product form"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
 msgid "Processor AMD Athlon XP 2200+"
-msgstr ""
+msgstr "Процессор AMD Athlon XP 2200+"
 
 #. module: product
 #: help:product.price.type,name:0
@@ -199,7 +207,7 @@ msgstr ""
 #. module: product
 #: field:product.product,incoming_qty:0
 msgid "Incoming"
-msgstr ""
+msgstr "Входящие"
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -215,7 +223,7 @@ msgstr "Вес"
 #. module: product
 #: model:product.template,name:product.product_product_fan2_product_template
 msgid "Silent fan"
-msgstr ""
+msgstr "Тихий вентилятор"
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -244,19 +252,8 @@ msgid "If Other Pricelist"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_tree
-#: model:ir.ui.menu,name:product.menu_main_product
-#: model:ir.ui.menu,name:product.menu_products
-#: view:product.product:0
-msgid "Products"
-msgstr "Продукция"
-
-#. module: product
-#: help:product.pricelist.item,price_round:0
-msgid "Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+#: rml:product.pricelist:0
+msgid "Price List Name:"
 msgstr ""
 
 #. module: product
@@ -314,6 +311,11 @@ msgid "Configuration"
 msgstr "Настройки"
 
 #. module: product
+#: field:product.packaging,width:0
+msgid "Width"
+msgstr "Ширина"
+
+#. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layer"
 msgstr ""
@@ -352,7 +354,7 @@ msgstr "На основе"
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
-msgstr ""
+msgstr "Клавиатура"
 
 #. module: product
 #: field:product.supplierinfo,name:0
@@ -367,7 +369,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Mouse"
-msgstr ""
+msgstr "Мышь"
 
 #. module: product
 #: help:product.template,cost_method:0
@@ -378,6 +380,15 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr ""
+
+#. module: product
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Активен"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -412,7 +423,7 @@ msgstr "* ( 1 + "
 #. module: product
 #: model:product.template,name:product.product_product_cpu1_product_template
 msgid "Processor AMD Athlon XP 1800+"
-msgstr ""
+msgstr "Процессор AMD Athlon XP 1800+"
 
 #. module: product
 #: selection:product.template,state:0
@@ -422,12 +433,12 @@ msgstr "В производстве"
 #. module: product
 #: field:product.category,child_id:0
 msgid "Child Categories"
-msgstr ""
+msgstr "Подчиненные категории"
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
-msgstr ""
+msgstr "Дополнительные"
 
 #. module: product
 #: field:product.supplierinfo,sequence:0
@@ -520,12 +531,12 @@ msgstr "Минимальное количество"
 #. module: product
 #: model:product.category,name:product.product_category_pc
 msgid "PC"
-msgstr ""
+msgstr "ПК"
 
 #. module: product
-#: help:product.template,seller_delay:0
-msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
-msgstr ""
+#: field:pricelist.partnerinfo,min_quantity:0
+msgid "Quantity"
+msgstr "Количество"
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -566,7 +577,7 @@ msgstr "Каталог"
 #. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr ""
+msgstr "Расходные"
 
 #. module: product
 #: help:product.price.type,currency_id:0
@@ -574,9 +585,15 @@ msgid "The currency the field is expressed in."
 msgstr ""
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Other Pricelist"
+msgstr "Другой прайс"
+
+#. module: product
 #: help:product.template,weight:0
 msgid "The gross weight in Kg."
-msgstr ""
+msgstr "Вес брутто в килограммах."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -591,7 +608,12 @@ msgstr "Неправильный XML для просмотра архитект�
 #. module: product
 #: help:product.template,sale_ok:0
 msgid "Determine if the product can be visible in the list of product within a selection from a sale order line."
-msgstr ""
+msgstr "Указывается, если продукция должна быть видна в списке продукции на продажу."
+
+#. module: product
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Продажи и закупки"
 
 #. module: product
 #: constraint:product.template:0
@@ -616,12 +638,12 @@ msgstr ""
 #. module: product
 #: help:product.product,outgoing_qty:0
 msgid "Quantities of products that are planned to leave in selected locations or all internal if none have been selected."
-msgstr ""
+msgstr "Количества продукции, которые планируется отправить в указанные места, или вся внутренняя, если ничего не выбранно."
 
 #. module: product
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
-msgstr ""
+msgstr "Итоговый вес пакета"
 
 #. module: product
 #: help:product.template,procure_method:0
@@ -643,7 +665,7 @@ msgstr "Продукция по категориям"
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
 msgid "HDD Seagate 7200.8 80GB"
-msgstr ""
+msgstr "Жёсткий диск Seagate 7200.8 80GB"
 
 #. module: product
 #: help:product.pricelist.version,active:0
@@ -653,7 +675,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
 msgid "HDD Seagate 7200.8 160GB"
-msgstr ""
+msgstr "Жёсткий диск Seagate 7200.8 160GB"
 
 #. module: product
 #: view:product.product:0
@@ -705,11 +727,11 @@ msgstr "Тип измерения"
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
 msgid "Weight"
-msgstr ""
+msgstr "Вес"
 
 #. module: product
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor on demand"
+#: rml:product.pricelist:0
+msgid "Currency :"
 msgstr ""
 
 #. module: product
@@ -731,13 +753,6 @@ msgstr ""
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
 msgstr "Категории единиц измерения"
-
-#. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "Последовательность"
 
 #. module: product
 #: view:product.supplierinfo:0
@@ -777,6 +792,11 @@ msgid "Suppliers of Product"
 msgstr ""
 
 #. module: product
+#: model:ir.model,name:product.model_pricelist_partnerinfo
+msgid "pricelist.partnerinfo"
+msgstr ""
+
+#. module: product
 #: field:product.pricelist.version,date_start:0
 msgid "Start Date"
 msgstr "Дата начала"
@@ -794,7 +814,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
 msgid "Basic PC"
-msgstr ""
+msgstr "Базовый ПК"
 
 #. module: product
 #: field:product.template,loc_row:0
@@ -854,7 +874,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_mb2_product_template
 msgid "Mainboard ASUStek A7V8X-X"
-msgstr ""
+msgstr "Материнская плата ASUStek A7V8X-X"
 
 #. module: product
 #: field:product.uom,factor:0
@@ -874,12 +894,12 @@ msgstr "Точность округления"
 #. module: product
 #: help:product.packaging,width:0
 msgid "The width of the package"
-msgstr ""
+msgstr "Ширина пакета"
 
 #. module: product
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
-msgstr ""
+msgstr "Количество по пакету"
 
 #. module: product
 #: help:product.template,uos_id:0
@@ -887,10 +907,12 @@ msgid "Used by companies that manages two unit of measure: invoicing and stock m
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Снабжение и местоположения"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Could not resolve product category, ' \\n"
+"                                    'you have defined cyclic categories ' \\n"
+"                                    'of products!"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -932,9 +954,9 @@ msgid "Max. Price Margin"
 msgstr ""
 
 #. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Продажи и закупки"
+#: model:ir.actions.report.xml,name:product.report_product_pricelist
+msgid "Product Pricelist"
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_10
@@ -949,6 +971,11 @@ msgstr ""
 #. module: product
 #: help:product.packaging,code:0
 msgid "The code of the transport unit."
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+msgid "Processor on demand"
 msgstr ""
 
 #. module: product
@@ -982,13 +1009,9 @@ msgid "Information about a product supplier"
 msgstr "Информация о поставщике продукции"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Активен"
+#: help:product.product,packaging:0
+msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+msgstr ""
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -1003,18 +1026,18 @@ msgstr "Прайс"
 #. module: product
 #: model:product.template,name:product.product_product_pc3_product_template
 msgid "Medium PC"
-msgstr ""
+msgstr "Средний ПК"
 
 #. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
+#: rml:product.pricelist:0
+msgid "Printing Date :"
 msgstr ""
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
 #: field:product.template,standard_price:0
 msgid "Cost Price"
-msgstr ""
+msgstr "Себестоимость"
 
 #. module: product
 #: view:product.product:0
@@ -1027,6 +1050,11 @@ msgstr "Описание закупки"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Second UoM"
+msgstr ""
+
+#. module: product
+#: help:product.template,seller_delay:0
+msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
 msgstr ""
 
 #. module: product
@@ -1043,7 +1071,7 @@ msgstr ""
 #. module: product
 #: help:product.packaging,length:0
 msgid "The length of the package"
-msgstr ""
+msgstr "Длина пакета"
 
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
@@ -1061,9 +1089,9 @@ msgid "Gross weight"
 msgstr "Вес брутто"
 
 #. module: product
-#: help:product.product,packaging:0
-msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
-msgstr ""
+#: field:product.packaging,weight_ul:0
+msgid "Empty Package Weight"
+msgstr "Вес пустого пакета"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1072,9 +1100,11 @@ msgid "Product Category"
 msgstr "Категория продукции"
 
 #. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "Поле продукции"
+#: code:addons/product/pricelist.py:0
+#: constraint:product.pricelist.item:0
+#, python-format
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
@@ -1118,7 +1148,7 @@ msgstr "Последовательность"
 #. module: product
 #: model:product.category,name:product.product_category_8
 msgid "Phone Help"
-msgstr ""
+msgstr "Телефон помощи"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -1146,7 +1176,7 @@ msgstr "Единица поставки"
 #. module: product
 #: help:product.uom,rounding:0
 msgid "The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."
-msgstr ""
+msgstr "Расчетная величина будет кратна этому значению. Используйте 1.0 для продуктов, которые не могут быть разделены."
 
 #. module: product
 #: field:product.packaging,height:0
@@ -1184,12 +1214,12 @@ msgstr "Вмешательство на месте"
 #. module: product
 #: model:product.category,name:product.cat0
 msgid "All products"
-msgstr ""
+msgstr "Все продукты"
 
 #. module: product
 #: wizard_button:product.price_list,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #. module: product
 #: help:product.packaging,qty:0
@@ -1226,7 +1256,7 @@ msgstr "Ед."
 #. module: product
 #: model:product.template,name:product.product_product_hdd2_product_template
 msgid "HDD Seagate 7200.8 120GB"
-msgstr ""
+msgstr "Жесткий диск Seagate 7200.8 120GB"
 
 #. module: product
 #: wizard_field:product.price_list,init,qty2:0
@@ -1242,7 +1272,7 @@ msgstr "Информация"
 #. module: product
 #: view:product.product:0
 msgid "Codes"
-msgstr ""
+msgstr "Коды"
 
 #. module: product
 #: constraint:ir.model:0
@@ -1340,6 +1370,7 @@ msgstr "Объем"
 #. module: product
 #: field:pricelist.partnerinfo,name:0
 #: field:product.packaging,name:0
+#: rml:product.pricelist:0
 #: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description:0
@@ -1360,7 +1391,7 @@ msgstr "Описание продукции"
 #. module: product
 #: view:product.pricelist.item:0
 msgid " ) + "
-msgstr ""
+msgstr " ) + "
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1403,6 +1434,11 @@ msgid "You cannot have 2 pricelist versions that overlap!"
 msgstr ""
 
 #. module: product
+#: rml:product.pricelist:0
+msgid "units"
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "Rounding Method"
 msgstr "Метод округления"
@@ -1420,7 +1456,7 @@ msgstr "Расчет цены"
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
 msgid "Mainboard ASUStek A7N8X"
-msgstr ""
+msgstr "Материнская плата ASUStek A7N8X"
 
 #. module: product
 #: field:product.template,loc_case:0
@@ -1467,6 +1503,13 @@ msgid "Can be Purchased"
 msgstr "Можно закупать"
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "No active version for the selected pricelist !\n' \\n"
+"                                'Please create or activate one."
+msgstr ""
+
+#. module: product
 #: field:product.template,uos_coeff:0
 msgid "UOM -> UOS Coeff"
 msgstr ""
@@ -1493,14 +1536,32 @@ msgid "Palletization"
 msgstr ""
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Внимание!"
+
+#. module: product
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr ""
+
+#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Prices & Suppliers"
-msgstr ""
+msgstr "Цены и поставщики"
 
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full of products palet or box."
+msgstr ""
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid "Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
 
 #. module: product
@@ -1522,17 +1583,17 @@ msgstr ""
 #. module: product
 #: help:product.template,weight_net:0
 msgid "The net weight in Kg."
-msgstr ""
+msgstr "Вес нетто в килограммах."
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
 msgid "ATX Mid-size Tower"
-msgstr ""
+msgstr "Среднеразмерный ATX корпус"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Delay"
-msgstr ""
+msgstr "Задержка доставки"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -1542,9 +1603,11 @@ msgid "Pricelist Versions"
 msgstr "Версии каталогов"
 
 #. module: product
-#: field:product.packaging,weight_ul:0
-msgid "Empty Package Weight"
-msgstr ""
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "Последовательность"
 
 #. module: product
 #: field:product.template,list_price:0
@@ -1570,6 +1633,12 @@ msgstr "Длина"
 #: model:product.category,name:product.cat2
 msgid "Private"
 msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Снабжение и местоположения"
 
 #. module: product
 #: help:product.supplierinfo,delay:0
@@ -1602,9 +1671,13 @@ msgid "Products Labels"
 msgstr ""
 
 #. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr ""
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
+#: model:ir.ui.menu,name:product.menu_main_product
+#: model:ir.ui.menu,name:product.menu_products
+#: view:product.product:0
+msgid "Products"
+msgstr "Продукция"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box

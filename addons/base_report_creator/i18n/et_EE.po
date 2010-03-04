@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:36:36+0000\n"
-"PO-Revision-Date: 2009-08-28 15:36:36+0000\n"
+"POT-Creation-Date: 2010-02-22 14:32:16+0000\n"
+"PO-Revision-Date: 2010-02-22 14:32:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,9 +42,15 @@ msgid "Graph Mode"
 msgstr "Graafiku laad"
 
 #. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Vigane mudeli nimi toimingu definitsioonis."
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
+msgstr ""
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Legend"
+msgstr ""
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -60,6 +66,12 @@ msgstr "Väärtus"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_set_filter_fields
 msgid "Set Filter Fields"
 msgstr "Määra filtri väljad"
+
+#. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "UserError"
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
@@ -106,6 +118,17 @@ msgid "Custom Reports"
 msgstr "Kohandatud aruanded"
 
 #. module: base_report_creator
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "No Related Models!!"
+msgstr ""
+
+#. module: base_report_creator
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
+
+#. module: base_report_creator
 #: wizard_view:base_report_creator.report.menu.create,init:0
 msgid "Menu Information"
 msgstr "Menüü info"
@@ -139,6 +162,11 @@ msgstr "Olek"
 #: selection:base_report_creator.report,state:0
 msgid "Valid"
 msgstr "Kehtiv"
+
+#. module: base_report_creator
+#: model:ir.actions.act_window,name:base_report_creator.base_report_creator_action
+msgid "Custom Report"
+msgstr "Kohandatud aruanne"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -177,6 +205,12 @@ msgid "Starting Date"
 msgstr "Alguskuupäev"
 
 #. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "No Wizards available for this object!"
+msgstr ""
+
+#. module: base_report_creator
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Vigane XML vaate arhitektuurile!"
@@ -197,6 +231,11 @@ msgstr "Volitatud grupid"
 #: field:base_report_creator.report,view_graph_orientation:0
 msgid "Graph Orientation"
 msgstr "Graafiku orientatsioon"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Use %(uid)s to filter by the connected user"
+msgstr ""
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -378,6 +417,11 @@ msgid "Field"
 msgstr "Väli"
 
 #. module: base_report_creator
+#: selection:base_report_creator.report.fields,calendar_mode:0
+msgid "Unique Colors"
+msgstr ""
+
+#. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Filters on Fields"
 msgstr "Filtrid väljadel"
@@ -410,8 +454,8 @@ msgstr "See moodul võimaldab sul luua mistahes statistilist\n"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
-msgid "Uniq Colors"
-msgstr "Unikaalsed värvid"
+msgid "End Date"
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0

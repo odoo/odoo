@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:36:36+0000\n"
-"PO-Revision-Date: 2009-08-28 15:36:36+0000\n"
+"POT-Creation-Date: 2010-02-22 14:32:16+0000\n"
+"PO-Revision-Date: 2010-02-22 14:32:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,11 @@ msgid "Small description"
 msgstr "Lühikirjeldus"
 
 #. module: base_module_publish
+#: help:base_module_publish.module_publish,step1,image:0
+msgid "support only .png files"
+msgstr "toeta ainult .png faile"
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,author:0
 msgid "Author"
 msgstr "Autor"
@@ -42,10 +47,12 @@ msgid "Introduction"
 msgstr "Tutvustus"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,url:0
-#: wizard_field:base_module_publish.module_publish,step1,url_download:0
-msgid "Download URL"
-msgstr "Allalaadimise URL"
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/base_module_publish/wizard/base_module_publish_all.py:0
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Error"
+msgstr "Viga"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_publish,step2,publish:0
@@ -145,6 +152,12 @@ msgid "Close"
 msgstr "Sulge"
 
 #. module: base_module_publish
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "Failed to upload the file"
+msgstr "Faili üleslaadimine nurjunud"
+
+#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
 #: wizard_view:base_module_publish.module_publish,publish:0
 #: wizard_view:base_module_publish.module_publish,step1:0
@@ -161,6 +174,11 @@ msgid "Licence"
 msgstr "Litsents"
 
 #. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish_all,publish,update:0
+msgid "Modules updated"
+msgstr "Moodulid uuendatud"
+
+#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step1:0
 msgid "Verify your module information"
 msgstr "Kontrolli oma mooduli informatsiooni"
@@ -170,6 +188,13 @@ msgstr "Kontrolli oma mooduli informatsiooni"
 #: wizard_field:base_module_publish.module_publish_all,login,password:0
 msgid "Password"
 msgstr "Salasõna"
+
+#. module: base_module_publish
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/base_module_publish/wizard/base_module_publish_all.py:0
+#, python-format
+msgid "Login failed!"
+msgstr "Sisenemine nurjunud!"
 
 #. module: base_module_publish
 #: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_publish_all
@@ -193,9 +218,10 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish_all,publish,update:0
-msgid "Modules updated"
-msgstr "Moodulid uuendatud"
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Can not export module that is not installed!"
+msgstr "Ei saa eksportida moodulit, mis pole paigaldatud!"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish_all,publish,error:0
@@ -208,9 +234,10 @@ msgid "Documentation URL"
 msgstr "Dokumentatsiooni URL"
 
 #. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,image:0
-msgid "support only .png files"
-msgstr "toeta ainult .png faile"
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "This version of the module is already exist on the server"
+msgstr "See mooduli versioon on juba serveris olemas"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,publish,text_end:0
@@ -252,6 +279,12 @@ msgid "GPL-2"
 msgstr "GPL-2"
 
 #. module: base_module_publish
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "You could not publish a module that is not installed!"
+msgstr "Sa ei saa avaldada moodulit, mis pole paigaldatud!"
+
+#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish_all,publish:0
 msgid "Upload information"
 msgstr "Üleslaadimise informatsioon"
@@ -281,6 +314,12 @@ msgstr "Üldine"
 #: wizard_view:base_module_publish.module_publish_all,login:0
 msgid "User information"
 msgstr "Kasutajainfo"
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish,step1,url:0
+#: wizard_field:base_module_publish.module_publish,step1,url_download:0
+msgid "Download URL"
+msgstr "Allalaadimise URL"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,publish:0

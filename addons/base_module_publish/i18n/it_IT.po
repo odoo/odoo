@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:44:13+0000\n"
-"PO-Revision-Date: 2009-08-28 15:44:13+0000\n"
+"POT-Creation-Date: 2010-02-22 14:36:54+0000\n"
+"PO-Revision-Date: 2010-02-22 14:36:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,11 @@ msgid "Small description"
 msgstr "Breve Descrizione"
 
 #. module: base_module_publish
+#: help:base_module_publish.module_publish,step1,image:0
+msgid "support only .png files"
+msgstr "Solo files con estensione .png supportati"
+
+#. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,step1,author:0
 msgid "Author"
 msgstr "Autore"
@@ -42,10 +47,12 @@ msgid "Introduction"
 msgstr "Introduzione"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish,step1,url:0
-#: wizard_field:base_module_publish.module_publish,step1,url_download:0
-msgid "Download URL"
-msgstr "URL Download"
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/base_module_publish/wizard/base_module_publish_all.py:0
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Error"
+msgstr "Errore"
 
 #. module: base_module_publish
 #: wizard_button:base_module_publish.module_publish,step2,publish:0
@@ -145,6 +152,12 @@ msgid "Close"
 msgstr "Chiudi"
 
 #. module: base_module_publish
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "Failed to upload the file"
+msgstr "Fallito il caricamento del file"
+
+#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,init:0
 #: wizard_view:base_module_publish.module_publish,publish:0
 #: wizard_view:base_module_publish.module_publish,step1:0
@@ -161,6 +174,11 @@ msgid "Licence"
 msgstr "Licenza"
 
 #. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish_all,publish,update:0
+msgid "Modules updated"
+msgstr "Moduli Aggiornati"
+
+#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,step1:0
 msgid "Verify your module information"
 msgstr "Verifica le Informazioni del tuo Modulo"
@@ -170,6 +188,13 @@ msgstr "Verifica le Informazioni del tuo Modulo"
 #: wizard_field:base_module_publish.module_publish_all,login,password:0
 msgid "Password"
 msgstr "Password"
+
+#. module: base_module_publish
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#: code:addons/base_module_publish/wizard/base_module_publish_all.py:0
+#, python-format
+msgid "Login failed!"
+msgstr "Accesso fallito!"
 
 #. module: base_module_publish
 #: model:ir.actions.wizard,name:base_module_publish.wizard_base_module_publish_all
@@ -193,9 +218,10 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: base_module_publish
-#: wizard_field:base_module_publish.module_publish_all,publish,update:0
-msgid "Modules updated"
-msgstr "Moduli Aggiornati"
+#: code:addons/base_module_publish/wizard/module_zip.py:0
+#, python-format
+msgid "Can not export module that is not installed!"
+msgstr "Non è possibile exportare un modulo che non è installato!"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish_all,publish,error:0
@@ -208,9 +234,10 @@ msgid "Documentation URL"
 msgstr "URL Documentazione"
 
 #. module: base_module_publish
-#: help:base_module_publish.module_publish,step1,image:0
-msgid "support only .png files"
-msgstr "Solo files con estensione .png supportati"
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "This version of the module is already exist on the server"
+msgstr "Questa versione del modulo è già prsente sul server"
 
 #. module: base_module_publish
 #: wizard_field:base_module_publish.module_publish,publish,text_end:0
@@ -252,6 +279,12 @@ msgid "GPL-2"
 msgstr "GPL-2"
 
 #. module: base_module_publish
+#: code:addons/base_module_publish/wizard/base_module_publish.py:0
+#, python-format
+msgid "You could not publish a module that is not installed!"
+msgstr "Non è possibile pubblicare un modulo che non è installato"
+
+#. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish_all,publish:0
 msgid "Upload information"
 msgstr "Informazioni Upload"
@@ -281,6 +314,12 @@ msgstr "Generale"
 #: wizard_view:base_module_publish.module_publish_all,login:0
 msgid "User information"
 msgstr "Informazione Utente"
+
+#. module: base_module_publish
+#: wizard_field:base_module_publish.module_publish,step1,url:0
+#: wizard_field:base_module_publish.module_publish,step1,url_download:0
+msgid "Download URL"
+msgstr "URL Download"
 
 #. module: base_module_publish
 #: wizard_view:base_module_publish.module_publish,publish:0

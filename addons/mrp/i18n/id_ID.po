@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:42:56+0000\n"
-"PO-Revision-Date: 2009-08-28 15:42:56+0000\n"
+"POT-Creation-Date: 2010-02-22 14:36:08+0000\n"
+"PO-Revision-Date: 2010-02-22 14:36:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,6 +58,11 @@ msgid "Exceptions Procurements"
 msgstr ""
 
 #. module: mrp
+#: field:mrp.procurement,product_uos_qty:0
+msgid "UoS Quantity"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Workcenters"
 msgstr ""
@@ -81,6 +86,12 @@ msgstr ""
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
 msgid "Stockable Stock"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: mrp
@@ -109,6 +120,18 @@ msgstr ""
 #: wizard_field:mrp.procurement.compute.all,init,automatic:0
 #: wizard_field:mrp.procurement.orderpoint.compute,init,automatic:0
 msgid "Automatic orderpoint"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "No supplier defined for this product !"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Product name"
 msgstr ""
 
 #. module: mrp
@@ -210,6 +233,12 @@ msgid "Do nothing"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "products"
+msgstr ""
+
+#. module: mrp
 #: rml:mrp.production.order:0
 msgid "Partner Ref"
 msgstr ""
@@ -267,8 +296,20 @@ msgid "Reference to a position in an external plan."
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Caution!"
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "Stockable Request"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Workcenter name"
 msgstr ""
 
 #. module: mrp
@@ -319,6 +360,12 @@ msgid "Confirm Production"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Product Quantity"
+msgstr ""
+
+#. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 #: field:stock.move,procurements:0
 msgid "Procurements"
@@ -353,6 +400,12 @@ msgstr ""
 #: selection:mrp.procurement,priority:0
 #: selection:mrp.production,priority:0
 msgid "Urgent"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Product Standard Price"
 msgstr ""
 
 #. module: mrp
@@ -393,6 +446,12 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_producttostockrules0
 msgid "Product to stock rules"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "from stock: products assigned."
 msgstr ""
 
 #. module: mrp
@@ -478,6 +537,12 @@ msgid "Latest error"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "from stock and no minimum orderpoint rule defined"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom,bom_lines:0
 msgid "BoM Lines"
 msgstr ""
@@ -520,6 +585,12 @@ msgid "Exceptions Procurements to Fix"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "No BoM defined for this product !"
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.procurement,state:0
 msgid "Ready"
 msgstr ""
@@ -530,9 +601,9 @@ msgid "Workcenter Operations"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action2_gantt
-#: model:ir.ui.menu,name:mrp.menu_production_orders_start_gantt
-msgid "Production Orders Planning"
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "TOTAL"
 msgstr ""
 
 #. module: mrp
@@ -601,13 +672,21 @@ msgid "Per month"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.procurement,product_uos_qty:0
-msgid "UoS Quantity"
+#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Couldn't find bill of material for product"
 msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
 msgid "Product Name"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Invalid action !"
 msgstr ""
 
 #. module: mrp
@@ -624,6 +703,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,revision_type:0
 msgid "indice type"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Hours Cost"
 msgstr ""
 
 #. module: mrp
@@ -666,6 +751,12 @@ msgstr ""
 #: model:process.node,note:mrp.process_node_serviceproduct0
 #: model:process.node,note:mrp.process_node_serviceproduct1
 msgid "If Product type is service"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "SUBTOTAL"
 msgstr ""
 
 #. module: mrp
@@ -756,6 +847,12 @@ msgid "Parent BoM"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Unit Product Price"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.procurement:0
 msgid "References"
 msgstr ""
@@ -810,8 +907,9 @@ msgid "Description of the workcenter. Explain here what's a cycle according to t
 msgstr ""
 
 #. module: mrp
-#: rml:bom.structure:0
-msgid "-"
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "The production is in \"%s\" state. You can not change the production quantity anymore"
 msgstr ""
 
 #. module: mrp
@@ -860,6 +958,25 @@ msgid "Name"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
+"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def copy(self, cr, uid, id, default=None,context=None):\n"
+"        if not default:\n"
+"            default = {}\n"
+"        default.update({\n"
+"            'name': self.pool.get('ir.sequence"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Product uom"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycle"
 msgstr ""
@@ -892,6 +1009,12 @@ msgstr ""
 #. module: mrp
 #: wizard_view:mrp.procurement.compute.all,init:0
 msgid "Scheduler Parameters"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Cycles Cost"
 msgstr ""
 
 #. module: mrp
@@ -1074,6 +1197,12 @@ msgid "Make to Stock"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/wizard/wizard_track_line.py:0
+#, python-format
+msgid "No production sequence defined"
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemto0
 msgid "If product type is service and procure method is Make to order"
 msgstr ""
@@ -1100,7 +1229,9 @@ msgid "Procurement Request"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/report/price.py:0
 #: model:ir.actions.wizard,name:mrp.wizard_price
+#, python-format
 msgid "Product Cost Structure"
 msgstr ""
 
@@ -1232,6 +1363,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
 #: model:ir.ui.menu,name:mrp.menu_production_orders_waiting4
 msgid "Production Orders Waiting Products"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Data Insufficient !"
 msgstr ""
 
 #. module: mrp
@@ -1462,6 +1599,18 @@ msgid "Use a phantom bill of material in raw materials lines that have to be aut
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "No address defined for the supplier"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Please check the Quantity of Procurement Order(s), it should not be less than 1!"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
 msgstr ""
@@ -1500,6 +1649,12 @@ msgstr ""
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
 msgid "Compute Procurements Only"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: mrp
@@ -1603,6 +1758,11 @@ msgid "New Bill of Materials"
 msgstr ""
 
 #. module: mrp
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.workcenter,time_stop:0
 msgid "Time after prod."
 msgstr ""
@@ -1620,6 +1780,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
 msgid "Number of Hours"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Product quantity"
 msgstr ""
 
 #. module: mrp
@@ -1672,6 +1838,12 @@ msgstr ""
 #. module: mrp
 #: model:process.process,name:mrp.process_process_stockableproductprocess0
 msgid "Stockable Product Process"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_action2_gantt
+#: model:ir.ui.menu,name:mrp.menu_production_orders_start_gantt
+msgid "Production Orders Planning"
 msgstr ""
 
 #. module: mrp
@@ -1745,6 +1917,13 @@ msgid "Order to Max"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/wizard/wizard_change_production_qty.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
@@ -1787,6 +1966,12 @@ msgid "Sale Name"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/report/price.py:0
+#, python-format
+msgid "Product supplier"
+msgstr ""
+
+#. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
 msgid "Create minimum stock rules"
 msgstr ""
@@ -1812,6 +1997,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.procurement,close_move:0
 msgid "Close Move at end"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
 msgstr ""
 
 #. module: mrp
@@ -1896,5 +2087,16 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Materials Components"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
+"        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
+"\n"
+"    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
+"        if product_id:\n"
+"            w=self.pool.get('product.product"
 msgstr ""
 

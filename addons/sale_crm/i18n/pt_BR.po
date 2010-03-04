@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:47:59+0000\n"
-"PO-Revision-Date: 2009-08-28 15:47:59+0000\n"
+"POT-Creation-Date: 2010-02-22 14:39:18+0000\n"
+"PO-Revision-Date: 2010-02-22 14:39:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,9 @@ msgid "Crm opportunity quotation"
 msgstr "Cotação da oportunidade de Crm"
 
 #. module: sale_crm
-#: model:process.transition,name:sale_crm.process_transition_opportunityanalytic0
-msgid "Opportunity Analytic"
-msgstr "Oportunidade analítica"
+#: wizard_field:crm.case.make_order,init,partner_id:0
+msgid "Customer"
+msgstr "Cliente"
 
 #. module: sale_crm
 #: help:crm.case.make_order,init,partner_id:0
@@ -38,7 +38,7 @@ msgstr "Criar"
 #. module: sale_crm
 #: selection:crm.case.make_order,init,picking_policy:0
 msgid "All at once"
-msgstr ""
+msgstr "Todos de uma vez"
 
 #. module: sale_crm
 #: constraint:ir.ui.view:0
@@ -59,6 +59,18 @@ msgstr "Conta analítica"
 #: model:process.node,note:sale_crm.process_node_crmquotation0
 msgid "Convert opportunity to quotation"
 msgstr "Converter oportunidade para cotação"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/makesale.py:0
+#, python-format
+msgid "Data Insufficient!"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/makesale.py:0
+#, python-format
+msgid "Customer has no addresses defined!"
+msgstr ""
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,description:0
@@ -88,7 +100,7 @@ msgstr "Oportunidade CRM"
 #. module: sale_crm
 #: model:ir.module.module,shortdesc:sale_crm.module_meta_information
 msgid "Sale CRM Stuff"
-msgstr ""
+msgstr "Liquidação coisas CRM"
 
 #. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_opportunityquotation0
@@ -122,14 +134,9 @@ msgid "Check this to close the case after having created the sale order."
 msgstr "Verifique isto para fechar o caso depois de ter criado o pedido de venda."
 
 #. module: sale_crm
-#: wizard_field:crm.case.make_order,init,partner_id:0
-msgid "Customer"
-msgstr "Cliente"
-
-#. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
 msgid "Opporunity convert to the Pricelist"
-msgstr ""
+msgstr "Oportunidade convertida com preço de lista"
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,user:0
@@ -140,6 +147,11 @@ msgstr "Usuário responsável"
 #: model:process.node,note:sale_crm.process_node_contractanalytic0
 msgid "Reflect the contract made with customer"
 msgstr "Refletir o contrato feito com o cliente"
+
+#. module: sale_crm
+#: model:process.transition,name:sale_crm.process_transition_opportunityanalytic0
+msgid "Opportunity Analytic"
+msgstr "Oportunidade analítica"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,products:0
@@ -175,7 +187,7 @@ msgstr "Lista de oportunidade"
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_contractpricelist0
 msgid "Contract Pricelist"
-msgstr ""
+msgstr "Contrato com preço de lista"
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,name:0
@@ -202,5 +214,5 @@ msgstr "Cancelar"
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,section:0
 msgid "Case Section"
-msgstr ""
+msgstr "Seção Casos"
 

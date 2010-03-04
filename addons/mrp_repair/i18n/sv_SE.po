@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:56:49+0000\n"
-"PO-Revision-Date: 2009-08-28 15:56:49+0000\n"
+"POT-Creation-Date: 2010-02-22 14:44:56+0000\n"
+"PO-Revision-Date: 2010-02-22 14:44:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr ""
 #: field:mrp.repair.fee,product_uom_qty:0
 #: rml:repair.order:0
 msgid "Quantity"
-msgstr ""
+msgstr "Kvantitet"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -98,7 +98,7 @@ msgstr ""
 #: field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "Skatter"
 
 #. module: mrp_repair
 #: rml:repair.order:0
@@ -108,7 +108,7 @@ msgstr ""
 #. module: mrp_repair
 #: rml:repair.order:0
 msgid "VAT"
-msgstr ""
+msgstr "Moms"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -118,7 +118,7 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
 msgid "Move"
-msgstr ""
+msgstr "Flytta"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
@@ -133,12 +133,12 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Tilläggsinformation"
 
 #. module: mrp_repair
 #: field:mrp.repair,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_quotation_tree
@@ -150,7 +150,7 @@ msgstr ""
 #: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Bekräftad"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -227,17 +227,17 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
 msgid "Packing"
-msgstr ""
+msgstr "Packning"
 
 #. module: mrp_repair
 #: rml:repair.order:0
 msgid "Total :"
-msgstr ""
+msgstr "Totalt:"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Prislista"
 
 #. module: mrp_repair
 #: help:mrp.repair,state:0
@@ -305,7 +305,7 @@ msgstr ""
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
 msgid "Canceled"
-msgstr ""
+msgstr "Avbruten"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
@@ -315,12 +315,12 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
 msgid "Current Location"
-msgstr ""
+msgstr "Nuvarande plats"
 
 #. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,yes:0
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #. module: mrp_repair
 #: field:mrp.repair,invoiced:0
@@ -330,9 +330,15 @@ msgid "Invoiced"
 msgstr ""
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner in the repair form !"
+msgstr ""
+
+#. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,end:0
 msgid "No"
-msgstr ""
+msgstr "Nej"
 
 #. module: mrp_repair
 #: wizard_view:mrp.repair.make_invoice,init:0
@@ -344,7 +350,7 @@ msgstr ""
 #: selection:mrp.repair.line,type:0
 #: rml:repair.order:0
 msgid "Add"
-msgstr ""
+msgstr "Lägg till"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
@@ -370,7 +376,7 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair.line,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: mrp_repair
 #: rml:repair.order:0
@@ -401,7 +407,7 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Compute"
-msgstr ""
+msgstr "Beräkna"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -421,7 +427,7 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "History"
-msgstr ""
+msgstr "Historik"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
@@ -443,7 +449,7 @@ msgstr ""
 #: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Done"
-msgstr ""
+msgstr "Klar"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_2binvoiced_tree
@@ -465,7 +471,7 @@ msgstr ""
 #: selection:mrp.repair,state:0
 #: wizard_button:mrp.repair.make_invoice,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
@@ -514,7 +520,7 @@ msgstr ""
 #: field:mrp.repair.line,name:0
 #: rml:repair.order:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. module: mrp_repair
 #: field:mrp.repair,operations:0
@@ -525,7 +531,7 @@ msgstr ""
 #: field:mrp.repair.fee,product_id:0
 #: field:mrp.repair.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -540,12 +546,12 @@ msgstr ""
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: mrp_repair
 #: rml:repair.order:0
 msgid "Price"
-msgstr ""
+msgstr "Pris"
 
 #. module: mrp_repair
 #: field:mrp.repair,deliver_bool:0
@@ -582,7 +588,7 @@ msgstr ""
 #: selection:mrp.repair.line,type:0
 #: rml:repair.order:0
 msgid "Remove"
-msgstr ""
+msgstr "Ta bort"
 
 #. module: mrp_repair
 #: wizard_view:mrp.repair.cancel,display:0
@@ -618,7 +624,7 @@ msgstr ""
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Quality"
-msgstr ""
+msgstr "Kvalité"
 
 #. module: mrp_repair
 #: model:ir.actions.wizard,name:mrp_repair.action_cancel_repair
@@ -649,5 +655,11 @@ msgstr ""
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No partner !"
 msgstr ""
 

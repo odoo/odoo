@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:49:14+0000\n"
-"PO-Revision-Date: 2009-08-28 15:49:14+0000\n"
+"POT-Creation-Date: 2010-02-22 14:40:06+0000\n"
+"PO-Revision-Date: 2010-02-22 14:40:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr ""
 #. module: event
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome de modelo inválido na definição da acção"
 
 #. module: event
 #: field:event.event,mail_registr:0
@@ -87,8 +87,9 @@ msgid "Ticket for Opera"
 msgstr ""
 
 #. module: event
-#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
-msgid "Invoice Rejected"
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: event
@@ -242,6 +243,12 @@ msgid "Configuration"
 msgstr "Configuração"
 
 #. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
+msgstr ""
+
+#. module: event
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
@@ -254,7 +261,7 @@ msgstr ""
 #. module: event
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erro: UOS deve estar em uma categoria diferente do que o UOM"
+msgstr "Erro: UdV deve estar numa categoria diferente da UdC"
 
 #. module: event
 #: view:event.event:0
@@ -332,7 +339,7 @@ msgstr ""
 #. module: event
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Erro: O  UOM por defeito e o UOM de compra devem estar na mesma categoria."
+msgstr "Erro: A UdM pré-defenida e a UdM de compra devem ser da mesma categoria."
 
 #. module: event
 #: wizard_field:event.reg_make_invoice,init,inv_created:0
@@ -582,6 +589,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_view_draft
 #: model:ir.ui.menu,name:event.menu_event_event_draft
 msgid "Draft Events"
+msgstr ""
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
+msgid "Invoice Rejected"
 msgstr ""
 
 #. module: event

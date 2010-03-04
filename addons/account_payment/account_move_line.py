@@ -47,7 +47,7 @@ class account_move_line(osv.osv):
         r=dict(cr.fetchall())
         return r
 
-    def _to_pay_search(self, cr, uid, obj, name, args):
+    def _to_pay_search(self, cr, uid, obj, name, args, context):
         if not len(args):
             return []
         line_obj = self.pool.get('account.move.line')

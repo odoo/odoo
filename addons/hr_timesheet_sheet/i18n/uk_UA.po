@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:59:21+0000\n"
-"PO-Revision-Date: 2009-08-28 15:59:21+0000\n"
+"POT-Creation-Date: 2010-02-22 14:46:36+0000\n"
+"PO-Revision-Date: 2010-02-22 14:46:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,12 @@ msgstr ""
 #: field:hr_timesheet_sheet.sheet.day,sheet_id:0
 msgid "Sheet"
 msgstr "Лист"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
+#, python-format
+msgid "No employee defined for your user !"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: constraint:ir.actions.act_window:0
@@ -81,9 +87,9 @@ msgid "Set to Draft"
 msgstr "Зробити чорновиком"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
-msgid "Defines employee's timesheet entry"
-msgstr ""
+#: field:hr_timesheet_sheet.sheet,date_to:0
+msgid "Date to"
+msgstr "По дату"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
@@ -99,7 +105,7 @@ msgstr "Мій поточний табель"
 #. module: hr_timesheet_sheet
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_validatetimesheet0
 msgid "Validate"
-msgstr ""
+msgstr "Підтвердити"
 
 #. module: hr_timesheet_sheet
 #: selection:res.company,timesheet_range:0
@@ -110,6 +116,12 @@ msgstr "День"
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Present"
 msgstr "Присутній"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "UserError"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -128,6 +140,12 @@ msgid "You must select a Current date wich is in the timesheet dates !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not sign in from an other date than today"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Total Difference"
 msgstr ""
@@ -138,8 +156,21 @@ msgid "Phone call encoding"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot enter an attendance ' \\n"
+"                            'date outside the current timesheet dates!"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Day"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -151,6 +182,13 @@ msgstr ""
 #: help:res.company,timesheet_max_difference:0
 msgid "Allowed difference between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."
 msgstr "Дозволена різниця між входом/виходом і розрахунком табелю для одного табеля. Встановіть значення 0, якщо контроль непотрібний."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot enter an attendance ' \\n"
+"                        'date outside the current timesheet dates!"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -236,6 +274,13 @@ msgid "Timesheet sheet confirm at the end of the period"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,total:0
 msgid "Total Time"
 msgstr "Всього Часу"
@@ -243,6 +288,12 @@ msgstr "Всього Часу"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Lines"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Please verify that the total difference of the sheet is lower than %.2f !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -254,6 +305,12 @@ msgstr ""
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "No employee defined"
 msgstr "Невідомий працівник"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Invalid action !"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
@@ -362,18 +419,30 @@ msgid "Timesheets To Confirm"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not sign out from an other date than today"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
 msgid "Status"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_to:0
-msgid "Date to"
-msgstr "По дату"
+#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
+msgid "Defines employee's timesheet entry"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Current Status"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot modify an entry in a confirmed timesheet !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -395,6 +464,12 @@ msgstr "Табель за рахунками"
 #: field:hr_timesheet_sheet.sheet.day,name:0
 msgid "Date"
 msgstr "Дата"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not modify an entry in a confirmed timesheet !"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,user_id:0
@@ -454,6 +529,12 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr "Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Cannot delete Sheet(s) which are already confirmed !"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "Timesheet is validate by project manager."
 msgstr ""
@@ -495,6 +576,18 @@ msgstr "Опис"
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Sign Out"
 msgstr "Вихід"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You can not duplicate a timesheet !"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0

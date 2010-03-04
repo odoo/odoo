@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:58:04+0000\n"
-"PO-Revision-Date: 2009-08-28 15:58:04+0000\n"
+"POT-Creation-Date: 2010-02-22 14:45:46+0000\n"
+"PO-Revision-Date: 2010-02-22 14:45:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order:0
 msgid "Set to draft"
-msgstr ""
+msgstr "Taslak olarak Ayarla"
 
 #. module: account_payment
 #: help:payment.order,mode:0
@@ -71,12 +71,12 @@ msgstr ""
 #. module: account_payment
 #: wizard_field:populate_payment,search,entries:0
 msgid "Entries"
-msgstr ""
+msgstr "Kayıtlar"
 
 #. module: account_payment
 #: wizard_field:populate_payment,init,duedate:0
 msgid "Due Date"
-msgstr ""
+msgstr "Vade Tarihi"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -92,7 +92,7 @@ msgstr ""
 #: rml:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
-msgstr ""
+msgstr "Miktar"
 
 #. module: account_payment
 #: rml:payment.order:0
@@ -107,25 +107,25 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "İptal Edildi"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form_new
 msgid "New Payment Order"
-msgstr ""
+msgstr "Yeni Ödeme Emri"
 
 #. module: account_payment
 #: rml:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
-msgstr ""
+msgstr "Referans"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr ""
+msgstr "Ödeme Emirleri"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -153,12 +153,12 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Onaylandı"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
-msgstr ""
+msgstr "Fatura İşlem Tarihi"
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -178,7 +178,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,state:0
 msgid "State"
-msgstr ""
+msgstr "Durum"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -191,7 +191,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Ödeme Biçimi"
 
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
@@ -201,7 +201,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
 msgid "Invoice Ref."
-msgstr ""
+msgstr "Fatura Ref."
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
@@ -209,9 +209,15 @@ msgid "Choose an option for the Payment Order:'Fixed' stands for a date specifie
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr ""
+msgstr "Toplam Borç"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
@@ -226,13 +232,13 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,info_partner:0
 msgid "Destination Account"
-msgstr ""
+msgstr "Hesap Kartı"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Desitination Account"
-msgstr ""
+msgstr "Hesap Kartı"
 
 #. module: account_payment
 #: constraint:ir.ui.view:0
@@ -244,11 +250,16 @@ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 #: wizard_button:populate_payment,search,end:0
 #: wizard_button:populate_statement,init,end:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_iptal"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
+msgstr "Oluşturuldu"
+
+#. module: account_payment
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
 msgstr ""
 
 #. module: account_payment
@@ -269,12 +280,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
 msgid "Payment Management"
-msgstr ""
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr ""
+msgstr "Ödeme Yönetimi"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -300,7 +306,7 @@ msgstr ""
 #: view:payment.type:0
 #: help:payment.type,name:0
 msgid "Payment Type"
-msgstr ""
+msgstr "Ödeme Tipi"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -310,17 +316,23 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Taslak"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
 #: rml:payment.order:0
 msgid "Partner"
-msgstr ""
+msgstr "Ortak"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "No partner defined on entry line"
 msgstr ""
 
 #. module: account_payment
@@ -331,7 +343,7 @@ msgstr ""
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr ""
+msgstr "Toplam Alacak"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_payment
@@ -341,7 +353,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
@@ -352,7 +364,7 @@ msgstr ""
 #. module: account_payment
 #: rml:payment.order:0
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #. module: account_payment
 #: rml:payment.order:0
@@ -367,12 +379,12 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
-msgstr ""
+msgstr "Ödeme Tarihi"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation date"
-msgstr ""
+msgstr "Oluşturma Tarihi"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -392,7 +404,7 @@ msgstr ""
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
 msgid "Amount to pay"
-msgstr ""
+msgstr "Ödeme Tutarı"
 
 #. module: account_payment
 #: field:payment.line,amount:0
@@ -407,44 +419,44 @@ msgstr ""
 #. module: account_payment
 #: field:payment.type,code:0
 msgid "Code"
-msgstr ""
+msgstr "Kodu"
 
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Referansınız"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Payment order"
-msgstr ""
+msgstr "Ödeme Emri"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "General Information"
-msgstr ""
+msgstr "Genel Bilgiler"
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Done"
-msgstr ""
+msgstr "Bitti"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
+#: field:payment.line,communication:0
+msgid "Communication"
 msgstr ""
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
-msgstr ""
+msgstr "Bilgi"
 
 #. module: account_payment
 #: constraint:ir.model:0
@@ -460,13 +472,13 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
-msgstr ""
+msgstr "Ödeme Emri"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_draft
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_draft
 msgid "Draft Payment Order"
-msgstr ""
+msgstr "Taslak Ödeme Emri"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -476,7 +488,7 @@ msgstr ""
 #. module: account_payment
 #: wizard_view:populate_payment,init:0
 msgid "Search Payment lines"
-msgstr ""
+msgstr "Ödeme Kalemlerinde Ara"
 
 #. module: account_payment
 #: field:payment.line,amount_currency:0
@@ -496,23 +508,23 @@ msgstr ""
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Ödeme Yönetimi için Kasa Hesabı"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
 #: rml:payment.order:0
 msgid "Bank account"
-msgstr ""
+msgstr "Banka Hesabı"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Confirm Payments"
-msgstr ""
+msgstr "Ödemeleri Onayla"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
 msgid "Company Currency"
-msgstr ""
+msgstr "Firma Dövizi"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.menu_main
@@ -520,7 +532,7 @@ msgstr ""
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
-msgstr ""
+msgstr "Ödeme"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -536,17 +548,23 @@ msgstr ""
 #: field:payment.mode,name:0
 #: field:payment.type,name:0
 msgid "Name"
-msgstr ""
+msgstr "Adı"
 
 #. module: account_payment
 #: wizard_button:populate_payment,init,search:0
 msgid "_Search"
-msgstr ""
+msgstr "_Ara"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Entry Information"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
 msgstr ""
 
 #. module: account_payment
@@ -563,18 +581,18 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_open
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_open
 msgid "Payment Orders to Validate"
-msgstr ""
+msgstr "Onaylanacak Ödeme Emirleri"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_type
 #: field:payment.mode,type:0
 msgid "Payment type"
-msgstr ""
+msgstr "Ödeme Tipi"
 
 #. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
-msgstr ""
+msgstr "Toplam"
 
 #. module: account_payment
 #: wizard_button:populate_statement,init,add:0
@@ -590,15 +608,15 @@ msgstr ""
 #: model:ir.model,name:account_payment.model_payment_mode
 #: field:payment.order,mode:0
 msgid "Payment mode"
-msgstr ""
+msgstr "Ödeme Biçimi"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
+msgstr "Ödeme Yönetimi için Banka Hesabı"
 
 #. module: account_payment
 #: field:payment.mode,journal:0
 msgid "Journal"
-msgstr ""
+msgstr "Yevmiye"
 

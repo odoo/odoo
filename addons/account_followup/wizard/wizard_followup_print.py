@@ -126,12 +126,13 @@ class followup_all_print(wizard.interface):
     def _update_partners(self, cr, uid, data, context):
         to_update = data['form']['to_update']
         for id in to_update.keys():
-            cr.execute(
-                "UPDATE account_move_line "\
-                "SET followup_line_id=%s, followup_date=%s "\
-                "WHERE id=%s",
-                (to_update[id],
-                data['form']['date'], int(id),))
+            if to_update[id]['partner_id'] in data['form']['partner_ids'][0][2]:
+                cr.execute(
+                    "UPDATE account_move_line "\
+                    "SET followup_line_id=%s, followup_date=%s "\
+                    "WHERE id=%s",
+                    (to_update[id]['level'],
+                    data['form']['date'], int(id),))
         return {}
 
     def _sendmail(self ,cr, uid, data, context):
@@ -162,7 +163,7 @@ class followup_all_print(wizard.interface):
                         if (not dest) and adr.type=='default':
                             if adr.email:
                                 dest = [adr.email]
-                src = tools.config.options['smtp_user']
+                src = tools.config.options['email_from']
                 if not data['form']['partner_lang']:
                     body = data['form']['email_body']
                 else:
@@ -264,11 +265,11 @@ class followup_all_print(wizard.interface):
                 if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                     if partner_id not in partner_list:
                         partner_list.append(partner_id)
-                    to_update[str(id)] = fups[followup_line_id][1]
+                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
             elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                 if partner_id not in partner_list:
                     partner_list.append(partner_id)
-                to_update[str(id)] = fups[followup_line_id][1]
+                to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
         
         message = pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
         

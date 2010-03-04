@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:26:04+0000\n"
-"PO-Revision-Date: 2009-08-28 15:26:04+0000\n"
+"POT-Creation-Date: 2010-02-22 14:25:36+0000\n"
+"PO-Revision-Date: 2010-02-22 14:25:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -77,6 +77,13 @@ msgstr ""
 #: model:crm.case.stage,name:crm_configuration.stage_claim2
 #: model:crm.case.stage,name:crm_configuration.stage_meet1
 msgid "Fixed"
+msgstr ""
+
+#. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#: code:addons/crm_configuration/wizard/wizard_partner_create.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: crm_configuration
@@ -168,6 +175,13 @@ msgstr ""
 #. module: crm_configuration
 #: view:crm.case:0
 msgid "Dates"
+msgstr ""
+
+#. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#, python-format
+msgid "You must assign a partner to this lead before converting to opportunity.\n' \\n"
+"                  'You can use the convert to partner button."
 msgstr ""
 
 #. module: crm_configuration
@@ -467,9 +481,11 @@ msgid "Leads Form"
 msgstr ""
 
 #. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
 #: view:crm.case:0
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor
 #: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor
+#, python-format
 msgid "Opportunity"
 msgstr ""
 
@@ -496,6 +512,13 @@ msgstr ""
 #. module: crm_configuration
 #: view:crm.case:0
 msgid "Prospect Information"
+msgstr ""
+
+#. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#, python-format
+msgid "You did not installed the opportunities tracking when you configured the crm_configuration module.' \\n"
+"                  '\nI can not convert the lead to an opportunity, you must create a section with the code \'oppor\'."
 msgstr ""
 
 #. module: crm_configuration
@@ -1168,6 +1191,12 @@ msgid "Schedule a normal or phone meeting"
 msgstr ""
 
 #. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: crm_configuration
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_categ0_act_my1
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ0_act_myjobs1
 msgid "My Pending Jobs Requests"
@@ -1385,6 +1414,12 @@ msgid "Cheque"
 msgstr ""
 
 #. module: crm_configuration
+#: code:addons/crm_configuration/wizard/meeting_planify.py:0
+#, python-format
+msgid "meeting"
+msgstr ""
+
+#. module: crm_configuration
 #: model:process.node,note:crm_configuration.process_node_opportunities0
 msgid "When a real project/opportunity is detected"
 msgstr ""
@@ -1463,6 +1498,12 @@ msgstr ""
 #: selection:report.crm.case.section.categ2,state:0
 #: selection:report.crm.case.section.stage,state:0
 msgid "Open"
+msgstr ""
+
+#. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_partner_create.py:0
+#, python-format
+msgid "A partner is already existing with the same name."
 msgstr ""
 
 #. module: crm_configuration
@@ -1619,6 +1660,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_categ_help_new_act
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_categ_help_new_act
 msgid "New Helpdesk"
+msgstr ""
+
+#. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_partner_create.py:0
+#, python-format
+msgid "A partner is already defined on this lead."
 msgstr ""
 
 #. module: crm_configuration

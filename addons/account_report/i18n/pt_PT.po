@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:49:14+0000\n"
-"PO-Revision-Date: 2009-08-28 15:49:14+0000\n"
+"POT-Creation-Date: 2010-02-22 14:40:06+0000\n"
+"PO-Revision-Date: 2010-02-22 14:40:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr "Seleccione um ficheiro PDF"
 #. module: account_report
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome de modelo inválido na definição da acção"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -45,7 +45,7 @@ msgstr "Pai"
 #. module: account_report
 #: field:account.report.report,disp_graph:0
 msgid "Display As Graph"
-msgstr ""
+msgstr "Mostrar como Gráfico"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -65,6 +65,12 @@ msgstr ""
 #. module: account_report
 #: rml:print.indicators:0
 msgid "Tabular Summary"
+msgstr ""
+
+#. module: account_report
+#: code:addons/account_report/wizard/wizard_print_indicators.py:0
+#, python-format
+msgid "Please select maximum 8 records to fit the page-width."
 msgstr ""
 
 #. module: account_report
@@ -147,7 +153,7 @@ msgstr "Seguinte"
 #. module: account_report
 #: model:ir.module.module,shortdesc:account_report.module_meta_information
 msgid "Reporting for accounting"
-msgstr ""
+msgstr "Relatórios da Contabilidade"
 
 #. module: account_report
 #: wizard_button:print.indicators,next,print:0
@@ -175,6 +181,12 @@ msgstr "Código do imposto da conta"
 #: selection:account.report.report,status:0
 msgid "Good"
 msgstr "Bom"
+
+#. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid "Error !"
+msgstr "Erro !"
 
 #. module: account_report
 #: view:account.report.history:0
@@ -210,6 +222,11 @@ msgstr "Credito da conta:"
 #: wizard_view:print.indicators,init:0
 msgid "Select the criteria based on which Indicators will be printed."
 msgstr "Seleccione o critério baseado em qual indicador será usado."
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "report('REPORT_CODE')"
+msgstr "report('REPORT_CODE')"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -284,9 +301,14 @@ msgid "Expression :"
 msgstr "Expressão:"
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "report('REPORT_CODE')"
-msgstr "report('REPORT_CODE')"
+#: rml:print.indicators:0
+msgid "COL 2"
+msgstr ""
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "COL 1"
+msgstr ""
 
 #. module: account_report
 #: field:account.report.report,expression:0
@@ -340,7 +362,7 @@ msgstr "Cancelar"
 #. module: account_report
 #: field:account.report.report,child_ids:0
 msgid "Children"
-msgstr ""
+msgstr "Contas-filho"
 
 #. module: account_report
 #: constraint:ir.model:0
@@ -396,7 +418,7 @@ msgstr "Limite indicador de bondade"
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_other
 #: model:ir.ui.menu,name:account_report.menu_action_account_report_tree_view_other
 msgid "Other reports"
-msgstr ""
+msgstr "Outros relatórios"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -449,6 +471,12 @@ msgid "Select Criteria"
 msgstr "Seleccionar critério"
 
 #. module: account_report
+#: code:addons/account_report/account.py:0
+#, python-format
+msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
+msgstr ""
+
+#. module: account_report
 #: view:account.report.report:0
 msgid "tax_code(['ACCOUNT_TAX_CODE',],period)"
 msgstr ""
@@ -467,9 +495,15 @@ msgid "Custom reporting"
 msgstr "Relatório do cliente"
 
 #. module: account_report
+#: code:addons/account_report/wizard/wizard_print_indicators.py:0
+#, python-format
+msgid "User Error!"
+msgstr ""
+
+#. module: account_report
 #: rml:print.indicators:0
 msgid "Page"
-msgstr ""
+msgstr "Página"
 
 #. module: account_report
 #: selection:account.report.report,type:0
@@ -479,7 +513,7 @@ msgstr "Ver"
 #. module: account_report
 #: rml:print.indicators:0
 msgid "Indicators -"
-msgstr ""
+msgstr "Indicadores -"
 
 #. module: account_report
 #: help:account.report.report,disp_graph:0
@@ -512,10 +546,13 @@ msgid "Financial and accounting reporting\n"
 "    Fiscal statements\n"
 "    Indicators\n"
 "    "
-msgstr ""
+msgstr "Relatórios da contabilidade financeira\n"
+"    Declarações fiscais\n"
+"    Indicadores\n"
+"    "
 
 #. module: account_report
 #: selection:account.report.report,type:0
 msgid "Fiscal Statement"
-msgstr ""
+msgstr "Declaração fiscal"
 

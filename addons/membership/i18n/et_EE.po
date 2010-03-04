@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:36:36+0000\n"
-"PO-Revision-Date: 2009-08-28 15:36:36+0000\n"
+"POT-Creation-Date: 2010-02-22 14:32:16+0000\n"
+"PO-Revision-Date: 2010-02-22 14:32:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -164,6 +164,12 @@ msgid "Start membership date"
 msgstr "Liikmelisuse alguskuupäev"
 
 #. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
 msgstr "Makstud liige"
@@ -199,7 +205,7 @@ msgstr "Lahtine arve."
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_conf
 msgid "Configuration"
-msgstr "Seadistus"
+msgstr "Seadistused"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
@@ -367,6 +373,11 @@ msgid "Old members"
 msgstr "Vanad liikmed"
 
 #. module: membership
+#: constraint:product.pricelist.item:0
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr ""
+
+#. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
 msgstr "Liikmelisuse kogus"
@@ -453,6 +464,12 @@ msgstr "Tühistatud liikmelisus"
 #: field:product.template,member_price:0
 msgid "Member Price"
 msgstr "Liikme hind"
+
+#. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "No Address defined for this partner"
+msgstr ""
 
 #. module: membership
 #: field:res.partner,free_member:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:55:35+0000\n"
-"PO-Revision-Date: 2009-08-28 15:55:35+0000\n"
+"POT-Creation-Date: 2010-02-22 14:44:07+0000\n"
+"PO-Revision-Date: 2010-02-22 14:44:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,6 +42,11 @@ msgid "End Date"
 msgstr "Fecha final"
 
 #. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "Id cuenta3"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
 msgid "Rate (%)"
 msgstr "Tasa (%)"
@@ -54,6 +59,18 @@ msgstr "Tasa (%)"
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
 msgid "Analytic Plan"
 msgstr "Plan analítico"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -103,7 +120,7 @@ msgstr "Código de distribución"
 #. module: account_analytic_plans
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
@@ -131,9 +148,10 @@ msgid "Select Information"
 msgstr "Seleccionar información"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
-msgstr "Id cuenta3"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "A model having this name and code already exists !"
+msgstr "¡Ya existe un modelo con este nombre y código!"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
@@ -162,6 +180,12 @@ msgid "Analytic Plan Line"
 msgstr "Línea de plan analítico"
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "No analytic plan defined !"
+msgstr "¡No se ha definido un plan analítico!"
+
+#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
 msgstr "Referencia cuenta analítica:"
@@ -177,12 +201,25 @@ msgid "Default Entries"
 msgstr "Asientos por defecto"
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Error"
+msgstr "Error"
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan:0
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
 msgstr "Planes analíticos"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "User Error"
+msgstr "Error de usuario"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
@@ -249,12 +286,38 @@ msgid "This module allows to use several analytic plans, according to the genera
 "So when this line of invoice will be confirmed, it will generate 3 analytic lines,\n"
 "for one account entry.\n"
 "        "
-msgstr ""
+msgstr "Este módulo permite utilizar varios planes analíticos, de acuerdo con el diario general,\n"
+"para que crea múltiples líneas analíticas cuando la factura o los asientos\n"
+"sean confirmados.\n"
+"\n"
+"Por ejemplo, puede definir la siguiente estructura de analítica:\n"
+"  Proyectos\n"
+"      Proyecto 1\n"
+"          Subproyecto 1,1\n"
+"          Subproyecto 1,2\n"
+"      Proyecto 2\n"
+"  Comerciales\n"
+"      Eduardo\n"
+"      Marta\n"
+"\n"
+"Aquí, tenemos dos planes: Proyectos y Comerciales. Una línea de factura debe\n"
+"ser capaz de escribir las entradas analíticas en los 2 planes: Subproyecto 1.1 y\n"
+"Eduardo. La cantidad también se puede dividir. El siguiente ejemplo es para\n"
+"una factura que implica a los dos subproyectos y asignada a un comercial:\n"
+"\n"
+"Plan1:\n"
+"    Subproyecto 1.1: 50%\n"
+"    Subproyecto 1.2: 50%\n"
+"Plan2:\n"
+"    Eduardo: 100%\n"
+"\n"
+"Así, cuando esta línea de la factura sea confirmada, generará 3 líneas analíticas para un asiento contable.\n"
+"        "
 
 #. module: account_analytic_plans
 #: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
 msgid "Multiple-plans management in Analytic Accounting"
-msgstr ""
+msgstr "Gestión de múltiples planes en contabilidad analítica"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
@@ -276,6 +339,12 @@ msgstr "Plan del modelo"
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
 msgstr "Id cuenta2"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Please put a name and a code before saving the model !"
+msgstr "¡Introduzca un nombre y un código antes de guardar el modelo!"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -340,6 +409,18 @@ msgstr "Cuenta analítica"
 #: field:account.move.line,analytics_id:0
 msgid "Analytic Distribution"
 msgstr "Distribución analítica"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "Value Error"
+msgstr "Valor erróneo"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr "El total debería estar entre %s y %s"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action

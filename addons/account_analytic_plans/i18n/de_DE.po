@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:40:25+0000\n"
-"PO-Revision-Date: 2009-08-28 15:40:25+0000\n"
+"POT-Creation-Date: 2010-02-22 14:34:34+0000\n"
+"PO-Revision-Date: 2010-02-22 14:34:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,6 +42,11 @@ msgid "End Date"
 msgstr "Endedatum"
 
 #. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "Konto3 ID"
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
 msgid "Rate (%)"
 msgstr "Rate (%)"
@@ -54,6 +59,18 @@ msgstr "Rate (%)"
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
 msgid "Analytic Plan"
 msgstr "Konten Analyse (Kontenplan)"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -103,7 +120,7 @@ msgstr "Verkaufscode /ID"
 #. module: account_analytic_plans
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
@@ -131,9 +148,10 @@ msgid "Select Information"
 msgstr "Wähle Information"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
-msgstr "Konto3 ID"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "A model having this name and code already exists !"
+msgstr "Ein Module mit diesem Namen eixistiert bereits"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
@@ -162,6 +180,12 @@ msgid "Analytic Plan Line"
 msgstr "Analyt. Planungspositionen"
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "No analytic plan defined !"
+msgstr "Kein Kontenplan für analyitsche Konten definiert"
+
+#. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
 msgstr "Analyt. Konto Referenz:"
@@ -177,12 +201,25 @@ msgid "Default Entries"
 msgstr "Default Buchungen"
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Error"
+msgstr "Fehler"
+
+#. module: account_analytic_plans
 #: view:account.analytic.plan:0
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
 msgstr "Analyt. Plan"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "User Error"
+msgstr "Benutzerfehler"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
@@ -249,12 +286,35 @@ msgid "This module allows to use several analytic plans, according to the genera
 "So when this line of invoice will be confirmed, it will generate 3 analytic lines,\n"
 "for one account entry.\n"
 "        "
-msgstr ""
+msgstr "Dieses Modul erlaubt verschiedene analytische Kontenpläne, etnsprechend dem Haupt Journal.\n"
+"Damit können mehrere analytische Buchungszeilen generiert werden, wenn die Rechnungen bestätigt werden\n"
+"\n"
+"So kann etwa eine Struktur aussehen\n"
+"  Projekte\n"
+"      Projekt 1\n"
+"          SubProj 1.1\n"
+"          SubProj 1.2\n"
+"      Projekt 2\n"
+"  Verkäufer\n"
+"      Eric\n"
+"      Fabien\n"
+"\n"
+"Hier gibt es 2 Pläne; Projekte und Verkäufer: Eine Rechungszeile muss Buchungen in 2 Plänen machen können:\n"
+"SubProj 1.1 and Fabien. \n"
+"Der Betrag muss geteilt werden. Das folgende Beispiel betrifft 2 Sub-Prokete und einen Verkäufer\n"
+"Plan1:\n"
+"    SubProjekt 1.1 : 50%\n"
+"    SubProjekt 1.2 : 50%\n"
+"Plan2:\n"
+"    Eric: 100%\n"
+"\n"
+"Wenn die Rechnung verbucht wird, werden 3 analytische Buchungen erstellt\n"
+"        "
 
 #. module: account_analytic_plans
 #: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
 msgid "Multiple-plans management in Analytic Accounting"
-msgstr ""
+msgstr "Mulitiple Pläne für analyitsche Konten"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
@@ -276,6 +336,12 @@ msgstr "Strategische Planung"
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
 msgstr "Konto2 ID"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/create_model.py:0
+#, python-format
+msgid "Please put a name and a code before saving the model !"
+msgstr "Name und Code vor Speichern eingeben"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -342,6 +408,18 @@ msgid "Analytic Distribution"
 msgstr "Analyt. Verkaufsvorgänge"
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "Value Error"
+msgstr "Wertefehler"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr ""
+
+#. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
 msgstr "Kostnerechnung Umlage Modell"
@@ -359,7 +437,7 @@ msgstr "Start Datum"
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "at"
-msgstr ""
+msgstr "bei"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0

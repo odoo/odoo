@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:46:41+0000\n"
-"PO-Revision-Date: 2009-08-28 15:46:41+0000\n"
+"POT-Creation-Date: 2010-02-22 14:38:29+0000\n"
+"PO-Revision-Date: 2010-02-22 14:38:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -164,6 +164,12 @@ msgid "Start membership date"
 msgstr ""
 
 #. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
 msgstr ""
@@ -214,7 +220,7 @@ msgstr ""
 #. module: membership
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
+msgstr "Błąd: JS musi być innej kategorii niż JM."
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_membership_products
@@ -277,7 +283,7 @@ msgstr ""
 #. module: membership
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgstr "Błąd: domyślna JM i zakupowa JM muszą być tej samej kategorii."
 
 #. module: membership
 #: help:res.partner,membership_amount:0
@@ -364,6 +370,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:membership.action_membership_members_old
 #: model:ir.ui.menu,name:membership.menu_members_old
 msgid "Old members"
+msgstr ""
+
+#. module: membership
+#: constraint:product.pricelist.item:0
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 msgstr ""
 
 #. module: membership
@@ -455,6 +466,12 @@ msgid "Member Price"
 msgstr ""
 
 #. module: membership
+#: code:addons/membership/wizard/invoice_membership.py:0
+#, python-format
+msgid "No Address defined for this partner"
+msgstr ""
+
+#. module: membership
 #: field:res.partner,free_member:0
 msgid "Free member"
 msgstr ""
@@ -506,7 +523,7 @@ msgstr ""
 #. module: membership
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Błąd: Niedozwolony kod EAN"
 
 #. module: membership
 #: field:report.partner_member.year,year:0

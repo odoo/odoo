@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:46:41+0000\n"
-"PO-Revision-Date: 2009-08-28 15:46:41+0000\n"
+"POT-Creation-Date: 2010-02-22 14:38:29+0000\n"
+"PO-Revision-Date: 2010-02-22 14:38:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,12 +28,12 @@ msgstr ""
 #. module: document_ics
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr ""
+msgstr "Błąd! Nie możesz tworzyć rekurencyjnych katalogów."
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,jobs:0
 msgid "Jobs Hiring Process"
-msgstr ""
+msgstr "Proces zatrudniania"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
@@ -48,12 +48,12 @@ msgstr ""
 #. module: document_ics
 #: field:document.directory.ics.fields,field_id:0
 msgid "Open ERP Field"
-msgstr ""
+msgstr "Pole OpenERP"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
 msgid "Next"
-msgstr ""
+msgstr "Następne"
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
@@ -63,17 +63,17 @@ msgstr "Zawartość"
 #. module: document_ics
 #: field:document.ics.crm.wizard,meeting:0
 msgid "Calendar of Meetings"
-msgstr ""
+msgstr "Kalendarz spotkań"
 
 #. module: document_ics
 #: model:crm.case.section,name:document_ics.section_meeting
 msgid "Shared Calendar Meetings"
-msgstr ""
+msgstr "Spotkania we współdzielonym kalendarzu"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "url"
-msgstr ""
+msgstr "url"
 
 #. module: document_ics
 #: constraint:ir.actions.act_window:0
@@ -96,13 +96,20 @@ msgid "dtend"
 msgstr ""
 
 #. module: document_ics
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "You can not set negative Duration."
+msgstr ""
+
+#. module: document_ics
 #: help:document.ics.crm.wizard,jobs:0
 msgid "Help you to organise the jobs hiring process: evaluation, meetings, email integration..."
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "description"
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: document_ics
@@ -129,6 +136,11 @@ msgstr ""
 #: field:document.ics.crm.wizard,fund:0
 msgid "Fund Raising Operations"
 msgstr ""
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "description"
+msgstr "opis"
 
 #. module: document_ics
 #: field:document.directory.content,ics_object_id:0
@@ -198,7 +210,7 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "last-modified"
-msgstr ""
+msgstr "ostatnia modyfikacja"
 
 #. module: document_ics
 #: view:document.directory:0
@@ -243,7 +255,7 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "categories"
-msgstr "Kategorie"
+msgstr "kategorie"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,lead:0
@@ -258,17 +270,17 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "created"
-msgstr ""
+msgstr "utworzony"
 
 #. module: document_ics
 #: field:crm.case,code:0
 msgid "Calendar Code"
-msgstr ""
+msgstr "Kod kalendarza"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "summary"
-msgstr ""
+msgstr "podsumowanie"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_ics_crm_wizard
@@ -288,7 +300,7 @@ msgstr ""
 #. module: document_ics
 #: field:document.directory.content,ics_field_ids:0
 msgid "Fields Mapping"
-msgstr ""
+msgstr "Mapowanie pól"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0

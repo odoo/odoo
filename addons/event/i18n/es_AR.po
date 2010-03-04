@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:54:18+0000\n"
-"PO-Revision-Date: 2009-08-28 15:54:18+0000\n"
+"POT-Creation-Date: 2010-02-22 14:43:19+0000\n"
+"PO-Revision-Date: 2010-02-22 14:43:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,7 +49,7 @@ msgstr ""
 #. module: event
 #: constraint:crm.case.section:0
 msgid "Error ! You cannot create recursive sections."
-msgstr ""
+msgstr "¡Error! No puede crear secciones recursivas."
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -87,8 +87,9 @@ msgid "Ticket for Opera"
 msgstr ""
 
 #. module: event
-#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
-msgid "Invoice Rejected"
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: event
@@ -202,7 +203,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_report_event
 msgid "Reporting"
-msgstr ""
+msgstr "Reporte"
 
 #. module: event
 #: view:event.registration:0
@@ -239,12 +240,18 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_config
 msgid "Configuration"
+msgstr "Configuración"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
 msgstr ""
 
 #. module: event
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "XML inválido para la definición de la vista!"
 
 #. module: event
 #: wizard_button:event.confirm_registration,split,confirm:0
@@ -254,7 +261,7 @@ msgstr ""
 #. module: event
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
+msgstr "Error: La UdV debe estar en una categoría diferente que la UdM"
 
 #. module: event
 #: view:event.event:0
@@ -332,7 +339,7 @@ msgstr ""
 #. module: event
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgstr "Error: La UdM predeterminada y la UdM de compra deben estar en la misma categoría."
 
 #. module: event
 #: wizard_field:event.reg_make_invoice,init,inv_created:0
@@ -362,7 +369,7 @@ msgstr ""
 #. module: event
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún caracter especial!"
 
 #. module: event
 #: field:event.registration,event_id:0
@@ -374,7 +381,7 @@ msgstr ""
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
 msgid "Events"
-msgstr "Evento"
+msgstr "Eventos"
 
 #. module: event
 #: field:event.registration,nb_register:0
@@ -585,6 +592,11 @@ msgid "Draft Events"
 msgstr ""
 
 #. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
+msgid "Invoice Rejected"
+msgstr ""
+
+#. module: event
 #: model:ir.ui.menu,name:event.menu_event_main
 msgid "Events Organisation"
 msgstr ""
@@ -602,7 +614,7 @@ msgstr ""
 #. module: event
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Error: Código EAN erróneo"
 
 #. module: event
 #: view:event.event:0

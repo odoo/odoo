@@ -41,10 +41,10 @@
     
     "update_xml" : [
         "voucher_sequence.xml",
-        "account_view.xml",
         "account_report.xml",
         "voucher_wizard.xml",
         "voucher_view.xml",
+        "account_view.xml",
     ],
     'certificate': '0037580727101',
     "active": False,

@@ -1412,7 +1412,7 @@ class FTPHandler(asynchat.async_chat):
             established connection.
          - (instance) server: the ftp server class instance.
         """
-        asynchat.async_chat.__init__(self, conn=conn)
+        asynchat.async_chat.__init__(self, conn)
         self.server = server
         self.remote_ip, self.remote_port = self.socket.getpeername()[:2]
         self.in_buffer = []
@@ -2558,6 +2558,7 @@ class FTPHandler(asynchat.async_chat):
                 why = "%s is not retrievable" %line
                 self.log('FAIL SIZE "%s". %s.' %(line, why))
                 self.respond("550 %s." %why)
+                self.fs.close_cr(datacr)
                 return
             size = self.run_as_current_user(self.fs.getsize, path)
         except OSError, err:

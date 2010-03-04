@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:46:41+0000\n"
-"PO-Revision-Date: 2009-08-28 15:46:41+0000\n"
+"POT-Creation-Date: 2010-02-22 14:38:29+0000\n"
+"PO-Revision-Date: 2010-02-22 14:38:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,22 +18,22 @@ msgstr ""
 #. module: warning
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Pozycja zamówienia zakupu"
 
 #. module: warning
 #: field:product.product,sale_line_warn_msg:0
 msgid "Message for Sale Order Line"
-msgstr ""
+msgstr "Informacja dla pozycji zamówienia sprzedaży"
 
 #. module: warning
 #: field:product.product,purchase_line_warn_msg:0
 msgid "Message for Purchase Order Line"
-msgstr ""
+msgstr "Informacja dla pozycji zamówienia sprzedaży"
 
 #. module: warning
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "Pozycja zamówienia sprzedaży"
 
 #. module: warning
 #: view:product.product:0
@@ -44,9 +44,10 @@ msgstr "Ostrzeżenie przy kupowaniu tego produktu"
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
-msgstr ""
+msgstr "Ostrzeżenia"
 
 #. module: warning
+#: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
@@ -78,7 +79,7 @@ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
 #. module: warning
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: warning
 #: model:ir.module.module,shortdesc:warning.module_meta_information
@@ -93,7 +94,7 @@ msgstr "Ostrzeżenie przy sprzedaży tego produktu"
 #. module: warning
 #: field:res.partner,sale_warn:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Zamówienie sprzedaży"
 
 #. module: warning
 #: field:res.partner,picking_warn:0
@@ -103,32 +104,34 @@ msgstr ""
 #. module: warning
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
-msgstr ""
+msgstr "Zamówienie zakupu"
 
 #. module: warning
 #: field:res.partner,sale_warn_msg:0
 msgid "Message for Sale Order"
-msgstr ""
+msgstr "Notatka dla zamówienia sprzedaży"
 
 #. module: warning
 #: field:res.partner,purchase_warn_msg:0
 msgid "Message for Purchase Order"
-msgstr ""
+msgstr "Notatka dla zamówienia zakupu"
 
 #. module: warning
+#: code:addons/warning/warning.py:0
 #: help:product.product,purchase_line_warn:0
 #: help:product.product,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
+#, python-format
 msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
 msgstr "Wybór \"Ostrzeżenie\" spowoduje ostrzeżenie użytkownika informacją. Wybór \"Informacja blokująca\" spowoduje wyświetlenie wyjątku z tekstem informacji i zablowowanie dalszego działania. Informację wpisz w następnym polu."
 
 #. module: warning
 #: field:res.partner,invoice_warn_msg:0
 msgid "Message for Invoice"
-msgstr ""
+msgstr "Informacja dla faktury"
 
 #. module: warning
 #: model:ir.module.module,description:warning.module_meta_information
@@ -144,6 +147,12 @@ msgstr ""
 #: view:res.partner:0
 msgid "Warning on the Purchase Order"
 msgstr "Ostrzeżenie dla zamówienia zakupu"
+
+#. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr ""
 
 #. module: warning
 #: view:res.partner:0

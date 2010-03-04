@@ -95,6 +95,7 @@ def create_payment(self, cr, uid, data, context):
             'partner_id': line.partner_id and line.partner_id.id or False,
             'communication': line.ref or '/',
             'date': date_to_pay,
+            'currency': line.invoice and line.invoice.currency_id.id or False,
             }, context=context)
     return {}
 

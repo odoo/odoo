@@ -64,7 +64,7 @@ class wizard_delegate(wizard.interface):
             'child_ids': [],
             'work_ids': []
         })
-        task_obj.write(cr, uid, data['id'], {
+        task_obj.write(cr, uid, [data['id']], {
             'remaining_hours': data['form']['planned_hours_me'],
             'name': newname
         })

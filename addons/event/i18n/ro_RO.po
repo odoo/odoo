@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:50:29+0000\n"
-"PO-Revision-Date: 2009-08-28 15:50:29+0000\n"
+"POT-Creation-Date: 2010-02-22 14:40:54+0000\n"
+"PO-Revision-Date: 2010-02-22 14:40:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -87,8 +87,9 @@ msgid "Ticket for Opera"
 msgstr ""
 
 #. module: event
-#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
-msgid "Invoice Rejected"
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: event
@@ -202,7 +203,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_report_event
 msgid "Reporting"
-msgstr ""
+msgstr "Raportare"
 
 #. module: event
 #: view:event.registration:0
@@ -239,6 +240,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_config
 msgid "Configuration"
+msgstr "Configurare"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
 msgstr ""
 
 #. module: event
@@ -582,6 +589,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_view_draft
 #: model:ir.ui.menu,name:event.menu_event_event_draft
 msgid "Draft Events"
+msgstr ""
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
+msgid "Invoice Rejected"
 msgstr ""
 
 #. module: event

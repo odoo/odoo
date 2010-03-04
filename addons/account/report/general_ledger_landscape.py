@@ -52,7 +52,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
         super(general_ledger_landscape, self).set_context(objects, data, new_ids,report_type)
 
     def __init__(self, cr, uid, name, context):
-        super(general_ledger_landscape, self).__init__(cr, uid, name, context)
+        super(general_ledger_landscape, self).__init__(cr, uid, name, context=context)
         self.date_borne = {}
         self.query = ""
         self.child_ids = ""
@@ -269,7 +269,7 @@ class general_ledger_landscape(rml_parse.rml_parse):
         else:
             sorttag = 'j.code'
         sql = """
-            SELECT l.id, l.date, j.code,c.code AS currency_code,l.amount_currency,l.ref, l.name , l.debit, l.credit, l.period_id
+            SELECT l.id, l.date, j.code,c.code AS currency_code,l.amount_currency,l.ref, l.name , COALESCE(l.debit,0) as debit, COALESCE(l.credit,0) as credit, l.period_id
                     FROM account_move_line as l
                        LEFT JOIN res_currency c on (l.currency_id=c.id)
                           JOIN account_journal j on (l.journal_id=j.id)

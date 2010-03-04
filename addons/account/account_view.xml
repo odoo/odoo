@@ -1352,7 +1352,7 @@
         </record>
 
         <record id="action_tax_code_line_open" model="ir.actions.act_window">
-            <field name="name">account.move.line</field>
+            <field name="name">Account Entry Lines</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1376,9 +1376,11 @@
 
         <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_move_line" name="Entry lines" res_model="account.move.line" src_model="account.journal"/>
 
-        <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]" id="act_account_partner_account_move_unreconciled" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
+        <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]" id="act_account_partner_account_move_unreconciled" name="Unreconciled Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
 
-        <act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All account entries" res_model="account.move.line" src_model="res.partner"/>
+        <act_window domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="All Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner"/>
+        
+        <act_window domain="[('partner_id', '=', active_id)]" id="act_account_partner_account_move" name="All Account Entries" res_model="account.move.line" src_model="res.partner"/>
 
 
 
@@ -1503,6 +1505,8 @@
                     <field name="property_account_payable"/>
                     <field name="property_account_expense_categ" />
                     <field name="property_account_income_categ"/>
+                    <field name="property_account_expense"/>
+                    <field name="property_account_income"/>
                 </form>
             </field>
         </record>
@@ -1709,6 +1713,7 @@
             <field name="arch" type="xml">
                 <form string="Fiscal Position Template">
                     <field name="name" select="1"/>
+                    <field name="chart_template_id"/>
                     <newline/>
                     <field name="tax_ids" colspan="4">
                         <tree string="Taxes Mapping" editable="bottom">

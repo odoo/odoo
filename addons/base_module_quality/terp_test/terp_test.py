@@ -26,7 +26,6 @@ import re
 import tools
 from tools.translate import _
 from base_module_quality import base_module_quality
-import pooler
 
 class quality_test(base_module_quality.abstract_quality_check):
 
@@ -116,6 +115,7 @@ class quality_test(base_module_quality.abstract_quality_check):
 
         if result_dict1 or result_dict1:
             score = round((feel_good_factor) / float(feel_good_factor + feel_bad_factor), 2)
+
         self.result_details += self.get_result_details(result_dict)
         self.result_details += self.get_result_details(result_dict1)
         return [_('__terp__.py file'), score]
@@ -137,10 +137,11 @@ class quality_test(base_module_quality.abstract_quality_check):
 
     def get_result_details(self, dict_terp):
         if dict_terp:
-            str_html = '''<html><head></head><body><table border="1">'''
-            header = ('<tr><th>%s</th><th>%s</th></tr>', [_('Tag Name'), _('Feed back About terp file of Module')])
+            str_html = '''<html><head>%s</head><body><table class="tablestyle">'''%(self.get_style())
+            header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('Tag Name'), _('Feed back About terp file of Module')])
             if not self.error:
                 res = str_html + self.format_html_table(header, data_list=dict_terp) + '</table><newline/></body></html>'
+                res = res.replace('''<td''', '''<td class="tdatastyle" ''')
                 return res
         return ""
 

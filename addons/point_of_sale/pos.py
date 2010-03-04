@@ -339,28 +339,29 @@ class pos_order(osv.osv):
 
             if new:
                 for line in order.lines:
-                    prop_ids = self.pool.get("ir.property").search(cr, uid,
-                            [('name', '=', 'property_stock_customer')])
-                    val = self.pool.get("ir.property").browse(cr, uid,
-                            prop_ids[0]).value
-                    location_id = order.shop_id.warehouse_id.lot_stock_id.id
-                    stock_dest_id = int(val.split(',')[1])
-                    if line.qty < 0:
-                        (location_id, stock_dest_id)= (stock_dest_id, location_id)
+                    if line.product_id.type != 'service':
+                        prop_ids = self.pool.get("ir.property").search(cr, uid,
+                                [('name', '=', 'property_stock_customer')])
+                        val = self.pool.get("ir.property").browse(cr, uid,
+                                prop_ids[0]).value
+                        location_id = order.shop_id.warehouse_id.lot_stock_id.id
+                        stock_dest_id = int(val.split(',')[1])
+                        if line.qty < 0:
+                            (location_id, stock_dest_id)= (stock_dest_id, location_id)
 
-                    self.pool.get('stock.move').create(cr, uid, {
-                        'name': 'Stock move (POS %d)' % (order.id, ),
-                        'product_uom': line.product_id.uom_id.id,
-                        'product_uos': line.product_id.uom_id.id,
-                        'picking_id': picking_id,
-                        'product_id': line.product_id.id,
-                        'product_uos_qty': abs(line.qty),
-                        'product_qty': abs(line.qty),
-                        'tracking_id': False,
-                        'state': 'waiting',
-                        'location_id': location_id,
-                        'location_dest_id': stock_dest_id,
-                    })
+                        self.pool.get('stock.move').create(cr, uid, {
+                            'name': 'Stock move (POS %d)' % (order.id, ),
+                            'product_uom': line.product_id.uom_id.id,
+                            'product_uos': line.product_id.uom_id.id,
+                            'picking_id': picking_id,
+                            'product_id': line.product_id.id,
+                            'product_uos_qty': abs(line.qty),
+                            'product_qty': abs(line.qty),
+                            'tracking_id': False,
+                            'state': 'waiting',
+                            'location_id': location_id,
+                            'location_dest_id': stock_dest_id,
+                        })
 
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking',
@@ -533,12 +534,15 @@ class pos_order(osv.osv):
                     'product_id': line.product_id.id,
                     'quantity': line.qty,
                 }
+                inv_name = self.pool.get('product.product').name_get(cr, uid, [line.product_id.id], context=context)[0][1]
+                
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                     line.product_id.id,
                     line.product_id.uom_id.id,
                     line.qty, partner_id = order.partner_id.id, fposition_id=order.partner_id.property_account_position.id)['value'])
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
+                inv_line['name'] = inv_name
 
                 inv_line['invoice_line_tax_id'] = ('invoice_line_tax_id' in inv_line)\
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []

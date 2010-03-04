@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:55:34+0000\n"
-"PO-Revision-Date: 2009-08-28 15:55:34+0000\n"
+"POT-Creation-Date: 2010-02-22 14:44:07+0000\n"
+"PO-Revision-Date: 2010-02-22 14:44:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,8 +42,14 @@ msgid "Graph Mode"
 msgstr "Modo de gráfico"
 
 #. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
+msgstr "Hay modelo(s) (%s) en la selección que no están relacionados con ningún otro modelo"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Legend"
 msgstr ""
 
 #. module: base_report_creator
@@ -60,6 +66,12 @@ msgstr "Valor"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_set_filter_fields
 msgid "Set Filter Fields"
 msgstr "Fijar campos de filtrado"
+
+#. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "UserError"
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
@@ -106,6 +118,17 @@ msgid "Custom Reports"
 msgstr "Informes personalizados"
 
 #. module: base_report_creator
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "No Related Models!!"
+msgstr "¡No existen modelos relacionados!"
+
+#. module: base_report_creator
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Nombre de modelo no válido en la definición de acción."
+
+#. module: base_report_creator
 #: wizard_view:base_report_creator.report.menu.create,init:0
 msgid "Menu Information"
 msgstr "Información del menú"
@@ -139,6 +162,11 @@ msgstr "Estado"
 #: selection:base_report_creator.report,state:0
 msgid "Valid"
 msgstr "Válido"
+
+#. module: base_report_creator
+#: model:ir.actions.act_window,name:base_report_creator.base_report_creator_action
+msgid "Custom Report"
+msgstr "Informe personalizado"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -177,6 +205,12 @@ msgid "Starting Date"
 msgstr "Fecha inicial"
 
 #. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "No Wizards available for this object!"
+msgstr ""
+
+#. module: base_report_creator
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "¡XML inválido para la definición de la vista!"
@@ -197,6 +231,11 @@ msgstr "Grupos autorizados"
 #: field:base_report_creator.report,view_graph_orientation:0
 msgid "Graph Orientation"
 msgstr "Orientación gráfico"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Use %(uid)s to filter by the connected user"
+msgstr ""
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -378,6 +417,11 @@ msgid "Field"
 msgstr "Campo"
 
 #. module: base_report_creator
+#: selection:base_report_creator.report.fields,calendar_mode:0
+msgid "Unique Colors"
+msgstr ""
+
+#. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Filters on Fields"
 msgstr "Filtros en campos"
@@ -401,12 +445,18 @@ msgid "This modules allows you to create any statistic\n"
 "After installing the module, it adds a menu to define custom report in\n"
 "the \"Dashboard\" menu.\n"
 ""
-msgstr ""
+msgstr "Este módulo permite crear cualquier informe estadístico sobre\n"
+"varios objetos. Es un constructor de consultas SQL y visualizador\n"
+"para cualquier usuario.\n"
+"\n"
+"Después de instalar el módulo se añade un menú para definir informes\n"
+"personalizados dentro del menú \"Tableros\".\n"
+""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
-msgid "Uniq Colors"
-msgstr "Colores únicos"
+msgid "End Date"
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0

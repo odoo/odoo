@@ -23,17 +23,44 @@
 import netsvc
 from osv import fields,osv
 from tools.translate import _
+import tools
 
 # Overloaded stock_picking to manage carriers :
 class stock_picking(osv.osv):
     _name = "stock.picking"
     _description = "Picking list"
     _inherit = 'stock.picking'
+
+    def _cal_weight(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        data_picking = self.browse(cr, uid, ids, context)
+        for picking in data_picking:
+            total_weight = 0.00
+            if picking.move_lines:
+                weight = 0.00
+                for move in picking.move_lines:
+                    if move.product_id.weight > 0.00:
+                        weight = (move.product_uos_qty * move.product_id.weight)
+                        total_weight += weight
+            res[picking.id] = total_weight
+        return res
+
+
+    def _get_picking_line(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
+            result[line.picking_id.id] = True
+        return result.keys()
+    
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
-        'weight': fields.float('Weight'),
-    }
+        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight',digits=(16, int(tools.config['price_accuracy'])),
+                  store={
+                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                 'stock.move': (_get_picking_line, ['product_id','product_uos_qty'], 20),
+                 }),
+        }
 
     def action_invoice_create(self, cursor, user, ids, journal_id=False,
             group=False, type='out_invoice', context=None):

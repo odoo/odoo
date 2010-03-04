@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:50:29+0000\n"
-"PO-Revision-Date: 2009-08-28 15:50:29+0000\n"
+"POT-Creation-Date: 2010-02-22 14:40:54+0000\n"
+"PO-Revision-Date: 2010-02-22 14:40:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,29 +21,9 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: analytic_user_function
-#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
-msgid "Relation table between users and products on a analytic account"
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic_user_funct_grid,product_id:0
-msgid "Product"
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic_user_funct_grid,account_id:0
-msgid "Analytic Account"
-msgstr ""
-
-#. module: analytic_user_function
-#: view:account.analytic.account:0
-#: field:account.analytic.account,user_product_ids:0
-msgid "Users/Products Rel."
-msgstr ""
-
-#. module: analytic_user_function
-#: field:analytic_user_funct_grid,user_id:0
-msgid "User"
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "Error !"
 msgstr ""
 
 #. module: analytic_user_function
@@ -52,12 +32,52 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr ""
 
 #. module: analytic_user_function
+#: field:analytic_user_funct_grid,product_id:0
+msgid "Product"
+msgstr "Produs"
+
+#. module: analytic_user_function
+#: field:analytic_user_funct_grid,account_id:0
+msgid "Analytic Account"
+msgstr "Cont analitic"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define ' \\n"
+"                                    'for this product: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: analytic_user_function
+#: view:account.analytic.account:0
+#: field:account.analytic.account,user_product_ids:0
+msgid "Users/Products Rel."
+msgstr "Rel. utilizatori/produse"
+
+#. module: analytic_user_function
+#: field:analytic_user_funct_grid,user_id:0
+msgid "User"
+msgstr "Utilizator"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Relation table between users and products on a analytic account"
+msgstr "Tabel de relaţii între utilizatori  şi produsele dintrun cont analitic"
+
+#. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
+msgstr "Funcţie analitică de utilizator"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:0
+#, python-format
+msgid "There is no expense account define ' \\n"
+"                                'for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: analytic_user_function
 #: view:analytic_user_funct_grid:0
 msgid "User's Product for this Analytic Account"
-msgstr ""
+msgstr "Produsul utilizatorului pentru acest cont analitic"
 

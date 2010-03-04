@@ -1,0 +1,173 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* crm_profiling
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 13:56+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-02-22 11:56+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: crm_profiling
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr ""
+"¡El nombre del objeto debe empezar con x_ y no contener ningún caracter "
+"especial!"
+
+#. module: crm_profiling
+#: field:crm_profiling.answer,question_id:0
+#: field:crm_profiling.question,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_question
+msgid "Question"
+msgstr "Pregunta"
+
+#. module: crm_profiling
+#: wizard_button:open_questionnaire,init,open:0
+msgid "Open Questionnaire"
+msgstr "Cuestionario abierto"
+
+#. module: crm_profiling
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "Perfiles hijos"
+
+#. module: crm_profiling
+#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
+msgid "crm_profiling management"
+msgstr "Gestión de perfiles del CRM"
+
+#. module: crm_profiling
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: crm_profiling
+#: field:crm_profiling.answer,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_answer
+msgid "Answer"
+msgstr "Respuesta"
+
+#. module: crm_profiling
+#: view:res.partner:0
+msgid "Profiling"
+msgstr "Perfiles"
+
+#. module: crm_profiling
+#: field:crm_profiling.questionnaire,description:0
+msgid "Description"
+msgstr "Descripción"
+
+#. module: crm_profiling
+#: field:crm.segmentation,answer_no:0
+msgid "Excluded Answers"
+msgstr "Respuestas excluidas"
+
+#. module: crm_profiling
+#: view:crm_profiling.answer:0
+#: view:crm_profiling.question:0
+#: field:res.partner,answers_ids:0
+msgid "Answers"
+msgstr "Respuestas"
+
+#. module: crm_profiling
+#: wizard_field:open_questionnaire,init,questionnaire_name:0
+msgid "Questionnaire name"
+msgstr "Nombre del cuestionario"
+
+#. module: crm_profiling
+#: view:res.partner:0
+msgid "Use a questionnaire"
+msgstr "Use un cuestionario"
+
+#. module: crm_profiling
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML inválido para la definición de la vista!"
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
+#: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
+#: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
+msgid "Questionnaires"
+msgstr "Cuestionarios"
+
+#. module: crm_profiling
+#: field:crm_profiling.questionnaire,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
+#: wizard_view:open_questionnaire,init:0
+msgid "Questionnaire"
+msgstr "Cuestionario"
+
+#. module: crm_profiling
+#: constraint:crm.segmentation:0
+msgid "Error ! You can not create recursive profiles."
+msgstr "¡Error! No puede crear perfiles recursivos."
+
+#. module: crm_profiling
+#: field:crm.segmentation,profiling_active:0
+msgid "Use The Profiling Rules"
+msgstr "Use las reglas del perfil"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible answers"
+msgstr "Respuestas disponibles"
+
+#. module: crm_profiling
+#: field:crm.segmentation,answer_yes:0
+msgid "Included Answers"
+msgstr "Respuestas incluidas"
+
+#. module: crm_profiling
+#: help:crm.segmentation,profiling_active:0
+msgid ""
+"Check this box if you want to use this tab as part of the segmentation rule. "
+"If not checked, the criteria beneath will be ignored"
+msgstr ""
+"Tilde esta casilla si desea utilizar esta solapa como parte de la regla de "
+"segmentación. Si no está tildada, los siguientes criterios serán ignorados"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.questionnaire,questions_ids:0
+#: model:ir.actions.act_window,name:crm_profiling.open_questions
+#: model:ir.ui.menu,name:crm_profiling.menu_segm_answer
+msgid "Questions"
+msgstr "Preguntas"
+
+#. module: crm_profiling
+#: field:crm.segmentation,parent_id:0
+msgid "Parent Profile"
+msgstr "Perfil padre"
+
+#. module: crm_profiling
+#: wizard_button:open_questionnaire,init,end:0
+#: wizard_button:open_questionnaire,open,end:0
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: crm_profiling
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
+msgstr "Segmentación de Partners"
+
+#. module: crm_profiling
+#: model:ir.actions.wizard,name:crm_profiling.wizard_open_questionnaire
+msgid "Using a questionnaire"
+msgstr "Uso del cuestionario"
+
+#. module: crm_profiling
+#: wizard_button:open_questionnaire,open,compute:0
+msgid "Save Data"
+msgstr "Guardar"

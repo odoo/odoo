@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:39:07+0000\n"
-"PO-Revision-Date: 2009-08-28 15:39:07+0000\n"
+"POT-Creation-Date: 2010-02-22 14:33:48+0000\n"
+"PO-Revision-Date: 2010-02-22 14:33:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -96,14 +96,21 @@ msgid "dtend"
 msgstr "dtend"
 
 #. module: document_ics
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "You can not set negative Duration."
+msgstr ""
+
+#. module: document_ics
 #: help:document.ics.crm.wizard,jobs:0
 msgid "Help you to organise the jobs hiring process: evaluation, meetings, email integration..."
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "description"
-msgstr "description"
+#: code:addons/document_ics/document.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
 
 #. module: document_ics
 #: model:ir.actions.act_window,name:document_ics.action_view_document_ics_config_directories
@@ -129,6 +136,11 @@ msgstr ""
 #: field:document.ics.crm.wizard,fund:0
 msgid "Fund Raising Operations"
 msgstr ""
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "description"
+msgstr "description"
 
 #. module: document_ics
 #: field:document.directory.content,ics_object_id:0

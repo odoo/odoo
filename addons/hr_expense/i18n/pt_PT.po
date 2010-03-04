@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:49:15+0000\n"
-"PO-Revision-Date: 2009-08-28 15:49:15+0000\n"
+"POT-Creation-Date: 2010-02-22 14:40:06+0000\n"
+"PO-Revision-Date: 2010-02-22 14:40:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr "Despesas aguardando validação"
 #. module: hr_expense
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome de modelo inválido na definição da acção"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
@@ -143,6 +143,12 @@ msgid "The accoutant validates the sheet"
 msgstr "O contabilista valida a folha"
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
 msgid "Analytic account"
 msgstr "Conta da Contabilidade Analítica"
@@ -178,6 +184,12 @@ msgstr "Preço Total"
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
 msgstr "Alguns custos podem ser re-facturadas ao cliente"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "Error !"
+msgstr "Erro !"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_my
@@ -238,6 +250,12 @@ msgstr "Linhas de despesa"
 #: field:hr.expense.expense,currency_id:0
 msgid "Currency"
 msgstr "Moeda"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a working address"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
@@ -356,7 +374,7 @@ msgstr "Meu esboço de despesas"
 #. module: hr_expense
 #: model:ir.module.module,shortdesc:hr_expense.module_meta_information
 msgid "Human Resources Expenses Tracking"
-msgstr ""
+msgstr "Monitoramento das despesas com recursos humanos"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -378,7 +396,7 @@ msgstr "Re-facturar"
 #. module: hr_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense Process"
-msgstr ""
+msgstr "Processo das despesas"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0

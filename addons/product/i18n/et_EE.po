@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:36:36+0000\n"
-"PO-Revision-Date: 2009-08-28 15:36:36+0000\n"
+"POT-Creation-Date: 2010-02-22 14:32:16+0000\n"
+"PO-Revision-Date: 2010-02-22 14:32:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -76,9 +76,9 @@ msgid "Futur stock for this product according to the selected location or all in
 msgstr "Tulevane laoseis sellele tootele lähtudes valitud asukohast või kõigist asukohtadest, kui ühtegi pole valitud. Arvututuskäik: Tegelik laoseis - Väljuvad + Sisenevad."
 
 #. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "Laius"
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "Toote väli"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -111,11 +111,18 @@ msgid "Standard Price"
 msgstr "Standardhind"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Products: "
+msgstr "Tooted: "
+
+#. module: product
 #: help:product.packaging,height:0
 msgid "The height of the package"
 msgstr "Pakendi kõrgus"
 
 #. module: product
+#: rml:product.pricelist:0
 #: view:product.pricelist:0
 msgid "Products Price List"
 msgstr "Toodete hinnakiri"
@@ -177,9 +184,10 @@ msgid "Base price for computing the customer price. Sometimes called the catalog
 msgstr "Baashind arvutamaks kliendihinda. Vahetevahel kutsutakse kui kataloogihind."
 
 #. module: product
-#: field:pricelist.partnerinfo,min_quantity:0
-msgid "Quantity"
-msgstr "Kogus"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Partner section of the product form"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -244,22 +252,9 @@ msgid "If Other Pricelist"
 msgstr "kui Muu hinnakiri"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_tree
-#: model:ir.ui.menu,name:product.menu_main_product
-#: model:ir.ui.menu,name:product.menu_products
-#: view:product.product:0
-msgid "Products"
-msgstr "Tooted"
-
-#. module: product
-#: help:product.pricelist.item,price_round:0
-msgid "Sets the price so that it is a multiple of this value.\n"
-"Rounding is applied after the discount and before the surcharge.\n"
-"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr "Määrab hinna nii, et see on selle väärtuse kordne.\n"
-"Ümardmine rakendatakse peale allahindlust ja enne lisatasu.\n"
-"Et saada hindu, mis lõppevad 9.99, määra ümarduseks 10, lisatasu -0,01"
+#: rml:product.pricelist:0
+msgid "Price List Name:"
+msgstr ""
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -313,7 +308,12 @@ msgstr "Reegel Nimi"
 #. module: product
 #: model:ir.ui.menu,name:product.menu_config_product
 msgid "Configuration"
-msgstr "Seadistus"
+msgstr "Seadistused"
+
+#. module: product
+#: field:product.packaging,width:0
+msgid "Width"
+msgstr "Laius"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -380,6 +380,15 @@ msgstr "Tavahind: omahind on fikseeritud ja ümberarvutatud perioodiliselt (tava
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "Hinnakirja nimi"
+
+#. module: product
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Aktiivne"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -525,9 +534,9 @@ msgid "PC"
 msgstr "PC"
 
 #. module: product
-#: help:product.template,seller_delay:0
-msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
-msgstr "See on keskmine viivitus päevades ostutellimuse kinnitamise ja kaupade vastuvõtmise vahel sellele tootele ja vaikimisi tarnijale. Seda kasutatakse planeerija poolt tellimuse jaoks põhinedes taastellimise viivitustel."
+#: field:pricelist.partnerinfo,min_quantity:0
+msgid "Quantity"
+msgstr "Kogus"
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -576,6 +585,12 @@ msgid "The currency the field is expressed in."
 msgstr "Valuuta, milles välja väljendatakse."
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Other Pricelist"
+msgstr "Muu hinnakiri"
+
+#. module: product
 #: help:product.template,weight:0
 msgid "The gross weight in Kg."
 msgstr "Brutokaal kilodes"
@@ -594,6 +609,11 @@ msgstr "Vigane XML vaate arhitektuurile!"
 #: help:product.template,sale_ok:0
 msgid "Determine if the product can be visible in the list of product within a selection from a sale order line."
 msgstr "Määra, kas toode on nähtav toodete nimekirjas müügikorralduse reale valimiseks."
+
+#. module: product
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Müügid ja ostud"
 
 #. module: product
 #: constraint:product.template:0
@@ -710,9 +730,9 @@ msgid "Weight"
 msgstr "Kaal"
 
 #. module: product
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor on demand"
-msgstr "Protsessor nõudmisel"
+#: rml:product.pricelist:0
+msgid "Currency :"
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -733,13 +753,6 @@ msgstr "IT komponentide komplektid"
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
 msgstr "Mõõtühikute kategooriad"
-
-#. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "Jada"
 
 #. module: product
 #: view:product.supplierinfo:0
@@ -777,6 +790,11 @@ msgstr "Kirjeldused"
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Suppliers of Product"
 msgstr "Toote tarnijad"
+
+#. module: product
+#: model:ir.model,name:product.model_pricelist_partnerinfo
+msgid "pricelist.partnerinfo"
+msgstr "pricelist.partnerinfo"
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -889,10 +907,12 @@ msgid "Used by companies that manages two unit of measure: invoicing and stock m
 msgstr "Kasutusel ettetvõtete poolt, mis haldavad kahte mõõtühikut: arveldmine ja  laohaldus. Näiteks toiduainetööstuses haldad sa singivarusid aga arveldad kilodes. Hoia tühjana, et kasutada vaikimisi möötühikut."
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Hanked ja asukohad"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Could not resolve product category, ' \\n"
+"                                    'you have defined cyclic categories ' \\n"
+"                                    'of products!"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -934,9 +954,9 @@ msgid "Max. Price Margin"
 msgstr "Maks. hinnamarginaal"
 
 #. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Müügid ja ostud"
+#: model:ir.actions.report.xml,name:product.report_product_pricelist
+msgid "Product Pricelist"
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_10
@@ -952,6 +972,11 @@ msgstr "Tühja logistilise üksuse kaal"
 #: help:product.packaging,code:0
 msgid "The code of the transport unit."
 msgstr "Transpordiüksuse kood"
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+msgid "Processor on demand"
+msgstr "Protsessor nõudmisel"
 
 #. module: product
 #: field:product.template,uom_po_id:0
@@ -984,13 +1009,9 @@ msgid "Information about a product supplier"
 msgstr "Info toote tarnija kohta"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Aktiivne"
+#: help:product.product,packaging:0
+msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+msgstr "Pakub erinevaid viise sama toote pakendamiseks. Sellel puudub mõju pakendamiskorrldusele ja kasutatakse peamiselt, kui sa kasutad EDI moodulit."
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -1008,9 +1029,9 @@ msgid "Medium PC"
 msgstr "Keskmine PC"
 
 #. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
-msgstr "pricelist.partnerinfo"
+#: rml:product.pricelist:0
+msgid "Printing Date :"
+msgstr ""
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
@@ -1030,6 +1051,11 @@ msgstr "Ostuselgitus"
 #: view:product.template:0
 msgid "Second UoM"
 msgstr "Teine mõõtühik"
+
+#. module: product
+#: help:product.template,seller_delay:0
+msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
+msgstr "See on keskmine viivitus päevades ostutellimuse kinnitamise ja kaupade vastuvõtmise vahel sellele tootele ja vaikimisi tarnijale. Seda kasutatakse planeerija poolt tellimuse jaoks põhinedes taastellimise viivitustel."
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -1063,9 +1089,9 @@ msgid "Gross weight"
 msgstr "Brutokaal"
 
 #. module: product
-#: help:product.product,packaging:0
-msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
-msgstr "Pakub erinevaid viise sama toote pakendamiseks. Sellel puudub mõju pakendamiskorrldusele ja kasutatakse peamiselt, kui sa kasutad EDI moodulit."
+#: field:product.packaging,weight_ul:0
+msgid "Empty Package Weight"
+msgstr "Tühja pakendi kaal"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1074,9 +1100,11 @@ msgid "Product Category"
 msgstr "Toote kategooria"
 
 #. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "Toote väli"
+#: code:addons/product/pricelist.py:0
+#: constraint:product.pricelist.item:0
+#, python-format
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
@@ -1343,6 +1371,7 @@ msgstr "Ruumala"
 #. module: product
 #: field:pricelist.partnerinfo,name:0
 #: field:product.packaging,name:0
+#: rml:product.pricelist:0
 #: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description:0
@@ -1406,6 +1435,11 @@ msgid "You cannot have 2 pricelist versions that overlap!"
 msgstr "Sul ei saa olla 2 hinnakirja versiooni, mis kattuvad!"
 
 #. module: product
+#: rml:product.pricelist:0
+msgid "units"
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "Rounding Method"
 msgstr "Ümardamise meetod"
@@ -1462,13 +1496,19 @@ msgstr "Nimi"
 #: help:product.template,uos_coeff:0
 msgid "Coefficient to convert UOM to UOS\n"
 " uom = uos * coeff"
-msgstr "Koefitsent, et konventeerida mõõtühik müügiühikuks.\n"
-" MõÜ = MüÜ * koef."
+msgstr ""
 
 #. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "On ostetav"
+
+#. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "No active version for the selected pricelist !\n' \\n"
+"                                'Please create or activate one."
+msgstr ""
 
 #. module: product
 #: field:product.template,uos_coeff:0
@@ -1497,6 +1537,17 @@ msgid "Palletization"
 msgstr "Kaubaalus"
 
 #. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Hoiatus!"
+
+#. module: product
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr "Maht kuupmeetrites."
+
+#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Prices & Suppliers"
@@ -1506,6 +1557,15 @@ msgstr "Hinnad ja tarnijad"
 #: help:product.packaging,weight:0
 msgid "The weight of a full of products palet or box."
 msgstr "Kaubaga täidetud kaubaaluse või kasti kaal."
+
+#. module: product
+#: help:product.pricelist.item,price_round:0
+msgid "Sets the price so that it is a multiple of this value.\n"
+"Rounding is applied after the discount and before the surcharge.\n"
+"To have prices that end in 9.99, set rounding 10, surcharge -0.01"
+msgstr "Määrab hinna nii, et see on selle väärtuse kordne.\n"
+"Ümardmine rakendatakse peale allahindlust ja enne lisatasu.\n"
+"Et saada hindu, mis lõppevad 9.99, määra ümarduseks 10, lisatasu -0,01"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1547,9 +1607,11 @@ msgid "Pricelist Versions"
 msgstr "Hinnakirja versioonid"
 
 #. module: product
-#: field:product.packaging,weight_ul:0
-msgid "Empty Package Weight"
-msgstr "Tühja pakendi kaal"
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "Jada"
 
 #. module: product
 #: field:product.template,list_price:0
@@ -1575,6 +1637,12 @@ msgstr "Pikkus"
 #: model:product.category,name:product.cat2
 msgid "Private"
 msgstr "Privaatne"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Hanked ja asukohad"
 
 #. module: product
 #: help:product.supplierinfo,delay:0
@@ -1607,9 +1675,13 @@ msgid "Products Labels"
 msgstr "Tootete sildid"
 
 #. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr "Maht kuupmeetrites."
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
+#: model:ir.ui.menu,name:product.menu_main_product
+#: model:ir.ui.menu,name:product.menu_products
+#: view:product.product:0
+msgid "Products"
+msgstr "Tooted"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box

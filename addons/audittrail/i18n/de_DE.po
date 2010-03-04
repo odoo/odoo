@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:40:25+0000\n"
-"PO-Revision-Date: 2009-08-28 15:40:25+0000\n"
+"POT-Creation-Date: 2010-02-22 14:34:34+0000\n"
+"PO-Revision-Date: 2010-02-22 14:34:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: audittrail
 #: model:ir.module.module,shortdesc:audittrail.module_meta_information
 msgid "Audit Trail"
-msgstr ""
+msgstr "Nachvollziehbarkeit"
 
 #. module: audittrail
 #: constraint:ir.model:0
@@ -68,7 +68,7 @@ msgstr "Alter Wert"
 #. module: audittrail
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ungültiger Modellname in der Aktionsdefinition."
 
 #. module: audittrail
 #: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
@@ -150,12 +150,19 @@ msgstr "Neuer Wert Text: "
 #: model:ir.module.module,description:audittrail.module_meta_information
 msgid "Allows the administrator to track every user operations on all objects of the system.\n"
 "    Subscribe Rules for read, write, create and delete on objects and check logs"
-msgstr ""
+msgstr "Erlaubt dem Administrator jede Benutzeraktivität bezüglich jeden Objektes nachzuvollziehen\n"
+"    Aktiviere Regeln für Lesen, Schreiben, Erzeugen und Löschen von Objekten und Prüfdateien"
 
 #. module: audittrail
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "Datum"
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING:audittrail is not part of the pool"
+msgstr "WARNUNG: Nachvollziehbarkeit ist nicht Teil des Datenbestandes"
 
 #. module: audittrail
 #: field:audittrail.log,user_id:0
@@ -173,9 +180,10 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
-msgstr "Bezeichnung"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
+msgstr "Ändern der Nachvollziehbarkeit -- Regel auf Entwurf setzten"
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
@@ -301,4 +309,9 @@ msgstr "Abbruch"
 #: field:audittrail.rule,log_unlink:0
 msgid "Log deletes"
 msgstr "Protokolliere Löschungen"
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Name"
+msgstr "Bezeichnung"
 

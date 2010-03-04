@@ -69,7 +69,7 @@ class Wiki(osv.osv):
     _columns={
         'name':fields.char('Title', size=256, select=True, required=True),
         'write_uid':fields.many2one('res.users',"Last Author"),
-        'text_area':fields.text("Content", select=True),
+        'text_area':fields.text("Content"),
         'create_uid':fields.many2one('res.users','Author', select=True),
         'create_date':fields.datetime("Created on", select=True),
         'write_date':fields.datetime("Modification Date", select=True),
@@ -143,7 +143,7 @@ class History(osv.osv):
     _order = 'id DESC'
     _columns={
       'create_date':fields.datetime("Date",select=True),
-      'text_area':fields.text("Text area",select=True),
+      'text_area':fields.text("Text area"),
       'minor_edit':fields.boolean('This is a major edit ?',select=True),
       'summary':fields.char('Summary',size=256, select=True),
       'write_uid':fields.many2one('res.users',"Modify By", select=True),

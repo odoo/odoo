@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:27:14+0000\n"
-"PO-Revision-Date: 2009-08-28 15:27:14+0000\n"
+"POT-Creation-Date: 2010-02-22 14:26:19+0000\n"
+"PO-Revision-Date: 2010-02-22 14:26:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,13 @@ msgstr "Автор"
 #. module: board
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
-msgstr ""
+msgstr "Основен модул на таблото"
+
+#. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "User Error!"
+msgstr "Потребителска грешка !"
 
 #. module: board
 #: view:board.note:0
@@ -119,6 +125,12 @@ msgid "Notes"
 msgstr "Бележки"
 
 #. module: board
+#: code:addons/board/wizard/board_wizard.py:0
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Моля въведете изглед(и) на табло"
+
+#. module: board
 #: model:ir.model,name:board.model_board_note_type
 msgid "board.note.type"
 msgstr "board.note.type"
@@ -133,7 +145,7 @@ msgstr "Табло"
 #. module: board
 #: model:ir.module.module,description:board.module_meta_information
 msgid "Base module for all dashboards."
-msgstr ""
+msgstr "Основен модул на всички табла"
 
 #. module: board
 #: field:board.board.line,position:0
@@ -143,7 +155,7 @@ msgstr "Позиция."
 #. module: board
 #: model:ir.actions.act_window,name:board.dashboard_open
 msgid "Open Dashboard"
-msgstr ""
+msgstr "Отваряне на табло"
 
 #. module: board
 #: wizard_field:board.board.menu.create,init,menu_name:0
@@ -163,7 +175,7 @@ msgstr "Отляво"
 #. module: board
 #: field:board.board,view_id:0
 msgid "Board View"
-msgstr ""
+msgstr "Изглед на табло"
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -199,7 +211,7 @@ msgstr "Създаване на меню на табло"
 #. module: board
 #: wizard_button:board.board.menu.create,init,end:0
 msgid "Cancel"
-msgstr "Откажи"
+msgstr "Отказ"
 
 #. module: board
 #: view:board.board:0

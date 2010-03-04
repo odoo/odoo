@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:36:35+0000\n"
-"PO-Revision-Date: 2009-08-28 15:36:35+0000\n"
+"POT-Creation-Date: 2010-02-22 14:32:16+0000\n"
+"PO-Revision-Date: 2010-02-22 14:32:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,7 @@ msgstr "Maksuvaba summa"
 #. module: mrp_repair
 #: field:mrp.repair,state:0
 msgid "Repair State"
-msgstr "Remondistaatus"
+msgstr "Remondi olek"
 
 #. module: mrp_repair
 #: rml:repair.order:0
@@ -160,7 +160,7 @@ msgstr "Loo arve uuesti"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repairs order"
-msgstr "Remonide korraldus"
+msgstr "Remontide korraldus"
 
 #. module: mrp_repair
 #: rml:repair.order:0
@@ -242,7 +242,7 @@ msgstr "Hinnakiri"
 #. module: mrp_repair
 #: help:mrp.repair,state:0
 msgid "Gives the state of the Repair Order"
-msgstr "Annab staatuse remondikorraldusele"
+msgstr "Annab remondikorralduse oleku"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -289,7 +289,7 @@ msgstr "Remonditud"
 #. module: mrp_repair
 #: wizard_field:mrp.repair.make_invoice,init,group:0
 msgid "Group by partner invoice address"
-msgstr "Grupeeri arveaadressijärgi"
+msgstr "Grupeeri partneri arve aadressi järgi"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
@@ -330,6 +330,12 @@ msgid "Invoiced"
 msgstr "Arveldatud"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner in the repair form !"
+msgstr "Sa pead valima partneri remondi vormil!"
+
+#. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,end:0
 msgid "No"
 msgstr "Ei"
@@ -365,7 +371,7 @@ msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Maksuvaba summa"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair.line,state:0
@@ -426,7 +432,7 @@ msgstr "Ajalugu"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 msgid "Repairs Order"
-msgstr "Remonditellimused"
+msgstr "Remondikorraldus"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_ready_tree
@@ -490,7 +496,7 @@ msgstr "Tarnea asukoht"
 #. module: mrp_repair
 #: model:ir.module.module,shortdesc:mrp_repair.module_meta_information
 msgid "Products Repairs Module"
-msgstr "Toodete remondi moodul"
+msgstr "Tooteremondi moodul"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
@@ -650,4 +656,10 @@ msgstr "Kokku"
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
 msgstr "Valmis remondiks"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No partner !"
+msgstr "Partner puudub!"
 

@@ -30,18 +30,15 @@ from tools.translate import _
 class project_work(osv.osv):
     _inherit = "project.task.work"
     _description = "Task Work"
-    def create(self, cr, uid, vals, *args, **kwargs):
 
-        obj = self.pool.get('hr.analytic.timesheet')
-        vals_line = {}
-        obj_task = self.pool.get('project.task').browse(cr, uid, vals['task_id'])
-
+    def get_user_related_details(self, cr, uid, user_id):
+        res = {}
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', vals.get('user_id', uid))])
-
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', user_id)])
         if not emp_id:
+            user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
             raise osv.except_osv(_('Bad Configuration !'),
-                 _('No employee defined for this user. You must create one.'))
+                 _('No employee defined for user "%s". You must create one.')% (user_name,))
         emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0])
         if not emp.product_id:
             raise osv.except_osv(_('Bad Configuration !'),
@@ -54,9 +51,23 @@ class project_work(osv.osv):
         a =  emp.product_id.product_tmpl_id.property_account_expense.id
         if not a:
             a = emp.product_id.categ_id.property_account_expense_categ.id
-
+            if not a:
+                raise osv.except_osv(_('Bad Configuration !'),
+                        _('No product and product category property account defined on the related employee.\nFill in the timesheet tab of the employee form.'))
+        res['product_id'] = emp.product_id.id
+        res['journal_id'] = emp.journal_id.id
+        res['general_account_id'] = a
+        res['product_uom_id'] = emp.product_id.uom_id.id
+        return res
+        
+    def create(self, cr, uid, vals, *args, **kwargs):
+        obj = self.pool.get('hr.analytic.timesheet')
+        vals_line = {}
+        obj_task = self.pool.get('project.task').browse(cr, uid, vals['task_id'])
+        result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
         vals_line['name'] = '%s: %s' % (tools.ustr(obj_task.name), tools.ustr(vals['name']) or '/')
         vals_line['user_id'] = vals['user_id']
+        vals_line['product_id'] = result['product_id']
         vals_line['date'] = vals['date'][:10]
         vals_line['unit_amount'] = vals['hours']
         acc_id = obj_task.project_id.category_id.id
@@ -64,9 +75,10 @@ class project_work(osv.osv):
         res = obj.on_change_account_id(cr, uid, False, acc_id)
         if res.get('value'):
             vals_line.update(res['value'])
-        vals_line['general_account_id'] = a
-        vals_line['journal_id'] = emp.journal_id.id
+        vals_line['general_account_id'] = result['general_account_id']
+        vals_line['journal_id'] = result['journal_id']
         vals_line['amount'] = 00.0
+        vals_line['product_uom_id'] = result['product_uom_id']
         timeline_id = obj.create(cr, uid, vals_line, {})
 
         vals_line['amount'] = (-1) * vals['hours'] * obj.browse(cr, uid, timeline_id).product_id.standard_price
@@ -84,9 +96,14 @@ class project_work(osv.osv):
         if line_id in list_avail_ids:
             obj = self.pool.get('hr.analytic.timesheet')
             if 'name' in vals:
-                vals_line['name'] = '%s: %s' % (tools.ustr(task.name), tools.ustr(vals['name']) or '/')
+                vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
+                result = self.get_user_related_details(cr, uid, vals['user_id'])
+                vals_line['product_id'] = result['product_id']
+                vals_line['general_account_id'] = result['general_account_id']
+                vals_line['journal_id'] = result['journal_id']
+                vals_line['product_uom_id'] = result['product_uom_id']
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
@@ -97,11 +114,13 @@ class project_work(osv.osv):
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
-        timesheet_id = self.pool.get('project.task.work').browse(cr, uid, ids)[0].hr_analytic_timesheet_id
-#         delete entry from timesheet too while deleting entry to task.
-        list_avail_ids = self.pool.get('hr.analytic.timesheet').search(cr, uid, [])
-        if timesheet_id in list_avail_ids:
-            obj = self.pool.get('hr.analytic.timesheet').unlink(cr, uid, [timesheet_id], *args, **kwargs)
+        pool_analytic_timesheet = self.pool.get('hr.analytic.timesheet')
+        for work_id in ids:
+            timesheet_id = self.read(cr, uid, work_id, ['hr_analytic_timesheet_id'])['hr_analytic_timesheet_id']
+#            delete entry from timesheet too while deleting entry to task.
+            list_avail_ids = pool_analytic_timesheet.search(cr, uid, [])
+            if timesheet_id in list_avail_ids:
+                obj = pool_analytic_timesheet.unlink(cr, uid, [timesheet_id], *args, **kwargs)
 
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
 
@@ -110,6 +129,40 @@ class project_work(osv.osv):
     }
 
 project_work()
+
+class task(osv.osv):
+    _inherit = "project.task"
+    _description = "Tasks"
+
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        for task_obj in self.browse(cr, uid, ids, *args, **kwargs):
+            if task_obj.work_ids:
+                work_ids = [x.id for x in task_obj.work_ids]
+                self.pool.get('project.task.work').unlink(cr, uid, work_ids, *args, **kwargs)
+        
+        return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
+    
+    def write(self, cr, uid, ids,vals,context={}):
+        if (vals.has_key('project_id') and vals['project_id']) or (vals.has_key('name') and vals['name']):
+            vals_line = {}
+            hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
+            task_obj_l = self.browse(cr, uid, ids, context)
+            if (vals.has_key('project_id') and vals['project_id']):
+                project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'])
+                acc_id = project_obj.category_id.id
+
+            for task_obj in task_obj_l:
+                if len(task_obj.work_ids):
+                    for task_work in task_obj.work_ids:
+                        line_id = task_work.hr_analytic_timesheet_id
+                        if (vals.has_key('project_id') and vals['project_id']):
+                            vals_line['account_id'] = acc_id
+                        if (vals.has_key('name') and vals['name']):
+                            vals_line['name'] = '%s: %s' % (tools.ustr(vals['name']), tools.ustr(task_work.name) or '/')
+                        hr_anlytic_timesheet.write(cr, uid, [line_id], vals_line, {})
+        return super(task,self).write(cr, uid, ids, vals, context)
+
+task()
 
 class project_project(osv.osv):
     _inherit = "project.project"

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:51:44+0000\n"
-"PO-Revision-Date: 2009-08-28 15:51:44+0000\n"
+"POT-Creation-Date: 2010-02-22 14:41:42+0000\n"
+"PO-Revision-Date: 2010-02-22 14:41:42+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,8 +42,14 @@ msgid "Graph Mode"
 msgstr "Графический вид"
 
 #. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
+msgstr ""
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Legend"
 msgstr ""
 
 #. module: base_report_creator
@@ -60,6 +66,12 @@ msgstr "Значение"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_set_filter_fields
 msgid "Set Filter Fields"
 msgstr "Установить поля фильтра"
+
+#. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "UserError"
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
@@ -106,6 +118,17 @@ msgid "Custom Reports"
 msgstr "Пользовательские отчеты"
 
 #. module: base_report_creator
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "No Related Models!!"
+msgstr ""
+
+#. module: base_report_creator
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr ""
+
+#. module: base_report_creator
 #: wizard_view:base_report_creator.report.menu.create,init:0
 msgid "Menu Information"
 msgstr "Информация меню"
@@ -139,6 +162,11 @@ msgstr "Состояние"
 #: selection:base_report_creator.report,state:0
 msgid "Valid"
 msgstr "Корректный"
+
+#. module: base_report_creator
+#: model:ir.actions.act_window,name:base_report_creator.base_report_creator_action
+msgid "Custom Report"
+msgstr "Пользовательский отчет"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -177,6 +205,12 @@ msgid "Starting Date"
 msgstr "Дата начала"
 
 #. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "No Wizards available for this object!"
+msgstr ""
+
+#. module: base_report_creator
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr "Неправильный XML для просмотра архитектуры!"
@@ -200,6 +234,11 @@ msgstr "Ориентация графика"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
+msgid "Use %(uid)s to filter by the connected user"
+msgstr ""
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
 msgid "Authorized Groups (empty for all)"
 msgstr "Авторизованные группы (пусто='все')"
 
@@ -211,7 +250,7 @@ msgstr "Безопасность"
 #. module: base_report_creator
 #: wizard_field:base_report_creator.report.menu.create,init,menu_name:0
 msgid "Menu Name"
-msgstr ""
+msgstr "Название меню"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.filter,condition:0
@@ -312,7 +351,7 @@ msgstr "Условие"
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Count"
-msgstr ""
+msgstr "Счётчик"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,graph_mode:0
@@ -378,6 +417,11 @@ msgid "Field"
 msgstr "Поле"
 
 #. module: base_report_creator
+#: selection:base_report_creator.report.fields,calendar_mode:0
+msgid "Unique Colors"
+msgstr ""
+
+#. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Filters on Fields"
 msgstr "Фильтры по полям"
@@ -405,8 +449,8 @@ msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
-msgid "Uniq Colors"
-msgstr "Уник. цвета"
+msgid "End Date"
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0

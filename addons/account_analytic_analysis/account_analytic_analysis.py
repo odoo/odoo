@@ -371,10 +371,13 @@ class account_analytic_account(osv.osv):
         res = {}
         for id in ids:
             ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-            cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month ' \
-                    'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
-                        'AND unit_amount <> 0.0')
-            res[id] = [int(id * 1000000 + int(x[0])) for x in cr.fetchall()]
+            if ids2:
+                cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month ' \
+                        'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
+                            'AND unit_amount <> 0.0')
+                res[id] = [int(id * 1000000 + int(x[0])) for x in cr.fetchall()]
+            else:
+                res[id] = []
         return res
 
     def _user(self, cr, uid, ids, name, arg, context=None):
@@ -383,10 +386,13 @@ class account_analytic_account(osv.osv):
         max_user = cr.fetchone()[0]
         for id in ids:
             ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-            cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user ' \
-                    'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
-                        'AND unit_amount <> 0.0')
-            res[id] = [int((id * max_user) + x[0]) for x in cr.fetchall()]
+            if ids2:
+                cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user ' \
+                        'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
+                            'AND unit_amount <> 0.0')
+                res[id] = [int((id * max_user) + x[0]) for x in cr.fetchall()]
+            else:
+                res[id] = []   
         return res
 
     _columns ={
@@ -608,7 +614,7 @@ class account_analytic_account_summary_month(osv.osv):
             for child_id in account_obj.search(cr, uid,
                     [('parent_id', 'child_of', [int(str(int(obj_id))[:-6])])]):
                 if child_id != int(str(int(obj_id))[:-6]):
-                    res[obj_id] += res.get(int(child_id * 1000000 + int(obj_id)), 0.0)
+                    res[obj_id] += res.get(int(child_id * 1000000 + int(str(int(obj_id))[-6:])), 0.0)
         for id in ids:
             res[id] = round(res.get(id, 0.0), 2)
         return res

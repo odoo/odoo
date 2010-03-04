@@ -27,6 +27,8 @@ import pooler
 
 import wizard
 from osv import osv
+import tools
+from tools.translate import _
 
 _moves_arch = UpdateableStr()
 _moves_fields = UpdateableDict()
@@ -34,8 +36,11 @@ _moves_fields = UpdateableDict()
 _moves_arch_end = '''<?xml version="1.0"?>
 <form string="Packing result">
     <label string="The packing has been successfully made !" colspan="4"/>
+    <field name="back_order_notification" colspan="4" nolabel="1"/>
 </form>'''
-_moves_fields_end = {}
+_moves_fields_end = {
+    'back_order_notification': {'string':'Back Order' ,'type':'text', 'readonly':True}
+                     }
 
 def make_default(val):
     def fct(uid, data, state):
@@ -54,13 +59,15 @@ def _get_moves(self, cr, uid, data, context):
     _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make packing">']
 
     for m in pick.move_lines:
+        if m.state in ('done', 'cancel'):
+            continue
         quantity = m.product_qty
         if m.state<>'assigned':
             quantity = 0
 
         _moves_arch_lst.append('<field name="move%s" />' % (m.id,))
         _moves_fields['move%s' % m.id] = {
-                'string': '%s - %s' % (_to_xml(m.product_id.code or '/'), _to_xml(m.product_id.name)),
+                'string': _to_xml(m.name),
                 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
 
         if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
@@ -198,8 +205,15 @@ def _do_split(self, cr, uid, data, context):
     else:
         pick_obj.action_move(cr, uid, [pick.id])
         wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
-    return {'new_picking':new_picking or False}
+    bo_name = ''
+    if new_picking:
+        bo_name = pick_obj.read(cr, uid, [new_picking], ['name'])[0]['name']
+    return {'new_picking':new_picking or False, 'back_order':bo_name}
 
+def _get_default(self, cr, uid, data, context):
+    if data['form']['back_order']:
+        data['form']['back_order_notification'] = _('Back Order %s Assigned to this Packing.') % (tools.ustr(data['form']['back_order']),)
+    return data['form']
 
 class partial_picking(wizard.interface):
 
@@ -215,10 +229,10 @@ class partial_picking(wizard.interface):
         },
         'split': {
             'actions': [ _do_split ],
-            'result': {'type': 'state', 'state': 'end'},
+            'result': {'type': 'state', 'state': 'end2'},
         },
         'end2': {
-            'actions': [ ],
+            'actions': [ _get_default ],
             'result': {'type': 'form', 'arch': _moves_arch_end,
                 'fields': _moves_fields_end,
                 'state': (

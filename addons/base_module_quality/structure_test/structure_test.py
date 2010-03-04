@@ -23,6 +23,7 @@ import os
 
 from tools.translate import _
 from base_module_quality import base_module_quality
+import pooler
 
 class quality_test(base_module_quality.abstract_quality_check):
 
@@ -135,7 +136,6 @@ This test checks if the module satisfy tiny structure
         self.module_score +=  final_score
         self.score = self.module_score / (self.count)
         self.result = self.get_result({ module_name: [module_name, int(self.score*100)]})
-#        self.result_details += self.get_result_details(self.result_dict)
         return None
 
     def run_test(self, cr, uid, module_path):
@@ -170,12 +170,12 @@ This test checks if the module satisfy tiny structure
         return score
 
     def get_result_details(self, dict_struct):
-        str_html = '''<html><head></head><body><table>'''
-        header = ('<tr><th>%s</th><th>%s</th></tr>', [_('File Name'), _('Feedback about structure of module')])
+        str_html = '''<html><head>%s</head><body><table class="tablestyle">'''%(self.get_style())
+        header = ('<tr><th class="tdatastyle">%s</th><th class="tdatastyle">%s</th></tr>', [_('File Name'), _('Feedback about structure of module')])
         if not self.error:
             res = str_html + self.format_html_table(header, data_list=dict_struct) + '</table></body></html>'
+            res = res.replace('''<td''', '''<td class="tdatastyle" ''')
             return res
         return ""
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

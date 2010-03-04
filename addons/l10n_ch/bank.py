@@ -33,14 +33,23 @@ from osv import fields, osv
 
 
 class Bank(osv.osv):
-	"""Inherit res.bank class in order to add swiss specific field"""
-	_inherit = 'res.bank'
-	_columns = {
-		###Swiss unik bank identifier also use in IBAN number
-		'clearing': fields.char('Clearing number', size=64),
-		### city of the bank
-		'city': fields.char('City', size=128, select=1),
-	}
+    """Inherit res.bank class in order to add swiss specific field"""
+    _inherit = 'res.bank'
+    _columns = {
+        ###Swiss unik bank identifier also use in IBAN number
+        'clearing': fields.char('Clearing number', size=64),
+        ### city of the bank
+        'city': fields.char('City', size=128, select=1),
+    }
 
 Bank()
+
+class bvr_checkbox(osv.osv):
+    """ Add function to generate function """
+    _inherit = "res.partner.bank"
+    _columns = {
+        'printBank' : fields.boolean('Print Bank on BVR'),
+        'printAccount' : fields.boolean('Print Account Number on BVR'),
+        }
+bvr_checkbox()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

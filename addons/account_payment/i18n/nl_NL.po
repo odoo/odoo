@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.7\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 15:35:24+0000\n"
-"PO-Revision-Date: 2009-08-28 15:35:24+0000\n"
+"POT-Creation-Date: 2010-02-22 14:31:31+0000\n"
+"PO-Revision-Date: 2010-02-22 14:31:31+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_planned:0
 msgid "Scheduled date if fixed"
-msgstr "Plan datum indien vast"
+msgstr "Geplande datum indien vast"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -33,12 +33,12 @@ msgstr "Zet op concept"
 #. module: account_payment
 #: help:payment.order,mode:0
 msgid "Select the Payment Mode to be applied."
-msgstr "Kies de betaalmethode die wordt gebruikt"
+msgstr "Kies de toe te passen betalingswijze"
 
 #. module: account_payment
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: account_payment
 #: view:payment.line:0
@@ -210,6 +210,12 @@ msgid "Choose an option for the Payment Order:'Fixed' stands for a date specifie
 msgstr "Kies een optie voor de betaalopdracht: 'Vast' staat voor een specifiek ingegeven datum, 'Direct' staat voor directe uitvoering, 'Vervaldatum' staat voor de geplande datum van uitvoering."
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "Error !"
+msgstr "Fout!"
+
+#. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Totaal debet"
@@ -238,7 +244,7 @@ msgstr "Rekeningnummer bestemming"
 #. module: account_payment
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave!"
 
 #. module: account_payment
 #: wizard_button:populate_payment,init,end:0
@@ -251,6 +257,11 @@ msgstr "_Annuleer"
 #: field:payment.line,create_date:0
 msgid "Created"
 msgstr "Aangemaakt"
+
+#. module: account_payment
+#: view:payment.order:0
+msgid "Select Invoices to Pay"
+msgstr "Kies te betalen facturen"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -270,12 +281,7 @@ msgstr "Communicatietype"
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
 msgid "Payment Management"
-msgstr ""
-
-#. module: account_payment
-#: field:payment.line,communication:0
-msgid "Communication"
-msgstr "Communicatie"
+msgstr "Betalingsbeheer"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -323,6 +329,12 @@ msgstr "Relatie"
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "Het vervolgbericht voor communicatie"
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "No partner defined on entry line"
+msgstr "Geen relatie gedefinieerd op boekingsregel"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -432,9 +444,9 @@ msgid "Done"
 msgstr "Gereed"
 
 #. module: account_payment
-#: view:payment.order:0
-msgid "Select Invoices to Pay"
-msgstr "Kies te betalen facturen"
+#: field:payment.line,communication:0
+msgid "Communication"
+msgstr "Communicatie"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -450,7 +462,7 @@ msgstr "Informatie"
 #. module: account_payment
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_pay_payment
@@ -531,7 +543,7 @@ msgstr "Boeking"
 #. module: account_payment
 #: help:payment.line,communication:0
 msgid "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"
-msgstr ""
+msgstr "Wordt gebruikt als bericht tussen de bestellende klant en het huidige bedrijf. Denk aan: 'Wat wilt u over deze opdracht vertellen aan de ontvanger?'"
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -549,6 +561,12 @@ msgstr "_Zoeken"
 #: view:payment.order:0
 msgid "Entry Information"
 msgstr "Boekingsinformatie"
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:0
+#, python-format
+msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
+msgstr "Voor relatie '+ line.partner_id.name+ ' is geen bankrekening bekend"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement

@@ -62,8 +62,8 @@ class rpc_proxy(object):
         return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request)
 
 class email_parser(object):
-    def __init__(self, uid, password, section, email, email_default, dbname):
-        self.rpc = rpc_proxy(uid, password, dbname=dbname)
+    def __init__(self, uid, password, section, email, email_default, dbname, host):
+        self.rpc = rpc_proxy(uid, password, host=host, dbname=dbname)
         try:
             self.section_id = int(section)
         except:
@@ -315,9 +315,11 @@ if __name__ == '__main__':
     parser.add_option("-s", "--section", dest="section", help="ID or code of the case section", default="support")
     parser.add_option("-m", "--default", dest="default", help="Default eMail in case of any trouble.", default=None)
     parser.add_option("-d", "--dbname", dest="dbname", help="Database name (default: terp)", default='terp')
+    parser.add_option("--host", dest="host", help="Hostname of the Open ERP Server", default="localhost")
+
 
     (options, args) = parser.parse_args()
-    parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname)
+    parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname, host=options.host)
 
     msg_txt = email.message_from_file(sys.stdin)
 
