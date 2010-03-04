@@ -315,9 +315,15 @@ class YamlInterpreter(object):
         try:
             code = compile(statements, self.filename, 'exec')
             eval(code, code_context)
+        except AssertionError, e:
+            msg = 'Assertion "%s" FAILED in Python code.'
+            args = (python.name,)
+            self._log_assert_failure(python.severity, msg, *args)
+            return
         except Exception, e:
-            raise YamlImportException(e)
-        # TODO log success/failure
+            raise YamlImportAbortion(e)
+        else:
+            self.assert_report.record(True, python.severity)
     
     def process_workflow(self, node):
         workflow, values = node.items()[0]
