@@ -171,7 +171,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Evaluation">
-                    <field name="create_date"/>
+                    <!--field name="create_date"/-->
                     <field name="employee_id"/>
                     <!-- field name="progress"/ -->
                     <field name="plan_id"/>
@@ -202,9 +202,9 @@
                         <field name="survey_id" widget="selection" colspan="3"/>
                         <group  colspan="1">
                             <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
-                                icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': response, 'active' : response, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                                icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                             <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
-                                icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : response,}" attrs="{'readonly':[('response','!=',True),('survey_id','!=',True)]}" />
+                                icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
                         </group>
                     </group>
                     <group col="4" colspan="4">

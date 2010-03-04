@@ -691,7 +691,7 @@ class survey_question_wiz(osv.osv_memory):
             total_pages = len(p_id)
             pre_button = False
             readonly = 0
-            if context.has_key('response_id') and context['response_id']:
+            if context.has_key('response_id') and context['response_id'] and int(context['response_id'][0]) > 0:
                 readonly = 1
             if not sur_name_rec['page_no'] + 1 :
                 surv_name_wiz.write(cr, uid, [context['sur_name_id']], {'store_ans':{}})
@@ -731,7 +731,7 @@ class survey_question_wiz(osv.osv_memory):
                     pag_rec = page_obj.read(cr, uid, p_id)
                     xml_form = etree.Element('form', {'string': _(tools.ustr(pag_rec['title']))})
                     xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
-                    if context.has_key('response_id'):
+                    if context.has_key('response_id') and context['response_id']  and int(context['response_id'][0]) > 0:
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
                         record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
                         etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr('Answer Of :- ' + record.user_id.name + ',  Date :- ' + record.date_create.split('.')[0]  )), 'align':"0.0"})
@@ -1011,7 +1011,7 @@ class survey_question_wiz(osv.osv_memory):
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
         response_obj = self.pool.get('survey.response')
-        if context.has_key('response_id') and context['response_id']:
+        if context.has_key('response_id') and context['response_id'] and int(context['response_id'][0]) > 0:
             data = super(survey_question_wiz, self).default_get(cr, uid, fields_list, context)
             response_ans = response_obj.browse(cr, uid, context['response_id'][context['response_no']])
             fields_list.sort()
