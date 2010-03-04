@@ -73,7 +73,7 @@
 	                    <field name="user_id" />
 	                    <label string="Resolution: " align="1.0"/>
 	                    <group colspan="1" col="3">
-	                        <field name="stage_id" select="1" nolabel="1"/>
+	                        <field name="stage_id"  select="1" nolabel="1" on_change="onchange_stage_id(stage_id)"  domain="[('object_id.model', '=', 'crm.project.bug')]"/>
 	                        <button icon="gtk-go-back" string="" name="stage_previous" type="object"/>
 	                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
 	                    </group>

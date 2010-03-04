@@ -88,6 +88,14 @@ class crm_project_bug(osv.osv):
     def convert_to_bug(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
 
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+        if not stage_id:
+            return {'value':{}}
+        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
+        if not stage.on_change:
+            return {'value':{}}
+        return {'value':{'probability':stage.probability}}
+
     _defaults = {
           'project_id':_get_project,          
           }
