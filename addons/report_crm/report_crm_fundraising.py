@@ -10,7 +10,6 @@ class report_crm_fundraising(osv.osv):
         'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]", readonly=True),
         'probability': fields.float('Avg. Probability', readonly=True),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
-        'amount_costs': fields.float('Est.Cost', readonly=True),
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
     }
