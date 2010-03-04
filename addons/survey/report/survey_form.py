@@ -365,12 +365,12 @@ class survey_form(report_rml):
                                rml+="""
                                 <td><para style="terp_default_9"><font color="white"> </font></para></td>"""
                             rml+="""</tr></blockTable>"""
-                if datas.has_key('form') and not datas['form']['without_pagebreak']:
-                    rml+="""<pageBreak/>"""
-                elif not datas.has_key('form'):
-                    rml+="""<pageBreak/>"""
-                else:
-                    rml+="""<para style="P2"><font></font></para>"""
+            if datas.has_key('form') and not datas['form']['without_pagebreak']:
+                rml+="""<pageBreak/>"""
+            elif not datas.has_key('form'):
+                rml+="""<pageBreak/>"""
+            else:
+                rml+="""<para style="P2"><font></font></para>"""
         rml+="""</story></document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]

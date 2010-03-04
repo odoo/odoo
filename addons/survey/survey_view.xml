@@ -4,15 +4,13 @@
 
 <!--        <menuitem name="Survey Management" id="main_menu_survey" icon="terp-crm" sequence="1" groups="group_survey_manager,group_survey_user"/>-->
 		    <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="15"/>
-			<menuitem name="Survey" id="main_menu_survey"
-				 sequence="3" groups="group_survey_manager,group_survey_user"
+			<menuitem name="Define Surveys" id="menu_define_survey"
+				 groups="group_survey_manager"
 				 parent="base.menu_tools" />
-			<menuitem id="menu_defination" name="Definition" parent="main_menu_survey" sequence="1" groups="group_survey_manager"/>
+			<menuitem id="menu_answer_surveys" name="Answer Surveys" parent="base.menu_tools" groups="group_survey_manager,group_survey_user"/>
 <!--        <menuitem name="Configuration" id="menu_survey_config" parent="main_menu_survey" groups="group_survey_manager"/>-->
-			<menuitem name="Configuration" parent="base.menu_tools"
-				id="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="6"/>
-		    <menuitem name="Surveys" id="menu_survey_config"
-		    	parent="base.menu_lunch_survey_root" groups="group_survey_manager" sequence="2"/>
+			<menuitem name="Reporting" parent="base.menu_tools"
+				id="menu_reporting" groups="group_survey_manager"/>
         <!--
             Survey
         -->
@@ -284,7 +282,7 @@
 
 
         <menuitem name="Surveys" id="menu_survey_form"
-            action="action_survey_form1" parent="menu_defination"
+            action="action_survey_form1" parent="menu_define_survey"
             groups="group_survey_manager"/>
 
         <!--
@@ -467,8 +465,8 @@
             <field name="view_id" ref="survey_page_tree"></field>
         </record>
 
-        <menuitem name="Survey Pages" id="menu_survey_page_form1"
-            action="action_survey_page_form" parent='menu_defination'
+        <menuitem name="Pages" id="menu_survey_page_form1"
+            action="action_survey_page_form" parent='menu_define_survey'
             groups="group_survey_manager"/>
 
         <record model="ir.ui.view" id="survey_page_wizard_test1">
@@ -655,10 +653,9 @@
             <field name="view_id" ref="survey_question_tree"></field>
         </record>
 
-        <menuitem name="Survey Question" id="menu_survey_question_form1"
+        <!--menuitem name="Survey Question" id="menu_survey_question_form1"
             action="action_survey_question_form" parent='menu_defination'
-            groups="group_survey_manager"/>
-
+            groups="group_survey_manager"/-->
 
         <record model="ir.ui.view" id="survey_question_wizard_test">
             <field name="name">survey_question_wizard_test</field>
@@ -848,11 +845,11 @@
             <field name="model">survey.response.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Survey Response">
+                <form string="Survey Answer">
                 	<field name="question_id"/>
                     <field name="date_create" select="1"/>
                     <notebook colspan="4">
-                        <page string="Response">
+                        <page string="Answer">
                             <field name="response_answer_ids" colspan="4" nolabel="1"/>
                             <group col="5" colspan="4">
                                 <field name="state"/>
@@ -889,7 +886,7 @@
             <field name="model">survey.response.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Survey Response Line">
+                <tree string="Survey Answer Line">
                 	<field name="page_id"/>
                     <field name="question_id"/>
                     <field name="date_create" select="1"/>
@@ -907,7 +904,7 @@
             <field name="model">survey.response</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Survey Response Answer">
+                <form string="Survey Answer">
 					<field name="survey_id" select="1"/>
                     <field name="date_create" select="1"/>
                     <field name="user_id" select="1"/>
@@ -923,7 +920,7 @@
             <field name="model">survey.response</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Survey Response Answer">
+                <tree string="Survey Answer">
                 	<field name="survey_id" select="1"/>
                     <field name="date_create" select="1"/>
                     <field name="user_id" select="1"/>
@@ -942,7 +939,7 @@
             <field name="model">survey.response.answer</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Survey Response Answer">
+                <form string="Survey Answer">
                     <group colspan="4">
                         <field name="answer_id"/>
                         <field name="answer" />
@@ -962,7 +959,7 @@
             <field name="model">survey.response.answer</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Survey Response Answer">
+                <tree editable="top" string="Survey Answer">
                     <field name="answer_id"/>
                     <field name="answer" />
                     <field name="value_choice" />
@@ -1047,6 +1044,18 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_survey_request_tree">
+            <field name="name">Survey Request</field>
+            <field name="res_model">survey.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="survey_request_tree"></field>
+        </record>
+
+        <menuitem name="Survey Requests" id="menu_survey_type_form1"
+            action="action_survey_request_tree" parent='menu_answer_surveys'
+            groups="group_survey_manager"/>
+
         <!--
             Survey Type
         -->
@@ -1083,9 +1092,9 @@
             <field name="view_id" ref="survey_type_tree"></field>
         </record>
 
-        <menuitem name="Survey Types" id="menu_survey_type_form1"
+        <!--menuitem name="Survey Types" id="menu_survey_type_form1"
             action="action_survey_type_form" parent='menu_survey_config'
-            groups="group_survey_manager"/>
+            groups="group_survey_manager"/-->
 
         <act_window domain="[('survey_id', '=', active_id)]"
             id="act_survey_pages"
@@ -1114,20 +1123,22 @@
 
         <act_window domain="[('survey_id', '=', active_id)]"
             id="act_survey_response"
-            name="Survey Response"
+            name="Survey Answer"
             res_model="survey.response"
             src_model="survey"/>
 
 		<menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
-			action="action_view_survey_name" parent="main_menu_survey"
+			action="action_view_survey_name" parent="menu_answer_surveys"
 			groups="group_survey_manager,group_survey_user" icon="STOCK_INDEX"/>
 
-		<menuitem name="Browse Response" id="menu_browse_survey_response"
-			action="action_browse_survey_response" parent="main_menu_survey"
+		<menuitem name="Browse Answers" id="menu_browse_survey_response"
+			action="action_browse_survey_response" parent="menu_reporting"
 			groups="group_survey_manager" icon="STOCK_PRINT_PREVIEW"/>
 
 		<menuitem action="wizard_browse_answer" id="menu_wizard_browse_answer"
-			parent="main_menu_survey" type="wizard" icon="STOCK_PRINT" groups="group_survey_manager"/>
+			parent="menu_reporting" type="wizard" icon="STOCK_PRINT" groups="group_survey_manager"/>
 
+		<menuitem action="wizard_print_survey_statistics" id="menu_wizard_print_survey_statistics"
+			parent="menu_reporting" type="wizard" icon="STOCK_PRINT" groups="group_survey_manager"/>
     </data>
 </openerp>

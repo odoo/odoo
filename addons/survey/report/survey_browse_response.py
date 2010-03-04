@@ -481,12 +481,12 @@ class survey_browse_response(report_rml):
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                          <tr><td> <para style="response">No Response</para></td> </tr>
                                         </blockTable>"""
-                    if datas.has_key('form') and not datas['form']['without_pagebreak']:
-                        rml += """<pageBreak/>"""
-                    elif not datas.has_key('form'):
-                        rml += """<pageBreak/>"""
-                    else:
-                        rml += """<para style="P2"><font></font></para>"""
+                if datas.has_key('form') and not datas['form']['without_pagebreak']:
+                    rml += """<pageBreak/>"""
+                elif not datas.has_key('form'):
+                    rml += """<pageBreak/>"""
+                else:
+                    rml += """<para style="P2"><font></font></para>"""
         rml += """</story></document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]

@@ -101,6 +101,9 @@ class survey_analysis(report_rml):
                       <font color="white"> </font>
                     </para>"""
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
+        if datas.has_key('form') and datas['form']['survey_ids']:
+           ids =  datas['form']['survey_ids'][0][2]
+            
         for survey in surv_obj.browse(cr, uid, ids):
             rml += """<blockTable colWidths="280.0,100.0,120.0" style="Table_heading">
                           <tr>

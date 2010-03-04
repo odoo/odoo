@@ -202,6 +202,10 @@ class invite_attendee_wizard(osv.osv_memory):
  to send an Email to Invited Person')
               }
 
+    _defaults = {
+                 'type': lambda *x: 'internal'
+                 }
+
     def do_invite(self, cr, uid, ids, context={}):
         datas = self.read(cr, uid, ids)[0]
         model = False
@@ -224,12 +228,10 @@ class invite_attendee_wizard(osv.osv_memory):
             user_obj = self.pool.get('res.users')
             for user_id in datas.get('user_ids', []):
                 user = user_obj.browse(cr, uid, user_id)
-                if not user.address_id.email:
-                    raise osv.except_osv(_('Error!'), \
-                                    ("User does not have an email Address"))
                 vals.update({'user_id': user_id, 
                                      'email': user.address_id.email})
-                mail_to.append(user.address_id.email)
+                if user.address_id.email:
+                    mail_to.append(user.address_id.email)
                 
         elif  type == 'external' and datas.get('email'):
             vals.update({'email': datas['email']})
@@ -237,13 +239,11 @@ class invite_attendee_wizard(osv.osv_memory):
         elif  type == 'partner':
             add_obj = self.pool.get('res.partner.address')
             for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
-                if not contact.email:
-                    raise osv.except_osv(_('Error!'), \
-                                    ("Partner does not have an email Address"))
                 vals.update({
                              'partner_address_id': contact.id, 
                              'email': contact.email})
-                mail_to.append(contact.email)
+                if contact.email:
+                    mail_to.append(contact.email)
 
         if model == 'calendar.attendee':
             att = att_obj.browse(cr, uid, context['active_id'])
@@ -256,9 +256,14 @@ class invite_attendee_wizard(osv.osv_memory):
             obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
         
         if datas.get('send_mail'):
+            if not mail_to:
+                name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
+                                   self._columns['type'].selection))
+                raise osv.except_osv(_('Error!'), ("%s must have an email \
+Address to send mail") % (name[0]))
             att_obj._send_mail(cr, uid, [att_id], mail_to, \
                    email_from=tools.config.get('email_from', False))
-                
+
         return {}
 
 
@@ -268,10 +273,6 @@ class invite_attendee_wizard(osv.osv_memory):
         cr.execute('select id from res_partner_address \
                          where partner_id=%s' % (partner_id))
         contacts = map(lambda x: x[0], cr.fetchall())
-        if not contacts:
-            raise osv.except_osv(_('Error!'), \
-                                ("Partner does not have any Contacts"))
-
         return {'value': {'contact_ids': contacts}}
 
 invite_attendee_wizard()
@@ -398,7 +399,7 @@ request was delegated to"),
         'user_id': fields.many2one('res.users', 'User'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
         'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', help="Partner related to contact"), 
-        'email': fields.char('Email', size=124, required=True, help="Email of Invited Person"), 
+        'email': fields.char('Email', size=124, help="Email of Invited Person"), 
         'event_date': fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'), 
         'event_end_date': fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'), 
         'ref': fields.reference('Event Ref', selection=_links_get, size=128), 
@@ -480,6 +481,17 @@ request was delegated to"),
         self.write(cr, uid, ids, {'state': 'tentative'}, context)
 
     def do_accept(self, cr, uid, ids, context=None, *args):
+        vals = self.read(cr, uid, ids, context=context)[0]
+        user = vals.get('user_id')
+        if user:
+            ref = vals.get('ref', None)
+            if ref:
+                model, event = ref.split(',')
+                model_obj = self.pool.get(model)
+                event_ref =  model_obj.browse(cr, uid, event, context=context)[0]
+                if event_ref.user_id.id != user[0]:
+                    defaults = {'user_id':  user[0]}
+                    new_event = model_obj.copy(cr, uid, event, default=defaults, context=context)
         self.write(cr, uid, ids, {'state': 'accepted'}, context)
 
     def do_decline(self, cr, uid, ids, context=None, *args):
@@ -708,26 +720,21 @@ class calendar_event(osv.osv):
                                  'interval': 1})
         return {'value': {'rrule': rrulestr}}
     
-    def _get_duration(self, cr, uid, ids, name, arg, context):
-        res = {}
-        for event in self.browse(cr, uid, ids, context=context):
-            start = datetime.strptime(event.date, "%Y-%m-%d %H:%M:%S")
-            res[event.id] = 0
-            if event.date_deadline:
-                end = datetime.strptime(event.date_deadline[:19], "%Y-%m-%d %H:%M:%S")
-                diff = end - start
-                duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
-                res[event.id] = round(duration, 2)
-        return res
+    def onchange_dates(self, cr, uid, ids, start_date, duration=False, end_date=False, context={}):
+        if not start_date:
+            return {}
+        start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
+        value = {}
+        if end_date and not duration:
+            end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+            diff = end - start
+            duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
+            value['duration'] = round(duration, 2)
+        elif not end_date:
+            end = start + timedelta(hours=duration)
+            value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
+        return {'value': value}
 
-    def _set_duration(self, cr, uid, id, name, value, arg, context):
-        event = self.browse(cr, uid, id, context=context)
-        start = datetime.strptime(event.date, "%Y-%m-%d %H:%M:%S")
-        end = start + timedelta(hours=value)
-        cr.execute("UPDATE %s set date_deadline='%s' \
-                        where id=%s"% (self._table, end.strftime("%Y-%m-%d %H:%M:%S"), id))
-        return True
-    
     _columns = {
         'id': fields.integer('ID'), 
         'sequence': fields.integer('Sequence'), 
@@ -735,8 +742,7 @@ class calendar_event(osv.osv):
         'date': fields.datetime('Date'), 
         'date_deadline': fields.datetime('Deadline'), 
         'create_date': fields.datetime('Created', readonly=True), 
-        'duration': fields.function(_get_duration, method=True, \
-                                    fnct_inv=_set_duration, string='Duration'), 
+        'duration': fields.float('Duration'), 
         'description': fields.text('Your action'), 
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
                  ('confidential', 'Confidential')], 'Mark as'), 
@@ -757,25 +763,15 @@ rule or repeating pattern for anexception to a recurrence set"),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
         'recurrent_uid': fields.integer('Recurrent ID'), 
         'recurrent_id': fields.datetime('Recurrent ID date'), 
-        'vtimezone': fields.selection(_tz_get, 'Timezone', size=64), 
+        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, string='Timezone'), 
         'user_id': fields.many2one('res.users', 'Responsible'),        
     }
-    
+
     _defaults = {
          'class': lambda *a: 'public', 
          'show_as': lambda *a: 'busy', 
     }
     
-    def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
-        if not user_id:
-            return {'value': {'vtimezone': False}}
-        value = {'vtimezone': False}
-        cr.execute('select context_tz from res_users where id=%s' % (user_id))
-        timezone = cr.fetchone()[0]
-        if timezone:
-            value.update({'vtimezone': timezone.lower()})
-        return {'value': value}    
-        
     def modify_this(self, cr, uid, ids, defaults, context=None, *args):
         datas = self.read(cr, uid, ids[0], context=context)
         defaults.update({
