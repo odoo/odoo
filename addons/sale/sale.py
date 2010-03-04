@@ -197,7 +197,8 @@ class sale_order(osv.osv):
             ('cancel', 'Cancelled')
             ], 'Order State', readonly=True, help="Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
         'date_order': fields.date('Ordered Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-
+        'create_date': fields.date('Creation Date', readonly=True),
+        'date_confirm': fields.date('Confirmation Date', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesman', states={'draft': [('readonly', False)]}, select=True),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)]}, required=True, change_default=True, select=True),
         'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)]}),
@@ -361,10 +362,10 @@ class sale_order(osv.osv):
     def button_dummy(self, cr, uid, ids, context={}):
         return True
 
-#FIXME: the method should return the list of invoices created (invoice_ids)
-# and not the id of the last invoice created (res). The problem is that we
-# cannot change it directly since the method is called by the sale order
-# workflow and I suppose it expects a single id...
+    #FIXME: the method should return the list of invoices created (invoice_ids)
+    # and not the id of the last invoice created (res). The problem is that we
+    # cannot change it directly since the method is called by the sale order
+    # workflow and I suppose it expects a single id...
     def _inv_get(self, cr, uid, order, context={}):
         return {}
 
@@ -522,9 +523,9 @@ class sale_order(osv.osv):
                         'partner_type': 'customer', 'probability': 1.0,\
                         'planned_revenue': o.amount_untaxed})
             if (o.order_policy == 'manual'):
-                self.write(cr, uid, [o.id], {'state': 'manual'})
+                self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
             else:
-                self.write(cr, uid, [o.id], {'state': 'progress'})
+                self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
 
     def procurement_lines_get(self, cr, uid, ids, *args):

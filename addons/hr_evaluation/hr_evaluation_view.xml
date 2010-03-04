@@ -1,249 +1,259 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
-		<record model="ir.ui.view" id="view_hr_evaluation_plan_form">
-			<field name="name">hr_evaluation.plan.form</field>
-			<field name="model">hr_evaluation.plan</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Evaluation Plan">
-					<group col="6" colspan="4">
-						<field name="name" select="1"/>
-						<field name="company_id" select="1" widget="selection"/>
-						<field name="active"/>
-						<field name="month_first"/>
-						<field name="month_next"/>
-						<label string="(months)" align="0.0"/>
-					</group>
-					 <notebook colspan="4">
-					 	<page string="Evaluation Phases">
+    <data>
+        <record model="ir.ui.view" id="view_hr_evaluation_plan_form">
+            <field name="name">hr_evaluation.plan.form</field>
+            <field name="model">hr_evaluation.plan</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Evaluation Plan">
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="company_id" select="1" widget="selection"/>
+                        <field name="active"/>
+                        <field name="month_first"/>
+                        <field name="month_next"/>
+                        <label string="(months)" align="0.0"/>
+                    </group>
+                     <notebook colspan="4">
+                         <page string="Evaluation Phases">
                             <field name="phase_ids" nolabel="1" colspan="4"/>
-                     	</page>
+                         </page>
                      </notebook>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_hr_evaluation_plan_tree">
-			<field name="name">hr_evaluation.plan.form</field>
-			<field name="model">hr_evaluation.plan</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Evaluation Plan">
-					<field name="name"/>
-					<field name="month_first"/>
-					<field name="month_next"/>
-					<field name="company_id"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="open_view_hr_evaluation_plan_tree">
-			<field name="res_model">hr_evaluation.plan</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="3"/>
-		<!--menuitem name="HR Responsible" parent="menu_eval_hr" id="menu_resp_hr"/-->
-		<menuitem
-			name="Evaluation Plan" parent="menu_eval_hr"
-			id="menu_open_view_hr_evaluation_plan_tree"
-			action="open_view_hr_evaluation_plan_tree"/>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_hr_evaluation_plan_tree">
+            <field name="name">hr_evaluation.plan.form</field>
+            <field name="model">hr_evaluation.plan</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Evaluation Plan">
+                    <field name="name"/>
+                    <field name="month_first"/>
+                    <field name="month_next"/>
+                    <field name="company_id"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="open_view_hr_evaluation_plan_tree">
+            <field name="res_model">hr_evaluation.plan</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="3"/>
+        <!--menuitem name="HR Responsible" parent="menu_eval_hr" id="menu_resp_hr"/-->
+        <menuitem
+            name="Evaluation Plan" parent="menu_eval_hr"
+            id="menu_open_view_hr_evaluation_plan_tree"
+            action="open_view_hr_evaluation_plan_tree"/>
 
-		<record model="ir.ui.view" id="view_hr_evaluation_plan_phase_form">
-			<field name="name">hr_evaluation.plan.phase.form</field>
-			<field name="model">hr_evaluation.plan.phase</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Evaluation Plan Phase">
-					<field name="plan_id" invisible="1"/>
-					<group col="6" colspan="4">
-						<field name="name"/>
-						<field name="wait"/>
-						<field name="sequence"/>
-					</group>
-					<group col="4" colspan="4">
-						<separator string="Action to Perform" colspan="4"/>
-						<field name="action"/>
-						<field name="survey_id" widget="selection"/>
-					</group>
-					<group col="4" colspan="4">
-						<group col="4" colspan="2">
-							<separator string="Send to Managers" colspan="2"/>
-							<newline/>
-							<field name="send_answer_manager"/>
-							<newline/>
-							<field name="send_anonymous_manager"/>
-						</group>
-						<group col="4" colspan="2">
-							<separator string="Send to Employees" colspan="2"/>
-							<newline/>
-							<field name="send_answer_employee"/>
-							<newline/>
-							<field name="send_anonymous_employee"/>
-						</group>
-					</group>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_hr_evaluation_plan_phase_tree">
-			<field name="name">hr_evaluation.plan.phase.form</field>
-			<field name="model">hr_evaluation.plan.phase</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Evaluation Plan Phase" editable="bottom" >
-					<field name="sequence"/>
-					<field name="name"/>
-					<field name="action"/>
-					<field name="survey_id" widget="selection"/>
-					<field name="wait"/>
-				</tree>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_form">
+            <field name="name">hr_evaluation.plan.phase.form</field>
+            <field name="model">hr_evaluation.plan.phase</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Evaluation Plan Phase">
+                    <field name="plan_id" invisible="1"/>
+                    <group col="6" colspan="4">
+                        <field name="name"/>
+                        <field name="wait"/>
+                        <field name="sequence"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <separator string="Action to Perform" colspan="4"/>
+                        <field name="action"/>
+                        <field name="survey_id" widget="selection"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <group col="4" colspan="2">
+                            <separator string="Send to Managers" colspan="2"/>
+                            <newline/>
+                            <field name="send_answer_manager"/>
+                            <newline/>
+                            <field name="send_anonymous_manager"/>
+                        </group>
+                        <group col="4" colspan="2">
+                            <separator string="Send to Employees" colspan="2"/>
+                            <newline/>
+                            <field name="send_answer_employee"/>
+                            <newline/>
+                            <field name="send_anonymous_employee"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_hr_evaluation_plan_phase_tree">
+            <field name="name">hr_evaluation.plan.phase.form</field>
+            <field name="model">hr_evaluation.plan.phase</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Evaluation Plan Phase" editable="bottom" >
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="action"/>
+                    <field name="survey_id" widget="selection"/>
+                    <field name="wait"/>
+                </tree>
+            </field>
+        </record>
 
-		<record id="hr_hr_employee_view_form" model="ir.ui.view">
+        <record id="hr_hr_employee_view_form" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Evaluation">
-                    	<field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id)"/>
-						<field name="evaluation_date"/>
+                        <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id)"/>
+                        <field name="evaluation_date"/>
                     </page>
                 </notebook>
             </field>
         </record>
 
         <record model="ir.ui.view" id="view_hr_evaluation_form">
-			<field name="name">hr_evaluation.evaluation.form</field>
-			<field name="model">hr_evaluation.evaluation</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Evaluation">
-					<group col="4" colspan="4">
-						<field name="date" select="1"/>
-						<field name="rating"/>
-						<field name="employee_id" select="1"/>
-						<field name="plan_id"/>
-						<field name="phase_id" domain="[('plan_id', '=', plan_id)]"/>
-					</group>
-					<notebook colspan="4">
-			            <page string="Appraisal">
-	                    	<field name="survey_request_ids" context="{'phase_id': phase_id}" nolabel="1" colspan="4"/>
-					    </page>
-					    <page string="Action Plan">
-	                    	<field name="note_action" colspan="4" nolabel="1"/>
-					    </page>
-					    <page string="Summary">
-	        				<field name="note_summary" colspan="4" nolabel="1"/>
-					    </page>
-                	</notebook>
-                	<newline/>
-					<group col="6" colspan="4">
-					<field name="state"/>
-                	<button name="button_plan_in_progress"
-                			string="Plan In Progress"
+            <field name="name">hr_evaluation.evaluation.form</field>
+            <field name="model">hr_evaluation.evaluation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Evaluation">
+                    <group col="4" colspan="3">
+                        <separator string="Evaluation Data" colspan="4"/>
+                        <field name="employee_id"/>
+                        <field name="plan_id"/>
+                        <field name="date"/>
+                    </group>
+                    <group col="2" colspan="1">
+                        <separator string="Ending Summary" colspan="2"/>
+                        <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')],'required':[('state','=','progress')]}"/>
+                        <field name="date_close" readonly="1"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Appraisal">
+                            <field name="survey_request_ids" context="{'phase_id': phase_id}" nolabel="1" colspan="4" widget="one2many"/>
+                        </page>
+                        <page string="Internal Notes">
+                            <field name="note_action" colspan="4" nolabel="1"
+                                groups="hr.group_hr_manager"/>
+                        </page>
+                        <page string="Public Notes">
+                            <field name="note_summary" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                    <newline/>
+                    <group col="6" colspan="4">
+                    <field name="state"/>
+                    <button name="button_plan_in_progress"
+                            string="Plan In Progress"
                             states="draft"
                             type="object"/>
                     <button name="button_final_validation"
-                			string="Final Validation"
+                            string="Final Validation"
                             states="wait"
                             type="object"/>
                     <button name="button_done"
-                			string="Done"
+                            string="Done"
                             states="progress"
                             type="object"/>
                     <button name="button_cancel"
-                			string="Cancel"
+                            string="Cancel"
                             states="draft,wait,progress"
                             type="object"/>
                     </group>
               </form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_hr_evaluation_tree">
-			<field name="name">hr_evaluation.evaluation.form</field>
-			<field name="model">hr_evaluation.evaluation</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Evaluation">
-					<field name="date"/>
-					<field name="employee_id"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="open_view_hr_evaluation_tree">
-			<field name="res_model">hr_evaluation.evaluation</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<menuitem
-			name="Evaluation" parent="menu_eval_hr"
-			id="menu_open_view_hr_evaluation_tree"
-			action="open_view_hr_evaluation_tree"/>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_hr_evaluation_tree">
+            <field name="name">hr_evaluation.evaluation.tree</field>
+            <field name="model">hr_evaluation.evaluation</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Evaluation">
+                    <field name="create_date"/>
+                    <field name="employee_id"/>
+                    <!-- field name="progress"/ -->
+                    <field name="plan_id"/>
+                    <field name="rating"/>
+                    <field name="date"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="open_view_hr_evaluation_tree">
+            <field name="res_model">hr_evaluation.evaluation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            name="Evaluation" parent="menu_eval_hr"
+            id="menu_open_view_hr_evaluation_tree"
+            action="open_view_hr_evaluation_tree"/>
 
 
-		<record model="ir.ui.view" id="view_hr_evaluation_interview_form">
-			<field name="name">hr_evaluation.interview.form</field>
-			<field name="model">hr.evaluation.interview</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
+        <record model="ir.ui.view" id="view_hr_evaluation_interview_form">
+            <field name="name">hr_evaluation.interview.form</field>
+            <field name="model">hr.evaluation.interview</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
                 <form string="Survey Request">
-					<group col="4" colspan="4">
-					    <field name="survey_id" widget="selection" colspan="3"/>
-					    <group  colspan="1">
-							<button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
-								icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': response, 'active' : response, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-							<button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
-								icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : response,}" attrs="{'readonly':[('response','!=',True),('survey_id','!=',True)]}" />
-						</group>
-					</group>
-                	<group col="4" colspan="4">
-                		<field name="date_deadline"/>
-	                    <field name="response" readonly="1"/>
-	                    <field name="user_to_review_id"/>
-						<field name="user_id"/>
-					</group>
+                    <group col="4" colspan="4">
+                        <field name="survey_id" widget="selection" colspan="3"/>
+                        <group  colspan="1">
+                            <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
+                                icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': response, 'active' : response, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                            <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
+                                icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : response,}" attrs="{'readonly':[('response','!=',True),('survey_id','!=',True)]}" />
+                        </group>
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="date_deadline"/>
+                        <field name="response" readonly="1"/>
+                        <field name="user_to_review_id"/>
+                        <field name="user_id"/>
+                    </group>
                     <newline/>
                     <separator string="State" colspan="4"/>
                     <group colspan="4" col="5">
-                    	<field name="state"/>
+                        <field name="state"/>
                         <button name="survey_req_waiting_answer" string="Set to Watting Answer" states="cancel,done" type="object" icon="gtk-new"/>
                         <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
                         <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_hr_evaluation_interview_tree">
-			<field name="name">hr_evaluation.interview.tree</field>
-			<field name="model">hr.evaluation.interview</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Evaluation Plan Phase">
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_hr_evaluation_interview_tree">
+            <field name="name">hr_evaluation.interview.tree</field>
+            <field name="model">hr.evaluation.interview</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Evaluation Plan Phase">
                     <field name="date_deadline"/>
                     <field name="survey_id" widget="selection"/>
                     <field name="user_to_review_id"/>
 
                     <field name="response" readonly="1" invisible="True"/>
-					<button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
-						icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': response, 'active' : response, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-					<button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="waiting_answer,done,cancel"
-						icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : response,}" attrs="{'readonly':[('response','!=',True),('survey_id','!=',True)]}" />
-					<field name="state" />
-				</tree>
-			</field>
-		</record>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
+                        icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': response, 'active' : response, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="waiting_answer,done,cancel"
+                        icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : response,}" attrs="{'readonly':[('response','!=',True),('survey_id','!=',True)]}" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
 
-		<record model="ir.actions.act_window" id="action_hr_evaluation_interview_tree">
-			<field name="res_model">hr.evaluation.interview</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
+        <record model="ir.actions.act_window" id="action_hr_evaluation_interview_tree">
+            <field name="res_model">hr.evaluation.interview</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
-		<menuitem
-			name="Intreview Requests" parent="menu_eval_hr"
-			id="menu_open_hr_evaluation_interview_requests"
-			action="action_hr_evaluation_interview_tree"/>
+        <menuitem
+            name="Intreview Requests" parent="menu_eval_hr"
+            id="menu_open_hr_evaluation_interview_requests"
+            action="action_hr_evaluation_interview_tree"/>
 
-	</data>
+    </data>
 </openerp>

@@ -129,15 +129,15 @@ class hr_evaluation(osv.osv):
             'evaluation_id',
             'survey_id',
             'Appraisal Forms'),
-        'plan_id': fields.many2one('hr_evaluation.plan', 'Plan'),
-        'phase_id': fields.many2one('hr_evaluation.plan.phase', 'Phase'),
+        'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
             ('draft','Draft'),
             ('wait','Plan In Progress'),
             ('progress','Final Validation'),
             ('done','Done'),
             ('cancel','Cancelled'),
-        ], 'State', required=True,readonly=True)
+        ], 'State', required=True,readonly=True),
+        'date_close': fields.date('Ending Date')
     }
     _defaults = {
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
@@ -153,7 +153,7 @@ class hr_evaluation(osv.osv):
         return True
 
     def button_done(self,cr, uid, ids, context):
-        self.write(cr,uid,ids,{'state':'done'})
+        self.write(cr,uid,ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')})
         return True
 
     def button_cancel(self,cr, uid, ids, context):
