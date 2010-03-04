@@ -166,13 +166,18 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_hr_evaluation_tree">
-            <field name="name">hr_evaluation.evaluation.form</field>
+            <field name="name">hr_evaluation.evaluation.tree</field>
             <field name="model">hr_evaluation.evaluation</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Evaluation">
-                    <field name="date"/>
+                    <field name="create_date"/>
                     <field name="employee_id"/>
+                    <!-- field name="progress"/ -->
+                    <field name="plan_id"/>
+                    <field name="rating"/>
+                    <field name="date"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
