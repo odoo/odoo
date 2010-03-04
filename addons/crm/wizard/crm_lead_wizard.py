@@ -98,7 +98,16 @@ class partner_create(wizard.interface):
                     'name': case.name,
                     'phone': case.phone,
                     'mobile': case.mobile,
-                    'email': case.email_from
+                    'email': case.email_from,
+                    'fax': case.fax,
+                    'title': case.title,
+                    'function': case.function and case.function.id or False,
+                    'street': case.street,
+                    'street2': case.street2,
+                    'zip': case.zip,
+                    'city': case.city,
+                    'country_id': case.country_id and case.country_id.id or False,
+                    'state_id': case.state_id and case.state_id.id or False,
                 })
 
             else:
