@@ -26,7 +26,7 @@ AVAILABLE_STATES = [
     ('draft','New'),
     ('open','Open'),
     ('cancel', 'Lost'),
-    ('done', 'Won'),
+    ('done', 'Converted'),
     ('pending','Pending')
 ]
 
