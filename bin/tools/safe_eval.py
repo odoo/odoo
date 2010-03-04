@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright P. Christeas <p_christ@hol.gr> 2008,2009
 #
