@@ -41,7 +41,11 @@
             <form string="Opportunities">
                 <group colspan="4" col="7">
                     <field name="name" string="Opportunity"/>
-                    <field name="stage_id" on_change="onchange_stage_id(stage_id)" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
+                    <group colspan="2" col="4">
+                        <field name="stage_id" readonly="1" on_change="onchange_stage_id(stage_id)" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
+                        <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
+                        <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
+                    </group>
                     <field name="user_id"/>
                     <button string="Schedule Meeting"
                         name="%(wizard_crm_opportunity_meeting_set)d" icon="gtk-redo" type="action" />
