@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+    	<!-- Search Views -->
+
+		<record id="view_resource_resource_search" model="ir.ui.view">
+            <field name="name">resource.resource.search</field>
+            <field name="model">resource.resource</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Resource">
+                   <group col='15' colspan='4'>
+                       <field name="name" string="Resource Name"/>
+                       <field name="code" string="Code"/>
+                       <field name="user_id" string="User" widget="selection"/>
+                       <field name="calendar_id" string="Working Calendar" widget="selection"/>
+                       <field name="resource_type" string="Resource Type"/>
+                       <field name="company_id" string="Company" widget="selection"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+       <record id="view_resource_calendar_search" model="ir.ui.view">
+            <field name="name">resource.calendar.search</field>
+            <field name="model">resource.calendar</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Resource Calendar">
+                   <group col='15' colspan='4'>
+                       <field name="name" string="Working Calendar"/>
+                       <field name="manager" string="Workgroup Manager" widget="selection"/>
+                       <field name="company_id" string="Company" widget="selection"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="view_resource_calendar_leaves_search" model="ir.ui.view">
+            <field name="name">resource.calendar.leaves.search</field>
+            <field name="model">resource.calendar.leaves</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Resource Calendar Leaves">
+                   <group col='15' colspan='4'>
+                       <field name="name" string="Name"/>
+                       <field name="company_id" string="Company" widget="selection"/>
+                       <field name="calendar_id" string="Working Time" widget="selection"/>
+                       <field name="resource_id" string="Resource" widget="selection"/>
+                   </group>
+               </search>
+            </field>
+        </record>
         <record id="resource_calendar_form" model="ir.ui.view">
             <field name="name">resource.calendar.form</field>
             <field name="model">resource.calendar</field>
@@ -169,56 +220,7 @@
         </record>
 
 
-		<!-- Search Views -->
 
-		<record id="view_resource_resource_search" model="ir.ui.view">
-            <field name="name">resource.resource.search</field>
-            <field name="model">resource.resource</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Resource">
-                   <group col='15' colspan='4'>
-                       <field name="name" string="Resource Name"/>
-                       <field name="code" string="Code"/>
-                       <field name="user_id" string="User" widget="selection"/>
-                       <field name="calendar_id" string="Working Calendar" widget="selection"/>
-                       <field name="resource_type" string="Resource Type"/>
-                       <field name="company_id" string="Company" widget="selection"/>
-                   </group>
-               </search>
-            </field>
-        </record>
-
-       <record id="view_resource_calendar_search" model="ir.ui.view">
-            <field name="name">resource.calendar.search</field>
-            <field name="model">resource.calendar</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Resource Calendar">
-                   <group col='15' colspan='4'>
-                       <field name="name" string="Working Calendar"/>
-                       <field name="manager" string="Workgroup Manager" widget="selection"/>
-                       <field name="company_id" string="Company" widget="selection"/>
-                   </group>
-               </search>
-            </field>
-        </record>
-
-        <record id="view_resource_calendar_leaves_search" model="ir.ui.view">
-            <field name="name">resource.calendar.leaves.search</field>
-            <field name="model">resource.calendar.leaves</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Resource Calendar Leaves">
-                   <group col='15' colspan='4'>
-                       <field name="name" string="Name"/>
-                       <field name="company_id" string="Company" widget="selection"/>
-                       <field name="calendar_id" string="Working Time" widget="selection"/>
-                       <field name="resource_id" string="Resource" widget="selection"/>
-                   </group>
-               </search>
-            </field>
-        </record>
 
     </data>
 </openerp>
