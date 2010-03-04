@@ -86,8 +86,7 @@ class opportunity2phonecall(wizard.interface):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         opportunites = opportunity_case_obj.browse(cr, uid, data['ids'])
-        for opportunity in opportunites:
-            #TODO : Take Other Info from opportunity            
+        for opportunity in opportunites:            
             new_case = phonecall_case_obj.create(cr, uid, {
                     'name' : opportunity.name,
                     'case_id' : opportunity.id,
@@ -96,9 +95,12 @@ class opportunity2phonecall(wizard.interface):
                     'description' : form['note'],
                     'date' : form['deadline'], 
                     'section_id' : form['section_id'],
-                    'partner_id': opportunity.partner_id.id,
-                    'partner_address_id':opportunity.partner_address_id.id,
+                    'partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
+                    'partner_address_id':opportunity.partner_address_id and opportunity.partner_address_id.id or False,
                     'description': data['form']['note'] or opportunity.description,
+                    'partner_phone' : opportunity.phone or (opportunity.partner_address_id and opportunity.partner_address_id.phone or False),
+                    'partner_mobile' : opportunity.partner_address_id and opportunity.partner_address_id.mobile or False,
+                    'priority': opportunity.priority,
                     'opportunity_id':opportunity.id
             }, context=context)
             vals = {}

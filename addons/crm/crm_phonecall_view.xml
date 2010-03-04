@@ -32,8 +32,7 @@
                 <field name="name" string="Call Summary"/>
                 <field name="partner_id" string="Partner"/>
                 <field name="partner_contact"/>
-                <field name="partner_phone"/>
-                <field name="partner_mobile"/>
+                <field name="partner_phone"/>                
                 <field name="user_id"/>
                 <button string="Opportunity" 
                     name="%(wizard_crm_phonecall_opportunity_set)d"
@@ -92,11 +91,7 @@
                 <group col="2" colspan="2">
                     <separator colspan="2" string="Categorization" />
                     <field name="priority"/>
-                    <field name="opportunity_id"
-                        on_change="onchange_case_id(case_id, name, partner_id)"
-                        context="{'default_name':name,'default_section_id':section_id,'default_user_id':user_id,'default_duration':duration,
-                        'default_partner_id':partner_id,'default_partner_address_id':partner_address_id,'default_partner_phone':partner_phone,
-                        'default_partner_mobile':partner_mobile,'default_categ_id':categ_id}" />
+                    <field name="opportunity_id"/>
                 </group>
                 <separator string="Description" colspan="4" />
                 <field name="description" nolabel="1" colspan="4" />
