@@ -11,6 +11,7 @@ class report_crm_fundraising(osv.osv):
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner'),       
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_crm_fundraising')
@@ -24,6 +25,7 @@ class report_crm_fundraising(osv.osv):
                     c.user_id,
                     c.section_id,
                     c.categ_id,
+                    c.partner_id,
                     count(*) as nbr,
                     0 as avg_answers,
                     0.0 as perc_done,
@@ -34,7 +36,7 @@ class report_crm_fundraising(osv.osv):
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     crm_fundraising c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.categ_id
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.categ_id,c.partner_id
             )""")
 report_crm_fundraising()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
