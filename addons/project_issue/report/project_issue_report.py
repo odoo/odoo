@@ -4,7 +4,7 @@ import tools
 class project_issue_report(osv.osv):
     _name = "project.issue.report"    
     _auto = False
-    _inherit = "report.crm.case"
+    _inherit = "crm.case.report"
     _columns = {
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue.report')]"),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue.report')]"),                
@@ -37,6 +37,8 @@ class project_issue_report(osv.osv):
                     project_issue c
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.categ_id,c.stage_id
             )""")
+
+
 project_issue_report()
 
 

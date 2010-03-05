@@ -1,10 +1,10 @@
 from osv import fields,osv
 import tools
 
-class report_crm_fundraising(osv.osv):
-    _name = "report.crm.fundraising"
+class crm_fundraising_report(osv.osv):
+    _name = "crm.fundraising.report"
     _auto = False
-    _inherit = "report.crm.case"
+    _inherit = "crm.case.report"
     _columns = {
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]"),
         'probability': fields.float('Avg. Probability', readonly=True),
@@ -15,9 +15,9 @@ class report_crm_fundraising(osv.osv):
         'company_id': fields.many2one('res.company','Company'),  
     }
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_crm_fundraising')
+        tools.drop_view_if_exists(cr, 'crm_fundraising_report')
         cr.execute("""
-            create or replace view report_crm_fundraising as (
+            create or replace view crm_fundraising_report as (
                 select
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY') as name,
@@ -40,5 +40,5 @@ class report_crm_fundraising(osv.osv):
                     crm_fundraising c
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.categ_id,c.partner_id,c.company_id
             )""")
-report_crm_fundraising()
+crm_fundraising_report()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
