@@ -3,8 +3,8 @@
     <data>       
 
         <record id="view_crm_case_tree" model="ir.ui.view">
-            <field name="name">report.crm.case.tree</field>
-            <field name="model">report.crm.case</field>
+            <field name="name">crm.case.report.tree</field>
+            <field name="model">crm.case.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Cases">
@@ -19,8 +19,8 @@
             </field>
         </record>
         <record id="view_crm_case_form" model="ir.ui.view">
-            <field name="name">report.crm.case.form</field>
-            <field name="model">report.crm.case</field>
+            <field name="name">crm.case.report.form</field>
+            <field name="model">>crm.case.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Cases">
@@ -35,8 +35,8 @@
         </record>
 
         <record id="view_crm_case_graph" model="ir.ui.view">
-            <field name="name">report.crm.case.graph</field>
-            <field name="model">report.crm.case</field>
+            <field name="name">crm.case.report</field>
+            <field name="model">crm.case.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Cases by User and Section" type="bar">
@@ -48,8 +48,8 @@
         </record>
 
         <record id="view_crm_case_filter" model="ir.ui.view">
-            <field name="name">report.crm.case.select</field>
-            <field name="model">report.crm.case</field>
+            <field name="name">crm.case.report.select</field>
+            <field name="model">crm.case.report</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
@@ -97,7 +97,7 @@
 
         <record id="action_report_crm_case_tree" model="ir.actions.act_window">
             <field name="name">Cases</field>
-            <field name="res_model">report.crm.case</field>
+            <field name="res_model">crm.case.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_crm_case_filter"/>
@@ -106,11 +106,11 @@
 -->
        <!-- <menuitem action="action_report_crm_case_categ_tree" id="menu_crm_case_categ_tree" parent="crm.next_id_52"/>-->
 
-        <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_crm_case_user" name="Monthly cases" res_model="report.crm.case" src_model="res.users"/>
+        <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_crm_case_user" name="Monthly cases" res_model="crm.case.report" src_model="res.users"/>
 
-        <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_user" name="Monthly cases by user" res_model="report.crm.case" src_model="crm.case.section"/>
+        <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_user" name="Monthly cases by user" res_model="crm.case.report" src_model="crm.case.section"/>
 
-        <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_categ" name="Monthly cases by section" res_model="report.crm.case" src_model="crm.case.section"/>
+        <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_categ" name="Monthly cases by section" res_model="crm.case.report" src_model="crm.case.section"/>
 
         
 

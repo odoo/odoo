@@ -30,8 +30,8 @@ AVAILABLE_STATES = [
     ('pending','Pending')
 ]
 
-class report_crm_case(osv.osv):
-    _name = "report.crm.case"
+class crm_case_report(osv.osv):
+    _name = "crm.case.report"
     _description = "Cases and section"
     _auto = False
 
@@ -78,9 +78,9 @@ class report_crm_case(osv.osv):
     }
     _order = 'name desc, user_id'
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_crm_case')
+        tools.drop_view_if_exists(cr, 'crm_case_report')
         cr.execute("""
-            create or replace view report_crm_case as (
+            create or replace view crm_case_report as (
                 select
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY') as name,
@@ -94,7 +94,7 @@ class report_crm_case(osv.osv):
                     crm_case c
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.company_id
             )""")
-report_crm_case()
+crm_case_report()
 
 class report_crm_case_service_dashboard(osv.osv):
     _name = "report.crm.case.service.dashboard"

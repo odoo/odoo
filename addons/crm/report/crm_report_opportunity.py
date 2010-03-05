@@ -1,10 +1,10 @@
 from osv import fields,osv
 import tools
 
-class report_crm_opportunity(osv.osv):
-    _name = "report.crm.opportunity"    
+class crm_opportunity_report(osv.osv):
+    _name = "crm.opportunity.report"    
     _auto = False
-    _inherit = "report.crm.case"    
+    _inherit = "crm.case.report"    
     
     _columns = {
         'probability': fields.float('Avg. Probability', readonly=True),
@@ -17,9 +17,9 @@ class report_crm_opportunity(osv.osv):
         'company_id': fields.many2one('res.company', 'Company',readonly=True),  
     }
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_crm_opportunity')
+        tools.drop_view_if_exists(cr, 'crm_opportunity_report')
         cr.execute("""
-            create or replace view report_crm_opportunity as (
+            create or replace view crm_opportunity_report as (
                 select
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY') as name,
@@ -43,5 +43,5 @@ class report_crm_opportunity(osv.osv):
                     crm_opportunity c
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.stage_id,c.categ_id,c.partner_id,company_id
             )""")
-report_crm_opportunity()
+crm_opportunity_report()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

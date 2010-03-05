@@ -1,10 +1,10 @@
 from osv import fields,osv
 import tools
 
-class report_crm_lead(osv.osv):
-    _name = "report.crm.lead"
+class crm_lead_report(osv.osv):
+    _name = "crm.lead.report"
     _auto = False
-    _inherit = "report.crm.case"
+    _inherit = "crm.case.report"
     _columns = {
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]" ,readonly=True),
@@ -13,9 +13,9 @@ class report_crm_lead(osv.osv):
         'company_id': fields.many2one('res.company','Company',readonly=True),  
     }
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_crm_lead')
+        tools.drop_view_if_exists(cr, 'crm_lead_report')
         cr.execute("""
-            create or replace view report_crm_lead as (
+            create or replace view crm_lead_report as (
                 select
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY') as name,
@@ -36,5 +36,5 @@ class report_crm_lead(osv.osv):
                     crm_lead c
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.stage_id,categ_id,c.partner_id,c.company_id
             )""")
-report_crm_lead()
+crm_lead_report()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

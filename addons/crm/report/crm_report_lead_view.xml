@@ -6,8 +6,8 @@
 	-->
 
         <record id="view_crm_lead_tree" model="ir.ui.view">
-            <field name="name">report.crm.lead.tree</field>
-            <field name="model">report.crm.lead</field>
+            <field name="name">crm.lead.report.tree</field>
+            <field name="model">crm.lead.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Leads">
@@ -26,8 +26,8 @@
             </field>
         </record>
         <record id="view_crm_lead_form" model="ir.ui.view">
-            <field name="name">report.crm.lead.form</field>
-            <field name="model">report.crm.lead</field>
+            <field name="name">crm.lead.report.form</field>
+            <field name="model">crm.lead.report</field>
             <field name="inherit_id" ref="view_crm_case_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -39,8 +39,8 @@
         </record>
         
         <record id="view_crm_lead_graph" model="ir.ui.view">
-            <field name="name">report.crm.lead.graph</field>
-            <field name="model">report.crm.lead</field>
+            <field name="name">crm.lead.report.graph</field>
+            <field name="model">crm.lead.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Leads" type="bar">
@@ -52,8 +52,8 @@
         </record>
 
         <record id="view_crm_lead_filter" model="ir.ui.view">
-            <field name="name">report.crm.lead.select</field>
-            <field name="model">report.crm.lead</field>
+            <field name="name">crm.lead.report.select</field>
+            <field name="model">crm.lead.report</field>
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -66,7 +66,7 @@
   
         <record id="action_report_crm_lead" model="ir.actions.act_window">
             <field name="name">Leads</field>
-            <field name="res_model">report.crm.lead</field>
+            <field name="res_model">crm.lead.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_crm_lead_filter"/>

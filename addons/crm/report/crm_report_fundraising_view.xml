@@ -6,8 +6,8 @@
 	-->
 
         <record id="view_crm_fundraising_tree" model="ir.ui.view">
-            <field name="name">report.crm.fundraising.tree</field>
-            <field name="model">report.crm.fundraising</field>
+            <field name="name">crm.fundraising.report.tree</field>
+            <field name="model">crm.fundraising.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
             	<tree string="Fundraising">
@@ -29,8 +29,8 @@
 
         </record>
         <record id="view_crm_fundraising_form" model="ir.ui.view">
-            <field name="name">report.crm.fundraising.form</field>
-            <field name="model">report.crm.fundraising</field>
+            <field name="name">crm.fundraising.report.form</field>
+            <field name="model">crm.fundraising.report</field>
             <field name="inherit_id" ref="view_crm_case_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -44,8 +44,8 @@
         </record>
         
         <record id="view_crm_fundraising_graph" model="ir.ui.view">
-            <field name="name">report.crm.fundraising.graph</field>
-            <field name="model">report.crm.fundraising</field>
+            <field name="name">crm.fundraising.report.graph</field>
+            <field name="model">crm.fundraising.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Fundraising" type="bar">
@@ -57,8 +57,8 @@
         </record>
 
         <record id="view_crm_fundraising_filter" model="ir.ui.view">
-            <field name="name">report.crm.fundraising.select</field>
-            <field name="model">report.crm.fundraising</field>
+            <field name="name">crm.fundraising.report.select</field>
+            <field name="model">crm.fundraising.report</field>
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -69,7 +69,7 @@
         
         <record id="action_report_crm_fundraising" model="ir.actions.act_window">
             <field name="name">Fundraising</field>
-            <field name="res_model">report.crm.fundraising</field>
+            <field name="res_model">crm.fundraising.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_crm_fundraising_tree"/>
