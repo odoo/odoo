@@ -15,9 +15,10 @@
 					<field name="month"/>
 					<field name="section_id" />
                     <field name="user_id" />
+                    <field name="company_id"/>
 					<field name="partner_id"/>                    
                 	<field name="nbr" string="#Opportunities"/>
-                    <field name="amount_revenue"/>
+                    <field name="amount_revenue"  sum="Total Revenue"/>
                     <field name="probability" widget="progressbar"/>
                     <field name="amount_revenue_prob"/>
                     <field name="delay_close"/>
@@ -64,8 +65,8 @@
             <field name="arch" type="xml">
 				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]' position='after'>
         	        <filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
+        	        <separator orientation="vertical"/>
         	         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-        	         
 	            </xpath>
             </field>
         </record>
