@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -150,9 +150,18 @@ class rml_parse(report_sxw.rml_parse):
             return str.encode("ascii")
 
         else:
-            print Stringer
             return Stringer
 
+    def _add_header(self, node, header=1):
+        if self.name == 'account.account.balance.landscape':
+            if header==2:
+                rml_head =  self.rml_header2
+            else:
+                rml_head =  self.rml_header
+            rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="770.0" width="1120.0" >[[company.logo]] </image> ''')
+        else:
+            return super(rml_parse, self)._add_header(node, header)
+        return True
 
     # def _add_header(self, node):
     #   rml_head = tools.file_open('specific_param/report/header/corporate_rml_header_ch.rml').read()

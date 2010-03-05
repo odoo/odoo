@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 import osv
 import time
@@ -76,7 +77,7 @@ class report_stock(report_int):
                    "group by date_planned,product_id",(('confirmed','assigned','waiting'),loc_ids ,product_ids,))
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
-                dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
+                dt= (datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d')
             else:
                 dt = dt[:10]
             products.setdefault(prod_id, [])
@@ -91,7 +92,7 @@ class report_stock(report_int):
 
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
-                dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
+                dt= (datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d')
             else:
                 dt = dt[:10]
             products.setdefault(prod_id, [])

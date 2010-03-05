@@ -19,7 +19,9 @@
 #
 ##############################################################################
 
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
 from osv import fields, osv
 from tools import config
 from tools.translate import _
@@ -1169,8 +1171,8 @@ class stock_move(osv.osv):
             if dest:
                 if dest[1] == 'transparent':
                     self.write(cr, uid, [m.id], {
-                        'date_planned': (DateTime.strptime(m.date_planned, '%Y-%m-%d %H:%M:%S') + \
-                            DateTime.RelativeDateTime(days=dest[2] or 0)).strftime('%Y-%m-%d'),
+                        'date_planned': (datetime.strptime(m.date_planned, '%Y-%m-%d %H:%M:%S') + \
+                            relativedelta(days=dest[2] or 0)).strftime('%Y-%m-%d'),
                         'location_dest_id': dest[0].id})
                 else:
                     result.setdefault(m.picking_id, [])
@@ -1206,7 +1208,7 @@ class stock_move(osv.osv):
                         'picking_id': pickid,
                         'state': 'waiting',
                         'move_history_ids': [],
-                        'date_planned': (DateTime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + DateTime.RelativeDateTime(days=delay or 0)).strftime('%Y-%m-%d'),
+                        'date_planned': (datetime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + relativedelta(days=delay or 0)).strftime('%Y-%m-%d'),
                         'move_history_ids2': []}
                     )
                     self.pool.get('stock.move').write(cr, uid, [move.id], {

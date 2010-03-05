@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -597,7 +597,7 @@ class account_balance_landscape(rml_parse.rml_parse):
                     result +=dir
 
         return result
-    
+
     def get_years(self,form):
         result =[]
         res={}
@@ -606,15 +606,15 @@ class account_balance_landscape(rml_parse.rml_parse):
             fy=self.pool.get('account.fiscalyear').name_get(self.cr,self.uid,form['fiscalyear'][0][2][temp])
             res['year']=fy[0][1]
             res['last_str']=temp
-            
+
             result.append(res)
         self.linesForYear(form)
         return result
-    
+
     def get_lines(self,year_dict,form):
         final_result = []
         line_l =[]
-        res = {}         
+        res = {}
         line_l = self.lines(form)
         self.cal_total(year_dict)
         if line_l:
@@ -625,11 +625,11 @@ class account_balance_landscape(rml_parse.rml_parse):
                 res['level'] = l['level']
                 for k,v in l.items():
                     if k.startswith('debit'+str(year_dict['last_str'])):
-                     res['debit'] = v  
+                     res['debit'] = v
                     if k.startswith('credit'+str(year_dict['last_str'])):
                      res['credit'] = v
                     if k.startswith('balance'+str(year_dict['last_str'])) and not k.startswith('balance_perc'+str(year_dict['last_str'])):
-                     res['balance'] =v 
+                     res['balance'] =v
                     if k.startswith('balance_perc'+str(year_dict['last_str'])) and not k.startswith('balance'+str(year_dict['last_str'])):
                      res['balance_perc'] = v
                     if form['compare_pattern'] == 'bal_perc':
@@ -654,13 +654,13 @@ class account_balance_landscape(rml_parse.rml_parse):
                 else:
                     continue
         return True
-    
+
     def total_dr(self):
         return self.dr_total
-    
+
     def total_cr(self):
         return self.cr_total
 
-report_sxw.report_sxw('report.account.account.balance.landscape', 'account.account', 'addons/account_balance/report/account_balance_landscape.rml', parser=account_balance_landscape, header=False)
+report_sxw.report_sxw('report.account.account.balance.landscape', 'account.account', 'addons/account/report/account_balance_landscape.rml', parser=account_balance_landscape, header=False)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
