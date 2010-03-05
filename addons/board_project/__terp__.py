@@ -40,7 +40,7 @@ This module implements a dashboard for project member that includes:
         'report_analytic_line',
         'report_task',
         'hr_timesheet_sheet',
-        'crm_project',
+        'project_issue',
         'resource'
     ],
     'update_xml': ['board_project_view.xml', 'board_project_manager_view.xml'],

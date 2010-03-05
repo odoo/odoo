@@ -44,7 +44,7 @@
         <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="3"/>
         <!--menuitem name="HR Responsible" parent="menu_eval_hr" id="menu_resp_hr"/-->
         <menuitem
-            name="Evaluation Plan" parent="menu_eval_hr"
+            name="Periodic Evaluations" parent="hr.menu_hr_configuration"
             id="menu_open_view_hr_evaluation_plan_tree"
             action="open_view_hr_evaluation_plan_tree"/>
 
@@ -63,7 +63,7 @@
                     <group col="4" colspan="4">
                         <separator string="Action to Perform" colspan="4"/>
                         <field name="action"/>
-                        <field name="survey_id" widget="selection"/>
+                        <field name="survey_id"/>
                     </group>
                     <group col="4" colspan="4">
                         <group col="4" colspan="2">
@@ -93,7 +93,7 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="action"/>
-                    <field name="survey_id" widget="selection"/>
+                    <field name="survey_id"/>
                     <field name="wait"/>
                 </tree>
             </field>
@@ -121,9 +121,10 @@
                 <form string="Evaluation">
                     <group col="4" colspan="3">
                         <separator string="Evaluation Data" colspan="4"/>
-                        <field name="employee_id"/>
+                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="plan_id"/>
                         <field name="date"/>
+                        <field name="progress" widget="progressbar"/>
                     </group>
                     <group col="2" colspan="1">
                         <separator string="Ending Summary" colspan="2"/>
@@ -173,36 +174,57 @@
                 <tree string="Evaluation">
                     <!--field name="create_date"/-->
                     <field name="employee_id"/>
-                    <!-- field name="progress"/ -->
                     <field name="plan_id"/>
                     <field name="rating"/>
                     <field name="date"/>
+                    <field name="progress" widget="progressbar"/>
                     <field name="state"/>
                 </tree>
             </field>
         </record>
+
+       <record id="hr_evaluation.evaluation_search" model="ir.ui.view">
+            <field name="name">hr_evaluation.evaluation_search</field>
+            <field name="model">hr_evaluation.evaluation</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Evaluation">
+                   <group col='10' colspan='4'>
+                   		<filter icon="terp-hr" string="Draft" domain="[('state','=','draft')]"/>
+                        <filter icon="terp-crm" string="Plan In progress" domain="[('state','=','wait')]"/>
+                        <filter icon="terp-mrp" string="Final Validation" domain="[('state','=','progress')]"/>
+                        <filter icon="terp-stock" string="Done" domain="[('state','=','done')]"/>
+                        <separator orientation="vertical"/>
+                        <field name="employee_id" widget="selection" select="1"/>
+                        <field name="plan_id" widget="selection" select="1"/>
+                        <field name="rating"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="open_view_hr_evaluation_tree">
             <field name="res_model">hr_evaluation.evaluation</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
         </record>
         <menuitem
             name="Evaluation" parent="menu_eval_hr"
             id="menu_open_view_hr_evaluation_tree"
             action="open_view_hr_evaluation_tree"/>
 
-
-        <record model="ir.ui.view" id="view_hr_evaluation_interview_form">
+		<record model="ir.ui.view" id="view_hr_evaluation_interview_form">
             <field name="name">hr_evaluation.interview.form</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Survey Request">
+                <form string="Interview Evaluation">
                     <group col="4" colspan="4">
-                        <field name="survey_id" widget="selection" colspan="3"/>
+                        <field name="survey_id"  colspan="3"/>
                         <group  colspan="1">
                             <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
-                                icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                                icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                             <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
                                 icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
                         </group>
@@ -215,32 +237,53 @@
                     </group>
                     <newline/>
                     <separator string="State" colspan="4"/>
-                    <group colspan="4" col="5">
-                        <field name="state"/>
-                        <button name="survey_req_waiting_answer" string="Set to Watting Answer" states="cancel,done" type="object" icon="gtk-new"/>
+                    <group colspan="4" col="6">
+                     	<field name="state"/>
+                     	<button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
+                        <button name="survey_req_waiting_answer" string="Watting Answer" states="draft" type="object" icon="gtk-new"/>
                         <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
                         <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
         </record>
+
         <record model="ir.ui.view" id="view_hr_evaluation_interview_tree">
             <field name="name">hr_evaluation.interview.tree</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Evaluation Plan Phase">
+                <tree string="Interview Evaluation">
                     <field name="date_deadline"/>
-                    <field name="survey_id" widget="selection"/>
+                    <field name="survey_id"/>
                     <field name="user_to_review_id"/>
-
                     <field name="response" readonly="1" invisible="True"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
-                        icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                        icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="waiting_answer,done,cancel"
-                        icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','!=',True),('survey_id','!=',True)]}" />
-                    <field name="state" />
+                        icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','=',False)]}" />
+                 	<field name="state"/>
                 </tree>
+            </field>
+        </record>
+
+       <record id="view_hr_evaluation_interview_search" model="ir.ui.view">
+            <field name="name">view_hr_evaluation_interview_search</field>
+            <field name="model">hr.evaluation.interview</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Evaluation">
+                   <group col='10' colspan='4'>
+                        <filter icon="terp-crm" string="Unanswered" domain="[('state','=','waiting_answer')]"/>
+                        <filter icon="terp-stock" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="survey_id" widget="selection" select="1"/>
+                        <field name="email" select="1"/>
+                        <field name="user_id" select="1" widget="selection" default="1">
+                        <filter string="MY" icon="terp-partner" domain="[('user_id','=',uid)]"/>
+                        </field>
+                   </group>
+               </search>
             </field>
         </record>
 
@@ -248,6 +291,8 @@
             <field name="res_model">hr.evaluation.interview</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('is_evaluation' ,'=', True)]</field>
+            <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
         </record>
 
         <menuitem

@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-from mx.DateTime import *
 from pychart import *
 import pychart.legend
 import time

@@ -39,6 +39,7 @@
     ],
     
     "update_xml" : [
+        "security/ir.model.access.csv",
         "voucher_sequence.xml",
         "account_report.xml",
         "voucher_view.xml",

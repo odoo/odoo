@@ -704,6 +704,8 @@ class survey_question_wiz(osv.osv_memory):
                 if sur_name_read['page'] == "next" or sur_name_rec['page_no'] == - 1 :
                     if len(p_id) > sur_name_rec['page_no'] + 1 :
                         if ((context.has_key('active') and not context['active']) or not context.has_key('active')) and not sur_name_rec['page_no'] + 1:
+                            if sur_rec['state'] != "open" :
+                                raise osv.except_osv(_('Warning !'),_("You can not give answer because of survey is not open for answer"))
                             cr.execute('select count(id) from survey_history where user_id=%s\
                                                     and survey_id=%s' % (uid,survey_id))
                             res = cr.fetchone()[0]
@@ -1093,7 +1095,11 @@ class survey_question_wiz(osv.osv_memory):
             sur_rec = survey_obj.read(cr, uid, sur_name_read['survey_id'])
             survey_obj.write(cr, uid, sur_name_read['survey_id'],  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
             if context.has_key('cur_id'):
-                self.pool.get(context['object']).write(cr, uid, [int(context['cur_id'])], {'response' : response_id})
+                if context.has_key('request') and context['request']:
+                    self.pool.get(context['object']).write(cr, uid, [int(context['cur_id'])], {'response' : response_id})
+                    self.pool.get(context['object']).survey_req_done(cr, uid, [int(context['cur_id'])], context)
+                else:
+                    self.pool.get(context['object']).write(cr, uid, [int(context['cur_id'])], {'response' : response_id})
 
         for key,val in sur_name_read['store_ans'].items():
             for field in vals:
@@ -1640,16 +1646,20 @@ class survey_request(osv.osv):
         'date_deadline' : fields.date("Deadline date"),
         'user_id' : fields.many2one("res.users", "User"),
         'email' : fields.char("E-mail", size=64),
-        'survey_id' : fields.many2one("survey", "Survey", required=1),
+        'survey_id' : fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
         'response' : fields.many2one('survey.response', 'Answer'),
         'state' : fields.selection([('draft','Draft'),('waiting_answer', 'Wating Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
     }
     _defaults = {
-        'state' : lambda * a: 'waiting_answer',
+        'state' : lambda * a: 'draft',
         'date_deadline' : lambda * a :  (now() + RelativeDateTime(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
     }
     def survey_req_waiting_answer(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, { 'state' : 'waiting_answer'})
+        return True
+
+    def survey_req_draft(self, cr, uid, ids, arg):
+        self.write(cr, uid, ids, { 'state' : 'draft'})
         return True
 
     def survey_req_done(self, cr, uid, ids, arg):

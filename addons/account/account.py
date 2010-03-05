@@ -27,8 +27,8 @@ from osv import fields, osv
 from tools.misc import currency
 from tools.translate import _
 import pooler
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from tools import config
 
@@ -48,7 +48,7 @@ class account_payment_term(osv.osv):
 
     def compute(self, cr, uid, id, value, date_ref=False, context={}):
         if not date_ref:
-            date_ref = now().strftime('%Y-%m-%d')
+            date_ref = datetime.now().strftime('%Y-%m-%d')
         pt = self.browse(cr, uid, id, context)
         amount = value
         result = []
@@ -60,11 +60,11 @@ class account_payment_term(osv.osv):
             elif line.value == 'balance':
                 amt = round(amount, int(config['price_accuracy']))
             if amt:
-                next_date = mx.DateTime.strptime(date_ref, '%Y-%m-%d') + RelativeDateTime(days=line.days)
+                next_date = datetime.strptime(date_ref, '%y-%m-%d') + relativedelta(days=line.days)
                 if line.days2 < 0:
-                    next_date += RelativeDateTime(day=line.days2)
+                    next_date += relativedelta(day=line.days2)
                 if line.days2 > 0:
-                    next_date += RelativeDateTime(day=line.days2, months=1)
+                    next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
                 amount -= amt
         return result
@@ -582,12 +582,12 @@ class account_fiscalyear(osv.osv):
 
     def create_period(self,cr, uid, ids, context={}, interval=1):
         for fy in self.browse(cr, uid, ids, context):
-            ds = mx.DateTime.strptime(fy.date_start, '%Y-%m-%d')
+            ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
             while ds.strftime('%Y-%m-%d')<fy.date_stop:
-                de = ds + RelativeDateTime(months=interval, days=-1)
+                de = ds + relativedelta(months=interval, days=-1)
 
                 if de.strftime('%Y-%m-%d')>fy.date_stop:
-                    de=mx.DateTime.strptime(fy.date_stop, '%Y-%m-%d')
+                    de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
 
                 self.pool.get('account.period').create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
@@ -596,7 +596,7 @@ class account_fiscalyear(osv.osv):
                     'date_stop': de.strftime('%Y-%m-%d'),
                     'fiscalyear_id': fy.id,
                 })
-                ds = ds + RelativeDateTime(months=interval)
+                ds = ds + relativedelta(months=interval)
         return True
 
     def find(self, cr, uid, dt=None, exception=True, context={}):
@@ -1720,11 +1720,11 @@ class account_subscription(osv.osv):
                     'subscription_id': sub.id,
                 })
                 if sub.period_type=='day':
-                    ds = (mx.DateTime.strptime(ds, '%Y-%m-%d') + RelativeDateTime(days=sub.period_nbr)).strftime('%Y-%m-%d')
+                    ds = (datetime.strptime(ds, '%Y-%m-%d') + relativedelta(days=sub.period_nbr)).strftime('%Y-%m-%d')
                 if sub.period_type=='month':
-                    ds = (mx.DateTime.strptime(ds, '%Y-%m-%d') + RelativeDateTime(months=sub.period_nbr)).strftime('%Y-%m-%d')
+                    ds = (datetime.strptime(ds, '%Y-%m-%d') + relativedelta(months=sub.period_nbr)).strftime('%Y-%m-%d')
                 if sub.period_type=='year':
-                    ds = (mx.DateTime.strptime(ds, '%Y-%m-%d') + RelativeDateTime(years=sub.period_nbr)).strftime('%Y-%m-%d')
+                    ds = (datetime.strptime(ds, '%Y-%m-%d') + relativedelta(years=sub.period_nbr)).strftime('%Y-%m-%d')
         self.write(cr, uid, ids, {'state':'running'})
         return True
 account_subscription()

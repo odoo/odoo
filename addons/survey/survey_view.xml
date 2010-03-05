@@ -1014,15 +1014,16 @@
             <field name="model">survey.request</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Survey Request">
+				<form string="Survey Request">
                     <field name="date_deadline"/>
-                    <field name="survey_id" widget="selection"/>
+                    <field name="survey_id"/>
                     <field name="user_id" on_change="on_change_user(user_id)"/>
-                    <field name="email"/>
-					<field name="response"/>
-                    <group colspan="4" col="5">
-                    	<field name="state"/>
-                        <button name="survey_req_waiting_answer" string="Set to Watting Answer" states="cancel,done" type="object" icon="gtk-new"/>
+<!--                    <field name="email"/>-->
+     				<field name="response" readonly="1"/>
+                    <group colspan="4" col="6">
+                     <field name="state"/>
+                     	<button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
+                        <button name="survey_req_waiting_answer" string="Watting Answer" states="draft" type="object" icon="gtk-new"/>
                         <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
                         <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
                     </group>
@@ -1035,12 +1036,33 @@
             <field name="model">survey.request</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Survey Request">
+                <tree string="Evaluation Plan Phase">
                     <field name="date_deadline"/>
-                    <field name="survey_id" widget="selection"/>
-                    <field name="email" />
+					<field name="user_id"/>
+                    <field name="survey_id"/>
+                    <field name="response" />
                     <field name="state" />
                 </tree>
+            </field>
+        </record>
+
+       <record id="survey_request_search" model="ir.ui.view">
+            <field name="name">survey_request_search</field>
+            <field name="model">survey.request</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Survey">
+                   <group col='10' colspan='4'>
+                        <filter icon="terp-crm" string="Unanswered" domain="[('state','=','waiting_answer')]"/>
+                        <filter icon="terp-stock" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="survey_id" widget="selection" select="1"/>
+                        <field name="email" select="1"/>
+                        <field name="user_id" select="1" widget="selection" default="1">
+                        <filter string="MY" icon="terp-partner" domain="[('user_id','=',uid)]"/>
+                        </field>
+                   </group>
+               </search>
             </field>
         </record>
 
@@ -1050,6 +1072,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="survey_request_tree"></field>
+            <field name="search_view_id" ref="survey_request_search"/>
         </record>
 
         <menuitem name="Survey Requests" id="menu_survey_type_form1"

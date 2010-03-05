@@ -24,8 +24,7 @@ import netsvc
 from osv import fields, osv
 from tools.translate import _
 
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
+from datetime import datetime
 
 import tools
 
@@ -35,12 +34,17 @@ class account_move_line(osv.osv):
 
     def _query_get(self, cr, uid, obj='l', context={}):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
+        fiscalperiod_obj = self.pool.get('account.period')
+        fiscalyear_ids = []
+        fiscalperiod_ids = []
         if not context.get('fiscalyear', False):
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
-            fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
         else:
-            fiscalyear_clause = '%s' % context['fiscalyear']
-        state=context.get('state',False)
+            fiscalyear_ids = [context['fiscalyear']]
+
+        fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
+        state = context.get('state',False)
+
         where_move_state = ''
         where_move_lines_by_date = ''
 
@@ -54,9 +58,47 @@ class account_move_line(osv.osv):
 
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
-            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
+            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
         else:
-            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
+            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
+
+        if context.get('period_manner','') == 'created':
+            #the query have to be build with no reference to periods but thanks to the creation date
+            if context.get('periods',False):
+                #if one or more period are given, use them
+                fiscalperiod_ids = fiscalperiod_obj.search(cr,uid,[('id','in',context['periods'])])
+            else:
+                fiscalperiod_ids = self.pool.get('account.period').search(cr,uid,[('fiscalyear_id','in',fiscalyear_ids)])
+
+
+
+            #remove from the old query the clause related to the period selection
+            res = ''
+            count = 1
+            clause_list = query.split('AND')
+            ref_string = ' '+obj+'.period_id in'
+            for clause in clause_list:
+                if count != 1 and not clause.startswith(ref_string):
+                    res += "AND"
+                if not clause.startswith(ref_string):
+                    res += clause
+                    count += 1
+
+            #add to 'res' a new clause containing the creation date criterion
+            count = 1
+            res += " AND ("
+            periods = self.pool.get('account.period').read(cr,uid,p_ids,['date_start','date_stop'])
+            for period in periods:
+                if count != 1:
+                    res += " OR "
+                #creation date criterion: the creation date of the move_line has to be
+                # between the date_start and the date_stop of the selected periods
+                res += "("+obj+".create_date between to_date('" + period['date_start']  + "','yyyy-mm-dd') and to_date('" + period['date_stop']  + "','yyyy-mm-dd'))"
+                count += 1
+            res += ")"
+            return res
+
+        return query
 
     def default_get(self, cr, uid, fields, context={}):
         data = self._default_get(cr, uid, fields, context)
@@ -485,7 +527,7 @@ class account_move_line(osv.osv):
         if not partner_id:
             return {'value':val}
         if not date:
-            date = now().strftime('%Y-%m-%d')
+            date = datetime.now().strftime('%Y-%m-%d')
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
 
         if part.property_payment_term and part.property_payment_term.line_ids:
