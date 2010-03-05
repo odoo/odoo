@@ -37,14 +37,17 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="open_view_hr_evaluation_plan_tree">
+            <field name="name">Evaluation Plans</field>
             <field name="res_model">hr_evaluation.plan</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="3"/>
-        <!--menuitem name="HR Responsible" parent="menu_eval_hr" id="menu_resp_hr"/-->
+
         <menuitem
-            name="Periodic Evaluations" parent="hr.menu_hr_configuration"
+            name="Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="3"/>
+        <menuitem
+            parent="menu_eval_hr_config"
             id="menu_open_view_hr_evaluation_plan_tree"
             action="open_view_hr_evaluation_plan_tree"/>
 
