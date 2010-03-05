@@ -90,25 +90,28 @@
                     </group>
                 </group>
                 <notebook colspan="4">
-                    <page string="Meeting">
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Contacts"/>
-                        <field name="partner_id" string="Partner"
-                            on_change="onchange_partner_id(partner_id)" />
-                        <field name="partner_address_id"
-                            string="Contact"
-                            on_change="onchange_partner_address_id(partner_address_id, email_from)" />
-                        <field name="email_from"/>
-                    </group><group col="2" colspan="2">
-                        <separator colspan="2" string="Assignment"/>
-                        <field name="section_id" widget="selection" />
-                        <field name="user_id" />
-                        <separator colspan="2" string="Categorization"/>
-                        <field name="show_as" string="Show time as"/>
-                        <field name="class" string="Privacy"/>
-                        <field name="rrule" groups="base.group_extended" />
-                        <field name="recurrent_id" invisible="1" />
-                        <field name="recurrent_uid" invisible="1" />
+                <page string="Meeting">
+                    <group col="6" colspan="4">
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Assignment"/>
+                            <field name="section_id" widget="selection" />
+                            <field name="user_id" />
+                        </group><group col="2" colspan="2">
+                            <separator colspan="2" string="Contacts"/>
+                            <field name="partner_id" string="Partner"
+                                on_change="onchange_partner_id(partner_id)" />
+                            <field name="partner_address_id"
+                                string="Contact"
+                                on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                            <field name="email_from"/>
+                        </group><group col="2" colspan="2">
+                            <separator colspan="2" string="Visibility"/>
+                            <field name="show_as" string="Show time as"/>
+                            <field name="class" string="Privacy"/>
+                            <field name="rrule" groups="base.group_extended" />
+                            <field name="recurrent_id" invisible="1" />
+                            <field name="recurrent_uid" invisible="1" />
+                        </group>
                     </group>
                     <separator string="Description" colspan="4" />
                     <field name="description" nolabel="1" colspan="4" />
