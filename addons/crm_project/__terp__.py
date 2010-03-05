@@ -39,7 +39,7 @@
         'crm_bugs_view.xml',
         'crm_bugs_menu.xml',        
         'crm_feature_menu.xml',
-        'report_crm_project_bug_view.xml',
+        'crm_report_project_bug_view.xml',
         'security/crm_project_security.xml',
         'security/ir.model.access.csv',
      ],

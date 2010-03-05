@@ -1,11 +1,11 @@
 from osv import fields,osv
 import tools
 
-class report_crm_project_bug(osv.osv):
-    _name = "report.crm.project.bug"
+class crm_project_bug_report(osv.osv):
+    _name = "crm.project.bug.report"
     _description = "Project Bug by user and section"
     _auto = False
-    _inherit = "report.crm.case"
+    _inherit = "crm.case.report"
     _columns = {
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.project.bug')]"),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'crm.project.bug')]"),                
@@ -16,9 +16,9 @@ class report_crm_project_bug(osv.osv):
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
     }
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_crm_project_bug')
+        tools.drop_view_if_exists(cr, 'crm_project_bug_report')
         cr.execute("""
-            create or replace view report_crm_project_bug as (
+            create or replace view crm_project_bug_report as (
                 select
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY') as name,
@@ -38,7 +38,7 @@ class report_crm_project_bug(osv.osv):
                     crm_project_bug c
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.categ_id,c.stage_id
             )""")
-report_crm_project_bug()
+crm_project_bug_report()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

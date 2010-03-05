@@ -6,8 +6,8 @@
 	-->
 
         <record id="view_crm_project_bug_tree" model="ir.ui.view">
-            <field name="name">report.crm.project.bug.tree</field>
-            <field name="model">report.crm.project.bug</field>
+            <field name="name">crm.project.bug.report.tree</field>
+            <field name="model">crm.project.bug.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
 				<tree string="Project Bug">
@@ -27,8 +27,8 @@
             </field>
         </record>
         <record id="view_crm_project_bug_form" model="ir.ui.view">
-            <field name="name">report.crm.project.bug.form</field>
-            <field name="model">report.crm.project.bug</field>
+            <field name="name">crm.project.bug.report.form</field>
+            <field name="model">crm.project.bug.report</field>
             <field name="inherit_id" ref="crm.view_crm_case_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -43,8 +43,8 @@
         </record>
 
         <record id="view_crm_project_bug_graph" model="ir.ui.view">
-            <field name="name">report.crm.project.bug.graph</field>
-            <field name="model">report.crm.project.bug</field>
+            <field name="name">crm.project.bug.report.graph</field>
+            <field name="model">crm.project.bug.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Project Bug" type="bar">
@@ -56,8 +56,8 @@
         </record>
 
         <record id="view_crm_project_bug_filter" model="ir.ui.view">
-            <field name="name">report.crm.project.bug.select</field>
-            <field name="model">report.crm.project.bug</field>
+            <field name="name">crm.project.bug.report.select</field>
+            <field name="model">crm.project.bug.report</field>
             <field name="inherit_id" ref="crm.view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -69,7 +69,7 @@
 
         <record id="action_report_crm_project_bug" model="ir.actions.act_window">
             <field name="name">Project Bug</field>
-            <field name="res_model">report.crm.project.bug</field>
+            <field name="res_model">crm.project.bug.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_crm_project_bug_graph"/>
