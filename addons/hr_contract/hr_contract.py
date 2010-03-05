@@ -82,6 +82,7 @@ class hr_contract(osv.osv):
     _columns = {
         'name' : fields.char('Contract Reference', size=30, required=True),
         'employee_id' : fields.many2one('hr.employee', "Employee", required=True),
+        'department_id' : fields.related('employee_id','department_id', "Department", readonly=True),
         'type_id' : fields.many2one('hr.contract.type', "Contract Type"),
         'job_id' : fields.many2one('hr.job', 'Job Title'),
         'date_start' : fields.date('Start Date', required=True),
