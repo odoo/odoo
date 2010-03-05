@@ -27,15 +27,15 @@ import ir
 import pooler
 from tools.translate import _
 
-class bug2task(wizard.interface):    
+class issue2task(wizard.interface):    
     
     def _check_state(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        case_obj = pool.get('crm.project.bug')
+        case_obj = pool.get('project.issue')
         for case in case_obj.browse(cr, uid, data['ids']):
             if case.state != 'open':
                 raise wizard.except_wizard(_('Warning !'),
-                    _('Bugs or Feature Requests should be in \'Open\' state before converting into Task.'))
+                    _('Issues or Feature Requests should be in \'Open\' state before converting into Task.'))
         return {}
 
     def _makeTask(self, cr, uid, data, context):
@@ -52,7 +52,7 @@ class bug2task(wizard.interface):
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
-        bug_case_obj = pool.get('crm.project.bug')
+        bug_case_obj = pool.get('project.issue')
         task_obj = pool.get('project.task')        
         for bug in bug_case_obj.browse(cr, uid, data['ids']):                
             new_task_id = task_obj.create(cr, uid, {            
@@ -94,5 +94,5 @@ class bug2task(wizard.interface):
         }        
     }
 
-bug2task('crm.bug.task_set')
+issue2task('project.issue.task_set')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

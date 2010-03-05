@@ -22,28 +22,28 @@
 
 
 {
-    'name': 'Bug Reporting in Project Management',
+    'name': 'Issue Management in Project Management',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-        This module provide  Store the project  bugs with  cases
+        This module provide Issues/Bugs Management in Project
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['crm','project'],
     'init_xml': [
-        'crm_bugs_data.xml'
+        'project_issue_data.xml'
     ],
     'update_xml': [
-        'crm_bug_wizard.xml',
-        'crm_bugs_view.xml',
-        'crm_bugs_menu.xml',        
-        'crm_feature_menu.xml',
-        'crm_report_project_bug_view.xml',
-        'security/crm_project_security.xml',
+        'project_issue_wizard.xml',
+        'project_issue_view.xml',
+        'project_issue_menu.xml',        
+        'project_feature_menu.xml',
+        'report/project_issue_report_view.xml',
+        'security/project_issue_security.xml',
         'security/ir.model.access.csv',
      ],
-    'demo_xml': ['crm_bugs_demo.xml'],
+    'demo_xml': ['project_issue_demo.xml'],
     'installable': True,
     'active': False,
 }

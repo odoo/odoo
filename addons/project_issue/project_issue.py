@@ -22,8 +22,6 @@
 import time
 import re
 import os
-
-import mx.DateTime
 import base64
 
 from tools.translate import _
@@ -35,9 +33,9 @@ from osv.orm import except_orm
 from crm import crm
 
 
-class crm_project_bug(osv.osv):
-    _name = "crm.project.bug"
-    _description = "Project Bug Cases"
+class project_issue(osv.osv):
+    _name = "project.issue"
+    _description = "Project Issue"
     _order = "priority, id desc"
     _inherit = 'crm.case'
     _columns = {
@@ -54,12 +52,12 @@ class crm_project_bug(osv.osv):
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'categ_id': fields.many2one('crm.case.categ','Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Bug Type', domain="[('object_id.model', '=', 'crm.project.bug')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Bug Type', domain="[('object_id.model', '=', 'project.issue')]"),
 
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'crm.project.bug')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),        
         'probability': fields.float('Probability (%)'),
@@ -74,7 +72,7 @@ class crm_project_bug(osv.osv):
 
     def _convert(self, cr, uid, ids, xml_id, context=None):
         data_obj = self.pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'crm_project', xml_id)        
+        id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)        
         categ_id = False
         if id2:
             categ_id = data_obj.browse(cr, uid, id2, context=context).res_id    
@@ -97,11 +95,11 @@ class crm_project_bug(osv.osv):
         return {'value':{'probability':stage.probability}}
 
     _defaults = {
-          'project_id':_get_project,    
+           'project_id':_get_project,    
            'probability':lambda *a:0.0,       
            'planned_cost':lambda *a:0.0,    
            'planned_revenue':lambda *a:0.0,    
           }
 
-crm_project_bug()
+project_issue()
 
