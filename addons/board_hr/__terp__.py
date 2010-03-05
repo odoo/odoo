@@ -31,7 +31,7 @@ This module implements a dashboard for human resource management that includes:
     * My Expenses
     """,
     'author': 'Tiny',
-    'depends': [ 'crm_project','board','hr_expense','hr_timesheet_sheet','hr_holidays'
+    'depends': [ 'project_issue','board','hr_expense','hr_timesheet_sheet','hr_holidays'
     ],
     'update_xml': ['board_hr_view.xml'],
     'demo_xml': [],
