@@ -19,10 +19,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import logging
 import time
 import operator
 
+import netsvc
 from osv import fields
 from osv import osv
 
@@ -33,10 +33,11 @@ from osv import osv
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _description = 'Analytic Accounts'
-    __logger = logging.getLogger('addons.' + _name)
+    logger = netsvc.Logger()
 
     def _credit_calc(self, cr, uid, ids, name, arg, context={}):
-        self.__logger.debug('Entering _credit_calc; ids:%s', ids)
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  'Entering _credit_calc; ids:%s'%ids)
         if not ids: return {}
 
         where_date = ''
@@ -52,13 +53,15 @@ class account_analytic_account(osv.osv):
                    "GROUP BY a.id" % (where_date),
                    dict(context, ids=tuple(ids)))
         r = dict(cr.fetchall())
-        self.__logger.debug('_credit_calc results: %s', r)
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_credit_calc results: %s'%r)
         for i in ids:
             r.setdefault(i,0.0)
         return r
 
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
-        self.__logger.debug('Entering _debit_calc; ids:%s', ids)
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  'Entering _debit_calc; ids:%s'%ids)
         if not ids: return {}
 
         where_date = ''
@@ -74,7 +77,8 @@ class account_analytic_account(osv.osv):
                    "GROUP BY a.id" % (where_date),
                    dict(context, ids=tuple(ids)))
         r = dict(cr.fetchall())
-        self.__logger.debug('_debit_calc results: %s', r)
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_debut_calc results: %s'%r)
         for i in ids:
             r.setdefault(i,0.0)
         return r
@@ -82,8 +86,9 @@ class account_analytic_account(osv.osv):
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        self.__logger.debug('Entering _balance_calc; ids:%s; ids2:%s',
-                          ids, ids2)
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  'Entering _balance_calc; ids:%s; ids2:%s'%(
+                            ids, ids2))
 
         for i in ids:
             res.setdefault(i,0.0)
@@ -106,7 +111,8 @@ class account_analytic_account(osv.osv):
 
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
-        logging.debug('_balance_calc, (id, sum): %s', res)
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_balance_calc, (id, sum): %s'%res)
 
         cr.execute("SELECT a.id, r.currency_id "
                    "FROM account_analytic_account a "
@@ -114,7 +120,8 @@ class account_analytic_account(osv.osv):
                    "WHERE a.id in %s", (tuple(ids),))
 
         currency = dict(cr.fetchall())
-        self.__logger.debug('_balance_calc currency: %s', currency)
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_balance_calc currency: %s'%currency)
 
         res_currency= self.pool.get('res.currency')
         for id in ids:
@@ -137,7 +144,8 @@ class account_analytic_account(osv.osv):
         return dict([(i, res[i]) for i in ids ])
 
     def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
-        self.__logger.debug('_quantity_calc ids:%s', ids)
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_quantity_calc ids:%s'%ids)
         #XXX must convert into one uom
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
@@ -162,7 +170,8 @@ class account_analytic_account(osv.osv):
 
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
-        self.__logger.debug('_quantity_calc, (id, sum): %s', res)
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_quantity_calc, (id, sum): %s'%res)
 
         for id in ids:
             if id not in ids2:

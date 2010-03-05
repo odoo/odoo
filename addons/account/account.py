@@ -20,7 +20,6 @@
 #
 ##############################################################################
 import time
-import logging
 
 from operator import itemgetter
 
@@ -172,7 +171,7 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
-    __logger = logging.getLogger('addons'. + _name)
+    logger = netsvc.Logger()
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -254,7 +253,8 @@ class account_account(osv.osv):
             if aml_query:
                 wheres.append(aml_query.strip())
             filters = " AND ".join(wheres)
-            self.__logger.debug('Filters: %s', filters)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Filters: %s'%filters)
             # IN might not work ideally in case there are too many
             # children_and_consolidated, in that case join on a
             # values() e.g.:
@@ -270,7 +270,8 @@ class account_account(osv.osv):
                        " GROUP BY l.account_id")
             params = (tuple(children_and_consolidated),) + query_params
             cr.execute(request, params)
-            self.__logger.debug('Status: %s', cr.statusmessage)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Status: %s'%cr.statusmessage)
 
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
