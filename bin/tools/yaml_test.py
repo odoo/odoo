@@ -66,7 +66,7 @@ class ActWindow(YamlTag):
     def __init__(self, model, action, **kwargs):
         self.model = model
         self.action = action
-        super(Workflow, self).__init__(**kwargs)
+        super(ActWindow, self).__init__(**kwargs)
 
 class Function(YamlTag):
     def __init__(self, model, name, **kwargs):
@@ -94,10 +94,9 @@ class Eval(YamlTag):
         self.expression = expression
         super(Eval, self).__init__()
     
-class Ref(YamlTag):
-    def __init__(self, xmlid):
-        self.xmlid = xmlid
-        super(Ref, self).__init__()
+class IrSet(YamlTag):
+    def __init__(self):
+        super(IrSet, self).__init__()
 
 def assert_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
@@ -143,9 +142,9 @@ def eval_constructor(loader, node):
     expression = loader.construct_scalar(node)
     return Eval(expression)
     
-def ref_constructor(loader, node):
-    xmlid = loader.construct_scalar(node)
-    return Ref(xmlid)
+def ir_set_constructor(loader, node):
+    kwargs = loader.construct_mapping(node)
+    return IrSet(**kwargs)
         
 yaml.add_constructor(u"!assert", assert_constructor)
 yaml.add_constructor(u"!record", record_constructor)
@@ -158,7 +157,7 @@ yaml.add_constructor(u"!context", context_constructor)
 yaml.add_constructor(u"!delete", delete_constructor)
 yaml.add_constructor(u"!url", url_constructor)
 yaml.add_constructor(u"!eval", eval_constructor)
-yaml.add_constructor(u"!ref", ref_constructor)
+yaml.add_constructor(u"!ir_set", ir_set_constructor)
 
 def _is_yaml_mapping(node, tag_constructor):
     value = isinstance(node, types.DictionaryType) \
@@ -204,8 +203,8 @@ def is_url(node):
 def is_eval(node):
     return isinstance(node, Eval)
     
-def is_ref(node):
-    return isinstance(node, Ref)
+def is_ir_set(node):
+    return _is_yaml_mapping(node, IrSet)
 
 
 class TestReport(object):
@@ -611,6 +610,21 @@ class YamlInterpreter(object):
             replace = node.replace or True
             self.pool.get('ir.model.data').ir_set(self.cr, self.uid, \
                     'action', keyword, node.url, ["ir.actions.url"], value, replace=replace, isobject=True, xml_id=node.id)
+    
+    def process_ir_set(self, node):
+        if not self.mode == 'init':
+            return False
+        _, fields = node.items()[0]
+        res = {}
+        for fieldname, expression in fields.items():
+            if isinstance(expression, Eval):
+                value = eval(expression.expression, {'ref': self._ref, '_ref': self._ref})
+            else:
+                value = expression
+            res[fieldname] = value
+        self.pool.get('ir.model.data').ir_set(self.cr, self.uid, res['key'], res['key2'], \
+                res['name'], res['models'], res['value'], replace=res.get('replace',True), \
+                isobject=res.get('isobject', False), meta=res.get('meta',None))
 
     def process(self, yaml_string):
         """Processes a Yaml string. Custom tags are interpreted by 'process_' instance methods."""
@@ -643,6 +657,8 @@ class YamlInterpreter(object):
             self.process_url(node)
         elif is_context(node):
             self.process_context(node)
+        elif is_ir_set(node):
+            self.process_ir_set(node)
         elif is_act_window(node):
             self.process_act_window(node)
         elif is_workflow(node):
