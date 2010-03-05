@@ -61,8 +61,9 @@
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <field name="user_id" position="before">
-               </field>
+				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]' position='after'>
+        	        <filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
+	            </xpath>
             </field>
         </record>
         

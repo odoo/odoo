@@ -16,8 +16,10 @@
                 	<field name="nbr" string="#Project Bug"/>
                     <field name="amount_revenue"/>
                     <field name="probability"/>
+                    <field name="amount_revenue_prob"/>
                     <field name="delay_close"/>
-                    <field name="state"/>
+                    <field name="state" invisible="1"/>
+                    <field name="section_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="stage_id"  invisible="1"/>
                     <field name="categ_id" invisible="1"/>
@@ -59,8 +61,9 @@
             <field name="inherit_id" ref="report_crm.view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <field name="state" position="before">
-               </field>
+				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]' position='after'>
+					<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
+            	</xpath>
             </field>
         </record>
 

@@ -86,8 +86,7 @@ class opportunity2phonecall(wizard.interface):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         opportunites = opportunity_case_obj.browse(cr, uid, data['ids'])
-        for opportunity in opportunites:
-            #TODO : Take Other Info from opportunity            
+        for opportunity in opportunites:            
             new_case = phonecall_case_obj.create(cr, uid, {
                     'name' : opportunity.name,
                     'case_id' : opportunity.id,
@@ -96,9 +95,12 @@ class opportunity2phonecall(wizard.interface):
                     'description' : form['note'],
                     'date' : form['deadline'], 
                     'section_id' : form['section_id'],
-                    'partner_id': opportunity.partner_id.id,
-                    'partner_address_id':opportunity.partner_address_id.id,
+                    'partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
+                    'partner_address_id':opportunity.partner_address_id and opportunity.partner_address_id.id or False,
                     'description': data['form']['note'] or opportunity.description,
+                    'partner_phone' : opportunity.phone or (opportunity.partner_address_id and opportunity.partner_address_id.phone or False),
+                    'partner_mobile' : opportunity.partner_address_id and opportunity.partner_address_id.mobile or False,
+                    'priority': opportunity.priority,
                     'opportunity_id':opportunity.id
             }, context=context)
             vals = {}
@@ -148,9 +150,15 @@ class opportunity2meeting(wizard.interface):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        opportunity = opportunity_case_obj.browse(cr, uid, data['id'], context=context)
+        partner_id = opportunity.partner_id and opportunity.partner_id.id or False
+        name = opportunity.name
+        email = opportunity.email_from
+        section_id = opportunity.section_id and opportunity.section_id.id or False        
         return {            
             'name': _('Meetings'),
-            'domain' : "[('opportunity_id','in',%s)]"%(data['ids']),         
+            'domain' : "[('user_id','=',%s)]"%(uid),  
+            'context': {'default_partner_id': partner_id, 'default_section_id': section_id, 'default_email_from': email, 'default_state':'open', 'default_name':name},
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
