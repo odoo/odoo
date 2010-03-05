@@ -1,7 +1,7 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -59,8 +59,8 @@ class ir_sequence(osv.osv):
 
     def _process(self, s):
         return (s or '') % {
-            'year':time.strftime('%Y'), 
-            'month': time.strftime('%m'), 
+            'year':time.strftime('%Y'),
+            'month': time.strftime('%m'),
             'day':time.strftime('%d'),
             'y': time.strftime('%y'),
             'doy': time.strftime('%j'),
@@ -93,4 +93,3 @@ ir_sequence()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

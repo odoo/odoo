@@ -778,7 +778,6 @@ class related(function):
                 res[data.id] = t_data.id
             else:
                 res[data.id] = t_data
-
         if self._type=='many2one':
             ids = filter(None, res.values())
             if ids:
@@ -790,7 +789,6 @@ class related(function):
             for r in res:
                 if res[r]:
                     res[r] = [x.id for x in res[r]]
-
         return res
 
     def __init__(self, *arg, **args):

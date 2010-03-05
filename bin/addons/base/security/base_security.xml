@@ -17,7 +17,7 @@
         <field name="name">Employee</field>
     </record>
 
-    <record model="res.groups" id="group_multi_company">
+    <record model="res.groups" context="{'noadmin':True}" id="group_multi_company">
         <field name="name">Multi Companies</field>
     </record>
 

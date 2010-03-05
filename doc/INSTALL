@@ -8,11 +8,9 @@ Required dependencies:
 
 You need the following software installed:
 
-    * Python 2.4 or 2.5
+    * Python 2.5 or 2.6
     * Postgresql 8.2 or above
     * Psycopg2 python module 
-    * libxml2 and python bindings
-    * libxslt and python bindings
     * Reportlab pdf generation library for python
     * lxml python module
     * pytz python module
@@ -29,7 +27,7 @@ for generating reports using non .jpg images, you need:
 For Debian-based distributions, the required packages can be installed with the 
 following command:
 
-  #> apt-get install -y postgresql graphviz python-psycopg2 python-xml python-lxml python-libxml2 python-libxslt1 python-tz python-imaging
+  #> apt-get install -y postgresql graphviz python-psycopg2 python-lxml python-tz python-imaging
 
 For Fedora 
 if they are not installed, install:
@@ -37,8 +35,6 @@ python and postgresql
 
 uses yum or you can recover required packages on fedora web site in "core" or "extra" repository :
 postgresql-python
-libxml2-python
-libxslt-python
 python-lxml
 python-imaging
 python-psycopg2
