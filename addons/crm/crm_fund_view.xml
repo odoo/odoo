@@ -28,6 +28,20 @@
 	  <menuitem action="crm_fundraising_stage_act" id="menu_crm_fundraising_stage_act" parent="crm.menu_crm_case_stage"/>
 
     # ------------------------------------------------------
+    #Fund  Resource Type
+    # ------------------------------------------------------
+        <record id="crm_fundraising_resource_act" model="ir.actions.act_window">
+            <field name="name">Fundraising Type</field>
+            <field name="res_model">crm.case.resource.type</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
+   			<field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
+   			<field name="context">{'object_id':'crm.fundraising'}</field>
+        </record>
+      <menuitem action="crm_fundraising_resource_act" id="menu_crm_fundraising_resource_act" parent="crm.menu_crm_case_resource_type"/>
+
+
+    # ------------------------------------------------------
     # Fund Raising
     # ------------------------------------------------------
     <record model="ir.ui.view" id="crm_case_tree_view_fund">
