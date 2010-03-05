@@ -610,3 +610,15 @@ class users(osv.osv):
         'context_section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 users()
+
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+
+res_partner()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
