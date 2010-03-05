@@ -13,14 +13,16 @@
             	<tree string="Fundraising">
 	              	<field name="name" />
 					<field name="month"/>
+					<field name="section_id" />
+                    <field name="user_id" />
+    				<field name="company_id" />                    
+                    <field name="partner_id" />
                 	<field name="nbr" string="#Fundraising"/>
-                    <field name="amount_revenue"/>
+                    <field name="amount_revenue"  sum="Total Revenue"/>
                     <field name="probability"/>
                     <field name="amount_revenue_prob"/>
                     <field name="delay_close"/>
                     <field name="state" invisible="1"/>
-                    <field name="section_id" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
                     <field name="categ_id" invisible="1"/>
                </tree>
             </field>	
@@ -69,21 +71,21 @@
             <field name="name">Fundraising</field>
             <field name="res_model">report.crm.fundraising</field>
             <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="view_crm_fundraising_graph"/>
+            <field name="view_mode">tree,graph</field>
+            <field name="view_id" ref="view_crm_fundraising_tree"/>
             <field name="search_view_id" ref="view_crm_fundraising_filter"/>
         </record>
         
                	
        	<record model="ir.actions.act_window.view" id="action_report_crm_fundrising_tree">
-	        <field name="sequence" eval="2"/>
+	        <field name="sequence" eval="1"/>
 	        <field name="view_mode">tree</field>
 	        <field name="view_id" ref="view_crm_fundraising_tree"/>
 	        <field name="act_window_id" ref="action_report_crm_fundraising"/>
 	    </record> 
 
         <record model="ir.actions.act_window.view" id="action_report_crm_fundrising_graph">
-	        <field name="sequence" eval="1"/>
+	        <field name="sequence" eval="2"/>
 	        <field name="view_mode">graph</field>
 	        <field name="view_id" ref="view_crm_fundraising_graph"/>
 	        <field name="act_window_id" ref="action_report_crm_fundraising"/>

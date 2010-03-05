@@ -39,6 +39,7 @@
     ],
     
     "update_xml" : [
+        "security/account_security.xml",
         "voucher_sequence.xml",
         "account_report.xml",
         "voucher_view.xml",

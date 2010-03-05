@@ -43,6 +43,11 @@
                  <field name="date_closed" string="Closure Date"/>
                 <field name="categ_id" string="Type" select="1"/>
                 <field name="state"/>
+                <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
+                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                <button name="case_close" string="Close" states="open,draft,pending" type="object"  icon="gtk-close"/>
+                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
+                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
             </tree>
         </field>
     </record>
@@ -188,24 +193,31 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <filter icon="gtk-new" string="Current Claims"
+                   <filter icon="gtk-new" string="Current"
                        domain="[('state','in',('draft', 'open'))]"
                        separator="1" help="Current Claims" default="1"
                    />
                    <filter icon="gtk-execute"
-                       string="In Progress Claims"
+                       string="In Progress"
                        domain="[('state','=','open')]"
                        separator="1" help="In Progress Claims"
                    />
                    <filter icon="gtk-media-pause"
-                       string="Pending Claims"
+                       string="Pending"
                        domain="[('state','=','pending')]"
                        separator="1" help="All pending Claims"
                    />
                    <separator orientation="vertical"/>
                    <field name="name" select='1'/>
                    <field name="partner_id" select="1"/>
-                   <field name="user_id" select="1" widget="selection"/>
+                   <field name="user_id" select="1" widget="selection">
+	                   	<filter icon="terp-partner"
+	                   		domain="[('user_id','=',uid)]" help="My Claims"
+	                   		default="1" />
+	                   	<filter icon="terp-partner"
+	                   		domain="[('user_id','=', False)]"
+	                   		help="Unassigned Claims" />
+                   </field>
                    <field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
                        <filter icon="terp-crm"
                            domain="[('section_id','=',context.get('section_id',False))]"

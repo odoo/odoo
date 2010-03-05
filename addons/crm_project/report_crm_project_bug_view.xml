@@ -29,7 +29,7 @@
         <record id="view_crm_project_bug_form" model="ir.ui.view">
             <field name="name">report.crm.project.bug.form</field>
             <field name="model">report.crm.project.bug</field>
-            <field name="inherit_id" ref="report_crm.view_crm_case_form"/>
+            <field name="inherit_id" ref="crm.view_crm_case_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="nbr" position="after">
@@ -58,7 +58,7 @@
         <record id="view_crm_project_bug_filter" model="ir.ui.view">
             <field name="name">report.crm.project.bug.select</field>
             <field name="model">report.crm.project.bug</field>
-            <field name="inherit_id" ref="report_crm.view_crm_case_filter"/>
+            <field name="inherit_id" ref="crm.view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
 				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]' position='after'>

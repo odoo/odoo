@@ -296,8 +296,8 @@ class crm_case(osv.osv):
             if section in s:
                 st = case.stage_id.id  or False
                 if st in s[section]:
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
-
+                    stage_value = self.pool.get('crm.case.stage').read(cr, uid,s[section][st] , ['probability'], context)
+                    self.write(cr, uid, [case.id], {'stage_id': s[section][st],'probability':stage_value['probability']})
         return True
     
     def get_stage_dict(self, cr, uid, ids, context={}):
@@ -319,7 +319,8 @@ class crm_case(osv.osv):
                 st = case.stage_id.id  or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
+                    stage_value = self.pool.get('crm.case.stage').read(cr, uid,s[section][st] ,['probability'], context)
+                    self.write(cr, uid, [case.id], {'stage_id': s[section][st],'probability':stage_value['probability']})
         return True  
     
 
@@ -609,3 +610,15 @@ class users(osv.osv):
         'context_section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 users()
+
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+
+res_partner()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

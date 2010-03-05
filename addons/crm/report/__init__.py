@@ -19,8 +19,13 @@
 #
 ##############################################################################
 
-import report_businessopp
+#import report_businessopp
 import crm_report
+import crm_report_claim
+import crm_report_lead
+import crm_report_phonecall
+import crm_report_fundraising
+import crm_report_opportunity
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
