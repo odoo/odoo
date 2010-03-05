@@ -31,7 +31,7 @@ import crm_claim
 import crm_fundraising
 import crm_helpdesk
 
-
+import crm_report
 #import report
 import wizard
 

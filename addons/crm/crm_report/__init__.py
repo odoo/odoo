@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-import report_crm
-import report_crm_lead
-import report_crm_claim
-import report_crm_opportunity
-import report_crm_fundraising
-import report_crm_phonecall
+import crm_report
+import crm_report_crm_lead
+import crm_report_claim
+import crm_report_opportunity
+import crm_report_fundraising
+import crm_report_phonecall
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
