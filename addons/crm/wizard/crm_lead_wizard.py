@@ -57,7 +57,7 @@ class partner_create(wizard.interface):
                 'string':'Action', 'required':True, 'default': lambda *a:'exist'},
         'partner_id' : {'type':'many2one', 'relation':'res.partner', 'string':'Partner'},
     }
-
+    
     def _selectPartner(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         case_obj = pool.get('crm.lead')
@@ -75,8 +75,11 @@ class partner_create(wizard.interface):
                     addresses = contact_obj.browse(cr, uid, address_ids)
                     partner_ids = addresses and [addresses[0].partner_id.id] or False
 
-            partner_id = partner_ids and partner_ids[0] or False            
-        return {'partner_id': partner_id}
+            partner_id = partner_ids and partner_ids[0] or False
+        vals = {'partner_id': partner_id}
+        if not partner_id:
+            vals['action'] = 'create'            
+        return vals
 
     def _create_partner(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)        
@@ -98,7 +101,16 @@ class partner_create(wizard.interface):
                     'name': case.name,
                     'phone': case.phone,
                     'mobile': case.mobile,
-                    'email': case.email_from
+                    'email': case.email_from,
+                    'fax': case.fax,
+                    'title': case.title,
+                    'function': case.function and case.function.id or False,
+                    'street': case.street,
+                    'street2': case.street2,
+                    'zip': case.zip,
+                    'city': case.city,
+                    'country_id': case.country_id and case.country_id.id or False,
+                    'state_id': case.state_id and case.state_id.id or False,
                 })
 
             else:

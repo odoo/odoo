@@ -41,17 +41,25 @@ class crm_meeting(osv.osv):
     _inherit = ["crm.case", "calendar.event"]   
 
     _columns = { 
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
-                            domain="[('object_id.model', '=', 'crm.meeting')]", \
-            ),            
-        'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'),        
-        'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),       
-        'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'),
+                        domain="[('object_id.model', '=', 'crm.meeting')]", \
+            ), 
+        'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'), 
+        'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'), 
+        'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'), 
         'date_closed': fields.datetime('Closed', readonly=True), 
-        'date_deadline': fields.datetime('Deadline'),
+        'date_deadline': fields.datetime('Deadline'), 
+        'state': fields.selection([('open', 'Confirmed'), 
+                                    ('draft', 'Unconfirmed'), 
+                                    ('cancel', 'Cancelled'), 
+                                    ('done', 'Done')], 'State', \
+                                    size=16, readonly=True)
     }
-
+    
+    _defaults = {
+        'state': lambda *a: 'draft',
+    }
+    
 crm_meeting()
 
 class calendar_attendee(osv.osv):
@@ -74,7 +82,9 @@ class calendar_attendee(osv.osv):
                     result[id][name] = False
         return result
     _columns = {
-        'categ_id': fields.function(_compute_data, method=True, string='Event Type', type="many2one", relation="crm.case.categ", multi='categ_id'), 
+        'categ_id': fields.function(_compute_data, method=True, \
+                        string='Event Type', type="many2one", \
+                        relation="crm.case.categ", multi='categ_id'), 
     }
 calendar_attendee()
 

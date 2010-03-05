@@ -165,9 +165,9 @@ class phonecall2opportunity(partner_create):
         pool = pooler.get_pool(cr.dbname)
         case_obj = pool.get('crm.phonecall')
         for case in case_obj.browse(cr, uid, data['ids']):
-            if case.state != 'open':
+            if case.state in ['done', 'cancel']:
                 raise wizard.except_wizard(_('Warning !'),
-                    _('Phone Call state should be \'Open\' before converting to Opportunity.'))
+                    _('Closed/Cancelled Phone Call Could not convert into Opportunity.'))
         return {}
 
     def _selectopportunity(self, cr, uid, data, context):
@@ -200,8 +200,7 @@ class phonecall2opportunity(partner_create):
 
         phonecall_case_obj = pool.get('crm.phonecall')
         opportunity_case_obj = pool.get('crm.opportunity')
-        for phonecall in phonecall_case_obj.browse(cr, uid, data['ids']):         
-            #TODO : Take other info from phonecall                   
+        for phonecall in phonecall_case_obj.browse(cr, uid, data['ids']):                     
             new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
                 'name': data['form']['name'],
                 'planned_revenue': data['form']['planned_revenue'],
@@ -210,7 +209,8 @@ class phonecall2opportunity(partner_create):
                 'section_id': phonecall.section_id.id,
                 'description': phonecall.description,         
                 'phonecall_id': phonecall.id,
-                'priority': phonecall.priority    
+                'priority': phonecall.priority,
+                'phone': phonecall.partner_phone,
             })
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
             vals = {
@@ -281,9 +281,15 @@ class phonecall2meeting(wizard.interface):
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        phonecall = phonecall_case_obj.browse(cr, uid, data['id'], context=context)
+        partner_id = phonecall.partner_id and phonecall.partner_id.id or False
+        name = phonecall.name
+        email = phonecall.email_from
+        section_id = phonecall.section_id and phonecall.section_id.id or False      
         return {            
             'name': _('Meetings'),
-            'domain' : "[('phonecall_id','in',%s)]"%(data['ids']),         
+            'domain' : "[('user_id','=',%s)]"%(uid), 
+            'context': {'default_partner_id': partner_id, 'default_section_id': section_id, 'default_email_from': email, 'default_state':'open', 'default_name':name},        
             'view_type': 'form',
             'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',

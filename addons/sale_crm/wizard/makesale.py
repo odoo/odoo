@@ -130,6 +130,9 @@ class make_sale(wizard.interface):
 
         if data['form']['close']:
             case_obj.case_close(cr, uid, data['ids'])
+        
+        if not new_ids:
+            return {}
             
         if len(new_ids)<=1:
             value = {

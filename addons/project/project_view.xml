@@ -3,8 +3,7 @@
     <data>
         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
         <menuitem id="menu_project_management" name="Project Management" parent="base.menu_main_pm" sequence="1"/>
-
-         <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
+        <menuitem id="menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
 
         <!-- Project -->
         <record id="edit_project" model="ir.ui.view">
@@ -25,7 +24,7 @@
                         <page string="Administration">
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Scheduling"/>
-                                 <field name="priority"/>
+                                <field name="priority"/>
                                 <field name="active" select="2"/>
                             </group>
                             <group col="2" colspan="2">
@@ -86,6 +85,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_project_list" model="ir.ui.view">
             <field name="name">project.project.list</field>
             <field name="model">project.project</field>
@@ -146,7 +146,6 @@
                 </tree>
             </field>
         </record>
-        <!--<menuitem id="menu_all_project" parent="base.menu_main_pm" name="Projects"/> -->
 
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
@@ -165,9 +164,9 @@
             <field name="domain">[('state','=','template')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
-        <!--<menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_definitions"/>-->
         <menuitem  id="menu_template_project_specification" parent="project.menu_definitions" name="Specification" sequence="1"/>
         <menuitem action="open_view_template_project" id="menu_template_project" parent="project.menu_template_project_specification" name="Specification Template"/>
+
         <record id="view_task_work_form" model="ir.ui.view">
             <field name="name">project.task.work.form</field>
             <field name="model">project.task.work</field>
@@ -320,6 +319,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_task_tree2" model="ir.ui.view">
             <field name="name">project.task.tree</field>
             <field name="model">project.task</field>
@@ -463,6 +463,7 @@
             <field name="domain">[('project_id', 'child_of', [active_id])]</field>
             <field name="context">{'project_id':active_id, 'active_test':False}</field>
         </record>
+
         <record id="ir_project_task_open" model="ir.values">
             <field eval=" 'tree_but_open'" name="key2"/>
             <field eval="'project.project'" name="model"/>
@@ -484,6 +485,7 @@
                 </form>
             </field>
         </record>
+
         <record id="task_type_tree" model="ir.ui.view">
             <field name="name">project.task.type.tree</field>
             <field name="model">project.task.type</field>
@@ -495,6 +497,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="open_task_type_form" model="ir.actions.act_window">
             <field name="name">Task Types</field>
             <field name="res_model">project.task.type</field>
@@ -507,15 +510,6 @@
 
         <act_window
             domain="[('project_id', '=', active_id)]"
-            id="act_project_project_2_project_task_new"
-            name="Create a Task"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="form,tree,calendar,graph"
-            view_type="form"/>
-
-        <act_window
-            domain="[('project_id', '=', active_id)]"
             id="act_project_project_2_project_task_all"
             name="Tasks"
             res_model="project.task"
@@ -523,16 +517,7 @@
             view_mode="tree,form,calendar,graph"
             view_type="form"/>
 
-         <act_window
-            domain="[('project_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]"
-            id="act_project_project_2_project_task_opened"
-            name="Tasks in Progress"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="tree,form,calendar,graph"
-            view_type="form"/>
-
-        <record id="task_company" model="ir.ui.view">
+         <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>
             <field name="model">res.company</field>
             <field name="type">form</field>
@@ -549,30 +534,30 @@
 
       <!--     User Form-->
       <record id="view_project_users_form_simple" model="ir.ui.view">
-            <field name="name">res.users.project.form1</field>
-            <field name="model">res.users</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
-            <field eval="18" name="priority"/>
-            <field name="arch" type="xml">
-                <field name="password" position="after">
-                 <field name="context_project_id" completion="1" widget="selection"/>
-                </field>
-            </field>
-        </record>
+	      <field name="name">res.users.project.form1</field>
+	      <field name="model">res.users</field>
+	      <field name="type">form</field>
+	      <field name="inherit_id" ref="base.view_users_form"/>
+	      <field eval="18" name="priority"/>
+	      <field name="arch" type="xml">
+	          <field name="password" position="after">
+	           <field name="context_project_id" completion="1" widget="selection"/>
+	          </field>
+	      </field>
+     </record>
 
      <record model="ir.ui.view" id="view_users_form_project_modif_inherited1">
-            <field name="name">view.users.form.project.modif.inherited1</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-            <field name="type">form</field>
-            <field eval="18" name="priority"/>
-            <field name="arch" type="xml">
-             <page string="Current Activity" position="inside">
-                    <field name="context_project_id" completion="1" widget="selection" context="{'user_prefence':True}"/>
-                </page>
-            </field>
-        </record>
+	     <field name="name">view.users.form.project.modif.inherited1</field>
+	     <field name="model">res.users</field>
+	     <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+	     <field name="type">form</field>
+	     <field eval="18" name="priority"/>
+	     <field name="arch" type="xml">
+            <page string="Current Activity" position="inside">
+                <field name="context_project_id" completion="1" widget="selection" context="{'user_prefence':True}"/>
+            </page>
+       </field>
+    </record>
 
 <!--- Messages-->
      <record id="view_project_message_form" model="ir.ui.view">

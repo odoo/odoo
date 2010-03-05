@@ -202,6 +202,10 @@ class invite_attendee_wizard(osv.osv_memory):
  to send an Email to Invited Person')
               }
 
+    _defaults = {
+                 'type': lambda *x: 'internal'
+                 }
+
     def do_invite(self, cr, uid, ids, context={}):
         datas = self.read(cr, uid, ids)[0]
         model = False
@@ -224,12 +228,10 @@ class invite_attendee_wizard(osv.osv_memory):
             user_obj = self.pool.get('res.users')
             for user_id in datas.get('user_ids', []):
                 user = user_obj.browse(cr, uid, user_id)
-                if not user.address_id.email:
-                    raise osv.except_osv(_('Error!'), \
-                                    ("User does not have an email Address"))
                 vals.update({'user_id': user_id, 
                                      'email': user.address_id.email})
-                mail_to.append(user.address_id.email)
+                if user.address_id.email:
+                    mail_to.append(user.address_id.email)
                 
         elif  type == 'external' and datas.get('email'):
             vals.update({'email': datas['email']})
@@ -237,13 +239,11 @@ class invite_attendee_wizard(osv.osv_memory):
         elif  type == 'partner':
             add_obj = self.pool.get('res.partner.address')
             for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
-                if not contact.email:
-                    raise osv.except_osv(_('Error!'), \
-                                    ("Partner does not have an email Address"))
                 vals.update({
                              'partner_address_id': contact.id, 
                              'email': contact.email})
-                mail_to.append(contact.email)
+                if contact.email:
+                    mail_to.append(contact.email)
 
         if model == 'calendar.attendee':
             att = att_obj.browse(cr, uid, context['active_id'])
@@ -256,9 +256,14 @@ class invite_attendee_wizard(osv.osv_memory):
             obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
         
         if datas.get('send_mail'):
+            if not mail_to:
+                name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
+                                   self._columns['type'].selection))
+                raise osv.except_osv(_('Error!'), ("%s must have an email \
+Address to send mail") % (name[0]))
             att_obj._send_mail(cr, uid, [att_id], mail_to, \
                    email_from=tools.config.get('email_from', False))
-                
+
         return {}
 
 
@@ -268,10 +273,6 @@ class invite_attendee_wizard(osv.osv_memory):
         cr.execute('select id from res_partner_address \
                          where partner_id=%s' % (partner_id))
         contacts = map(lambda x: x[0], cr.fetchall())
-        if not contacts:
-            raise osv.except_osv(_('Error!'), \
-                                ("Partner does not have any Contacts"))
-
         return {'value': {'contact_ids': contacts}}
 
 invite_attendee_wizard()
@@ -398,7 +399,7 @@ request was delegated to"),
         'user_id': fields.many2one('res.users', 'User'), 
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
         'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', help="Partner related to contact"), 
-        'email': fields.char('Email', size=124, required=True, help="Email of Invited Person"), 
+        'email': fields.char('Email', size=124, help="Email of Invited Person"), 
         'event_date': fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'), 
         'event_end_date': fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'), 
         'ref': fields.reference('Event Ref', selection=_links_get, size=128), 
@@ -480,6 +481,17 @@ request was delegated to"),
         self.write(cr, uid, ids, {'state': 'tentative'}, context)
 
     def do_accept(self, cr, uid, ids, context=None, *args):
+        vals = self.read(cr, uid, ids, context=context)[0]
+        user = vals.get('user_id')
+        if user:
+            ref = vals.get('ref', None)
+            if ref:
+                model, event = ref.split(',')
+                model_obj = self.pool.get(model)
+                event_ref =  model_obj.browse(cr, uid, event, context=context)[0]
+                if event_ref.user_id.id != user[0]:
+                    defaults = {'user_id':  user[0]}
+                    new_event = model_obj.copy(cr, uid, event, default=defaults, context=context)
         self.write(cr, uid, ids, {'state': 'accepted'}, context)
 
     def do_decline(self, cr, uid, ids, context=None, *args):
@@ -698,36 +710,38 @@ class calendar_event(osv.osv):
     def _tz_get(self, cr, uid, context={}):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
-    def onchange_rrule_type(self, cr, uid, ids, rtype, *args, **argv):
-        if rtype == 'none' or not rtype:
-            return {'value': {'rrule': ''}}
-        if rtype == 'custom':
+    
+    def onchange_dates(self, cr, uid, ids, start_date, duration=False, end_date=False, context={}):
+        if not start_date:
             return {}
-        rrule = self.pool.get('calendar.custom.rrule')
-        rrulestr = rrule.compute_rule_string(cr, uid, {'freq': rtype.upper(), \
-                                 'interval': 1})
-        return {'value': {'rrule': rrulestr}}
-    
-    def _get_duration(self, cr, uid, ids, name, arg, context):
-        res = {}
-        for event in self.browse(cr, uid, ids, context=context):
-            start = datetime.strptime(event.date, "%Y-%m-%d %H:%M:%S")
-            res[event.id] = 0
-            if event.date_deadline:
-                end = datetime.strptime(event.date_deadline[:19], "%Y-%m-%d %H:%M:%S")
-                diff = end - start
-                duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
-                res[event.id] = round(duration, 2)
-        return res
+        start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
+        value = {}
+        if end_date and not duration:
+            end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
+            diff = end - start
+            duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
+            value['duration'] = round(duration, 2)
+        elif not end_date:
+            end = start + timedelta(hours=duration)
+            value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
+        return {'value': value}
 
-    def _set_duration(self, cr, uid, id, name, value, arg, context):
-        event = self.browse(cr, uid, id, context=context)
-        start = datetime.strptime(event.date, "%Y-%m-%d %H:%M:%S")
-        end = start + timedelta(hours=value)
-        cr.execute("UPDATE %s set date_deadline='%s' \
-                        where id=%s"% (self._table, end.strftime("%Y-%m-%d %H:%M:%S"), id))
-        return True
-    
+    def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for event in ids:
+            datas = self.read(cr, uid, ids)[0]
+            if datas.get('rrule_type'):
+                if datas.get('rrule_type') == 'none':
+                    result[event] = False
+                elif datas.get('rrule_type') == 'custom':
+                    rrule_custom = self.compute_rule_string(cr, uid, datas)
+                    result[event] = rrule_custom
+                else:
+                    result[event] = self.compute_rule_string(cr, uid, {'freq':\
+                                        datas.get('rrule_type').upper(), \
+                                        'interval': 1}, context=context)
+        return result
+
     _columns = {
         'id': fields.integer('ID'), 
         'sequence': fields.integer('Sequence'), 
@@ -735,8 +749,7 @@ class calendar_event(osv.osv):
         'date': fields.datetime('Date'), 
         'date_deadline': fields.datetime('Deadline'), 
         'create_date': fields.datetime('Created', readonly=True), 
-        'duration': fields.function(_get_duration, method=True, \
-                                    fnct_inv=_set_duration, string='Duration'), 
+        'duration': fields.float('Duration'), 
         'description': fields.text('Your action'), 
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
                  ('confidential', 'Confidential')], 'Mark as'), 
@@ -749,7 +762,7 @@ class calendar_event(osv.osv):
 defines the list of date/time exceptions for arecurring calendar component."), 
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
 rule or repeating pattern for anexception to a recurrence set"), 
-        'rrule': fields.char('Recurrent Rule', size=124), 
+        'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, string='Recurrent Rule', store=True), 
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'), 
@@ -757,26 +770,49 @@ rule or repeating pattern for anexception to a recurrence set"),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
         'recurrent_uid': fields.integer('Recurrent ID'), 
         'recurrent_id': fields.datetime('Recurrent ID date'), 
-        'vtimezone': fields.selection(_tz_get, 'Timezone', size=64), 
-        'user_id': fields.many2one('res.users', 'Responsible'),        
+        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, string='Timezone'), 
+        'user_id': fields.many2one('res.users', 'Responsible'), 
+        'freq': fields.selection([('None', 'No Repeat'), \
+                            ('secondly', 'Secondly'), \
+                            ('minutely', 'Minutely'), \
+                            ('hourly', 'Hourly'), \
+                            ('daily', 'Daily'), \
+                            ('weekly', 'Weekly'), \
+                            ('monthly', 'Monthly'), \
+                            ('yearly', 'Yearly')], 'Frequency'), 
+        'interval': fields.integer('Interval'), 
+        'count': fields.integer('Count'), 
+        'mo': fields.boolean('Mon'), 
+        'tu': fields.boolean('Tue'), 
+        'we': fields.boolean('Wed'), 
+        'th': fields.boolean('Thu'), 
+        'fr': fields.boolean('Fri'), 
+        'sa': fields.boolean('Sat'), 
+        'su': fields.boolean('Sun'), 
+        'select1': fields.selection([('date', 'Date of month'), \
+                            ('day', 'Day of month')], 'Option'), 
+        'day': fields.integer('Date of month'), 
+        'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
+                                   ('WE', 'Wednesday'), ('TH', 'Thursday'), \
+                                   ('FR', 'Friday'), ('SA', 'Saturday'), \
+                                   ('SU', 'Sunday')], 'Weekday'), 
+        'byday': fields.selection([('1', 'First'), ('2', 'Second'), \
+                                   ('3', 'Third'), ('4', 'Fourth'), \
+                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day'), 
+        'month_list': fields.selection(months.items(), 'Month'), 
+        'end_date': fields.date('Repeat Until')
     }
-    
+
     _defaults = {
          'class': lambda *a: 'public', 
          'show_as': lambda *a: 'busy', 
+         'freq':  lambda *x: 'None', 
+         'select1':  lambda *x: 'date', 
+         'interval':  lambda *x: 1, 
     }
     
-    def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
-        if not user_id:
-            return {'value': {'vtimezone': False}}
-        value = {'vtimezone': False}
-        cr.execute('select context_tz from res_users where id=%s' % (user_id))
-        timezone = cr.fetchone()[0]
-        if timezone:
-            value.update({'vtimezone': timezone.lower()})
-        return {'value': value}    
-        
     def modify_this(self, cr, uid, ids, defaults, context=None, *args):
+        ids = map(lambda x: base_calendar_id2real_id(x), ids)
         datas = self.read(cr, uid, ids[0], context=context)
         defaults.update({
                'recurrent_uid': base_calendar_id2real_id(datas['id']), 
@@ -785,10 +821,26 @@ rule or repeating pattern for anexception to a recurrence set"),
                'rrule': ''
                     })
         exdate = datas['exdate'] and datas['exdate'].split(',') or []
-        exdate.append(defaults.get('date'))
+        if defaults.get('date'):
+            exdate.append(defaults.get('date'))
         self.write(cr, uid, ids, {'exdate': ','.join(exdate)}, context=context)
         new_id = self.copy(cr, uid, ids[0], default=defaults, context=context)
         return new_id
+
+    def modify_all(self, cr, uid, ids, defaults, context=None, *args):
+        ids = map(lambda x: base_calendar_id2real_id(x), ids)
+        defaults.pop('id')
+        defaults.update({'table': self._table})
+
+        qry = "UPDATE %(table)s set name='%(name)s', \
+                        date='%(date)s', date_deadline='%(date_deadline)s'"
+        if defaults.get('alarm_id'):
+            qry += ", alarm_id=%(alarm_id)s"
+        if defaults.get('location'):
+            qry += ", location='%(location)s'"
+        qry += "WHERE id=%s" % (ids[0])
+        cr.execute(qry % (defaults))
+        return True
 
     def get_recurrent_ids(self, cr, uid, select, base_start_date, base_until_date, limit=100):
         if not limit:
@@ -862,6 +914,50 @@ rule or repeating pattern for anexception to a recurrence set"),
             return ids and ids[0] or False
         return ids
 
+    def compute_rule_string(self, cr, uid, datas, context=None, *args):
+        weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        weekstring = ''
+        monthstring = ''
+        yearstring = ''
+#    logic for computing rrule string
+        freq = datas.get('freq')
+        if freq == 'None':
+            return ''
+
+        if freq == 'weekly':
+            byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
+            if byday:
+                weekstring = ';BYDAY=' + ','.join(byday)
+
+        elif freq == 'monthly':
+            if datas.get('select1')=='date' and (datas.get('day') < 1 or datas.get('day') > 31):
+                raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
+            if datas.get('select1')=='day':
+                monthstring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            elif datas.get('select1')=='date':
+                monthstring = ';BYMONTHDAY=' + str(datas.get('day'))
+
+        elif freq == 'yearly':
+            if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
+                raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
+            bymonth = ';BYMONTH=' + str(datas.get('month_list'))
+            if datas.get('select1')=='day':
+                bystring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
+            elif datas.get('select1')=='date':
+                bystring = ';BYMONTHDAY=' + str(datas.get('day'))
+            yearstring = bymonth + bystring
+
+        if datas.get('end_date'):
+            datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
+        enddate = (datas.get('count') and (';COUNT=' +  str(datas.get('count'))) or '') +\
+                             ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
+
+        rrule_string = 'FREQ=' + freq.upper() +  weekstring + ';INTERVAL=' + \
+                str(datas.get('interval')) + enddate + monthstring + yearstring
+
+#        End logic
+        return rrule_string
+
     def search(self, cr, uid, args, offset=0, limit=100, order=None, 
             context=None, count=False):
         args_without_date = []
@@ -889,6 +985,10 @@ rule or repeating pattern for anexception to a recurrence set"),
             select = ids
         new_ids = []
         for id in select:
+            if len(str(id).split('-')) > 1:
+                data = self.read(cr, uid, id, ['date', 'date_deadline'])
+                self.modify_this(cr, uid, [id], vals, context)
+                continue
             id = base_calendar_id2real_id(id)
             if not id in new_ids:
                 new_ids.append(id)
@@ -1076,114 +1176,6 @@ class virtual_report_spool(web_services.report_spool):
 
 virtual_report_spool()
 
-class calendar_custom_rrule(osv.osv):
-    _name = "calendar.custom.rrule"
-    _description = "Custom Recurrency Rule"
-
-    _columns = {
-        'freq': fields.selection([('None', 'No Repeat'), \
-                            ('secondly', 'Secondly'), \
-                            ('minutely', 'Minutely'), \
-                            ('hourly', 'Hourly'), \
-                            ('daily', 'Daily'), \
-                            ('weekly', 'Weekly'), \
-                            ('monthly', 'Monthly'), \
-                            ('yearly', 'Yearly')], 'Frequency', required=True), 
-        'interval': fields.integer('Interval'), 
-        'count': fields.integer('Count'), 
-        'mo': fields.boolean('Mon'), 
-        'tu': fields.boolean('Tue'), 
-        'we': fields.boolean('Wed'), 
-        'th': fields.boolean('Thu'), 
-        'fr': fields.boolean('Fri'), 
-        'sa': fields.boolean('Sat'), 
-        'su': fields.boolean('Sun'), 
-        'select1': fields.selection([('date', 'Date of month'), \
-                            ('day', 'Day of month')], 'Option'), 
-        'day': fields.integer('Date of month'), 
-        'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
-                                   ('WE', 'Wednesday'), ('TH', 'Thursday'), \
-                                   ('FR', 'Friday'), ('SA', 'Saturday'), \
-                                   ('SU', 'Sunday')], 'Weekday'), 
-        'byday': fields.selection([('1', 'First'), ('2', 'Second'), \
-                                   ('3', 'Third'), ('4', 'Fourth'), \
-                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day'), 
-        'month_list': fields.selection(months.items(), 'Month'), 
-        'end_date': fields.date('Repeat Until')
-    }
-
-    _defaults = {
-                 'freq':  lambda *x: 'daily', 
-                 'select1':  lambda *x: 'date', 
-                 'interval':  lambda *x: 1, 
-                 }
-
-    def compute_rule_string(self, cr, uid, datas, context=None, *args):
-        weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
-        weekstring = ''
-        monthstring = ''
-        yearstring = ''
-
-#    logic for computing rrule string
-
-        freq = datas.get('freq')
-        if freq == 'None':
-            obj.write(cr, uid, [res_obj.id], {'rrule': ''})
-            return {}
-
-        if freq == 'weekly':
-            byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
-            if byday:
-                weekstring = ';BYDAY=' + ','.join(byday)
-
-        elif freq == 'monthly':
-            if datas.get('select1')=='date' and (datas.get('day') < 1 or datas.get('day') > 31):
-                raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
-            if datas.get('select1')=='day':
-                monthstring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
-            elif datas.get('select1')=='date':
-                monthstring = ';BYMONTHDAY=' + str(datas.get('day'))
-
-        elif freq == 'yearly':
-            if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
-                raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
-            bymonth = ';BYMONTH=' + str(datas.get('month_list'))
-            if datas.get('select1')=='day':
-                bystring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
-            elif datas.get('select1')=='date':
-                bystring = ';BYMONTHDAY=' + str(datas.get('day'))
-            yearstring = bymonth + bystring
-
-        if datas.get('end_date'):
-            datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
-        enddate = (datas.get('count') and (';COUNT=' +  str(datas.get('count'))) or '') +\
-                             ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
-
-        rrule_string = 'FREQ=' + freq.upper() +  weekstring + ';INTERVAL=' + \
-                str(datas.get('interval')) + enddate + monthstring + yearstring
-
-#        End logic
-        return rrule_string
-
-    def do_add(self, cr, uid, ids, context={}):
-        datas = self.read(cr, uid, ids)[0]
-        if datas.get('interval') <= 0:
-            raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
-
-
-        if not context or not context.get('model'):
-            return {}
-        else:
-            model = context.get('model')
-        obj = self.pool.get(model)
-        res_obj = obj.browse(cr, uid, context['active_id'])
-
-        rrule_string = self.compute_rule_string(cr, uid, datas)
-        obj.write(cr, uid, [res_obj.id], {'rrule': rrule_string})
-        return {}
-
-calendar_custom_rrule()
-
 class res_users(osv.osv):
     _inherit = 'res.users'
 
@@ -1202,7 +1194,7 @@ class res_users(osv.osv):
             status = 'busy'
             res.update({user_id:status})
 
-        #TOCHECK: Delegrated Event        
+        #TOCHECK: Delegated Event        
         for user_id in ids:
             if user_id not in res:
                 res[user_id] = 'free'
@@ -1218,4 +1210,5 @@ class res_users(osv.osv):
                     string='Free/Busy', method=True), 
     }
 res_users()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
