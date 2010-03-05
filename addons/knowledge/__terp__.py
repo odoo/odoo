@@ -30,6 +30,7 @@
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
+        'security/ir.model.access.csv',
         'knowledge_installer.xml',
     ],
     'demo_xml': [],
