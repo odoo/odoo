@@ -26,10 +26,6 @@ from osv import fields, osv
 from tools.misc import currency
 from tools.translate import _
 
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
-
-
 class account_bank_statement(osv.osv):
     def _default_journal_id(self, cr, uid, context={}):
         if context.get('journal_id', False):

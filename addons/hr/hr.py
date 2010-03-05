@@ -19,10 +19,6 @@
 #
 ##############################################################################
 
-from mx import DateTime
-import time
-import math
-
 from osv import fields, osv
 from tools.translate import _
 
