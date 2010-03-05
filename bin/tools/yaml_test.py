@@ -6,6 +6,7 @@ import logging
 
 import pooler
 import netsvc
+import misc
 
 from config import config
 
@@ -74,6 +75,13 @@ class Function(YamlTag):
         self.name = name
         super(Function, self).__init__(**kwargs)
 
+class Report(YamlTag):
+    def __init__(self, model, name, string, **kwargs):
+        self.model = model
+        self.name = name
+        self.string = string
+        super(Function, self).__init__(**kwargs)
+
 class Delete(YamlTag):
     def __init__(self, model, id, search, **kwargs):
         self.model = model
@@ -126,6 +134,10 @@ def function_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return Function(**kwargs)
 
+def report_constructor(loader, node):
+    kwargs = loader.construct_mapping(node)
+    return Report(**kwargs)
+
 def delete_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return Delete(**kwargs)
@@ -153,6 +165,7 @@ yaml.add_constructor(u"!menuitem", menuitem_constructor)
 yaml.add_constructor(u"!workflow", workflow_constructor)
 yaml.add_constructor(u"!act_window", act_window_constructor)
 yaml.add_constructor(u"!function", function_constructor)
+yaml.add_constructor(u"!report", report_constructor)
 yaml.add_constructor(u"!context", context_constructor)
 yaml.add_constructor(u"!delete", delete_constructor)
 yaml.add_constructor(u"!url", url_constructor)
@@ -184,6 +197,9 @@ def is_menuitem(node):
 def is_function(node):
     return isinstance(node, Function) \
         or _is_yaml_mapping(node, Function)
+
+def is_report(node):
+    return isinstance(node, Report)
 
 def is_workflow(node):
     return isinstance(node, Workflow)
@@ -636,6 +652,38 @@ class YamlInterpreter(object):
                 res['name'], res['models'], res['value'], replace=res.get('replace',True), \
                 isobject=res.get('isobject', False), meta=res.get('meta',None))
 
+    def process_report(self, node):
+        values = {}
+        for dest, f in (('name','string'), ('model','model'), ('report_name','name')):
+            values[dest] = getattr(node, f)
+            assert values[dest], "Attribute %s of report is empty !" % (f,)
+        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment'),('attachment_use','attachment_use')):
+            if getattr(node, field):
+                values[dest] = getattr(node, field)
+        if node.auto:
+            values['auto'] = eval(node.auto)
+        if node.sxw:
+            sxw_content = misc.file_open(node.sxw).read()
+            values['report_sxw_content'] = sxw_content
+        if node.header:
+            values['header'] = eval(node.header)
+        values['multi'] = node.multi and eval(node.multi)
+        xml_id = node.id
+        self.validate_xml_id(xml_id)
+
+        self._set_group_values(node, values)
+
+        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, "ir.actions.report.xml", \
+                self.module, values, xml_id, noupdate=self.isnoupdate(node), mode=self.mode)
+        self.id_map[xml_id] = int(id)
+
+        if not node.menu or eval(node.menu):
+            keyword = node.keyword or 'client_print_multi'
+            value = 'ir.actions.report.xml,%s' % id
+            replace = node.replace or True
+            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', \
+                    keyword, values['name'], [values['model']], value, replace=replace, isobject=True, xml_id=xml_id)
+
     def process(self, yaml_string):
         """Processes a Yaml string. Custom tags are interpreted by 'process_' instance methods."""
         
@@ -671,6 +719,8 @@ class YamlInterpreter(object):
             self.process_ir_set(node)
         elif is_act_window(node):
             self.process_act_window(node)
+        elif is_report(node):
+            self.process_report(node)
         elif is_workflow(node):
             if isinstance(node, types.DictionaryType):
                 self.process_workflow(node)
