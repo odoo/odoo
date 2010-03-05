@@ -74,6 +74,7 @@ class report_crm_case(osv.osv):
         'perc_cancel': fields.function(_get_data,string='%Cancel', method=True,type="float"),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'company_id': fields.many2one('res.company','Company',readonly=True),                                  
     }
     _order = 'name desc, user_id'
     def init(self, cr):
@@ -87,10 +88,11 @@ class report_crm_case(osv.osv):
                     c.state,
                     c.user_id,
                     c.section_id,
+                    c.company_id,
                     count(*) as nbr
                 from
                     crm_case c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.company_id
             )""")
 report_crm_case()
 

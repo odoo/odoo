@@ -11,6 +11,7 @@
                     <field name="name" />
                     <field name="month"/>
                     <field name="user_id"/>
+                    <field name="company_id"/>
  					<field name="section_id"/>
                     <field name="nbr"/>
                     <field name="state"/>
@@ -72,6 +73,7 @@
                    <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="User" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}" default="1" />
+                        <filter string="Company" icon="terp-sale" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Section" icon="terp-sale" domain="[]" context="{'group_by':'section_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
@@ -79,6 +81,7 @@
                     	 <separator orientation="vertical"/>
                     	<filter string="Month" icon="terp-sale" domain="[]" context="{'group_by':'month'}"/>
                     	<filter string="Year" icon="terp-sale" domain="[]" context="{'group_by':'name'}"/>
+                    	
                    </group>
                </search>
             </field>

@@ -7,10 +7,10 @@ class report_crm_lead(osv.osv):
     _inherit = "report.crm.case"
     _columns = {
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]" ,readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]", readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'company_id': fields.many2one('res.company','Company'),  
+        'partner_id': fields.many2one('res.partner', 'Partner' ,readonly=True),
+        'company_id': fields.many2one('res.company','Company',readonly=True),  
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_crm_lead')
