@@ -408,7 +408,7 @@ class YamlInterpreter(object):
             self.logger.notifyChannel(logger_channel, netsvc.LOG_TEST, msg)
         python, statements = node.items()[0]
         model = self.get_model(python.model)
-        statements = statements.replace("\r\n", "\n").replace("\n", ";")
+        statements = statements.replace("\r\n", "\n")
         code_context = {'self': model, 'cr': self.cr, 'uid': self.uid, 'log': log, 'context': self.context}
         try:
             code = compile(statements, self.filename, 'exec')
