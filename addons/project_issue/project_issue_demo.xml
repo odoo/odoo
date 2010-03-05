@@ -4,8 +4,8 @@
 	<!-- 
 		((((((((((( Demo Cases ))))))))))) 
 	-->
-<!--For Bug Tracking-->
-	<record id="crm_case_buginaccountsmodule0" model="crm.project.bug">
+<!--For Issue Tracking-->
+	<record id="crm_case_buginaccountsmodule0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_8"/>
 		<field eval="time.strftime('%Y-%m-08 10:15:00')" name="date"/>
 		<field name="type_id" ref="type1"/>
@@ -30,7 +30,7 @@
 		<field model="res.partner.canal" name="canal_id" search="[('name','=','website')]"/>
 	</record>
 
-	<record id="crm_case_programnotgivingproperoutput0" model="crm.project.bug">
+	<record id="crm_case_programnotgivingproperoutput0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_tang"/>
 		<field eval="time.strftime('%Y-%m-15  12:50:00')" name="date"/>
 		<field name="type_id" ref="type2"/>
@@ -47,7 +47,7 @@
 		<field name="project_id" ref="project.project_project_22"/>
 	</record>
 
-	<record id="crm_case_outputincorrect0" model="crm.project.bug">
+	<record id="crm_case_outputincorrect0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_9"/>
 		<field eval="time.strftime('%Y-%m-18 14:30:00')" name="date"/>
 		<field name="type_id" ref="type1"/>
@@ -64,7 +64,7 @@
 		<field eval="&quot;Output incorrect&quot;" name="name"/>
 	</record>
 
-	<record id="crm_case_problemloadingpage0" model="crm.project.bug">
+	<record id="crm_case_problemloadingpage0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_13"/>
 		<field eval="time.strftime('%Y-%m-20  15:25:05')" name="date"/>
 		<field name="type_id" ref="type1"/>
@@ -81,7 +81,7 @@
 		<field eval="&quot;Problem loading page&quot;" name="name"/>
 	</record>
 
-	<record id="crm_case_pagenotfound0" model="crm.project.bug">
+	<record id="crm_case_pagenotfound0" model="project.issue">
 		<field eval="time.strftime('%Y-%m-22  18:15:00')" name="date"/>
 		<field name="type_id" ref="type1"/>
 		<field eval="&quot;3&quot;" name="priority"/>
@@ -97,7 +97,7 @@
 		<field eval="&quot;Page not Found&quot;" name="name"/>
 	</record>
 
-	<record id="crm_case_programmingerror0" model="crm.project.bug">
+	<record id="crm_case_programmingerror0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_10"/>
 		<field eval="time.strftime('%Y-%m-24  09:45:00')" name="date"/>
 		<field name="type_id" ref="type2"/>
@@ -114,7 +114,7 @@
 		<field eval="&quot;Programming Error&quot;" name="name"/>
 	</record>
 
-	<record id="crm_case_logicalerrorinprogram0" model="crm.project.bug">
+	<record id="crm_case_logicalerrorinprogram0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_6"/>
 		<field eval="time.strftime('%Y-%m-26  11:10:00')" name="date"/>
 		<field name="type_id" ref="type1"/>
@@ -131,7 +131,7 @@
 		<field eval="&quot;Logical Error in Program&quot;" name="name"/>
 	</record>
 
-	<record id="crm_case_constrainterror0" model="crm.project.bug">
+	<record id="crm_case_constrainterror0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_6"/>
 		<field eval="time.strftime('%Y-%m-25  13:35:00')" name="date"/>
 		<field name="type_id" ref="type1"/>
@@ -148,7 +148,7 @@
 		<field eval="&quot;Constraint Error&quot;" name="name"/>
 	</record>
 	
-	<record id="crm_case_errorinprogram0" model="crm.project.bug">
+	<record id="crm_case_errorinprogram0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_10"/>
 		<field eval="time.strftime('%Y-%m-28  15:40:00')" name="date"/>
 		<field name="type_id" ref="type2"/>
@@ -164,7 +164,7 @@
 		<field eval="&quot;Error in Program&quot;" name="name"/>
 	</record>
 	
-	<record id="crm_case_patcheserrorinprogram0" model="crm.project.bug">
+	<record id="crm_case_patcheserrorinprogram0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_9"/>
 		<field eval="time.strftime('%Y-%m-28  16:30:00')" name="date"/>
 		<field name="type_id" ref="type2"/>
@@ -181,7 +181,7 @@
 		<field eval="&quot;Patches Error in Program&quot;" name="name"/>
 	</record>
 	
-	<record id="crm_case_newfeaturestobeadded0" model="crm.project.bug">
+	<record id="crm_case_newfeaturestobeadded0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_wong"/>
 		<field eval="time.strftime('%Y-%m-01 12:15:10')" name="date"/>
 		<field name="type_id" ref="type1"/>
@@ -198,7 +198,7 @@
 		<field eval="&quot;New Features To Be Added&quot;" name="name"/>
 	</record>
 	
-	<record id="crm_case_addmenustothemodule0" model="crm.project.bug">
+	<record id="crm_case_addmenustothemodule0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_1"/>
 		<field eval="time.strftime('%Y-%m-05 18:00:00')" name="date"/>
 		<field name="type_id" ref="type2"/>
@@ -216,7 +216,7 @@
 		<field eval="&quot;info@opensides.be&quot;" name="email_from"/>
 	</record>
 	
-	<record id="crm_case_includeattendancesheetinproject0" model="crm.project.bug">
+	<record id="crm_case_includeattendancesheetinproject0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_2"/>
 		<field eval="time.strftime('%Y-%m-10 17:05:30')" name="date"/>
 		<field name="type_id" ref="type1"/>
@@ -234,7 +234,7 @@
 		<field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
 	</record>
 	
-	<record id="crm_case_createnewobject0" model="crm.project.bug">
+	<record id="crm_case_createnewobject0" model="project.issue">
 		<field model="res.partner.canal" name="canal_id" search="[('name','=','phone')]"/>
 		<field name="partner_address_id" ref="base.res_partner_address_6"/>
 		<field name="som" ref="base.som_happy"/>
@@ -253,7 +253,7 @@
 		<field eval="&quot;Create new object&quot;" name="name"/>
 	</record>
 	
-	<record id="crm_case_improvereportsinhrms0" model="crm.project.bug">
+	<record id="crm_case_improvereportsinhrms0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_15"/>
 		<field eval="time.strftime('%Y-%m-19 12:15:00')" name="date"/>
 		<field name="type_id" ref="type1"/>
@@ -270,7 +270,7 @@
 		<field eval="&quot;Improve Reports in HRMS&quot;" name="name"/>
 	</record>
 	
-	<record id="crm_case_improvereportsinpms0" model="crm.project.bug">
+	<record id="crm_case_improvereportsinpms0" model="project.issue">
 		<field name="partner_address_id" ref="base.res_partner_address_15"/>
 		<field eval="time.strftime('%Y-%m-21 14:30:00')" name="date"/>
 		<field name="type_id" ref="type1"/>
