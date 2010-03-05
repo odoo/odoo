@@ -50,15 +50,44 @@ class Python(YamlTag):
         self.name = name
         super(Python, self).__init__(**kwargs)
 
+class Menuitem(YamlTag):
+    def __init__(self, id, name, **kwargs):
+        self.id = id
+        self.name = name
+        super(Menuitem, self).__init__(**kwargs)
+
 class Workflow(YamlTag):
     def __init__(self, model, action, **kwargs):
         self.model = model
         self.action = action
         super(Workflow, self).__init__(**kwargs)
 
+class ActWindow(YamlTag):
+    def __init__(self, model, action, **kwargs):
+        self.model = model
+        self.action = action
+        super(Workflow, self).__init__(**kwargs)
+
+class Function(YamlTag):
+    def __init__(self, model, name, **kwargs):
+        self.model = model
+        self.name = name
+        super(Function, self).__init__(**kwargs)
+
+class Delete(YamlTag):
+    def __init__(self, model, id, search, **kwargs):
+        self.model = model
+        self.id = id
+        self.search = search
+        super(Delete, self).__init__(**kwargs)
+
 class Context(YamlTag):
     def __init__(self, **kwargs):
         super(Context, self).__init__(**kwargs)
+
+class Url(YamlTag):
+    def __init__(self, **kwargs):
+        super(Url, self).__init__(**kwargs)
 
 class Eval(YamlTag):
     def __init__(self, expression):
@@ -82,13 +111,33 @@ def python_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return Python(**kwargs)
 
+def menuitem_constructor(loader, node):
+    kwargs = loader.construct_mapping(node)
+    return Menuitem(**kwargs)
+
 def workflow_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return Workflow(**kwargs)
 
+def act_window_constructor(loader, node):
+    kwargs = loader.construct_mapping(node)
+    return ActWindow(**kwargs)
+
+def function_constructor(loader, node):
+    kwargs = loader.construct_mapping(node)
+    return Function(**kwargs)
+
+def delete_constructor(loader, node):
+    kwargs = loader.construct_mapping(node)
+    return Delete(**kwargs)
+
 def context_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return Context(**kwargs)
+
+def url_constructor(loader, node):
+    kwargs = loader.construct_mapping(node)
+    return Url(**kwargs)
 
 def eval_constructor(loader, node):
     expression = loader.construct_scalar(node)
@@ -101,8 +150,13 @@ def ref_constructor(loader, node):
 yaml.add_constructor(u"!assert", assert_constructor)
 yaml.add_constructor(u"!record", record_constructor)
 yaml.add_constructor(u"!python", python_constructor)
+yaml.add_constructor(u"!menuitem", menuitem_constructor)
 yaml.add_constructor(u"!workflow", workflow_constructor)
+yaml.add_constructor(u"!act_window", act_window_constructor)
+yaml.add_constructor(u"!function", function_constructor)
 yaml.add_constructor(u"!context", context_constructor)
+yaml.add_constructor(u"!delete", delete_constructor)
+yaml.add_constructor(u"!url", url_constructor)
 yaml.add_constructor(u"!eval", eval_constructor)
 yaml.add_constructor(u"!ref", ref_constructor)
 
@@ -124,12 +178,28 @@ def is_record(node):
 def is_python(node):
     return _is_yaml_mapping(node, Python)
 
+def is_menuitem(node):
+    return isinstance(node, Menuitem) \
+        or _is_yaml_mapping(node, Menuitem)
+
+def is_function(node):
+    return isinstance(node, Function) \
+        or _is_yaml_mapping(node, Function)
+
 def is_workflow(node):
-    return isinstance(node, Workflow) \
-        or _is_yaml_mapping(node, Workflow)
+    return isinstance(node, Workflow)
+
+def is_act_window(node):
+    return isinstance(node, ActWindow)
+
+def is_delete(node):
+    return isinstance(node, Delete)
 
 def is_context(node):
     return isinstance(node, Context)
+
+def is_url(node):
+    return isinstance(node, Url)
 
 def is_eval(node):
     return isinstance(node, Eval)
@@ -154,7 +224,7 @@ class TestReport(object):
 
     def __str__(self):
         res = []
-        res.append('\nAssertions report:\nLevel\tsuccess\tfailed')
+        res.append('\nAssertions report:\nLevel\tsuccess\tfailure')
         success = failure = 0
         for severity in self._report:
             res.append("%s\t%s\t%s" % (severity, self._report[severity][True], self._report[severity][False]))
@@ -216,6 +286,12 @@ class YamlInterpreter(object):
             id = int(obj['res_id'])
             self.id_map[xml_id] = id
         return id
+    
+    def get_context(self, node, locals_dict):
+        context = self.context.copy()
+        if node.context:
+            context.update(eval(node.context, locals_dict))
+        return context
     
     def process_comment(self, node):
         return node
@@ -336,8 +412,8 @@ class YamlInterpreter(object):
             if not len(values) == 1:
                 raise YamlImportException('Only one child node is accepted (%d given).' % len(values))
             value = values[0]
-            if not 'model' in value and not 'eval' in value:
-                raise YamlImportException('You must provide a model and an expression to evaluate for the workflow.')
+            if not 'model' in value and (not 'eval' in value or not 'search' in value):
+                raise YamlImportException('You must provide a "model" and an "eval" or "search" to evaluate.')
             value_model = self.get_model(value['model'])
             local_context = {'ref': self._ref, '_ref': self._ref}
             local_context['obj'] = lambda x: value_model.browse(self.cr, self.uid, x, context=self.context)
@@ -350,7 +426,192 @@ class YamlInterpreter(object):
             uid = self.uid
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, model, id, workflow.action, self.cr)
+        
+    def process_function(self, node):
+        if self.mode != 'init':
+            return
+        function, values = node.items()[0]
+        local_context = {'ref': self._ref, '_ref': self._ref}
+        context = self.get_context(node, local_context)
+        args = []
+        if function.eval:
+            args = eval(function.eval, local_context)
+        for value in values:
+            if not 'model' in value and (not 'eval' in value or not 'search' in value):
+                raise YamlImportException('You must provide a "model" and an "eval" or "search" to evaluate.')
+            value_model = self.get_model(value['model'])
+            local_context = {'ref': self._ref, '_ref': self._ref}
+            local_context['obj'] = lambda x: value_model.browse(self.cr, self.uid, x, context=context)
+            local_context.update(self.id_map)
+            id = eval(value['eval'], local_context)
+            if id != None:
+                args.append(id)
+        model = self.get_model(function.model)
+        method = function.name
+        getattr(model, method)(self.cr, self.uid, *args)
     
+    def _set_group_values(self, node, values):
+        if node.groups:
+            group_names = node.groups.split(',')
+            groups_value = []
+            for group in group_names:
+                if group.startswith('-'):
+                    group_id = self.get_id(group[1:])
+                    groups_value.append((3, group_id))
+                else:
+                    group_id = self.get_id(group)
+                    groups_value.append((4, group_id))
+            values['groups_id'] = groups_value
+
+    def process_menuitem(self, node):
+        self.validate_xml_id(node.id)
+
+        if not node.parent:
+            parent_id = False
+            self.cr.execute('select id from ir_ui_menu where parent_id is null and name=%s', (node.name,))
+            res = self.cr.fetchone()
+            values = {'parent_id': parent_id, 'name': node.name}
+        else:
+            parent_id = self.get_id(node.parent)
+            values = {'parent_id': parent_id}
+            if node.name:
+                values['name'] = node.name
+            try:
+                res = [ self.get_id(node.id) ]
+            except: # which exception ?
+                res = None
+
+        if node.action:
+            action_type = node.type or 'act_window'
+            icons = {
+                "act_window": 'STOCK_NEW',
+                "report.xml": 'STOCK_PASTE',
+                "wizard": 'STOCK_EXECUTE',
+                "url": 'STOCK_JUMP_TO',
+            }
+            values['icon'] = icons.get(action_type, 'STOCK_NEW')
+            if action_type == 'act_window':
+                action_id = self.get_id(node.action)
+                self.cr.execute('select view_type,view_mode,name,view_id,target from ir_act_window where id=%s', (action_id,))
+                ir_act_window_result = self.cr.fetchone()
+                assert ir_act_window_result, "No window action defined for this id %s !\n" \
+                        "Verify that this is a window action or add a type argument." % (node.action,)
+                action_type, action_mode, action_name, view_id, target = ir_act_window_result
+                if view_id:
+                    self.cr.execute('SELECT type FROM ir_ui_view WHERE id=%s', (view_id,))
+                    # TODO guess why action_mode is ir_act_window.view_mode above and ir_ui_view.type here
+                    action_mode = self.cr.fetchone()
+                self.cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%s ORDER BY sequence LIMIT 1', (action_id,))
+                if self.cr.rowcount:
+                    action_mode = self.cr.fetchone()
+                if action_type == 'tree':
+                    values['icon'] = 'STOCK_INDENT'
+                elif action_mode and action_mode.startswith('tree'):
+                    values['icon'] = 'STOCK_JUSTIFY_FILL'
+                elif action_mode and action_mode.startswith('graph'):
+                    values['icon'] = 'terp-graph'
+                elif action_mode and action_mode.startswith('calendar'):
+                    values['icon'] = 'terp-calendar'
+                if target == 'new':
+                    values['icon'] = 'STOCK_EXECUTE'
+                if not values.get('name', False):
+                    values['name'] = action_name
+            elif action_type == 'wizard':
+                action_id = self.get_id(node.action)
+                self.cr.execute('select name from ir_act_wizard where id=%s', (action_id,))
+                ir_act_wizard_result = self.cr.fetchone()
+                if (not values.get('name', False)) and ir_act_wizard_result:
+                    values['name'] = ir_act_wizard_result[0]
+            else:
+                raise YamlImportException("Unsupported type '%s' in menuitem tag." % action_type)
+        if node.sequence:
+            values['sequence'] = node.sequence
+        if node.icon:
+            values['icon'] = node.icon
+
+        self._set_group_values(node, values)
+        
+        pid = self.pool.get('ir.model.data')._update(self.cr, self.uid, \
+                'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
+                res_id=res and res[0] or False)
+
+        if node.id and parent_id:
+            self.id_map[node.id] = int(parent_id)
+
+        if node.action and pid:
+            action_type = node.type or 'act_window'
+            action_id = self.get_id(node.action)
+            action = "ir.actions.%s,%d" % (action_type, action_id)
+            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', \
+                    'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
+
+    def process_act_window(self, node):
+        self.validate_xml_id(node.id)
+        view_id = False
+        if node.view:
+            view_id = self.get_id(node.view)
+        context = eval(node.context, {'ref': self._ref, '_ref': self._ref})
+
+        values = {
+            'name': node.name,
+            'type': type or 'ir.actions.act_window',
+            'view_id': view_id,
+            'domain': node.domain,
+            'context': context,
+            'res_model': node.res_model,
+            'src_model': node.src_model,
+            'view_type': node.view_type or 'form',
+            'view_mode': node.view_mode or 'tree,form',
+            'usage': node.usage,
+            'limit': node.limit,
+            'auto_refresh': node.auto_refresh,
+        }
+
+        self._set_group_values(node, values)
+
+        if node.target:
+            values['target'] = node.target
+        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, \
+                'ir.actions.act_window', self.module, values, node.id, mode=self.mode)
+        self.id_map[node.id] = int(id)
+
+        if node.src_model:
+            keyword = 'client_action_relate'
+            value = 'ir.actions.act_window,%s' % id
+            replace = node.replace or True
+            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', \
+                    keyword, node.id, [node.src_model], value, replace=replace, isobject=True, xml_id=node.id)
+        # TODO add remove ir.model.data
+
+    def process_delete(self, node):
+        ids = []
+        if len(node.search):
+            ids = self.pool.get(node.model).search(self.cr, self.uid, eval(node.search))
+        if len(node.id):
+            try:
+                ids.append(self.get_id(node.id))
+            except:
+                pass
+        if len(ids):
+            self.pool.get(node.model).unlink(self.cr, self.uid, ids)
+            self.pool.get('ir.model.data')._unlink(self.cr, self.uid, node.model, ids, direct=True)
+    
+    def process_url(self, node):
+        self.validate_xml_id(node.id)
+
+        res = {'name': node.name, 'url': node.url, 'target': node.target}
+
+        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, \
+                "ir.actions.url", self.module, res, node.id, mode=self.mode)
+        self.id_map[node.id] = int(id)
+        # ir_set
+        if (not node.menu or eval(node.menu)) and id:
+            keyword = node.keyword or 'client_action_multi'
+            value = 'ir.actions.url,%s' % id
+            replace = node.replace or True
+            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, \
+                    'action', keyword, node.url, ["ir.actions.url"], value, replace=replace, isobject=True, xml_id=node.id)
+
     def process(self, yaml_string):
         """Processes a Yaml string. Custom tags are interpreted by 'process_' instance methods."""
         
@@ -374,13 +635,26 @@ class YamlInterpreter(object):
             self.process_record(node)
         elif is_python(node):
             self.process_python(node)
+        elif is_menuitem(node):
+            self.process_menuitem(node)
+        elif is_delete(node):
+            self.process_delete(node)
+        elif is_url(node):
+            self.process_url(node)
         elif is_context(node):
             self.process_context(node)
+        elif is_act_window(node):
+            self.process_act_window(node)
         elif is_workflow(node):
             if isinstance(node, types.DictionaryType):
                 self.process_workflow(node)
             else:
                 self.process_workflow({node: []})
+        elif is_function(node):
+            if isinstance(node, types.DictionaryType):
+                self.process_function(node)
+            else:
+                self.process_function({node: []})
         else:
             raise YamlImportException("Can not process YAML block: %s" % node)
     
