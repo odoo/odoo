@@ -198,7 +198,9 @@
                            <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Funds"/>
                        </field>
                        <field name="name" select='1' string="Fund Description"/>
-                       <field name="user_id" select="1" widget="selection"/>
+                       <field name="user_id" select="1" widget="selection">
+		                   <filter icon="terp-partner" domain="[('user_id','=', False)]" help="Unassigned" />
+                       </field>
 					   <field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
 							<filter icon="terp-crm"
                                domain="[('section_id','=',context.get('section_id',False))]"
