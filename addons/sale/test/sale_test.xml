@@ -1,121 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- 
-            Order - Invoice - Payment - Picking
-        -->
-
+    
+    	<!-- ================================================================  
+			  Smoke test for sale.order process.
+			  
+			   0. Verify that the virtual stock level for the products is sufficient. 
+			   1. creates a simple sale order with 2 lines, 
+			     in manual invoice mode
+			   2. confirms the sale order
+			   3. creates the invoice manually
+			   4. confirm the invoice manually
+			   5. pay the invoice and reconcile it with payment
+			   6. check availability on picking list
+			   7. deliver the products
+			   8. verify that everything is done: sale.order, invoice, picking. 
+			   
+    	     ================================================================
+    	-->
+    	
+    	<!-- ==== 0. CHECK VIRTUAL STOCK LEVEL ==== -->
+        <assert id="product.product_product_pc1" model="product.product" string="The virtual stock of PC1 is sufficient for the smoke test.">
+            <test expr="virtual_available &gt; 2"/>
+        </assert>
+        <assert id="product.product_product_ram512" model="product.product" string="The virtual stock of RAM512 is sufficient for the smoke test.">
+            <test expr="virtual_available &gt; 3"/>
+        </assert>
+    	
+    	<!-- ==== 1. CREATE SALE ORDER ==== -->  
         <!-- Resource: sale.order -->
-        <record id="test_order_1" model="sale.order">
-            <field name="name">test_order_1</field>
-            <field name="note">This Sale Order was used to test the following use case during the installation: Order - Invoice - Payment - Picking</field>
-            <field name="shop_id" ref="shop" />
-            <field model="product.pricelist" name="pricelist_id" search="[]" />
-            <field name="user_id" ref="base.user_root" />
-            <field name="partner_id" ref="base.res_partner_agrolait" />
-            <field name="partner_invoice_id" ref="base.res_partner_address_8invoice" /> <!-- you should patch your server to get res_partner_address_8invoice, or revert to res_partner_address_8 -->
-            <field name="partner_shipping_id" ref="base.res_partner_address_8delivery" /> <!-- you should patch your server to get res_partner_address_8delivery, or revert to res_partner_address_8 -->
-            <field name="partner_order_id" ref="base.res_partner_address_8" />
+        <record id="smoke_test_sale_order" model="sale.order">
+            <field name="shop_id" ref="shop"/>
+            <field model="product.pricelist" name="pricelist_id" search="[]"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="order_policy">manual</field> <!-- force manual invoicing -->
+            <field name="picking_policy">one</field> <!-- full delivery only -->
+            <field name="invoice_quantity">order</field> <!-- invoice based on ordered quantities -->
+            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_invoice_id" ref="base.res_partner_address_8invoice"/>
+            <field name="partner_shipping_id" ref="base.res_partner_address_8delivery"/>
+            <field name="partner_order_id" ref="base.res_partner_address_8"/>
+            <field name="name">SO-SMOKE-TEST</field>
         </record>
         <!-- Resource: sale.order.line -->
-        <record id="test_order_1_line_1" model="sale.order.line">
-            <field name="order_id" ref="test_order_1" />
+        <record id="smoke_test_sale_order_line_1" model="sale.order.line">
+            <field name="order_id" ref="smoke_test_sale_order"/>
             <field name="name">[PC1] Basic PC</field>
-            <field name="product_id" ref="product.product_product_pc1" />
-            <field name="product_uom" ref="product.product_uom_unit" />
+            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">450</field>
             <field name="product_uom_qty">2</field>
             <field name="product_uos_qty">2</field>
             <field name="type">make_to_stock</field>
         </record>
-        <record id="test_order_1_line_3" model="sale.order.line">
-            <field name="order_id" ref="test_order_1" />
+        <record id="smoke_test_sale_order_line_3" model="sale.order.line">
+            <field name="order_id" ref="smoke_test_sale_order"/>
             <field name="name">[RAM512] DDR 512MB PC400</field>
-            <field name="product_id" ref="product.product_product_ram512" />
-            <field name="product_uom" ref="product.product_uom_unit" />
+            <field name="product_id" ref="product.product_product_ram512"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">90</field>
             <field name="product_uom_qty">3</field>
             <field name="product_uos_qty">3</field>
             <field name="type">make_to_stock</field>
         </record>
-        <assert id="test_order_1" model="sale.order" severity="error" string="The amount of the sale order is correctly computed">
-            <test expr="amount_untaxed == 450*2 + 90*3" />
+        <assert id="smoke_test_sale_order" model="sale.order" severity="error" string="The amount of the sale order is correctly computed">
+            <test expr="amount_untaxed == 450*2 + 90*3"/>
             <test expr="state">draft</test>
         </assert>
-
-        <!-- Confirm order -->
-        <workflow action="order_confirm" model="sale.order" ref="test_order_1" />
-        <assert id="test_order_1" model="sale.order" severity="error" string="the sale order is now in 'Manual in progress' state">
+        
+        
+        <!-- ==== 2. CONFIRM SALE ORDER ==== --> 
+        <workflow action="order_confirm" model="sale.order" ref="smoke_test_sale_order"/>
+        <assert id="smoke_test_sale_order" model="sale.order" string="the sale order is now in 'Manual in progress' state">
             <test expr="state">manual</test>
-            <test expr="len(picking_ids) == 1" />
-            <test expr="picking_ids[0].address_id == partner_shipping_id" />
+            <test expr="len(picking_ids) == 1"/>
+            <test expr="picking_ids[0].address_id == partner_shipping_id"/>
             <test expr="picking_ids[0].invoice_state">none</test>
             <test expr="picking_ids[0].state">confirmed</test> <!-- Used to be desactivated because of MRP_JIT  -->
         </assert>
-
-        <!-- Invoice order -->
-        <workflow action="manual_invoice" model="sale.order" ref="test_order_1" uid="base.user_root" />
-        <assert id="test_order_1" model="sale.order" string="the sale order is now in progress">
+        
+        
+        <!-- ==== 3. CREATE DRAFT INVOICE ==== --> 
+        <workflow action="manual_invoice" model="sale.order" ref="smoke_test_sale_order" uid="base.user_root"/>
+        
+        <assert id="smoke_test_sale_order" model="sale.order" string="the sale order is now in progress and has an invoice">
             <test expr="state">progress</test>
-            <test expr="len(invoice_ids) == 1" />
-            <test expr="invoice_ids[0].amount_untaxed == amount_untaxed" />
-            <test expr="invoice_ids[0].amount_total == amount_total" />
+            <test expr="len(invoice_ids) == 1"/>
+            <test expr="invoice_ids[0].amount_untaxed == amount_untaxed"/>
+            <test expr="invoice_ids[0].amount_total == amount_total"/>
             <test expr="invoice_ids[0].state">draft</test>
-            <test expr="invoice_ids[0].address_invoice_id == partner_invoice_id" />
+            <test expr="invoice_ids[0].address_invoice_id == partner_invoice_id"/>
         </assert>
 
-        <!-- Confirm invoice -->
+        <!-- ==== 4. CONFIRM INVOICE ==== -->         
         <workflow action="invoice_open" model="account.invoice">
-            <value eval="obj(ref('test_order_1')).invoice_ids[0].id" model="sale.order" />
+            <value eval="obj(ref('smoke_test_sale_order')).invoice_ids[0].id" model="sale.order"/>
         </workflow>
-        <assert id="test_order_1" model="sale.order" severity="error" string="the sale order's picking is invoiced">
-            <test expr="invoice_ids[0].reconciled == False" />
-            <test expr="invoice_ids[0].residual == amount_total" />
+        <assert id="smoke_test_sale_order" model="sale.order" severity="error" string="the sale order's picking is invoiced">
+            <test expr="invoice_ids[0].reconciled == False"/>
+            <test expr="invoice_ids[0].residual == amount_total"/>
             <test expr="invoice_ids[0].state">open</test>
         </assert>
 
-        <!-- Pay the invoice -->
+        <!-- ==== 5. PAY THE INVOICE AND RECONCILE ==== -->
         <function model="account.invoice" name="pay_and_reconcile">
-            <value eval="[obj(ref('test_order_1')).invoice_ids[0].id]" model="sale.order" />
-            <value eval="obj(ref('test_order_1')).amount_total" model="sale.order" />
-            <value eval="ref('account.cash')" />
-            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
-            <value eval="ref('account.bank_journal')" />
-            <value eval="ref('account.cash')" />
-            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
-            <value eval="ref('account.bank_journal')" />
+            <value eval="[obj(ref('smoke_test_sale_order')).invoice_ids[0].id]" model="sale.order"/>
+            <value eval="obj(ref('smoke_test_sale_order')).amount_total" model="sale.order"/>
+            <value eval="ref('account.cash')"/>
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <value eval="ref('account.bank_journal')"/>
+            <value eval="ref('account.cash')"/>
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <value eval="ref('account.bank_journal')"/>
         </function>
-        <assert id="test_order_1" model="sale.order" severity="error" string="the sale order's invoice is now paid">
-            <test expr="invoice_ids[0].reconciled == True" />
-            <test expr="invoice_ids[0].residual == 0.0" />
+        <assert id="smoke_test_sale_order" model="sale.order" severity="error" string="the sale order's invoice is now paid">
+            <test expr="invoice_ids[0].reconciled == True"/>
+            <test expr="invoice_ids[0].residual == 0.0"/>
             <test expr="invoice_ids[0].state">paid</test>
         </assert>
 
-        <!-- assign stock -->
-        <!-- Here we need to use the function tag because action_assign is a method of stock_picking and not part of the workflow -->
-        <function model="stock.picking" name="action_assign">
-            <value eval="[obj(ref('test_order_1')).picking_ids[0].id]" model="sale.order" />
-        </function>
-        <assert id="test_order_1" model="sale.order" severity="error" string="the sale order's picking is now assigned">
-            <test expr="picking_ids[0].state">assigned</test>
+		<!-- ==== VERIFY THE PICKING AND MOVES ARE CONFIRMED ==== -->
+		<!-- Check the state of the picking and moves -->
+        <assert id="smoke_test_sale_order" model="sale.order" severity="fatal" string="the sale order has now a corresponding packing">
+            <test expr="len(picking_ids) == 1"/>
+        </assert>
+        <!-- Verify the state of the picking and its moves  -->
+        <assert id="smoke_test_sale_order" model="sale.order" severity="error" string="the sale order's picking will be sent to the correct address and is already confirmed">
+            <test expr="picking_ids[0].address_id == partner_shipping_id"/>
+            <test expr="picking_ids[0].state in ('confirmed','assigned')"/> <!-- Both values are acceptable depending if mrp-jit is installed or not -->
+        </assert>
+        <assert id="smoke_test_sale_order" model="sale.order" severity="error" string="the stock moves of the picking must be confirmed">
+            <test expr="picking_ids[0].move_lines[0].state in ('confirmed','assigned')"/> <!-- Both values are acceptable depending if mrp-jit is installed or not -->
         </assert>
 
-        <!-- Do the same as in wizard_partial_picking lines 143-144 -->
+		<!-- ==== 6. PICKING: CHECK AVAILABILITY  ==== -->
+        <!-- Here we need to directly call the function tag because action_assign is a method of stock_picking and not part of the workflow -->
+        <function model="stock.picking" name="action_assign">
+            <value eval="[obj(ref('smoke_test_sale_order')).picking_ids[0].id]" model="sale.order"/>
+        </function>
+        <assert id="smoke_test_sale_order" model="sale.order" severity="error" string="the sale order's picking is now assigned">
+            <test expr="picking_ids[0].state">assigned</test>
+        </assert>
+        
+        <!-- The above step could also be replaced by the following call to the mrp schedulers:  -->
+        <!-- <function model="mrp.procurement" name="run_scheduler"/> -->
+
+        <!-- ==== 7. MAKE THE DELIVERY ==== -->
+        <!-- See wizard_picking_make or wizard_partial_picking in stock module. -->
         <function model="stock.picking" name="action_move">
-            <value eval="[obj(ref('test_order_1')).picking_ids[0].id]" model="sale.order" />
+            <value eval="[obj(ref('smoke_test_sale_order')).picking_ids[0].id]" model="sale.order"/>
         </function>
         <workflow action="button_done" model="stock.picking">
-            <value eval="obj(ref('test_order_1')).picking_ids[0].id" model="sale.order" />
+            <value eval="obj(ref('smoke_test_sale_order')).picking_ids[0].id" model="sale.order"/>
         </workflow>
-        <assert id="test_order_1" model="sale.order" string="the sale order's picking is now done">
+        
+        
+        <!-- ==== 8. VERIFY THAT EVERYTHING IS DONE ==== -->
+        <assert id="smoke_test_sale_order" model="sale.order" string="the sale order's picking is now done">
             <test expr="picking_ids[0].state">done</test>
-            <test expr="shipped == True" />
-            <test expr="invoiced == True" />
+            <test expr="shipped == True"/>
+            <test expr="invoiced == True"/>
         </assert>
 
         <!-- Run all schedulers -->
-        <function model="mrp.procurement" name="run_scheduler" />
-        <assert id="test_order_1" model="sale.order" string="the sale order is now done">
+        <function model="mrp.procurement" name="run_scheduler"/>
+        <assert id="smoke_test_sale_order" model="sale.order" string="the sale order is now done">
             <test expr="state">done</test>
         </assert>
     </data>
