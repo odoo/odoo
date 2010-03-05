@@ -80,7 +80,7 @@ class Report(YamlTag):
         self.model = model
         self.name = name
         self.string = string
-        super(Function, self).__init__(**kwargs)
+        super(Report, self).__init__(**kwargs)
 
 class Delete(YamlTag):
     def __init__(self, model, id, search, **kwargs):
