@@ -291,6 +291,9 @@ class YamlInterpreter(object):
         if node.context:
             context.update(eval(node.context, locals_dict))
         return context
+
+    def isnoupdate(self, node):
+        return self.noupdate or node.noupdate or False
     
     def process_comment(self, node):
         return node
@@ -315,6 +318,8 @@ class YamlInterpreter(object):
     def process_assert(self, node):
         assertion, expressions = node.items()[0]
 
+        if self.isnoupdate(assertion) and self.mode != 'init':
+            return
         model = self.get_model(assertion.model)
         ids = self._get_assertion_id(assertion)
         if assertion.count and len(ids) != assertion.count:
@@ -325,11 +330,12 @@ class YamlInterpreter(object):
             args = (assertion.string, assertion.count, len(ids))
             self._log_assert_failure(assertion.severity, msg, *args)
         else:
-            test_context = {'ref': self._ref, '_ref': self._ref} # added '_ref' so that record['ref'] is possible
+            local_context = {'ref': self._ref, '_ref': self._ref} # added '_ref' so that record['ref'] is possible
+            context = self.get_context(assertion, local_context)
             for id in ids:
-                record = model.browse(self.cr, self.uid, id, assertion.context)
+                record = model.browse(self.cr, self.uid, id, context)
                 for test in expressions.get('test', ''):
-                    success = eval(test, test_context, record)
+                    success = eval(test, local_context, record)
                     if not success:
                         msg = 'Assertion "%s" FAILED\ntest: %s\n'
                         args = (assertion.string, test)
@@ -342,13 +348,14 @@ class YamlInterpreter(object):
         record, fields = node.items()[0]
 
         self.validate_xml_id(record.id)
-        model = self.get_model(record.model)
-        record_dict = self._create_record(model, fields)
-        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
-                self.module, record_dict, record.id, mode=self.mode)
-        self.id_map[record.id] = int(id)
-        if config.get('import_partial', False):
-            self.cr.commit()
+        if self.isnoupdate(record) and self.mode != 'init':
+            model = self.get_model(record.model)
+            record_dict = self._create_record(model, fields)
+            id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
+                    self.module, record_dict, record.id, noupdate=self.isnoupdate(node), mode=self.mode)
+            self.id_map[record.id] = int(id)
+            if config.get('import_partial', False):
+                self.cr.commit()
     
     def _create_record(self, model, fields):
         record_dict = {}
@@ -402,6 +409,8 @@ class YamlInterpreter(object):
     
     def process_workflow(self, node):
         workflow, values = node.items()[0]
+        if self.isnoupdate(workflow) and self.mode != 'init':
+            return
         model = self.get_model(workflow.model)
         if workflow.ref:
             id = self.get_id(workflow.ref)
@@ -427,11 +436,11 @@ class YamlInterpreter(object):
         wf_service.trg_validate(uid, model, id, workflow.action, self.cr)
         
     def process_function(self, node):
-        if self.mode != 'init':
-            return
         function, values = node.items()[0]
+        if self.isnoupdate(function) and self.mode != 'init':
+            return
         local_context = {'ref': self._ref, '_ref': self._ref}
-        context = self.get_context(node, local_context)
+        context = self.get_context(function, local_context)
         args = []
         if function.eval:
             args = eval(function.eval, local_context)
@@ -532,7 +541,7 @@ class YamlInterpreter(object):
         
         pid = self.pool.get('ir.model.data')._update(self.cr, self.uid, \
                 'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
-                res_id=res and res[0] or False)
+                noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
         if node.id and parent_id:
             self.id_map[node.id] = int(parent_id)
@@ -578,8 +587,8 @@ class YamlInterpreter(object):
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', \
-                    keyword, node.id, [node.src_model], value, replace=replace, isobject=True, xml_id=node.id)
+            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', keyword, \
+                    node.id, [node.src_model], value, replace=replace, noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
         # TODO add remove ir.model.data
 
     def process_delete(self, node):
@@ -608,8 +617,9 @@ class YamlInterpreter(object):
             keyword = node.keyword or 'client_action_multi'
             value = 'ir.actions.url,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, \
-                    'action', keyword, node.url, ["ir.actions.url"], value, replace=replace, isobject=True, xml_id=node.id)
+            self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', \
+                    keyword, node.url, ["ir.actions.url"], value, replace=replace, \
+                    noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
     
     def process_ir_set(self, node):
         if not self.mode == 'init':
