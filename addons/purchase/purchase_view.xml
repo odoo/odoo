@@ -5,7 +5,7 @@
             groups="group_purchase_user"/>-->
        <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Procurement Management"
             groups="group_purchase_user" sequence="7"/>
-	   <menuitem id="menu_procurement_management" name="Procurement Management"
+       <menuitem id="menu_procurement_management" name="Procurement Management"
             parent="base.menu_purchase_root" sequence="1"/>
 
      <!--supplier menu-->
@@ -20,9 +20,9 @@
       <menuitem id="menu_procurement_management_nventory" name="Inventory Control"
             parent="base.menu_purchase_root" sequence="4"/>
       <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_nventory"
-      		name="Incoming shipments" sequence="9"/>
+              name="Incoming shipments" sequence="9"/>
         <menuitem action="stock.action_reception_picking_move" id="menu_action_reception_picking_move"
-      		name="Incoming Products" parent="menu_procurement_management_nventory" sequence="10"/>
+              name="Incoming Products" parent="menu_procurement_management_nventory" sequence="10"/>
 
      <!--Invoice control-->
       <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
@@ -160,11 +160,11 @@
                         <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>                        
                     </field>
                 </group>
-  				<group expand="1" string="Group By..." colspan="4" col="10">
-					<filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>	
-                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>				
-					<filter string="Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
-				</group>
+                  <group expand="1" string="Group By..." colspan="4" col="10">
+                    <filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>    
+                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>                
+                    <filter string="Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
+                </group>
               </search>
             </field>
         </record>
@@ -178,8 +178,8 @@
             <field name="view_mode">tree,form</field>  
             <field name="search_view_id" ref="view_purchase_order_filter"/>          
         </record>
-	    <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management" 
-	    		name="Request for Quotations" sequence="6"/>
+        <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management" 
+                name="Request for Quotations" sequence="6"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
