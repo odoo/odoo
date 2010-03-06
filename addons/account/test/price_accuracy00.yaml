@@ -1,0 +1,47 @@
+- 
+    Tax Scenario
+
+    In order to check that the accounting entries and tax engine works
+    efficiently with all kind of price accuracies we run this test scenario.
+- 
+    Given the price accuracy for the account module is configured with two
+    digits (0.12€)
+- 
+    !record {model: decimal.precision, id: product.decimal_account}
+      digits: 2
+- 
+    And we have a tax of 19.6% defined
+- 
+    !record {model: account.tax, id: tax196}
+      name: Tax 19.6%
+      amount: 0.196
+- 
+    And we define an invoice with 12.32 pieces at a unit price of 11.11€ and
+    a tax of 19.6%
+- 
+    !record {model: account.invoice, id: invoice1}
+        name: Precision Test
+        type: out_invoice
+        partner_id: 
+        address_contact_id:
+        address_invoice_id:
+        account_id:
+        invoice_line:
+            - 
+- 
+    When I press on the CREATE button on the invoice to open it.
+- 
+    ????
+-
+    Then I should see an account entry linked to this invoice.
+-
+    !record {model: account.invoice, id: invoice1}
+        test: bool(move_id)
+-
+    And this account entry must have a credit equals to 163.70€
+    which is equal to 12.32 x 11.11 x 1.196 €, with nearest rounding.
+- 
+    !record {model: account.invoice, id: invoice1}
+        test: (move_id.credit - 163.70) < 0.000001
+
+
