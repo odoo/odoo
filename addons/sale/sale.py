@@ -27,6 +27,8 @@ from dateutil.relativedelta import relativedelta
 from tools import config
 from tools.translate import _
 
+import decimal_precision as dp
+
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -233,19 +235,19 @@ class sale_order(osv.osv):
             fnct_search=_invoiced_search, type='boolean'),
         'note': fields.text('Notes', translate=True),
 
-        'amount_untaxed': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Untaxed Amount',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums'),
-        'amount_tax': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Taxes',
+        'amount_tax': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Taxes',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums'),
-        'amount_total': fields.function(_amount_all, method=True, digits=(16, int(config['price_accuracy'])), string='Total',
+        'amount_total': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Sale Price'), string='Total',
             store = {
                 'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
@@ -773,9 +775,9 @@ class sale_order_line(osv.osv):
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'procurement_id': fields.many2one('mrp.procurement', 'Requisition'),
-        'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy'])), readonly=True, states={'draft':[('readonly',False)]}),
-        'price_net': fields.function(_amount_line_net, method=True, string='Net Price', digits=(16, int(config['price_accuracy']))),
-        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits=(16, int(config['price_accuracy']))),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
+        'price_net': fields.function(_amount_line_net, method=True, string='Net Price', digits_compute= dp.get_precision('Sale Price')),
+        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly',False)]}),
         'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Requisition Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft':[('readonly',False)]}),
@@ -854,7 +856,7 @@ class sale_order_line(osv.osv):
                 pu = 0.0
                 if uosqty:
                     pu = round(line.price_unit * line.product_uom_qty / uosqty,
-                            int(config['price_accuracy']))
+                            self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price'))
                 fpos = line.order_id.fiscal_position or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
                 if not a:

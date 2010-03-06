@@ -24,6 +24,8 @@ from osv import fields,osv
 from tools.translate import _
 import tools
 
+import decimal_precision as dp
+
 # Overloaded stock_picking to manage carriers :
 class stock_picking(osv.osv):
     _name = "stock.picking"
@@ -54,7 +56,7 @@ class stock_picking(osv.osv):
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
-        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight',digits=(16, int(tools.config['price_accuracy'])),
+        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight',digits_compute= dp.get_precision('Stock Weight'),
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
                  'stock.move': (_get_picking_line, ['product_id','product_uos_qty'], 20),

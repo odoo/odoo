@@ -30,6 +30,11 @@ class decimal_precision(osv.osv):
     _defaults = {
         'digits': lambda *a : 2,
     }
+    def precision_get(self, cr, uid, application):
+        cr.execute('select digits from decimal_precision where name=%s', (application,))
+        res = cr.fetchone()
+        return res and res[0] or 2
+
     def write(self, cr, uid, ids, data, *args, **argv):
         res = super(decimal_precision, self).write(cr, uid, ids, data, *args, **argv)
         for obj in self.pool.obj_list():
@@ -43,7 +48,5 @@ def get_precision(application):
     def change_digit(cr):
         cr.execute('select digits from decimal_precision where name=%s', (application,))
         res = cr.fetchone()
-        if res:
-            return (16,res[0])
-        return (16,2)
+        return (16,res and res[0] or 2)
     return change_digit

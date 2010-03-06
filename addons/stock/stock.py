@@ -30,6 +30,8 @@ import netsvc
 import time
 import tools
 
+import decimal_precision as dp
+
 
 #----------------------------------------------------------
 # Incoterms
@@ -1027,7 +1029,7 @@ class stock_move(osv.osv):
                                   help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
                                   \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price',
-            digits=(16, int(config['price_accuracy']))),
+            digits_compute= dp.get_precision('Account')),
         'company_id': fields.many2one('res.company', 'Company', required=True,select=1),
         'partner_id': fields.related('picking_id','address_id','partner_id',type='many2one', relation="res.partner", string="Partner"),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"),

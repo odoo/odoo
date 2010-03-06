@@ -26,6 +26,7 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime, today, DateTime, localtime
 from tools import config
 from tools.translate import _
+import decimal_precision as dp
 
 class mrp_repair(osv.osv):
     _name = 'mrp.repair'
@@ -500,8 +501,8 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'to_invoice': fields.boolean('To Invoice'),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok','=',True)], required=True),
         'invoiced': fields.boolean('Invoiced',readonly=True),
-        'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
-        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal',digits=(16, int(config['price_accuracy']))),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price')),
+        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal',digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes'),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2), required=True),
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
@@ -575,7 +576,7 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         'product_uom_qty': fields.float('Quantity', digits=(16,2), required=True),
         'price_unit': fields.float('Unit Price', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
-        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal',digits=(16, int(config['price_accuracy']))),
+        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal',digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes'),
         'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
         'to_invoice': fields.boolean('To Invoice'),

@@ -23,6 +23,9 @@ from osv import fields, osv
 from tools import config
 import time
 
+import decimal_precision as dp
+
+
 STATE = [
     ('none', 'Non Member'),
     ('canceled', 'Canceled Member'),
@@ -415,7 +418,7 @@ Partner()
 class product_template(osv.osv):
     _inherit = 'product.template'
     _columns = {
-            'member_price':fields.float('Member Price', digits=(16, int(config['price_accuracy']))),
+            'member_price':fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
             }
 product_template()
 
