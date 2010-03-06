@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
-        
         <!--
 	Resource: product.uom.categ
 	-->
@@ -14,8 +12,8 @@
         </record>
         <record id="uom_categ_wtime" model="product.uom.categ">
             <field name="name">Working Time</field>
-        </record>  
-        
+        </record>
+
         <!--
 	Resource: product.uom
 	-->
@@ -23,33 +21,33 @@
             <field name="category_id" ref="product_uom_categ_unit"/>
             <field name="name">PCE</field>
             <field name="factor">1.0</field>
-            <field name="factor_inv">1.0</field>            
+            <field name="factor_inv">1.0</field>
         </record>
         <record id="product_uom_kgm" model="product.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <field name="name">KGM</field>
             <field name="factor">1.0</field>
-            <field name="factor_inv">1.0</field>            
+            <field name="factor_inv">1.0</field>
         </record>
         <record id="uom_hour" model="product.uom">
             <field name="name">Hour</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor">8.0</field>
-            <field name="factor_inv">1.0</field>            
+            <field name="factor_inv">1.0</field>
         </record>
         <record id="uom_day" model="product.uom">
             <field name="name">Day</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor">1.0</field>
-            <field name="factor_inv">1.0</field>            
-        </record>            
-        
+            <field name="factor_inv">1.0</field>
+        </record>
+
         <!--
-... to here, it should be in product_demo but we cant just move it 
+... to here, it should be in product_demo but we cant just move it
 there yet otherwise people who have installed the server (even with the without-demo
 parameter) will see those record just disappear.
 -->
-        
+
         <!--
 	Request link
 	-->
@@ -57,7 +55,7 @@ parameter) will see those record just disappear.
             <field name="name">Product</field>
             <field name="object">product.product</field>
         </record>
-        
+
         <!--
 	Resource: product.price.type
 	-->
@@ -69,10 +67,10 @@ parameter) will see those record just disappear.
             <field name="name">Cost Price</field>
             <field name="field">standard_price</field>
         </record>
-        
-        
-        
-        
+
+
+
+
         <!--
 	Price list type
 	-->
@@ -80,8 +78,8 @@ parameter) will see those record just disappear.
             <field name="name">Sale Pricelist</field>
             <field name="key">sale</field>
         </record>
- 
-        
+
+
         <!--
 	Price list
 	-->
@@ -98,7 +96,7 @@ parameter) will see those record just disappear.
             <field name="base" ref="list_price"/>
             <field name="name">Default Public Pricelist Line</field>
         </record>
-        
+
         <!--
         Property
         -->
@@ -107,12 +105,25 @@ parameter) will see those record just disappear.
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
             <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
         </record>
-        
+
         <record forcecreate="True" id="property_valuation_price_type" model="ir.property">
             <field name="name">property_valuation_price_type</field>
             <field name="fields_id" search="[('model','=','res.company'),('name','=','property_valuation_price_type')]"/>
             <field eval="'product.price.type,'+str(ref('standard_price'))" name="value"/>
         </record>
-        
+
+        <record forcecreate="True" id="decimal_sale" model="decimal.precision">
+            <field name="name">Sale Price</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_purchase" model="decimal.precision">
+            <field name="name">Purchase Price</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_account" model="decimal.precision">
+            <field name="name">Account</field>
+            <field name="digits">2</field>
+        </record>
+
     </data>
 </openerp>
