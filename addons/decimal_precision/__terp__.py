@@ -33,6 +33,7 @@ per company.
     "init_xml": [],
     "update_xml": [
         'decimal_precision_view.xml', 
+        'security/ir.model.access.csv', 
     ],
     "demo_xml": [],
     "installable": True,
