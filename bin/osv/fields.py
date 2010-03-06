@@ -172,10 +172,16 @@ class float(_column):
     _symbol_f = lambda x: __builtin__.float(x or 0.0)
     _symbol_set = (_symbol_c, _symbol_f)
 
-    def __init__(self, string='unknown', digits=None, **args):
+    def __init__(self, string='unknown', digits=None, digits_compute=None, **args):
         _column.__init__(self, string=string, **args)
         self.digits = digits
+        self.digits_compute = digits_compute
 
+    def digits_change(self, cr):
+        if self.digits_compute:
+            t = self.digits_compute(cr)
+            self._symbol_set=('%s', lambda x: ('%.'+str(t[1])+'f') % (__builtin__.float(x or 0.0),))
+            self.digits = t
 
 class date(_column):
     _type = 'date'
