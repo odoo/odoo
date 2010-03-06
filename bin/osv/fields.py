@@ -630,11 +630,9 @@ class function(_column):
         if 'relation' in args:
             self._obj = args['relation']
             
-        if 'digits' in args:
-            self.digits = args['digits']
-        else:
-            self.digits = (16,2)    
-                
+        self.digits = args.get('digits', (16,2))
+        self.digits_compute = args.get('digits_compute', None)
+
         self._fnct_inv_arg = fnct_inv_arg
         if not fnct_inv:
             self.readonly = 1
@@ -655,6 +653,13 @@ class function(_column):
             self._symbol_c = float._symbol_c
             self._symbol_f = float._symbol_f
             self._symbol_set = float._symbol_set
+
+    def digits_change(self, cr):
+        if self.digits_compute:
+            t = self.digits_compute(cr)
+            self._symbol_set=('%s', lambda x: ('%.'+str(t[1])+'f') % (__builtin__.float(x or 0.0),))
+            self.digits = t
+
 
     def search(self, cr, uid, obj, name, args, context=None):
         if not self._fnct_search:

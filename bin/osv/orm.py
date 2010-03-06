@@ -2296,7 +2296,7 @@ class orm(orm_template):
         self._columns = self._columns.copy()
         for store_field in self._columns:
             f = self._columns[store_field]
-            if isinstance(f, fields.float):
+            if hasattr(f, 'digits_change'):
                 f.digits_change(cr)
             if not isinstance(f, fields.function):
                 continue
