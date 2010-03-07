@@ -18,10 +18,10 @@
 -
     And we define an invoice with one invoice line with a tax of *tax
 -
-    !record {model: account.invoice, id: invoice1}:
+    !record {model: account.invoice, id: invoice1}: &invoice
         name: Precision Test
         type: out_invoice
-        partner_id: 
+        partner_id: base.xxx
         address_contact_id:
         address_invoice_id:
         account_id:
@@ -51,3 +51,15 @@
 -
     !record {model: account.invoice, id: invoice1}:
         test: abs(move_id.debit - move_id.credit) < 0.000001
+-
+    Then, I change the precision of numbers to 3 digits.
+-
+    !record {model: decimal.precision, id: product.decimal_account}:
+      digits: 2
+-
+    And I create another invoice with the same content.
+-
+    !record {model: account.invoice, id: invoice2}:
+        *invoice
+-
+    to be completed, etc.
