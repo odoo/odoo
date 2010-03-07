@@ -31,7 +31,7 @@ class YamlTag(object):
         return "<%s %s>" % (self.__class__.__name__, sorted(self.__dict__.items()))
 
 class Assert(YamlTag):
-    def __init__(self, model, id, severity=netsvc.LOG_ERROR, string="NONAME", **kwargs):
+    def __init__(self, model, id, severity=logging.ERROR, string="NONAME", **kwargs):
         self.model = model
         self.id = id
         self.severity = severity
@@ -45,7 +45,7 @@ class Record(YamlTag):
         super(Record, self).__init__(**kwargs)
     
 class Python(YamlTag):
-    def __init__(self, model, severity=netsvc.LOG_ERROR, name="NONAME", **kwargs):
+    def __init__(self, model, severity=logging.ERROR, name="NONAME", **kwargs):
         self.model= model
         self.severity = severity
         self.name = name
@@ -259,7 +259,7 @@ class YamlInterpreter(object):
         self.filename = filename
         self.assert_report = TestReport()
         self.noupdate = noupdate
-        self.logger = netsvc.Logger()
+        self.logger = logging.getLogger(logger_channel)
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         self.context = {}
@@ -284,7 +284,7 @@ class YamlInterpreter(object):
                         ['&', ('name', '=', module), ('state', 'in', ['installed'])])
                 assert module_count == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
         if len(id) > 64: # TODO where does 64 come from (DB is 128)? should be a constant or loaded form DB
-            self.logger.notifyChannel(logger_channel, netsvc.LOG_ERROR, 'id: %s is to long (max: 64)' % (id,))
+            self.logger.log(logging.ERROR, 'id: %s is to long (max: 64)', id)
 
     def get_id(self, xml_id):
         if isinstance(xml_id, types.IntType):
@@ -316,8 +316,8 @@ class YamlInterpreter(object):
 
     def _log_assert_failure(self, severity, msg, *args):
         self.assert_report.record(False, severity)
-        self.logger.notifyChannel(logger_channel, severity, msg % (args))
-        if getattr(logging, severity.upper()) >= config['assert_exit_level']:
+        self.logger.log(severity, msg, *args)
+        if severity >= config['assert_exit_level']:
             raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % (severity,))
         return
 
@@ -404,8 +404,8 @@ class YamlInterpreter(object):
             self.uid = self.get_id(node.__dict__['uid'])
     
     def process_python(self, node):
-        def log(msg):
-            self.logger.notifyChannel(logger_channel, netsvc.LOG_TEST, msg)
+        def log(msg, *args):
+            self.logger.log(logging.TEST, msg, *args)
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
@@ -414,9 +414,7 @@ class YamlInterpreter(object):
             code = compile(statements, self.filename, 'exec')
             eval(code, code_context)
         except AssertionError, e:
-            msg = 'Assertion "%s" FAILED in Python code.'
-            args = (python.name,)
-            self._log_assert_failure(python.severity, msg, *args)
+            self._log_assert_failure(python.severity, 'Assertion "%s" FAILED in Python code.', python.name)
             return
         except Exception, e:
             raise YamlImportAbortion(e)
@@ -693,9 +691,9 @@ class YamlInterpreter(object):
             try:
                 self._process_node(node)
             except YamlImportException, e:
-                self.logger.notifyChannel(logger_channel, netsvc.LOG_ERROR, e)
+                self.logger.log(logging.ERROR, e)
             except YamlImportAbortion, e:
-                self.logger.notifyChannel(logger_channel, netsvc.LOG_ERROR, e)
+                self.logger.log(logging.ERROR, e)
                 return
     
     def _process_node(self, node):
@@ -737,14 +735,14 @@ class YamlInterpreter(object):
     def _log(self, node, is_preceded_by_comment):
         if is_comment(node):
             is_preceded_by_comment = True
-            self.logger.notifyChannel(logger_channel, netsvc.LOG_TEST, node)
+            self.logger.log(logging.TEST, node)
         elif not is_preceded_by_comment:
             if isinstance(node, types.DictionaryType):
-                k, v = node.items()[0]
-                msg = "Creating %s\n with %s" % (k, v)
-                self.logger.notifyChannel(logger_channel, netsvc.LOG_TEST, msg)
+                msg = "Creating %s\n with %s"
+                args = node.items()[0]
+                self.logger.log(logging.TEST, msg, *args)
             else:
-                self.logger.notifyChannel(logger_channel, netsvc.LOG_TEST, node)
+                self.logger.log(logging.TEST, node)
         else:
             is_preceded_by_comment = False
         return is_preceded_by_comment
