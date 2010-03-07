@@ -24,7 +24,6 @@ import win32
 from config import *
 from misc import *
 from convert import *
-from yaml_test import *
 from translate import *
 from graph import graph
 from amount_to_text import *

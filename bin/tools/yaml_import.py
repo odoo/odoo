@@ -368,7 +368,7 @@ class YamlInterpreter(object):
             model = self.get_model(record.model)
             record_dict = self._create_record(model, fields)
             id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
-                    self.module, record_dict, record.id, noupdate=self.isnoupdate(node), mode=self.mode)
+                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
             self.id_map[record.id] = int(id)
             if config.get('import_partial', False):
                 self.cr.commit()

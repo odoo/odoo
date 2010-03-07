@@ -37,6 +37,7 @@ import netsvc
 import osv
 import pooler
 from config import config
+from yaml_import import convert_yaml_import
 
 class ConvertError(Exception):
     def __init__(self, doc, orig_excpt):
