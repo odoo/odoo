@@ -1871,13 +1871,9 @@ class orm(orm_template):
         fields_pre = [f for f in float_int_fields if
                    f == self.CONCURRENCY_CHECK_FIELD
                 or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
-        avg_fields = context.get('avg',[])
         for f in fields_pre:
             if f not in ['id','sequence']:
-                if f in avg_fields:
-                    flist += ',avg('+f+') as '+f
-                else:
-                    flist += ',sum('+f+') as '+f
+                flist += ',sum('+f+') as '+f
 
         cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + ' group by '+ groupby + limit_str + offset_str, where_params)
         alldata = {}
