@@ -207,63 +207,64 @@ class invite_attendee_wizard(osv.osv_memory):
                  }
 
     def do_invite(self, cr, uid, ids, context={}):
-        datas = self.read(cr, uid, ids)[0]
-        model = False
-        model_field = False
-        if not context or not context.get('model'):
-            return {}
-        else:
-            model = context.get('model')
-        model_field = context.get('attendee_field', False)
-        obj = self.pool.get(model)
-        res_obj = obj.browse(cr, uid, context['active_id'])
-        type = datas.get('type')
-        att_obj = self.pool.get('calendar.attendee')
-        vals = {}
-        mail_to = []
-        if not model == 'calendar.attendee':
-            vals = {'ref': '%s,%s' % (model, base_calendar_id2real_id(context['active_id']))}
-
-        if type == 'internal':
-            user_obj = self.pool.get('res.users')
-            if not datas.get('user_ids'):
-                raise osv.except_osv(_('Error!'), ("Please select any User"))
-            for user_id in datas.get('user_ids'):
-                user = user_obj.browse(cr, uid, user_id)
-                vals.update({'user_id': user_id, 
-                                     'email': user.address_id.email})
-                if user.address_id.email:
-                    mail_to.append(user.address_id.email)
-                
-        elif  type == 'external' and datas.get('email'):
-            vals.update({'email': datas['email']})
-            mail_to.append(datas['email'])
-        elif  type == 'partner':
-            add_obj = self.pool.get('res.partner.address')
-            for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
+        for att_id in ids:
+            datas = self.read(cr, uid, att_id)
+            model = False
+            model_field = False
+            if not context or not context.get('model'):
+                return {}
+            else:
+                model = context.get('model')
+            model_field = context.get('attendee_field', False)
+            obj = self.pool.get(model)
+            res_obj = obj.browse(cr, uid, context['active_id'])
+            type = datas.get('type')
+            att_obj = self.pool.get('calendar.attendee')
+            vals = {}
+            mail_to = []
+            if not model == 'calendar.attendee':
+                vals = {'ref': '%s,%s' % (model, base_calendar_id2real_id(context['active_id']))}
+    
+            if type == 'internal':
+                user_obj = self.pool.get('res.users')
+                if not datas.get('user_ids'):
+                    raise osv.except_osv(_('Error!'), ("Please select any User"))
+                for user_id in datas.get('user_ids'):
+                    user = user_obj.browse(cr, uid, user_id)
+                    vals.update({'user_id': user_id, 
+                                         'email': user.address_id.email})
+                    if user.address_id.email:
+                        mail_to.append(user.address_id.email)
+                    
+            elif  type == 'external' and datas.get('email'):
+                vals.update({'email': datas['email']})
+                mail_to.append(datas['email'])
+            elif  type == 'partner':
+                add_obj = self.pool.get('res.partner.address')
+                for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
+                    vals.update({
+                                 'partner_address_id': contact.id, 
+                                 'email': contact.email})
+                    if contact.email:
+                        mail_to.append(contact.email)
+    
+            if model == 'calendar.attendee':
+                att = att_obj.browse(cr, uid, context['active_id'])
                 vals.update({
-                             'partner_address_id': contact.id, 
-                             'email': contact.email})
-                if contact.email:
-                    mail_to.append(contact.email)
-
-        if model == 'calendar.attendee':
-            att = att_obj.browse(cr, uid, context['active_id'])
-            vals.update({
-                'parent_ids' : [(4, att.id)],
-                'ref': att.ref
-            })
-        if datas.get('send_mail'):
-            if not mail_to:
-                name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
-                                   self._columns['type'].selection))
-                raise osv.except_osv(_('Error!'), ("%s must have an email \
-Address to send mail") % (name[0]))
-            att_obj._send_mail(cr, uid, [att_id], mail_to, \
-                   email_from=tools.config.get('email_from', False))
-        att_id = att_obj.create(cr, uid, vals)
-        if model_field:
-            obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
+                    'parent_ids' : [(4, att.id)],
+                    'ref': att.ref
+                })
+            if datas.get('send_mail'):
+                if not mail_to:
+                    name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
+                                       self._columns['type'].selection))
+                    raise osv.except_osv(_('Error!'), ("%s must have an email \
+    Address to send mail") % (name[0]))
+                att_obj._send_mail(cr, uid, [att_id], mail_to, \
+                       email_from=tools.config.get('email_from', False))
+            att_id = att_obj.create(cr, uid, vals)
+            if model_field:
+                obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
         return {}
 
 
@@ -483,18 +484,20 @@ request was delegated to"),
         self.write(cr, uid, ids, {'state': 'tentative'}, context)
 
     def do_accept(self, cr, uid, ids, context=None, *args):
-        vals = self.read(cr, uid, ids, context=context)[0]
-        user = vals.get('user_id')
-        if user:
-            ref = vals.get('ref', None)
-            if ref:
-                model, event = ref.split(',')
-                model_obj = self.pool.get(model)
-                event_ref =  model_obj.browse(cr, uid, event, context=context)[0]
-                if event_ref.user_id.id != user[0]:
-                    defaults = {'user_id':  user[0]}
-                    new_event = model_obj.copy(cr, uid, event, default=defaults, context=context)
-        self.write(cr, uid, ids, {'state': 'accepted'}, context)
+        for invite in ids:
+            vals = self.read(cr, uid, invite, context=context)
+            user = vals.get('user_id')
+            if user:
+                ref = vals.get('ref', None)
+                if ref:
+                    model, event = ref.split(',')
+                    model_obj = self.pool.get(model)
+                    event_ref =  model_obj.browse(cr, uid, event, context=context)[0]
+                    if event_ref.user_id.id != user[0]:
+                        defaults = {'user_id':  user[0]}
+                        new_event = model_obj.copy(cr, uid, event, default=defaults, context=context)
+            self.write(cr, uid, invite, {'state': 'accepted'}, context)
+        return True
 
     def do_decline(self, cr, uid, ids, context=None, *args):
         self.write(cr, uid, ids, {'state': 'declined'}, context)
@@ -731,7 +734,7 @@ class calendar_event(osv.osv):
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for event in ids:
-            datas = self.read(cr, uid, ids)[0]
+            datas = self.read(cr, uid, event)
             if datas.get('rrule_type'):
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
