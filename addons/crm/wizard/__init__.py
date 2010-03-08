@@ -28,6 +28,8 @@ import wizard_crm_new_send_email
 import wizard_history_event
 import crm_phonecall2phonecall
 
+import lead_to_partner
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
