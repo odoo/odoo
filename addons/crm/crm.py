@@ -280,7 +280,7 @@ class crm_case(osv.osv):
         'section_id': _get_section,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
     }
-    _order = 'date_deadline desc, date desc,id desc'
+    _order = 'date_deadline desc, create_date desc,id desc'
 
     def unlink(self, cr, uid, ids, context={}):
         for case in self.browse(cr, uid, ids, context):
