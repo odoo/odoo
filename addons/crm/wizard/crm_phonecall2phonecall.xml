@@ -9,6 +9,10 @@
                 <form string="Schedule Other Call " col="2">
                 		<field name="name"/>
 						<field name="user_id" />
+						<separator colspan="3" string="Contacts" />
+						<field name="partner_id"/>
+						<field name="address_id"/>
+						<separator colspan="3" string="" />
 						<field name="category_id" domain="[('object_id.model', '=', 'crm.phonecall')]" />
 						<field name="section_id"/>
 						<field name="notes"/>
@@ -26,7 +30,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="phonecall_to_phonecall_view"/>
             <field name="target">new</field>
-            <field name="context">{'record_id' : False}</field>
+         	<field name="context">{'record_id' : active_id}</field>
         </record>
     </data>
 </openerp>   
