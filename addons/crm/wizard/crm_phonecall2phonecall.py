@@ -42,7 +42,6 @@ class crm_phonecall2phonecall(osv.osv_memory):
         this = self.browse(cr, uid, ids)[0]
 
         record_id = context and context.get('record_id', False) or False
-        print ">>>>>>>>>>",record_id
         values={}
         values['name']=this.name
         values['user_id']=this.user_id and this.user_id.id

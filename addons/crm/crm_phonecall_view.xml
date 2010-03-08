@@ -78,16 +78,20 @@
                         name="%(wizard_crm_phonecall_meeting_set)d"
                         icon="gtk-redo"
                         type="action" />
-                    <newline/>
-
+                   
                     <field name="partner_phone"/>
                     <field name="duration"/>
                     <field name="section_id" colspan="1" widget="selection" />
-
                     <button string="Convert to Opportunity"
                         name="%(wizard_crm_phonecall_opportunity_set)d"
                         icon="gtk-index" type="action"
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+					<label colspan="6"  string=""/>                                 
+	                <button string="Schedule Call Other" 
+	                 icon="gtk-redo"
+                    name="%(phonecall_to_phonecall_act)d"
+                    type="action"  />
+ 					               
                 </group>
                 <group col="3" colspan="2">
                     <separator colspan="3" string="Contacts" />

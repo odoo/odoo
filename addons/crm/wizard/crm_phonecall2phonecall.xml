@@ -6,10 +6,10 @@
             <field name="model">crm.phonecall2phonecall</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Schedule Other Cal" col="2">
+                <form string="Schedule Other Call " col="2">
                 		<field name="name"/>
 						<field name="user_id" />
-						<field name="category_id" />
+						<field name="category_id" domain="[('object_id.model', '=', 'crm.phonecall')]" />
 						<field name="section_id"/>
 						<field name="notes"/>
                     <group colspan="2" col="2" >
@@ -19,7 +19,6 @@
                 </form>
             </field>
         </record>
-
         <record model="ir.actions.act_window" id="phonecall_to_phonecall_act">
             <field name="name">Schedule Other Call</field>
             <field name="res_model">crm.phonecall2phonecall</field>
