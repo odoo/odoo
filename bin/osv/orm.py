@@ -1007,7 +1007,7 @@ class orm_template(object):
                 if fields and f not in fields:
                     continue
                 res[f] = {'type': self._columns[f]._type}
-                for arg in ('string', 'readonly', 'states', 'size', 'required',
+                for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
                         'change_default', 'translate', 'help', 'select', 'selectable'):
                     if getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
@@ -1873,7 +1873,8 @@ class orm(orm_template):
                 or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
         for f in fields_pre:
             if f not in ['id','sequence']:
-                flist += ',sum('+f+') as '+f
+                operator = fget[f].get('group_operator','sum')
+                flist += ','+operator+'('+f+') as '+f
 
         cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + ' group by '+ groupby + limit_str + offset_str, where_params)
         alldata = {}
