@@ -197,8 +197,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                    <group col="10" colspan="4">		                						
-                        <filter icon="terp-crm" string="Unvalidated" domain="[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Unvalidated Timesheets"/>
+                    <group col="10" colspan="4">
+                        <filter icon="terp-crm" string="Unvalidated" domain="[('state','!=','done'),('date_to','&lt;',current_date')]" help="Unvalidated Timesheets"/>
                         <separator orientation="vertical"/>
                         <field name="state">
                             <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
