@@ -8,12 +8,7 @@ import netsvc
 import misc
 from config import config
 
-try:
-    import yaml
-except ImportError, e:
-    msg = "Module yaml was not found."
-    e.args = (msg,)
-    raise e
+import yaml
 
 logger_channel = 'tests'
 
