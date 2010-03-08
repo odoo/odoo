@@ -94,11 +94,11 @@ class hr_employee(osv.osv):
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
         'sinid': fields.char('SIN No', size=32),
         'otherid': fields.char('Other ID', size=32),
-        'gender': fields.selection([('',''),('male','Male'),('female','Female')], 'Gender'),
+        'gender': fields.selection([('male','Male'),('female','Female')], 'Gender'),
         'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
-
+        'bank_account': fields.char('Bank Account', size=56),
         'partner_id' : fields.related('company_id', 'partner_id', type='many2one', relation='res.partner', readonly=True),
-
+        'department_id':fields.many2one('hr.department','Department'),
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
         'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone'),

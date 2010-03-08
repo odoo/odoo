@@ -25,6 +25,8 @@ import pooler
 import time
 from tools.translate import _
 import tools
+import decimal_precision as dp
+
 
 pay_form = '''<?xml version="1.0"?>
 <form string="Pay invoice">
@@ -37,7 +39,7 @@ pay_form = '''<?xml version="1.0"?>
 </form>'''
 
 pay_fields = {
-    'amount': {'string': 'Amount paid', 'type':'float', 'required':True, 'digits': (16,int(tools.config['price_accuracy']))},
+    'amount': {'string': 'Amount paid', 'type':'float', 'required':True, 'digits': (16,dp.get_precision('Account'))},
     'name': {'string': 'Entry Name', 'type':'char', 'size': 64, 'required':True},
     'date': {'string': 'Payment date', 'type':'date', 'required':True, 'default':lambda *args: time.strftime('%Y-%m-%d')},
     'journal_id': {'string': 'Journal/Payment Mode', 'type': 'many2one', 'relation':'account.journal', 'required':True, 'domain':[('type','=','cash')]},

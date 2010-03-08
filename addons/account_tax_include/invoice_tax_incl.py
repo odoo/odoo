@@ -24,6 +24,7 @@ import netsvc
 from osv import fields, osv
 import ir
 from tools import config
+import decimal_precision as dp
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
@@ -84,7 +85,7 @@ class account_invoice_line(osv.osv):
                 else:
                     res[line.id]['price_subtotal'] = cur and cur_obj.round(cr, uid, cur, res_init[line.id]) or res_init[line.id]
                     for tax in tax_obj.compute_inv(cr, uid, product_taxes, res_init[line.id]/line.quantity, line.quantity):
-                        res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - round(tax['amount'], int(config['price_accuracy']))
+                        res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - round(tax['amount'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
             else:
                 res[line.id]['price_subtotal'] = cur and cur_obj.round(cr, uid, cur, res_init[line.id]) or res_init[line.id]
 
@@ -99,8 +100,8 @@ class account_invoice_line(osv.osv):
                     res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - tax['amount']
                     res[line.id]['data'].append( tax)
 
-            res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], int(config['price_accuracy']))
-            res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], int(config['price_accuracy']))
+            res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
+            res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
         return res
 
     def _price_unit_default(self, cr, uid, context=None):

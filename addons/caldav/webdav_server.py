@@ -53,7 +53,7 @@ class DAVHandler(FixSendError,DAVRequestHandler):
         self.baseuri = "http://%s:%d%s"% (self.server.server_name,self.server.server_port,davpath)
         self.IFACE_CLASS  = tinydav_handler(self)
         pass
-    
+
     def log_message(self, format, *args):
         netsvc.Logger().notifyChannel('webdav',netsvc.LOG_DEBUG_RPC,format % args)
 
@@ -62,7 +62,7 @@ class DAVHandler(FixSendError,DAVRequestHandler):
 
 
 try:
-    from service.http_server import reg_http_service,OpenERPAuthProvider    
+    from service.http_server import reg_http_service,OpenERPAuthProvider
     davpath = '/calendar/'
     handler = DAVHandler
     handler.verbose = config.get_misc('webdav','verbose',True)

@@ -25,7 +25,7 @@
     "version" : "1.1",
     "author" : "Tiny",
     "category" : "Generic Modules/Inventory Control",
-    "depends" : ["base", "process"],
+    "depends" : ["base", "process", "decimal_precision"],
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml"],
     "description": """

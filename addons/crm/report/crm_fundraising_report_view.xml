@@ -5,7 +5,7 @@
 	Fundraising by user and section
 	-->
 
-        <record id="view_crm_fundraising_tree" model="ir.ui.view">
+        <record id="view_report_crm_fundraising_tree" model="ir.ui.view">
             <field name="name">crm.fundraising.report.tree</field>
             <field name="model">crm.fundraising.report</field>
             <field name="type">tree</field>
@@ -28,7 +28,7 @@
             </field>	
 
         </record>
-        <record id="view_crm_fundraising_form" model="ir.ui.view">
+        <record id="view_report_crm_fundraising_form" model="ir.ui.view">
             <field name="name">crm.fundraising.report.form</field>
             <field name="model">crm.fundraising.report</field>
             <field name="inherit_id" ref="view_crm_case_form"/>
@@ -43,7 +43,7 @@
             </field>
         </record>
         
-        <record id="view_crm_fundraising_graph" model="ir.ui.view">
+        <record id="view_report_crm_fundraising_graph" model="ir.ui.view">
             <field name="name">crm.fundraising.report.graph</field>
             <field name="model">crm.fundraising.report</field>
             <field name="type">graph</field>
@@ -56,7 +56,7 @@
             </field>
         </record>
 
-        <record id="view_crm_fundraising_filter" model="ir.ui.view">
+        <record id="view_report_crm_fundraising_filter" model="ir.ui.view">
             <field name="name">crm.fundraising.report.select</field>
             <field name="model">crm.fundraising.report</field>
             <field name="inherit_id" ref="view_crm_case_filter"/>
@@ -72,25 +72,25 @@
             <field name="res_model">crm.fundraising.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="view_id" ref="view_crm_fundraising_tree"/>
-            <field name="search_view_id" ref="view_crm_fundraising_filter"/>
+            <field name="view_id" ref="view_report_crm_fundraising_tree"/>
+            <field name="search_view_id" ref="view_report_crm_fundraising_filter"/>
         </record>
         
                	
        	<record model="ir.actions.act_window.view" id="action_report_crm_fundrising_tree">
 	        <field name="sequence" eval="1"/>
 	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="view_crm_fundraising_tree"/>
+	        <field name="view_id" ref="view_report_crm_fundraising_tree"/>
 	        <field name="act_window_id" ref="action_report_crm_fundraising"/>
 	    </record> 
 
         <record model="ir.actions.act_window.view" id="action_report_crm_fundrising_graph">
 	        <field name="sequence" eval="2"/>
 	        <field name="view_mode">graph</field>
-	        <field name="view_id" ref="view_crm_fundraising_graph"/>
+	        <field name="view_id" ref="view_report_crm_fundraising_graph"/>
 	        <field name="act_window_id" ref="action_report_crm_fundraising"/>
 	    </record>            
-        <menuitem name="Fundraising" action="action_report_crm_fundraising" id="menu_crm_fundraising_tree" parent="base.next_id_64"/>
+        <menuitem name="Fundraising" action="action_report_crm_fundraising" id="menu_report_crm_fundraising_tree" parent="base.next_id_64"/>
                 
    	</data>
 </openerp>

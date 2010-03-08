@@ -37,14 +37,17 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="open_view_hr_evaluation_plan_tree">
+            <field name="name">Evaluation Plans</field>
             <field name="res_model">hr_evaluation.plan</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="3"/>
-        <!--menuitem name="HR Responsible" parent="menu_eval_hr" id="menu_resp_hr"/-->
+
         <menuitem
-            name="Periodic Evaluations" parent="hr.menu_hr_configuration"
+            name="Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="3"/>
+        <menuitem
+            parent="menu_eval_hr_config"
             id="menu_open_view_hr_evaluation_plan_tree"
             action="open_view_hr_evaluation_plan_tree"/>
 
@@ -175,9 +178,9 @@
                     <!--field name="create_date"/-->
                     <field name="employee_id"/>
                     <field name="plan_id"/>
-                    <field name="rating"/>
                     <field name="date"/>
                     <field name="progress" widget="progressbar"/>
+                    <field name="rating"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -190,9 +193,9 @@
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
                    <group col='10' colspan='4'>
-                   		<filter icon="terp-hr" string="Draft" domain="[('state','=','draft')]"/>
-                        <filter icon="terp-crm" string="Plan In progress" domain="[('state','=','wait')]"/>
-                        <filter icon="terp-mrp" string="Final Validation" domain="[('state','=','progress')]"/>
+                           <filter icon="terp-hr" string="Draft" domain="[('state','=','draft')]"/>
+                        <filter icon="terp-crm" string="In progress" domain="[('state','=','wait')]"/>
+                        <filter icon="terp-mrp" string="Final Step" domain="[('state','=','progress')]"/>
                         <filter icon="terp-stock" string="Done" domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id" widget="selection" select="1"/>
@@ -214,7 +217,7 @@
             id="menu_open_view_hr_evaluation_tree"
             action="open_view_hr_evaluation_tree"/>
 
-		<record model="ir.ui.view" id="view_hr_evaluation_interview_form">
+        <record model="ir.ui.view" id="view_hr_evaluation_interview_form">
             <field name="name">hr_evaluation.interview.form</field>
             <field name="model">hr.evaluation.interview</field>
             <field name="type">form</field>
@@ -238,8 +241,8 @@
                     <newline/>
                     <separator string="State" colspan="4"/>
                     <group colspan="4" col="6">
-                     	<field name="state"/>
-                     	<button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
+                         <field name="state"/>
+                         <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
                         <button name="survey_req_waiting_answer" string="Watting Answer" states="draft" type="object" icon="gtk-new"/>
                         <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
                         <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
@@ -262,7 +265,7 @@
                         icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="waiting_answer,done,cancel"
                         icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','=',False)]}" />
-                 	<field name="state"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>

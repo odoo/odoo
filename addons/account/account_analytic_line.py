@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+import decimal_precision as dp
 
 from osv import fields
 from osv import osv
@@ -85,7 +86,7 @@ class account_analytic_line(osv.osv):
                 },
                 help="The related account currency if not equal to the company one."),
         'company_id': fields.many2one('res.company','Company',required=True),
-        'amount_currency': fields.function(_amount_currency, method=True, digits=(16, int(config['price_accuracy'])), string='Amount currency',
+        'amount_currency': fields.function(_amount_currency, method=True, digits_compute= dp.get_precision('Account'), string='Amount currency',
                 store={
                     'account.analytic.account': (_get_account_line, ['company_id'], 50),
                     'account.analytic.line': (lambda self,cr,uid,ids,c={}: ids, ['amount','unit_amount'],10),
