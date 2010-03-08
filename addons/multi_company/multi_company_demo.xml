@@ -24,30 +24,36 @@
 <!--                      Company                        -->            
         <record id="base.main_company" model="res.company">
             <field name="name">OpenERP Corp.</field>
+            <field name="currency_id" ref="base.EUR"/>
         </record>
         <record id="res_company_oerp_editor" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_editor"/>
             <field name="parent_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="name">OpenERP Editor</field>
         </record>
         <record id="res_company_oerp_us" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_us"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
+            <field name="currency_id" ref="base.USD"/>
             <field name="name">OpenERP US</field>
         </record>
         <record id="res_company_oerp_be" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_be"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="name">OpenERP BE</field>
-        </record>OpenERP IN
+        </record>
         <record id="res_company_oerp_in" model="res.company">
             <field name="partner_id" ref="res_partner_oerp_in"/>
             <field name="parent_id" ref="res_company_oerp_editor"/>
+            <field name="currency_id" ref="base.INR"/>
             <field name="name">OpenERP IN</field>
         </record>
         <record id="res_company_odoo" model="res.company">
             <field name="partner_id" ref="res_partner_odoo"/>
             <field name="parent_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.EUR"/>
             <field name="name">Odoo</field>
         </record>
         
