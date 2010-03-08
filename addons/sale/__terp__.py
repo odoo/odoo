@@ -57,7 +57,7 @@
         'stock_view.xml',
         'process/sale_process.xml',
     ],
-    'demo_xml': ['sale_demo.xml', 'sale_test.xml'],
+    'demo_xml': ['sale_demo.xml', 'test/sale_test.xml'],
     'installable': True,
     'active': False,
     'certificate': '0058103601429',

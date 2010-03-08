@@ -998,7 +998,8 @@ class mrp_procurement(osv.osv):
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move':1})
                 else:
                     if procurement.procure_method=='make_to_stock' and procurement.move_id.state in ('draft','waiting',):
-                        id = self.pool.get('stock.move').write(cr, uid, [procurement.move_id.id], {'state':'confirmed'})
+                        # properly call action_confirm() on stock.move to abide by the location chaining etc.
+                        id = self.pool.get('stock.move').action_confirm(cr, uid, [procurement.move_id.id], context=context)
         self.write(cr, uid, ids, {'state':'confirmed','message':''})
         return True
 

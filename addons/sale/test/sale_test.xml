@@ -129,6 +129,8 @@
         </assert>
         <assert id="smoke_test_sale_order" model="sale.order" severity="error" string="the stock moves of the picking must be confirmed">
             <test expr="picking_ids[0].move_lines[0].state in ('confirmed','assigned')"/> <!-- Both values are acceptable depending if mrp-jit is installed or not -->
+            <!-- By default on a fresh install the output location must have been replaced with the Customer location since they are chained - (auto-no-step-added) -->
+            <test expr="picking_ids[0].move_lines[0].location_dest_id.id == ref('stock.stock_location_customers')"/> 
         </assert>
 
 		<!-- ==== 6. PICKING: CHECK AVAILABILITY  ==== -->
