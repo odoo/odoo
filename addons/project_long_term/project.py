@@ -339,7 +339,10 @@ class task(osv.osv):
 
 # if the task is performed by a resource then its calendar and efficiency also taken
 # otherwise the project's working calendar considered
-        tasks = self.browse( cr, uid, ids[0])
+        task_id = ids
+        if isinstance(ids, list):
+            task_id = ids[0]
+        tasks = self.browse(cr, uid, task_id, context=context)
         resource_cal_pool = self.pool.get('resource.calendar')
         resource_pool = self.pool.get('resource.resource')
         calendar_id = tasks.project_id.resource_calendar_id.id

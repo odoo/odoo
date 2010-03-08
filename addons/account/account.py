@@ -23,12 +23,13 @@ import time
 import netsvc
 
 from osv import fields, osv
+import decimal_precision as dp
 
 from tools.misc import currency
 from tools.translate import _
 import pooler
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from tools import config
 
@@ -48,23 +49,24 @@ class account_payment_term(osv.osv):
 
     def compute(self, cr, uid, id, value, date_ref=False, context={}):
         if not date_ref:
-            date_ref = now().strftime('%Y-%m-%d')
+            date_ref = datetime.now().strftime('%Y-%m-%d')
         pt = self.browse(cr, uid, id, context)
         amount = value
         result = []
         for line in pt.line_ids:
+            prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
             if line.value == 'fixed':
-                amt = round(line.value_amount, int(config['price_accuracy']))
+                amt = round(line.value_amount, prec)
             elif line.value == 'procent':
-                amt = round(value * line.value_amount, int(config['price_accuracy']))
+                amt = round(value * line.value_amount, prec)
             elif line.value == 'balance':
-                amt = round(amount, int(config['price_accuracy']))
+                amt = round(amount, prec)
             if amt:
-                next_date = mx.DateTime.strptime(date_ref, '%Y-%m-%d') + RelativeDateTime(days=line.days)
+                next_date = datetime.strptime(date_ref, '%y-%m-%d') + relativedelta(days=line.days)
                 if line.days2 < 0:
-                    next_date += RelativeDateTime(day=line.days2)
+                    next_date += relativedelta(day=line.days2)
                 if line.days2 > 0:
-                    next_date += RelativeDateTime(day=line.days2, months=1)
+                    next_date += relativedelta(day=line.days2, months=1)
                 result.append( (next_date.strftime('%Y-%m-%d'), amt) )
                 amount -= amt
         return result
@@ -296,9 +298,9 @@ class account_account(osv.osv):
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
         'child_id': fields.function(_get_child_ids, method=True, type='many2many', relation="account.account", string="Child Accounts"),
-        'balance': fields.function(__compute, digits=(16, int(config['price_accuracy'])), method=True, string='Balance', multi='balance'),
-        'credit': fields.function(__compute, digits=(16, int(config['price_accuracy'])), method=True, string='Credit', multi='balance'),
-        'debit': fields.function(__compute, digits=(16, int(config['price_accuracy'])), method=True, string='Debit', multi='balance'),
+        'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), method=True, string='Balance', multi='balance'),
+        'credit': fields.function(__compute, digits_compute=dp.get_precision('Account'), method=True, string='Credit', multi='balance'),
+        'debit': fields.function(__compute, digits_compute=dp.get_precision('Account'), method=True, string='Debit', multi='balance'),
         'reconcile': fields.boolean('Reconcile', help="Check this if the user is allowed to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
@@ -582,12 +584,12 @@ class account_fiscalyear(osv.osv):
 
     def create_period(self,cr, uid, ids, context={}, interval=1):
         for fy in self.browse(cr, uid, ids, context):
-            ds = mx.DateTime.strptime(fy.date_start, '%Y-%m-%d')
+            ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
             while ds.strftime('%Y-%m-%d')<fy.date_stop:
-                de = ds + RelativeDateTime(months=interval, days=-1)
+                de = ds + relativedelta(months=interval, days=-1)
 
                 if de.strftime('%Y-%m-%d')>fy.date_stop:
-                    de=mx.DateTime.strptime(fy.date_stop, '%Y-%m-%d')
+                    de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
 
                 self.pool.get('account.period').create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
@@ -596,7 +598,7 @@ class account_fiscalyear(osv.osv):
                     'date_stop': de.strftime('%Y-%m-%d'),
                     'fiscalyear_id': fy.id,
                 })
-                ds = ds + RelativeDateTime(months=interval)
+                ds = ds + relativedelta(months=interval)
         return True
 
     def find(self, cr, uid, dt=None, exception=True, context={}):
@@ -817,7 +819,7 @@ class account_move(osv.osv):
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Be Verified'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner"),
-        'amount': fields.function(_amount_compute, method=True, string='Amount', digits=(16,int(config['price_accuracy'])), type='float', fnct_search=_search_amount),
+        'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True),
         'type': fields.selection([
             ('pay_voucher','Cash Payment'),
@@ -1189,7 +1191,7 @@ class account_tax_code(osv.osv):
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
-            res[record.id] = round(_rec_get(record), int(config['price_accuracy']))
+            res[record.id] = round(_rec_get(record), self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
         return res
 
     def _sum_year(self, cr, uid, ids, name, args, context):
@@ -1460,9 +1462,9 @@ class account_tax(osv.osv):
         total = 0.0
         for r in res:
             if r.get('balance',False):
-                r['amount'] = round(r['balance'] * quantity, int(config['price_accuracy'])) - total
+                r['amount'] = round(r['balance'] * quantity, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')) - total
             else:
-                r['amount'] = round(r['amount'] * quantity, int(config['price_accuracy']))
+                r['amount'] = round(r['amount'] * quantity, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
                 total += r['amount']
 
         return res
@@ -1556,10 +1558,11 @@ class account_tax(osv.osv):
         res = self._unit_compute_inv(cr, uid, taxes, price_unit, address_id, product, partner=None)
         total = 0.0
         for r in res:
+            prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
             if r.get('balance',False):
-                r['amount'] = round(r['balance'] * quantity, int(config['price_accuracy'])) - total
+                r['amount'] = round(r['balance'] * quantity, prec) - total
             else:
-                r['amount'] = round(r['amount'] * quantity, int(config['price_accuracy']))
+                r['amount'] = round(r['amount'] * quantity, prec)
                 total += r['amount']
         return res
 account_tax()
@@ -1627,9 +1630,9 @@ class account_model_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the resources from lower sequences to higher ones"),
-        'quantity': fields.float('Quantity', digits=(16, int(config['price_accuracy'])), help="The optional quantity on entries"),
-        'debit': fields.float('Debit', digits=(16, int(config['price_accuracy']))),
-        'credit': fields.float('Credit', digits=(16, int(config['price_accuracy']))),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account'), help="The optional quantity on entries"),
+        'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
+        'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
 
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade"),
 
@@ -1720,11 +1723,11 @@ class account_subscription(osv.osv):
                     'subscription_id': sub.id,
                 })
                 if sub.period_type=='day':
-                    ds = (mx.DateTime.strptime(ds, '%Y-%m-%d') + RelativeDateTime(days=sub.period_nbr)).strftime('%Y-%m-%d')
+                    ds = (datetime.strptime(ds, '%Y-%m-%d') + relativedelta(days=sub.period_nbr)).strftime('%Y-%m-%d')
                 if sub.period_type=='month':
-                    ds = (mx.DateTime.strptime(ds, '%Y-%m-%d') + RelativeDateTime(months=sub.period_nbr)).strftime('%Y-%m-%d')
+                    ds = (datetime.strptime(ds, '%Y-%m-%d') + relativedelta(months=sub.period_nbr)).strftime('%Y-%m-%d')
                 if sub.period_type=='year':
-                    ds = (mx.DateTime.strptime(ds, '%Y-%m-%d') + RelativeDateTime(years=sub.period_nbr)).strftime('%Y-%m-%d')
+                    ds = (datetime.strptime(ds, '%Y-%m-%d') + relativedelta(years=sub.period_nbr)).strftime('%Y-%m-%d')
         self.write(cr, uid, ids, {'state':'running'})
         return True
 account_subscription()

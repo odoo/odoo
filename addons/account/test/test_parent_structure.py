@@ -19,6 +19,10 @@
 #
 ##############################################################################
 
+#
+# TODO: move this in a YAML test with !python tag
+#
+
 import xmlrpclib
 
 DB = 'training3'

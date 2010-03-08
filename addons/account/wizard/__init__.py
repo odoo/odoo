@@ -40,6 +40,7 @@ import wizard_fiscalyear_close
 import wizard_open_closed_fiscalyear
 
 import wizard_vat
+import wizard_compare_account_balance_report
 
 import wizard_invoice_state
 import wizard_account_duplicate

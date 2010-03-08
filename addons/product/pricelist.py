@@ -27,6 +27,8 @@ import time
 from tools import config
 from tools.misc import ustr
 from tools.translate import _
+import decimal_precision as dp
+
 
 class price_type(osv.osv):
     """
@@ -369,18 +371,18 @@ class product_pricelist_item(osv.osv):
         'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',
-            digits=(16, int(config['price_accuracy']))),
+            digits_compute= dp.get_precision('Sale Price')),
         'price_discount': fields.float('Price Discount', digits=(16,4)),
         'price_round': fields.float('Price Rounding',
-            digits=(16, int(config['price_accuracy'])),
+            digits_compute= dp.get_precision('Sale Price'),
             help="Sets the price so that it is a multiple of this value.\n" \
               "Rounding is applied after the discount and before the surcharge.\n" \
               "To have prices that end in 9.99, set rounding 10, surcharge -0.01" \
             ),
         'price_min_margin': fields.float('Min. Price Margin',
-            digits=(16, int(config['price_accuracy']))),
+            digits_compute= dp.get_precision('Sale Price')),
         'price_max_margin': fields.float('Max. Price Margin',
-            digits=(16, int(config['price_accuracy']))),
+            digits_compute= dp.get_precision('Sale Price')),
         'company_id': fields.related('price_version_id','company_id',type='many2one',
             readonly=True, relation='res.company', string='Company', store=True)
     }

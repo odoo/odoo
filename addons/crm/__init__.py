@@ -32,7 +32,7 @@ import crm_fundraising
 import crm_helpdesk
 
 
-#import report
+import report
 import wizard
 
 

@@ -811,18 +811,18 @@ rule or repeating pattern for anexception to a recurrence set"),
          'interval':  lambda *x: 1, 
     }
     
-    def modify_this(self, cr, uid, ids, defaults, context=None, *args):
+    def modify_this(self, cr, uid, ids, defaults, real_date, context=None, *args):
         ids = map(lambda x: base_calendar_id2real_id(x), ids)
         datas = self.read(cr, uid, ids[0], context=context)
         defaults.update({
                'recurrent_uid': base_calendar_id2real_id(datas['id']), 
-               'recurrent_id': defaults.get('date'), 
+               'recurrent_id': defaults.get('date') or real_date, 
                'rrule_type': 'none', 
                'rrule': ''
                     })
         exdate = datas['exdate'] and datas['exdate'].split(',') or []
-        if defaults.get('date'):
-            exdate.append(defaults.get('date'))
+        if real_date and defaults.get('date'):
+            exdate.append(real_date)
         self.write(cr, uid, ids, {'exdate': ','.join(exdate)}, context=context)
         new_id = self.copy(cr, uid, ids[0], default=defaults, context=context)
         return new_id
@@ -986,9 +986,13 @@ rule or repeating pattern for anexception to a recurrence set"),
         new_ids = []
         for id in select:
             if len(str(id).split('-')) > 1:
-                data = self.read(cr, uid, id, ['date', 'date_deadline'])
-                self.modify_this(cr, uid, [id], vals, context)
-                continue
+                data = self.read(cr, uid, id, ['date', 'date_deadline', 'rrule', 'duration'])
+                if data.get('rrule'):
+                    real_date = data.get('date')
+                    data.update(vals)
+                    new_id = self.modify_this(cr, uid, [id], data, real_date, context)
+                    context.update({'active_id': new_id,'active_ids': [new_id]})
+                    continue
             id = base_calendar_id2real_id(id)
             if not id in new_ids:
                 new_ids.append(id)

@@ -80,7 +80,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('resource_type','=','user')]</field>
-            <field name="view_id" ref="resource.view_project_member_tree"/>
+            <field name="view_id" ref="resource.resource_resource_tree"/>
         </record>
 
         <record id="board_project_form" model="ir.ui.view">
@@ -92,7 +92,7 @@
                     <hpaned>
                         <child1>
                             <action colspan="4" height="220" name="%(action_view_task_tree)d" string="My Open Tasks" width="510"/>
-                            <action colspan="4" name="%(crm_project.crm_case_categ_act0)d" string="Issues"/>
+                            <action colspan="4" name="%(project_issue.project_issue_categ_act0)d" string="Issues"/>
                             
                          </child1>
                         <child2>

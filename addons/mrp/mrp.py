@@ -1422,7 +1422,7 @@ StockPicking()
 
 
 class spilt_in_production_lot(osv.osv_memory):
-    _inherit = "stock.move.spilt"
+    _inherit = "stock.move.split"
     def split(self, cr, uid, ids, move_ids, context=None):
         production_obj = self.pool.get('mrp.production')
         move_obj = self.pool.get('stock.move')  

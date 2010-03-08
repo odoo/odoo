@@ -110,13 +110,13 @@ class stock_move_scrap(osv.osv_memory):
 stock_move_scrap()
 
 
-class spilt_in_production_lot(osv.osv_memory):
-    _name = "stock.move.spilt"
+class split_in_production_lot(osv.osv_memory):
+    _name = "stock.move.split"
     _description = "Split in Production lots"
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'line_ids': fields.one2many('stock.move.spilt.lines', 'lot_id', 'Lots Number')
+        'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number')
      }
 
     def _get_product_id(self, cr, uid, context):
@@ -185,17 +185,17 @@ class spilt_in_production_lot(osv.osv_memory):
 
 
         return new_move
-spilt_in_production_lot()
+split_in_production_lot()
 
-class stock_move_spilt_lines(osv.osv_memory):
-    _name = "stock.move.spilt.lines"
+class stock_move_split_lines(osv.osv_memory):
+    _name = "stock.move.split.lines"
     _description = "Split lines"
 
     _columns = {
         'name': fields.char('Tracking serial', size=64),
         'quantity': fields.integer('Quantity'),
         'use_exist' : fields.boolean('Use Exist'),
-        'lot_id': fields.many2one('stock.move.spilt', 'Lot'),
+        'lot_id': fields.many2one('stock.move.split', 'Lot'),
         'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
     }
     _defaults = {
@@ -203,4 +203,4 @@ class stock_move_spilt_lines(osv.osv_memory):
         'action' : lambda *x: 'split',
     }
 
-stock_move_spilt_lines()
+stock_move_split_lines()

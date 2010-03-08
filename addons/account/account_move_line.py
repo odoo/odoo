@@ -24,9 +24,8 @@ import netsvc
 from osv import fields, osv
 from tools.translate import _
 
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, now, DateTime, localtime
-
+from datetime import datetime
+import decimal_precision as dp
 import tools
 
 class account_move_line(osv.osv):
@@ -35,12 +34,17 @@ class account_move_line(osv.osv):
 
     def _query_get(self, cr, uid, obj='l', context={}):
         fiscalyear_obj = self.pool.get('account.fiscalyear')
+        fiscalperiod_obj = self.pool.get('account.period')
+        fiscalyear_ids = []
+        fiscalperiod_ids = []
         if not context.get('fiscalyear', False):
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
-            fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
         else:
-            fiscalyear_clause = '%s' % context['fiscalyear']
-        state=context.get('state',False)
+            fiscalyear_ids = [context['fiscalyear']]
+
+        fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
+        state = context.get('state',False)
+
         where_move_state = ''
         where_move_lines_by_date = ''
 
@@ -54,9 +58,47 @@ class account_move_line(osv.osv):
 
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
-            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
+            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s %s" % (fiscalyear_clause, ids,where_move_state,where_move_lines_by_date)
         else:
-            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
+            query = obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s %s)" % (fiscalyear_clause,where_move_state,where_move_lines_by_date)
+
+        if context.get('period_manner','') == 'created':
+            #the query have to be build with no reference to periods but thanks to the creation date
+            if context.get('periods',False):
+                #if one or more period are given, use them
+                fiscalperiod_ids = fiscalperiod_obj.search(cr,uid,[('id','in',context['periods'])])
+            else:
+                fiscalperiod_ids = self.pool.get('account.period').search(cr,uid,[('fiscalyear_id','in',fiscalyear_ids)])
+
+
+
+            #remove from the old query the clause related to the period selection
+            res = ''
+            count = 1
+            clause_list = query.split('AND')
+            ref_string = ' '+obj+'.period_id in'
+            for clause in clause_list:
+                if count != 1 and not clause.startswith(ref_string):
+                    res += "AND"
+                if not clause.startswith(ref_string):
+                    res += clause
+                    count += 1
+
+            #add to 'res' a new clause containing the creation date criterion
+            count = 1
+            res += " AND ("
+            periods = self.pool.get('account.period').read(cr,uid,p_ids,['date_start','date_stop'])
+            for period in periods:
+                if count != 1:
+                    res += " OR "
+                #creation date criterion: the creation date of the move_line has to be
+                # between the date_start and the date_stop of the selected periods
+                res += "("+obj+".create_date between to_date('" + period['date_start']  + "','yyyy-mm-dd') and to_date('" + period['date_stop']  + "','yyyy-mm-dd'))"
+                count += 1
+            res += ")"
+            return res
+
+        return query
 
     def default_get(self, cr, uid, fields, context={}):
         data = self._default_get(cr, uid, fields, context)
@@ -355,8 +397,8 @@ class account_move_line(osv.osv):
         'quantity': fields.float('Quantity', digits=(16,2), help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports."),
         'product_uom_id': fields.many2one('product.uom', 'UoM'),
         'product_id': fields.many2one('product.product', 'Product'),
-        'debit': fields.float('Debit', digits=(16,int(tools.config['price_accuracy']))),
-        'credit': fields.float('Credit', digits=(16,int(tools.config['price_accuracy']))),
+        'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
+        'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
         'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", states={'valid':[('readonly',True)]}, help="The move of this entry line.", select=2),
 
@@ -364,7 +406,7 @@ class account_move_line(osv.osv):
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
-        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits=(16,int(tools.config['price_accuracy']))),
+        'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
 
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
@@ -384,14 +426,14 @@ class account_move_line(osv.osv):
         'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True,
                                   help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or a tax code account."),
-        'tax_amount': fields.float('Tax/Base Amount', digits=(16,int(tools.config['price_accuracy'])), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
+        'tax_amount': fields.float('Tax/Base Amount', digits_compute=dp.get_precision('Account'), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
                     "this field will contain the basic amount(without tax)."),
         'invoice': fields.function(_invoice, method=True, string='Invoice',
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
         'account_tax_id':fields.many2one('account.tax', 'Tax'),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
 #TODO: remove this
-        'amount_taxed':fields.float("Taxed Amount",digits=(16,int(tools.config['price_accuracy']))),
+        'amount_taxed':fields.float("Taxed Amount",digits_compute=dp.get_precision('Account')),
         'company_id': fields.related('account_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
 
     }
@@ -485,7 +527,7 @@ class account_move_line(osv.osv):
         if not partner_id:
             return {'value':val}
         if not date:
-            date = now().strftime('%Y-%m-%d')
+            date = datetime.now().strftime('%Y-%m-%d')
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
 
         if part.property_payment_term and part.property_payment_term.line_ids:

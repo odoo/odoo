@@ -41,7 +41,7 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Social IDs"/>
                                 <field name="ssnid"/>
-                                <field name="sinid"/>
+                                <field name="sinid" groups="base.group_extended"/>
                                 <field name="otherid"/>
                             </group>
                             <group col="2" colspan="2">
@@ -64,7 +64,8 @@
 
                             <group col="2" colspan="2">
                                 <separator string="Position" colspan="2"/>
-                                <field name="job_id" select="1"/>
+                                <field name="job_id" widget="selection"/>
+                                <field name="department_id" widget="selection"/>
                                 <separator string="Managers" colspan="2"/>
                                 <field name="parent_id" select="1"/>
                                 <field name="coach_id" select="1"/>
@@ -86,9 +87,10 @@
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
+                    <field name="job_id"/>
                     <field name="work_phone"/>
                     <field name="work_email"/>
-                    <field name="address_id"/>
+                    <field name="department_id"/>
                     <field name="parent_id"/>
                 </tree>
             </field>
@@ -101,7 +103,9 @@
                 <search string="Employees">
                     <group col='6' colspan='2'>
                         <field name="name"/>
-                        <field name="parent_id" widget="selection">
+                        <field name="job_id" widget="selection"/>
+                        <field name="department_id" widget="selection"/>
+                        <field name="parent_id">
                                <filter icon="terp-partner" domain="[('parent_id','child_of',uid)]"  help="Employees under me"/>
                          </field>
                     </group>

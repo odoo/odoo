@@ -25,7 +25,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import time
-from mx.DateTime import *
 from report import report_sxw
 import xml
 import rml_parse
