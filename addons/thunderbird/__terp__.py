@@ -55,7 +55,7 @@
 	"category" : "Generic Modules/Thunderbird interface",
 	"init_xml" : [],
 	"demo_xml" : [],
-	"update_xml" : [],
+	"update_xml" : ['security/ir.model.access.csv'],
 	"active": False,
 	"installable": True
 }
