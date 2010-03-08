@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from locale import localeconv
+import tools
 
 class lang(osv.osv):
     _name = "res.lang"
@@ -59,23 +60,35 @@ class lang(osv.osv):
         ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique (code)', 'The code of the language must be unique !'),
     ]
-    def _group(self,cr,uid,ids,s, monetary=False):
+    
+    @tools.cache(skiparg=3)
+    def _lang_data_get(self, cr, uid, lang_id):
         conv = localeconv()
-
-        lang_obj=self.browse(cr,uid,ids[0])
+        lang_obj=self.browse(cr,uid,lang_id)
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
+        decimal_point = lang_obj.decimal_point
+        grouping = lang_obj.grouping
+        return (grouping, thousands_sep, decimal_point)        
 
-        grouping = eval(lang_obj.grouping)
+    def write(self, cr, uid, ids, vals, context=None):
+        for lang_id in ids :
+            self._lang_data_get.clear_cache(cr.dbname,lang_id= lang_id)
+        return super(lang, self).write(cr, uid, ids, vals, context)
 
+    def _group(self, cr, uid, ids, s, monetary=False, grouping=False, thousands_sep=''):
+        grouping = eval(grouping)
+        
         if not grouping:
             return (s, 0)
         result = ""
         seps = 0
         spaces = ""
+        
         if s[-1] == ' ':
             sp = s.find(' ')
             spaces = s[sp:]
             s = s[:sp]
+            
         while s and grouping:
             # if grouping is -1, we are done
             if grouping[0] == -1:
@@ -101,13 +114,13 @@ class lang(osv.osv):
             seps += 1
         return result + spaces, seps
 
-    def format(self,cr,uid,ids,percent, value, grouping=False, monetary=False):
+    def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False):
         """ Format() will return the language-specific output for float values"""
 
         if percent[0] != '%':
             raise ValueError("format() must be given exactly one %char format specifier")
 
-        lang_obj=self.browse(cr,uid,ids[0])
+        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0])        
 
         formatted = percent % value
         # floats and decimal ints need special action!
@@ -116,9 +129,8 @@ class lang(osv.osv):
             parts = formatted.split('.')
 
             if grouping:
-                parts[0], seps = self._group(cr,uid,ids,parts[0], monetary=monetary)
+                 parts[0], seps = self._group(cr,uid,ids,parts[0], monetary=monetary, grouping=lang_grouping, thousands_sep=thousands_sep)
 
-            decimal_point=lang_obj.decimal_point
             formatted = decimal_point.join(parts)
             while seps:
                 sp = formatted.find(' ')
@@ -127,7 +139,7 @@ class lang(osv.osv):
                 seps -= 1
         elif percent[-1] in 'diu':
             if grouping:
-                formatted = self._group(cr,uid,ids,formatted, monetary=monetary)[0]
+                formatted = self._group(cr,uid,ids,formatted, monetary=monetary, grouping=lang_grouping, thousands_sep=thousands_sep)[0]
 
         return formatted
 
