@@ -6,8 +6,8 @@
 		</record>
 		
 		<record model="ir.ui.view" id="view_crm_opportunity_user_graph1">
-			<field name="name">crm.opportunity.user.graph1</field>
-			<field name="model">report.crm.opportunity.user</field>
+			<field name="name">crm.opportunity.report.graph1</field>
+			<field name="model">crm.opportunity.report</field>
 			<field name="type">graph</field>
 			<field name="arch" type="xml">
 				<graph string="Opportunities by User and Section" type="pie">
@@ -41,7 +41,7 @@
 				id="act_my_cases"/>
 
 		<record model="ir.actions.act_window" id="act_my_leads_stage">
-			<field name="res_model">report.crm.lead.section.stage</field>
+			<field name="res_model">crm.lead.report</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree,form</field>
 			<field name="view_id" ref="view_crm_lead_stage_graph1"/>
@@ -49,7 +49,7 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="act_sales_pipeline">
-			<field name="res_model">report.crm.opportunity.user</field>
+			<field name="res_model">crm.opportunity.report</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree,form</field>
 			<field name="view_id" ref="view_crm_opportunity_user_graph1"/>
