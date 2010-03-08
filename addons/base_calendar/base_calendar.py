@@ -813,9 +813,9 @@ rule or repeating pattern for anexception to a recurrence set"),
          'interval':  lambda *x: 1, 
     }
     
-    def modify_this(self, cr, uid, ids, defaults, real_date, context=None, *args):
-        ids = map(lambda x: base_calendar_id2real_id(x), ids)
-        datas = self.read(cr, uid, ids[0], context=context)
+    def modify_this(self, cr, uid, event_id, defaults, real_date, context=None, *args):
+        event_id = base_calendar_id2real_id(event_id)
+        datas = self.read(cr, uid, event_id, context=context)
         defaults.update({
                'recurrent_uid': base_calendar_id2real_id(datas['id']), 
                'recurrent_id': defaults.get('date') or real_date, 
@@ -825,12 +825,12 @@ rule or repeating pattern for anexception to a recurrence set"),
         exdate = datas['exdate'] and datas['exdate'].split(',') or []
         if real_date and defaults.get('date'):
             exdate.append(real_date)
-        self.write(cr, uid, ids, {'exdate': ','.join(exdate)}, context=context)
-        new_id = self.copy(cr, uid, ids[0], default=defaults, context=context)
+        self.write(cr, uid, event_id, {'exdate': ','.join(exdate)}, context=context)
+        new_id = self.copy(cr, uid, event_id, default=defaults, context=context)
         return new_id
 
-    def modify_all(self, cr, uid, ids, defaults, context=None, *args):
-        ids = map(lambda x: base_calendar_id2real_id(x), ids)
+    def modify_all(self, cr, uid, event_id, defaults, context=None, *args):
+        event_id = base_calendar_id2real_id(event_id)
         defaults.pop('id')
         defaults.update({'table': self._table})
 
@@ -840,7 +840,7 @@ rule or repeating pattern for anexception to a recurrence set"),
             qry += ", alarm_id=%(alarm_id)s"
         if defaults.get('location'):
             qry += ", location='%(location)s'"
-        qry += "WHERE id=%s" % (ids[0])
+        qry += "WHERE id=%s" % (event_id)
         cr.execute(qry % (defaults))
         return True
 
@@ -986,23 +986,26 @@ rule or repeating pattern for anexception to a recurrence set"),
         else:
             select = ids
         new_ids = []
-        for id in select:
-            if len(str(id).split('-')) > 1:
-                data = self.read(cr, uid, id, ['date', 'date_deadline', 'rrule', 'duration'])
+        for event_id in select:
+            if len(str(event_id).split('-')) > 1:
+                data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
+                                                    'rrule', 'duration'])
                 if data.get('rrule'):
                     real_date = data.get('date')
                     data.update(vals)
-                    new_id = self.modify_this(cr, uid, [id], data, real_date, context)
+                    new_id = self.modify_this(cr, uid, event_id, data, \
+                                                real_date, context)
                     context.update({'active_id': new_id,'active_ids': [new_id]})
                     continue
-            id = base_calendar_id2real_id(id)
-            if not id in new_ids:
-                new_ids.append(id)
+            event_id = base_calendar_id2real_id(event_id)
+            if not event_id in new_ids:
+                new_ids.append(event_id)
         res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
         if vals.has_key('alarm_id') or vals.has_key('base_calendar_alarm_id'):
             alarm_obj = self.pool.get('res.alarm')
             context.update({'alarm_id': vals.get('alarm_id')})
-            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', context=context)
+            alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', \
+                                            context=context)
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
@@ -1011,7 +1014,8 @@ rule or repeating pattern for anexception to a recurrence set"),
         else:
             select = ids
         select = map(lambda x: base_calendar_id2real_id(x), select)
-        res = super(calendar_event, self).browse(cr, uid, select, context, list_class, fields_process)
+        res = super(calendar_event, self).browse(cr, uid, select, context, \
+                                                    list_class, fields_process)
         if isinstance(ids, (str, int, long)):
             return res and res[0] or False
         return res
@@ -1059,7 +1063,8 @@ rule or repeating pattern for anexception to a recurrence set"),
                             res = self.write(cr, uid, [base_calendar_id2real_id(id)], {'exdate': exdate})
                     else:
                         ids = map(lambda x: base_calendar_id2real_id(x), ids)
-                        res = super(calendar_event, self).unlink(cr, uid, base_calendar_id2real_id(ids))
+                        res = super(calendar_event, self).unlink(cr, uid, \
+                                                base_calendar_id2real_id(ids))
                         alarm_obj = self.pool.get('res.alarm')
                         alarm_obj.do_alarm_unlink(cr, uid, ids, self._name)
             else:
@@ -1096,7 +1101,7 @@ class calendar_todo(osv.osv):
 
     _columns = {
         'date': fields.function(_get_date, method=True, fnct_inv=_set_date, \
-                                        string='Duration', store=True, type='datetime'), 
+                            string='Duration', store=True, type='datetime'), 
         'duration': fields.integer('Duration'), 
     }
     
@@ -1218,3 +1223,4 @@ class res_users(osv.osv):
 res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
