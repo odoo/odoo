@@ -162,7 +162,7 @@
 			<field name="arch" type="xml">
 				<tree string="Registration">
 					<field name="id"/>
-					<field name="date"/>
+					<field name="create_date"/>
 					<field name="event_id"/>
 					<field name="partner_id"/>
 					<field name="nb_register"/>
@@ -331,14 +331,14 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_event_registration">
-			<field name="name">Events On Registrations</field>
+			<field name="name">Registration by Event</field>
 			<field name="res_model">report.event.registration</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,graph</field>
 		</record>
 		<menuitem name="Reporting" id="menu_report_event" parent="menu_marketing_event_main" sequence="20"/>
 		<!--<menuitem parent="menu_report_event" action="action_event_registration" id="menu_report_event_registration"/>-->
-		<menuitem parent="menu_event_main" action="action_event_registration" id="menu_report_event_registration" name="Registrations Per Event"/>
+		<menuitem parent="menu_event_main" action="action_event_registration" id="menu_report_event_registration" />
 	<!-- end... -->
 
 
