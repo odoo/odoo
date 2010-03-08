@@ -236,11 +236,12 @@
             <field name="arch" type="xml">
                 <tree string="Partners">
                     <field name="name"/>
-                    <field name="title"/>
                     <field name="ref"/>
+                    <field name="phone"/>
                     <field name="city"/>
                     <field name="country"/>
                     <field name="lang"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -335,12 +336,14 @@
                         <filter string="My Partners" icon="terp-partner" domain="[('parent_id','!=',False)]"/>
                         <separator orientation="vertical"/>
                         <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
-                        <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                        <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"
+                            default="context.get('default_supplier',False)"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="country" select="1"/>
                         <field name="address" select="1"/>
                         <field name="category_id" select="1"/>
+                        <field name="user_id" select="1"/>
                    </group>
                </search>
             </field>
@@ -376,7 +379,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('customer','=',1)]</field>
+            <field name="domain">[]</field>
+            <field name="context">{'default_customer':1}</field>
             <field name="filter" eval="True"/>
         </record>
 
@@ -385,8 +389,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('supplier','=',1)]</field>
-            <field name="context">{'default_customer':0}</field>
+            <field name="domain">[]</field>
+            <field name="context">{'default_customer':0, 'default_supplier':1}</field>
             <field name="filter" eval="True"/>
         </record>
 
@@ -582,7 +586,9 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('category_id','child_of', [active_id])]</field>
             <field name="context">{'category_id':active_id}</field>
+            <field name="search_view_id" ref="view_res_partner_filter"/>
         </record>
+
         <record id="ir_action_partner_by_category" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
             <field eval="'res.partner.category'" name="model"/>

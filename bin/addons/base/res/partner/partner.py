@@ -149,9 +149,10 @@ class res_partner(osv.osv):
         'active': fields.boolean('Active'),
         'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
-        'city':fields.related('address','city',type='char', string='City'),
-        'country':fields.related('address','country_id',type='many2one', relation='res.country', string='Country'),
-        'company_id': fields.many2one('res.company', 'Company',select=1),
+        'city': fields.related('address', 'city', type='char', string='City'), 
+        'phone': fields.related('address', 'phone', type='char', string='Phone'), 
+        'country': fields.related('address', 'country_id', type='many2one', relation='res.country', string='Country'), 
+        'company_id': fields.many2one('res.company', 'Company', select=1), 
     }
 
     def _default_category(self, cr, uid, context={}):

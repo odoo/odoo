@@ -192,8 +192,15 @@ class act_window(osv.osv):
             return s
         for act in self.browse(cr, uid, ids):
             fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid)
+            search_view_id = False
             if act.search_view_id:
-                field_get = self.pool.get(act.res_model).fields_view_get(cr, uid, act.search_view_id.id, 'search', context)
+                search_view_id = act.search_view_id.id
+            else:
+                res_view = self.pool.get('ir.ui.view').search(cr, uid, [('model','=',act.res_model),('type','=','search'),('inherit_id','=',False)])
+                if res_view:
+                    search_view_id = res_view[0]
+            if search_view_id:
+                field_get = self.pool.get(act.res_model).fields_view_get(cr, uid, search_view_id, 'search', context)
                 fields_from_fields_get.update(field_get['fields'])
                 field_get['fields'] = fields_from_fields_get
                 res[act.id] = str(field_get)
