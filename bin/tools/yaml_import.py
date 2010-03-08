@@ -1,14 +1,19 @@
 # -*- encoding: utf-8 -*-
 import types
-import yaml
 import time # used to eval time.strftime expressions
 import logging
 
 import pooler
 import netsvc
 import misc
-
 from config import config
+
+try:
+    import yaml
+except ImportError, e:
+    msg = "Module yaml was not found."
+    e.args = (msg,)
+    raise e
 
 logger_channel = 'tests'
 
