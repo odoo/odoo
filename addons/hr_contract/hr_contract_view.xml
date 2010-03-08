@@ -57,9 +57,9 @@
             <field name="res_model">hr.contract.wage.type.period</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem 
-                action="action_hr_contract_wage_type_period" 
-                id="hr_menu_contract_wage_type_period" 
+        <menuitem
+                action="action_hr_contract_wage_type_period"
+                id="hr_menu_contract_wage_type_period"
                 parent="hr_contract.next_id_56"/>
 
 
@@ -76,7 +76,7 @@
                                 <field name="job_id"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
-                                <field name="working_hours_per_day_id"/>
+                                <field name="working_hours"/>
                                 <field name="wage_type_id"/>
                                 <field name="wage"/>
                             </tree>
@@ -95,7 +95,7 @@
                                         <separator colspan="2" string="Duration"/>
                                         <field name="date_start" select="1"/>
                                         <field name="date_end" select="1"/>
-                                        <field name="working_hours_per_day_id"/>
+                                        <field name="working_hours"/>
                                     </group>
                                     <group col="2" colspan="2">
                                         <separator colspan="2" string="Advantages"/>
@@ -165,7 +165,7 @@
                             <separator colspan="2" string="Duration"/>
                             <field name="date_start" select="1"/>
                             <field name="date_end" select="1"/>
-                            <field name="working_hours_per_day_id"/>
+                            <field name="working_hours"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Advantages"/>
@@ -204,7 +204,7 @@
                     <field name="department_id"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <field name="working_hours_per_day_id"/>
+                    <field name="working_hours"/>
                     <field name="wage_type_id"/>
                     <field name="wage"/>
                 </tree>

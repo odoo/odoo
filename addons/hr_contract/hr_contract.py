@@ -80,20 +80,20 @@ class hr_contract(osv.osv):
     _name = 'hr.contract'
     _description = 'Contract'
     _columns = {
-        'name' : fields.char('Contract Reference', size=30, required=True),
-        'employee_id' : fields.many2one('hr.employee', "Employee", required=True),
-        'department_id' : fields.related('employee_id','department_id', string="Department", readonly=True),
-        'type_id' : fields.many2one('hr.contract.type', "Contract Type"),
-        'job_id' : fields.many2one('hr.job', 'Job Title'),
-        'date_start' : fields.date('Start Date', required=True),
-        'date_end' : fields.date('End Date'),
-        'working_hours_per_day_id' : fields.many2one('resource.calendar','Working hours per day'),
-        'wage_type_id' : fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
-        'wage' : fields.float('Wage', digits=(16,2), required=True),
+        'name': fields.char('Contract Reference', size=30, required=True),
+        'employee_id': fields.many2one('hr.employee', "Employee", required=True),
+        'department_id': fields.related('employee_id','department_id', string="Department", readonly=True),
+        'type_id': fields.many2one('hr.contract.type', "Contract Type"),
+        'job_id': fields.many2one('hr.job', 'Job Title'),
+        'date_start': fields.date('Start Date', required=True),
+        'date_end': fields.date('End Date'),
+        'working_hours': fields.many2one('resource.calendar','Working hours'),
+        'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
+        'wage': fields.float('Wage', digits=(16,2), required=True),
         'advantages': fields.text('Advantages'),
         'advantages_net': fields.float('Net Advantages Value', digits=(16,2)),
         'advantages_gross': fields.float('Gross Advantages Value', digits=(16,2)),
-        'notes' : fields.text('Notes'),
+        'notes': fields.text('Notes'),
     }
     _defaults = {
         'date_start' : lambda *a : time.strftime("%Y-%m-%d"),
