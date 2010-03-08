@@ -26,6 +26,7 @@ import crm_phonecall_wizard
 import wizard_crm_send_email
 import wizard_crm_new_send_email
 import wizard_history_event
+import crm_phonecall2phonecall
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
