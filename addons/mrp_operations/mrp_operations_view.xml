@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-
+	<menuitem id="menu_mrp_planning" name="Planning" parent="base.menu_mrp_root" sequence="2"/>
     <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
         <field name="name">mrp.production.workcenter.line.tree</field>
         <field name="model">mrp.production.workcenter.line</field>
@@ -138,7 +138,7 @@
         <field name="res_model">mrp.production.workcenter.line</field>
         <field name="view_type">form</field>
         <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
-        <field name="view_mode">gantt,tree,form,graph,calendar</field>
+        <field name="view_mode">tree,form,graph,calendar</field>
     </record>
 
 
@@ -151,7 +151,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,graph,gantt,calendar</field>
         <field name="domain">[('production_state','=','ready')]</field>
-        <field name="filter" eval="True"/>        
+        <field name="filter" eval="True"/>
     </record>
 
     <!-- Action for Draft Operations   -->
@@ -163,7 +163,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,graph</field>
         <field name="domain">[('state','=','draft')]</field>
-        <field name="filter" eval="True"/>        
+        <field name="filter" eval="True"/>
     </record>
 
     <record model="ir.values" id="mrp_production_wc_action_open">
@@ -175,7 +175,10 @@
 
     </record>
 
-    <menuitem name="All Work Orders" parent="mrp.menu_mrp_root" id="menu_mrp_production_wc_action" action="mrp_production_wc_action"/>
+    <menuitem action="mrp.mrp_production_action" id="menu_mrp_production_order_action" parent="menu_mrp_planning" sequence="1"/>
+    <menuitem name="Work Orders" parent="mrp.menu_mrp_manufacturing" id="menu_mrp_production_wc_order" action="mrp_production_wc_action_form"/>
+	<menuitem name="Work Orders" parent="menu_mrp_planning" id="menu_mrp_production_wc_action_planning" action="mrp_production_wc_action_planning" sequence="2"/>
+<!--    <menuitem name="All Work Orders" parent="menu_mrp_planning" id="menu_mrp_production_wc_action" action="mrp_production_wc_action"/>-->
 
 <!-- Operation codes -->
 
@@ -214,7 +217,7 @@
         <field name="view_id" ref="mrp_production_code_tree_view"/>
     </record>
 
-    <menuitem name="Start - Stop Codes" parent="mrp.menu_mrp_configuration" id="menu_mrp_production_code_action" action="mrp_production_code_action"/>
+<!--    <menuitem name="Start - Stop Codes" parent="menu_mrp_planning" id="menu_mrp_production_code_action" action="mrp_production_code_action"/>-->
 
 <!-- Operations -->
 
@@ -271,11 +274,11 @@
         <field name="view_id" ref="mrp_production_operation_tree_view"/>
     </record>
 
-    <menuitem
-        name="Work Order Events Using Bar Codes"
-        parent="mrp.menu_mrp_root"
-        id="menu_mrp_production_operation_action"
-        action="mrp_production_operation_action"/>
+<!--    <menuitem-->
+<!--        name="Work Order Events Using Bar Codes"-->
+<!--        parent="menu_mrp_planning"-->
+<!--        id="menu_mrp_production_operation_action"-->
+<!--        action="mrp_production_operation_action"/>-->
 
     <record id="mrp_production_reorder_form_view" model="ir.ui.view">
         <field name="name">mrp.production.allow_reorder.form</field>

@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 from tools.translate import _
+import tools
 
 #
 # Check if it works with UoM ???
@@ -37,6 +38,7 @@ class stock_report_prodlots(osv.osv):
     }
     
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'stock_report_prodlots')
         cr.execute("""
             create or replace view stock_report_prodlots as (
                 select max(id) as id,
@@ -92,6 +94,7 @@ class stock_report_tracklots(osv.osv):
     }
     
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'stock_report_tracklots')
         cr.execute("""
            create or replace view stock_report_tracklots as (
                 
@@ -142,21 +145,25 @@ class report_stock_lines_date(osv.osv):
     _columns = {
         'id': fields.integer('Inventory Line Id', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
-        'create_date': fields.datetime('Latest Date of Inventory'),
-        }
+        'date': fields.datetime('Latest Inventory Date'),
+    }
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_stock_lines_date')
         cr.execute("""
             create or replace view report_stock_lines_date as (
                 select
-                l.id as id,
+                min(l.id) as id,
                 p.id as product_id,
-                max(l.create_date) as create_date
+                max(s.date) as date
                 from
                 product_product p
                 left outer join
                 stock_inventory_line l on (p.id=l.product_id)
+                left join stock_inventory s
+                on (l.inventory_id=s.id)
                 where l.create_date is not null
-                group by p.id,l.id
+                and s.state = 'done'
+                group by p.id
             )""")
 report_stock_lines_date()
 

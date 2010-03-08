@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -97,7 +97,7 @@ class fill_inventory(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : inventory_form,
                     'fields' : inventory_fields,
-                    'state' : [('end', 'Cancel'),('fill_inventory', 'Fill Inventory') ]}
+                    'state' : [('end', 'Cancel', 'gtk-cancel'),('fill_inventory', 'Fill Inventory', 'gtk-apply', True) ]}
         },
         'fill_inventory' : {
             'actions' : [],

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,13 +15,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import wizard
 import time
 import pooler
+from tools.translate import _
 
 _date_form = '''<?xml version="1.0"?>
 <form string="Select a time span">
@@ -41,21 +42,19 @@ _date_fields = {
 def _check_data(self, cr, uid, data, *args):
     date_from = data['form']['init_date']
     date_to = data['form']['end_date']
-    emp_ids = (','.join([str(x) for x in data['ids']]))
-                  
-    cr.execute("select id from hr_attendance where employee_id in (%s) and to_char(name,'YYYY-mm-dd')<='%s' and to_char(name,'YYYY-mm-dd')>='%s' and action in ('%s','%s') order by name" %(emp_ids, date_to, date_from, 'sign_in', 'sign_out'))
+    cr.execute("select id from hr_attendance where employee_id =ANY(%s) and to_char(name,'YYYY-mm-dd')<=%s and to_char(name,'YYYY-mm-dd')>=%s and action =ANY(%s) order by name" ,(data['ids'], date_to, date_from, ['sign_in','sign_out']))
     attendance_ids = [x[0] for x in cr.fetchall()]
     if not attendance_ids:
-        raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))    
-    
+        raise wizard.except_wizard(_('No Data Available'), _('No records found for your selection!'))
+
     attendance_records = pooler.get_pool(cr.dbname).get('hr.attendance').browse(cr,uid,attendance_ids)
     emp_ids = []
     for rec in attendance_records:
         if rec.employee_id.id not in emp_ids:
             emp_ids.append(rec.employee_id.id)
-    
+
     data['form']['emp_ids'] = emp_ids
-    
+
     return data['form']
 
 

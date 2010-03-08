@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -71,7 +71,7 @@ class stock_picking_make(wizard.interface):
                 'fields': FIELDS,
                 'state': [
                     ('end', 'Cancel', 'gtk-cancel'),
-                    ('make', 'Ok', 'gtk-ok', True)
+                    ('make', 'Ok', 'gtk-apply', True)
                 ],
             },
         },

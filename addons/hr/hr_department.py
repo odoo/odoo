@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,9 +23,27 @@ from osv import fields,osv
 import tools
 
 class hr_department(osv.osv):
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _dept_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
+        res = self.name_get(cr, uid, ids, context)
+        return dict(res)
+
     _name = "hr.department"
     _columns = {
         'name': fields.char('Department Name', size=64, required=True),
+        'complete_name': fields.function(_dept_name_get_fnc, method=True, type="char", string='Name'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=True),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
         'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),
@@ -43,7 +61,7 @@ class hr_department(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_department where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from hr_department where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -97,7 +115,7 @@ class res_users(osv.osv):
             result[user_id] = parent_ids
         return result
 
-    def _parent_search(self, cr, uid, obj, name, args):
+    def _parent_search(self, cr, uid, obj, name, args, context):
         parent = []
         for arg in args:
             if arg[0] == 'parent_id':
@@ -117,12 +135,12 @@ class res_users(osv.osv):
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)])
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'])
-                childs = map(lambda x: x['member_ids'], data_dept)                
+                childs = map(lambda x: x['member_ids'], data_dept)
                 childs = tools.flatten(childs)
-                childs = obj_user.search(cr, uid, [('id','in',childs),('active','=',True)])                
+                childs = obj_user.search(cr, uid, [('id','in',childs),('active','=',True)])
                 if manager_id in childs:
                     childs.remove(manager_id)
-                
+
                 child_ids.extend(tools.flatten(childs))
                 set = {}
                 map(set.__setitem__, child_ids, [])
@@ -132,7 +150,7 @@ class res_users(osv.osv):
             result[manager_id] = child_ids
         return result
 
-    def _child_search(self, cr, uid, obj, name, args):
+    def _child_search(self, cr, uid, obj, name, args, context):
         parent = []
         for arg in args:
             if arg[0] == 'child_ids':
@@ -145,9 +163,7 @@ class res_users(osv.osv):
     _columns = {
         'parent_id': fields.function(_parent_compute, relation='res.users',fnct_search=_parent_search, method=True, string="Managers", type='many2many'),
         'child_ids': fields.function(_child_compute, relation='res.users', fnct_search=_child_search,method=True, string="Subordinates", type='many2many'),
+        'context_department_id': fields.many2one('hr.department', 'Departments'),
     }
-
-
 res_users()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -55,7 +55,7 @@ def _get_moves(self, cr, uid, data, context):
 
     for move in move_lines:
         quantity = move.product_qty
-        if move.state <> 'assigned':
+        if move.state != 'assigned':
             quantity = 0
 
         _moves_arch_lst.append('<field name="move%s" />' % (move.id,))
@@ -124,7 +124,8 @@ def _do_split(self, cr, uid, data, context):
             currency = data['form']['currency%s' % move.id]
 
             qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
-
+            pricetype=pool.get('product.price.type').browse(cr,uid,user.company_id.property_valuation_price_type.id)
+            
             if (qty > 0):
                 new_price = currency_obj.compute(cr, uid, currency,
                         user.company_id.currency_id.id, price)
@@ -133,15 +134,17 @@ def _do_split(self, cr, uid, data, context):
                 if product.qty_available<=0:
                     new_std_price = new_price
                 else:
-                    new_std_price = ((product.standard_price * product.qty_available)\
+                    # Get the standard price
+                    amount_unit=product.price_get(pricetype.field, context)[product.id]
+                    new_std_price = ((amount_unit * product.qty_available)\
                         + (new_price * qty))/(product.qty_available + qty)
 
                 product_obj.write(cr, uid, [product.id],
-                        {'standard_price': new_std_price})
+                        {pricetype.field: new_std_price})
                 move_obj.write(cr, uid, move.id, {'price_unit': new_price})        
 
     for move in too_few:        
-        if data['form']['move%s' % move.id] <> 0:
+        if data['form']['move%s' % move.id] != 0:
             new_move = move_obj.copy(cr, uid, move.id,
                 {
                     'product_qty' : data['form']['move%s' % move.id],
@@ -190,8 +193,8 @@ class partial_move(wizard.interface):
             'actions': [ _get_moves ],
             'result': {'type': 'form', 'arch': _moves_arch, 'fields': _moves_fields,
                 'state' : (
-                    ('end', 'Cancel'),
-                    ('split', 'Partial')
+                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('split', 'Partial', 'gtk-apply', True)
                 )
             },
         },

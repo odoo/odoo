@@ -1,21 +1,21 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-	
+
 		<!--
 			Process
 		-->
-	
+
 		<record id="process_process_mrpoperationprocess0" model="process.process">
 			<field eval="&quot;&quot;&quot;Mrp Operations&quot;&quot;&quot;" name="name"/>
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="1" name="active"/>
 		</record>
-		
+
 		<!--
 			Process Node
 		-->
-		
+
 		<record id="process_node_productionorder0" model="process.node">
 			<field name="menu_id" ref="mrp.menu_mrp_production_action"/>
 			<field name="model_id" ref="mrp.model_mrp_production"/>
@@ -26,9 +26,9 @@
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_workorder0" model="process.node">
-			<field name="menu_id" ref="menu_mrp_production_operation_action"/>
+<!--			<field name="menu_id" ref="menu_mrp_production_operation_action"/>-->
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Information from the routing definition.&quot;&quot;&quot;" name="note"/>
@@ -37,9 +37,9 @@
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_startoperation0" model="process.node">
-			<field name="menu_id" ref="menu_mrp_production_operation_action"/>
+<!--			<field name="menu_id" ref="menu_mrp_production_operation_action"/>-->
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Start the operation.&quot;&quot;&quot;" name="note"/>
@@ -48,9 +48,9 @@
 			<field eval="&quot;&quot;&quot;object.state=='startworking'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_doneoperation0" model="process.node">
-			<field name="menu_id" ref="menu_mrp_production_operation_action"/>
+<!--			<field name="menu_id" ref="menu_mrp_production_operation_action"/>-->
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Finish the operation.&quot;&quot;&quot;" name="note"/>
@@ -59,9 +59,9 @@
 			<field eval="&quot;&quot;&quot;object.state=='done'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_canceloperation0" model="process.node">
-			<field name="menu_id" ref="menu_mrp_production_operation_action"/>
+<!--			<field name="menu_id" ref="menu_mrp_production_operation_action"/>-->
 			<field name="model_id" ref="mrp.model_mrp_production_workcenter_line"/>
 			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
 			<field eval="&quot;&quot;&quot;Cancel the operation.&quot;&quot;&quot;" name="note"/>
@@ -70,11 +70,11 @@
 			<field eval="&quot;&quot;&quot;object.state=='cancel'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<!--
 			Process Transition
 		-->
-		
+
 		<record id="process_transition_productionstart0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -83,7 +83,7 @@
 			<field model="process.node" name="target_node_id" ref="process_node_startoperation0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_productionorder0"/>
 		</record>
-		
+
 		<record id="process_transition_workstartoperation0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -92,7 +92,7 @@
 			<field model="process.node" name="target_node_id" ref="process_node_startoperation0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_workorder0"/>
 		</record>
-		
+
 		<record id="process_transition_startdoneoperation0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -101,7 +101,7 @@
 			<field model="process.node" name="target_node_id" ref="process_node_doneoperation0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_startoperation0"/>
 		</record>
-		
+
 		<record id="process_transition_startcanceloperation0" model="process.transition">
 			<field eval="[(6,0,[])]" name="role_ids"/>
 			<field eval="[(6,0,[])]" name="transition_ids"/>
@@ -110,7 +110,6 @@
 			<field model="process.node" name="target_node_id" ref="process_node_canceloperation0"/>
 			<field model="process.node" name="source_node_id" ref="process_node_startoperation0"/>
 		</record>
-		
+
 	</data>
 </openerp>
-	

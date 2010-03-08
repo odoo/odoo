@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -32,6 +32,7 @@ from tools.translate import _
 class document_directory(osv.osv):
     _name = 'document.directory'
     _description = 'Document directory'
+    _order = 'name desc'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
         'write_date': fields.datetime('Date Modified', readonly=True),
@@ -64,6 +65,7 @@ class document_directory(osv.osv):
         objid=self.pool.get('ir.model.data')
         try:
             mid = objid._get_id(cr, uid, 'document', 'dir_root')
+            return None # TODO: check why not display root dir 
             if not mid:
                 return None
         except Exception, e:
@@ -98,6 +100,16 @@ class document_directory(osv.osv):
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),
         ('no_selfparent', 'check(parent_id <> id)', 'Directory cannot be parent of itself!')
     ]
+    def name_get(self, cr, uid, ids, context={}):
+        res = []
+        for d in self.browse(cr, uid, ids, context=context):
+            s = ''
+            d2 = d
+            while d2 and d2.parent_id:
+                s = d2.name + (s and ('/' + s) or '')
+                d2 = d2.parent_id
+            res.append((d.id, s))
+        return res
 
     def ol_get_resource_path(self,cr,uid,dir_id,res_model,res_id):
         # this method will be used in process module

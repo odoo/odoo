@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -30,6 +30,7 @@ import random
 import tools
 import re
 
+from tools.translate import _
 from document.nodes import node_content
 
 from tools.safe_eval import safe_eval
@@ -128,7 +129,7 @@ class document_directory_content(osv.osv):
         if node.extension != '.ics':
                 return super(document_directory_content, self).process_write(cr, uid, node, data, context)
         import vobject
-        parsedCal = vobject.readOne(data)
+        parsedCal = vobject.readOne(data)        
         fields = {}
         funcs = {}
         fexprs = {}
@@ -226,13 +227,11 @@ class document_directory_content(osv.osv):
             if isinstance(id, list):
                 if len(id) > 1:
                     raise Exception("Multiple matches found for ICS")
-            if id:
-                print "writting at %s#%d:" %(cmodel, id[0]), result
+            if id:                
                 fobj.write(cr, uid, id, result, context=context)
             else:
                 r = idomain.copy()
-                r.update(result)
-                print "creating at  %s#%d:" %(cmodel, id), result
+                r.update(result)                
                 fobj.create(cr, uid, r, context=context)
 
         return True

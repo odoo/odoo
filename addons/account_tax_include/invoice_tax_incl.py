@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,6 +23,8 @@ import time
 import netsvc
 from osv import fields, osv
 import ir
+from tools import config
+import decimal_precision as dp
 
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
@@ -35,6 +37,20 @@ class account_invoice(osv.osv):
     _defaults = {
         'price_type': lambda *a: 'tax_excluded',
     }
+
+    def refund(self, cr, uid, ids, date=None, period_id=None, description=None):
+        map_old_new = {}
+        refund_ids = []
+        for old_inv_id in ids:
+            new_id = super(account_invoice,self).refund(cr, uid, ids, date=date, period_id=period_id, description=description)
+            refund_ids += new_id
+            map_old_new[old_inv_id] = new_id[0]
+
+        for old_inv_id in map_old_new.keys():
+            old_inv_record = self.read(cr, uid, [old_inv_id], ['price_type'])[0]['price_type']
+            self.write(cr, uid, [map_old_new[old_inv_id]], {'price_type' : old_inv_record})
+        return refund_ids
+
 account_invoice()
 
 class account_invoice_line(osv.osv):
@@ -45,7 +61,9 @@ class account_invoice_line(osv.osv):
         """
         res = {}
         tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
+            cur = line.invoice_id and line.invoice_id.currency_id or False
             res_init = super(account_invoice_line, self)._amount_line(cr, uid, [line.id], name, args, context)
             res[line.id] = {
                 'price_subtotal': 0.0,
@@ -63,13 +81,13 @@ class account_invoice_line(osv.osv):
                         product_taxes = filter(lambda x: x.price_include, line.product_id.supplier_taxes_id)
 
                 if ((set(product_taxes) == set(line.invoice_line_tax_id)) or not product_taxes) and (line.invoice_id.price_type == 'tax_included'):
-                    res[line.id]['price_subtotal_incl'] = res_init[line.id]
+                    res[line.id]['price_subtotal_incl'] = cur and cur_obj.round(cr, uid, cur, res_init[line.id]) or res_init[line.id]
                 else:
-                    res[line.id]['price_subtotal'] = res_init[line.id]
+                    res[line.id]['price_subtotal'] = cur and cur_obj.round(cr, uid, cur, res_init[line.id]) or res_init[line.id]
                     for tax in tax_obj.compute_inv(cr, uid, product_taxes, res_init[line.id]/line.quantity, line.quantity):
-                        res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - round(tax['amount'], 2)
+                        res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - round(tax['amount'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
             else:
-                res[line.id]['price_subtotal'] = res_init[line.id]
+                res[line.id]['price_subtotal'] = cur and cur_obj.round(cr, uid, cur, res_init[line.id]) or res_init[line.id]
 
             if res[line.id]['price_subtotal']:
                 res[line.id]['price_subtotal_incl'] = res[line.id]['price_subtotal']
@@ -82,8 +100,8 @@ class account_invoice_line(osv.osv):
                     res[line.id]['price_subtotal'] = res[line.id]['price_subtotal'] - tax['amount']
                     res[line.id]['data'].append( tax)
 
-        res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], 2)
-        res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], 2)
+            res[line.id]['price_subtotal']= round(res[line.id]['price_subtotal'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
+            res[line.id]['price_subtotal_incl']= round(res[line.id]['price_subtotal_incl'], self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
         return res
 
     def _price_unit_default(self, cr, uid, context=None):
@@ -139,16 +157,16 @@ class account_invoice_line(osv.osv):
         else:
             return super(account_invoice_line, self).product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         # note: will call product_id_change_unit_price_inv with context...
 
-        # Temporary trap, for bad context that came from koo: 
+        # Temporary trap, for bad context that came from koo:
         # if isinstance(context, str):
         #       print "str context:", context
 
         ctx = (context and context.copy()) or {}
         ctx.update({'price_type': ctx.get('price_type','tax_excluded')})
-        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context=ctx)
+        return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id=currency_id, context=ctx)
 account_invoice_line()
 
 class account_invoice_tax(osv.osv):
@@ -163,7 +181,7 @@ class account_invoice_tax(osv.osv):
         cur_obj = self.pool.get('res.currency')
         cur = inv.currency_id
         company_currency = inv.company_id.currency_id.id
-        
+
         for line in inv.invoice_line:
             data = self.pool.get('account.invoice.line')._amount_line2(cr, uid, [line.id], [], [], context)[line.id]
             for tax in data['data']:
@@ -201,7 +219,7 @@ class account_invoice_tax(osv.osv):
             t['amount'] = cur_obj.round(cr, uid, cur, t['amount'])
             t['base_amount'] = cur_obj.round(cr, uid, cur, t['base_amount'])
             t['tax_amount'] = cur_obj.round(cr, uid, cur, t['tax_amount'])
-        
+
         return tax_grouped
 account_invoice_tax()
 

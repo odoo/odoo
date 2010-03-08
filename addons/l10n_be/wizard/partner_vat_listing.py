@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -94,9 +94,7 @@ class wizard_vat(wizard.interface):
 
     def _get_partner(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
-        period_ids = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fyear'])])
-        period = "("+','.join(map(lambda x: str(x), period_ids)) +")"
-
+        period = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fyear'])])
         p_id_list = pool.get('res.partner').search(cr,uid,[('vat_subjected','!=',False)])
         if not p_id_list:
              raise wizard.except_wizard(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
@@ -116,8 +114,7 @@ class wizard_vat(wizard.interface):
                     break
             if not go_ahead:
                 continue
-            query = 'select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in ('"'produit'"','"'tax'"') and l.partner_id='+str(obj_partner.id)+' and l.period_id in '+period+' group by b.code'
-            cr.execute(query)
+            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in %s and l.partner_id=%s and l.period_id=ANY(%s) group by b.code',(('produit','tax'),obj_partner.id,period,))
             line_info = cr.fetchall()
             if not line_info:
                 continue

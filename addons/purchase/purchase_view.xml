@@ -1,8 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"
-            groups="group_purchase_user"/>
+        <!--<menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchase Management"
+            groups="group_purchase_user"/>-->
+       <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Procurement Management"
+            groups="group_purchase_user" sequence="7"/>
+       <menuitem id="menu_procurement_management" name="Procurement Management"
+            parent="base.menu_purchase_root" sequence="1"/>
+
+     <!--supplier menu-->
+     <menuitem id="base.menu_procurement_management_supplier" name="Suppliers"
+            parent="base.menu_purchase_root" sequence="3"/>
+     <menuitem id="menu_procurement_management_supplier_name" name="Suppliers"
+            parent="base.menu_procurement_management_supplier" action="base.action_partner_supplier_form" sequence="1"/>
+
+
+
+          <!--Inventory control-->
+      <menuitem id="menu_procurement_management_nventory" name="Inventory Control"
+            parent="base.menu_purchase_root" sequence="4"/>
+      <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_nventory"
+              name="Incoming shipments" sequence="9"/>
+        <menuitem action="stock.action_reception_picking_move" id="menu_action_reception_picking_move"
+              name="Incoming Products" parent="menu_procurement_management_nventory" sequence="10"/>
+
+     <!--Invoice control-->
+      <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
+            parent="base.menu_purchase_root" sequence="6"/>
+     <menuitem name="Pending Invoices" id="menu_procurement_management_pending_invoice" action="account.action_invoice_tree_pending_invoice"
+      parent="menu_procurement_management_invoice"/>
+
+      <!--product menu-->
+      <menuitem id="menu_procurement_management_product" name="Product"
+            parent="base.menu_purchase_root" sequence="8"/>
+      <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product.product_normal_action_puchased"
+      parent="menu_procurement_management_product"/>
 
        <record model="ir.ui.view" id="purchase_order_calendar">
             <field name="name">purchase.order.calendar</field>
@@ -121,17 +153,33 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-purchase" string="To Invoice" domain="[('invoiced','=',1)]" separator="1"/>
                     <separator orientation="vertical"/>
-                    <field name="name" select="1"/>
+                    <field name="name" select="1" string="Reference"/>
                     <field name="partner_id" select="1"/>
                     <field name="product_id" select="1"/>
                     <field name="create_uid" select="1" widget="selection">
-                        <filter icon="terp-purchase" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>
-                        <filter icon="terp-purchase" domain="[('create_uid','child_of',[uid])]" help="My Departments Purchase Orders"/>
+                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>                        
                     </field>
+                </group>
+                  <group expand="1" string="Group By..." colspan="4" col="10">
+                    <filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>    
+                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>                
+                    <filter string="Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
                 </group>
               </search>
             </field>
         </record>
+
+        <record id="purchase_rfq" model="ir.actions.act_window">
+            <field name="name">Quotation Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','draft')]</field>
+            <field name="view_mode">tree,form</field>  
+            <field name="search_view_id" ref="view_purchase_order_filter"/>          
+        </record>
+        <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management" 
+                name="Request for Quotations" sequence="6"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
@@ -140,7 +188,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
-        <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="purchase.menu_purchase_root"/>
+        <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management"/>
 
         <record id="purchase_form_action4" model="ir.actions.act_window">
             <field name="name">Purchase Orders in Progress</field>
@@ -159,15 +207,16 @@
             <field name="arch" type="xml">
                 <tree string="Purchase Order">
                     <field name="name" string="Reference"/>
-                    <field name="date_order"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <field name="minimum_planned_date"/>
+                    <field name="origin"/>
+                    <field name="date_order" string="Order Date"/>
                     <field name="partner_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="location_id"/>
+                    <field name="minimum_planned_date"/>
                     <field name="invoiced_rate" widget="progressbar"/>
                     <field name="shipped_rate" widget="progressbar"/>
-                    <field name="amount_untaxed"/>
-                    <field name="origin"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount"/>                               
+                    <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -185,7 +234,7 @@
                             <field context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
                             <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
                             <field colspan="4" name="name"/>
-                            <field name="date_planned"/>
+                            <field name="date_planned" widget="date"/>
                             <field name="price_unit"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <field name="price_subtotal" readonly="1"/>
@@ -213,8 +262,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:date_planned&lt;=current_date;black:date_planned&gt;current_date" string="Purchase Order Lines">
+                    <field name="order_id"/>
                     <field name="name"/>
-                    <field name="date_planned"/>
+                    <field name="date_planned" widget="date"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>

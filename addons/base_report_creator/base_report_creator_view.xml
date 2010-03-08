@@ -14,7 +14,7 @@
             </tree>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="base_report_creator_tree">
         <field name="name">base_report_creator.report.tree</field>
         <field name="model">base_report_creator.report</field>
@@ -67,7 +67,7 @@
                         </form>
                         <tree editable="bottom" string="Fields to Display">
                             <field name="sequence"/>
-                            <field name="field_id" domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2]),('ttype','&lt;&gt;','many2many'),('ttype','&lt;&gt;','one2many')] or []"/>
+                            <field name="field_id" domain="parent.model_ids and [('model_id','in',parent.model_ids[0][2]),('ttype','&lt;&gt;','many2many'),('ttype','&lt;&gt;','one2many')] or []" attrs="{'required':[('group_method','!=','count')]}"/>
                             <field name="group_method"/>
                             <field name="graph_mode"/>
                             <field name="calendar_mode"/>
@@ -104,9 +104,12 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem 
-        name="Custom Reports" parent="board.next_id_50"
-        id="menu_base_report_creator_action_config" 
+    <menuitem
+        name="Custom Reports" id="base.menu_custom_reports"
+        action="base_report_creator_action" parent="base.reporting_menu" sequence="1"/>
+    <menuitem
+        name="Custom Reports" parent="base.next_id_50"
+        id="menu_base_report_creator_action_config"
         action="base_report_creator_action"/>
 
     <record model="ir.ui.view" id="base_report_creator_tree_simple">
@@ -123,9 +126,9 @@
         <field name="res_model">base_report_creator.report</field>
         <field name="view_type">tree</field>
     </record>
-    <menuitem 
-        name="Custom Reports" parent="board.dashboard_menu"
-        id="menu_base_report_creator_action" 
+    <menuitem
+        name="Custom Reports" parent="base.menu_custom_reports"
+        id="menu_base_report_creator_action"
         action="base_report_creator_action_tree"/>
 
     <wizard

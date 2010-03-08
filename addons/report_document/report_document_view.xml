@@ -57,8 +57,8 @@
             </field>
         </record>
 
-        <menuitem name="Document Management" id="menu_action_view_my_document"/>
-        <menuitem name="Reporting" id="menu_action_view_my_document_report" parent="menu_action_view_my_document"/>
+     <!--   <menuitem name="Document Management" id="menu_action_view_my_document"/>
+        <menuitem name="Reporting" id="menu_action_view_my_document_report" parent="menu_action_view_my_document"/>-->
 
         <record model="ir.actions.act_window" id="action_view_all_document_tree1">
             <field name="name">All Users files</field>
@@ -68,7 +68,7 @@
             <field name="search_view_id" ref="view_report_document_user_search"/>
         </record>
 
-        <menuitem name="All Users files" id="menu_action_view_my_document_report_all_userfile" parent="menu_action_view_my_document_report" action="action_view_all_document_tree1"/>
+      <!--  <menuitem name="All Users files" id="menu_action_view_my_document_report_all_userfile" parent="menu_action_view_my_document_report" action="action_view_all_document_tree1"/>-->
 
 <!--        -->
         <record model="ir.ui.view" id="view_document_wall_form">
@@ -107,7 +107,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Wall of Shame" id="menu_action_view_my_document_report_shame" parent="menu_action_view_my_document_report" action="action_view_wall"/>
+        <!--<menuitem name="Wall of Shame" id="menu_action_view_my_document_report_shame" parent="menu_action_view_my_document_report" action="action_view_wall"/>-->
 
 <!--***************************************************************************************-->
 

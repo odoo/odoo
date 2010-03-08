@@ -79,8 +79,9 @@
             <field name="search_view_id" ref="view_order_product_search"/>
         </record>
 
-        <menuitem id="next_id_73" name="Reporting" parent="purchase.menu_purchase_root"/>
-        <menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="next_id_73"/>
+        <menuitem id="next_id_73" name="Reporting" parent="base.menu_purchase_root"/>
+        <menuitem action="action_order_product_tree_all" id="menu_report_order_product_all"
+        	name="PO by Products" parent="next_id_73"/>
 
         <!-- Purchases by category by month -->
 
@@ -159,7 +160,8 @@
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_order_category_search"/>
         </record>
-        <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="report_purchase.next_id_73"/>
+        <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all"
+        	name="PO by Products Category" parent="report_purchase.next_id_73"/>
 
         <act_window domain="[('product_id', '=', active_id)]" id="act_product_product_2_report_purchases_order_product" name="Monthly purchases" res_model="report.purchase.order.product" src_model="product.product"/>
 

@@ -18,7 +18,7 @@
                                 name="%(report_document.action_view_all_document_tree1)d"
                                 view_mode="tree"
                                 domain="[('name','=',time.strftime('%%Y-%%m-01'))]"/>
-                                 
+
                             <action
                                 string="File Size by Month"
                                 name="%(report_document.action_view_size_month)d"
@@ -28,8 +28,8 @@
                             <action
                                 string="Files by Resource Type"
                                 name="%(report_document.action_view_document_by_resourcetype_graph)d"
-                                view_mode="graph,tree"/>            
-                                
+                                view_mode="graph,tree"/>
+
                             <action
                                 string="Files by Partner"
                                 name="%(report_document.action_view_files_by_partner)d"
@@ -50,10 +50,11 @@
             <field name="view_id" ref="board_document_manager_form"/>
          </record>
 
+		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
          <menuitem
             name="Document"
             id="menu_board_document"
-            parent="board.dashboard_menu"
+            parent="base.dashboard"
             groups="document.group_document_manager"/>
 
 
@@ -76,7 +77,7 @@
                                 string="Wall of Shame"
                                 name="%(report_document.action_view_wall)d"
                                 view_mode="tree"/>
-                                
+
                         </child1>
                         <child2>
                             <action

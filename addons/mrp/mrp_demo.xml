@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
+
         <!--
 	Resource: mrp.workcenter
 	-->
-        
+
         <record id="mrp_workcenter_0" model="mrp.workcenter">
             <field name="name">Assembly workshop</field>
-            <field name="type">hr</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
         <record id="mrp_workcenter_1" model="mrp.workcenter">
             <field name="name">Repairs workshop</field>
-            <field name="type">hr</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
         </record>
-        
+
         <!--
 	Resource: mrp.property.group
 	-->
-        
+
         <record id="mrp_property_group_ram" model="mrp.property.group">
             <field name="name">RAM</field>
         </record>
@@ -52,11 +52,11 @@
         <record id="mrp_property_group_psu" model="mrp.property.group">
             <field name="name">PSU</field>
         </record>
-        
+
         <!--
 	Resource: mrp.property
 	-->
-        
+
         <record id="mrp_property_0" model="mrp.property">
             <field name="group_id" ref="mrp_property_group_ram"/>
             <field name="name">DDR 512MB PC400</field>
@@ -138,7 +138,7 @@
         <!--
 	Resource: mrp.routing.workcenter
 	-->
-        
+
         <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
             <field name="routing_id" ref="mrp_routing_0"/>
             <field name="workcenter_id" ref="mrp_workcenter_0"/>
@@ -158,11 +158,11 @@
             <field name="hour_nbr">3</field>
             <field name="name">assembly main + processor + fan</field>
         </record>
-        
+
         <!--
 	Resource: mrp.bom
 	-->
-        
+
         <record id="mrp_bom_0" model="mrp.bom">
             <field name="name">Regular processor config</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
@@ -171,7 +171,7 @@
             <field name="type">normal</field>
             <field model="product.product" name="product_id" search="[('default_code','=','CPU_GEN')]"/>
         </record>
-        
+
         <record id="mrp_bom_1" model="mrp.bom">
             <field name="name">Assembly Basic+ PC</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
@@ -247,14 +247,14 @@
             <field name="type">phantom</field>
             <field model="product.product" name="product_id" search="[('default_code','=','RAM_GEN')]"/>
         </record>
-        
+
         <record id="mrp_bom_13" model="mrp.bom">
             <field name="name">High Speed Processor + main board on demand</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
             <field model="product.product" name="product_id" search="[('default_code','=','CPU2')]"/>
         </record>
-        
+
         <record id="mrp_bom_kit" model="mrp.bom">
             <field name="code">KIT</field>
             <field name="name">Kit Mouse</field>
@@ -484,7 +484,7 @@
             <field name="bom_id" ref="mrp_bom_9"/>
             <field model="product.product" name="product_id" search="[('default_code','=','TOW1')]"/>
         </record>
-        
+
         <record id="mrp_bom_kit2" model="mrp.bom">
             <field name="code">KIT</field>
             <field name="name">Kit Keyboard + Mouse</field>
@@ -508,6 +508,6 @@
             <field name="bom_id" ref="mrp_bom_kit2"/>
             <field model="product.product" name="product_id" search="[('default_code','=','KEYA')]"/>
         </record>
-        
+
     </data>
 </openerp>

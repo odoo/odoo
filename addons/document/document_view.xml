@@ -1,7 +1,11 @@
 <openerp>
 <data>
-    <menuitem name="Document Management" icon="terp-stock" id="menu_document"/>
-    <menuitem name="Document Configuration" id="menu_document_configuration" parent="menu_document"/>
+    <!--<menuitem name="Document Management" icon="terp-stock" id="menu_document"/>
+    <menuitem name="Document Configuration" id="menu_document_configuration" parent="menu_document"/>-->
+
+    <menuitem name="Knowledge Management" icon="terp-stock" id="base.menu_document" sequence="4"/>
+    <menuitem name="Configuration" id="base.menu_document_configuration" parent="base.menu_document" sequence="50"/>
+    <menuitem name="Document Management" id="menu_document_management_configuration" parent="base.menu_document_configuration" sequence="1"/>
 
     <record model="ir.ui.view" id="view_document_storage_form">
         <field name="name">document.storage</field>
@@ -39,11 +43,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
-    <menuitem
+   <menuitem
         name="Storage Media"
         action="action_document_storage_form"
         id="menu_document_storage_media"
-        parent="menu_document_configuration"/>
+        parent="menu_document_management_configuration"/>
 
     <record model="ir.ui.view" id="view_document_directory_form">
         <field name="name">document.directory</field>
@@ -124,16 +128,30 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_document_directory_form">
+        <field name="name">Directories</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.directory</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+
+    <record id="action_dir_view1" model="ir.actions.act_window.view">
+        <field eval="10" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_document_directory_tree"/>
+        <field name="act_window_id" ref="action_document_directory_form"/>
+    </record>
+    <record id="action_dir_view2" model="ir.actions.act_window.view">
+        <field eval="20" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_document_directory_form"/>
+        <field name="act_window_id" ref="action_document_directory_form"/>
+    </record>
+
     <menuitem
-        name="Directories"
         action="action_document_directory_form"
         id="menu_document_directories"
-        parent="menu_document_configuration"/>
+        parent="menu_document_management_configuration"/>
 
 
     <record model="ir.actions.act_window" id="action_document_directory_tree">
@@ -141,12 +159,13 @@
         <field name="name">Directorie's Structure</field>
         <field name="res_model">document.directory</field>
         <field name="view_type">tree</field>
+        <field name="view_id" ref="document.view_document_directory_tree"/>
         <field name="domain">[('ressource_parent_type_id','=',False),('parent_id','=',False)]</field>
     </record>
     <menuitem
         action="action_document_directory_tree"
         id="menu_document_directories_tree"
-        parent="menu_document_configuration"/>    
+        parent="menu_document_management_configuration" sequence="5"/>
 
     <record model="ir.ui.view" id="view_document_file_form">
         <field name="name">ir.attachment</field>
@@ -154,14 +173,13 @@
         <field name="priority" eval="1"/>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Files">
+            <form string="Documents">
                 <group colspan="4" col="6">
                     <field name="name" select="1" />
                     <field name="title" select="1"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="create_uid" select="2"/>
-                    <field name="create_date" select="2"/>
+                    <field name="parent_id" select="2"/>                    
                 </group>
                 <notebook colspan="4">
                 <page string="Attachment">
@@ -189,17 +207,18 @@
                     <field name="index_content" nolabel="1" colspan="4" select="1"/>
                 </page><page string="Security">
                     <field name="group_ids" colspan="4" nolabel="1"/>
-                </page><page string="Others Info">
-                    <group colspan="2" col="2">
-                        <separator string="History" colspan="2"/>
-                        <field name="write_date"/>
+                </page><page string="Others Info">                                        
+                    <group colspan="4" col="4">   
+                        <separator string="File Information" colspan="4"/>                     
+                        <field name="file_size" readonly="1"/>                      
+                        <newline/>
+                        <separator string="History" colspan="4"/>                     
+                        <field name="create_uid"/>
+                        <field name="create_date"/>
                         <field name="write_uid"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <separator string="File Information" colspan="2"/>
-                        <field name="file_size" readonly="1"/>
-                        <field name="parent_id" select="2"/>
-                    </group>
+                        <field name="write_date"/>                        
+                    </group>                   
+                    
                 </page><page string="Notes">
                     <field colspan="4" name="description" nolabel="1"/>
                 </page>
@@ -213,7 +232,7 @@
         <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree string="Files">
+            <tree string="Documents">
                 <field name="name"/>
                 <field name="title" />
                 <field name="partner_id"/>
@@ -230,17 +249,18 @@
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
     </record>
+    <menuitem name="Documents" id="menu_document_doc" parent="base.menu_document" sequence="5"/>
     <menuitem
-        name="Search a File"
+        name="Documents"
         action="action_document_file_form"
         id="menu_document_files"
-        parent="menu_document"/>
+        parent="menu_document_doc"/>
 
     <record model="ir.actions.act_window" id="action_document_file_directory_form">
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
-        <field name="domain">[('parent_id','=',active_id)]</field>
+        <field name="domain">[('parent_id','child_of',active_id)]</field>
         <field name="context">{'parent_id':'active_id'}</field>
     </record>
 
@@ -289,11 +309,16 @@
             </field>
         </field>
     </record>
-        
-        <act_window domain="[('partner_id', '=', active_id)]"
-            id="act_res_partner_document" name="Related Documents"
-            res_model="ir.attachment"
-            src_model="res.partner"/>
+
+    <act_window domain="[('partner_id', '=', active_id)]"
+        id="act_res_partner_document" name="Related Documents"
+        res_model="ir.attachment"
+        src_model="res.partner"/>
+
+    <act_window domain="[('parent_id', '=', active_id)]"
+        id="zoom_directory" name="Related Documents"
+        res_model="ir.attachment"
+        src_model="document.directory"/>
 
 </data>
 </openerp>

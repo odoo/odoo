@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+import decimal_precision as dp
 import pooler
 
 import math
@@ -208,7 +209,7 @@ class product_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from product_category where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from product_category where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -252,8 +253,8 @@ class product_template(osv.osv):
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Requisition Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the requisition request."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
-        'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy'])), help="Base price for computing the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy'])), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
+        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Sale Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
+        'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Account'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross weight', help="The gross weight in Kg."),
         'weight_net': fields.float('Net weight', help="The net weight in Kg."),
@@ -433,8 +434,8 @@ class product_product(osv.osv):
         'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
         'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
-        'price': fields.function(_product_price, method=True, type='float', string='Customer Price', digits=(16, int(config['price_accuracy']))),
-        'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='List Price', digits=(16, int(config['price_accuracy']))),
+        'price': fields.function(_product_price, method=True, type='float', string='Customer Price', digits_compute=dp.get_precision('Sale Price')),
+        'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='List Price', digits_compute=dp.get_precision('Sale Price')),
         'code': fields.function(_product_code, method=True, type='char', string='Code'),
         'partner_ref' : fields.function(_product_partner_ref, method=True, type='char', string='Customer ref'),
         'default_code' : fields.char('Code', size=64),
@@ -443,8 +444,8 @@ class product_product(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
         'ean13': fields.char('EAN13', size=13),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
-        'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
-        'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
+        'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
+        'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
         'pricelist_id': fields.dummy(string='Pricelist',relation='product.pricelist', type='many2one'),
     }
 
@@ -651,7 +652,7 @@ class pricelist_partnerinfo(osv.osv):
         'name': fields.char('Description', size=64),
         'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
         'min_quantity': fields.float('Quantity', required=True),
-        'price': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
+        'price': fields.float('Unit Price', required=True, digits_compute=dp.get_precision('Purchase Price')),
     }
     _order = 'min_quantity asc'
 pricelist_partnerinfo()

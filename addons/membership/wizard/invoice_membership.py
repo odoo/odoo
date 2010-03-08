@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -32,9 +32,7 @@ def _invoice_membership(self, cr, uid, data, context):
     cr.execute('''
             SELECT partner_id, id, type
             FROM res_partner_address
-            WHERE partner_id IN (%s)
-            ''' % ','.join([str(id) for id in partner_ids])
-            )
+            WHERE partner_id =ANY(%s)''',(partner_ids,))
     fetchal = cr.fetchall()
     if not fetchal:
         raise wizard.except_wizard(_('Error !'), _('No Address defined for this partner'))
@@ -84,6 +82,9 @@ def _invoice_membership(self, cr, uid, data, context):
             for tax in tax_value:
                 invoice_tax_obj.create(cr, uid, tax, context=context)
 
+    result = pool.get('ir.model.data')._get_id(cr, uid, 'account', 'view_account_invoice_filter')
+    res = pool.get('ir.model.data').read(cr, uid, result, ['res_id'])
+
     value = {
             'domain': [
                 ('id', 'in', invoice_list),
@@ -93,6 +94,8 @@ def _invoice_membership(self, cr, uid, data, context):
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'type': 'ir.actions.act_window',
+            'res_id' : invoice_list,
+            'search_view_id' : res['res_id']
         }
     return value
 

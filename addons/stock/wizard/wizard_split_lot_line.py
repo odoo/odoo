@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -66,7 +66,7 @@ class wizard_split_move(wizard.interface):
     states = {
         'init': {
             'actions': [_get_moves],
-            'result': {'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel'),('split','Split')]}
+            'result': {'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel','gtk-cancel'),('split','Split','gtk-apply',True)]}
         },
         'split': {
             'actions': [_split_lines],

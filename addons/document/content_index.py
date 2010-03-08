@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,28 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+import logging
 import os
 import tempfile
-
-# A quick hack: if netsvc is not there, emulate it. Thus, work offline, too
-try:
-    import netsvc
-    def log(lvl,msg):
-        netsvc.Logger().notifyChannel("index",lvl,msg)
-except:
-    class netsvc:
-        LOG_NOTSET = 'notset'
-        LOG_DEBUG_RPC = 'debug_rpc'
-        LOG_DEBUG = 'debug'
-        LOG_DEBUG2 = 'debug2'
-        LOG_INFO = 'info'
-        LOG_WARNING = 'warn'
-        LOG_ERROR = 'error'
-        LOG_CRITICAL = 'critical'
-    
-    def log(lvl,msg):
-        print msg
-
 
 class NhException(Exception):
     pass
@@ -130,7 +111,8 @@ def mime_match(mime, mdict):
     
     return (None, None)
 
-class contentIndex() :
+class contentIndex():
+    __logger = logging.getLogger('addons.document.content_index')
     def __init__(self):
         self.mimes = {}
         self.exts = {}
@@ -146,7 +128,7 @@ class contentIndex() :
             f = True
             
         if f:
-            log(netsvc.LOG_DEBUG, "Register content indexer: %r" % obj)
+            self.__logger.debug('Register content indexer: %s', obj)
         if not f:
             raise Exception("Your indexer should at least suport a mimetype or extension")
     
@@ -180,30 +162,31 @@ class contentIndex() :
                 result = fp.read()
                 fp.close()
                 mime2 = result.strip()
-                log(netsvc.LOG_DEBUG,"File gave us: %s" % mime2)
+                self.__logger.debug('File gave us: %s', mime2)
                 # Note that the temporary file still exists now.
                 mime,fobj = mime_match(mime2, self.mimes)
                 if not mime:
                     mime = mime2
-            except Exception, e:
-                log(netsvc.LOG_WARNING,"Cannot determine mime type: %s" % str(e))
+            except Exception:
+                self.__logger.exception('Cannot determine mime type')
         
         try:
             if fobj:
                 res = (mime, fobj.indexContent(content,filename,fname or realfname) )
             else:
-                log(netsvc.LOG_DEBUG,"Have no object, return (%s, None)" % mime)
+                self.__logger.debug("Have no object, return (%s, None)", mime)
                 res = (mime, None )
-        except Exception, e:
-            log(netsvc.LOG_WARNING,"Could not index file, %s" % e)
+        except Exception:
+            self.__logger.exception("Could not index file %s (%s)",
+                                    filename, fname or realfname)
             res = None
         
         # If we created a tmp file, unlink it now
         if not realfname and fname:
             try:
                 os.unlink(fname)
-            except Exception, e:
-                log(netsvc.LOG_WARNING,"Could not unlink %s, %s" %(fname, e))
+            except Exception:
+                self.__logger.exception("Could not unlink %s", fname)
         
         return res
 

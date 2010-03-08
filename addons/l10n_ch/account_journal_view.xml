@@ -4,41 +4,44 @@
             <field name="name">account.journal.todo.form</field>
             <field name="model">account.journal.todo</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
-                <form string="Account Journal">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                    </group>
-                    <separator colspan="4" string="The accounts linked to the account journals"/>
-                    <field name="default_credit_account_id"
-                        on_change="on_change_credit(name, default_credit_account_id)" select="1"/>
-                    <field name="default_debit_account_id"
-                        on_change="on_change_debit(name, default_debit_account_id)" select="1"/>
-                    <group col="4" colspan="4">
-						<button icon="gtk-cancel" name="action_cancel" string="Cancel" type="object"/>
-						<button icon="gtk-ok" name="action_new" string="Next" type="object"/>
-
-                    </group>
+              <data>
+                <form position="attributes">
+                  <attribute name="string">Account Journal</attribute>
                 </form>
+                <group string="res_config_contents" position="replace">
+                  <label colspan="4" align="0.0"
+                         string="Set accounts on financial journals defined by CamptoCamp l10n_ch module"/>
+                  <separator colspan="4"/>
+                  <group colspan="4" col="6">
+                    <field name="name" select="1"/>
+                  </group>
+                  <separator colspan="4" string="
+                    The accounts linked to the account journals"/>
+                  <field name="default_credit_account_id" select="1"
+                         on_change="on_change_credit(name, default_credit_account_id)"/>
+                  <field name="default_debit_account_id" select="1"
+                         on_change="on_change_debit(name, default_debit_account_id)"/>
+                </group>
+                <xpath expr="//button[@name='action_next']" position="attributes">
+                  <attribute name="string">Next</attribute>
+                </xpath>
+              </data>
             </field>
         </record>
-		<record id="action_config_journal" model="ir.actions.act_window">
-            <field name="name">Configure Journal</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.journal.todo</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-			<field name="view_id" ref="view_account_journal_form_todo"/>
-            <field name="target">new</field>
+        <record id="action_config_journal" model="ir.actions.act_window">
+          <field name="name">Finalize your Journal</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">account.journal.todo</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="view_id" ref="view_account_journal_form_todo"/>
+          <field name="target">new</field>
         </record>
-
-
         <record id="action_config_journal_todo" model="ir.actions.todo">
-            <field name="name">Finalize your journal</field>
-            <field name="note">Set accounts on financial journals defined by
-			Camptocamp l10n_ch module</field>
-            <field name="action_id" ref="action_config_journal"/>
-            <field name="sequence">5</field>
+          <field name="action_id" ref="action_config_journal"/>
+          <field name="sequence">5</field>
         </record>
     </data>
 </openerp>

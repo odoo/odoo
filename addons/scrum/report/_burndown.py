@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,14 +26,13 @@ import time
 def compute_burndown(cr, uid, tasks_id, date_start, date_stop):
     latest = False
     if len(tasks_id):
-        cr.execute('select id,create_date,state,planned_hours from project_task where id in ('+','.join(map(str,tasks_id))+') order by create_date')
+        cr.execute('select id,create_date,state,planned_hours from project_task where id = ANY(%s) order by create_date',(tasks_id,))
         tasks = cr.fetchall()
 
-        cr.execute('select w.date,w.hours from project_task_work w left join project_task t on (t.id=w.task_id) where t.id in ('+','.join(map(str,tasks_id))+') and t.state in (\'open\',\'progress\') order by date')
-
+        cr.execute('select w.date,w.hours from project_task_work w left join project_task t on (t.id=w.task_id) where t.id = ANY(%s) and t.state in (%s,%s) order by date',(tasks_id,'open','progress',))
         tasks2 = cr.fetchall()
 
-        cr.execute('select date_close,planned_hours from project_task where id in ('+','.join(map(str,tasks_id))+') and state in (\'cancelled\',\'done\') order by date_close')
+        cr.execute('select date_end,planned_hours from project_task where id =ANY(%s) and state in (%s,%s) order by date_end' ,(tasks_id,'cancelled','done',))
         tasks2 += cr.fetchall()
         tasks2.sort()
     else:
@@ -50,7 +49,7 @@ def compute_burndown(cr, uid, tasks_id, date_start, date_stop):
             total += latest[3]
         i = 0
         while i<len(tasks2):
-            if tasks2[i][0][:10]<=current_date:
+            if tasks2[i][0] and tasks2[i][0][:10]<=current_date:
                 t = tasks2.pop(i)
                 done += t[1]
             else:

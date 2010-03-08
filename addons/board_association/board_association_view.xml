@@ -35,7 +35,7 @@
                                 string="New members"
                                 name="%(membership.action_report_partner_member_year_tree)d"
                                 view_mode="graph,tree" colspan="4"/>
-                            <action 
+                            <action
                                 string="Registrations by Events"
                                 name="%(event.action_event_type_registration)d"
                                 view_mode="graph,tree"
@@ -53,9 +53,10 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_associations_manager_form"/>
         </record>
-
+		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+		<menuitem id="board_associations" name="Associations" parent="base.dashboard" />
         <menuitem
-            name="Associations" parent="board.dashboard_menu"
+            name="Associations" parent="board_associations"
             action="open_board_associations_manager"
             sequence="1"
             id="menu_board_associations_manager"

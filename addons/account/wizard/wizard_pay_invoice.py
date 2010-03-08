@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -25,6 +25,8 @@ import pooler
 import time
 from tools.translate import _
 import tools
+import decimal_precision as dp
+
 
 pay_form = '''<?xml version="1.0"?>
 <form string="Pay invoice">
@@ -37,7 +39,7 @@ pay_form = '''<?xml version="1.0"?>
 </form>'''
 
 pay_fields = {
-    'amount': {'string': 'Amount paid', 'type':'float', 'required':True, 'digits': (16,int(tools.config['price_accuracy']))},
+    'amount': {'string': 'Amount paid', 'type':'float', 'required':True, 'digits': (16,dp.get_precision('Account'))},
     'name': {'string': 'Entry Name', 'type':'char', 'size': 64, 'required':True},
     'date': {'string': 'Payment date', 'type':'date', 'required':True, 'default':lambda *args: time.strftime('%Y-%m-%d')},
     'journal_id': {'string': 'Journal/Payment Mode', 'type': 'many2one', 'relation':'account.journal', 'required':True, 'domain':[('type','=','cash')]},
@@ -63,6 +65,13 @@ def _pay_and_reconcile(self, cr, uid, data, context):
         ctx = {'date':data['form']['date']}
         amount = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, amount, context=ctx)
         currency_id = journal.currency.id
+        # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
+        context.update({'amount_currency':form['amount'],'currency_id':currency_id})
+    
+    if invoice.company_id.currency_id.id<>invoice.currency_id.id:
+        ctx = {'date':data['form']['date']}
+        amount = cur_obj.compute(cr, uid, invoice.currency_id.id, invoice.company_id.currency_id.id, amount, context=ctx)
+        currency_id = invoice.currency_id.id
         # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
         context.update({'amount_currency':form['amount'],'currency_id':currency_id})
         
@@ -91,7 +100,13 @@ def _wo_check(self, cr, uid, data, context):
     #    => Ask to a write-off of the difference. This could happen even if both amount are equal,
     #    because if the currency rate
     # Get the amount in company currency for the invoice (according to move lines)
-    inv_amount_company_currency=invoice.move_id.amount
+    inv_amount_company_currency = 0
+    for aml in invoice.move_id.line_id:
+        if aml.account_id.id == invoice.account_id.id or aml.account_id.type in ('receivable', 'payable'):
+            inv_amount_company_currency += aml.debit
+            inv_amount_company_currency -= aml.credit
+    inv_amount_company_currency = abs(inv_amount_company_currency)
+
     # Get the current amount paid in company currency
     if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
         ctx = {'date':data['form']['date']}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
+
         <!--
 	Resource: stock.location
 	-->
@@ -51,21 +51,21 @@
             <field name="name">Components</field>
             <field name="location_id" ref="stock_location_workshop"/>
         </record>
-        
+
         <!--
 	Resource: stock.inventory
 	-->
-        
+
         <record id="stock_inventory_0" model="stock.inventory">
             <field name="name">Starting Inventory</field>
             <field name="date_done">2005-08-02 13:42:43</field>
             <field name="state">done</field>
         </record>
-        
+
         <!--
 	Resource: stock.inventory.line
 	-->
-        
+
         <record id="stock_inventory_line_0" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_pc1"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
@@ -73,7 +73,7 @@
             <field name="product_qty">14.0</field>
             <field name="location_id" ref="stock_location_14"/>
         </record>
-        
+
         <record id="stock_inventory_line_1" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_24"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
@@ -179,13 +179,13 @@
             <field name="product_qty">80.0</field>
             <field name="location_id" ref="stock_location_components"/>
         </record>
-        
+
         <function model="stock.inventory" name="action_done">
             <function eval="[[]]" model="stock.inventory" name="search"/>
         </function>
-        
+
         <!--  Multi Company -->
-        
+
          <record id="res_partner_tinyshop0" model="res.partner">
             <field eval="0" name="customer"/>
             <field eval="0" name="supplier"/>
@@ -246,7 +246,7 @@
             <field eval="1" name="active"/>
             <field eval="&quot;&quot;&quot;Shop 2&quot;&quot;&quot;" name="name"/>
         </record>
-        <record id="res_users_shopuser0" model="res.users">
+        <!--<record id="res_users_shopuser0" model="res.users">
             <field model="ir.actions.actions" name="menu_id" search="[('name','=','Menu')]"/>
             <field eval="[(6,0,[ref('base.group_user'),ref('stock.group_stock_user')])]" name="groups_id"/>
             <field model="res.partner.address" name="address_id" search="[('name','=','Fabien')]"/>
@@ -269,7 +269,7 @@
             <field eval="&quot;&quot;&quot;shop2&quot;&quot;&quot;" name="login"/>
             <field model="ir.actions.actions" name="action_id" search="[('name','=','Menu')]"/>
         </record>
-        <record id="stock_location_intermediatelocation0" model="stock.location">
+        --><record id="stock_location_intermediatelocation0" model="stock.location">
             <field name="address_id" ref="base.main_address"/>
             <field name="location_id" ref="stock.stock_location_company"/>
             <field eval="&quot;&quot;&quot;procurement&quot;&quot;&quot;" name="usage"/>
@@ -292,7 +292,7 @@
             <field name="company_id" ref="res_company_tinyshop0"/>
             <field name="lot_input_id" ref="stock_location_shop1"/>
         </record>
-        
-        
+
+
     </data>
 </openerp>

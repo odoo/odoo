@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -28,11 +28,14 @@ import urlparse
 import os
 
 class document_configuration_wizard(osv.osv_memory):
+
     _name='document.configuration.wizard'
-    _rec_name = 'Auto Directory configuration'
+    _description = 'Auto Directory configuration'
+    _inherit = 'res.config'
+    _rec_name = 'host'
     _columns = {
-        'host': fields.char('Server Address', size=64, help="Put here the server address or IP. " \
-            "Keep localhost if you don't know what to write.", required=True)
+        'host': fields.char('Address', size=64,
+                            help="Server address or IP.", required=True),
     }
 
     def detect_ip_addr(self, cr, uid, context=None):
@@ -73,16 +76,7 @@ class document_configuration_wizard(osv.osv_memory):
         'host': detect_ip_addr,
     }
 
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-         }
-
-    def action_config(self, cr, uid, ids, context=None):
+    def execute(self, cr, uid, ids, context=None):
         conf = self.browse(cr, uid, ids[0], context)
         obj=self.pool.get('document.directory')
         objid=self.pool.get('ir.model.data')
@@ -149,15 +143,7 @@ class document_configuration_wizard(osv.osv_memory):
         })
 
         # Update the action for FTP browse.
-        aid = objid._get_id(cr, uid, 'document', 'action_document_browse')
+        aid = objid._get_id(cr, uid, 'document_ftp', 'action_document_browse')
         aid = objid.browse(cr, uid, aid, context=context).res_id
         self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost')+':8021/'})
-
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.actions.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-        }
 document_configuration_wizard()

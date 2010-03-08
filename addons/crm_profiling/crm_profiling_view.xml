@@ -22,7 +22,7 @@
 		  <field name="view_type">form</field>
 		  <field name="view_mode">tree,form</field>
 		</record>
-		<menuitem parent="crm.next_id_53" id="menu_segm_questionnaire" 
+		<menuitem parent="crm.menu_crm_configuration" id="menu_segm_questionnaire"
 				  action="open_questionnaires" />
 
 
@@ -32,7 +32,7 @@
 		  <field name="view_type">form</field>
 		  <field name="view_mode">tree,form</field>
 		</record>
-		<menuitem parent="crm.next_id_53" id="menu_segm_answer" 
+		<menuitem parent="crm.menu_crm_configuration" id="menu_segm_answer"
 				  action="open_questions" />
 
 <!--		<record model="ir.actions.act_window" id="open_crm_segmentations">
@@ -172,7 +172,7 @@
 					</group>
 				</page>
 				<page string="Sales Purchase">
-					<!-- <field name="sales_purchase_active"/> -->
+					<field name="sales_purchase_active"/>
 					<separator string="State of Mind Computation" colspan="4"/>
 					<field name="som_interval"/>
 					<field name="som_interval_max"/>
@@ -203,7 +203,7 @@
 		<field name="arch" type="xml">
 			<tree string="Partner Profiles">
 				<field name="name"/>
-				
+
 			</tree>
 		</field>
 -->		<field name="name">crm.segmentation.tree</field>
@@ -228,9 +228,9 @@
 	</record>
 -->
 <!--	<menuitem
-		name="Partners/Partners by Profile" 
+		name="Partners/Partners by Profile"
 		sequence="1"
-		action="action_partner_crm_segmentation" 
+		action="action_partner_crm_segmentation"
 		id="menu_partner_crm_segmentation_main"/>
 -->
 <!--	<record model="ir.values" id="ir_action_partner_by_crm_segmentation">

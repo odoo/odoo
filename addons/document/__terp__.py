@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -27,6 +27,12 @@
     'description': """This is a complete document management system:    
     * User Authentication
     * Document Indexation
+
+    ATTENTION: 
+    - When you install this module in a running company that have already PDF files stored into the database, 
+      you will lose them all. 
+    - After installing this module PDF's are not longer stored into the database, 
+      but in the servers rootpad like /server/bin/filestore.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',

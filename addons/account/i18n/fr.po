@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-08 14:44+0000\n"
+"PO-Revision-Date: 2010-02-18 09:24+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-02-20 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -25,7 +25,7 @@ msgstr "Écritures non réconciliées"
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
 #: model:ir.ui.menu,name:account.menu_unreconcile_select
 msgid "Unreconcile entries"
-msgstr "Annuler lettrage d'un compte"
+msgstr "Dé-lettrer les écritures"
 
 #. module: account
 #: wizard_view:account.aged.trial.balance,init:0
@@ -125,12 +125,6 @@ msgstr "Écriture standard"
 #: help:wizard.multi.charts.accounts,code_digits:0
 msgid "No. of Digits to use for account code"
 msgstr "Nombre de chiffres dans les numéros des comptes"
-
-#. module: account
-#: model:ir.actions.wizard,name:account.wizard_fiscalyear_close_state
-#: model:ir.ui.menu,name:account.menu_wizard_fy_close_state
-msgid "Close a Fiscal Year"
-msgstr "Clôturer un exercice fiscal"
 
 #. module: account
 #: field:account.invoice,move_id:0
@@ -1605,7 +1599,7 @@ msgstr "Devise société"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Fiscal Position Template Account Mapping"
-msgstr "Mapping du Compte Modèle de la Position Fiscale"
+msgstr "Affectation des comptes suivant le modèle de régime fiscal"
 
 #. module: account
 #: field:account.analytic.account,parent_id:0
@@ -1663,7 +1657,7 @@ msgstr "Transaction non-lettrée"
 #: field:account.fiscal.position,tax_ids:0
 #: field:account.fiscal.position.template,tax_ids:0
 msgid "Tax Mapping"
-msgstr "Mapping des taxes"
+msgstr "Affectation des taxes"
 
 #. module: account
 #: view:account.config.wizard:0
@@ -1686,6 +1680,12 @@ msgstr "Compte de pertes et profits"
 #: field:account.subscription,model_id:0
 msgid "Model"
 msgstr "Modèle"
+
+#. module: account
+#: model:ir.actions.wizard,name:account.wizard_fiscalyear_close_state
+#: model:ir.ui.menu,name:account.menu_wizard_fy_close_state
+msgid "Close a Fiscal Year"
+msgstr "Clôturer un exercice fiscal"
 
 #. module: account
 #: field:account.journal,centralisation:0

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,11 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 import osv
 import time
@@ -35,7 +36,7 @@ class external_pdf(render):
         render.__init__(self)
         self.pdf = pdf
         self.output_type='pdf'
-    
+
     def _render(self):
         return self.pdf
 
@@ -68,20 +69,15 @@ class report_stock(report_int):
         if not loc_ids or not product_ids:
             return (False, 'pdf')
 
-        loc_ids_s = ",".join(['%s']*len(loc_ids))
-        prod_ids_s = ",".join(['%s']*len(product_ids))
-
         cr.execute("select sum(r.product_qty * u.factor), r.date_planned, r.product_id "
                    "from stock_move r left join product_uom u on (r.product_uom=u.id) "
-                   "where state in ('confirmed','assigned','waiting') "
-                   "and location_id in (%s) "
-                   "and product_id in (%s) "
-                   "group by date_planned,product_id" % (loc_ids_s, prod_ids_s),
-                   loc_ids + product_ids)
-
+                   "where state in %s"
+                   "and location_id=ANY(%s)"
+                   "and product_id=ANY(%s)"
+                   "group by date_planned,product_id",(('confirmed','assigned','waiting'),loc_ids ,product_ids,))
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
-                dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
+                dt= (datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d')
             else:
                 dt = dt[:10]
             products.setdefault(prod_id, [])
@@ -89,15 +85,14 @@ class report_stock(report_int):
 
         cr.execute("select sum(r.product_qty * u.factor), r.date_planned, r.product_id "
                    "from stock_move r left join product_uom u on (r.product_uom=u.id) "
-                   "where state in ('confirmed','assigned','waiting') "
-                   "and location_dest_id in (%s) "
-                   "and product_id in (%s) "
-                   "group by date_planned,product_id" % (loc_ids_s, prod_ids_s),
-                   loc_ids + product_ids)
+                   "where state in %s"
+                   "and location_dest_id=ANY(%s)"
+                   "and product_id=ANY(%s)"
+                   "group by date_planned,product_id",(('confirmed','assigned','waiting'),loc_ids ,product_ids,))
 
         for (qty, dt, prod_id) in cr.fetchall():
             if dt<=dt_from:
-                dt= (DateTime.now() + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
+                dt= (datetime.now() + relativedelta(days=1)).strftime('%Y-%m-%d')
             else:
                 dt = dt[:10]
             products.setdefault(prod_id, [])

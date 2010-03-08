@@ -6,7 +6,7 @@
          -->
         <record model="ir.ui.view" id="view_crm_lead_stage_graph1">
             <field name="name">Leads By Stage - Graph</field>
-            <field name="model">report.crm.case.section.stage</field>
+            <field name="model">report.crm.lead.section.stage</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Leads By Stage" type="pie">
@@ -17,12 +17,12 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_crm_case_categ_graph">
-            <field name="name">report.crm.case.categ.graph</field>
-            <field name="model">report.crm.case.categ</field>
+        <record model="ir.ui.view" id="view_crm_opportunity_categ_graph">
+            <field name="name">report.crm.opportunity.categ.graph</field>
+            <field name="model">report.crm.opportunity.categ</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Cases by Sections and Categories" type="bar" orientation="horizontal">
+                <graph string="Opportunity by Sections and Categories" type="bar" orientation="horizontal">
                     <field name="categ_id"/>
                     <field name="nbr" operator="+"/>
                     <field name="state" group="True"/>
@@ -31,34 +31,27 @@
         </record>
 
         <act_window name="Opportunities By Categories"
-            domain="[('section_id', '=', 'Opportunities'),('state','!=','done'),('state','!=','cancel')]"
-            res_model="report.crm.case.categ"
+            domain="[('state','!=','done'),('state','!=','cancel')]"
+            res_model="report.crm.opportunity.categ"
             view_type="form"
             view_mode="graph,tree,form"
-            view_id="view_crm_case_categ_graph"
+            view_id="view_crm_opportunity_categ_graph"
             id="act_oppor_categ"/>
 
         <record model="ir.actions.act_window" id="act_leads_state">
-            <field name="res_model">report.crm.case.section.stage</field>
+            <field name="res_model">report.crm.lead.section.stage</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_lead_stage_graph1"/>
-            <field name="domain">[('section_id', '=', 'Leads'),('state','!=','done'),('state','!=','cancel')]</field>
+            <field name="domain">[('state','!=','done'),('state','!=','cancel')]</field>
         </record>
 
-        <act_window name="Jobs Requests Of The Month by Applied Job"
-            domain="[('section_id', '=', 'Jobs'),('name','=',time.strftime('%Y-%m-01')),('state','!=','done'),('state','!=','cancel')]"
-            res_model="report.crm.case.categ"
-            view_type="form"
-            view_mode="graph,tree,form"
-            view_id="view_crm_case_categ_graph"
-            id="act_jobs_categ"/>
-
         <act_window name="Leads Of The Month By User"
-            domain="[('section_id', '=', 'Leads'),('name','=',time.strftime('%Y-%m-01')),('state','!=','cancel')]"
-            res_model="report.crm.case.user"
+            domain="[('month','=',time.strftime('%%m')),('state','!=','cancel')]"
+            res_model="report.crm.lead.user"
             view_type="form"
             view_mode="graph,tree,form"
+            view_id="view_crm_lead_stage_graph1"
             id="act_leads_month_user"/>
 
         <record model="ir.ui.view" id="board_crm_statistical_form">
@@ -84,11 +77,6 @@
 
                         </child1>
                         <child2>
-                            <action
-                                string="Jobs Requests Of The Month by Applied Job"
-                                name="%(act_jobs_categ)d"
-                                colspan="4"/>
-
 
                             <action
                                 string="Leads Of The Month By User"
@@ -110,8 +98,9 @@
             <field name="view_id" ref="board_crm_statistical_form"/>
         </record>
 
+		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
         <menuitem
-            name="CRM Configuration" parent="board.dashboard_menu"
+            name="CRM Configuration" parent="base.dashboard"
             id="menu_board_crm_config"
             groups="crm.group_crm_manager"/>
         <menuitem

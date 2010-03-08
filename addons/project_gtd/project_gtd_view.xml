@@ -7,8 +7,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Context">
+                <field name="sequence" invisible="1"/>
                 <field name="name"/>
-                <field name="project_default_id"/>
             </tree>
         </field>
     </record>
@@ -38,7 +38,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Timebox">
-                <field name="sequence"/>
+                <field name="sequence" invisible="1"/>
                 <field name="name"/>
                 <field name="icon"/>
             </tree>
@@ -74,10 +74,11 @@
         <field name="type">tree</field>
         <field name="inherit_id" ref="project.view_task_tree2" />
         <field name="arch" type="xml">
-            <field name="project_id" position="after">
-                <field name="timebox_id"/>
-                <button name="next_timebox" string="Next Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','other')]}"/>
-                <button name="prev_timebox" string="Previous Timebox" type="object" icon="gtk-indent" attrs="{'invisible':[('timebox_id.type','=','daily')]}"/>
+            <field name="remaining_hours" position="after">
+                <field name="timebox_id" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
+                <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
+                <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open" groups="project_gtd.group_project_getting" invisible=" not context.get('set_visible',False)"/>
+                <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
         </field>
     </record>
@@ -89,83 +90,10 @@
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
             <field name="progress" position="after">
-                <newline/>
-                <field name="context_id" select="2" widget="selection"/>
-                <field name="timebox_id" select="1"/>
-                <newline/>
+                <field name="context_id" select="2" widget="selection" groups="project_gtd.group_project_getting"/>
+                <field name="timebox_id" select="1" groups="project_gtd.group_project_getting"/>
             </field>
         </field>
     </record>
-    <record id="view_project_task_tree2" model="ir.ui.view">
-        <field name="name">Tasks</field>
-        <field name="model">project.task</field>
-        <field name="type">tree</field>
-        <field eval="2" name="priority"/>
-        <field name="arch" type="xml">
-            <tree editable="top" colors="grey:state in ('done',);red:state in ('cancelled');black:state not in ('done','cancelled')" string="Tasks">
-                <field name="name"/>
-                <field name="user_id"/>
-                <field name="timebox_id" widget="selection"/>
-                <field name="planned_hours" widget="float_time"/>
-                <field name="state" invisible="1"/>
-                <button name="%(project.wizard_close_task)d" states="draft,pending,open" string="Done" type="action" icon="gtk-jump-to" help="For changing to done state"/>
-                <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
-                <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks"/>
-            </tree>
-        </field>
-    </record>
-
-    <record model="ir.actions.act_window" id="action_prject_task_tree">
-        <field name="res_model">project.task</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form,calendar,graph</field>
-        <field name="view_id" ref="view_project_task_tree2"/>
-        <field name="search_view_id" ref="project.view_task_search_form"/>
-    </record>
-
-    <menuitem name="Todo List"
-        groups="group_project_getting"
-        id="menu_task_inbox"
-        parent="project.menu_main"
-        action="action_prject_task_tree"/>
-
-    <act_window name="My Inbox"
-        domain="[('user_id', '=', uid),('state','in',('draft','open'))]"
-        res_model="project.task"
-        src_model="project.gtd.timebox"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_timebox_tasks_my_inbox"/>
-    <act_window name="My Open Tasks"
-        domain="[('user_id', '=', uid),('state','in',('draft','open'))]"
-        res_model="project.task"
-        src_model="project.gtd.timebox"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_timebox_tasks_my_open"/>
-    <act_window name="My Pending Tasks"
-        domain="[('user_id', '=', uid),('state','=','pending')]"
-        res_model="project.task"
-        src_model="project.gtd.timebox"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_timebox_tasks_my_pending"/>
-
-    <act_window name="My Deadlines"
-        domain="[('user_id', '=', uid),('state','in',('draft','open','pending')),('date_deadline','&lt;&gt;',False)]"
-        res_model="project.task"
-        src_model="project.gtd.timebox"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_timebox_tasks_my_deadline_open"/>
-
-    <act_window name="Timebox Tasks"
-        domain="[('timebox_id', '=', active_id)]"
-        res_model="project.task"
-        src_model="project.gtd.timebox"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_timebox_tasks"/>
-
     </data>
 </openerp>

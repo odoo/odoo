@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution    
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -51,12 +51,13 @@ email_send_fields = {
 # this sends an email to ALL the addresses of the selected partners.
 def _mass_mail_send(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
-    case_pool=pool.get('crm.case')
 
     hist_obj = pool.get('crm.case.history').browse(cr,uid,data['ids'])[0]
-    case = hist_obj.log_id.case_id
-    case_pool._history(cr, uid, [case], _('Send'), history=True, email=False)
-    case_pool.write(cr, uid, [case.id], {
+    model = hist_obj.log_id.model_id.model
+    model_pool = pool.get(model)
+    case = model_pool.browse(cr, uid, hist_obj.log_id.res_id)
+    model_pool._history(cr, uid, [case], _('Send'), history=True, email=False)
+    model_pool.write(cr, uid, [case.id], {
                 'som': False,
                 'canal_id': False,
                 })
@@ -69,9 +70,10 @@ def _mass_mail_send(self, cr, uid, data, context):
         case.user_id.address_id.email,
         emails,
         data['form']['subject'],
-        case_pool.format_body(body),
+        model_pool.format_body(body),
         reply_to=case.section_id.reply_to,
-        tinycrm=str(case.id)
+        openobject_id=str(case.id), 
+        subtype="html"
     )
     return {}
 
@@ -80,7 +82,9 @@ def _get_info(self, cr, uid, data, context):
         raise wizard.except_wizard(_('Error'),_('There is no mail to reply!'))
     pool = pooler.get_pool(cr.dbname)
     hist_obj = pool.get('crm.case.history').browse(cr,uid,data['ids'])[0]
-    case = hist_obj.log_id.case_id
+    model = hist_obj.log_id.model_id.model
+    model_pool = pool.get(model)
+    case = model_pool.browse(cr, uid, hist_obj.log_id.res_id)
     if not case.email_from:
         raise wizard.except_wizard(_('Error'),_('You must put a Partner eMail to use this action!'))
     if not case.user_id:

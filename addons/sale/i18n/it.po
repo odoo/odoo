@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-19 19:58+0000\n"
-"Last-Translator: LucaSub <subluca@gmail.com>\n"
+"PO-Revision-Date: 2010-01-09 11:23+0000\n"
+"Last-Translator: Carlo <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-01-10 07:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -44,7 +44,7 @@ msgstr "Ripartizione Partner"
 #. module: sale
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome del modulo non valido nella definizione dell'azione."
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -57,6 +57,8 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
+"Se non hai disponibile a magazzino tutto il materiale da consegnare in una "
+"sola volta, accetti la spedizione parziale o no?"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -190,7 +192,7 @@ msgstr "Politiche di Spedizione"
 #: selection:sale.order,state:0
 #: selection:sale.order.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Annullato"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -272,7 +274,7 @@ msgstr "I Miei Ordini di Vendita in esecuzione"
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Quantità (Unità di Vendita)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -401,7 +403,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr ""
+msgstr "Consegna totale"
 
 #. module: sale
 #: view:sale.order:0
@@ -542,12 +544,12 @@ msgstr "Tutti i Preventivi"
 #. module: sale
 #: field:sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr "Sconto (5)"
+msgstr "Sconto (%)"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "Draft customer invoice, to be reviewed by accountant."
-msgstr ""
+msgstr "Fattura fornitore in bozza, deve essere revisionata da un contabile."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree3
@@ -638,7 +640,7 @@ msgstr "Fatturato"
 #. module: sale
 #: model:ir.actions.wizard,name:sale.advance_payment
 msgid "Advance Invoice"
-msgstr ""
+msgstr "Fattura di acconto"
 
 #. module: sale
 #: field:sale.order,state:0
@@ -657,11 +659,13 @@ msgid ""
 "This Configuration step use to set default picking policy when make sale "
 "order"
 msgstr ""
+"Questo passo di configurazione serve ad impostare la politica di consegna "
+"standard quando viene fatto un ordine di vendita"
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
 msgid "Sales Process"
-msgstr ""
+msgstr "Processo di vendita"
 
 #. module: sale
 #: wizard_view:sale.order.line.make_invoice,init:0
@@ -911,7 +915,7 @@ msgstr "Prezzo unitario"
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Posizione Fiscale"
 
 #. module: sale
 #: rml:sale.order:0
@@ -969,7 +973,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "In corso"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,init:0
@@ -992,7 +996,7 @@ msgstr "Conferma l'ordine di vendita e crea la fattura."
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Packing List & Delivery Order"
-msgstr ""
+msgstr "Lista di consegna e Ordini in Consegna"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1106,7 +1110,7 @@ msgstr "Annulla Assegnazione"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice from the Packing"
-msgstr ""
+msgstr "DDT"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
@@ -1170,7 +1174,7 @@ msgstr "Data ordine"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "Unità di Vendita Prodotto"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1190,6 +1194,10 @@ msgid ""
 "and simple methods to deliver products to the customer in one or two "
 "operations by the worker."
 msgstr ""
+"Di default, Open ERP è in grado di gestire complessi instradamenti e "
+"percorsi di prodotti all'interno del proprio magazzino e dei partner. Questo "
+"organizzerà il modo più comune e semplice per consegnare prodotti ai clienti "
+"con una o due operazioni dell'operatore."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -1225,7 +1233,7 @@ msgstr "Fatture correlate"
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "Nome Negozio"
 
 #. module: sale
 #: field:sale.order,payment_term:0
@@ -1278,7 +1286,7 @@ msgstr "Prelevato"
 #. module: sale
 #: view:sale.shop:0
 msgid "Accounting"
-msgstr ""
+msgstr "Contabilità"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0

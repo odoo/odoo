@@ -8,6 +8,27 @@
             <field name="arch" type="xml">
                 <tree string="Timesheets">
                     <field name="user_id"/>
+                    <field name="department_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="name"/>
+                    <field name="total_attendance" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="total_timesheet"/>
+                    <field name="total_difference" groups="hr_attendance.group_hr_attendance"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Editable current timesheet used  in dashboard-->
+        <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheets" editable="top">
+                    <field name="user_id"/>
+                    <field name="department_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="name"/>
@@ -46,7 +67,7 @@
                 </tree>
             </field>
         </record>
-
+<!--
         <record id="hr_timesheet_day_form" model="ir.ui.view">
             <field name="name">hr.timesheet.day.form</field>
             <field name="model">hr_timesheet_sheet.sheet.day</field>
@@ -76,7 +97,7 @@
                 </tree>
             </field>
         </record>
-
+-->
         <record id="hr_timesheet_sheet_form" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.form</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
@@ -88,6 +109,7 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
+                    <field name="department_id"/>
                     <notebook colspan="4">
                         <page string="Daily View">
                             <group col="6" colspan="4">
@@ -175,10 +197,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                   <group col="10" colspan="4">
-		                <filter icon="terp-partner" string="My Timesheets" domain="[('user_id','=',uid)]" help="My Timesheet"/>
-		                <filter icon="terp-crm" string="My departments timesheets"  domain="[('user_id', 'child_of', [uid])]" help="My Departments Timesheet"/>
-						<separator orientation="vertical"/>
+                   <group col="10" colspan="4">		                						
 						<filter icon="terp-crm" string="Unvalidated" domain="[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Unvalidated Timesheets"/>
                        	<separator orientation="vertical"/>
                        	<field name="state">
@@ -186,7 +205,14 @@
                            <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
 						</field>
 						<field name="name" select="1"/>
-						<field name="user_id" select="1" widget="selection"/>
+						<field name="user_id" select="1" widget="selection">
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Timesheet"/>
+                        </field>
+						<field name="department_id" widget="selection">
+							<filter icon="terp-crm"
+								domain="[('department_id','=',context.get('department_id',False))]"
+								help="My Departments Timesheet"/>
+						</field>
                    </group>
                </search>
             </field>
@@ -200,8 +226,16 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
         </record>
-        <menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/>
-        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="next_id_60"
+        <!--Time Tracking menu in project Management-->
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
+          <menuitem
+             id="base.menu_project_management_time_tracking"
+             name="Time Tracking"
+             parent="base.menu_main_pm" sequence="3"/>
+         <menuitem action="hr_timesheet_sheet.act_hr_timesheet_sheet_form" id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
+             groups="hr.group_hr_manager" sequence="5"/>
+        <!--<menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/>-->
+        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
             groups="hr.group_hr_manager"/>
 
         <!--
@@ -266,7 +300,7 @@
         </record>
 
         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_day" name="Timesheet by Account" res_model="hr_timesheet_sheet.sheet.account" src_model="hr_timesheet_sheet.sheet"/>
-        <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_account" name="Timesheet by Day" res_model="hr_timesheet_sheet.sheet.day" src_model="hr_timesheet_sheet.sheet"/>
+<!--         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_account" name="Timesheet by Day" res_model="hr_timesheet_sheet.sheet.day" src_model="hr_timesheet_sheet.sheet"/>  -->
 
 
         <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet" name="Timesheet Lines" res_model="hr.analytic.timesheet" src_model="hr_timesheet_sheet.sheet"/>

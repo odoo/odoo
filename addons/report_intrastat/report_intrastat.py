@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -65,7 +65,7 @@ class report_intrastat(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'supply_units':fields.float('Supply Units', readonly=True),
-        'ref':fields.char('Origin',size=64, readonly=True),
+        'ref':fields.char('Source document',size=64, readonly=True),
         'code': fields.char('Country code', size="2", readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),

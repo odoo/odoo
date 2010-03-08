@@ -1,0 +1,48 @@
+<openerp>
+  <data>
+    <record id="view_misc_tools_installer" model="ir.ui.view">
+      <field name="name">misc_tools.installer.view</field>
+      <field name="model">misc_tools.installer</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="arch" type="xml">
+        <data>
+          <form position="attributes">
+            <attribute name="string">Tools Modules Installation</attribute>
+          </form>
+
+          <separator string="title" position="attributes">
+            <attribute name="string">Select Tools To Install</attribute>
+          </separator>
+          <xpath expr="//label[@string='description']"
+                 position="attributes">
+            <attribute name="string"
+                       >Here are a few useful applications which, while they don't directly contribute to your business, can improve on it or improve your OpenERP experience</attribute>
+          </xpath>
+          <group colspan="8">
+            <separator string="Tools" colspan="4"/>
+            <field name="lunch"/>
+            <field name="subscription"/>
+            <field name="survey"/>
+            <field name="audittrail"/>
+          </group>
+        </data>
+      </field>
+    </record>
+
+    <record id="action_misc_tools_installer" model="ir.actions.act_window">
+      <field name="name">Tools Modules Installation</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">misc_tools.installer</field>
+      <field name="view_id" ref="view_misc_tools_installer"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="misc_tools_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="action_misc_tools_installer"/>
+      <field name="sequence">3</field>
+    </record>
+  </data>
+</openerp>

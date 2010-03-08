@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 10:31+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2009-12-31 12:52+0000\n"
+"Last-Translator: Albert Cervera i Areny <albert@nan-tic.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-01-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -192,7 +192,7 @@ msgstr "Política de envío"
 #: selection:sale.order,state:0
 #: selection:sale.order.line,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -599,7 +599,7 @@ msgstr "Empaquetado"
 #: model:ir.module.module,shortdesc:sale.module_meta_information
 #: model:ir.ui.menu,name:sale.menu_sale_root
 msgid "Sales Management"
-msgstr "Gestión de ventas"
+msgstr "Ventas"
 
 #. module: sale
 #: field:sale.order.line,order_id:0
@@ -861,6 +861,18 @@ msgid ""
 "  - The 'Invoice from the packing' choice is used to create an invoice "
 "during the packing process."
 msgstr ""
+"La política de envío se utiliza para sincronizar la factura y las "
+"operaciones de envío.\n"
+"  - La opción 'Pago antes del envío' primero genera la factura y luego "
+"genera el albarán después del pago de esta factura.\n"
+"  - La opción 'Envío '& Factura manual' creará el albarán directamente y "
+"esperará a que el usuario haga clic manualmente en el botón 'Factura' para "
+"generar la factura borrador.\n"
+"  - La opción 'Factura según pedido después envío' generará la factura "
+"borrador basada en el pedido de venta después de que todos los albaranes se "
+"hayan procesado.\n"
+"  - La opción 'Factura desde albarán' se utiliza para crear una factura "
+"durante el proceso de los albaranes."
 
 #. module: sale
 #: rml:sale.order:0

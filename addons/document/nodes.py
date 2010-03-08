@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -184,13 +184,14 @@ class node_dir(node_class):
         dc2.update(self.dctx)
         dc2['dir_id'] = self.dir_id
         self.displayname = dirr.name
-        for dfld in dirr.dctx_ids:
-            try:
-                self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
-            except Exception,e:
-                print "Cannot eval %s" % dfld.expr
-                print e
-                pass
+        if dirr.dctx_ids:
+            for dfld in dirr.dctx_ids:
+                try:
+                    self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
+                except Exception,e:
+                    print "Cannot eval %s" % dfld.expr
+                    print e
+                    pass
 
     def children(self,cr):
         return self._child_get(cr) + self._file_get(cr)
@@ -597,7 +598,8 @@ class node_file(node_class):
         if fil.parent_id:
             self.storage_id = fil.parent_id.storage_id.id
         else:
-            self.storage_id = None
+            self.storage_id = None                       
+            
     
     def get_data(self, cr, fil_obj = None):
         """ Retrieve the data for some file. 
@@ -606,12 +608,20 @@ class node_file(node_class):
             the browse object. """
         # this is where storage kicks in..
         stor = self.storage_id
+        if not stor:
+            data_obj = self.context._dirobj.pool.get('ir.model.data')
+            data_id = data_obj._get_id(cr, self.context.uid, 'document', 'storage_db')
+            if data_id:
+                stor = data_obj.browse(cr, self.context.uid, data_id, context=self.context.context).res_id 
         assert stor
         stobj = self.context._dirobj.pool.get('document.storage')
         return stobj.get_data(cr,self.context.uid,stor, self,self.context.context, fil_obj)
 
     def get_data_len(self, cr, fil_obj = None):
         # TODO: verify with the storage object!
+        bin_size = self.context.context.get('bin_size', False)
+        if bin_size and not self.content_length:
+            self.content_length = fil_obj.db_datas
         return self.content_length
 
     def set_data(self, cr, data, fil_obj = None):

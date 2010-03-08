@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,26 +23,17 @@
 from osv import fields, osv
 import time
 
-class hr_employee_marital_status(osv.osv):
-    _name = "hr.employee.marital.status"
-    _description = "Employee Marital Status"
-    _columns = {
-        'name' : fields.char('Marital Status', size=30, required=True),
-        'description' : fields.text('Status Description'),
-    }
-hr_employee_marital_status()
-
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherit = "hr.employee"
     _columns = {
         'manager' : fields.boolean('Manager'),
-        'medic_exam' : fields.date('Medical examination date'),
-        'audiens_num' : fields.char('AUDIENS Number', size=30),
+        'medic_exam' : fields.date('Medical Examination Date'),
         'place_of_birth' : fields.char('Place of Birth', size=30),
-        'marital_status' : fields.many2one('hr.employee.marital.status', 'Marital Status'),
-        'children' : fields.integer('Number of children'),
+        'children' : fields.integer('Number of Children'),
+        'vehicle' : fields.integer('Company Vehicle'),
+        'vehicle_distance' : fields.integer('Home-Work Distance', help="In kilometers"),
         'contract_ids' : fields.one2many('hr.contract', 'employee_id', 'Contracts'),
     }
 hr_employee()
@@ -76,19 +67,33 @@ class hr_contract_wage_type(osv.osv):
     }
 hr_contract_wage_type()
 
+
+class hr_contract_type(osv.osv):
+    _name = 'hr.contract.type'
+    _description = 'Contract Type'
+    _columns = {
+        'name' : fields.char('Contract Type', size=30, required=True),
+    }
+hr_contract_type()
+
 class hr_contract(osv.osv):
     _name = 'hr.contract'
     _description = 'Contract'
     _columns = {
-        'name' : fields.char('Contract Name', size=30, required=True),
-        'employee_id' : fields.many2one('hr.employee', "Employee's Name", required=True),
-        'function' : fields.many2one('res.partner.function', 'Function'),
-        'date_start' : fields.date('Start Date', required=True),
-        'date_end' : fields.date('End Date'),
-        'working_hours_per_day_id' : fields.many2one('hr.timesheet.group','Working hours per day'),
-        'wage_type_id' : fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
-        'wage' : fields.float('Wage', required=True),
-        'notes' : fields.text('Notes'),
+        'name': fields.char('Contract Reference', size=30, required=True),
+        'employee_id': fields.many2one('hr.employee', "Employee", required=True),
+        'department_id': fields.related('employee_id','department_id', string="Department", readonly=True),
+        'type_id': fields.many2one('hr.contract.type', "Contract Type"),
+        'job_id': fields.many2one('hr.job', 'Job Title'),
+        'date_start': fields.date('Start Date', required=True),
+        'date_end': fields.date('End Date'),
+        'working_hours': fields.many2one('resource.calendar','Working hours'),
+        'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
+        'wage': fields.float('Wage', digits=(16,2), required=True),
+        'advantages': fields.text('Advantages'),
+        'advantages_net': fields.float('Net Advantages Value', digits=(16,2)),
+        'advantages_gross': fields.float('Gross Advantages Value', digits=(16,2)),
+        'notes': fields.text('Notes'),
     }
     _defaults = {
         'date_start' : lambda *a : time.strftime("%Y-%m-%d"),

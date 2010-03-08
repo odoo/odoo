@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-
+		<menuitem name="Marketing" id="menu_marketing_event_main" icon="terp-calendar" sequence="9"/>
+		<menuitem name="Events Organisation" id="menu_event_main" parent="menu_marketing_event_main" />
 	<!-- EVENTS  -->
-		<menuitem name="Events Organisation" id="menu_event_main" icon="terp-calendar" />
+		<!--<menuitem name="Events Organisation" id="menu_event_main" icon="terp-calendar" />-->
 
 	<!-- EVENTS/CONFIGURATION/TYPE OF EVENTS -->
 		<record model="ir.ui.view" id="view_event_type_form">
@@ -32,7 +33,7 @@
 			<field name="res_model">event.type</field>
 			<field name="view_type">form</field>
 		</record>
-		<menuitem name="Configuration" id="menu_event_config" parent="menu_event_main" />
+		<menuitem name="Configuration" id="menu_event_config" parent="menu_marketing_event_main" sequence="30"/>
 		<menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="menu_event_config"/>
 
 		<!-- The base section for all events -->
@@ -215,8 +216,6 @@
 						<separator colspan="4" string="Dates"/>
 						<field name="create_date"/>
 						<field name="date_closed"/>
-						<field name="date_action_last"/>
-						<field name="date_action_next"/>
 						<separator colspan="4" string="References"/>
 						<field name="ref" colspan="4"/>
 						<field name="ref2" colspan="4"/>
@@ -337,8 +336,9 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,graph</field>
 		</record>
-		<menuitem name="Reporting" id="menu_report_event" parent="menu_event_main"/>
-		<menuitem parent="menu_report_event" action="action_event_registration" id="menu_report_event_registration"/>
+		<menuitem name="Reporting" id="menu_report_event" parent="menu_marketing_event_main" sequence="20"/>
+		<!--<menuitem parent="menu_report_event" action="action_event_registration" id="menu_report_event_registration"/>-->
+		<menuitem parent="menu_event_main" action="action_event_registration" id="menu_report_event_registration" name="Registrations Per Event"/>
 	<!-- end... -->
 
 

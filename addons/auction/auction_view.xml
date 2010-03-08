@@ -2,7 +2,7 @@
 <openerp>
 <data>
 	<menuitem name="Auction Management" id="auction_menu_root" icon="terp-purchase"/>
-	<menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="1"/>
+	<menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="7"/>
 
 	=======================================================
 	Auction Management/Configuration/artist
@@ -127,7 +127,7 @@
 		<field name="view_id" eval="False"/>
 	</record>
 
-	<menuitem name="Auction Dates" parent="auction_menu_root" id="auction_date_menu"/>
+	<menuitem name="Auction Dates" parent="auction_menu_root" id="auction_date_menu" sequence="1"/>
 	<menuitem name="Next Auction Dates" parent="auction_date_menu" id="menu_auction_dates_next1" action="action_auction_dates_next"/>
 	=======================================================
 	Auction Management/Auction Dates/Old Auction Dates
@@ -361,10 +361,10 @@
 		<field name="res_model">auction.lots</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('state','=','sold')]</field>
-        <field name="filter" eval="True"/>		
+        <field name="filter" eval="True"/>
 	</record>
 
-	<menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu"/>
+	<menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu" sequence="2"/>
 	<menuitem name="All objects" action="action_all_objects" parent="auction_objects_menu" id="auction_all_objects_menu"/>
 
 	<record model="ir.actions.act_window" id="action_all_objects_to_sell">
@@ -373,7 +373,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','&lt;&gt;','sold')]</field>
-        <field name="filter" eval="True"/>		
+        <field name="filter" eval="True"/>
 	</record>
 
 	<record model="ir.actions.act_window" id="action_all_objects_unplanned">
@@ -382,7 +382,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('auction_id','=', False),('state','=','draft')]</field>
-        <field name="filter" eval="True"/>		
+        <field name="filter" eval="True"/>
 	</record>
 
 	<!--		for the sold object  start-->
@@ -392,7 +392,7 @@
 		<field name="res_model">auction.lots</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('state','=','unsold')]</field>
-        <field name="filter" eval="True"/>		
+        <field name="filter" eval="True"/>
 	</record>
 
 	<!-- form3: simplified form meant for during the sale (action button in dates) -->
@@ -439,7 +439,7 @@
 	                    <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
 	                    <button name="button_draft" string="Set to draft" states="sold,unsold" type="object" icon="gtk-convert"/>
 	                    <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
-                    </group> 
+                    </group>
 				</page>
 				<page string="Statements">
 					<field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
@@ -465,7 +465,7 @@
 		<field name="res_model">report.unclassified.objects</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
-        <field name="filter" eval="True"/>		
+        <field name="filter" eval="True"/>
 	 </record>
 
 	<record model="ir.ui.view" id="v12">
@@ -583,7 +583,7 @@
 		<field name="view_id" ref="view_deposit_border_tree2"/>
 	</record>
 
-	<menuitem name="Sellers" id="auction_seller_menu" parent="auction_menu_root"/>
+	<menuitem name="Sellers" id="auction_seller_menu" parent="auction_menu_root" sequence="3"/>
 	<menuitem name="Deposit border" parent="auction_seller_menu" action="action_deposit_border" id="menu_auction_deposit_border"/>
 
 	=======================================================
@@ -679,7 +679,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 
-	<menuitem name="Buyers" id="auction_buyers_menu" parent="auction_menu_root"/>
+	<menuitem name="Buyers" id="auction_buyers_menu" parent="auction_menu_root" sequence="4"/>
 	<menuitem name="Bids" parent="auction_buyers_menu" action="action_bid_open" id="menu_action_bid_open"/>
 
 
@@ -728,7 +728,7 @@
 		</field>
 	</record>
 
-	<menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root"/>
+	<menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6"/>
 
 
 <record model="ir.actions.act_window" id="action_auction_report_allmonth_view1">

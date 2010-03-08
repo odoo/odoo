@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -25,6 +25,7 @@ import wizard
 import netsvc
 import ir
 import pooler
+from tools.translate import _
 
 sale_form = """<?xml version="1.0"?>
 <form string="Convert to Quote">
@@ -56,7 +57,7 @@ sale_fields = {
 class make_sale(wizard.interface):
 
     def _selectPartner(self, cr, uid, data, context):
-        case_obj = pooler.get_pool(cr.dbname).get('crm.case')
+        case_obj = pooler.get_pool(cr.dbname).get('crm.opportunity')
         case = case_obj.read(cr, uid, data['ids'], ['partner_id'])
         return {'partner_id': case[0]['partner_id']}
 
@@ -65,7 +66,7 @@ class make_sale(wizard.interface):
         mod_obj = pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'sale', 'view_sales_order_filter')
         id = mod_obj.read(cr, uid, result, ['res_id'])
-        case_obj = pool.get('crm.case')
+        case_obj = pool.get('crm.opportunity')
         sale_obj = pool.get('sale.order')
         partner_obj = pool.get('res.partner')
         sale_line_obj = pool.get('sale.order.line')
@@ -95,7 +96,8 @@ class make_sale(wizard.interface):
                 raise wizard.except_wizard(_('Data Insufficient!'),_('Customer has no addresses defined!'))
 
             vals = {
-                'origin': 'CRM:%s' % str(case.id),
+                'origin': 'CRM-Opportunity:%s' % str(case.id),
+                'section_id': case.section_id and case.section_id.id or False,
                 'picking_policy': data['form']['picking_policy'],
                 'shop_id': data['form']['shop_id'],
                 'partner_id': partner_id,
@@ -105,8 +107,13 @@ class make_sale(wizard.interface):
                 'partner_shipping_id': partner_addr['delivery'],
                 'order_policy': 'manual',
                 'date_order': now(),
-                'fiscal_position': fpos
+                'fiscal_position': fpos,
             }
+
+            if partner_id:
+                partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                vals['user_id'] = partner.user_id and partner.user_id.id or uid
+
             if data['form']['analytic_account']:
                 vals['project_id'] = data['form']['analytic_account']
             new_id = sale_obj.create(cr, uid, vals)
@@ -118,21 +125,36 @@ class make_sale(wizard.interface):
                 value['tax_id'] = [(6,0,value['tax_id'])]
                 sale_line_obj.create(cr, uid, value)
 
-            case_obj.write(cr, uid, case.id, {'ref': 'sale.order,%s' % new_id})
+            case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
             new_ids.append(new_id)
 
         if data['form']['close']:
             case_obj.case_close(cr, uid, data['ids'])
-
-        value = {
-            'domain': str([('id', 'in', new_ids)]),
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'sale.order',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'search_view_id': id['res_id']
-        }
+        
+        if not new_ids:
+            return {}
+            
+        if len(new_ids)<=1:
+            value = {
+                'domain': str([('id', 'in', new_ids)]),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'sale.order',
+                'view_id': False,
+                'type': 'ir.actions.act_window',
+                'res_id': new_ids and new_ids[0]
+            }
+        else:
+            value = {
+                'domain': str([('id', 'in', new_ids)]),
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'sale.order',
+                'view_id': False,
+                'type': 'ir.actions.act_window',
+                'res_id':new_ids
+                }
+                
         return value
 
     states = {
@@ -147,6 +169,6 @@ class make_sale(wizard.interface):
         }
     }
 
-make_sale('crm.case.make_order')
+make_sale('crm.opportunity.make_order')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

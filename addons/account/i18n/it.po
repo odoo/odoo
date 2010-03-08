@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 09:58+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2010-02-03 19:01+0000\n"
+"Last-Translator: Davide Corio <davide.corio@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-02-04 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -24,13 +24,13 @@ msgstr "Nome Interno"
 #. module: account
 #: view:account.tax.code:0
 msgid "Account Tax Code"
-msgstr "Codice conto tasse"
+msgstr "Codice conto imposte"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree9
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree9
 msgid "Unpaid Supplier Invoices"
-msgstr "Non pagate"
+msgstr "Fatture fornitori non pagate"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries
@@ -40,7 +40,7 @@ msgstr "Codifica delle registrazioni"
 #. module: account
 #: model:ir.actions.todo,note:account.config_wizard_account_base_setup_form
 msgid "Specify The Message for the Overdue Payment Report."
-msgstr ""
+msgstr "Specificare il messaggio per il Report Pagamenti Scaduti."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -73,11 +73,14 @@ msgid ""
 "This account will be used to value incoming stock for the current product "
 "category"
 msgstr ""
+"Questo conto verrà utilizzato per valorizzare le merci in entrata per la "
+"categoria di prodotti corrente"
 
 #. module: account
 #: help:account.invoice,period_id:0
 msgid "Keep empty to use the period of the validation(invoice) date."
 msgstr ""
+"Lasciare vuoto per usare il periodo della data di validazione (fattura)."
 
 #. module: account
 #: wizard_view:account.automatic.reconcile,reconcile:0
@@ -115,7 +118,7 @@ msgstr "Mastro"
 #. module: account
 #: selection:account.move,type:0
 msgid "Journal Voucher"
-msgstr ""
+msgstr "Giornale Ricevute"
 
 #. module: account
 #: field:account.invoice,residual:0
@@ -128,7 +131,7 @@ msgstr "Rimanenze"
 #: field:account.tax.template,base_sign:0
 #: field:account.tax.template,ref_base_sign:0
 msgid "Base Code Sign"
-msgstr ""
+msgstr "Segno imponibile"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_unreconcile_select
@@ -139,7 +142,7 @@ msgstr "Annulla riconcigliazione voci"
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr ""
+msgstr "Errore ! La durata del/dei Periodo/i non è valida "
 
 #. module: account
 #: view:account.bank.statement.reconcile:0
@@ -215,7 +218,7 @@ msgstr "Codice calcolo (se tipo=codice)"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr ""
+msgstr "Registrazione contabile"
 
 #. module: account
 #: wizard_view:account.aged.trial.balance,init:0
@@ -270,6 +273,11 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
+"Imposta la vista da utilizzare quando si inseriscono o si consultano le "
+"registrazioni in questo Giornale. La vista dice a Open ERP quali campi "
+"dovranno essere visibili, richiesti o di sola lettura e in quale ordine. "
+"Puoi creare la tua vista personale per velocizzare l'inserimento dei dati in "
+"ogni giornale."
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -280,6 +288,11 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"Se vengono utilizzati i termini di pagamento, la data di scadenza verrà "
+"calcolata automaticamente alla generazione dei movimenti contabili. Se i "
+"termini di pagamento e la data di scadenza non vengono valorizzati, equivale "
+"al pagamento diretto. Il termine di pagamento può essere calcolato a fronte "
+"di diverse scadenze, per esempio 50% subito e 50% dopo un mese."
 
 #. module: account
 #: selection:account.tax,type:0
@@ -291,7 +304,7 @@ msgstr "Fisso"
 #: model:ir.actions.report.xml,name:account.account_overdue
 #: view:res.company:0
 msgid "Overdue Payments"
-msgstr ""
+msgstr "Ritardo Pagamenti"
 
 #. module: account
 #: wizard_view:account.account.balance.report,checktype:0
@@ -313,7 +326,7 @@ msgstr "Origine"
 #. module: account
 #: rml:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr ""
+msgstr "Nome Movimento"
 
 #. module: account
 #: xsl:account.transfer:0
@@ -328,7 +341,7 @@ msgstr "Computazione del canone"
 #. module: account
 #: rml:account.central.journal:0
 msgid "Account Num."
-msgstr ""
+msgstr "Conto n."
 
 #. module: account
 #: rml:account.analytic.account.analytic.check:0
@@ -345,7 +358,7 @@ msgstr "Tassa"
 #. module: account
 #: rml:account.general.journal:0
 msgid "Debit Trans."
-msgstr ""
+msgstr "Debito Trans."
 
 #. module: account
 #: field:account.analytic.line,account_id:0
@@ -467,7 +480,7 @@ msgstr "Riconciliazione bancaria"
 #. module: account
 #: rml:account.invoice:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Sconto (%)"
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -489,6 +502,8 @@ msgid ""
 "Set if the amount of tax must be included in the base amount before "
 "computing the next taxes."
 msgstr ""
+"Selezionare se l'importo della tassa debba essere incluso nell'importo base "
+"prima di calcolare le prossime tasse"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
@@ -498,7 +513,7 @@ msgstr "Elaborazioni periodiche"
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
 msgid "Analytic Entries Stats"
-msgstr ""
+msgstr "Statistiche delle registrazioni analitiche"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_code_template_form
@@ -520,7 +535,7 @@ msgstr "Pagamento Riconciliato"
 #. module: account
 #: wizard_field:account.chart,init,target_move:0
 msgid "Target Moves"
-msgstr ""
+msgstr "Registrazioni:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -541,7 +556,7 @@ msgstr "Metodo riapertura conti"
 #. module: account
 #: field:account.tax.template,include_base_amount:0
 msgid "Include in Base Amount"
-msgstr ""
+msgstr "Incluso nell'imponibile"
 
 #. module: account
 #: field:account.tax,ref_base_code_id:0
@@ -571,6 +586,9 @@ msgid ""
 "Number of days to add before computation of the day of month.If Date=15/01, "
 "Number of Days=22, Day of Month=-1, then the due date is 28/02."
 msgstr ""
+"Numero di giorni da aggiungere prima della computazione del giorno del mese. "
+"Se Data=15/01, Numero di giorni=22, Giorno del mese=-1, allora la scadenza "
+"sarà 28/02."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -580,12 +598,12 @@ msgstr "account.tax"
 #. module: account
 #: rml:account.central.journal:0
 msgid "Printing Date"
-msgstr ""
+msgstr "Stampa Data"
 
 #. module: account
 #: rml:account.general.ledger:0
 msgid "Mvt"
-msgstr ""
+msgstr "Reg. n."
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_aged_trial_balance
@@ -651,7 +669,7 @@ msgstr ""
 #. module: account
 #: help:account.fiscalyear,company_id:0
 msgid "Keep empty if the fiscal year belongs to several companies."
-msgstr ""
+msgstr "Lasciare vuoto se l'anno fiscale appartiene a più aziende"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
@@ -661,7 +679,7 @@ msgstr "Contabilità Analitica"
 #. module: account
 #: rml:account.overdue:0
 msgid "Sub-Total :"
-msgstr ""
+msgstr "Sub-totale"
 
 #. module: account
 #: field:account.analytic.account,line_ids:0
@@ -679,12 +697,12 @@ msgstr "Mese"
 #. module: account
 #: field:account.analytic.account,partner_id:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "Partner associato"
 
 #. module: account
 #: field:account.invoice,comment:0
 msgid "Additional Information"
-msgstr ""
+msgstr "Informazioni Aggiuntive"
 
 #. module: account
 #: selection:account.invoice,type:0
@@ -1019,7 +1037,7 @@ msgstr "Posizione fiscale"
 #: field:account.analytic.line,product_uom_id:0
 #: field:account.move.line,product_uom_id:0
 msgid "UoM"
-msgstr "UM"
+msgstr "Unità di Misura"
 
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,page_split:0

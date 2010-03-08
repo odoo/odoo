@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <record id="view_attendance_form" model="ir.ui.view">
             <field name="name">hr.attendance.form</field>
             <field name="model">hr.attendance</field>
@@ -27,7 +27,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_attendance_who" model="ir.ui.view">
             <field name="name">hr.attendance.tree</field>
             <field name="model">hr.attendance</field>
@@ -48,11 +48,16 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root"
-            groups="group_hr_attendance"/>
+
+        <!--<menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root"
+            groups="group_hr_attendance"/>-->
+        <menuitem
+           id="menu_hr_time_tracking"
+           name="Time Tracking"
+           parent="hr.menu_hr_root" sequence="5"/>
         <menuitem action="open_view_attendance" id="menu_open_view_attendance"
-            parent="menu_hr_attendance" groups="hr.group_hr_manager"/>
-        
+            parent="menu_hr_time_tracking" groups="hr.group_hr_manager"/>
+
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>
             <field name="model">hr.action.reason</field>
@@ -83,21 +88,22 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
-        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_hr_configuration"/>
-        
+        <menuitem sequence="9" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
+        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_config"/>
+
         <record id="hr_attendance_employee" model="ir.ui.view">
             <field name="name">hr.employee.form1</field>
             <field name="model">hr.employee</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="parent_id" position="after">
+                <field name="coach_id" position="after">
                     <field name="state"/>
-                    <button name="sign_in" states="absent" string="Sign In" type="object" icon="gtk-go-back"/>
-                    <button name="sign_out" states="present" string="Sign Out" type="object" icon="gtk-go-forward"/>
+                    <button name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}"/>
+                    <button name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}"/>
                 </field>
             </field>
         </record>
-        
+
     </data>
 </openerp>

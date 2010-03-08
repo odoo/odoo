@@ -2,19 +2,58 @@
 <openerp>
 <data>
 
+	# ------------------------------------------------------
+    # Fund Raising Categories
+    # ------------------------------------------------------
+    <record id="crm_fund_categ_action" model="ir.actions.act_window">
+        <field name="name">Fundraising Categories</field>
+        <field name="res_model">crm.case.categ</field>
+        <field name="view_type">form</field>
+ 		<field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+		<field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
+		<field name="context">{'object_id':'crm.fundraising'}</field>
+    </record>
+   <menuitem action="crm_fund_categ_action" id="menu_crm_case_fundraising-act" parent="crm.menu_crm_case_categ"/>
+    # ------------------------------------------------------
+    # Fund Stage
+    # ------------------------------------------------------
+	    <record id="crm_fundraising_stage_act" model="ir.actions.act_window">
+	        <field name="name">Fundraising Stages</field>
+	        <field name="res_model">crm.case.stage</field>
+	        <field name="view_type">form</field>
+	        <field name="view_id" ref="crm.crm_case_stage_tree"/>
+   			<field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
+   			<field name="context">{'object_id':'crm.fundraising'}</field>
+	    </record>
+	  <menuitem action="crm_fundraising_stage_act" id="menu_crm_fundraising_stage_act" parent="crm.menu_crm_case_stage"/>
+
+    # ------------------------------------------------------
+    #Fund  Resource Type
+    # ------------------------------------------------------
+        <record id="crm_fundraising_resource_act" model="ir.actions.act_window">
+            <field name="name">Fundraising Resource Type</field>
+            <field name="res_model">crm.case.resource.type</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
+   			<field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
+   			<field name="context">{'object_id':'crm.fundraising'}</field>
+        </record>
+      <menuitem action="crm_fundraising_resource_act" id="menu_crm_fundraising_resource_act" parent="crm.menu_crm_case_resource_type"/>
+
+
     # ------------------------------------------------------
     # Fund Raising
     # ------------------------------------------------------
     <record model="ir.ui.view" id="crm_case_tree_view_fund">
         <field name="name">CRM - Funds Tree</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Funds Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                 <field name="id"/>
-                <field name="name" string="Funds"/>
+                <field name="name" string="Fund Description"/>
                 <field name="categ_id"/>
-                <field name="category2_id" string="Payment Mode"/>
+                <field name="type_id" string="Payment Mode"/>
                 <field name="planned_cost" string="Amount"/>
                 <field name="probability"/>
                 <field name="user_id"/>
@@ -30,31 +69,38 @@
     </record>
     <record model="ir.ui.view" id="crm_case_form_view_fund">
         <field name="name">CRM - Funds Form</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Funds Form">
-                <group colspan="4" col="6">
-                    <field name="name" select="1" string="Name" colspan="2"/>
-                    <field name="section_id" colspan="1" widget="selection"/>
-                    <field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)"/>
-                    <newline/>
-                    <field name="date" string="Next Meeting"/>
-                    <field name="duration"/>
-                    <field name="category2_id" select="1" string="Payment Mode"/>
+                <group colspan="4" col="4">
+                    <field name="name" select="1" string="Name"/>                    
+                    <field name="type_id" string="Payment Mode" select="1" widget="selection"
+                    		domain="[('object_id.model', '=', 'crm.fundraising')]" />
                 </group>
                 <notebook colspan="4">
                 <page string="Funds">
-                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
-                    <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
-                    <newline/>
-                    <field name="email_from" colspan="2"/>
-                    <field name="user_id" select="2" string="Responsible"/>
+                	<separator colspan="4" string="Communication"/>
+                	<group colspan="4" col="4">
+	                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
+	                    <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+	                    <field name="email_from" colspan="2"/>
+                    </group>
                     <separator colspan="4" string="Estimates"/>
                     <field name="planned_cost"/>
                     <field name="planned_revenue"/>
                     <field name="probability"/>
-                    <separator colspan="4" string="Description Information"/>
+                    <separator colspan="4" string="Categorization"/>
+                    <group colspan="4" col="6">
+                    	<field name="user_id" select="2" string="Responsible"/>
+                        <field name="section_id" colspan="1" widget="selection"/>
+                    	<field name="categ_id" select="1"
+                    		widget="selection"
+                    		domain="[('object_id.model', '=', 'crm.fundraising')]" />
+                    	<field name="date"/>
+	                    <field name="duration"/>
+                    </group>
+                    <separator colspan="4" string="Details"/>
                         <field name="description" nolabel="1" colspan="4"/>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
@@ -67,7 +113,7 @@
                         <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
                     </group>
                 </page>
-                <page string="History">
+                <page string="History" groups="base.group_extended">
                     <field name="id" select="1"/>
                     <field name="active"/>
                     <field name="priority" string="Priority"/>
@@ -77,8 +123,6 @@
                     <separator colspan="4" string="Dates"/>
                     <field name="create_date"/>
                     <field name="date_closed"/>
-                    <field name="date_action_last"/>
-                    <field name="date_action_next"/>
                     <separator colspan="4" string="References"/>
                     <field name="ref" colspan="4"/>
                     <field name="ref2" colspan="4"/>
@@ -94,7 +138,7 @@
                         </form>
                     </field>
                 </page>
-                 <page string="Emails">
+                 <page string="Emails" groups="base.group_extended">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" string="CC"/>
                    </group>
@@ -127,7 +171,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_calendar_view_fund">
         <field name="name">CRM - Funds Calendar</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
@@ -139,7 +183,7 @@
     </record>
     <record model="ir.ui.view" id="crm_case_graph_view_fund">
         <field name="name">CRM - Funds Graph</field>
-        <field name="model">crm.case</field>
+        <field name="model">crm.fundraising</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Funds by Categories" type="bar" orientation="horizontal">
@@ -151,8 +195,8 @@
     </record>
 
     <record id="view_crm_case_fund_filter" model="ir.ui.view">
-            <field name="name">crm.case.fund.select</field>
-            <field name="model">crm.case</field>
+            <field name="name">CRM - Funds Search</field>
+            <field name="model">crm.fundraising</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Funds">
@@ -163,12 +207,20 @@
                        	help="Funds Related to Current User"
                        />
                        <field name="state" select="1">
-                           <filter icon="gtk-new" domain="[('state','=','draft')]" help="Draft Funds"/>
+                           <filter icon="gtk-new" domain="[('state','in',('draft', 'open'))]" help="Current Funds" default="1"/>
                            <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Funds"/>
                            <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Funds"/>
                        </field>
-                       <field name="name" select='1'/>
-                       <field name="user_id" select="1" widget="selection"/>
+                       <field name="name" select='1' string="Fund Description"/>
+                       <field name="user_id" select="1" widget="selection">
+		                   <filter icon="terp-partner" domain="[('user_id','=', False)]" help="Unassigned" />
+                       </field>
+					   <field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
+							<filter icon="terp-crm"
+                               domain="[('section_id','=',context.get('section_id',False))]"
+                               help="My section"
+                           />
+                       </field>
                    </group>
                </search>
             </field>

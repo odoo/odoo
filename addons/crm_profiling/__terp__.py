@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -25,11 +25,10 @@
     'version': '1.3',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-    This module allow users to perform segmentation within partners.
-    It use the profiles criteria from the earlier segmentation module and improve it thanks to the new concept of questionnaire. You can now regroup questions into a questionnaire and directly use it on a partner.
+    This module allows users to perform segmentation within partners.
+    It uses the profiles criteria from the earlier segmentation module and improve it. Thanks to the new concept of questionnaire. You can now regroup questions into a questionnaire and directly use it on a partner.
 
     It also has been merged with the earlier CRM & SRM segmentation tool because they were overlapping.
-
 
     The menu items related are in "CRM & SRM\Configuration\Segmentations"
 

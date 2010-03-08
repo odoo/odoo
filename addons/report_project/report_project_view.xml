@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <!-- Tasks by projects and users -->
         <record id="view_task_project_user_form" model="ir.ui.view">
             <field name="name">report.project.task.user.form</field>
@@ -12,7 +12,7 @@
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
                     <field name="user_id" select="1"/>
-                    <field name="project_id" select="1"/>
+                    <field name="project_id" select="1" default="context.get('project_id', False)"/>
                     <field name="task_closed" select="1"/>
                     <field name="hours_planned" select="1"/>
                     <field name="hours_effective" select="1"/>
@@ -21,8 +21,8 @@
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record id="view_task_project_user_tree" model="ir.ui.view">
             <field name="name">report.project.task.user.tree</field>
             <field name="model">report.project.task.user</field>
@@ -41,7 +41,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
             <field name="model">report.project.task.user</field>
@@ -55,12 +55,12 @@
 	            		<field name="name" select="1"/>
 	                    <field name="month" select="1"/>
 	                    <field name="user_id" select="1"/>
-	                    <field name="project_id" select="1"/>
+	                    <field name="project_id" select="1" default="context.get('project_id', False)"/>
             		</group>
             	</search>
             </field>
         </record>
-        
+
         <record id="action_project_task_user_tree" model="ir.actions.act_window">
             <field name="name">Tasks Closed by Project and User</field>
             <field name="res_model">report.project.task.user</field>
@@ -68,10 +68,10 @@
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
         </record>
-        <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="report_task.next_id_57"/>
-        
+        <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
+
         <!-- Tasks by projects -->
-        
+
         <record id="view_task_project_form" model="ir.ui.view">
             <field name="name">report.project.task.form</field>
             <field name="model">report.project.task</field>
@@ -106,7 +106,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_task_project_search" model="ir.ui.view">
             <field name="name">report.project.task.search</field>
             <field name="model">report.project.task</field>
@@ -119,13 +119,13 @@
 	            		<separator orientation="vertical"/>
 	            		<field name="name" select="1"/>
 	                    <field name="month" select="1"/>
-	                    <field name="project_id" select="1"/>
+	                    <field name="project_id" select="1" default="context.get('project_id', False)"/>
 	                    <field name="task_closed" select="1"/>
 	                </group>
             	</search>
             </field>
         </record>
-        
+
         <record id="action_project_task_tree" model="ir.actions.act_window">
             <field name="name">Tasks Closed by Project</field>
             <field name="res_model">report.project.task</field>
@@ -133,7 +133,7 @@
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="view_task_project_search"/>
         </record>
-        <menuitem action="action_project_task_tree" id="menu_project_task_tree" parent="report_task.next_id_57"/>
-        
+        <menuitem action="action_project_task_tree" id="menu_project_task_tree" parent="base.menu_project_report"/>
+
     </data>
 </openerp>

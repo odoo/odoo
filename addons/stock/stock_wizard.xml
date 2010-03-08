@@ -29,11 +29,11 @@
             string="Partial Move"/>
 
     <wizard
-        id="track_line"
-        model="stock.move"
+        id="split_inventory_lots"
+        model="stock.inventory.line"
         multi="True"
-        name="stock.move.track"
-        string="Track line"/>
+        name="stock.inventory.line.split"
+        string="Split inventory lines"/>
 
     <wizard id="make_picking" model="stock.picking" multi="True" name="stock.picking.make" string="Make picking"/>
 
@@ -78,5 +78,6 @@
         model="stock.location"
         name="stock.location.products"
         string="Products by Location"/>
-    </data>
+            
+   </data>        
 </openerp>

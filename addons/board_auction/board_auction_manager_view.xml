@@ -14,7 +14,7 @@
 					<hpaned position="100">
 						<child1>
 
-						
+
 							<action
 								string="Latest objects"
 								name="%(auction.action_report_latest_objects_manager_tree)d"
@@ -49,12 +49,12 @@
 								string="Min/Adj/Max"
 								name="%(auction.action_report_auction_estimation_adj_category_manager_tree)d"
 								view_mode="graph,tree" colspan="4" />
-						
+
 							<action
 								string="Objects by day"
 								name="%(auction.action_report_auction_object_date_tree)d"
 								view_mode="graph,tree" colspan="4" />
-								
+
 						</child2>
 					</hpaned>
 				</form>
@@ -69,12 +69,13 @@
 			<field name="usage">menu</field>
 			<field name="view_id" ref="board_auction_manager_form1"/>
 		</record>
-
+		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+		<menuitem name="Auction Manager" id="board_menu_auction_manager" parent="base.dashboard" />
 		<menuitem
-			name="Dashboards/Auction/Auction Manager"
+			name="Auction Manager"
 			action="open_board_auction_manager"
 			sequence="1"
-			id="menu_board_auction_manager"/>
+			id="menu_board_auction_manager" parent="board_menu_auction_manager"/>
 
 	</data>
 </openerp>

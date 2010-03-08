@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    	<!-- Search Views -->
+
+		<record id="view_resource_resource_search" model="ir.ui.view">
+            <field name="name">resource.resource.search</field>
+            <field name="model">resource.resource</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Resource">
+                   <group col='15' colspan='4'>
+                       <field name="name" string="Resource Name"/>
+                       <field name="code" string="Code"/>
+                       <field name="user_id" string="User" widget="selection"/>
+                       <field name="calendar_id" string="Working Calendar" widget="selection"/>
+                       <field name="resource_type" string="Resource Type"/>
+                       <field name="company_id" string="Company" widget="selection"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+       <record id="view_resource_calendar_search" model="ir.ui.view">
+            <field name="name">resource.calendar.search</field>
+            <field name="model">resource.calendar</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Resource Calendar">
+                   <group col='15' colspan='4'>
+                       <field name="name" string="Working Calendar"/>
+                       <field name="manager" string="Workgroup Manager" widget="selection"/>
+                       <field name="company_id" string="Company" widget="selection"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+
+        <record id="view_resource_calendar_leaves_search" model="ir.ui.view">
+            <field name="name">resource.calendar.leaves.search</field>
+            <field name="model">resource.calendar.leaves</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Resource Calendar Leaves">
+                   <group col='15' colspan='4'>
+                       <field name="name" string="Name"/>
+                       <field name="company_id" string="Company" widget="selection"/>
+                       <field name="calendar_id" string="Working Time" widget="selection"/>
+                       <field name="resource_id" string="Resource" widget="selection"/>
+                   </group>
+               </search>
+            </field>
+        </record>
+     
+        <record id="resource_calendar_form" model="ir.ui.view">
+            <field name="name">resource.calendar.form</field>
+            <field name="model">resource.calendar</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Resource Calendar">
+                    <field name="name" select="1"/>
+                    <field name="manager" select="1"/>
+                    <field name="company_id" select="1"/>
+                    <newline/>
+                    <field colspan="4" name="week_id" nolabel="1" widget="one2many_list"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_resource_calendar_tree" model="ir.ui.view">
+            <field name="name">resource.calendar.tree</field>
+            <field name="model">resource.calendar</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Resource Calendar">
+                    <field name="name"/>
+                    <field name="manager" select="1"/>
+                    <field name="company_id" select="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_resource_calendar_form" model="ir.actions.act_window">
+            <field name="name">Resource Calendar</field>
+            <field name="res_model">resource.calendar</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_resource_calendar_search"/>
+        </record>
+
+        <record id="view_resource_calendar_week_tree" model="ir.ui.view">
+            <field name="name">resource.calendar.week.tree</field>
+            <field name="model">resource.calendar.week</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Working Time">
+                    <field name="name"/>
+                    <field name="dayofweek"/>
+                    <field name="hour_from" widget="float_time"/>
+                    <field name="hour_to" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_resource_calendar_week_form" model="ir.ui.view">
+            <field name="name">resource.calendar.week.form</field>
+            <field name="model">resource.calendar.week</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Working Time">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="date_from"/>
+                    <field name="dayofweek" select="1"/>
+                    <field name="hour_from" widget="float_time"/>
+                    <field name="hour_to" widget="float_time"/>
+                </form>
+            </field>
+        </record>
+
+		<record id="view_resource_calendar" model="ir.ui.view">
+            <field name="name">resource.calendar.leaves.calendar</field>
+            <field name="model">resource.calendar.leaves</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar color="resource_id" date_start="date_from" string="Resource">
+                    <field name="name"/>
+                </calendar>
+            </field>
+        </record>
+
+        <act_window
+        id="resource_calendar_closing_days"
+        name="Closing Days"
+        res_model="resource.calendar.leaves"
+        src_model="resource.calendar"
+        view_mode="calendar,tree,form"
+        domain="[('calendar_id','=',active_id), ('resource_id','=',False)]"/>
+
+        <act_window
+        id="resource_calendar_resources_leaves"
+        name="Resources Leaves"
+        res_model="resource.calendar.leaves"
+        src_model="resource.calendar"
+        view_mode="calendar,tree,form"
+        domain="[('calendar_id','=',active_id), ('resource_id','!=',False)]"/>
+
+        <record id="resource_resource_form" model="ir.ui.view">
+            <field name="name">resource.resource.form</field>
+            <field name="model">resource.resource</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Resource">
+                    <field name="name" />
+                    <field name="active"/>
+                    <field name="company_id" />
+                    <field name="calendar_id" />
+                    <field name="resource_type" />
+                    <field name="user_id" attrs="{'required':[('resource_type','=','user')]}"/>
+                    <field name="time_efficiency" />
+                </form>
+            </field>
+        </record>
+        <record id="resource_resource_tree" model="ir.ui.view">
+            <field name="name">resource.resource.tree</field>
+            <field name="model">resource.resource</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Resources">
+                    <field name="name" />
+                    <field name="company_id" />
+                    <field name="calendar_id" />
+                    <field name="resource_type" />
+                    <field name="user_id" />
+                    <field name="time_efficiency" />
+                </tree>
+            </field>
+        </record>
+        <record id="action_resource_resource_tree" model="ir.actions.act_window">
+            <field name="name">Resources</field>
+            <field name="res_model">resource.resource</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_resource_resource_search"/>
+        </record>
+
+        <record id="resource_calendar_leave_form" model="ir.ui.view">
+            <field name="name">resource.calendar.leaves.form</field>
+            <field name="model">resource.calendar.leaves</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Leave Detail">
+                    <field name="name" />
+                    <field name="company_id" />
+                    <field name="calendar_id" />
+                    <field name="date_from" />
+                    <field name="date_to" />
+                    <field name="resource_id"  on_change="onchange_resource(resource_id)"/>
+                </form>
+            </field>
+        </record>
+        <record id="resource_calendar_leave_tree" model="ir.ui.view">
+            <field name="name">resource.calendar.leaves.tree</field>
+            <field name="model">resource.calendar.leaves</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Leave Detail">
+                    <field name="name" />
+                    <field name="company_id" />
+                    <field name="calendar_id" />
+                    <field name="date_from" />
+                    <field name="date_to" />
+                    <field name="resource_id" />
+                </tree>
+            </field>
+        </record>
+        <record id="action_resource_calendar_leave_tree" model="ir.actions.act_window">
+            <field name="name">Resource Leaves</field>
+            <field name="res_model">resource.calendar.leaves</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
+        </record>
+
+    </data>
+</openerp>

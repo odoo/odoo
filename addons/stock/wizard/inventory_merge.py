@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -82,8 +82,8 @@ class merge_inventory(wizard.interface):
             'result' : {'type' : 'form',
                     'arch' : _form,
                     'fields' : {},
-                    'state' : [('end', 'Cancel'),
-                               ('merge', 'Yes') ]}
+                    'state' : [('end', 'Cancel', 'gtk-cancel'),
+                               ('merge', 'Yes', 'gtk-apply', True) ]}
         },
         'merge' : {
             'actions' : [],

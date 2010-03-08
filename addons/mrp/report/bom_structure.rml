@@ -112,20 +112,20 @@
         </tr>
       </blockTable>
       <section>
-        <para style="terp_default_9">[[ repeatIn(o.bom_lines, 'l') ]]</para>
+        <para style="terp_default_9">[[ repeatIn(get_children(o.bom_lines), 'l') ]]</para>
         <blockTable colWidths="166.0,208.0,79.0,55.0" style="Table1">
           <tr>
             <td>
-              <para style="P1">- [[ l.name ]]</para>
+              <para style="P1"><font color="white">[[  '... '*(l['level']) ]]</font>-[[ l['name'] ]]</para>
             </td>
             <td>
-              <para style="P1">[[ l.product_id.name ]]</para>
+              <para style="P1">[[ l['pname'] ]]</para>
             </td>
             <td>
-              <para style="P2">[[ l.product_qty ]] [[ l.product_uom.name ]]</para>
+              <para style="P2">[[ l['pqty'] ]] [[ l['uname'] ]]</para>
             </td>
             <td>
-              <para style="terp_default_Centre_9">[[ l.code ]]</para>
+              <para style="terp_default_Centre_9">[[ l['code'] ]]</para>
             </td>
           </tr>
         </blockTable>

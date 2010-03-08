@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -38,8 +38,7 @@ class hr_expense_expense(osv.osv):
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context)
 
     def _amount(self, cr, uid, ids, field_name, arg, context):
-        id_set = ",".join(map(str, ids))
-        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
+        cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id =ANY(%s) GROUP BY s.id ",(ids,))
         res = dict(cr.fetchall())
         return res
 
@@ -69,7 +68,8 @@ class hr_expense_expense(osv.osv):
         'amount': fields.function(_amount, method=True, string='Total Amount'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-
+        'department_id':fields.many2one('hr.department','Department'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('confirm', 'Waiting confirmation'),
@@ -86,6 +86,7 @@ class hr_expense_expense(osv.osv):
         'employee_id' : _employee_get,
         'user_id' : lambda cr,uid,id,c={}: id,
         'currency_id': _get_currency,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     def expense_confirm(self, cr, uid, ids, *args):
         #for exp in self.browse(cr, uid, ids):
@@ -176,7 +177,7 @@ class product_product(osv.osv):
     _inherit = "product.product"
 
     _columns = {
-                'hr_expense_ok': fields.boolean('Can be Expensed', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
+        'hr_expense_ok': fields.boolean('Can constitute an Expense', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
     }
 
 product_product()
@@ -188,8 +189,7 @@ class hr_expense_line(osv.osv):
     def _amount(self, cr, uid, ids, field_name, arg, context):
         if not len(ids):
             return {}
-        id_set = ",".join(map(str, ids))
-        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id IN ("+id_set+") GROUP BY l.id ")
+        cr.execute("SELECT l.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_line l WHERE id =ANY(%s) GROUP BY l.id ",(ids,))
         res = dict(cr.fetchall())
         return res
 
@@ -212,12 +212,18 @@ class hr_expense_line(osv.osv):
         'date_value' : lambda *a: time.strftime('%Y-%m-%d'),
     }
     _order = "sequence"
-    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, context={}):
+    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context={}):
         v={}
         if product_id:
             product=self.pool.get('product.product').browse(cr,uid,product_id, context=context)
             v['name']=product.name
-            v['unit_amount']=product.standard_price
+
+            # Compute based on pricetype of employee company
+            pricetype_id = self.pool.get('hr.employee').browse(cr,uid,employee_id).user_id.company_id.property_valuation_price_type.id
+            pricetype=self.pool.get('product.price.type').browse(cr,uid,pricetype_id)
+            amount_unit=product.price_get(pricetype.field, context)[product.id]
+
+            v['unit_amount']=amount_unit
             if not uom_id:
                 v['uom_id']=product.uom_id.id
         return {'value':v}

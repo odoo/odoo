@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,7 +26,7 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Production",
-    "depends" : ["stock", "hr", "purchase", "product","process"],
+    "depends" : ["stock", "resource", "purchase", "product","process"],
     "description": """
     This is the base module to manage the manufacturing process in Open ERP.
 
@@ -54,22 +54,21 @@
     * Print a production order
     * Stock forecasts
     """,
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['stock', 'hr', 'purchase', 'product', 'process'],
     'init_xml': [],
     'update_xml': [
         'security/mrp_security.xml',
         'security/ir.model.access.csv',
         'mrp_workflow.xml',
         'mrp_data.xml',
+        'mrp_wizard_view.xml',
         'mrp_view.xml',
         'mrp_wizard.xml',
         'mrp_report.xml',
         'company_view.xml',
         'process/stockable_product_process.xml',
         'process/service_product_process.xml',
-        'process/procurement_process.xml'
+        'process/procurement_process.xml',
+        'mrp_installer.xml',
     ],
     'demo_xml': ['mrp_demo.xml', 'mrp_order_point.xml'],
     'installable': True,

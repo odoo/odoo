@@ -91,7 +91,7 @@
             <field name="view_id" ref="view_account_report_tree_simple"/>
         </record>
 
-        <menuitem action="action_account_report_tree" id="menu_action_account_report_tree_define" parent="account.menu_finance_configuration"/>
+        <menuitem action="action_account_report_tree" id="menu_action_account_report_tree_define" parent="account.menu_finance_configuration" sequence="20"/>
 
         <record id="view_account_report_tree" model="ir.ui.view">
             <field name="name">account.report.report.tree</field>
@@ -116,7 +116,7 @@
             <field name="view_id" ref="view_account_report_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="action_account_report_tree_view" id="menu_action_account_report_tree_view" parent="account.menu_finance_reporting"/>
+        <menuitem action="action_account_report_tree_view" id="menu_action_account_report_tree_view" parent="account.menu_finance_generic_reporting" sequence="5"/>
 
 
         <record id="action_account_report_tree_view_fiscal" model="ir.actions.act_window">

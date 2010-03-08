@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -60,7 +60,7 @@ class mrp_procurement(osv.osv):
             cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by priority,date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
             ids = map(lambda x: x[0], cr.fetchall())
             for proc in procurement_obj.browse(cr, uid, ids):
-                if (maxdate.strftime('%Y-%m-%d')>=proc.date_planned)  or (proc.procure_method=='make_to_order'):
+                if (maxdate.strftime('%Y-%m-%d')>=proc.date_planned):
                     wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
                 else:
                     offset += 1
@@ -83,7 +83,7 @@ class mrp_procurement(osv.osv):
             report_ids = []
             ids = self.pool.get('mrp.procurement').search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
             for proc in procurement_obj.browse(cr, uid, ids):
-                if ((maxdate).strftime('%Y-%m-%d') >= proc.date_planned) or (proc.procure_method=='make_to_order'):
+                if ((maxdate).strftime('%Y-%m-%d') >= proc.date_planned) :
                     wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
                     report_ids.append(proc.id)
                 else:

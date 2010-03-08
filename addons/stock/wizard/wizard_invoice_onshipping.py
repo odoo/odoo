@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -121,13 +121,13 @@ def _create_invoice(obj, cr, uid, data, context):
         raise  wizard.except_wizard(_('Error'), _('Invoice is not created'))
 
     if type == 'out_invoice':
-        xml_id = 'action_invoice_tree5'
+        xml_id = 'action_invoice_tree1'
     elif type == 'in_invoice':
-        xml_id = 'action_invoice_tree8'
+        xml_id = 'action_invoice_tree2'
     elif type == 'out_refund':
-        xml_id = 'action_invoice_tree10'
+        xml_id = 'action_invoice_tree3'
     else:
-        xml_id = 'action_invoice_tree12'
+        xml_id = 'action_invoice_tree4'
 
     result = mod_obj._get_id(cr, uid, 'account', xml_id)
     id = mod_obj.read(cr, uid, result, ['res_id'])
@@ -145,8 +145,8 @@ class make_invoice_onshipping(wizard.interface):
                 'arch': invoice_form,
                 'fields': invoice_fields,
                 'state': [
-                    ('end', 'Cancel'),
-                    ('create_invoice', 'Create invoice')
+                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('create_invoice', 'Create invoice', 'gtk-apply', True)
                 ]
             }
         },

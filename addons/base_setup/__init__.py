@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,64 @@
 #
 ##############################################################################
 
+import installer
+import todo
 import wizard
+
+from osv import osv
+import netsvc
+
+class base_setup_config_choice(osv.osv_memory):
+    """
+    """
+    _name = 'base.setup.config'
+    logger = netsvc.Logger()
+
+    def set_default_menu(self, cr, uid, menu, context=None):
+        user = self.pool.get('res.users')\
+                        .browse(cr, uid, uid, context=context)
+
+        user.write({'action_id': menu.id,
+                    'menu_id': menu.id})
+
+    def get_default_menu(self, cr, uid, context=None):
+        actions = self.pool.get('ir.actions.act_window')
+
+        current_menu_id = actions.search(cr, uid, [('name','=','Menu')],
+                                         context=context)
+        assert len(current_menu_id) == 1,\
+               'A given user should only have one menu item'
+        return actions.browse(cr, uid, current_menu_id[0], context=context)
+
+    def menu(self, cr, uid, ids, context=None):
+        menu = self.get_default_menu(cr, uid, context=context)
+        self.set_default_menu(cr, uid, menu, context=context)
+
+        if menu.view_id.id:
+            view_id = (menu.view_id.id, menu.view_id.name)
+        else:
+            view_id = False
+
+        return {
+            'name': menu.name,
+            'type': menu.type,
+            'view_id': view_id,
+            'domain': menu.domain,
+            'res_model': menu.res_model,
+            'src_model': menu.src_model,
+            'view_type': menu.view_type,
+            'view_mode': menu.view_mode,
+            'views': menu.views,
+        }
+
+    def config(self, cr, uid, ids, context=None):
+        menu = self.get_default_menu(cr, uid, context=context)
+        self.set_default_menu(cr, uid, menu, context=context)
+
+        return self.pool.get('res.config').next(cr, uid, [], context=context)
+
+base_setup_config_choice()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

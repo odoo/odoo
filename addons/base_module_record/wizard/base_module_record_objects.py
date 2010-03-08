@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -56,7 +56,7 @@ def _info_default(self, cr, uid, data, context):
      cr.execute('select max(create_date) from ir_model_data')
      c=(cr.fetchone())[0].split('.')[0]
      c = time.strptime(c,"%Y-%m-%d %H:%M:%S")
-     sec=c.tm_sec + 1
+     sec=c.tm_sec!=59 and c.tm_sec + 1
      c=(c[0],c[1],c[2],c[3],c[4],sec,c[6],c[7],c[8])
      data['form']['check_date']=time.strftime("%Y-%m-%d %H:%M:%S",c)
      return data['form']
@@ -108,7 +108,7 @@ class base_module_record_objects(wizard.interface):
                     ('record', 'Record', 'gtk-ok'),
                 ]
             }
-        },
+         },
          'record': {
             'actions': [],
             'result': {'type':'action','action':_record_objects,'state':'intro'}
@@ -124,7 +124,7 @@ class base_module_record_objects(wizard.interface):
                     ('save', 'Continue', 'gtk-ok'),
                 ]
             },
-            },
+         },
          'save': {
             'actions': [inter_call],
             'result': {

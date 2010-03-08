@@ -6,6 +6,48 @@
         </pageTemplate>
     </template>
     <stylesheet>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+    </blockTableStyle>
+	<blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+
+    </blockTableStyle>
+
+	<blockTableStyle id="Table4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+
+    </blockTableStyle>
+
+    <blockTableStyle id="Table5">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,0" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="1,0"/>
+
+    </blockTableStyle>
+    <blockTableStyle id="Table6">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+
+    </blockTableStyle>
+
         <blockTableStyle id="Standard_Outline">
             <blockAlignment value="LEFT"/>
             <blockValign value="TOP"/>
@@ -51,6 +93,13 @@
         <initialize>
             <paraStyle name="all" alignment="justify"/>
         </initialize>
+        <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+        <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+        <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+        <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+        <paraStyle name="terp_default_Left_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+        <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+        <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
         <paraStyle name="P1" fontName="Times-Roman" fontSize="11.0" leading="14"/>
         <paraStyle name="P2" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
         <paraStyle name="P3" fontName="Times-Roman" fontSize="8.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -77,35 +126,59 @@
         <paraStyle name="Index" fontName="Times-Roman"/>
     </stylesheet>
     <story>
-        <para style="Heading">
-            <font face="Times-Roman" size="11.0">Detail of Sales</font>
-        </para>
-        <para style="Heading1">
-            <font face="Times-Roman" size="11.0"> </font>
-        </para>
-        <para style="P12">
-            <font face="Times-Roman" size="11.0">Company: [[ company.name ]]</font>
-        </para>
-        <para style="P12">
-            <font face="Times-Roman" size="11.0">Print Date: [[time.strftime('%Y-%m-%d')]]</font>
-        </para>
-        <para style="P12">
-            <font face="Times-Roman" size="11.0">Period: [[ '%s' % getperiod(objects) ]]</font>
-        </para>
 
-        <para>
+     <para style="terp_default_8">
             <font color="white"> </font>
-        </para>
-        <para>
+          </para>
+	<para style="terp_default_8">
             <font color="white"> </font>
-        </para>
-        <blockTable colWidths="238.0,238.0" style="tmpTable2">
-            <tr>
-                <td>
-                    <blockTable colWidths="150,50" style="Tableau8">
+          </para>
+     <para style="terp_header"> Detail of Sales </para>
+     <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+     <blockTable colWidths="178.0,178.0,178.0" style="Table2">
+      <tr>
+        <td>
+          <para style="terp_tblheader_General_Centre">Company </para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Centre">Print Date </para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Centre">Period </para>
+        </td>
+      </tr>
+    </blockTable>
+	<blockTable colWidths="178.0,178.0,178.0" style="Table3">
+      <tr>
+        <td>
+          <para style="terp_default_Centre_8">[[ company.name ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[time.strftime('%Y-%m-%d')]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[ '%s' % getperiod(objects) ]]</para>
+        </td>
+
+      </tr>
+    </blockTable>
+    <para style="terp_default_8">
+            <font color="white"> </font>
+    </para>
+
+	<para style="terp_default_8">
+            <font color="white"> </font>
+    </para>
+    <para style="terp_default_8">
+            <font color="white"> </font>
+    </para>
+
+	<blockTable colWidths="267.0,267.0" style="Table4">
                         <tr>
                             <td>
-                                <para style="P3">
+                                <para style="terp_tblheader_Details">
                                     <font face="Helvetica-Bold" size="10.0">Mode of Taxes</font>
                                 </para>
                             </td>
@@ -115,12 +188,12 @@
                             <td>[[ p[0] ]]</td>
                             <td><para style="P17">[[ '%.2f' % (p[1],) ]]</para></td>
                         </tr>
-                    </blockTable>
-                    <para style="P2"><font color="white" /> </para>
-                    <blockTable colWidths="150,50" style="Tableau8">
+       </blockTable>
+
+       <blockTable colWidths="267.0,267.0" style="Table4">
                         <tr>
                             <td>
-                                <para style="P3">
+                                <para style="terp_tblheader_Details">
                                     <font face="Helvetica-Bold" size="10.0">Mode of payment</font>
                                 </para>
                             </td>
@@ -131,40 +204,48 @@
                             <td><para style="P17">[[ '%.2f' % (p[1],) ]]</para></td>
                         </tr>
                     </blockTable>
-                </td>
-                <td>
-                    <blockTable colWidths="150.0,50.0" style="Tableau8">
+
+		<para style="terp_default_8">
+            <font color="white"> </font>
+    	</para>
+    	<para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+         <blockTable colWidths="267.0,267.0" style="Table5">
+         	<tr>
+            	<td colspan="2">
+                	<para style="terp_default_Left_9_Bold"><font face="Helvetica-Bold" size="10.0">Summary</font></para></td>
+            </tr>
                         <tr>
-                            <td colspan="2"><para style="P3"><font face="Helvetica-Bold" size="10.0">Summary</font></para></td>
+                            <td><para style="terp_tblheader_Details">Sales total</para></td>
+                            terp_tblheader_Details
+                            <td><para style="terp_default_Right_9">[[ '%d' % getsalestotal(objects) ]]</para></td>
                         </tr>
                         <tr>
-                            <td>Sales total</td>
-                            <td><para style="P17">[[ '%d' % getsalestotal(objects) ]]</para></td>
+                            <td><para style="terp_tblheader_Details">Qty of product</para></td>
+                            <td><para style="terp_default_Right_9">[[ '%d' % getqtytotal(objects) ]]</para></td>
                         </tr>
                         <tr>
-                            <td>Qty of product</td>
-                            <td><para style="P17">[[ '%d' % getqtytotal(objects) ]]</para></td>
+                            <td><para style="terp_tblheader_Details">Total invoiced</para></td>
+                            <td><para style="terp_default_Right_9">[[ '%.2f' % getsuminvoice(objects) ]]</para></td>
                         </tr>
                         <tr>
-                            <td>Total invoiced</td>
-                            <td><para style="P17">[[ '%.2f' % getsuminvoice(objects) ]]</para></td>
+                            <td><para style="terp_tblheader_Details">Total discount</para></td>
+                            <td><para style="terp_default_Right_9">[[ '%.2f' % getsumdisc(objects) ]]</para></td>
                         </tr>
                         <tr>
-                            <td>Total discount</td>
-                            <td><para style="P17">[[ '%.2f' % getsumdisc(objects) ]]</para></td>
+                            <td><para style="terp_tblheader_Details">Total paid</para></td>
+                            <td><para style="terp_default_Right_9">[[ '%.2f' % getpaidtotal(objects) ]]</para></td>
                         </tr>
                         <tr>
-                            <td>Total paid</td>
-                            <td><para style="P17">[[ '%.2f' % getpaidtotal(objects) ]]</para></td>
-                        </tr>
-                        <tr>
-                            <td>Total of the day</td>
-                            <td><para style="P17">[[ '%.2f' % gettotalofthaday(objects) ]]</para></td>
+                            <td><para style="terp_tblheader_Details">Total of the day</para></td>
+                            <td><para style="terp_default_Right_9">[[ '%.2f' % gettotalofthaday(objects) ]]</para></td>
                         </tr>
                     </blockTable>
-                </td>
-            </tr>
-        </blockTable>
+
     </story>
 </document>
 

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -79,7 +79,7 @@ class  report_closed_task(osv.osv):
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance', readonly=True),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True),
         'remaining_hours': fields.float('Remaining Hours', readonly=True),
-        'date_close' : fields.datetime('Date Closed', readonly=True)
+        'date_end' : fields.datetime('Date Closed', readonly=True)
     }
 
     def init(self, cr):
@@ -91,11 +91,11 @@ class  report_closed_task(osv.osv):
                    tsk.date_deadline as date_deadline, tsk.planned_hours as planned_hours,
                    tsk.delay_hours as delay_hours, tsk.progress as progress,
                    tsk.priority as priority, tsk.state as state,
-                   tsk.remaining_hours as remaining_hours, tsk.date_close as date_close
+                   tsk.remaining_hours as remaining_hours, tsk.date_end as date_end
                 from
                     project_task tsk
-                where
-                    (tsk.date_close <= CURRENT_DATE AND tsk.date_close > (CURRENT_DATE-15))
+              where
+                    (tsk.date_end <= CURRENT_DATE AND tsk.date_end > (CURRENT_DATE-15))
             )
         ''')
 report_closed_task()

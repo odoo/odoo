@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -52,20 +52,21 @@ class wizard_delegate(wizard.interface):
         task_obj = pooler.get_pool(cr.dbname).get('project.task')
         task = task_obj.browse(cr, uid, data['id'], context)
         newname = data['form']['prefix'] or ''
-        task_obj.copy(cr, uid, data['id'], {
+        new_task_id = task_obj.copy(cr, uid, data['id'], {
             'name': data['form']['name'],
             'user_id': data['form']['user_id'],
             'planned_hours': data['form']['planned_hours'],
             'remaining_hours': data['form']['planned_hours'],
-            'parent_id': data['id'],
+            'parent_ids': [(6, 0, [data['id']])],
             'state': 'open',
             'description': data['form']['new_task_description'] or '',
             'child_ids': [],
             'work_ids': []
         })
-        task_obj.write(cr, uid, data['id'], {
+        task_obj.write(cr, uid, [data['id']], {
             'remaining_hours': data['form']['planned_hours_me'],
-            'name': newname
+            'planned_hours': data['form']['planned_hours_me'] + (task.effective_hours or 0.0),
+            'name': newname,
         })
         if data['form']['state']=='pending':
             task_obj.do_pending(cr, uid, [data['id']])
@@ -104,7 +105,3 @@ class wizard_delegate(wizard.interface):
         }
     }
 wizard_delegate('project.task.delegate')
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

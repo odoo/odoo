@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="40"/>
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
@@ -21,7 +20,19 @@
                 </field>
             </field>
         </record>
-
+        
+        <record id="view_account_analytic_account_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="company_currency_id" select="2" position="replace">
+                    <field name="currency_id" select="2"/>
+                </field>
+            </field>
+        </record>
+            
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
@@ -106,7 +117,10 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('to_invoice','&lt;&gt;',False)]</field>
         </record>
-        <menuitem action="action_hr_analytic_timesheet_open_tree" id="menu_hr_analytic_timesheet_tree" parent="account.menu_finance_periodical_processing"/>
+        <menuitem 
+            action="action_hr_analytic_timesheet_open_tree" 
+            id="menu_hr_analytic_timesheet_tree" 
+            parent="account.menu_finance_periodical_processing"/>
 
         <record id="action_hr_analytic_timesheet_tree_invoiced" model="ir.actions.act_window">
             <field name="name">Uninvoiced Entries</field>
@@ -164,7 +178,10 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_timesheet_invoice_factor_tree"/>
         </record>
-        <menuitem action="action_hr_timesheet_invoice_factor_form" id="hr_timesheet_invoice_factor_view" parent="account.account_analytic_def_account"/>
+        <menuitem 
+            action="action_hr_timesheet_invoice_factor_form" 
+            id="hr_timesheet_invoice_factor_view" 
+            parent="account.account_analytic_def_account"/>
 
     </data>
 </openerp>

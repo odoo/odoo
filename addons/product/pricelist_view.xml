@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem groups="base.group_extended" id="menu_product_pricelist_main" name="Pricelists" parent="product.menu_config_product" sequence="2"/>
+        <menuitem groups="base.group_extended" id="menu_product_pricelist_main" name="Pricelists" parent="prod_config_main" sequence="50"/>
 
         <record id="product_pricelist_version_form_view" model="ir.ui.view">
             <field name="name">product.pricelist.version.form</field>
@@ -165,8 +165,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name="Prices Computations" id="menu_price" parent="product.menu_config_product"/>
-        <menuitem action="product_price_type_action" groups="base.group_extended" id="menu_product_price_type_action" parent="menu_price"/>
+<!--        <menuitem name="Prices Computations" id="menu_price" parent="product.menu_config_product"/>-->
+<!--        <menuitem action="product_price_type_action" groups="base.group_extended" id="menu_product_price_type_action" parent="menu_price"/>-->
 
         <record id="product_pricelist_type_view" model="ir.ui.view">
             <field name="name">product.pricelist.type.form</field>
@@ -186,7 +186,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="product_pricelist_type_action" groups="base.group_extended" id="menu_product_pricelist_type_action" parent="menu_price"/>
+<!--        <menuitem action="product_pricelist_type_action" groups="base.group_extended" id="menu_product_pricelist_type_action" parent="menu_price"/>-->
 
     </data>
 </openerp>

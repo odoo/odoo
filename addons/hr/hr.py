@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,167 +15,124 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from mx import DateTime
-import time
-import math
 
 from osv import fields, osv
 from tools.translate import _
 
-class hr_timesheet_group(osv.osv):
-    _name = "hr.timesheet.group"
-    _description = "Working Time"
-    _columns = {
-        'name' : fields.char("Group name", size=64, required=True),
-        'timesheet_id' : fields.one2many('hr.timesheet', 'tgroup_id', 'Working Time'),
-        'manager' : fields.many2one('res.users', 'Workgroup manager'),
-    }
-    def interval_min_get(self, cr, uid, id, dt_from, hours):
-        if not id:
-            return [(dt_from-DateTime.RelativeDateTime(hours=int(hours)*3), dt_from)]
-        todo = hours
-        cycle = 0
-        result = []
-        maxrecur = 100
-        current_hour = dt_from.hour
-        while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from hr_timesheet where dayofweek='%s' and tgroup_id=%s order by hour_from desc", (dt_from.day_of_week,id))
-            for (hour_from,hour_to) in cr.fetchall():
-                if (hour_from<current_hour) and (todo>0):
-                    m = min(hour_to, current_hour)
-                    if (m-hour_from)>todo:
-                        hour_from = m-todo
-                    d1 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_from)),int((hour_from%1) * 60))
-                    d2 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
-                    result.append((d1, d2))
-                    current_hour = hour_from
-                    todo -= (m-hour_from)
-            dt_from -= DateTime.RelativeDateTime(days=1)
-            current_hour = 24
-            maxrecur -= 1
-        result.reverse()
-        return result
-
-    def interval_get(self, cr, uid, id, dt_from, hours, byday=True):
-        if not id:
-            return [(dt_from,dt_from+DateTime.RelativeDateTime(hours=int(hours)*3))]
-        todo = hours
-        cycle = 0
-        result = []
-        maxrecur = 100
-        current_hour = dt_from.hour
-        while (todo>0) and maxrecur:
-            cr.execute("select hour_from,hour_to from hr_timesheet where dayofweek='%s' and tgroup_id=%s order by hour_from", (dt_from.day_of_week,id))
-            for (hour_from,hour_to) in cr.fetchall():
-                if (hour_to>current_hour) and (todo>0):
-                    m = max(hour_from, current_hour)
-                    if (hour_to-m)>todo:
-                        hour_to = m+todo
-                    d1 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(m)),int((m%1) * 60))
-                    d2 = DateTime.DateTime(dt_from.year,dt_from.month,dt_from.day,int(math.floor(hour_to)),int((hour_to%1) * 60))
-                    result.append((d1, d2))
-                    current_hour = hour_to
-                    todo -= (hour_to - m)
-            dt_from += DateTime.RelativeDateTime(days=1)
-            current_hour = 0
-            maxrecur -= 1
-        return result
-
-hr_timesheet_group()
-
-
 class hr_employee_category(osv.osv):
     _name = "hr.employee.category"
     _description = "Employee Category"
-    
+
     _columns = {
         'name' : fields.char("Category", size=64, required=True),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
     }
-    
+
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee_category where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from hr_employee_category where id=ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
         return True
-    
+
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive Categories.', ['parent_id'])
     ]
-    
+
 hr_employee_category()
+
+class hr_employee_marital_status(osv.osv):
+    _name = "hr.employee.marital.status"
+    _description = "Employee Marital Status"
+    _columns = {
+        'name' : fields.char('Marital Status', size=30, required=True),
+        'description' : fields.text('Status Description'),
+    }
+hr_employee_marital_status()
+
+class hr_job(osv.osv):
+    def _no_of_employee(self, cr, uid, ids, name,args,context=None):
+        res = {}
+        for emp in self.browse(cr, uid, ids):
+            res[emp.id] = len(emp.employee_ids or [])
+        return res
+
+    _name = "hr.job"
+    _description = "Job Description"
+    _columns = {
+        'name': fields.char('Job Name', size=128, required=True, select=True),
+        'expected_employees':fields.integer('Expected Employees'),
+        'no_of_employee': fields.function(_no_of_employee, method=True, string='No of Employees', type='integer'),
+        'employee_ids':fields.one2many('hr.employee', 'job_id','Employees'),
+        'description': fields.text('Job Description'),
+        'requirements':fields.text('Requirements'),
+        'department_id':fields.many2one('hr.department','Department'),
+        'company_id': fields.many2one('res.company', 'Company'),
+        'state': fields.selection([('open','Open'),('old','Old'),('recruit','In Recruitement')], 'State', required=True),
+    }
+    _defaults = {
+        'expected_employees': lambda *a: 1,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
+        'state': lambda *args: 'open'
+    }
+hr_job()
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
-
+    _inherits = {'resource.resource':"resource_id"}
     _columns = {
-        'name' : fields.char("Employee's Name", size=128, required=True),
-        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the employee record without removing it."),
-        'company_id': fields.many2one('res.company', 'Company'),
-        'user_id' : fields.many2one('res.users', 'Related User', help='Related user name for an employee to manage his access rights.'),
-
         'country_id' : fields.many2one('res.country', 'Nationality'),
         'birthday' : fields.date("Birthday"),
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
         'sinid': fields.char('SIN No', size=32),
         'otherid': fields.char('Other ID', size=32),
-        'gender': fields.selection([('',''),('male','Male'),('female','Female')], 'Gender'),
-        'marital': fields.selection([('married','Married'),('unmarried','Unmarried'),('divorced','Divorced'),('other','Other')],'Marital Status', size=32),
-
+        'gender': fields.selection([('male','Male'),('female','Female')], 'Gender'),
+        'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
+        'bank_account': fields.char('Bank Account', size=56),
+        'partner_id' : fields.related('company_id', 'partner_id', type='many2one', relation='res.partner', readonly=True),
+        'department_id':fields.many2one('hr.department','Department'),
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
-        'work_phone': fields.char('Work Phone', size=32),
-        'work_email': fields.char('Work Email', size=128),
+        'work_phone': fields.related('address_id', 'phone', type='char', string='Work Phone'),
+        'work_email': fields.related('address_id', 'email', type='char', size=240, string='Work E-mail'),
         'work_location': fields.char('Office Location', size=32),
 
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager', select=True),
         'category_id' : fields.many2one('hr.employee.category', 'Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id','Subordinates'),
+        'resource_id': fields.many2one('resource.resource','Resource',ondelete='cascade'),
+        'coach_id':fields.many2one('res.users','Coach'),
+        'job_id':fields.many2one('hr.job', 'Job'),
+
     }
     _defaults = {
         'active' : lambda *a: True,
     }
-    
+
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_employee where id in ('+','.join(map(str, ids))+')')
+            cr.execute('select distinct parent_id from hr_employee where id =ANY(%s)',(ids,))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
             level -= 1
         return True
-    
+
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id'])
     ]
-    
-hr_employee()
 
-class hr_timesheet(osv.osv):
-    _name = "hr.timesheet"
-    _description = "Timesheet Line"
-    _columns = {
-        'name' : fields.char("Name", size=64, required=True),
-        'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of week'),
-        'date_from' : fields.date('Starting date'),
-        'hour_from' : fields.float('Work from', size=8, required=True),
-        'hour_to' : fields.float("Work to", size=8, required=True),
-        'tgroup_id' : fields.many2one("hr.timesheet.group", "Employee's timesheet group", select=True),
-    }
-    _order = 'dayofweek, hour_from'
-hr_timesheet()
+hr_employee()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

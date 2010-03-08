@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,19 +19,14 @@
 #
 ##############################################################################
 
-import crm_wizard
+import crm_opportunity_wizard
+import crm_lead_wizard
+import crm_phonecall_wizard
+
 import wizard_crm_send_email
 import wizard_crm_new_send_email
-import wizard_fetch_mail
-import wizard_cal_export
-import wizard_cal_import
-
-import meeting_planify
-import wizard_partner_create
-import wizard_opportunity_set
-import schedule_phone_call
 import wizard_history_event
-import wizard_partner_opportunity
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

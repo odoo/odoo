@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+		<wizard
+			string="Account balance-Compare Years"
+			model="account.account"
+			name="account.balance.account.balance.report"
+			keyword="client_print_multi"
+			id="wizard_account_balance_compare_report"/>
         <wizard id="wizard_invoice_refund" model="account.invoice" name="account.invoice.refund" string="Credit Note" groups="base.group_user"/>
 
         <wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice" groups="base.group_user"/>
@@ -67,7 +72,7 @@
 
         <!-- Aged partner balance -->
         <wizard id="wizard_aged_trial_balance" menu="False" model="res.partner" name="account.aged.trial.balance" string="Aged Partner Balance"/>
-        <menuitem id="next_id_22" name="Partner Accounts" parent="menu_finance_reporting"/>
+        <menuitem id="next_id_22" name="Partner Accounts" parent="menu_finance_generic_reporting" sequence="1"/>
         <menuitem icon="STOCK_PRINT" action="wizard_aged_trial_balance" id="menu_aged_trial_balance" parent="next_id_22" type="wizard"/>
 
         <!-- report-related wizards -->
@@ -114,7 +119,7 @@
 
         <wizard id="wizard_general_journal" menu="False" model="account.journal.period" name="account.general.journal.report" string="Print General Journal" />
 		<menuitem icon="STOCK_PRINT" action="wizard_general_journal" id="menu_general_journal" parent="account.menu_generic_report" type="wizard" />
-        
+
         <wizard id="wizard_invoice_currency_change" model="account.invoice" name="account.invoice.currency_change" string="Change Currency" groups="base.group_user"/>
     </data>
 </openerp>
