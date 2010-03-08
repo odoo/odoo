@@ -89,7 +89,7 @@ class configmanager(object):
         hasSSL = check_ssl()
 
         self._LOGLEVELS = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x))
-                          for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'DEBUG_RPC', 'NOTSET')])
+                          for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'NOTSET')])
 
         version = "%s %s" % (release.description, release.version)
         parser = optparse.OptionParser(version=version)
