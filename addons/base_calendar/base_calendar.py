@@ -226,7 +226,9 @@ class invite_attendee_wizard(osv.osv_memory):
 
         if type == 'internal':
             user_obj = self.pool.get('res.users')
-            for user_id in datas.get('user_ids', []):
+            if not datas.get('user_ids'):
+                raise osv.except_osv(_('Error!'), ("Please select any User"))
+            for user_id in datas.get('user_ids'):
                 user = user_obj.browse(cr, uid, user_id)
                 vals.update({'user_id': user_id, 
                                      'email': user.address_id.email})
@@ -251,10 +253,6 @@ class invite_attendee_wizard(osv.osv_memory):
                 'parent_ids' : [(4, att.id)],
                 'ref': att.ref
             })
-        att_id = att_obj.create(cr, uid, vals)
-        if model_field:
-            obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
-        
         if datas.get('send_mail'):
             if not mail_to:
                 name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
@@ -263,7 +261,9 @@ class invite_attendee_wizard(osv.osv_memory):
 Address to send mail") % (name[0]))
             att_obj._send_mail(cr, uid, [att_id], mail_to, \
                    email_from=tools.config.get('email_from', False))
-
+        att_id = att_obj.create(cr, uid, vals)
+        if model_field:
+            obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
         return {}
 
 
@@ -313,12 +313,14 @@ class calendar_attendee(osv.osv):
             if name == 'delegated_to':
                 todata = []
                 for parent in attdata.parent_ids:
-                    todata.append('MAILTO:' + parent.email)
+                    if parent.email:
+                        todata.append('MAILTO:' + parent.email)
                 result[id][name] = ', '.join(todata)
             if name == 'delegated_from':
                 fromdata = []
                 for child in attdata.child_ids:
-                    fromdata.append('MAILTO:' + child.email)
+                    if child.email:
+                        fromdata.append('MAILTO:' + child.email)
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
                 if attdata.ref:
