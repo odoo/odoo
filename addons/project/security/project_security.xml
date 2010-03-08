@@ -42,7 +42,7 @@
         <field name="global" eval="True"/>
     </record>
     <record model="ir.rule" id="task_visibility_rule">
-        <field name="domain_force">['|','|',('user_id','=',user.id),('project_id.members','=',user.id),('project_id.user_id','=',user.id)]</field>
+        <field name="domain_force">['|','|','|',('user_id','=',False),('user_id','=',user.id),('project_id.members','=',user.id),('project_id.user_id','=',user.id)]</field>
         <field name="rule_group" ref="task_visibility_rule_group"/>
     </record>
 
