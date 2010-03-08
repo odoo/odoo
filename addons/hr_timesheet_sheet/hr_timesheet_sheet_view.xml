@@ -197,24 +197,24 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                   <group col="10" colspan="4">		                						
-						<filter icon="terp-crm" string="Unvalidated" domain="[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Unvalidated Timesheets"/>
-                       	<separator orientation="vertical"/>
-                       	<field name="state">
-                           <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
-                           <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-						</field>
-						<field name="name" select="1"/>
-						<field name="user_id" select="1" widget="selection">
+                    <group col="10" colspan="4">		                						
+                        <filter icon="terp-crm" string="Unvalidated" domain="[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Unvalidated Timesheets"/>
+                        <separator orientation="vertical"/>
+                        <field name="state">
+                            <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
+                            <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                        </field>
+                        <field name="name" select="1"/>
+                        <field name="user_id" select="1" widget="selection">
                             <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Timesheet"/>
                         </field>
-						<field name="department_id" widget="selection">
-							<filter icon="terp-crm"
-								domain="[('department_id','=',context.get('department_id',False))]"
-								help="My Departments Timesheet"/>
-						</field>
-                   </group>
-               </search>
+                        <field name="department_id" widget="selection">
+                            <filter icon="terp-crm"
+                                domain="[('department_id','=',context.get('department_id',False))]"
+                                help="My Departments Timesheet"/>
+                        </field>
+                    </group>
+                </search>
             </field>
         </record>
 
