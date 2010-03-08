@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
 import types
-import yaml
 import time # used to eval time.strftime expressions
 import logging
 
 import pooler
 import netsvc
 import misc
-
 from config import config
+
+import yaml
 
 logger_channel = 'tests'
 

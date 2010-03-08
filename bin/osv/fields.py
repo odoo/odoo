@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -80,6 +80,7 @@ class _column(object):
         self.view_load = 0
         self.select = select
         self.selectable = True
+        self.group_operator = args.get('group_operator', False)
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
@@ -176,6 +177,7 @@ class float(_column):
         _column.__init__(self, string=string, **args)
         self.digits = digits
         self.digits_compute = digits_compute
+
 
     def digits_change(self, cr):
         if self.digits_compute:
@@ -320,8 +322,8 @@ class many2one(_column):
             except except_orm:
                 record_name = {}
                 record_name[record] = '// Access Denied //'
-            names.update(record_name)        
-        
+            names.update(record_name)
+
         for r in res.keys():
             if res[r] and res[r] in names:
                 res[r] = (res[r], names[res[r]])
@@ -629,7 +631,7 @@ class function(_column):
         self._multi = multi
         if 'relation' in args:
             self._obj = args['relation']
-            
+
         self.digits = args.get('digits', (16,2))
         self.digits_compute = args.get('digits_compute', None)
 
@@ -642,7 +644,7 @@ class function(_column):
 
         if not fnct_search and not store:
             self.selectable = False
-        
+
         if store:
             self._classic_read = True
             self._classic_write = True
@@ -681,14 +683,14 @@ class function(_column):
         if self._type == "many2one" :
             # Filtering only integer/long values if passed
             res_ids = [x for x in res.values() if x and isinstance(x, (int,long))]
-            
+
             if res_ids:
                 obj_model = obj.pool.get(self._obj)
                 dict_names = dict(obj_model.name_get(cr, user, res_ids, context))
                 for r in res.keys():
                     if res[r] and res[r] in dict_names:
                         res[r] = (res[r], dict_names[res[r]])
-            
+
         if self._type == 'binary' and context.get('bin_size', False):
             # convert the data returned by the function with the size of that data...
             res = dict(map( get_nice_size, res.items()))
@@ -838,7 +840,7 @@ class dummy(function):
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         return {}
-    
+
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []

@@ -1007,7 +1007,7 @@ class orm_template(object):
                 if fields and f not in fields:
                     continue
                 res[f] = {'type': self._columns[f]._type}
-                for arg in ('string', 'readonly', 'states', 'size', 'required',
+                for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
                         'change_default', 'translate', 'help', 'select', 'selectable'):
                     if getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
@@ -1871,13 +1871,10 @@ class orm(orm_template):
         fields_pre = [f for f in float_int_fields if
                    f == self.CONCURRENCY_CHECK_FIELD
                 or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
-        avg_fields = context.get('avg',[])
         for f in fields_pre:
             if f not in ['id','sequence']:
-                if f in avg_fields:
-                    flist += ',avg('+f+') as '+f
-                else:
-                    flist += ',sum('+f+') as '+f
+                operator = fget[f].get('group_operator','sum')
+                flist += ','+operator+'('+f+') as '+f
 
         cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + ' group by '+ groupby + limit_str + offset_str, where_params)
         alldata = {}
