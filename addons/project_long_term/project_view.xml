@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+    # ------------------------------------------------------
+    # Project Resource Allocation
+    # ------------------------------------------------------
+
         <record id="view_project_resource_allocation_form" model="ir.ui.view">
             <field name="name">project.resource.allocation.form</field>
             <field name="model">project.resource.allocation</field>
@@ -13,7 +18,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_project_resource_allocation_list" model="ir.ui.view">
             <field name="name">project.resource.allocation.list</field>
             <field name="model">project.resource.allocation</field>
@@ -26,7 +31,11 @@
                 </tree>
             </field>
         </record>
-        
+
+	# ------------------------------------------------------
+    # Project Phase
+    # ------------------------------------------------------
+
         <record id="view_project_phase_form" model="ir.ui.view">
             <field name="name">project.phase.form</field>
             <field name="model">project.phase</field>
@@ -57,11 +66,11 @@
                              </field>
                             <group col="12" colspan="4">
                             	<field name="state" select="1"/>
-                            	<button string="Draft" name="phase_draft" states="open"/>
-                            	<button string="Start Phase" name="phase_start" states="pending,draft"/>
-                                <button string="Cancel" name="phase_cancel" states="draft,open,pending"/>
-                                <button string="Done" name="phase_done" states="draft,pending,open"/>
-                                <button string="Pending" name="phase_pending" states="open"/>
+                            	<button string="Draft" name="set_draft" states="open" icon="gtk-indent"/>
+                            	<button string="Start Phase" name="set_open" states="pending,draft" icon="gtk-execute"/>
+                                <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
+                                <button string="Done" name="set_done" states="draft,pending,open" icon="gtk-jump-to"/>
+                                <button string="Pending" name="set_pending" states="open" icon="gtk-media-pause"/>
                             </group>
                         </page>
                         <page string="Other Info">
@@ -128,7 +137,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_project_phase_list" model="ir.ui.view">
             <field name="name">project.phase.list</field>
             <field name="model">project.phase</field>
@@ -185,7 +194,7 @@
 	                    <field name="project_id" widget="selection"/>
 	                    <field name="responsible_id">
                             <filter domain="[('responsible_id','=',uid)]" help="My Phase" icon="gtk-execute" default="1"/>
-                        </field>	                    
+                        </field>
 	                    <field name="date_start"/>
 	                    <field name="date_end"/>
                     </group>
@@ -194,7 +203,7 @@
                         <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
                         <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'responsible_id'}"/>
                         <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
-                    </group>                    
+                    </group>
                 </search>
             </field>
         </record>
@@ -206,6 +215,10 @@
             <field name="view_mode">tree,form,calendar,gantt</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
+
+	# ------------------------------------------------------
+    # Project
+    # ------------------------------------------------------
 
         <record id="view_phase_project_form1" model="ir.ui.view">
 			<field name="name">phase.project.form1</field>
@@ -219,6 +232,10 @@
 
 			</field>
 	   </record>
+
+	# ------------------------------------------------------
+    # Project Task
+    # ------------------------------------------------------
 
     	<record id="view_project_phase_task_form1" model="ir.ui.view">
 			<field name="name">project.phase.task.form1</field>
@@ -262,9 +279,11 @@
         view_mode="tree,form"
         view_type="form" />
 
-        <menuitem action="act_project_phase" id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
+	# ------------------------------------------------------
+    # Menu Items
+    # ------------------------------------------------------
 
-		<!-- Menu for Resource for Long Term Project -->
+        <menuitem action="act_project_phase" id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
 		<menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
         <menuitem id="menu_pm_resources_project1" name="Resources" parent="base.menu_main_pm" sequence="2"/>
 		<menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_resources_project1" sequence="1"/>

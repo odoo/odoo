@@ -23,10 +23,12 @@ import wizard
 import pooler
 from tools.translate import _
 import datetime
+
 from resource.faces import *
 from new import classobj
 import operator
-import project_resource as proj
+
+import working_calendar as wkcal
 
 compute_form = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
@@ -39,44 +41,51 @@ success_msg = """<?xml version="1.0" ?>
 </form>"""
 
 compute_fields = {
-    'project_id': {'string':'Project', 'type':'many2one', 'relation': 'project.project', 'required':'True'},
+    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project', 'required':'True'},
 }
 
 class wizard_compute_tasks(wizard.interface):
 
     def _compute_date(self, cr, uid, data, context):
+        """
+        Schedule the tasks according to resource available and priority.
+        """
         pool = pooler.get_pool(cr.dbname)
-        project_pool = pool.get('project.project')
+        project_obj = pool.get('project.project')
         task_pool = pool.get('project.task')
-        resource_pool = pool.get('resource.resource')
-        user_pool = pool.get('res.users')
+        resource_obj = pool.get('resource.resource')
+        user_obj = pool.get('res.users')
         project_id = data['form']['project_id']
-        project = project_pool.browse(cr, uid, project_id)
-        task_ids = task_pool.search(cr, uid, [('project_id','=',project_id), ('state','in',['draft','open','pending'])])
+        project = project_obj.browse(cr, uid, project_id, context=context)
+        task_ids = task_pool.search(cr, uid, [('project_id', '=', project_id),
+                                              ('state', 'in', ['draft', 'open', 'pending'])
+                                              ])
         if task_ids:
-            wktime_cal = []
             task_ids.sort()
-            task_obj = task_pool.browse(cr, uid, task_ids)
+            task_objs = task_pool.browse(cr, uid, task_ids, context=context)
             calendar_id = project.resource_calendar_id.id
             start_date = project.date_start
             if not project.date_start:
                 start_date = datetime.datetime.now().strftime("%Y-%m-%d")
             date_start = datetime.datetime.strftime(datetime.datetime.strptime(start_date, "%Y-%m-%d"), "%Y-%m-%d %H:%M")
-
-#    To create resources which are the Project Members
-            resource_objs = []
-            for resource in project.members:
+            # Create Resource Class objects which are the Project Members
+            resources = []
+            for user in project.members:
                 leaves = []
-                resource_id = resource_pool.search(cr, uid, [('user_id','=',resource.id)])
+                time_efficiency = 1.0
+                resource_id = resource_obj.search(cr, uid, [('user_id', '=', user.id)])
                 if resource_id:
-                    resource_obj = resource_pool.browse(cr, uid, resource_id)[0]
-                    leaves = proj.leaves_resource(cr, uid, calendar_id or False , resource_id, resource_obj.calendar_id.id)
-                    resource_objs.append(classobj(str(resource.name), (Resource,), {'__doc__' : resource.name, '__name__' : resource.name, 'vacation' : tuple(leaves), 'efficiency' : resource_obj.time_efficiency}))
-
-            priority_dict = {'0' :1000, '1' :800, '2' :500, '3' :300,'4' :100}
-
-#     To create dynamic no of tasks with the resource specified
-            def tasks_resource(j, eff, priorty=500, obj=None):
+                    resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
+                    leaves = wkcal.compute_leaves(cr, uid, calendar_id or False , resource_id, resource.calendar_id.id)
+                    time_efficiency = resource.time_efficiency
+                resources.append(classobj(str(user.name), (Resource,), {'__doc__': user.name,
+                                                                        '__name__': user.name,
+                                                                        'vacation': tuple(leaves),
+                                                                        'efficiency': time_efficiency
+                                                                        }))
+            priority_dict = {'0': 1000, '1': 800, '2': 500, '3': 300,'4': 100}
+            # Create dynamic no of tasks with the resource specified
+            def create_tasks(j, eff, priorty=500, obj=None):
                 def task():
                     """
                     task is a dynamic method!
@@ -89,43 +98,47 @@ class wizard_compute_tasks(wizard.interface):
                 task.__name__ = "task%d" %j
                 return task
 
-#    Creating the project with all the tasks and resources
+            # Create a 'Faces' project with all the tasks and resources
             def Project():
                 title = project.name
                 start = date_start
-                resource = reduce(operator.or_, resource_objs)
+                try:
+                    resource = reduce(operator.or_, resources)
+                except:
+                    raise wizard.except_wizard(_('MemberError'), _('Project must have members assigned !'))
                 minimum_time_unit = 1
-
-#    If project has calendar
-                if calendar_id:
-                    working_days = proj.compute_working_calendar(cr, uid, calendar_id)
-                    vacation = tuple(proj.leaves_resource(cr, uid, calendar_id))
-
-#    Dynamic Creation of tasks
+                if calendar_id:        # If project has calendar
+                    working_days = wkcal.compute_working_calendar(cr, uid, calendar_id)
+                    vacation = tuple(wkcal.compute_leaves(cr, uid, calendar_id))
+                # Dynamic Creation of tasks
                 i = 0
-                for each_task in task_obj:
+                for each_task in task_objs:
                     hours = str(each_task.planned_hours / each_task.occupation_rate)+ 'H'
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
                     if each_task.user_id:
-                       for resource_object in resource_objs:
-                            if resource_object.__name__ == each_task.user_id.name:
-                               task = tasks_resource(i, hours, priorty, resource_object)
+                       for resource in resources:
+                            if resource.__name__ == each_task.user_id.name:
+                               task = create_tasks(i, hours, priorty, resource)
                     else:
-                        task = tasks_resource(i, hours, priorty)
+                        task = create_tasks(i, hours, priorty)
                     i += 1
 
-#    Writing back the dates
             project = BalancedProject(Project)
             loop_no = 0
+            # Write back the computed dates
             for t in project:
                 s_date = t.start.to_datetime()
                 e_date = t.end.to_datetime()
                 if loop_no == 0:
-                    project_pool.write(cr, uid, [project_id], {'date' : e_date})
+                    project_obj.write(cr, uid, [project_id], {'date' : e_date})
                 else:
-                    user_id = user_pool.search(cr, uid, [('name','=',t.booked_resource[0].__name__)])
-                    task_pool.write(cr, uid, [task_obj[loop_no-1].id], {'date_start' :s_date.strftime('%Y-%m-%d %H:%M:%S'), 'date_deadline' :e_date.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' :user_id[0]}, context={'scheduler' :True})
+                    user_id = user_obj.search(cr, uid, [('name', '=', t.booked_resource[0].__name__)])
+                    task_pool.write(cr, uid, [task_objs[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                                         'date_deadline': e_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                                         'user_id': user_id[0]},
+                                                                         context={'scheduler': True
+                                                                        })
                 loop_no +=1
         return {}
 
@@ -137,14 +150,10 @@ class wizard_compute_tasks(wizard.interface):
                 ('compute', 'Compute')
             ]},
         },
-
-
         'compute': {
             'actions': [_compute_date],
             'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
         }
     }
 wizard_compute_tasks('wizard.compute.tasks')
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

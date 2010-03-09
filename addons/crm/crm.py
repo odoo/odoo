@@ -295,9 +295,8 @@ class crm_case(osv.osv):
             section = (case.section_id.id or False)
             if section in s:
                 st = case.stage_id.id  or False
-                if st in s[section]:
-                    stage_value = self.pool.get('crm.case.stage').read(cr, uid,s[section][st] , ['probability'], context)
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st],'probability':stage_value['probability']})
+                if st in s[section]:                    
+                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
         return True
     
     def get_stage_dict(self, cr, uid, ids, context={}):
@@ -318,9 +317,8 @@ class crm_case(osv.osv):
             if section in s:
                 st = case.stage_id.id  or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
-                if st in s[section]:
-                    stage_value = self.pool.get('crm.case.stage').read(cr, uid,s[section][st] ,['probability'], context)
-                    self.write(cr, uid, [case.id], {'stage_id': s[section][st],'probability':stage_value['probability']})
+                if st in s[section]:                    
+                    self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
         return True  
     
 
