@@ -252,43 +252,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partners" col='1'>
-					<html>
-    					<fieldset>
-                    		<legend>HTML Form Example</legend>
-     						<div style="width: 150px; white-space: nowrap;">
-          						<Label for="name">
-               						Name:
-          						</Label>
-          						<field name="name" select="1" colspan="6"/>
-								<BUTTON type="button" class="button" onclick="clickme();">Test Click</BUTTON>
-								
-								<script type="text/javascript"> 
-    								var clickme = function() {
-							        	alert("This is Test HTML Code in Form View");
-							    	}
-								</script>
-							</div>
-							<newline/>
-							<table width="25%%" border='1'>
-							    <tr>
-							        <td>
-							        	<b>
-							            	OpenERP
-							       		</b>
-							        </td>
-							        <td>
-								        <i>
-								            Tiny
-								        </i>
-							        </td>
-							    </tr>
-							</table>
-						</fieldset>
-						<hr/>
-					</html>
                     <group col="6" colspan="4">
                         <group colspan="5" col="6">
-                            <field name="ref" select="1"/>
+                            <field name="name" select="1"/>
+                            <field name="ref"/>
                             <field domain="[('domain', '=', 'partner')]" name="title"/>
                             <field name="lang"/>
                         </group>
