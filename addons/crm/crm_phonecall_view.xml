@@ -49,7 +49,7 @@
                 <field name="partner_phone"/>                
                 <field name="user_id"/>
                 <button string="Opportunity" 
-                    name="%(wizard_crm_phonecall_opportunity_set)d"
+                    name="%(phonecall2opportunity_act)d"
                     states="draft,open,pending"
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
@@ -82,7 +82,7 @@
                     <field name="duration"/>
                     <field name="section_id" colspan="1" widget="selection" />
                     <button string="Convert to Opportunity"
-                        name="%(wizard_crm_phonecall_opportunity_set)d"
+                        name="%(phonecall2opportunity_act)d"
                         icon="gtk-index" type="action"
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
 					<label colspan="6"  string=""/>                                 
