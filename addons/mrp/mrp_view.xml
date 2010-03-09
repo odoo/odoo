@@ -462,7 +462,9 @@
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
                         <field name="product_uom"/>
-                        <button type="action" name="%(mrp.action_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production"/>
+                        <button type="action"
+                        	name="%(mrp.action_change_production_qty)d"
+                        	string="Change Qty" states="ready,confirmed" />
                         </group>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
@@ -482,18 +484,18 @@
 
                             <field colspan="2" name="move_lines" nolabel="1" widget="one2many_list"
                                 mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
-                                <tree string="Products to Consume">
+                                <tree string="Products to Consume" colors="red:location_dest_id&lt;&gt;parent.location_dest_id">
                                     <field name="product_id" />
                                     <field name="product_qty" />
                                     <field name="product_uom" />
                                     <field name="state" invisible="1" />
                                     <button
                                         name="%(stock.move_consume)d"
-                                        string=">" type="action"
+                                        string="Consume Products" type="action"
                                         icon="gtk-go-forward" context="{'consume': True}"
                                         states="draft,waiting,confirmed,assigned"/>
                                     <button name="%(stock.move_scrap)d"
-                                        string="D" type="action"
+                                        string="Scrap Products" type="action"
                                         icon="gtk-justify-fill" context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" />
                                 </tree>
@@ -520,7 +522,7 @@
                            				states="done,cancel" />
                            			<button
                            				name="%(stock.move_scrap)d"
-                           				string="D" type="action"
+                           				string="Scrap Products" type="action"
                            				icon="gtk-convert"
                            				states="done,cancel" />
                            		</tree>
@@ -552,11 +554,11 @@
                                     <field name="state" invisible="1" />
                                     <button
                                         name="%(stock.move_consume)d"
-                                        string=">" type="action"
+                                        string="Consume Products" type="action"
                                         icon="gtk-go-forward"
                                         states="draft,waiting,confirmed,assigned"/>
                                     <button name="%(stock.move_scrap)d"
-                                        string="D" type="action"
+                                        string="Scrap Products" type="action"
                                         icon="gtk-justify-fill" context="{'scrap': True}"
                                         states="draft,waiting,confirmed,assigned" />
                                 </tree>
@@ -579,7 +581,7 @@
                            			<button name="%(stock.track_line)d"
                                             string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                            			<button name="%(stock.move_scrap)d"
-                           				string="D" type="action" icon="gtk-go-forward"
+                           				string="Scrap Products" type="action" icon="gtk-go-forward"
                            				states="done,cancel" />
                            		</tree>
                            		<form string="Finished Products">
