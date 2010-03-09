@@ -62,6 +62,7 @@
         'mrp_data.xml',
         'mrp_wizard_view.xml',
         'mrp_view.xml',
+        'wizard/make_procurement_view.xml',
         'mrp_wizard.xml',
         'mrp_report.xml',
         'company_view.xml',
