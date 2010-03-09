@@ -63,7 +63,7 @@ class auction_dates(osv.osv):
         return name
 
     _columns = {
-        'name': fields.char('Auction date', size=64, required=True),
+        'name': fields.char('Auction Name', size=64, required=True),
         'expo1': fields.date('First Exposition Day', required=True),
         'expo2': fields.date('Last Exposition Day', required=True),
         'auction1': fields.date('First Auction Day', required=True),

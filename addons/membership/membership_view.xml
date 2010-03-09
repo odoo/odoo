@@ -97,7 +97,7 @@
         <!-- MEMBERSHIP/CURRENT MEMBERS -->
 
         <record model="ir.ui.view" id="membership_members_tree">
-            <field name="name">Current members</field>
+            <field name="name">Members</field>
             <field name="model">res.partner</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -129,10 +129,10 @@
 	    </record>
 
         <record model="ir.actions.act_window" id="action_membership_members">
-            <field name="name">Current members</field>
+            <field name="name">Members</field>
             <field name="res_model">res.partner</field>
             <field name="domain">[('membership_state','&lt;&gt;','none'),('membership_state','&lt;&gt;','canceled'),('membership_state','&lt;&gt;','old'),('membership_state','&lt;&gt;','waiting')]</field>
-        	<field name="search_view_id" ref="view_res_partner_member_filter"/>
+            <field name="search_view_id" ref="view_res_partner_member_filter"/>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
@@ -148,10 +148,7 @@
             <field name="act_window_id" ref="action_membership_members"/>
         </record>
 
-        <menuitem name="Current members" parent="menu_member"
-            id="menu_members"
-            sequence="2"
-            action="action_membership_members"/>
+        <menuitem name="Members" parent="menu_member" id="menu_members" sequence="2" action="action_membership_members"/>
 
         <!-- PARTNERS -->
 
@@ -189,7 +186,7 @@
                         <field name="membership_start" select="2"/>
                         <field name="membership_stop" select="2"/>
                         <field name="membership_cancel" select="2"/>
-                        <field name="member_lines" nolabel="1" colspan="4" readonly="1">
+                        <field name="member_lines" nolabel="1" colspan="4">
                             <tree string="Membership">
                                 <field name="date_from"/>
                                 <field name="date_to"/>

@@ -1,6 +1,5 @@
--
-    Tax Scenario
-
+- |
+    Tax Scenario:
     In order to check that the accounting entries and tax engine works
     efficiently with all kind of price accuracies we run this test scenario.
 -
@@ -55,7 +54,7 @@
     Then, I change the precision of numbers to 3 digits.
 -
     !record {model: decimal.precision, id: product.decimal_account}:
-      digits: 2
+      digits: 3
 -
     And I create another invoice with the same content.
 -
