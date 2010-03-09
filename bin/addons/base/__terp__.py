@@ -60,7 +60,12 @@
         'maintenance/maintenance_view.xml',
         'security/ir.model.access.csv'
     ],
-    'demo_xml': ['base_demo.xml', 'res/partner/partner_demo.xml', 'res/partner/crm_demo.xml'],
+    'demo_xml': [
+        'base_demo.xml', 
+        'res/partner/partner_demo.xml', 
+        'res/partner/crm_demo.xml',
+        'base_test.xml'
+    ],
     'installable': True,
     'active': True,
     'certificate': '0076807797149',
