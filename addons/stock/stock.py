@@ -1602,7 +1602,21 @@ class stock_move(osv.osv):
         return res
 
     def scrap_moves(self, cr, uid, ids, quantity, location_dest_id, context=None):
-        return self.consume_moves(cr, uid, ids, quantity, location_id=False, location_dest_id=location_dest_id, consume=False, context=context)
+        if quantity <= 0:
+            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+        res = []       
+        for move in self.browse(cr, uid, ids, context=context):            
+            move_qty = move.product_qty
+            uos_qty = quantity / move_qty * move.product_uos_qty
+            default_val = {
+                    'product_qty': quantity, 
+                    'product_uos_qty': uos_qty, 
+                    'state': move.state, 
+                    'location_dest_id': location_dest_id
+                }
+            new_move = self.copy(cr, uid, move.id, default_val)
+            res += [new_move]
+        return res
 
 stock_move()
 

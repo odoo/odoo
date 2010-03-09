@@ -1385,13 +1385,32 @@ class StockMove(osv.osv):
     def consume_moves(self, cr, uid, ids, product_qty, location_id=False, location_dest_id=False, consume=True, context=None):
         res = []
         production_obj = self.pool.get('mrp.production')
+        wf_service = netsvc.LocalService("workflow")
         for move in self.browse(cr, uid, ids):
             new_moves = super(StockMove, self).consume_moves(cr, uid, [move.id], product_qty, location_id, location_dest_id, consume, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
+            for prod in production_obj.browse(cr, uid, production_ids, context=context):
+                if prod.state == 'confirmed':
+                    production_obj.force_production(cr, uid, [prod.id])
+                wf_service.trg_validate(uid, 'mrp.production', prod.id, 'button_produce', cr)
             for new_move in new_moves:
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)
-        return res  
+        return res
+    
+    def scrap_moves(self, cr, uid, ids, product_qty, location_id, context=None):
+        res = []
+        production_obj = self.pool.get('mrp.production')
+        wf_service = netsvc.LocalService("workflow")
+        for move in self.browse(cr, uid, ids):
+            new_moves = super(StockMove, self).scrap_moves(cr, uid, [move.id], product_qty, location_id, context=context)
+            production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
+            for prod_id in production_ids:
+                wf_service.trg_validate(uid, 'mrp.production', prod_id, 'button_produce', cr)
+            for new_move in new_moves:
+                production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
+                res.append(new_move)
+        return {}
 
 StockMove()
 
