@@ -19,35 +19,34 @@
 #
 ##############################################################################
 
+import netsvc
+from osv import osv, fields 
 
-{
-    'name': 'Products Repairs Module - Manage All products Repairs',
-    'version': '1.0',
-    'category': 'Custom',
-    'description': """
-           The aim is to have a complete module to manage all products repairs. The following topics should be covered by this module:
-           * Add/remove products in the reparation
-           * Impact for stocks
-           * Invoicing (products and/or services)
-           * Warranty concept
-           * Repair quotation report
-           * Notes for the technician and for the final customer           
-""",
-    'author': 'Tiny',
-    'depends': ['base', 'sale', 'account'],
-    'update_xml': [
-        'security/ir.model.access.csv',
-        'mrp_repair_sequence.xml',
-        'mrp_repair_wizard.xml',
-        'mrp_repair_cancel_view.xml',
-        'mrp_repair_make_invoice_view.xml',
-        'mrp_repair_view.xml',
-        'mrp_repair_workflow.xml',
-        'mrp_repair_report.xml',
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': '0060814381277',
-}
+class make_invoice(osv.osv_memory):
+    _name = 'mrp.repair.make_invoice'
+    _description = 'Make Invoice'
+    
+    _columns = {
+	       'group': fields.boolean('Group by partner invoice address'),
+    }
+
+    def make_invoices(self, cr, uid, ids, context):
+        inv = self.browse(cr, uid, ids[0])
+        order_obj = self.pool.get('mrp.repair')       
+        newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'], group=inv.group,context=context)    
+            
+        return {
+            'domain': [('id','in', newinv.values())],
+            'name': 'Invoices',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'view_id': False,
+            'context': "{'type':'out_invoice'}",
+            'type': 'ir.actions.act_window'
+        }
+
+make_invoice()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
