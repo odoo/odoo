@@ -224,6 +224,7 @@ class crm_case(osv.osv):
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'email_cc': fields.text('Watchers Emails', size=252 , help="These people will receive a copy of the future" \
                                                                     " communication between partner and users by email"),
+        'probability': fields.float('Probability'),
         'email_last': fields.function(_email_last, method=True,
             string='Latest E-Mail', type='text'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
@@ -318,7 +319,7 @@ class crm_case(osv.osv):
             if section in s:
                 st = case.stage_id.id  or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
-                if st in s[section]:
+                if st and st in s[section]:
                     stage_value = self.pool.get('crm.case.stage').read(cr, uid,s[section][st] ,['probability'], context)
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st],'probability':stage_value['probability']})
         return True  
