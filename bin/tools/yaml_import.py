@@ -718,12 +718,8 @@ class YamlInterpreter(object):
                 self._process_node(node)
             except YamlImportException, e:
                 self.logger.log(logging.ERROR, e)
-            except YamlImportAbortion, e:
-                self.logger.log(logging.ERROR, e)
-                self.cr.rollback()
-                return
             except Exception, e:
-                self.cr.rollback()
+                self.logger.log(logging.ERROR, e)
                 raise e
     
     def _process_node(self, node):
