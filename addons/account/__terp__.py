@@ -38,6 +38,7 @@
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
+        'test/test_parent_structure.yml',
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
