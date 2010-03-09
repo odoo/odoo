@@ -12,7 +12,6 @@
                 <graph string="Leads By Stage" type="pie">
                     <field name="stage_id"/>
                     <field name="nbr" operator="+"/>
-                    <field name="state" group="True"/>
                 </graph>
             </field>
         </record>
@@ -25,7 +24,6 @@
                 <graph string="Opportunities" type="bar" orientation="horizontal">
                     <field name="categ_id"/>
                     <field name="nbr" operator="+"/>
-                    <field name="state" group="True"/>
                 </graph>
             </field>
         </record>
@@ -100,7 +98,7 @@
 
 		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
         <menuitem
-            name="CRM Configuration" parent="base.dashboard"
+            name="CRM" parent="base.dashboard"
             id="menu_board_crm_config"
             groups="crm.group_crm_manager"/>
         <menuitem

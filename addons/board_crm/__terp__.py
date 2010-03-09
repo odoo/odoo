@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Dashboard for CRM Configuration',
+    'name': 'Dashboard for CRM',
     'version': '1.0',
     'category': 'Board/CRM',
     'description': """
@@ -31,7 +31,7 @@ This module implements a dashboard for CRM that includes:
     * My Meetings (list)
     * Sales Pipeline by Stage (graph)
     * My Cases (list)
-    * Jobs Tracking (graph)
+    * Leads of the month by user (list)
     """,
     'author': 'Tiny',
     'depends': ['board', 'crm'],

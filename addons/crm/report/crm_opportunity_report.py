@@ -14,7 +14,8 @@ class crm_opportunity_report(osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]", readonly=True),
         'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),  
-        'company_id': fields.many2one('res.company', 'Company',readonly=True),  
+        'company_id': fields.many2one('res.company', 'Company',readonly=True),
+        'user_id':fields.many2one('res.users', 'User', readonly=True),  
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'crm_opportunity_report')
