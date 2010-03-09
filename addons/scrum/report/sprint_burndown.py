@@ -50,9 +50,6 @@ class report_tasks(report_int):
 
         cr.execute('select id,date_start,date_stop from scrum_sprint where id=%s', (datas['id'],))
         for (id,date_start,date_stop) in cr.fetchall():
-            date_to_int = lambda x: int(x.ticks())
-            int_to_date = lambda x: '/a60{}'+DateTime.localtime(x).strftime('%d/%m/%Y')
-
             cr.execute('select id from project_task where product_backlog_id in(select id from scrum_product_backlog where sprint_id=%s)', (id,))
 
             ids = map(lambda x: x[0], cr.fetchall())
@@ -71,7 +68,9 @@ class report_tasks(report_int):
                     if (not result) or result[-1]<>res:
                         result.append(res)
                 return result
-
+            
+            guideline__data=[(datas[0][0],max_hour), (datas[-1][0],0)]
+            
             ar = area.T(x_grid_style=line_style.gray50_dash1,
                 x_axis=axis.X(label="Date", format=int_to_date),
                 y_axis=axis.Y(label="Burndown Chart - Planned Hours"),
@@ -80,7 +79,14 @@ class report_tasks(report_int):
                 y_range = (0,max_hour),
                 legend = None,
                 size = (680,450))
-            ar.add_plot(line_plot.T(data=datas))
+            ar.add_plot(line_plot.T(data=guideline__data, line_style=line_style.red))
+            ar.add_plot(line_plot.T(data=datas, line_style=line_style.green))
+            
+            entr1 = pychart.legend.Entry(label="guideline", line_style=line_style.red)
+            entr2 = pychart.legend.Entry(label="burndownchart",line_style=line_style.green)
+            legend = pychart.legend.T(nr_rows=2, inter_row_sep=5)
+            legend.draw(ar,[entr1,entr2],canv)
+            
             ar.draw(canv)
         canv.close()
 
