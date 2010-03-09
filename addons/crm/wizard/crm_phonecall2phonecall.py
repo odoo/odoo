@@ -46,8 +46,8 @@ class crm_phonecall2phonecall(osv.osv_memory):
         values['user_id']=this.user_id and this.user_id.id
         values['categ_id']=this.category_id and this.category_id.id
         values['section_id']=this.section_id and this.section_id.id or False,
-        values['description']=this.notes 
-        values['partner_id']=this.partner_id
+        values['description']=this.notes or ''
+        values['partner_id']=this.partner_id.id
         values['partner_address_id']=this.address_id.id
         phonecall_proxy = self.pool.get('crm.phonecall')
         phonecall_id = phonecall_proxy.create(cr, uid, values, context=context)  
@@ -75,17 +75,14 @@ class crm_phonecall2phonecall(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         record_id = context and context.get('record_id', False) or False
         res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
-       
         if record_id:
             phonecall_id = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
-            print ":::::::::",phonecall_id.section_id.id
             res['name']=phonecall_id.name
             res['user_id']=phonecall_id.user_id and phonecall_id.user_id.id
             res['section_id']=phonecall_id.section_id and phonecall_id.section_id.id
-            res['notes']=phonecall_id.description and phonecall_id.description
+            res['notes']=phonecall_id.description and phonecall_id.description or ''
             res['category_id']=phonecall_id.categ_id and phonecall_id.categ_id.id
             res['partner_id']=phonecall_id.partner_id and phonecall_id.partner_id.id
             res['address_id']=phonecall_id.partner_address_id and phonecall_id.partner_address_id.id
-             
         return res
 crm_phonecall2phonecall()
