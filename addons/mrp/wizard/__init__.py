@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import wizard_orderpoint_procurement
+import orderpoint_procurement
 import wizard_procurement
 import wizard_schedulers_all
 import wizard_price

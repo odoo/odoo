@@ -63,6 +63,7 @@
         'mrp_wizard_view.xml',
         'wizard/make_procurement_view.xml',
         'wizard/change_production_qty_view.xml',
+        'wizard/orderpoint_procurement_view.xml',
         'mrp_view.xml',
         'mrp_wizard.xml',
         'mrp_report.xml',
