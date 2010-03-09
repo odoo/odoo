@@ -19,8 +19,9 @@ class YamlImportAbortion(Exception):
     pass
 
 class YamlTag(object):
-    """Superclass for constructors of custom tags defined in yaml file."""
-
+    """
+    Superclass for constructors of custom tags defined in yaml file.
+    """
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
     def __getitem__(self, key):
@@ -45,7 +46,7 @@ class Record(YamlTag):
         super(Record, self).__init__(**kwargs)
     
 class Python(YamlTag):
-    def __init__(self, model, severity=logging.ERROR, name="NONAME", **kwargs):
+    def __init__(self, model, severity=logging.ERROR, name="", **kwargs):
         self.model= model
         self.severity = severity
         self.name = name
@@ -228,9 +229,10 @@ class TestReport(object):
         self._report = {}
 
     def record(self, success, severity):
-        """Records the result of an assertion for the failed/success count.
-           Returns success."""
-
+        """
+        Records the result of an assertion for the failed/success count.
+        Returns success.
+        """
         if severity in self._report:
             self._report[severity][success] += 1
         else:
@@ -249,7 +251,18 @@ class TestReport(object):
         res.append("end of report (%s assertion(s) checked)" % success + failure)
         return "\n".join(res)
 
-
+class RecordDictWrapper(dict):
+    """
+    Used to pass a record as locals in eval:
+    records do not strictly behave like dict, so we force them to.
+    """
+    def __init__(self, record):
+        self.record = record 
+    def __getitem__(self, key):
+        if key in self.record:
+            return self.record[key]
+        return dict.__getitem__(self, key)
+ 
 class YamlInterpreter(object):
     def __init__(self, cr, module, id_map, mode, filename, noupdate=False):
         self.cr = cr
@@ -259,10 +272,11 @@ class YamlInterpreter(object):
         self.filename = filename
         self.assert_report = TestReport()
         self.noupdate = noupdate
-        self.logger = logging.getLogger(logger_channel)
+        self.logger = logging.getLogger("%s.%s" % (logger_channel, self.module))
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
-        self.context = {}
+        self.context = {} # opererp context
+        self.eval_context = {'ref': self._ref, '_ref': self._ref} # added '_ref' so that record['ref'] is possible
 
     def _ref(self):
         return lambda xml_id: self.get_id(xml_id)
@@ -282,11 +296,13 @@ class YamlInterpreter(object):
             if module != self.module:
                 module_count = self.pool.get('ir.module.module').search_count(self.cr, self.uid, \
                         ['&', ('name', '=', module), ('state', 'in', ['installed'])])
-                assert module_count == 1, """The ID "%s" refers to an uninstalled module""" % (xml_id,)
+                assert module_count == 1, 'The ID "%s" refers to an uninstalled module.' % (xml_id,)
         if len(id) > 64: # TODO where does 64 come from (DB is 128)? should be a constant or loaded form DB
             self.logger.log(logging.ERROR, 'id: %s is to long (max: 64)', id)
 
     def get_id(self, xml_id):
+        if not xml_id:
+            raise YamlImportException("The xml_id should be a non empty string.")
         if isinstance(xml_id, types.IntType):
             id = xml_id
         elif xml_id in self.id_map:
@@ -302,10 +318,10 @@ class YamlInterpreter(object):
             self.id_map[xml_id] = id
         return id
     
-    def get_context(self, node, locals_dict):
+    def get_context(self, node, eval_dict):
         context = self.context.copy()
         if node.context:
-            context.update(eval(node.context, locals_dict))
+            context.update(eval(node.context, eval_dict))
         return context
 
     def isnoupdate(self, node):
@@ -318,14 +334,14 @@ class YamlInterpreter(object):
         self.assert_report.record(False, severity)
         self.logger.log(severity, msg, *args)
         if severity >= config['assert_exit_level']:
-            raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % (severity,))
+            raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % logging.getLevelName(severity))
         return
 
     def _get_assertion_id(self, assertion):
         if assertion.id:
             ids = [self.get_id(assertion.id)]
         elif assertion.search:
-            q = eval(assertion.search, {'ref': self._ref})
+            q = eval(assertion.search, self.eval_context)
             ids = self.pool.get(assertion.model).search(self.cr, self.uid, q, context=assertion.context)
         if not ids:
             raise YamlImportException('Nothing to assert: you must give either an id or a search criteria.')
@@ -346,12 +362,14 @@ class YamlInterpreter(object):
             args = (assertion.string, assertion.count, len(ids))
             self._log_assert_failure(assertion.severity, msg, *args)
         else:
-            local_context = {'ref': self._ref, '_ref': self._ref} # added '_ref' so that record['ref'] is possible
-            context = self.get_context(assertion, local_context)
+            context = self.get_context(assertion, self.eval_context)
             for id in ids:
                 record = model.browse(self.cr, self.uid, id, context)
                 for test in expressions.get('test', ''):
-                    success = eval(test, local_context, record)
+                    try:
+                        success = eval(test, self.eval_context, RecordDictWrapper(record))
+                    except Exception, e:
+                        raise YamlImportAbortion(e)
                     if not success:
                         msg = 'Assertion "%s" FAILED\ntest: %s\n'
                         args = (assertion.string, test)
@@ -367,6 +385,7 @@ class YamlInterpreter(object):
         if self.isnoupdate(record) and self.mode != 'init':
             model = self.get_model(record.model)
             record_dict = self._create_record(model, fields)
+            self.logger.debug("RECORD_DICT %s" % record_dict)
             id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
             self.id_map[record.id] = int(id)
@@ -412,9 +431,9 @@ class YamlInterpreter(object):
         code_context = {'self': model, 'cr': self.cr, 'uid': self.uid, 'log': log, 'context': self.context}
         try:
             code = compile(statements, self.filename, 'exec')
-            eval(code, code_context)
+            eval(code, {'ref': self.get_id}, code_context)
         except AssertionError, e:
-            self._log_assert_failure(python.severity, 'Assertion "%s" FAILED in Python code.', python.name)
+            self._log_assert_failure(python.severity, 'AssertionError in Python code %s: %s', python.name, e)
             return
         except Exception, e:
             raise YamlImportAbortion(e)
@@ -437,10 +456,9 @@ class YamlInterpreter(object):
             if not 'model' in value and (not 'eval' in value or not 'search' in value):
                 raise YamlImportException('You must provide a "model" and an "eval" or "search" to evaluate.')
             value_model = self.get_model(value['model'])
-            local_context = {'ref': self._ref, '_ref': self._ref}
-            local_context['obj'] = lambda x: value_model.browse(self.cr, self.uid, x, context=self.context)
+            local_context = {'obj': lambda x: value_model.browse(self.cr, self.uid, x, context=self.context)}
             local_context.update(self.id_map)
-            id = eval(value['eval'], local_context)
+            id = eval(value['eval'], self.eval_context, local_context)
         
         if workflow.uid is not None:
             uid = workflow.uid
@@ -453,19 +471,17 @@ class YamlInterpreter(object):
         function, values = node.items()[0]
         if self.isnoupdate(function) and self.mode != 'init':
             return
-        local_context = {'ref': self._ref, '_ref': self._ref}
-        context = self.get_context(function, local_context)
+        context = self.get_context(function, self.eval_context)
         args = []
         if function.eval:
-            args = eval(function.eval, local_context)
+            args = eval(function.eval, self.eval_context)
         for value in values:
             if not 'model' in value and (not 'eval' in value or not 'search' in value):
                 raise YamlImportException('You must provide a "model" and an "eval" or "search" to evaluate.')
             value_model = self.get_model(value['model'])
-            local_context = {'ref': self._ref, '_ref': self._ref}
-            local_context['obj'] = lambda x: value_model.browse(self.cr, self.uid, x, context=context)
+            local_context = {'obj': lambda x: value_model.browse(self.cr, self.uid, x, context=context)}
             local_context.update(self.id_map)
-            id = eval(value['eval'], local_context)
+            id = eval(value['eval'], self.eval_context, local_context)
             if id != None:
                 args.append(id)
         model = self.get_model(function.model)
@@ -572,7 +588,7 @@ class YamlInterpreter(object):
         view_id = False
         if node.view:
             view_id = self.get_id(node.view)
-        context = eval(node.context, {'ref': self._ref, '_ref': self._ref})
+        context = eval(node.context, self.eval_context)
 
         values = {
             'name': node.name,
@@ -608,7 +624,7 @@ class YamlInterpreter(object):
     def process_delete(self, node):
         ids = []
         if len(node.search):
-            ids = self.pool.get(node.model).search(self.cr, self.uid, eval(node.search))
+            ids = self.pool.get(node.model).search(self.cr, self.uid, eval(node.search, self.eval_context))
         if len(node.id):
             try:
                 ids.append(self.get_id(node.id))
@@ -642,7 +658,7 @@ class YamlInterpreter(object):
         res = {}
         for fieldname, expression in fields.items():
             if isinstance(expression, Eval):
-                value = eval(expression.expression, {'ref': self._ref, '_ref': self._ref})
+                value = eval(expression.expression, self.eval_context)
             else:
                 value = expression
             res[fieldname] = value
@@ -681,10 +697,18 @@ class YamlInterpreter(object):
             replace = node.replace or True
             self.pool.get('ir.model.data').ir_set(self.cr, self.uid, 'action', \
                     keyword, values['name'], [values['model']], value, replace=replace, isobject=True, xml_id=xml_id)
+            
+    def process_none(self):
+        """
+        Empty node or commented node should not pass silently.
+        """
+        self._log_assert_failure(logging.WARNING, "You have an empty block in your tests.")
+        
 
     def process(self, yaml_string):
-        """Processes a Yaml string. Custom tags are interpreted by 'process_' instance methods."""
-        
+        """
+        Processes a Yaml string. Custom tags are interpreted by 'process_' instance methods.
+        """
         is_preceded_by_comment = False
         for node in yaml.load(yaml_string):
             is_preceded_by_comment = self._log(node, is_preceded_by_comment)
@@ -694,7 +718,11 @@ class YamlInterpreter(object):
                 self.logger.log(logging.ERROR, e)
             except YamlImportAbortion, e:
                 self.logger.log(logging.ERROR, e)
+                self.cr.rollback()
                 return
+            except Exception, e:
+                self.cr.rollback()
+                raise e
     
     def _process_node(self, node):
         if is_comment(node):
@@ -729,6 +757,8 @@ class YamlInterpreter(object):
                 self.process_function(node)
             else:
                 self.process_function({node: []})
+        elif node is None:
+            self.process_none()
         else:
             raise YamlImportException("Can not process YAML block: %s" % node)
     
