@@ -440,13 +440,13 @@
             </field>
         </record>
 
-        <wizard
-            string="Change Product Qty."
-            model="mrp.production"
-            name="change_production_qty"
-            id="mrp.wizard_change_production_qty"
-            keyword="client_action_multi"
-            multi="True"/>
+<!--        <wizard-->
+<!--            string="Change Product Qty."-->
+<!--            model="mrp.production"-->
+<!--            name="change_production_qty"-->
+<!--            id="mrp.wizard_change_production_qty"-->
+<!--            keyword="client_action_multi"-->
+<!--            multi="True"/>-->
 
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
@@ -462,7 +462,7 @@
                         <field name="product_qty"/>
                         <group colspan="2" col="3">
                         <field name="product_uom"/>
-                        <button type="action" name="%(mrp.wizard_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production"/>
+                        <button type="action" name="%(mrp.action_change_production_qty)d" string="Change Qty" states="ready,confirmed,in_production"/>
                         </group>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
