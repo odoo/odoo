@@ -875,7 +875,8 @@ class orm_template(object):
                     msg = _('Insertion Failed! ' + e[1])
                     return (-1, res, 'Line ' + str(counter) +' : ' + msg, '' )
                 #Raising Uncaught exception
-                raise
+                return (-1, res, 'Line ' + str(counter) +' : ' + str(e), '' )
+            
             for lang in translate:
                 context2 = context.copy()
                 context2['lang'] = lang
