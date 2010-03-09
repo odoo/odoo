@@ -32,6 +32,7 @@
             <rng:attribute name="name" />
             <rng:optional><rng:attribute name="id" /></rng:optional>
             <rng:optional><rng:attribute name="eval" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:choice>
                 <rng:empty />
                 <rng:oneOrMore>
@@ -50,6 +51,7 @@
             <rng:optional><rng:attribute name="search" /> </rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="id" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:optional><rng:attribute name="severity" /></rng:optional>
             <rng:oneOrMore>
                 <rng:element name="test">
@@ -69,6 +71,7 @@
             <rng:optional><rng:attribute name="ref" /></rng:optional>
             <rng:attribute name="action"/>
             <rng:optional><rng:attribute name="uid"/></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:choice>
                 <rng:empty/>
                 <rng:ref name="value"/>
@@ -198,6 +201,7 @@
     <rng:define name="data">
         <rng:element name="data">
             <rng:optional><rng:attribute name="noupdate" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:text/>
