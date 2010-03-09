@@ -40,37 +40,41 @@ class crm_phonecall2phonecall(osv.osv_memory):
 
     def action_apply(self, cr, uid, ids, context=None):
         this = self.browse(cr, uid, ids)[0]
-        record_id = context and context.get('record_id', False) or False
         values={}
-        values['name']=this.name
-        values['user_id']=this.user_id and this.user_id.id
-        values['categ_id']=this.category_id and this.category_id.id
-        values['section_id']=this.section_id and this.section_id.id or False,
-        values['description']=this.notes or ''
-        values['partner_id']=this.partner_id.id
-        values['partner_address_id']=this.address_id.id
-        phonecall_proxy = self.pool.get('crm.phonecall')
-        phonecall_id = phonecall_proxy.create(cr, uid, values, context=context)  
-        value = {            
-            'name': _('Phone Call'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'crm.phonecall',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'res_id': phonecall_id
-            }
+        record_id = context and context.get('record_id', False) or False
+        if record_id:
+            for case in self.pool.get('crm.phonecall').browse(cr, uid, [record_id], context=context):
+                values['name']=this.name
+                values['user_id']=this.user_id and this.user_id.id
+                values['categ_id']=case.categ_id and case.categ_id.id or False
+                values['section_id']=case.section_id and case.section_id.id or False,
+                values['description']=case.description or ''
+                values['partner_id']=case.partner_id.id
+                values['partner_address_id']=case.partner_address_id.id
+                values['partner_mobile']=case.partner_mobile or False
+                values['priority']=case.priority
+                values['partner_phone']=case.partner_phone or False
+                values['date']=this.date
+                phonecall_proxy = self.pool.get('crm.phonecall')
+                phonecall_id = phonecall_proxy.create(cr, uid, values, context=context)
+                  
+            value = {            
+                'name': _('Phone Call'),
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'crm.phonecall',
+                'view_id': False,
+                'type': 'ir.actions.act_window',
+                'res_id': phonecall_id
+                }
         return value
 
     _columns = {
-        'name' : fields.char('Name', size=64, required=True, select=1),
+        'name' : fields.char('Call summary', size=64, required=True, select=1),
         'user_id' : fields.many2one('res.users',"Assign To"),
-        'deadline': fields.datetime('Deadline', readonly=True),
-        'category_id' : fields.many2one('crm.case.categ','Category',domain="[('object_id.model', '=', ''crm.phonecall')]"),
+        'date': fields.datetime('Date'),
         'section_id':fields.many2one('crm.case.section','Sales Team'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),        
-        'notes' : fields.text('Notes'),
+
     }
     def default_get(self, cr, uid, fields, context=None):
         record_id = context and context.get('record_id', False) or False
@@ -78,11 +82,8 @@ class crm_phonecall2phonecall(osv.osv_memory):
         if record_id:
             phonecall_id = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
             res['name']=phonecall_id.name
-            res['user_id']=phonecall_id.user_id and phonecall_id.user_id.id
-            res['section_id']=phonecall_id.section_id and phonecall_id.section_id.id
-            res['notes']=phonecall_id.description and phonecall_id.description or ''
-            res['category_id']=phonecall_id.categ_id and phonecall_id.categ_id.id
-            res['partner_id']=phonecall_id.partner_id and phonecall_id.partner_id.id
-            res['address_id']=phonecall_id.partner_address_id and phonecall_id.partner_address_id.id
+            res['user_id']=phonecall_id.user_id and phonecall_id.user_id.id or False
+            res['date']=phonecall_id.date 
+            res['section_id']=phonecall_id.section_id and phonecall_id.section_id.id or False 
         return res
 crm_phonecall2phonecall()
