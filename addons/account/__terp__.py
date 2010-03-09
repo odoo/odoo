@@ -62,6 +62,7 @@
         'account_installer.xml',
     ],
     'demo_xml': [
+        'demo/price_accuracy00.yml',
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
