@@ -27,8 +27,8 @@ import ir
 import pooler
 from tools.translate import _
 
-class crm_phonecall2partner(osv.osv_memory):
-    _name = 'crm.phonecall2partner'
+class crm_opportunity2partner(osv.osv_memory):
+    _name = 'crm.opportunity2partner'
     _description = 'Phone Call to Partner'
     
     _columns = {
@@ -41,18 +41,18 @@ class crm_phonecall2partner(osv.osv_memory):
     
     def create_partner(self, cr, uid, ids, context):
         view_obj = self.pool.get('ir.ui.view')
-        view_id = view_obj.search(cr,uid,[('model','=','crm.phonecall2partner'),('name','=','crm.phonecall2partner.view')])
+        view_id = view_obj.search(cr,uid,[('model','=','crm.opportunity2partner'),('name','=','crm.opportunity2partner.view')])
         return {
             'view_mode': 'form',
             'view_type': 'form',
             'view_id': view_id or False,
-            'res_model': 'crm.phonecall2partner',
+            'res_model': 'crm.opportunity2partner',
             'type': 'ir.actions.act_window',
             'target': 'new',
         }
         
     def selectPartner(self, cr, uid, ids, context):
-        case_obj = self.pool.get('crm.phonecall')
+        case_obj = self.pool.get('crm.opportunity')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
         rec_ids = context and context.get('record_ids',False)
@@ -62,7 +62,7 @@ class crm_phonecall2partner(osv.osv_memory):
                 raise osv.except_osv(_('Warning !'),
                     _('A partner is already defined on this lead.'))
            
-            partner_ids = partner_obj.search(cr, uid, [('name', '=', case.partner_contact or case.name)])            
+            partner_ids = partner_obj.search(cr, uid, [('name', '=', case.name)])            
             if not partner_ids and case.email_from:
                 address_ids = contact_obj.search(cr, uid, [('email', '=', case.email_from)])
                 if address_ids:
@@ -75,7 +75,7 @@ class crm_phonecall2partner(osv.osv_memory):
         return value 
 
     def _create_partner(self, cr, uid, ids, context):
-        case_obj = self.pool.get('crm.phonecall')
+        case_obj = self.pool.get('crm.opportunity')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
         datas = self.browse(cr, uid, ids)[0]
@@ -86,15 +86,14 @@ class crm_phonecall2partner(osv.osv_memory):
         for case in case_obj.browse(cr, uid, rec_ids):
             if datas.action == 'create':
                 partner_id = partner_obj.create(cr, uid, {
-                    'name': case.partner_contact or case.name,
+                    'name':  case.name,
                     'user_id': case.user_id.id,
                     'comment': case.description,
                 })
                 contact_id = contact_obj.create(cr, uid, {
                     'partner_id': partner_id,
                     'name': case.name,
-                    'phone': case.partner_phone,
-                    'mobile': case.partner_mobile,
+                    'phone': case.phone,
                     'email': case.email_from
                 })
 
@@ -130,5 +129,5 @@ class crm_phonecall2partner(osv.osv_memory):
         }
         return value
     
-crm_phonecall2partner()
+crm_opportunity2partner()
 

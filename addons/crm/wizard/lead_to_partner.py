@@ -59,7 +59,7 @@ class crm_lead2partner(osv.osv_memory):
         value={}
         for case in case_obj.browse(cr, uid, rec_ids):
             if case.partner_id:
-                raise wizard.except_wizard(_('Warning !'),
+                 raise osv.except_osv(_('Warning !'),
                     _('A partner is already defined on this lead.'))
            
             partner_ids = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])            
