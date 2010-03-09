@@ -57,7 +57,6 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 values['date']=this.date
                 phonecall_proxy = self.pool.get('crm.phonecall')
                 phonecall_id = phonecall_proxy.create(cr, uid, values, context=context)
-                  
             value = {            
                 'name': _('Phone Call'),
                 'view_type': 'form',

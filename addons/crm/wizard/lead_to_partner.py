@@ -56,6 +56,7 @@ class crm_lead2partner(osv.osv_memory):
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
         rec_ids = context and context.get('record_ids',False)
+        value={}
         for case in case_obj.browse(cr, uid, rec_ids):
             if case.partner_id:
                 raise wizard.except_wizard(_('Warning !'),
@@ -71,7 +72,7 @@ class crm_lead2partner(osv.osv_memory):
             partner_id = partner_ids and partner_ids[0] or False
         if not partner_id:
             value = self._make_partner(cr, uid, ids, context)           
-        return value or {}
+        return value 
 
     def _create_partner(self, cr, uid, ids, context):
         case_obj = self.pool.get('crm.lead')
