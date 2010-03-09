@@ -26,7 +26,7 @@
     "author" : "Tiny",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Projects & Services",
-    "depends" : ["project","resource"],
+    "depends" : ["project", "resource"],
     "description": """Long Term Project management module that track planning, scheduling, resources allocation.
     """,
     "init_xml" : [],
@@ -35,7 +35,7 @@
         #"security/ir.model.access.csv",
         "project_wizard.xml" ,
         "project_view.xml",
-        "project_phase_workflow.xml"
+        "project_workflow.xml"
     ],
     'installable': True,
     'active': False,
