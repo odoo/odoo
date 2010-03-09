@@ -27,8 +27,20 @@
                     "base", 
                 ], 
      'description': """
- Contains basic functionality for caldav system like:  
-  - Availabilities of synchronisation using WebDAV
+    This module Contains basic functionality for caldav system like:  
+  - Webdav server that provides remote access to calendar
+  - Synchronisation of calendar using WebDAV
+  - Customize calendar event and todo attribute with any of OpenERP model
+  - Provides iCal Import/Export functionality
+
+    To access OpenERP Calendar using caldav to remote site use the URL like:
+        http://HOSTNAME:PORT/calendar/DATABASE_NAME/CALENDAR_NAME.ics
+
+      Where,
+        HOSTNAME: Host on which OpenERP server(With webdav) is running
+        PORT : Port on which OpenERP server is running (By Default : 8069)
+        DATABASE_NAME: Name of database on which OpenERP Calendar is created
+        CALENDAR_NAME: Name of calendar to access
 """, 
     "author" : "Tiny", 
     'category': 'Generic Modules/Others', 

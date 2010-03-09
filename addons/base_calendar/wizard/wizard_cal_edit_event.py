@@ -55,10 +55,10 @@ class event_edit_all(wizard.interface):
                       })
         return event
 
-    def _modify_this(self, cr, uid, datas, context=None):
+    def _modify_all(self, cr, uid, datas, context=None):
         model = datas.get('model')
         model_obj = pooler.get_pool(cr.dbname).get(model)
-        model_obj.modify_all(cr, uid, [datas['id']], datas['form'], context)
+        model_obj.modify_all(cr, uid, datas['id'], datas['form'], context)
         return {}
 
     states = {
@@ -69,7 +69,7 @@ class event_edit_all(wizard.interface):
         }, 
         'edit': {
             'actions': [], 
-            'result': {'type': 'action', 'action': _modify_this, 'state': 'end'}
+            'result': {'type': 'action', 'action': _modify_all, 'state': 'end'}
         }
     }
 
