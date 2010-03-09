@@ -419,8 +419,10 @@ class YamlInterpreter(object):
     
     def process_context(self, node):
         self.context = node.__dict__
-        if 'uid' in node.__dict__:
-            self.uid = self.get_id(node.__dict__['uid'])
+        if node.uid:
+            self.uid = self.get_id(node.uid)
+        if node.noupdate:
+            self.noupdate = node.noupdate
     
     def process_python(self, node):
         def log(msg, *args):
