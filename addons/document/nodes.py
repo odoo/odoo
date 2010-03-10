@@ -631,6 +631,11 @@ class node_file(node_class):
             the browse object. """
         # this is where storage kicks in..
         stor = self.storage_id
+        if not stor:
+            data_obj = self.context._dirobj.pool.get('ir.model.data')
+            data_id = data_obj._get_id(cr, self.context.uid, 'document', 'storage_db')
+            if data_id:
+                stor = data_obj.browse(cr, self.context.uid, data_id, context=self.context.context).res_id 
         assert stor
         stobj = self.context._dirobj.pool.get('document.storage')
         return stobj.set_data(cr,self.context.uid,stor, self, data, self.context.context, fil_obj)
