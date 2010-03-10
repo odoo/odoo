@@ -23,7 +23,6 @@
 import wizard_pos_payment
 import wizard_default_journal
 import wizard_refund_order
-import wizard_add_product
 import wizard_confirm
 import wizard_discount
 import wizard_get_sale
@@ -39,5 +38,6 @@ import wizard_pos_sales_user_current_user
 import wizard_pos_details
 import wizard_open_statement
 import wizard_all_closed_cashbox_of_the_day
+import pos_add_product
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
