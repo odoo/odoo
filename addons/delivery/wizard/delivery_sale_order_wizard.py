@@ -34,7 +34,19 @@ class make_delivery(osv.osv_memory):
     }
 
 
-    def default_get(self, cr, uid, ids, context):
+    def default_get(self, cr, uid, fields, context):
+        """ 
+             @summary: To get default values for the object.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
+        
+        """
         rec_id = context and context.get('record_id',False)
         res = {}
         order_obj = self.pool.get('sale.order')
@@ -48,6 +60,18 @@ class make_delivery(osv.osv_memory):
         return res
     
     def delivery_set(self, cr, uid, ids, context):
+        """ 
+             @summary: Adds delivery costs to Sale Order Line.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """
         rec_ids = context and context.get('active_ids',False)
         order_obj = self.pool.get('sale.order')
         line_obj = self.pool.get('sale.order.line')
