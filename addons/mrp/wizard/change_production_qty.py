@@ -34,7 +34,19 @@ class change_production_qty(osv.osv_memory):
         'product_qty': fields.float('Product Qty', required=True),
     }
 
-    def default_get(self, cr, uid, ids, context):
+    def default_get(self, cr, uid, fields, context):
+        """ 
+             @summary: To get default values for the object.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
+        
+        """
         record_id = context and context.get('record_id',False)
         res = {}
         prod_obj = self.pool.get('mrp.production')
@@ -48,6 +60,18 @@ class change_production_qty(osv.osv_memory):
         return res
     
     def change_prod_qty(self, cr, uid, ids, context):
+        """ 
+             @summary: Changes the Quantity of Product.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """
         record_id = context and context.get('record_id',False)
         prod_obj = self.pool.get('mrp.production')
         wiz_qty = self.browse(cr, uid, ids[0])

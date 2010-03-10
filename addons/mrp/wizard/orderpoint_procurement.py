@@ -40,6 +40,13 @@ class procurement_compute(osv.osv_memory):
     }
     
     def _procure_calculation_orderpoint(self, cr, uid, ids, context):
+        """ 
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+        """
         try:
             proc_obj = self.pool.get('mrp.procurement')
             for proc in self.browse(cr, uid, ids):
@@ -49,6 +56,14 @@ class procurement_compute(osv.osv_memory):
         return {}
     
     def procure_calculation(self, cr, uid, ids, context):
+        """ 
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+        
+        """
         threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=(cr, uid, ids, context))
         threaded_calculation.start()
         return {}
