@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,31 +15,33 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
+from tools.translate import _
+import netsvc
+import pooler
+import time
+import tools
+import wizard
 
-#import wizard_aie_send
-#import wizard_aie_send_result
-#import wizard_lots_buyer_map
-#import wizard_lots_cancel
-#import wizard_lots_invoice
-#import wizard_lots_numerotate
-#import wizard_lots_pay
-#import wizard_pay
-#import wizard_lot_date_move
-#import wizard_transfer_unsold_object
-#import auction_catalog_flagey
-
-import auction_lots_able
-import auction_lots_enable
-import auction_lots_make_invoice_buyer
-import auction_lots_make_invoice
-import auction_taken
-import auction_lots_auction_move
-import auction_pay_buy
-import auction_payer_sel
-import auction_lots_sms_send
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+class auction_lots_enable(osv.osv_memory):
+   
+    _name = "auction.lots.enable"
+    _description = "Lots Enable"
+    _columns= {
+               'confirm_en':fields.integer('Catalog Number')
+               }
+    
+    def _confirm_enable(self, cr, uid, ids, context={}):
+        """
+        This function Update auction lots object and set taken away field False.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of auction lots enable’s IDs.
+        """
+        self.pool.get('auction.lots').write(cr, uid, context['active_id'], {'ach_emp':False})
+        return {}
+    
+auction_lots_enable()

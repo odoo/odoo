@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+  		<record id="view_auction_lots_auction_move" model="ir.ui.view">
+            <field name="name">auction.lots.auction.move.form</field>
+            <field name="model">auction.lots.auction.move</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Change Auction Date">
+                	<group colspan="4" >
+                		 <label string="Warning, this will erase the object adjudication price and its buyer !" colspan="2"/>
+              			 <newline/>
+              			 <field name="auction_id"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                    	<button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button  icon="gtk-redo" string="Move to Auction date" name="_auction_move_set" type="object"/>
+                   </group>
+               </form>
+            </field>
+  		</record>
+  		
+        <record id="action_auction_lots_auction_move" model="ir.actions.act_window">
+            <field name="name">Change Auction Date</field>
+            <field name="res_model">auction.lots.auction.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_auction_lots_auction_move"/> 
+           <field name="target">new</field>
+           <field name="context">{'record_id' : active_id}</field>
+        </record>
+        
+        <record id="auction_lots_auction_move_values" model="ir.values">
+            <field name="model_id" ref="auction.model_auction_lots" />
+            <field name="object" eval="1" />
+            <field name="name">Change Auction Date</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_auction_lots_auction_move'))" />
+            <field name="key">action</field> 
+            <field name="model">auction.lots</field>
+        </record>
+        
+    </data>
+</openerp>
