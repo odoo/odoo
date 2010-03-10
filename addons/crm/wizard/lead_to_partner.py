@@ -19,12 +19,7 @@
 #
 ##############################################################################
 
-from mx.DateTime import now
-
 from osv import osv, fields
-import netsvc
-import ir
-import pooler
 from tools.translate import _
 
 class crm_lead2partner(osv.osv_memory):
