@@ -58,17 +58,19 @@ class crm_phonecall2opportunity(osv.osv_memory):
                         id3 = data_obj.browse(cr, uid, id3, context=context).res_id
                         opportunity_case_obj = self.pool.get('crm.opportunity')
                         phonecall_case_obj = self.pool.get('crm.phonecall')
-                        new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
-                                'name': this.name,
-                                'planned_revenue': this.planned_revenue,
-                                'probability': this.probability,
-                                'partner_id': this.partner_id.id,                 
-                                'section_id': case.section_id.id,
-                                'description': case.description,         
-                                'phonecall_id': case.id,
-                                'priority': case.priority,
-                                'phone': case.partner_phone,
-                            })
+                        for phonecall in phonecall_case_obj.browse(cr, uid, record_id):   
+                            new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
+                                    'name': this.name,
+                                    'case'
+                                    'planned_revenue': this.planned_revenue,
+                                    'probability': this.probability,
+                                    'partner_id': this.partner_id and  this.partner_id.id or False,                 
+                                    'section_id': phonecall.section_id and phonecall.section_id.id or False,
+                                    'description': phonecall.description or False,         
+                                    'phonecall_id': phonecall.id,
+                                    'priority': phonecall.priority,
+                                    'phone': phonecall.partner_phone or False,
+                                })
                         new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
                         vals = {
                                 'partner_id': this.partner_id.id, 

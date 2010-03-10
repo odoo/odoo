@@ -72,8 +72,8 @@ class crm_opportunity2phonecall(osv.osv_memory):
             new_case = phonecall_case_obj.create(cr, uid, {
                     'name' : opportunity.name,
                     'case_id' : opportunity.id ,
-                    'user_id' : this.user_id and this.user_id.id or Flase,
-                    'categ_id' : opportunity.categ_id and opportunity.categ_id.id or Flase,
+                    'user_id' : this.user_id and this.user_id.id or False,
+                    'categ_id' : opportunity.categ_id and opportunity.categ_id.id or False,
                     'description' : opportunity.description or False,
                     'date' : this.date,
                     'section_id' : opportunity.section_id and opportunity.section_id.id or False,
