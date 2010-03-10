@@ -336,6 +336,12 @@ class crm_case(osv.osv):
             if case.email_from:
                 value['email_from'] = case.email_from
         return {'value': value}
+    
+    def history(self, cr, uid, ids, keyword, history=False, email=False, details=None, context={}):
+        cases = self.browse(cr, uid, ids, context=context)
+        return self.__history(cr, uid, cases, keyword=keyword,\
+                               history=history, email=email, details=details,\
+                               context=context)
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
         model_obj = self.pool.get('ir.model')          
