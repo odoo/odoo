@@ -69,19 +69,6 @@
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 
                 <newline/>
-
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}"/>
-                    <filter string="Salesman" icon="terp-account" context="{'group_by':'user_id'}" default="1"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
-                    <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
-                    <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-account" context="{'group_by':'date'}"/>
-                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
-                </group>
-                 <newline/>
                 <group expand="1" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-account"
                     		string="Customer Invoices"
@@ -95,6 +82,18 @@
                     <filter icon="terp-account"
                     		string="Supplier Refunds"
                     		domain="[('type','=','in_refund')]"/>
+                </group>
+                <newline/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}"/>
+                    <filter string="Salesman" icon="terp-account" context="{'group_by':'user_id'}" default="1"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
+                    <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
+                    <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Month" icon="terp-account" context="{'group_by':'date'}"/>
+                    <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>
