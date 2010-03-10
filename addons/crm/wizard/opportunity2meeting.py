@@ -38,7 +38,7 @@ class crm_opportunity2meeting(osv.osv_memory):
     def action_cancel(self, cr, uid, ids, context=None):
         return {'type':'ir.actions.act_window_close'}
 
-    def _makeMeeting(self, cr, uid, ids, context=None):
+    def action_makeMeeting(self, cr, uid, ids, context=None):
         this = self.browse(cr, uid, ids[0], context=context)
         record_id = context and context.get('record_id', False) or False
         if record_id:

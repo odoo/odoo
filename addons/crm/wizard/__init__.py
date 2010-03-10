@@ -34,6 +34,7 @@ import phonecall2meeting
 import phonecall_to_opportunity
 import opportunity2partner
 import opportunity2meeting
+import opportunity2phonecall
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
