@@ -41,6 +41,12 @@ class account_invoice_report(osv.osv):
         'price_total':fields.float('Total Price', readonly=True),
         'price_average':fields.float('Average Price', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
+        'type': fields.selection([
+            ('out_invoice','Customer Invoice'),
+            ('in_invoice','Supplier Invoice'),
+            ('out_refund','Customer Refund'),
+            ('in_refund','Supplier Refund'),
+            ],'Type', readonly=True),
         'state': fields.selection([
             ('draft','Draft'),
             ('proforma','Pro-forma'),
@@ -68,6 +74,7 @@ class account_invoice_report(osv.osv):
                      sum(l.quantity*l.price_unit) as price_total,
                      (sum(l.quantity*l.price_unit)/sum(l.quantity * u.factor))::decimal(16,2) as price_average,
                      count(*) as nbr,
+                     s.type as type,
                      s.state
                      from
                  account_invoice_line l
@@ -75,7 +82,7 @@ class account_invoice_report(osv.osv):
                      account_invoice s on (s.id=l.invoice_id)
                      left join product_uom u on (u.id=l.uos_id)
                  group by
-                     s.date_invoice, s.partner_id, l.product_id,
+                     s.type,s.date_invoice, s.partner_id, l.product_id,
                      l.uos_id, s.user_id, s.state,
                      s.company_id
             )

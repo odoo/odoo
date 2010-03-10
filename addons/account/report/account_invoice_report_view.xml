@@ -11,7 +11,7 @@
                 <field name="user_id"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
-                <!--field name="shop_id" invisible="1"/-->
+                <field name="type" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
@@ -46,11 +46,9 @@
                 <filter icon="terp-account"
                     string="This Year"
                     domain="[('year','=',time.strftime('%%Y'))]"
-                    default="1"
                     help="Invoices of the year"/>
                 <filter icon="terp-account"
                     string="This Month"
-                    default="1"
                     domain="[('month','=',time.strftime('%%m'))]"
                     help="Invoices of this month"/>
                 <separator orientation="vertical"/>
@@ -59,7 +57,6 @@
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-account"
                     string="Invoices"
-                    default="1"
                     domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
                 <separator orientation="vertical"/>
                 <field name="product_id"/>
@@ -72,6 +69,7 @@
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 
                 <newline/>
+
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}"/>
                     <filter string="Salesman" icon="terp-account" context="{'group_by':'user_id'}" default="1"/>
@@ -82,6 +80,21 @@
                     <separator orientation="vertical"/>
                     <filter string="Month" icon="terp-account" context="{'group_by':'date'}"/>
                     <filter string="Year" icon="terp-account" context="{'group_by':'year'}"/>
+                </group>
+                 <newline/>
+                <group expand="1" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-account"
+                    		string="Customer Invoices"
+                    		domain="[('type','=','out_invoice')]"/>
+                    <filter icon="terp-account"
+                    		string="Supplier Invoices"
+                    		domain="[('type','=','in_invoice')]"/>
+                    <filter icon="terp-account"
+                    		string="Customer Refunds"
+                    		domain="[('type','=','out_refund')]"/>
+                    <filter icon="terp-account"
+                    		string="Supplier Refunds"
+                    		domain="[('type','=','in_refund')]"/>
                 </group>
             </search>
         </field>
