@@ -29,8 +29,10 @@ from tools.translate import _
 import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
+from datetime import datetime, timedelta
 
 from crm import crm
+import time
 
 
 class project_issue(osv.osv):
@@ -38,6 +40,39 @@ class project_issue(osv.osv):
     _description = "Project Issue"
     _order = "priority, id desc"
     _inherit = 'crm.case'
+
+    def _compute_openday(self, cr, uid, ids, name, args, context={}):
+        result = {}
+        for r in self.browse(cr, uid, ids , context):
+            result[r.id] = 0
+            model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'project.issue')])
+            log_obj = self.pool.get('crm.case.log')
+            hist_id = log_obj.search(cr, uid, [('model_id', '=', model_id[0]), \
+                                                     ('res_id', '=', r.id), \
+                                                     ('name', '=', 'Open')])
+
+            if hist_id:
+                # Considering last log for opening case
+                log = log_obj.browse(cr, uid, hist_id[-1])
+                date_lead_open = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
+                date_log_open = datetime.strptime(log.date, "%Y-%m-%d %H:%M:%S")
+                ans = date_lead_open - date_log_open
+                duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                result[r.id] = abs(int(duration))
+        return result
+
+    def _compute_closeday(self, cr, uid, ids, name, args, context={}):
+        result = {}
+        for r in self.browse(cr, uid, ids , context):
+            result[r.id] = 0
+            if r.date_closed:
+                date_create = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
+                date_close = datetime.strptime(r.date_closed, "%Y-%m-%d %H:%M:%S")
+                ans = date_close - date_create
+                duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                result[r.id] = abs(int(duration))
+        return result
+
     _columns = {
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
@@ -59,27 +94,31 @@ class project_issue(osv.osv):
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
         'project_id':fields.many2one('project.project', 'Project'),
-        'duration': fields.float('Duration'),        
+        'duration': fields.float('Duration'),
         'probability': fields.float('Probability (%)'),
-        'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]")
+        'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
+        'day_open': fields.function(_compute_openday, string='Days to Open', \
+                                method=True, type="integer", store=True),
+        'day_close': fields.function(_compute_closeday, string='Days to Close', \
+                                method=True, type="integer", store=True),
     }
 
     def _get_project(self, cr, uid, context):
        user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
        if user.context_project_id:
            return user.context_project_id
-       return False  
+       return False
 
     def _convert(self, cr, uid, ids, xml_id, context=None):
         data_obj = self.pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)        
+        id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)
         categ_id = False
         if id2:
-            categ_id = data_obj.browse(cr, uid, id2, context=context).res_id    
+            categ_id = data_obj.browse(cr, uid, id2, context=context).res_id
         if categ_id:
             self.write(cr, uid, ids, {'categ_id': categ_id})
         return True
-   
+
     def convert_to_feature(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'feature_request_categ', context=context)
 
@@ -95,10 +134,10 @@ class project_issue(osv.osv):
         return {'value':{'probability':stage.probability}}
 
     _defaults = {
-           'project_id':_get_project,    
-           'probability':lambda *a:0.0,       
-           'planned_cost':lambda *a:0.0,    
-           'planned_revenue':lambda *a:0.0,    
+           'project_id':_get_project,
+           'probability':lambda *a:0.0,
+           'planned_cost':lambda *a:0.0,
+           'planned_revenue':lambda *a:0.0,
           }
 
 project_issue()
