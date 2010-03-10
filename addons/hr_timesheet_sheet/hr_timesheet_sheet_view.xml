@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
-            <field name="name">hr.timesheet.sheet.tree</field>
-            <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Timesheets">
-                    <field name="user_id"/>
-                    <field name="department_id"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
-                    <field name="name"/>
-                    <field name="total_attendance" groups="hr_attendance.group_hr_attendance"/>
-                    <field name="total_timesheet"/>
-                    <field name="total_difference" groups="hr_attendance.group_hr_attendance"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
         <!-- Editable current timesheet used  in dashboard-->
         <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.tree</field>
@@ -273,13 +254,25 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="date" position="after">
-                    <field name="sheet_id" select="2"/>
+                    <field name="sheet_id" />
                 </field>
             </field>
         </record>
         <!--
             hr.attendance inheritancy
         -->
+
+        <record model="ir.ui.view" id="view_hr_attendance_filter">
+            <field name="name">view_hr_attendance_filter</field>
+            <field name="model">hr.attendance</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="hr_attendance.view_hr_attendance_filter" />
+            <field name="arch" type="xml">
+                <field name="action_desc" position="after">
+                    <field name="sheet_id" select="1" />
+                </field>
+            </field>
+        </record>
 
         <record id="view_attendance_form" model="ir.ui.view">
             <field name="name">hr.attendance.form</field>
@@ -297,6 +290,17 @@
             <field name="model">hr.attendance</field>
             <field name="type">tree</field>
             <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="arch" type="xml">
+                <field name="action_desc" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_attendance_tree_who" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
             <field name="arch" type="xml">
                 <field name="action_desc" position="after">
                     <field name="sheet_id"/>

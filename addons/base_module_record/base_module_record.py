@@ -27,8 +27,8 @@ import pooler
 import string
 import tools
 
-objects_proxy = netsvc.ExportService.getService('object').__class__
-class recording_objects_proxy(objects_proxy):
+#objects_proxy = netsvc.ExportService.getService('object').__class__
+class recording_objects_proxy(osv_pool):
     def execute(self, *args, **argv):
         if len(args) >= 6 and isinstance(args[5], dict):
             _old_args = args[5].copy()
@@ -38,7 +38,7 @@ class recording_objects_proxy(objects_proxy):
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
         if mod and mod.recording:
-            if args[4] in ('copy','write','unlink','create'):
+            if args[3] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink'):
                 if _old_args is not None:
                     args[5].update(_old_args)
                     if args[5]:
@@ -188,6 +188,71 @@ class base_module_record(osv.osv):
 
         return record_list, noupdate
 
+    def _create_yaml_record(self, cr, uid, model, data, record_id):
+        record={'model': model, 'id': str(record_id)}
+        lids  = self.pool.get('ir.model.data').search(cr, uid, [('model','=',model)])
+        res = self.pool.get('ir.model.data').read(cr, uid, lids[:1], ['module'])
+        attrs={}
+        if res:
+            self.depends[res[0]['module']]=True
+        fields = self.pool.get(model).fields_get(cr, uid)
+        defaults={}
+        defaults[model] = self.pool.get(model).default_get(cr, uid, data)
+        for key,val in data.items():  
+            if ((key in defaults[model]) and (val ==  defaults[model][key])) and not(fields[key].get('required',False)):
+                continue
+            if not (val or (fields[key]['type']=='boolean')):
+                continue
+            elif fields[key]['type'] in ('boolean',):
+                if not val:
+                    continue
+                attrs[key] = val
+            elif fields[key]['type'] in ('integer','float'):
+                attrs[key] = val
+            elif fields[key]['type'] in ('many2one',):
+                if type(val) in (type(''),type(u'')):
+                    id = val
+                else:
+                    id,update = self._get_id(cr, uid, fields[key]['relation'], val)
+                attrs[key] = str(id)
+            elif fields[key]['type'] in ('one2many',):
+                items=[[]]
+                for valitem in (val or []):
+                    if valitem[0] in (0,1):
+                        if key in self.pool.get(model)._columns:
+                            fname = self.pool.get(model)._columns[key]._fields_id
+                        else:
+                            fname = self.pool.get(model)._inherit_fields[key][2]._fields_id
+                        valitem[2][fname] = record_id
+                        newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
+                        if not newid:
+                            newid = self._create_id(cr, uid, fields[key]['relation'], valitem[2])
+                        self.ids[(fields[key]['relation'], valitem[1])] = newid
+                        childrecord = self._create_yaml_record(cr, uid, fields[key]['relation'],valitem[2], newid)
+                        items[0].append(childrecord['attrs'])
+                attrs[key] = items
+            elif fields[key]['type'] in ('many2many',):
+                if (key in defaults[model]) and (val[0][2] ==  defaults[model][key]):
+                    continue
+                res = []
+                for valitem in (val or []):
+                    if valitem[0]==6:
+                        for id2 in valitem[2]:
+                            id,update = self._get_id(cr, uid, fields[key]['relation'], id2)
+                            self.ids[(fields[key]['relation'],id2)] = id
+                            res.append(str(id))
+                        m2m=[res]
+                if m2m[0]:
+                    attrs[key] = m2m
+            else:
+                val=val.replace('"','\'')
+                try:
+                    attrs[key]=str(val)
+                except:
+                    attrs[key]=tools.ustr(val)
+        record['attrs'] = attrs
+        return record
+
     def get_copy_data(self, cr, uid, model, id, result):
         res = []
         obj=self.pool.get(model)
@@ -215,7 +280,7 @@ class base_module_record(osv.osv):
                     result[key]=data[key][0]
 
             elif mod_fields[key]['type'] in ('one2many',):
-                continue # due to this start stop recording will not record one2many field
+#                continue # due to this start stop recording will not record one2many field
                 rel = mod_fields[key]['relation']
                 if len(data[key]):
                     res1=[]
@@ -272,24 +337,40 @@ class base_module_record(osv.osv):
                 noupdate = noupdate or update
                 record_list += record
 
-        elif rec[4]=='create':
-            id = self._create_id(cr, uid, rec[3],rec[5])
-            record,noupdate = self._create_record(cr, uid, doc, rec[3], rec[5], id)
+        elif rec[3]=='create':
+            id = self._create_id(cr, uid, rec[2],rec[4])
+            record,noupdate = self._create_record(cr, uid, doc, rec[2], rec[4], id)
             self.ids[(rec[3], result)] = id
             record_list += record
 
-        elif rec[4]=='copy':
-            data=self.get_copy_data(cr,uid,rec[3],rec[5],rec[6])
-            copy_rec=(rec[0],rec[1],rec[2],rec[3],rec[4],rec[5],data,rec[7])
+        elif rec[3]=='copy':
+            data=self.get_copy_data(cr,uid,rec[2],rec[4],rec[5])
+            copy_rec=(rec[0],rec[1],rec[2],rec[3],rec[4],data,rec[5])
             rec=copy_rec
             rec_data=[(self.recording_data[0][0],rec,self.recording_data[0][2],self.recording_data[0][3])]
             self.recording_data=rec_data
-            id = self._create_id(cr, uid, rec[3],rec[6])
-            record,noupdate = self._create_record(cr, uid, doc, rec[3], rec[6], id)
-            self.ids[(rec[3], result)] = id
+            id = self._create_id(cr, uid, rec[2],rec[5])
+            record,noupdate = self._create_record(cr, uid, doc, rec[2], rec[5], id)
+            self.ids[(rec[2], result)] = id
             record_list += record
 
         return record_list,noupdate
+
+    def _generate_object_yaml(self, cr, uid, rec, result=None):
+        if self.mode=="create":
+            id = self._create_id(cr, uid, rec[2],rec[4])
+            self.ids[(rec[2], result)] = id
+            record = self._create_yaml_record(cr, uid, rec[2], rec[4], id)
+            return record
+        data=self.get_copy_data(cr,uid,rec[2],rec[4],rec[5])
+        copy_rec=(rec[0],rec[1],rec[2],rec[3],rec[4],data,rec[5])
+        rec=copy_rec
+        rec_data=[(self.recording_data[0][0],rec,self.recording_data[0][2],self.recording_data[0][3])]
+        self.recording_data=rec_data
+        id = self._create_id(cr, uid, rec[2],rec[5])
+        record = self._create_yaml_record(cr, uid, str(rec[2]), rec[5], id)
+        self.ids[(rec[2], result)] = id
+        return record
 
     def _generate_assert_xml(self, rec, doc):
         pass
@@ -327,6 +408,78 @@ class base_module_record(osv.osv):
                 elif rec[0]=='assert':
                         pass
             return doc.toprettyxml(indent="\t").encode('utf-8')
+
+    def generate_yaml(self, cr, uid):
+        self.ids = {}
+        if len(self.recording_data):
+            strg='''import yaml
+            
+class record(yaml.YAMLObject):
+    yaml_tag = u'!record'
+    def __init__(self, model, id=None, attrs={}):
+        self.model = model
+        self.id = id
+        self.attrs=attrs
+    def __repr__(self):
+        return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
+
+class ref(yaml.YAMLObject):
+    yaml_tag = u'!ref'
+    def __init__(self, expr="False"):
+        self.expr = expr
+    def __repr__(self):
+        return 'ref(%s)' % (str(self.expr,))
+
+class eval(yaml.YAMLObject):
+    yaml_tag = u'!eval'
+    def __init__(self, expr="False"):
+        self.expr = expr
+    def __repr__(self):
+        return 'eval(%s)' % (str(self.expr,))
+\n'''
+    
+            for rec in self.recording_data:
+                if rec[1][3] == 'create':
+                    self.mode="create"
+                elif rec[1][3] == 'copy':
+                    self.mode="copy"
+                else:
+                    continue
+                record= self._generate_object_yaml(cr, uid, rec[1],rec[3])
+                strg+="object=yaml.load(unicode('''\n !record %s \n''','iso-8859-1'))"%record
+                strg+='''
+print object
+attrs=yaml.dump(object.attrs, default_flow_style=False)
+print attrs \n\n'''
+
+            import os
+            py_path = os.path.join(os.getcwd(), 'records.py')
+            txt_path = os.path.join(os.getcwd(), 'records.txt')
+            f = open(py_path, 'w')
+            f.write(strg)
+            f.close()
+            os.system('python %s > %s'%(py_path,txt_path))
+            f = open(txt_path, 'r+')
+            lines=f.readlines()
+            f.seek(0)
+            for line in lines:
+                line=line.replace("''","'")
+                if line.find('!record') == 0:
+                    line = "- \n" + "  " + line
+                elif line.find('- -') != -1:
+                    line=line.replace('- -','  -')
+                    line = "    " + line
+                else:
+                    line = "    " + line
+                f.write(line)
+            f.close()
+            f = open(txt_path, 'r')
+            strg = ''.join(f.readlines()) 
+            f.close()
+            os.system('rm %s'%py_path)
+            os.system('rm %s'%txt_path)
+            return strg
+
 base_module_record()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
