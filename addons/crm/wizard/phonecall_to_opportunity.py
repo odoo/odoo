@@ -43,42 +43,41 @@ class crm_phonecall2opportunity(osv.osv_memory):
         record_id = context and context.get('record_id', False) or False
         if record_id:
             for case in self.pool.get('crm.phonecall').browse(cr, uid, [record_id], context=context):
-                 if case.state in ['done', 'cancel']:       
+                if case.state in ['done', 'cancel']:       
                             raise osv.except_osv(_("Warning"),
                                                  _("Closed/Cancelled Phone Call Could not convert into Opportunity"))
-                 else:
-                     data_obj = self.pool.get('ir.model.data')
-                     result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
-                     res = data_obj.read(cr, uid, result, ['res_id'])
-                     id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_oppor')
-                     id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_oppor')
-                     if id2:
+                else:
+                    data_obj = self.pool.get('ir.model.data')
+                    result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
+                    res = data_obj.read(cr, uid, result, ['res_id'])
+                    id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_oppor')
+                    id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_oppor')
+                    if id2:
                         id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-                     if id3:
+                    if id3:
                         id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-                        opportunity_case_obj = self.pool.get('crm.opportunity')
-                        phonecall_case_obj = self.pool.get('crm.phonecall')
-                        for phonecall in phonecall_case_obj.browse(cr, uid, record_id):   
-                            new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
+                    opportunity_case_obj = self.pool.get('crm.opportunity')
+                    phonecall_case_obj = self.pool.get('crm.phonecall')
+                           
+                    new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
                                     'name': this.name,
-                                    'case'
                                     'planned_revenue': this.planned_revenue,
                                     'probability': this.probability,
                                     'partner_id': this.partner_id and  this.partner_id.id or False,                 
-                                    'section_id': phonecall.section_id and phonecall.section_id.id or False,
-                                    'description': phonecall.description or False,         
-                                    'phonecall_id': phonecall.id,
-                                    'priority': phonecall.priority,
-                                    'phone': phonecall.partner_phone or False,
+                                    'section_id': case.section_id and case.section_id.id or False,
+                                    'description': case.description or False,         
+                                    'phonecall_id': case.id,
+                                    'priority': case.priority,
+                                    'phone': case.partner_phone or False,
                                 })
-                        new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
-                        vals = {
+                    new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
+                    vals = {
                                 'partner_id': this.partner_id.id, 
                                 'opportunity_id' : new_opportunity_id,                
                                 }            
-                        phonecall_case_obj.write(cr, uid, [case.id], vals)
-                        phonecall_case_obj.case_close(cr, uid, [case.id])
-                        phonecall_case_obj.case_open(cr, uid, [new_opportunity_id])
+                    phonecall_case_obj.write(cr, uid, [case.id], vals)
+                    phonecall_case_obj.case_close(cr, uid, [case.id])
+                    phonecall_case_obj.case_open(cr, uid, [new_opportunity_id])
             value = {            
                 'name': _('Opportunity'),
                 'view_type': 'form',
