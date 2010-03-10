@@ -29,7 +29,15 @@ import os
 import binascii
 import time, socket
 
-email_re = re.compile(r"[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*\.[a-z]{2,3}",  re.VERBOSE)
+
+email_re = re.compile(r"""
+    ([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
+    @                                # mandatory @ sign
+    [a-zA-Z0-9][\w\.-]*              # domain must start with a letter ... Ged> why do we include a 0-9 then?
+     \.
+     [a-z]{2,3}                      # TLD
+    )
+    """, re.VERBOSE)
 case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 reference_re = re.compile("<.*-tinycrm-(\\d+)@(.*)>", re.UNICODE)
@@ -124,8 +132,8 @@ class rpc_proxy(object):
         self.passwd = passwd
         self.dbname = dbname
 
-    def __call__(self, *request):
-        return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request)
+    def __call__(self, *request, **kwargs):
+        return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request, **kwargs)
 
 class email_parser(object):
     def __init__(self, uid, password, model, email, email_default, dbname, host, port):        
@@ -169,7 +177,6 @@ class email_parser(object):
             'canal_id': self.canal_id, 
             'user_id': False, 
             'description': message['body'], 
-            'history_line': [(0, 0, {'description': message['body'], 'email': msg['From'] })], 
         }
         try:
             data.update(self.partner_get(self._decode_header(msg['From'])))
@@ -179,7 +186,8 @@ class email_parser(object):
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'case_open', [id])    
+            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'])
+            #self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
                 e = '\n\nThe Specified user does not have an access to the CRM case.'
@@ -268,7 +276,6 @@ class email_parser(object):
 
         data = {
             'description': body['body'], 
-            'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})], 
         }
         act = 'case_pending'
         if 'state' in actions:
@@ -295,6 +302,7 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
+        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -324,9 +332,9 @@ class email_parser(object):
         body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
         data = {
             'description':body, 
-            'history_line': [(0, 0, {'description': body, 'email': msg['From'][:84]})], 
         }
         self.rpc(self.model, 'write', [id], data)
+        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
         return id
 
     def msg_test(self, msg, case_str):
@@ -385,7 +393,6 @@ if __name__ == '__main__':
         "This program parse a mail from standard input and communicate "
         "with the Open ERP server for case management in the CRM module.")
     parser.add_option_group(group)
-
     parser.add_option("-u", "--user", dest="userid", help="ID of the user in Open ERP", default=1, type='int')
     parser.add_option("-p", "--password", dest="password", help="Password of the user in Open ERP", default='admin')
     parser.add_option("-e", "--email", dest="email", help="Email address used in the From field of outgoing messages")

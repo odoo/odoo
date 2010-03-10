@@ -38,6 +38,7 @@
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
+        #'test/test_parent_structure.yml',
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
@@ -60,9 +61,10 @@
         'sequence_view.xml',
         'company_view.xml',
         'account_installer.xml',
+        'report/account_invoice_report_view.xml',
     ],
     'demo_xml': [
-        'demo/price_accuracy00.yml',
+        #'demo/price_accuracy00.yml',
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',

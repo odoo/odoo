@@ -155,7 +155,11 @@ class wiz_si_so(wizard.interface):
     states = {
            'init' : {
                'actions' : [_get_empid],
-               'result' : {'type' : 'form', 'arch' : si_so_form, 'fields' : si_so_fields, 'state' : [('end', 'Cancel'),('si_test', 'Sign in'),('so_test', 'Sign out')] }
+               'result' : {'type' : 'form', 'arch' : si_so_form, 'fields' : si_so_fields, 
+                           'state' : [('end', 'Cancel', 'gtk-cancel'),
+                                      ('si_test', 'Sign in', 'gtk-go-back'),
+                                      ('so_test', 'Sign out', 'gtk-go-forward')]
+                          }
             },
             'si_test' : {
                 'actions' : [],
