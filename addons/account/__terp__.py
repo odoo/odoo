@@ -61,6 +61,7 @@
         'sequence_view.xml',
         'company_view.xml',
         'account_installer.xml',
+        'report/account_invoice_report_view.xml',
     ],
     'demo_xml': [
         #'demo/price_accuracy00.yml',
