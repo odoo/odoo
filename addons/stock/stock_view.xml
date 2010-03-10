@@ -271,6 +271,7 @@
                         <field name="product_id" select="1"/>
                         <field name="date" select="1"/>
                     </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
                     </group>
@@ -699,6 +700,7 @@
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
                     </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
@@ -851,6 +853,7 @@
                         <field name="address_id" select="1"/>
                         <field name="origin" select="1"/>
                     </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="10">
                         <filter string="Partner" icon="terp-stock" domain="[]"  context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
@@ -1033,6 +1036,7 @@
                         <field name="address_id" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
                    </group>
+                   <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
@@ -1204,6 +1208,7 @@
                         <field name="address_id" select="1"/>
                         <field name="company_id" select="1" widget="selection" groups="base.group_multi_company" />
                     </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
@@ -1257,6 +1262,7 @@
                         <field name="origin" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
                     </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
@@ -1376,6 +1382,7 @@
                         <field name="location_dest_id" select="1"/>
                         <field name="product_id" select="1"/>
                     </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Product" icon="terp-stock" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
@@ -1426,7 +1433,7 @@
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancel','done');black:state not in ('cancel','done')" string="Moves">
                     <field name="picking_id" string="Reference"/>
-                    <field name="origin" string="Purchase Order"/>
+                    <field name="origin" string="Latest Requisition"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="product_id"/>
                     <field name="product_qty" />
@@ -1504,10 +1511,11 @@
 	            		<filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
 	            		<filter icon="terp-stock" string="Planned Today" domain="[('date_planned::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Orders planned for today"/>
 	            		<separator orientation="vertical"/>
-                        <field name="origin" string="Purchase Order" select="1"/>
+                        <field name="origin" string="Latest Requisition" select="1"/>
 	            		<field name="partner_id" string="Supplier" select="1"/>
 	                    <field name="product_id"/>
                     </group>
+                    <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
 						<filter string="Product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
 						<filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>

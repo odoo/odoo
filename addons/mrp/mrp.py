@@ -189,6 +189,7 @@ class mrp_bom(osv.osv):
         'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
+        'multi_level_bom': fields.boolean('Multi-level BoM'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -196,7 +197,8 @@ class mrp_bom(osv.osv):
         'product_qty': lambda *a: 1.0,
         'product_rounding': lambda *a: 1.0,
         'type': lambda *a: 'normal',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c),
+        'multi_level_bom': lambda *a: 0, 
     }
     _order = "sequence"
     _sql_constraints = [

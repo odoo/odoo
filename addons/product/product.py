@@ -82,7 +82,7 @@ class product_uom(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
             help="Unit of Measure of a category can be converted between each others in the same category."),
-        'factor': fields.float('Rate', digits=(12, 6), required=True,
+        'factor': fields.float('Ratio', digits=(12, 6), required=True,
             help='The coefficient for the formula:\n' \
                     '1 (base unit) = coeff (this unit). Rate = 1 / Factor.'),
         'factor_inv': fields.function(_factor, digits=(12, 6),
