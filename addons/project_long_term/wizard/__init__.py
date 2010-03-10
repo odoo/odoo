@@ -22,7 +22,7 @@
 import compute_phases_date
 import compute_tasks_date
 import schedule_tasks
-import project_resource
+import working_calendar
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

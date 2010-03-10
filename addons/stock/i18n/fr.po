@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-03-10 04:47+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -45,7 +45,7 @@ msgstr "LIFO"
 #. module: stock
 #: field:stock.location,chained_location_id:0
 msgid "Chained Location If Fixed"
-msgstr "Emplacement Lié si Fixe"
+msgstr "Emplacement lié si \"fixe\""
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -102,7 +102,7 @@ msgstr "STOCK_ZOOM_100"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "UoM"
-msgstr ""
+msgstr "UdM"
 
 #. module: stock
 #: field:product.category,property_stock_journal:0
@@ -125,7 +125,7 @@ msgstr "Liste de colisage"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Amount"
-msgstr ""
+msgstr "Montant"
 
 #. module: stock
 #: view:stock.picking:0
@@ -136,7 +136,7 @@ msgstr "Réception produit"
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 msgid "Incoming Products"
-msgstr "Produits Entrant"
+msgstr "Produits entrants"
 
 #. module: stock
 #: field:stock.picking,name:0
@@ -217,7 +217,7 @@ msgstr "Disponible"
 #. module: stock
 #: view:stock.move:0
 msgid "Make Parcel"
-msgstr "Créer un coli"
+msgstr "Faire le colis"
 
 #. module: stock
 #: wizard_view:stock.partial_picking,end2:0
@@ -508,7 +508,7 @@ msgstr "Emplacement de l'Inventaire"
 #. module: stock
 #: help:product.product,track_production:0
 msgid "Force to use a Production Lot during production order"
-msgstr "Forcer à utiliser les lot de production lors de la fabrication"
+msgstr "Forcer à utiliser un lot de production lors de la fabrication"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -522,8 +522,9 @@ msgid ""
 "instead of the default one, as the source location for stock moves generated "
 "when you do an inventory"
 msgstr ""
-"Cette localisation de stock sera utilisée au lieu de celle par défaut, en "
-"tant que localisation source générées quand vous effectué un inventaire"
+"Cet emplacement de stock sera utilisé au lieu de celui par défaut, comme "
+"emplacement source sur les movements de stock générés quand vous effectuez "
+"un inventaire"
 
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
@@ -676,7 +677,7 @@ msgstr "Date d'envoi prévue"
 #. module: stock
 #: rml:stock.picking.list:0
 msgid "Shipping Address :"
-msgstr "Adresse de livraison :"
+msgstr ""
 
 #. module: stock
 #: view:stock.tracking:0
@@ -830,7 +831,7 @@ msgstr "STOCK_CONNECT"
 #: model:ir.ui.menu,name:stock.menu_action_picking_all
 #: wizard_field:stock.picking.make,init,pickings:0
 msgid "Packing"
-msgstr "Emballage"
+msgstr "Colisage"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -962,7 +963,7 @@ msgstr "À facturer"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Counter-Part Locations Properties"
-msgstr "Proprietés des Emplacements de contrepartie"
+msgstr "Proprietés des emplacements de contrepartie"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1113,8 +1114,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
-"Cette localisation de stock sera utilisée au lieu de celle par défaut, en "
-"tant que localisation source pour les biens recus du partenaire courant"
+"Cet emplacement de stock sera utilisé au lieu de celle par défaut, comme "
+"emplacement source pour les biens reçus du partenaire courant"
 
 #. module: stock
 #: field:stock.warehouse,partner_address_id:0
@@ -1294,7 +1295,7 @@ msgstr "Lignes de mouvements"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 #. module: stock
 #: field:stock.picking,type:0
@@ -1345,7 +1346,7 @@ msgstr "Emplacement de Dest."
 #: model:ir.actions.act_window,name:stock.action_inventory_form_new
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form_new
 msgid "New Periodical Inventory"
-msgstr "Nouvel inventaire préiodique"
+msgstr "Nouvel inventaire périodique"
 
 #. module: stock
 #: field:stock.production.lot,revisions:0
@@ -1780,7 +1781,7 @@ msgstr "Retourner"
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Packing"
-msgstr "Auto-colisage"
+msgstr "Colisage automatique"
 
 #. module: stock
 #: field:stock.location,posz:0
@@ -1791,7 +1792,7 @@ msgstr "Hauteur (Z)"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Variants"
-msgstr ""
+msgstr "Variantes"
 
 #. module: stock
 #: field:stock.location,posx:0
@@ -2144,9 +2145,9 @@ msgid ""
 "instead of the default one, as the source location for stock moves generated "
 "by production orders"
 msgstr ""
-"Pour le produit courant (patron), cet emplacement de stock sera utilisé, à "
+"Pour le produit (modèle) courant, cet emplacement de stock sera utilisé, à "
 "la place de celui par défaut, comme emplacement source pour les mouvements "
-"de stock gérérés par les commandes de production"
+"de stock générés par les ordres de production"
 
 #. module: stock
 #: view:stock.picking.move.wizard:0
@@ -2211,7 +2212,7 @@ msgstr "STOCK_REVERT_TO_SAVED"
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Production Lots"
-msgstr "Suive les lots de productions"
+msgstr "Suivre les lots de production"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2230,9 +2231,9 @@ msgid ""
 "instead of the default one, as the source location for stock moves generated "
 "by procurements"
 msgstr ""
-"Pour le produit courant (patron), cet emplacement de stock sera utilisé, à "
+"Pour le produit (modèle) courant, cet emplacement de stock sera utilisé, à "
 "la place de celui par défaut, comme emplacement source pour les mouvements "
-"de stock gérérés par les approvisionnements"
+"de stock générés par les approvisionnements"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_move_wizard

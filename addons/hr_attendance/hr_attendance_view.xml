@@ -42,11 +42,27 @@
                 </tree>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="view_hr_attendance_filter">
+            <field name="name">view_hr_attendance_filter</field>
+            <field name="model">hr.attendance</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Hr Attendance Search">
+                    <field name="employee_id" select="1" />
+                    <field name="name" select="1"  />
+                    <field name="action" select="1" />
+                    <field name="action_desc" select="1" />
+                </search>
+            </field>
+        </record>
+        
         <record id="open_view_attendance" model="ir.actions.act_window">
             <field name="name">Attendances</field>
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_hr_attendance_filter" />
         </record>
 
         <!--<menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root"

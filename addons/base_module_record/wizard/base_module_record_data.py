@@ -37,14 +37,14 @@ intro_start_form = '''<?xml version="1.0"?>
     <field name="filter_cond"/>
     <separator string="Choose objects to record" colspan="4"/>
     <field name="objects" colspan="4" nolabel="1"/>
-
+    <group><field name="info_yaml"/></group>
 </form>'''
 
 intro_start_fields = {
     'check_date':  {'string':"Record from Date",'type':'datetime','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')},
     'objects':{'string': 'Objects', 'type': 'many2many', 'relation': 'ir.model', 'help': 'List of objects to be recorded'},
     'filter_cond':{'string':'Records only', 'type':'selection','selection':[('created','Created'),('modified','Modified'),('created_modified','Created & Modified')], 'required':True, 'default': lambda *args:'created'},
-
+    'info_yaml': {'string':'YAML','type':'boolean'}
 }
 
 exp_form = '''<?xml version="1.0"?>
@@ -98,14 +98,31 @@ def _record_objects(self, cr, uid, data, context):
                       continue
         search_ids=obj_pool.search(cr,uid,search_condition)
         for s_id in search_ids:
-             args=(cr.dbname,uid,user,obj_name,'copy',s_id,{},context)
+             args=(cr.dbname,uid,obj_name,'copy',s_id,{},context)
              mod.recording_data.append(('query',args, {}, s_id))
     return {}
 
+def _check(self, cr, uid, data, context):
+     pool = pooler.get_pool(cr.dbname)
+     mod = pool.get('ir.module.record')
+     if len(mod.recording_data):
+         if data['form']['info_yaml']:
+             return 'save_yaml'
+         else:
+             return 'info'
+     else:
+         return 'end'
+         
 def _create_xml(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     mod = pool.get('ir.module.record')
     res_xml = mod.generate_xml(cr, uid)
+    return { 'res_text': res_xml }
+
+def _create_yaml(self,cr,uid,data,context):
+    pool = pooler.get_pool(cr.dbname)
+    mod = pool.get('ir.module.record')
+    res_xml = mod.generate_yaml(cr, uid)
     return { 'res_text': res_xml }
 
 class base_module_record_objects(wizard.interface):
@@ -122,11 +139,15 @@ class base_module_record_objects(wizard.interface):
                 ]
             }
         },
-         'record': {
+        'record': {
             'actions': [],
-            'result': {'type':'action','action':_record_objects,'state':'intro'}
+            'result': {'type':'action','action':_record_objects,'state':'check'}
                 },
-         'intro': {
+        'check': {
+            'actions': [],
+            'result': {'type':'choice','next_state':_check}
+        },
+         'info': {
             'actions': [ _create_xml ],
             'result': {
                 'type':'form',
@@ -136,7 +157,18 @@ class base_module_record_objects(wizard.interface):
                     ('end', 'End', 'gtk-cancel'),
                 ]
             },
+        },
+        'save_yaml': {
+            'actions': [ _create_yaml ],
+            'result': {
+                'type':'form',
+                'arch': exp_form,
+                'fields':exp_fields,
+                'state':[
+                    ('end', 'End', 'gtk-cancel'),
+                ]
             },
+        },
          'end': {
             'actions': [],
             'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','OK')]}
