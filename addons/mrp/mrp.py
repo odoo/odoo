@@ -1197,6 +1197,11 @@ class stock_warehouse_orderpoint(osv.osv):
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
     }
+    
+    _sql_constraints = [
+        ( 'qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
+    ]
+    
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         if warehouse_id:
             w=self.pool.get('stock.warehouse').browse(cr,uid,warehouse_id, context)
