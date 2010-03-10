@@ -44,6 +44,7 @@ class report_purchase_order(osv.osv):
             ('cancel','Cancel')
         ], 'Order State', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
         'category_id': fields.many2one('product.category', 'Categories', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
@@ -67,6 +68,7 @@ class report_purchase_order(osv.osv):
                     to_char(s.date_order, 'YYYY') as name,
                     to_char(s.date_order, 'MM') as month,
                     s.state,
+                    s.warehouse_id as warehouse_id,
                     s.partner_id as partner_id,
                     s.create_uid as user_id,
                     s.company_id as company_id,
@@ -84,7 +86,8 @@ class report_purchase_order(osv.osv):
                 where l.product_id is not null
                 group by s.company_id,s.create_uid,s.partner_id,
                          t.categ_id,l.product_id,s.date_order,
-                         to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),s.state
+                         to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),s.state,
+                         s.warehouse_id
             )
         """)
 report_purchase_order()

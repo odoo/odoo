@@ -25,6 +25,7 @@
                     <field name="partner_id"/>
                     <field name="product_id"/>
                     <field name="user_id" invisible="1"/>
+                    <field name="warehouse_id" invisible="1"/>
                     <field name="category_id" invisible="1"/>
                     <field name="date" invisible="1"/>
                     <field name="company_id" invisible="1"/>
@@ -74,6 +75,7 @@
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}"/>
+                    <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
                     <filter string="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}" default="1"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
