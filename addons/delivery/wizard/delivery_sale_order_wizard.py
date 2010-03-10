@@ -75,19 +75,22 @@ class make_delivery(osv.osv_memory):
         rec_ids = context and context.get('active_ids',False)
         order_obj = self.pool.get('sale.order')
         line_obj = self.pool.get('sale.order.line')
+        grid_obj = self.pool.get('delivery.grid')
+        carrier_obj = self.pool.get('delivery.carrier')
+        acc_fp_obj = self.pool.get('account.fiscal.position')
         order_objs = order_obj.browse(cr, uid, rec_ids, context)
         datas = self.browse(cr, uid, ids[0])
     
         for order in order_objs:
-            grid_id = self.pool.get('delivery.carrier').grid_get(cr, uid, [datas.carrier_id.id],order.partner_shipping_id.id)
+            grid_id = carrier_obj.grid_get(cr, uid, [datas.carrier_id.id],order.partner_shipping_id.id)
             if not grid_id:
-                raise osv.except_osv(_('No grid avaible !'), _('No grid matching for this carrier !'))
-            grid_obj = self.pool.get('delivery.grid')
+                raise osv.except_osv(_('No grid available !'), _('No grid matching for this carrier !'))
+            
             grid = grid_obj.browse(cr, uid, [grid_id])[0]
     
             taxes = grid.carrier_id.product_id.taxes_id
             fpos = order.fiscal_position or False
-            taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+            taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
             line_obj.create(cr, uid, {
                 'order_id': order.id,
                 'name': grid.carrier_id.name,
