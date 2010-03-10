@@ -19,14 +19,6 @@
 #
 ##############################################################################
 
-import time
-import re
-import os
-import base64
-import tools
-import mx.DateTime
-import datetime
-
 from datetime import datetime
 from datetime import timedelta
 from osv import fields
@@ -34,7 +26,12 @@ from osv import orm
 from osv import osv
 from osv.orm import except_orm
 from tools.translate import _
-
+import base64
+import mx.DateTime
+import os
+import re
+import time
+import tools
 
 
 MAX_LEVEL = 15
