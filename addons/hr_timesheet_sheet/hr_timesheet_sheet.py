@@ -482,7 +482,7 @@ class hr_attendance(osv.osv):
                 res[line_id] = False
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args):
+    def _sheet_search(self, cursor, user, obj, name, args, context={}):
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -525,9 +525,11 @@ class hr_attendance(osv.osv):
                     LEFT JOIN (hr_attendance a \
                         LEFT JOIN hr_employee e \
                             ON (a.employee_id = e.id)) \
+                                LEFT JOIN resource_resource r \
+                                    ON (e.resource_id = r.id) \
                         ON (s.date_to >= date_trunc(\'day\',a.name) \
                             AND s.date_from <= a.name \
-                            AND s.user_id = e.user_id) ' + \
+                            AND s.user_id = r.user_id) ' + \
                 qu1, qu2)
         res = cursor.fetchall()
         if not len(res):
