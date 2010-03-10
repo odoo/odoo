@@ -29,7 +29,7 @@ import wizard_split_lot_line
 import wizard_ups
 import inventory_merge
 
-import inventory_merge_stock_zero
+import stock_inventory_set_stock_zero
 import stock_fill_inventory
 import stock_inventory_line_split
 import stock_invoice_onshipping

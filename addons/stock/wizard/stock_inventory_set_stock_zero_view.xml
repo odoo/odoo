@@ -26,6 +26,17 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+         	<field name="context">{'record_id' : active_id}</field>
+    	</record>
+
+      	 <record model="ir.values" id="wiki_merge_stock_zero">
+            <field name="model_id" ref="stock.model_stock_inventory" />
+            <field name="object" eval="1" />
+            <field name="name">Set Stock to Zero</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_view_inventory_merge_stock_zero'))" />
+            <field name="key">action</field>
+            <field name="model">stock.inventory</field>
         </record>
         
     </data>

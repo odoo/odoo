@@ -33,9 +33,12 @@
                     <field name="product_uom"/>
                     <field name="prod_lot_id"/>
                     <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
-                    <button name="%(stock.action_view_stock_inventory_line_split)d"
-                     		 				string="Split inventory lines"
-                      		 				type="action" icon="gtk-justify-fill"/>
+                  <!--   <button name="%(split_inventory_lots)d"
+                    	string="Split Inventory Lines" type="action"
+                    	icon="gtk-justify-fill" /> -->
+                    	 <button name="%(stock.action_view_stock_inventory_line_split)d"
+                    		 		string="Split inventory lines"
+                      		 		type="action" icon="gtk-justify-fill"/>
                 </form>
             </field>
         </record>
@@ -110,16 +113,6 @@
                         <button name="action_done" states="draft" string="Confirm Inventory" type="object" icon="gtk-apply"/>
                         <button name="action_cancel" states="cancel" string="Set to Draft" type="object" icon="gtk-cancel"/>
                         <button name="action_cancel_inventary" states="draft" string="Cancel Inventory" type="object" icon="gtk-cancel"/>
-                         <group col="4" colspan="2">
-                        	<button name="%(stock.action_view_inventory_merge_stock_zero)d"
-                     		 string="Set Stock to Zero"
-                      		 type="action"/>
-                      		<button name="%(stock.action_view_stock_fill_inventory)d"
-                     		 string="Fill Inventory"
-                      		 type="action"/>
-						</group>
-
-
                     </group>
 
                 </form>
@@ -429,9 +422,6 @@
                     </group>
                     <separator string="Additional Information" colspan="4"/>
                     <field colspan="4" name="comment" nolabel="1"/>
-                    <button name="%(stock.action_view_stock_location_product)d"
-                     		 string="Products by Location"
-                      		 type="action"/>
                 </form>
             </field>
         </record>
@@ -919,9 +909,6 @@
                     <field name="state"/>
                     <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.    Do you want to continue?"/>
-                    <button name="%(wizard_invoice_onshipping)d" states="done" string="Invoice" type="action"
-                    			icon="gtk-execute" help="Create invoice"
-                    			attrs="{'invisible': [('invoice_state', '!=', '2binvoiced')]}" />
                 </tree>
             </field>
         </record>

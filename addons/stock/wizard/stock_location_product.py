@@ -36,7 +36,7 @@ class stock_location_product(osv.osv_memory):
                 'to_date': fields.datetime('To'), 
                 }
 
-    def _action_open_window(self, cr, uid, ids, context):
+    def action_open_window(self, cr, uid, ids, context):
         mod_obj = self.pool.get('ir.model.data')
         for location_obj in self.read(cr, uid, ids, ['from_date', 'to_date']):
             result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')

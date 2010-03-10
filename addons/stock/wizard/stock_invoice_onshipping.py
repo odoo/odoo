@@ -68,7 +68,7 @@ class stock_invoice_onshipping(osv.osv_memory):
             'type': _get_type,
         }
 
-    def _create_invoice(self, cr, uid, ids, context):
+    def create_invoice(self, cr, uid, ids, context):
         result = []
         for onshipdata_obj in self.read(cr, uid, ids, ['journal_id', 'group', 'type', 'invoice_date']):
             if context.get('new_picking', False):

@@ -49,7 +49,7 @@ inventory lines, make sure the production lot is assigned to this product.'))
             'prefix': _check_production_lot, 
             }
 
-    def _split_lines(self, cr, uid, ids, context):
+    def split_lines(self, cr, uid, ids, context):
         inv_id = context['active_id']
         inv_line_obj = self.pool.get('stock.inventory.line')
         prodlot_obj = self.pool.get('stock.production.lot')

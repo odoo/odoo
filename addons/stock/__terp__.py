@@ -42,7 +42,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [
         "stock_data.xml",
-        "wizard/inventory_merge_stock_zero_view.xml",
+        "wizard/stock_inventory_set_stock_zero_view.xml",
         "wizard/stock_fill_inventory_view.xml",
         "wizard/stock_invoice_onshipping_view.xml",
         "wizard/stock_location_product_view.xml",
