@@ -31,6 +31,18 @@ class make_invoice(osv.osv_memory):
     }
 
     def make_invoices(self, cr, uid, ids, context):
+        """ 
+             @summary: Generates invoice(s) of selected records.
+        
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+             
+             @return: Loads the view of new invoice(s).
+        
+        """
         inv = self.browse(cr, uid, ids[0])
         order_obj = self.pool.get('mrp.repair')       
         newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'], group=inv.group,context=context)    
