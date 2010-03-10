@@ -90,7 +90,7 @@
                         <separator string="Links" colspan="4" col="3"/>
                         <field name="partner_id"/>
                         <button
-                            name="%(wizard_crm_lead_partner_create)d" 
+                            name="%(action_crm_lead2partner)d" 
                             icon="gtk-index" type="action"
                             string="Create"
                             attrs="{'invisible':[('partner_id','!=',False)]}"/>
@@ -190,7 +190,7 @@
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
                 <button name="case_close" string="Close" states="open,draft,pending" type="object"  icon="gtk-close"/>
-                <button string="Convert to Opportunity" name="%(wizard_crm_lead_opportunity_set)d" states="draft,open,pending" icon="gtk-index" type="action"/>
+                <button string="Convert to Opportunity" name="%(action_crm_lead2opportunity)d" states="draft,open,pending" icon="gtk-index" type="action"/>
                 <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"  icon="gtk-go-up"/>
                 <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
             </tree>
