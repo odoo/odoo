@@ -47,25 +47,25 @@
                     string="This Year"
                     domain="[('name','=',time.strftime('%%Y'))]"
                     default="1"
-                    help="Sales orders of the year"/>
+                    help="Purchase orders of the year"/>
                 <filter icon="terp-purchase"
                     string="This Month"
                     default="1"
                     domain="[('month','=',time.strftime('%%m'))]"
-                    help="Sales orders of this month"/>
+                    help="Purchase orders of this month"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-purchase"
                     string="Quotations"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-purchase"
-                    string="Purchases"
+                    string="Purchase"
                     default="1"
                     domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
                 <separator orientation="vertical"/>
                 <field name="product_id"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-purchase"
-                        string="My Sales"
+                        string="My Purchases"
                         domain="[('user_id','=',uid)]"/>
                 </field>
                 <field name="partner_id"/>
