@@ -24,7 +24,7 @@ pool_dic = {}
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False):
     if not status:
         status={}
- 
+
     db = get_db_only(db_name)
 
     if db_name in pool_dic:
@@ -81,4 +81,3 @@ def get_pool(db_name, force_demo=False, status=None, update_module=False):
     return pool
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
