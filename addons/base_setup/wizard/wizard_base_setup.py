@@ -143,8 +143,11 @@ class wizard_base_setup(wizard.interface):
         pool = pooler.get_pool(cr.dbname)
         obj = pool.get(model)
         ids = obj.search(cr, uid, [])
-        res = [(o.id, o.name) for o in obj.browse(cr, uid, ids, context=context)]
-        res.append((-1, ''))
+        if model != 'res.currency':
+            res = [(o.id, o.name) for o in obj.browse(cr, uid, ids, context=context)]
+            res.append((-1, ''))
+        else:
+            res = [(o.id, tools.ustr(o.name) + ' (' + tools.ustr(o.code) + ')') for o in obj.browse(cr, uid, ids, context=context)]    
         res.sort(key=lambda x: x[1])
         return res
 
