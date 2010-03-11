@@ -289,9 +289,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Scrum Sprint">
-                    <field name="name" select="1"/>
-                    <field name="date"/>
-                    <field name="sprint_id"/>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="date"/>
+                        <field name="sprint_id"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">
                             <separator colspan="4" string="What have you accomplished since yesterday ?"/>
