@@ -87,8 +87,8 @@ class project_phase(osv.osv):
         'name': fields.char("Phase Name", size=64, required=True),
         'date_start': fields.datetime('Starting Date'),
         'date_end': fields.datetime('End Date'),
-        'constraint_date_start': fields.datetime('Start Date'),
-        'constraint_date_end': fields.datetime('End Date'),
+        'constraint_date_start': fields.datetime('Start Date', help='force the phase to start after this date'),
+        'constraint_date_end': fields.datetime('End Date', help='force the phase to finish before this date'),
         'project_id': fields.many2one('project.project', 'Project', required=True),
         'next_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'prv_phase_id', 'next_phase_id', 'Next Phases'),
         'previous_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'next_phase_id', 'prv_phase_id', 'Previous Phases'),
@@ -139,7 +139,7 @@ class project_phase(osv.osv):
                 calendar_id = cal_id
        default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-       work_times = self.pool.get('resource.calendar').interval_min_get(cr, uid, calendar_id, date_end, avg_hours or 0.0, resource_id[0] or False)
+       work_times = self.pool.get('resource.calendar').interval_min_get(cr, uid, calendar_id, date_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
        dt_start = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [phase.id], {'date_start': dt_start, 'date_end': date_end.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
@@ -157,7 +157,7 @@ class project_phase(osv.osv):
                 calendar_id = cal_id
        default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-       work_times = self.pool.get('resource.calendar').interval_get(cr, uid, calendar_id, date_start, avg_hours or 0.0, resource_id[0] or False)
+       work_times = self.pool.get('resource.calendar').interval_get(cr, uid, calendar_id, date_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
        dt_end = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [phase.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'), 'date_end': dt_end}, context=context)
 
@@ -185,13 +185,13 @@ class project_phase(osv.osv):
         # for previous and next phases respectively based on valid condition
         if vals.get('date_start', False) and vals['date_start'] < phase.date_start:
                 dt_start = mx.DateTime.strptime(vals['date_start'],'%Y-%m-%d %H:%M:%S')
-                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id or False, dt_start, avg_hours or 0.0, resource_id[0] or False)
+                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id or False, dt_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
                 vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
                 for prv_phase in phase.previous_phase_ids:
                     self._check_date_start(cr, uid, prv_phase, dt_start, context=context)
         if vals.get('date_end', False) and vals['date_end'] > phase.date_end:
                 dt_end = mx.DateTime.strptime(vals['date_end'],'%Y-%m-%d %H:%M:%S')
-                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id or False, dt_end, avg_hours or 0.0, resource_id[0] or False)
+                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id or False, dt_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
                 vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
                 for next_phase in phase.next_phase_ids:
                     self._check_date_end(cr, uid, next_phase, dt_end, context=context)
