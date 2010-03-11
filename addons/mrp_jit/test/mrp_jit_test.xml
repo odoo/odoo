@@ -7,7 +7,10 @@
 			  based on a similar smoke test in 'sale' module.
 			  Output location NOT chained to Customers locations.
 			  
-			   0. Verify that the virtual stock level for the products is sufficient. 
+			   0a. Verify that the virtual stock level for the products is sufficient. 
+			   0b. Force location chaining to manual to be sure that the test is correct. 
+			       [/!\ This is a side-effect of the test on demo databases 
+			            until we can correct the test to check the chaining!!]
 			   1. creates a simple sale order with 2 lines, 
 			     in manual invoice mode
 			   2. confirms the sale order
@@ -27,6 +30,13 @@
         <assert id="product.product_product_ram512" model="product.product" string="The virtual stock of RAM512 is sufficient for the smoke test.">
             <test expr="virtual_available &gt; 3"/>
         </assert>
+        
+        <!-- ==== 0b. SET LOCATION CHAINING TO MANUAL ==== --> 
+        <record id="stock.stock_location_output" model="stock.location">
+            <field name="chained_location_type">customer</field>
+            <field name="chained_auto_packing">manual</field>
+        </record>
+        
     	
     	<!-- ==== 1. CREATE SALE ORDER ==== -->  
         <!-- Resource: sale.order -->
@@ -207,7 +217,7 @@
             <field model="res.partner.address" name="partner_invoice_id" search="[]"/>
             <field model="res.partner.address" name="partner_shipping_id" search="[]"/>
             <field model="res.partner.address" name="partner_order_id" search="[]"/>
-            <field name="name">SO-SMOKE-TEST-JIT</field>
+            <field name="name">SO-SMOKE-TEST-JIT-CHAINED</field>
         </record>
         <!-- Resource: sale.order.line -->
         <record id="smoke_test_sale_order_chained_line_1" model="sale.order.line">
@@ -325,6 +335,8 @@
         </assert>
         
          <!-- ==== 8. RESET LOCATION CHAINING ==== -->
+         <!--  XXX: side-effect! we should not do this, because it is not the default if the sale config wizard was run previously...
+               But until we can do a better test in trunk... -->
         <record id="stock.stock_location_output" model="stock.location">
             <field name="chained_location_type">customer</field>
             <field name="chained_auto_packing">manual</field>
