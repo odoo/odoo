@@ -44,6 +44,7 @@ Main features :
         'pos_report.xml',
         'pos_wizard.xml',
         'wizard/pos_add_product.xml',
+        'wizard/pos_confirm.xml',
         'pos_view.xml',
         'pos_sequence.xml',
         'posrule_data.xml',
