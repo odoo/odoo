@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -47,7 +47,7 @@ class except_osv(Exception):
 
 
 class osv_pool(netsvc.Service):
-   
+
     def check(f):
         @wraps(f)
         def wrapper(self, dbname, *args, **kwargs):
@@ -99,23 +99,28 @@ class osv_pool(netsvc.Service):
                 for o in self._init_parent:
                     self.get(o)._parent_store_compute(cr)
             self._init = mode
-        
+
         self._ready = True
         return different
-   
+
     def execute_cr(self, cr, uid, obj, method, *args, **kw):
         object = pooler.get_pool(cr.dbname).get(obj)
         if not object:
             raise except_osv('Object Error', 'Object %s doesn\'t exist' % str(obj))
         return getattr(object, method)(cr, uid, *args, **kw)
-    
+
     @check
     def execute(self, db, uid, obj, method, *args, **kw):
         db, pool = pooler.get_db_and_pool(db)
         cr = db.cursor()
         try:
             try:
+                if method.startswith('_'):
+                    raise except_osv('Method Error', 'Private method %s can not be calleble.' % (method,))
                 res = pool.execute_cr(cr, uid, obj, method, *args, **kw)
+                if res is None:
+                    self.logger.notifyChannel("web-services", netsvc.LOG_WARNING,
+                    'Method can not return a None value (crash in XML-RPC)')
                 cr.commit()
             except Exception:
                 cr.rollback()
