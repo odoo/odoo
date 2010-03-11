@@ -37,7 +37,8 @@ class stock_inventory_line_split(osv.osv_memory):
             }
 
     def _check_production_lot(self, cr, uid, context):
-        for inv_obj in self.pool.get('stock.inventory.line').browse(cr, uid, \
+        stock_inventory_line_obj = self.pool.get('stock.inventory.line')
+        for inv_obj in stock_inventory_line_obj.browse(cr, uid, \
                             context['active_ids']):
             if not inv_obj.prod_lot_id:
                 raise osv.except_osv(_('Caution!'), _('Before splitting the \
@@ -53,10 +54,11 @@ inventory lines, make sure the production lot is assigned to this product.'))
         inv_id = context['active_id']
         inv_line_obj = self.pool.get('stock.inventory.line')
         prodlot_obj = self.pool.get('stock.production.lot')
-        for linesplit_obj in self.browse(cr, uid, ids):
-            ir_sequence_obj = self.pool.get('ir.sequence')
 
-            sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+        ir_sequence_obj = self.pool.get('ir.sequence')
+        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+
+        for linesplit_obj in self.browse(cr, uid, ids):
             if not sequence:
                 raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
             if linesplit_obj.prefix:

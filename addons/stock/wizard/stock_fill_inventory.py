@@ -40,6 +40,8 @@ class stock_fill_inventory(osv.osv_memory):
     def fill_inventory(self, cr, uid, ids, context):
         inventory_line_obj = self.pool.get('stock.inventory.line')
         location_obj = self.pool.get('stock.location')
+        product_obj = self.pool.get('product.product')
+        stock_location_obj = self.pool.get('stock.location')
         for fill_inventory in self.browse(cr, uid, ids):
             res = {}
             res_location = {}
@@ -59,10 +61,10 @@ class stock_fill_inventory(osv.osv_memory):
                 for location in res_location.keys():
                     res = res_location[location]
                     for product_id in res.keys():
-                        prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
+                        prod = product_obj.browse(cr, uid, [product_id])[0]
                         uom = prod.uom_id.id
                         context.update({'uom': uom})
-                        amount = self.pool.get('stock.location')._product_get(cr, uid,
+                        amount = stock_location_obj._product_get(cr, uid,
                                  location, [product_id], context=context)[product_id]
 
                         if(amount):
