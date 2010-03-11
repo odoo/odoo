@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -32,7 +32,8 @@ if len(sys.argv) == 2 and (sys.argv[1] in ['-h', '--help']):
 
 modules = sys.argv[1:]
 if not len(modules):
-    modules = map(os.path.dirname, glob.glob(os.path.join('*', '__terp__.py')))
+    modules = map(os.path.dirname, glob.glob(os.path.join('*', '__openerp__.py')))
+    modules += map(os.path.dirname, glob.glob(os.path.join('*', '__terp__.py')))
 
 done = []
 
@@ -40,7 +41,11 @@ print 'digraph G {'
 while len(modules):
     f = modules.pop(0)
     done.append(f)
-    if os.path.isfile(os.path.join(f,"__terp__.py")):
+    terp_file = os.path.join(f,"__openerp__.py")
+    if not os.path.isfile(terp_file):
+        terp_file = os.path.join(f,"__terp__.py")
+
+    if os.path.isfile(terp_file):
         info=eval(file(os.path.join(f,"__terp__.py")).read())
         if info.get('installable', True):
             for name in info['depends']:

@@ -50,13 +50,19 @@ def init_db(cr):
     cr.commit()
 
     for i in addons.get_modules():
-        terp_file = addons.get_module_resource(i, '__terp__.py')
+        terp_file = addons.get_module_resource(i, '__openerp__.py')
         mod_path = addons.get_module_path(i)
         if not mod_path:
             continue
         info = False
+#        if os.path.isfile(terp_file) or os.path.isfile(mod_path+'.zip'):
+#            info = eval(file_open(terp_file).read())
+        if not os.path.isfile(terp_file):
+            terp_file = addons.get_module_resource(i, '__terp__.py')
+
         if os.path.isfile(terp_file) or os.path.isfile(mod_path+'.zip'):
-            info = eval(file_open(terp_file).read())
+                info = eval(file_open(terp_file).read())
+
         if info:
             categs = info.get('category', 'Uncategorized').split('/')
             p_id = None

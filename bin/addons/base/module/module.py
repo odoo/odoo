@@ -65,7 +65,10 @@ class module(osv.osv):
 
     def get_module_info(self, name):
         try:
-            f = tools.file_open(os.path.join(name, '__terp__.py'))
+            terp_file = addons.get_module_resource(name, '__openerp__.py')
+            if not os.path.isfile(terp_file):
+                terp_file = addons.get_module_resource(name, '__terp__.py')
+            f = tools.file_open(terp_file)
             data = f.read()
             info = eval(data)
             if 'version' in info:
