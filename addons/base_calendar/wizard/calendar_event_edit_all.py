@@ -53,7 +53,7 @@ class calendar_event_edit_all(osv.osv_memory):
                 event = model_obj.read(cr, uid, context['active_id'], ['name', 'location', 'alarm_id'])
                 return event['date_deadline']
 
-    def _modify_this(self, cr, uid, ids, context=None):
+    def modify_this(self, cr, uid, ids, context=None):
         """
         Modify All event for Crm Meeting.
         @param cr: the current row, from the database cursor,
