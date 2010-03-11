@@ -49,7 +49,9 @@
     "demo_xml" : [], 
     "update_xml" : [
                     'security/ir.model.access.csv', 
-                    'caldav_wizard.xml', 
+                    'wizard/calendar_event_export_view.xml',
+                    'wizard/calendar_event_import_view.xml',
+                    'wizard/calendar_event_subscribe_view.xml',
                     'caldav_view.xml'
                     ], 
     "installable" : True, 
