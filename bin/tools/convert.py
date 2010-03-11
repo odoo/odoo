@@ -369,9 +369,10 @@ form: module.record_id""" % (xml_id,)
         domain = rec.get('domain','').encode('utf-8') or '{}'
         context = rec.get('context','').encode('utf-8') or '{}'
         res_model = rec.get('res_model','').encode('utf-8')
-        src_model = rec.get('src_model','').encode('utf-8')
+        src_model = rec.get('src_model','').encode('utf-8')        
         view_type = rec.get('view_type','').encode('utf-8') or 'form'
         view_mode = rec.get('view_mode','').encode('utf-8') or 'tree,form'
+        
         usage = rec.get('usage','').encode('utf-8')
         limit = rec.get('limit','').encode('utf-8')
         auto_refresh = rec.get('auto_refresh','').encode('utf-8')
@@ -419,7 +420,8 @@ form: module.record_id""" % (xml_id,)
         self.idref[xml_id] = int(id)
 
         if src_model:
-            keyword = 'client_action_relate'
+            #keyword = 'client_action_relate'
+            keyword = rec.get('key2','').encode('utf-8') or 'client_action_relate'
             keys = [('action', keyword), ('res_model', res_model)]
             value = 'ir.actions.act_window,'+str(id)
             replace = rec.get('replace','') or True
