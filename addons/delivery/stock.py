@@ -36,25 +36,24 @@ class stock_picking(osv.osv):
         uom_obj = self.pool.get('product.uom')
         for picking in self.browse(cr, uid, ids, context):
             total_weight = 0.00
-            if picking.move_lines:
+            for move in picking.move_lines:
                 weight = 0.00
-                for move in picking.move_lines:
-                    if move.product_id.weight > 0.00:
-                        converted_qty = move.product_qty
-#                        from_uom = move.product_uom.id
-#                        pass_qty = move.product_qty
-#                        to_uom = move.product_id.uom_id.id
-#                        if picking.type == 'out':
-#                            if move.product_uos:
-#                                converted_qty = move.product_uos_qty
-#                                if move.product_uos.id <> move.product_uom.id:
-#                                    converted_qty = (move.product_uos_qty/move.product_id.uos_coeff)
-#                                pass_qty = converted_qty
-                        if move.product_uom.id <> move.product_id.uom_id.id:
-                            converted_qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
+                if move.product_id.weight > 0.00:
+                    converted_qty = move.product_qty
+#                    from_uom = move.product_uom.id
+#                    pass_qty = move.product_qty
+#                    to_uom = move.product_id.uom_id.id
+#                    if picking.type == 'out':
+#                        if move.product_uos:
+#                            converted_qty = move.product_uos_qty
+#                            if move.product_uos.id <> move.product_uom.id:
+#                                converted_qty = (move.product_uos_qty/move.product_id.uos_coeff)
+#                            pass_qty = converted_qty
+                    if move.product_uom.id <> move.product_id.uom_id.id:
+                        converted_qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
 
-                        weight = (converted_qty * move.product_id.weight)
-                        total_weight += weight
+                    weight = (converted_qty * move.product_id.weight)
+                    total_weight += weight
             res[picking.id] = total_weight
         return res
 
