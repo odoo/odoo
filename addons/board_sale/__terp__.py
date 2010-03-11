@@ -33,7 +33,7 @@ This module implements a dashboard for salesman that includes:
     * Graph of cases of the month
     """,
     'author': 'Tiny',
-    'depends': ['board', 'sale', 'report_crm', 'report_sale'],
+    'depends': ['board', 'sale'],
     'update_xml': ['board_sale_view.xml'],
     'demo_xml': ['board_sale_demo.xml'],
     'installable': True,

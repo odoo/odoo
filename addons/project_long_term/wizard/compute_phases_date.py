@@ -23,9 +23,11 @@ import wizard
 import pooler
 from tools.translate import _
 import datetime
+
 from resource.faces import *
 from new import classobj
-import project_resource as proj
+
+import working_calendar as wkcal
 
 compute_form = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Phases">
@@ -35,42 +37,54 @@ compute_form = """<?xml version="1.0" ?>
 </form>"""
 
 compute_fields = {
-    'project_id': {'string':'Project', 'type':'many2one', 'relation': 'project.project'},
+    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project'},
 
 }
 
-success_msg = """<?xml version="1.0" ?>
-<form string="Compute Scheduling of Phases">
-    <label string="Phase Scheduling completed successfully."/>
-</form>"""
+class wizard_compute_phases(wizard.interface):
+    def _phase_schedule(self, cr, uid, phase, start_date, calendar_id=False, context={}):
 
-def phase_schedule(cr, uid, phase, start_date, calendar_id=False):
+       """Schedule phase with the start date till all the next phases are completed.
+
+       Arguements: start_dsate -- start date for the phase
+                   calendar_id -- working calendar of the project
+
+       """
+
        pool = pooler.get_pool(cr.dbname)
-       phase_pool = pool.get('project.phase')
-       resource_pool = pool.get('resource.resource')
-       uom_pool = pool.get('product.uom')
-       wktime_cal = []
-       resource_cal = False
-       phase_resource = False
+       phase_obj = pool.get('project.phase')
+       resource_obj = pool.get('resource.resource')
+       uom_obj = pool.get('product.uom')
+       phase_resource_obj = False
        if phase:
-            resource_id = resource_pool.search(cr, uid, [('user_id','=',phase.responsible_id.id)])
+            leaves = []
+            time_efficiency = 1.0
+            resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
             if resource_id:
-                resource_obj = resource_pool.browse(cr, uid, resource_id)[0]
-                leaves = proj.leaves_resource(cr, uid, calendar_id or False , resource_id, resource_obj.calendar_id.id)
-                phase_resource = classobj(str(resource_obj.name), (Resource,), {'__doc__' : resource_obj.name, '__name__' : resource_obj.name, 'vacation' : tuple(leaves), 'efficiency' : resource_obj.time_efficiency})
-            default_uom_id = uom_pool.search(cr, uid, [('name','=','Hour')])[0]
-            avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
+                # Create a new resource object with
+                # all the attributes of the Resource Class
+                resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
+                time_efficiency = resource.time_efficiency
+                leaves = wkcal.compute_leaves(cr, uid, calendar_id or False , resource_id, resource.calendar_id.id)
+            phase_resource_obj = classobj(str(phase.responsible_id.name), (Resource,),
+                                               {'__doc__': phase.responsible_id.name,
+                                                '__name__': phase.responsible_id.name,
+                                                'vacation': tuple(leaves),
+                                                'efficiency': time_efficiency
+                                                })
+            default_uom_id = uom_obj.search(cr, uid, [('name','=','Hour')])[0]
+            avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
             duration = str(avg_hours) + 'H'
-
-            #    Creating a new project for each phase
+            # Create a new project for each phase
             def Project():
                 start = start_date
                 minimum_time_unit = 1
-                resource = phase_resource
-                #    If project has working calendar else the default one would be considered
+                resource = phase_resource_obj
+                # If project has working calendar then that
+                # else the default one would be considered
                 if calendar_id:
-                    working_days = proj.compute_working_calendar(cr, uid, calendar_id)
-                    vacation = tuple(proj.leaves_resource(cr, uid, calendar_id))
+                    working_days = wkcal.compute_working_calendar(cr, uid, calendar_id)
+                    vacation = tuple(wkcal.compute_leaves(cr, uid, calendar_id))
 
                 def phase():
                     effort = duration
@@ -78,7 +92,8 @@ def phase_schedule(cr, uid, phase, start_date, calendar_id=False):
             project = BalancedProject(Project)
             s_date = project.phase.start.to_datetime()
             e_date = project.phase.end.to_datetime()
-            #    According to constraints on date start and date end on phase recalculation done
+            # Recalculate date_start and date_end
+            # according to constraints on date start and date end on phase
             if phase.constraint_date_start and str(s_date) < phase.constraint_date_start:
                 start_date = datetime.datetime.strptime(phase.constraint_date_start, '%Y-%m-%d %H:%M:%S')
             else:
@@ -89,54 +104,59 @@ def phase_schedule(cr, uid, phase, start_date, calendar_id=False):
             else:
                 end_date = e_date
                 date_start = end_date
-
-            #    Writing the dates back
-            phase_pool.write(cr, uid, [phase.id], {'date_start' :start_date.strftime('%Y-%m-%d %H:%M:%S'), 'date_end' :end_date.strftime('%Y-%m-%d %H:%M:%S')}, context={'scheduler' :True})
-
-            #    Recursive calling the next phases till all the phases are scheduled
+            # Write the calculated dates back
+            phase_obj.write(cr, uid, [phase.id], {'date_start': start_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                                  'date_end': end_date.strftime('%Y-%m-%d %H:%M:%S')},
+                                                   context={'scheduler': True
+                                                  })
+            # Recursive call till all the next phases scheduled
             for phase in phase.next_phase_ids:
                if phase.state in ['draft','open','pending']:
-                   phase_schedule(cr, uid, phase, date_start, phase.project_id.resource_calendar_id.id or False)
+                   self._phase_schedule(cr, uid, phase, date_start, phase.project_id.resource_calendar_id.id or False)
                else:
                    continue
 
-#
-class wizard_compute_phases(wizard.interface):
-
     def _compute_date(self, cr, uid, data, context):
+        """
+        Compute the phases for scheduling.
+        """
         pool = pooler.get_pool(cr.dbname)
-        project_pool = pool.get('project.project')
-        phase_pool = pool.get('project.phase')
-
-        # if project mentioned
-        if data['form']['project_id']:
-            project_id = project_pool.browse(cr, uid, data['form']['project_id'])
-            phase_ids = phase_pool.search(cr, uid, [('project_id','=',project_id.id), ('state','in',['draft','open','pending']), ('previous_phase_ids','=',False)])
-
-        # else all the draft,open,pending states phases taken
-        else:
-            phase_ids = phase_pool.search(cr, uid,[('state','in',['draft','open','pending']), ('previous_phase_ids','=',False)])
-
+        project_obj = pool.get('project.project')
+        phase_obj = pool.get('project.phase')
+        if data['form']['project_id']:        # If project mentioned find its phases
+            project_id = project_obj.browse(cr, uid, data['form']['project_id'], context=context)
+            phase_ids = phase_obj.search(cr, uid, [('project_id', '=', project_id.id),
+                                                  ('state', 'in', ['draft', 'open', 'pending']),
+                                                  ('previous_phase_ids', '=', False)
+                                                  ])
+        else:                        # Else take all the draft,open,pending states phases
+            phase_ids = phase_obj.search(cr, uid,[('state', 'in', ['draft', 'open', 'pending']),
+                                                  ('previous_phase_ids', '=', False)
+                                                  ])
         phase_ids.sort()
-        phase_objs = phase_pool.browse(cr, uid, phase_ids)
+        phase_objs = phase_obj.browse(cr, uid, phase_ids, context=context)
         for phase in phase_objs:
             start_date = phase.project_id.date_start
             if not phase.project_id.date_start:
                 start_date = datetime.datetime.now().strftime("%Y-%m-%d")
             start_dt = datetime.datetime.strftime((datetime.datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d %H:%M")
             calendar_id = phase.project_id.resource_calendar_id.id
-            phase_schedule(cr, uid, phase, start_dt, calendar_id or False)
+            self._phase_schedule(cr, uid, phase, start_dt, calendar_id or False)
         return {}
 
-    def phases_open_list(self, cr, uid, data, context):
+    def _open_phases_list(self, cr, uid, data, context):
+        """
+        Return the scheduled phases list.
+        """
         mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
         act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
         result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_project_phase')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
-        if data['form']['project_id']:
-            result['domain'] = [('project_id', '=', data['form']['project_id'])]
         result['domain'] = [('state', 'not in', ['cancelled','done'])]
+        if data['form']['project_id']:
+            result['domain'] = [('project_id', '=', data['form']['project_id']),
+                                ('state', 'not in', ['cancelled','done'])]
         return result
 
     states = {
@@ -150,11 +170,8 @@ class wizard_compute_phases(wizard.interface):
         },
         'compute': {
             'actions': [_compute_date],
-            'result': {'type': 'action', 'action':phases_open_list, 'state':'end'},
+            'result': {'type': 'action', 'action':_open_phases_list, 'state':'end'},
         },
     }
-
 wizard_compute_phases('wizard.compute.phases')
-
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -61,6 +61,20 @@ class crm_opportunity(osv.osv):
             return {'value':{}}
         return {'value':{'probability':stage.probability}}
 
+    def stage_next(self, cr, uid, ids, context={}):
+        res = super(crm_opportunity, self).stage_next(cr, uid, ids, context=context)
+        for case in self.browse(cr, uid, ids, context):
+            if case.stage_id and case.stage_id.on_change:                                
+                self.write(cr, uid, [case.id], {'probability': case.stage_id.probability})
+        return res
+
+    def stage_previous(self, cr, uid, ids, context={}):
+        res = super(crm_opportunity, self).stage_previous(cr, uid, ids, context=context)
+        for case in self.browse(cr, uid, ids, context):
+            if case.stage_id and case.stage_id.on_change:                                
+                self.write(cr, uid, [case.id], {'probability': case.stage_id.probability})
+        return res 
+
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.opportunity', context=c),
     }
