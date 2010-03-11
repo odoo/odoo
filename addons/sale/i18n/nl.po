@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-16 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-03-11 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -187,8 +187,7 @@ msgid "Shipping Policy"
 msgstr "Leveringscondities"
 
 #. module: sale
-#: selection:sale.order,state:0
-#: selection:sale.order.line,state:0
+#: selection:sale.order,state:0 selection:sale.order.line,state:0
 msgid "Cancelled"
 msgstr ""
 
@@ -272,7 +271,7 @@ msgstr "Mijn lopende verkooporders"
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Aantal (UoS)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -413,7 +412,7 @@ msgstr "Hoeveelheid (eenheid)"
 #: model:ir.ui.menu,name:sale.menu_action_order_line_tree1
 #: view:sale.order.line:0
 msgid "Sales Order Lines"
-msgstr "Verkooporder regels"
+msgstr "Verkooporderregels"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -491,7 +490,7 @@ msgstr "Fout: UOS moet in een andere categorie staan dan de maateenheid"
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Ref"
-msgstr ""
+msgstr "Klantreferentie"
 
 #. module: sale
 #: view:sale.order:0
@@ -577,7 +576,7 @@ msgstr "Standaard verpakmethode"
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
 msgid "Manages the delivery and invoicing progress"
-msgstr "Beheert de voortgang van levering en facturerings"
+msgstr "Beheert de voortgang van levering en facturering"
 
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
@@ -616,7 +615,8 @@ msgid ""
 "In sale order , procuerement for each line and it comes into the procurement "
 "order"
 msgstr ""
-"In de verkooporder, de aanschaf voor elke regel kom in de inkooporder."
+"In de verkooporder, de aanschaf voor elke verkoopregel komt in de "
+"inkooporder."
 
 #. module: sale
 #: rml:sale.order:0
@@ -1166,7 +1166,7 @@ msgstr "Besteldatum"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "Artikel UoS"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1186,9 +1186,9 @@ msgid ""
 "and simple methods to deliver products to the customer in one or two "
 "operations by the worker."
 msgstr ""
-"Standaard regelt OpenERP complexe gangen van producten en het magazijn en "
-"relatie-locaties. Deze opties stelt de meest simpele methode om producten te "
-"leveren in een of twee handeling bij de werknemer."
+"Standaard regelt OpenERP complexe routering van producten, het magazijn en "
+"relatie-locaties. Deze opties stellen de eenvoudigste manier in om artikelen "
+"te leveren met een of twee handelingen door de werknemer."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -1243,8 +1243,8 @@ msgid ""
 "example)."
 msgstr ""
 "Dit is de lijst van facturen welke zijn gegenereerd op basis van de "
-"verkooporder. De zelfde verkoop kan meerdere keren zijn gefactureerd "
-"(bijvoorbeeld op regelniveau."
+"verkooporder. Dezelfde verkoop kan meerdere keren zijn gefactureerd "
+"(bijvoorbeeld op regelniveau)."
 
 #. module: sale
 #: view:sale.order:0
