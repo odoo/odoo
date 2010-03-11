@@ -47,7 +47,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 values['name']=this.name
                 values['user_id']=this.user_id and this.user_id.id
                 values['categ_id']=case.categ_id and case.categ_id.id or False
-                values['section_id']=case.section_id and case.section_id.id or False,
+                values['section_id']=case.section_id and case.section_id.id
                 values['description']=case.description or ''
                 values['partner_id']=case.partner_id.id
                 values['partner_address_id']=case.partner_address_id.id
