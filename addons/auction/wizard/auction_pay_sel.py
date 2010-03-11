@@ -37,7 +37,7 @@ class auction_pay_sel(osv.osv_memory):
                'period_id':fields.many2one('account.period', 'Period', required=True), 
                }
     
-    def _pay_and_reconcile(self, cr, uid, ids, context):
+    def pay_and_reconcile(self, cr, uid, ids, context):
         lot = self.pool.get('auction.lots').browse(cr, uid, context['active_id'], context)
         for datas in self.read(cr, uid, ids):
             account_id = datas.get('writeoff_acc_id', False)

@@ -43,7 +43,7 @@ class auction_lots_auction_move(osv.osv_memory):
                 raise osv.except_osv('Error !', 'You can not move a lot that has no auction date')
         return {}
     
-    def _auction_move_set(self, cr, uid, ids, context={}):
+    def auction_move_set(self, cr, uid, ids, context={}):
         """
         This Function update auction date on auction lots to given auction date.
         erase the auction lots's object adjudication price and its buyer and change state to draft.

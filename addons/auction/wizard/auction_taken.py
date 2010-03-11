@@ -40,7 +40,7 @@ class auction_taken(osv.osv_memory):
     def _to_xml(s):
         return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
-    def _process(self, cr, uid, ids, context):
+    def process(self, cr, uid, ids, context):
           """
           Update Auction lots state to taken_away.
           @param cr: the current row, from the database cursor.

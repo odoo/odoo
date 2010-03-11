@@ -57,7 +57,7 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
             buyer=lot and lot.ach_uid.id or False
         return buyer  
 
-    def _makeInvoices(self, cr, uid, ids, context):
+    def makeInvoices(self, cr, uid, ids, context):
         """
         Create an invoice for selected lots (IDS) to BUYER_ID .
         @param cr: the current row, from the database cursor.

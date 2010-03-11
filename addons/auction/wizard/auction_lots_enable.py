@@ -34,7 +34,7 @@ class auction_lots_enable(osv.osv_memory):
                'confirm_en':fields.integer('Catalog Number')
                }
     
-    def _confirm_enable(self, cr, uid, ids, context={}):
+    def confirm_enable(self, cr, uid, ids, context={}):
         """
         This function Update auction lots object and set taken away field False.
         @param cr: the current row, from the database cursor,

@@ -31,7 +31,7 @@ class auction_lots_able(osv.osv_memory):
     _name = "auction.lots.able"
     _description = "Lots able"
     
-    def _confirm_able(self, cr, uid, ids, context={}):
+    def confirm_able(self, cr, uid, ids, context={}):
         """
             This function Update auction lots object and set taken away field true.
             @param cr: the current row, from the database cursor,

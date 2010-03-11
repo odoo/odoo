@@ -47,7 +47,7 @@ class auction_lots_make_invoice(osv.osv_memory):
         object = len(context['active_ids'])
         return object
     
-    def _makeInvoices(self, cr, uid, ids, context):
+    def makeInvoices(self, cr, uid, ids, context):
         """
         seller invoice :Create an invoice.
         @param cr: the current row, from the database cursor.

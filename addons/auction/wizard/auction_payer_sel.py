@@ -32,7 +32,7 @@ class auction_payer(osv.osv_memory):
     _name = "auction.payer"
     _description = "Auction payer"
     
-    def _payer(self, cr, uid, ids, context):
+    def payer(self, cr, uid, ids, context):
         self.pool.get('auction.lots').write(cr, uid, context['active_ids'], {'is_ok':True, 'state':'paid'})
         return {}
     
@@ -45,7 +45,7 @@ class auction_payer_sel(osv.osv_memory):
     _name = "auction.payer.sel"
     _description = "Auction payment for seller"
     
-    def _payer_sel(self, cr, uid, ids, context):
+    def payer_sel(self, cr, uid, ids, context):
         """
         This function Update auction lots object and seller paid  true.
         @param cr: the current row, from the database cursor,

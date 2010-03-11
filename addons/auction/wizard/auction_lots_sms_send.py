@@ -38,7 +38,7 @@ class auction_lots_sms_send(osv.osv_memory):
                'text':fields.text('SMS Message', required=True)
                }
     
-    def _sms_send(self, cr, uid, ids, context):
+    def sms_send(self, cr, uid, ids, context):
         
         for datas in self.read(cr, uid, ids):
             lots = self.pool.get('auction.lots').read(cr, uid, context['active_ids'], ['obj_num','obj_price','ach_uid'])

@@ -48,7 +48,7 @@ class auction_pay_buy(osv.osv_memory):
             buyer=lot and lot.ach_uid.id or False
         return buyer
     
-    def _pay_and_reconcile(self, cr, uid, ids, context):
+    def pay_and_reconcile(self, cr, uid, ids, context):
         for datas in self.read(cr, uid, ids):
             if not abs(datas['total'] - (datas['amount'] + datas['amount2'] + datas['amount3'])) <0.01:
                 rest = datas['total']-(datas['amount'] + datas['amount2'] + datas['amount3'])
