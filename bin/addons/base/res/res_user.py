@@ -137,6 +137,15 @@ class users(osv.osv):
                 result = override_password(result)
             else:
                 result = map(override_password, result)
+        
+        if isinstance(result, list):
+            for rec in result:
+                if not rec.get('action_id',True):
+                    rec['action_id'] = (self._get_menu(cr, uid),'Menu')
+        else:
+            if not result.get('action_id',True):
+                result['action_id'] = (self._get_menu(cr, uid),'Menu')
+        
         return result
 
     _sql_constraints = [
