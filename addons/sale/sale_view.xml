@@ -150,8 +150,8 @@
                                             </group>
                                         </page>
                                         <page groups="base.group_extended" string="Extra Info">
-                                            <field groups="product.group_uos" name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
-                                            <field groups="product.group_uos" name="product_uos"/>
+                                            <field name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
+                                            <field name="product_uos"/>
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id" select="2"/>
                                             <separator colspan="4" string="Properties"/>
