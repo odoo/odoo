@@ -45,7 +45,7 @@
         <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="3"/>
 
         <menuitem
-            name="Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="3"/>
+            name="Periodic Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="3"/>
         <menuitem
             parent="menu_eval_hr_config"
             id="menu_open_view_hr_evaluation_plan_tree"
@@ -109,7 +109,7 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Evaluation">
-                        <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id)"/>
+                        <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
                         <field name="evaluation_date"/>
                     </page>
                 </notebook>
@@ -201,6 +201,12 @@
                         <field name="employee_id" widget="selection" select="1"/>
                         <field name="plan_id" widget="selection" select="1"/>
                         <field name="rating"/>
+                        <newline/>
+
+                        <group col='8' colspan='15' expand='1' string='Group by...'>
+                        <filter string='Plan' icon="terp-stock" domain="[]" context="{'group_by' : 'plan_id'}" />
+                        <filter string='state' icon="terp-stock" domain="[]" context="{'group_by' : 'state'}" />
+                        </group>
                    </group>
                </search>
             </field>
@@ -226,9 +232,9 @@
                     <group col="4" colspan="4">
                         <field name="survey_id"  colspan="3"/>
                         <group  colspan="1">
-                            <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
+                            <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
                                 icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                            <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
+                            <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done"
                                 icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
                         </group>
                     </group>
@@ -242,10 +248,10 @@
                     <separator string="State" colspan="4"/>
                     <group colspan="4" col="6">
                          <field name="state"/>
-                         <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
-                        <button name="survey_req_waiting_answer" string="Watting Answer" states="draft" type="object" icon="gtk-new"/>
+                         <!--<button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
+                        <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object" icon="gtk-new"/>
                         <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
-                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
+                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>-->
                     </group>
                 </form>
             </field>
@@ -263,7 +269,7 @@
                     <field name="response" readonly="1" invisible="True"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
                         icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="waiting_answer,done,cancel"
+                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done"
                         icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','=',False)]}" />
                     <field name="state"/>
                 </tree>
