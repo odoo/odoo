@@ -431,7 +431,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/group/field[@name='progress']" position="after">
-                    <field name="sprint_id" />
+                    <field domain="[('project_id','=',project_id),]" name="product_backlog_id" select="1"/>
                 </xpath>
             </field>
         </record>
@@ -443,7 +443,7 @@
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page[@string='Extra Info']/group/field[@name='sequence']" position="after">
-                    <field domain="[('project_id','=',project_id)]" name="product_backlog_id" select="1"/>
+                    <field name="sprint_id" />
                 </xpath>
             </field>
         </record>

@@ -22,6 +22,7 @@
 import wizard
 import osv
 import pooler
+from tools.translate import _
 
 info = '''<?xml version="1.0"?>
 <form string="Module Recording">
@@ -33,11 +34,13 @@ info_start_form = '''<?xml version="1.0"?>
     <separator string="Recording Information" colspan="4"/>
     <field name="info_status"/>
     <field name="info_text" colspan="4" nolabel="1"/>
+    <field name="info_yaml" colspan="4"/>
 </form>'''
 
 info_start_fields = {
     'info_text': {'string':'Information', 'type':'text', 'readonly':True},
-    'info_status': {'string':'Status','type':'selection', 'selection':[('no','Not Recording'),('record','Recording')], 'readonly':True}
+    'info_status': {'string':'Status','type':'selection', 'selection':[('no','Not Recording'),('record','Recording')], 'readonly':True},
+    'info_yaml': {'string':'YAML','type':'boolean'}
 }
 
 
@@ -74,13 +77,24 @@ intro_save_form = '''<?xml version="1.0"?>
     <newline/>
     <field name="module_file" filename="module_filename"/>
     <separator string="Information" colspan="4"/>
-    <label string="If you think your module could interrest others people, we'd like you to publish it on OpenERP.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." colspan="4" align="0.0"/>
+     <label string="If you think your module could interest others people, we'd like you to publish it on OpenERP.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." colspan="4" align="0.0"/>
     <label string="Thanks in advance for your contribution." colspan="4" align="0.0"/>
 </form>'''
 
 intro_save_fields = {
     'module_file': {'string': 'Module .zip File', 'type':'binary', 'readonly':True},
     'module_filename': {'string': 'Filename', 'type':'char', 'size': 64, 'readonly':True},
+}
+
+yaml_save_form = '''<?xml version="1.0"?>
+<form string="Module Recording">
+    <separator string="YAML file successfully created !" colspan="4"/>
+    <newline/>
+    <field name="yaml_file" filename="module_filename"/>
+</form>'''
+
+yaml_save_fields = {
+    'yaml_file': {'string': 'Module .zip File', 'type':'binary'},
 }
 
 import zipfile
@@ -96,8 +110,8 @@ def _info_default(self, cr, uid, data, context):
     for line in mod.recording_data:
         result.setdefault(line[0],{})
         result[line[0]].setdefault(line[1][3], {})
-        result[line[0]][line[1][3]].setdefault(line[1][4], 0)
-        result[line[0]][line[1][3]][line[1][4]]+=1
+        result[line[0]][line[1][3]].setdefault(line[1][3], 0)
+        result[line[0]][line[1][3]][line[1][3]]+=1
     for key1,val1 in result.items():
         info+=key1+"\n"
         for key2,val2 in val1.items():
@@ -106,11 +120,22 @@ def _info_default(self, cr, uid, data, context):
                 info+="\t\t"+key3+" : "+str(val3)+"\n"
     return {'info_text': info, 'info_status':mod.recording and 'record' or 'no'}
 
+def _create_yaml(self, cr, uid, data, context):
+    pool = pooler.get_pool(cr.dbname)
+    mod = pool.get('ir.module.record')
+    try:
+        res_xml = mod.generate_yaml(cr, uid)
+    except Exception, e:
+        raise wizard.except_wizard(_('Error'),_(str(e)))
+    return {
+    'yaml_file': base64.encodestring(res_xml),
+}
+    
 def _create_module(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     mod = pool.get('ir.module.record')
     res_xml = mod.generate_xml(cr, uid)
-
+    
     s=StringIO.StringIO()
     zip = zipfile.ZipFile(s, 'w')
     dname = data['form']['directory_name']
@@ -155,7 +180,10 @@ def _check(self, cr, uid, data, context):
      pool = pooler.get_pool(cr.dbname)
      mod = pool.get('ir.module.record')
      if len(mod.recording_data):
-         return 'info'
+         if data['form']['info_yaml']:
+             return 'save_yaml'
+         else:
+             return 'info'
      else:
          return 'end'
 
@@ -200,6 +228,18 @@ class base_module_publish(wizard.interface):
                 ]
             }
         },
+        'save_yaml': {
+            'actions': [_create_yaml],
+            'result': {
+                'type':'form',
+                'arch':yaml_save_form,
+                'fields': yaml_save_fields,
+                'state':[
+                    ('end', 'Close', 'gtk-ok'),
+                ]
+            }
+         },
+         
         'end': {
             'actions': [],
             'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','OK')]}
