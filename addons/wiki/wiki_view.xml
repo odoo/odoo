@@ -6,7 +6,7 @@
         <menuitem name="Wiki" id="menu_wiki_configuration" parent="base.menu_document_configuration" sequence="2"/>
         <menuitem id="base.menu_document2" name="Collaborative Content" parent="base.menu_document"/>
 
-        <wizard
+         <wizard
             id="wizard_group_menu_create"
             string="Create Menu"
             menu="True"
@@ -49,11 +49,16 @@
                         <field name="template" colspan="4" nolabel="1" widget="text_wiki"/>
                     </page>
                     </notebook>
-                    <button
-                        name="%(wizard_group_menu_create)d"
-                        string="Create a Menu"
-                        type="action"
-                        target="new" icon="gtk-justify-fill"/>
+                     <button
+			 	    	name="%(wiki.action_wiki_create_menu)d"
+			 	    	string="Create Menu"
+			 	     	type="action"
+			 	     	icon="gtk-justify-fill" />
+			 	     <button
+			 	    	name="%(wiki.action_view_wiki_wiki_page_open)d"
+			 	    	string="Open Wiki Page"
+			 	     	type="action"/>
+
                 </form>
             </field>
         </record>
@@ -137,6 +142,14 @@
                         <field name="tags" select="1" groups="base.group_extended"/>
                         <field name="summary" colspan="4" select="2" groups="base.group_extended"/>
                     </group>
+                     <button
+			 	    	name="%(wiki.action_view_wiki_wiki_help_open)d"
+			 	    	string="Basic Wiki Editing"
+			 	     	type="action"/>
+			 	     <button
+			 	    	name="%(wiki.action_view_wiki_make_index)d"
+			 	    	string="Create Index"
+			 	     	type="action"/>
                 </form>
             </field>
         </record>
@@ -234,7 +247,7 @@
             res_model="wiki.wiki"
             src_model="wiki.groups"/>
 
-        <wizard
+         <wizard
             id="wizard_open_page"
             string="Open Wiki Pages"
             name="wiki.wiki.page.open"

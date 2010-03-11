@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+     	<record id="view_stock_inventory_line_split" model="ir.ui.view">
+            <field name="name">Split inventory lines</field>
+            <field name="model">stock.inventory.line.split</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+               <form string="Split Inventory Line">
+ 					<field name="prefix"/>
+ 					<newline/>
+ 					<field name="quantity"/>
+ 					<separator string="" colspan="4" />
+        			<label string=""/>
+					<button special="cancel" string="Cancel" icon="gtk-cancel" />
+           	    	<button name="split_lines" string="Ok" type="object" icon="gtk-ok"/>
+    			</form>
+            </field>
+		</record>
+
+		<record id="action_view_stock_inventory_line_split" model="ir.actions.act_window">
+            <field name="name">Split inventory lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.inventory.line.split</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+    	</record>
+
+    </data>
+</openerp>

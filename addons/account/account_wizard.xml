@@ -11,18 +11,18 @@
 
         <wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice" groups="base.group_user"/>
 
-        <!-- close year, period, journal -->
+       	<!--  close year, period, journal -->
         <wizard id="wizard_fiscalyear_close" menu="False" model="account.fiscalyear" name="account.fiscalyear.close" string="Generate Fiscal Year Opening Entries"/>
 
-        <menuitem
+       <!--  <menuitem
             action="wizard_fiscalyear_close"
             id="menu_wizard_fy_close"
             parent="menu_account_end_year_treatments"
-            type="wizard"
-            sequence="1"/>
+            
+            sequence="1"/>-->
 
         <wizard id="wizard_fiscalyear_close_state" menu="False" model="account.fiscalyear" name="account.fiscalyear.close.state" string="Close a Fiscal Year"/>
-        <menuitem action="wizard_fiscalyear_close_state" id="menu_wizard_fy_close_state" parent="menu_account_end_year_treatments" type="wizard"/>
+        
 
         <wizard
             id="wizard_open_closed_fiscalyear"
@@ -36,13 +36,12 @@
             sequence="2"
             parent="account.menu_account_end_year_treatments" type="wizard"/>
 
-        <wizard id="wizard_period_close" model="account.period" name="account.period.close" string="Close a Period"/>
-
+        <!--  <wizard id="wizard_period_close" model="account.period" name="account.period.close" string="Close a Period"/>--> 
         <!-- automatic reconcile -->
         <wizard id="wizard_automatic_reconcile" menu="False" model="account.account" name="account.automatic.reconcile" string="Automatic reconciliation"/>
         <menuitem id="next_id_20" name="Reconciliation" parent="menu_finance_periodical_processing"/><menuitem action="wizard_automatic_reconcile" id="menu_automatic_reconcile" parent="next_id_20" type="wizard"/>
 
-        <!-- Import entry in statement -->
+  		<!-- Import entry in statement -->
 
         <wizard
             string="Import invoices"
@@ -57,8 +56,7 @@
         <wizard id="wizard_reconcile_unreconcile" model="account.move.reconcile" name="account.reconcile.unreconcile" string="Unreconcile Entries"/>
 
 
-        <wizard id="wizard_reconcile_select" menu="False" model="account.move.line" name="account.move.line.reconcile.select" string="Reconcile entries"/>
-        <menuitem action="wizard_reconcile_select" id="menu_reconcile_select" parent="account.next_id_20" type="wizard"/>
+        
 
         <!-- unreconcile -->
         <wizard id="wizard_unreconcile" model="account.move.line" name="account.move.line.unreconcile" string="Unreconcile Entries"/>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_stock_invoice_onshipping" model="ir.ui.view">
+            <field name="name">Stock Invoice Onshipping</field>
+            <field name="model">stock.invoice.onshipping</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+              <form string="Create invoices">
+					<separator colspan="4" string="Create invoices" />
+    				<field name="journal_id"/>
+    				<newline/>
+					<field name="group"/>
+					<newline/>
+					<field name="type"/>
+					<newline/>
+					<field name="invoice_date" />
+			   	    <separator string="" colspan="4" />
+					<button special="cancel" string="Cancel" />
+			       	<button name="create_invoice" string="Create Invoices" type="object"/>
+             </form>
+            </field>
+		</record>
+
+		<record id="action_stock_invoice_onshipping" model="ir.actions.act_window">
+            <field name="name">Create Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.invoice.onshipping</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        	<field name="context">{'record_id' : active_id}</field>
+    	</record>
+
+     	 <record model="ir.values" id="stock_stock_invoice_onshipping">
+            <field name="model_id" ref="stock.model_stock_picking" />
+            <field name="object" eval="1" />
+            <field name="name">Create Invoice</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_stock_invoice_onshipping'))" />
+            <field name="key">action</field>
+            <field name="model">stock.picking</field>
+        </record>
+    </data>
+</openerp>

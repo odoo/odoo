@@ -33,7 +33,12 @@
                     <field name="product_uom"/>
                     <field name="prod_lot_id"/>
                     <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
-                    <button name="%(split_inventory_lots)d" string="Split Inventory Lines" type="action" icon="gtk-justify-fill"/>
+                  <!--   <button name="%(split_inventory_lots)d"
+                    	string="Split Inventory Lines" type="action"
+                    	icon="gtk-justify-fill" /> -->
+                    	 <button name="%(stock.action_view_stock_inventory_line_split)d"
+                    		 		string="Split inventory lines"
+                      		 		type="action" icon="gtk-justify-fill"/>
                 </form>
             </field>
         </record>
@@ -50,6 +55,7 @@
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </search>
+
             </field>
         </record>
 
@@ -64,6 +70,7 @@
                     <field name="state"/>
                 </tree>
             </field>
+
         </record>
         <record id="view_inventory_form" model="ir.ui.view">
             <field name="name">stock.inventory.form</field>
@@ -89,11 +96,12 @@
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
                                 <field  domain="[('usage','=','internal')]" name="location_id" select="1"/>
+                                <field name="prod_lot_id"/>
                                 <group colspan="2" col="3">
-	                                <field name="prod_lot_id"/>
-	                                <button name="%(split_inventory_lots)d" string="Split in Production Lots" type="action" icon="gtk-justify-fill"/>
-                                </group>
-
+                                   <button name="%(stock.action_view_stock_inventory_line_split)d"
+                     		 				string="Split inventory lines"
+                      		 				type="action" icon="gtk-justify-fill"/>
+								</group>
                             </form>
                         </field>
                     </page><page string="Posted Inventory">
@@ -106,6 +114,7 @@
                         <button name="action_cancel" states="cancel" string="Set to Draft" type="object" icon="gtk-cancel"/>
                         <button name="action_cancel_inventary" states="draft" string="Cancel Inventory" type="object" icon="gtk-cancel"/>
                     </group>
+
                 </form>
             </field>
         </record>
@@ -138,6 +147,9 @@
                     <field name="name" select="1"/>
                     <field name="serial" select="1"/>
                     <field name="date" select="1"/>
+                    <field name="active" select="1"/>
+                    <group colspan="4">
+                    </group>
                     <field name="active" />
                 </form>
             </field>
@@ -524,7 +536,7 @@
             <field name="auto_refresh" eval="1"/>
             <field name="target">new</field>
             <field name="context">{'action_id': active_id}</field>
-        </record>    	
+        </record>
 
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
@@ -585,7 +597,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
-                                    <field name="state"/> 
+                                    <field name="state"/>
                                     <button
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
@@ -662,6 +674,9 @@
                             <field name="move_type"/>
                         </page>
                     </notebook>
+                    <button
+                    	name="%(stock.action_stock_invoice_onshipping)d"
+                    	string="Create Invoices" type="action" />
                 </form>
             </field>
         </record>
@@ -726,6 +741,7 @@
                         <field name="min_date" select="1"/>
                         <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+
                     </group>
                         <notebook colspan="4">
                         <page string="General Information">
@@ -740,7 +756,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
-                                    <field name="state"/> 
+                                    <field name="state"/>
                                     <button
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
@@ -812,6 +828,9 @@
                             <field name="move_type"/>
                         </page>
                     </notebook>
+					<button
+                     	name="%(stock.action_stock_invoice_onshipping)d"
+                     	string="Create Invoice" type="action" />
                 </form>
             </field>
         </record>
@@ -890,9 +909,6 @@
                     <field name="state"/>
                     <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.    Do you want to continue?"/>
-                    <button name="%(wizard_invoice_onshipping)d" states="done" string="Invoice" type="action" 
-                    			icon="gtk-execute" help="Create invoice" 
-                    			attrs="{'invisible': [('invoice_state', '!=', '2binvoiced')]}" />
                 </tree>
             </field>
         </record>
@@ -925,7 +941,7 @@
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_planned"/>
-                                    <field name="state"/> 
+                                    <field name="state"/>
                                     <button
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
@@ -1110,8 +1126,8 @@
                            				name="%(stock.move_scrap)d"
                            				string="D" type="action"
                            				icon="gtk-convert"
-                           				states="draft,waiting,confirmed,assigned" />
-                                </tree>                                
+                           				states="done,cancel" />
+                                </tree>
                                 <form string="Stock Moves">
                                 	<notebook colspan="4">
                                 		<page string="General Information">
@@ -1278,7 +1294,7 @@
                     <field name="location_id"/>
                     <field name="location_dest_id"/>
                     <field name="date_planned"/>
-                    <field name="state"/>                    
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -1317,7 +1333,7 @@
                                 <field name="date"/>
                                 <field name="date_planned"/>
                                 <field name="priority"/>
-                            </group> 
+                            </group>
 
                             <group colspan="2" col="4">
                                 <separator string="Tracability" colspan="4" />
@@ -1327,7 +1343,7 @@
                                     domain="[('product_id','=?',product_id)]"
                                     on_change="onchange_lot_id(prodlot_id,product_qty, location_id, product_id)"/>
                                 <button name="%(track_line)d" string="Split in production lots" type="action" icon="gtk-justify-fill" colspan="2" />
-                            </group> 
+                            </group>
                         </page>
                         <page string="Return Picking History">
                             <field name="move_stock_return_history" nolabel="1"/>

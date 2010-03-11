@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,16 +25,16 @@ from tools.translate import _
 class stock_move_track(osv.osv_memory):
     _name = "stock.move.track"
     _description = "Track moves"
-    
+
     _columns = {
-        'tracking_prefix': fields.char('Tracking prefix', size=64), 
+        'tracking_prefix': fields.char('Tracking prefix', size=64),
         'quantity': fields.float("Quantity per lot")
               }
 
     _defaults = {
         'quantity': lambda *x: 1
                  }
-    
+
     def track_lines(self, cr, uid, ids, context={}):
         datas = self.read(cr, uid, ids)[0]
         move_obj = self.pool.get('stock.move')
@@ -46,43 +46,43 @@ stock_move_track()
 class stock_move_consume(osv.osv_memory):
     _name = "stock.move.consume"
     _description = "Consume Products"
-    
+
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product', required=True, select=True), 
-        'product_qty': fields.float('Quantity', required=True), 
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True), 
+        'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
+        'product_qty': fields.float('Quantity', required=True),
+        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True)
               }
 
     def _get_product_id(self, cr, uid, context):
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         return move.product_id.id
-    
+
     def _get_product_qty(self, cr, uid, context):
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         return move.product_qty
-    
+
     def _get_product_uom(self, cr, uid, context):
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         return move.product_uom.id
-    
+
     def _get_location_id(self, cr, uid, context):
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         return move.location_id.id
-    
+
     _defaults = {
-                 'product_id': _get_product_id, 
-                 'product_qty': _get_product_qty, 
-                 'product_uom': _get_product_uom, 
+                 'product_id': _get_product_id,
+                 'product_qty': _get_product_qty,
+                 'product_uom': _get_product_uom,
                  'location_id': _get_location_id
                  }
 
     def do_move_consume(self, cr, uid, ids, context={}):
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
-        for data in self.read(cr, uid, ids):            
-            move_obj.consume_moves(cr, uid, move_ids, 
-                             data['product_qty'], data['location_id'], 
+        for data in self.read(cr, uid, ids):
+            move_obj.consume_moves(cr, uid, move_ids,
+                             data['product_qty'], data['location_id'],
                              context=context)
         return {}
 
@@ -93,17 +93,17 @@ class stock_move_scrap(osv.osv_memory):
     _name = "stock.move.scrap"
     _description = "Scrap Products"
     _inherit = "stock.move.consume"
-    
+
     _defaults = {
                  'location_id': lambda *x: False
-    }
+                 }
 
     def move_scrap(self, cr, uid, ids, context={}):
-        move_obj = self.pool.get('stock.move')        
+        move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):
-            move_obj.scrap_moves(cr, uid, move_ids, 
-                             data['product_qty'], data['location_id'], 
+            move_obj.scrap_moves(cr, uid, move_ids,
+                             data['product_qty'], data['location_id'],
                              context=context)
         return {}
 
@@ -113,18 +113,18 @@ stock_move_scrap()
 class split_in_production_lot(osv.osv_memory):
     _name = "stock.move.split"
     _description = "Split in Production lots"
-    
+
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number')
      }
-    
+
     def _get_product_id(self, cr, uid, context):
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         return move.product_id.id
-    
+
     _defaults = {
-                 'product_id': _get_product_id, 
+                 'product_id': _get_product_id,
                  }
 
     def split_lot(self, cr, uid, ids, context=None):
@@ -135,16 +135,15 @@ class split_in_production_lot(osv.osv_memory):
         prodlot_obj = self.pool.get('stock.production.lot')
         ir_sequence_obj = self.pool.get('ir.sequence')
         move_obj = self.pool.get('stock.move')
-        new_move = []        
+        new_move = []
         for data in self.browse(cr, uid, ids):
             for move in move_obj.browse(cr, uid, move_ids):
                 move_qty = move.product_qty
                 quantity_rest = move.product_qty
                 uos_qty_rest = move.product_uos_qty
-                new_move = []                            
+                new_move = []
                 for line in data.line_ids:
                     quantity = line.quantity
-                    
 
                     if quantity <= 0 or move_qty == 0:
                         continue
@@ -155,52 +154,53 @@ class split_in_production_lot(osv.osv_memory):
                         quantity_rest = quantity
                         break
                     default_val = {
-                        'product_qty': quantity, 
-                        'product_uos_qty': uos_qty, 
+                        'product_qty': quantity,
+                        'product_uos_qty': uos_qty,
                         'state': move.state
                     }
+
                     current_move = move_obj.copy(cr, uid, move.id, default_val)
                     new_move.append(current_move)
                     prodlot_id = False
                     if line.use_exist and line.name:
                         prodlot_id = prodlot_obj.search(cr, uid, [('prefix','=',line.name),('product_id','=',data.product_id.id)])
                         if prodlot_id:
-                            prodlot_id = prodlot_id[0]                    
+                            prodlot_id = prodlot_id[0]
                     if not prodlot_id:
                         sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-                        prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix' : line.name}, 
-                                                 {'product_id': move.product_id.id})                    
+                        prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix' : line.name},
+                                                 {'product_id': move.product_id.id})
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id})
-                    prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
+                    prodlot = prodlot_obj.browse(cr, uid, prodlot_id)
                     ref = '%d' % (current_move)
                     if prodlot.ref:
-                        ref = '%s, %s' % (prodlot.ref, ref) 
+                        ref = '%s, %s' % (prodlot.ref, ref)
                     prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
-                    
+
                     update_val = {}
-                    if quantity_rest > 0:                        
+                    if quantity_rest > 0:
                         update_val['product_qty'] = quantity_rest
-                        update_val['product_uos_qty'] = uos_qty_rest                          
+                        update_val['product_uos_qty'] = uos_qty_rest
                         move_obj.write(cr, uid, [move.id], update_val)
 
-                    
+
         return new_move
 split_in_production_lot()
 
 class stock_move_split_lines(osv.osv_memory):
     _name = "stock.move.split.lines"
     _description = "Split lines"
-    
+
     _columns = {
-        'name': fields.char('Tracking serial', size=64), 
-        'quantity': fields.integer('Quantity'), 
+        'name': fields.char('Tracking serial', size=64),
+        'quantity': fields.integer('Quantity'),
         'use_exist' : fields.boolean('Use Exist'),
         'lot_id': fields.many2one('stock.move.split', 'Lot'),
         'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
     }
     _defaults = {
         'quantity': lambda *x: 1,
-        'action' : lambda *x: 'split', 
+        'action' : lambda *x: 'split',
     }
 
 stock_move_split_lines()

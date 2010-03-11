@@ -31,6 +31,7 @@
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [
+        'wizard/audittrail_view_log_view.xml',
         'audittrail_view.xml',
         'security/ir.model.access.csv',
         'security/audittrail_security.xml'

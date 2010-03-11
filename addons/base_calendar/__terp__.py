@@ -40,7 +40,8 @@
                    ], 
     "demo_xml" : [], 
     "update_xml" : [
-                    'security/ir.model.access.csv', 
+                    'security/ir.model.access.csv',
+                    'wizard/calendar_event_edit_all_view.xml',
                     'base_calendar_view.xml'
                     ], 
     "installable" : True, 

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <!--  Make Invoice -->
+        
+		<record id="view_make_invoice" model="ir.ui.view">
+            <field name="name">Make Invoice</field>
+            <field name="model">mrp.repair.make_invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Create invoices">
+				    <separator colspan="4" string="Do you really want to create the invoices ?" />  
+				    <field name="group"/>
+				    <newline/>  
+				    <group col="2" colspan="4">
+                		<button icon='gtk-cancel' special="cancel"
+                			string="Cancel" />
+                		<button name="make_invoices" string="Create Invoice"
+                			colspan="1" type="object" icon="gtk-ok" />
+                	</group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_make_invoice" model="ir.actions.act_window">
+            <field name="name">Make Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.repair.make_invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'active_ids' : active_ids}</field>
+        </record>
+ 
+ 		<record model="ir.values" id="action_make_invoice_related">
+            <field name="object" eval="1" />
+            <field name="name">Make Invoice</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_make_invoice'))" />
+            <field name="key2">client_action_multi</field>
+            <field name="key">action</field>
+            <field name="model">mrp.repair</field>
+        </record>
+        
+	</data>
+</openerp>	
