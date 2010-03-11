@@ -1309,7 +1309,40 @@ class stock_move(osv.osv):
             wf_service.trg_trigger(uid, 'stock.move', id, cr)
         #self.action_cancel(cr,uid, ids2, context)
         return True
-
+    
+    def action_scrap(self, cr, uid, ids,context=None):
+        '''
+        add the damaged product into consumed product by updating its state to cancel and 
+        add same product since we need that product to manufacture the parent product.
+        
+        :param cr: the database cursor
+        :param uid: the user id
+        :param ids: ids of product object to be scraped
+        :param context: context arguments
+        :return: 
+        '''   
+#        to find the parent id(manufacturing order) of the active record(product to consume), 
+#        obtain active record id 1st and then get the production_id from mrp_production_move_ids
+        active_id=ids[0]
+        cr.execute("select production_id from mrp_production_move_ids where move_id=%s" % (active_id))
+#        it gives parent id in [list(tuple)] format so extract it [(21,)]
+        parent_id = int(cr.fetchall()[0][0])
+#        get the parent object
+        parent_obj = self.pool.get('mrp.production').browse(cr, uid, parent_id)
+#       create copy for multiple id processing for product to consume which r scraped 
+        for id in ids:
+            #create copy of the product records which are scraped due to damage since they are 
+            #still required to manufacture the product.
+            new_rec_id = self.copy(cr, uid, id, {'state': 'waiting'}, context)
+            
+            #assign all new products which will replace damaged product to the current manufacturing order
+            cr.execute('insert into mrp_production_move_ids (production_id,move_id) values (%s,%s)', (parent_id,  new_rec_id))
+        
+#        all damaged product needs to be in consumed product window having cancel state.
+        vals={'state': 'cancel', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}
+        self.pool.get('stock.move').write(cr, uid, ids,vals )      
+                  
+        return True
     def action_done(self, cr, uid, ids, context=None):
         track_flag = False
         picking_ids = []
@@ -1563,11 +1596,27 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [move.id], update_val)
 
         if consume:
-            self.action_done(cr, uid, res)        
+            self.action_done(cr, uid, res)  
+        else:
+            self.action_scrap(cr, uid, res,context) 
         return res
 
     def scrap_moves(self, cr, uid, ids, quantity, location_dest_id, context=None):
-        return self.consume_moves(cr, uid, ids, quantity, location_id=False, location_dest_id=location_dest_id, consume=False, context=context)
+        if quantity <= 0:
+            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+        res = []       
+        for move in self.browse(cr, uid, ids, context=context):            
+            move_qty = move.product_qty
+            uos_qty = quantity / move_qty * move.product_uos_qty
+            default_val = {
+                    'product_qty': quantity, 
+                    'product_uos_qty': uos_qty, 
+                    'state': move.state, 
+                    'location_dest_id': location_dest_id
+                }
+            new_move = self.copy(cr, uid, move.id, default_val)
+            res += [new_move]
+        return res
 
 stock_move()
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <!--  Make Procurement -->
+        
+		<record id="view_make_procurment_wizard" model="ir.ui.view">
+            <field name="name">Requisition Request</field>
+            <field name="model">make.procurement</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Requisition Request">
+				    <label string="This wizard will plan the procurement for this product. This procurement may generate task, production orders or purchase orders." colspan="4"/>
+				    <field name="product_id" on_change="onchange_product_id(product_id)"/>
+				    <field name="qty"/>
+				    <field name="uom_id"/>
+				    <field name="date_planned"/>
+				    <field name="warehouse_id" colspan="4"/>
+				    <newline/>
+				    <group col="2" colspan="4">
+                		<button icon='gtk-cancel' special="cancel"
+                			string="Cancel" />
+                		<button name="make_procurement" string="Ask New Products"
+                			colspan="1" type="object" icon="gtk-ok" />
+                	</group>
+                </form>
+            </field>
+        </record>
+
+        <act_window name="Requisition Request"		    
+		    res_model="make.procurement"
+		    src_model="product.product"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="act_make_procurement"/>       
+		
+	</data>
+</openerp>	

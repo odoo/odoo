@@ -43,6 +43,7 @@ Main features :
         'security/ir.model.access.csv',
         'pos_report.xml',
         'pos_wizard.xml',
+        'wizard/pos_add_product.xml',
         'pos_view.xml',
         'pos_sequence.xml',
         'posrule_data.xml',
