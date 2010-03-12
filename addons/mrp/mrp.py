@@ -998,7 +998,8 @@ class mrp_procurement(osv.osv):
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move':1})
                 else:
                     if procurement.procure_method=='make_to_stock' and procurement.move_id.state in ('draft','waiting',):
-                        id = self.pool.get('stock.move').write(cr, uid, [procurement.move_id.id], {'state':'confirmed'})
+                        # properly call action_confirm() on stock.move to abide by the location chaining etc.
+                        id = self.pool.get('stock.move').action_confirm(cr, uid, [procurement.move_id.id], context=context)
         self.write(cr, uid, ids, {'state':'confirmed','message':''})
         return True
 
@@ -1175,10 +1176,10 @@ class stock_warehouse_orderpoint(osv.osv):
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active'),
         'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','=','product')]),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True ),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
+        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','=','product')], ondelete="cascade"),
+        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_min_qty': fields.float('Min Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
@@ -1187,7 +1188,7 @@ class stock_warehouse_orderpoint(osv.osv):
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order')
+        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order', ondelete="set null")
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -1196,6 +1197,11 @@ class stock_warehouse_orderpoint(osv.osv):
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
     }
+    
+    _sql_constraints = [
+        ( 'qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
+    ]
+    
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         if warehouse_id:
             w=self.pool.get('stock.warehouse').browse(cr,uid,warehouse_id, context)

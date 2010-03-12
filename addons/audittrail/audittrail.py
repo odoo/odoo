@@ -309,30 +309,32 @@ class audittrail_objects_proxy(objects_proxy):
                 return res
             cr.close()
 
-    def execute(self, db, uid, passwd, object, method, *args):
+    def execute(self, db, uid, passwd, model, method, *args):
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
         try:
-            cr.autocommit(True)
-            obj = pool.get(object)
-            logged_uids = []
-            object_name = obj._name
+            proxy = pool.get(model)
+            if proxy is None:
+                raise Exception('Unknow model: %r' % (model,))
 
-            fct_src = super(audittrail_objects_proxy, self).execute
+            logged_uids = []
+            model_name = proxy._name
+
+            fct_src = super(audittrail_models_proxy, self).execute
 
             field = method
             rule = False
-            obj_ids= pool.get('ir.model').search(cr, uid,[('model','=',object_name)])
+            obj_ids= pool.get('ir.model').search(cr, uid,[('model','=',model_name)])
             for obj_name in pool.obj_list():
                 if obj_name == 'audittrail.rule':
                     rule = True
             if not rule:
-                return fct_src(db, uid, passwd, object, method, *args)
+                return fct_src(db, uid, passwd, model, method, *args)
             if not len(obj_ids):
-                return fct_src(db, uid, passwd, object, method, *args)
-            rule_ids=pool.get('audittrail.rule').search(cr, uid, [('object_id','=',obj_ids[0]),('state','=','subscribed')])
+                return fct_src(db, uid, passwd, model, method, *args)
+            rule_ids=pool.get('audittrail.rule').search(cr, uid, [('model_id','=',obj_ids[0]),('state','=','subscribed')])
             if not len(rule_ids):
-                return fct_src(db, uid, passwd, object, method, *args)
+                return fct_src(db, uid, passwd, model, method, *args)
 
             for thisrule in pool.get('audittrail.rule').browse(cr, uid, rule_ids):
                 for user in thisrule.user_id:
@@ -340,8 +342,8 @@ class audittrail_objects_proxy(objects_proxy):
                 if not len(logged_uids) or uid in logged_uids:
                     if field in ('read','write','create','unlink'):
                         if getattr(thisrule, 'log_'+field):
-                            return self.log_fct(db, uid, passwd, object, method, fct_src, *args)
-                return fct_src(db, uid, passwd, object, method, *args)
+                            return self.log_fct(db, uid, passwd, model, method, fct_src, *args)
+                return fct_src(db, uid, passwd, model, method, *args)
         finally:
             cr.close()
             pass

@@ -51,8 +51,13 @@ fields = {
 def _check_picking(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     move_obj = pool.get('stock.move').browse(cr, uid, data['id'])
-    if not move_obj.picking_id:
-        raise wizard.except_wizard(_('Caution!'), _('Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation.'))
+    #Checking for the existence of production id too
+    cr.execute('select production_id from mrp_production_move_ids where move_id=%s' % (data['id'],))
+    res = cr.fetchone()
+    res = res and res[0] or False
+    
+    if (not move_obj.picking_id) and (not res):
+        raise wizard.except_wizard(_('Caution!'), _('Before splitting the production lots,make sure this move or its Production Order has a Picking attached !\nYou must save the move before performing this operation.'))
     return data['form']
 
 def _track_lines(self, cr, uid, data, context):
@@ -68,13 +73,14 @@ def _track_lines(self, cr, uid, data, context):
     if not sequence:
         raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
     if data['form']['tracking_prefix']:
-        sequence=data['form']['tracking_prefix']+'/'+(sequence or '')
+        sequence = data['form']['tracking_prefix']+'/'+(sequence or '')
 
     move = move_obj.browse(cr, uid, [move_id])[0]
+    
     quantity=data['form']['quantity']
     if quantity <= 0 or move.product_qty == 0:
         return {}
-    uos_qty=quantity/move.product_qty*move.product_uos_qty
+    uos_qty = quantity/move.product_qty*move.product_uos_qty
 
     quantity_rest = move.product_qty%quantity
     uos_qty_rest = quantity_rest/move.product_qty*move.product_uos_qty
@@ -87,7 +93,7 @@ def _track_lines(self, cr, uid, data, context):
     production_ids = []
     for idx in range(int(move.product_qty//quantity)):
         if idx:
-            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
+            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state})
             new_move.append(current_move)
         else:
             current_move = move.id
@@ -95,13 +101,12 @@ def _track_lines(self, cr, uid, data, context):
         update_val['prodlot_id'] = new_prodlot
         move_obj.write(cr, uid, [current_move], update_val)
         production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-    
+
     if quantity_rest > 0:
         idx = int(move.product_qty//quantity)
-        update_val['product_qty']=quantity_rest
-        update_val['product_uos_qty']=uos_qty_rest
+        update_val['product_qty'] = quantity_rest
+        update_val['product_uos_qty'] = uos_qty_rest
         if idx:
-            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
             current_move = move_obj.copy(cr, uid, move.id, {'state': move.state})
             new_move.append(current_move)
         else:

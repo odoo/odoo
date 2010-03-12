@@ -1200,7 +1200,7 @@ class account_tax_code(osv.osv):
     _description = 'Tax Code'
     _rec_name = 'code'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True),
+        'name': fields.char('Tax Case Name', size=64, required=True, translate=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'sum': fields.function(_sum_year, method=True, string="Year Sum"),
@@ -1213,7 +1213,14 @@ class account_tax_code(osv.osv):
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
-
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = self.search(cr, user, ['|',('name',operator,name),('code',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
+        
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
@@ -1242,7 +1249,14 @@ class account_tax_code(osv.osv):
                 return False
             level -= 1
         return True
-
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.update({'line_ids': []})
+        return super(account_tax_code, self).copy(cr, uid, id, default, context)
+    
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]

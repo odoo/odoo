@@ -786,15 +786,22 @@ class stock_picking(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
+        move_obj = self.pool.get('stock.move')
+        if context is None:
+            context = {}
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
                 raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
-            elif pick.state in ['confirmed','assigned']:
+            elif pick.state in ['confirmed','assigned', 'draft']:
                 ids2 = [move.id for move in pick.move_lines]
-                context.update({'call_unlink':True})
-                self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
-            else:
-                continue
+                ctx = context.copy()
+                ctx.update({'call_unlink':True})
+                if pick.state != 'draft':
+                    #Cancelling the move in order to affect Virtual stock of product
+                    move_obj.action_cancel(cr, uid, ids2, ctx)
+                #Removing the move
+                move_obj.unlink(cr, uid, ids2, ctx)
+            
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
 stock_picking()
@@ -1343,12 +1350,15 @@ class stock_move(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.state != 'draft':
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        for move in self.browse(cr, uid, ids, context=ctx):
+            if move.state != 'draft' and not ctx.get('call_unlink',False):
                 raise osv.except_osv(_('UserError'),
                         _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
-            cr, uid, ids, context=context)
+            cr, uid, ids, context=ctx)
 
 stock_move()
 

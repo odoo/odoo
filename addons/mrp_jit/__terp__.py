@@ -41,7 +41,7 @@
     'author': 'Tiny',
     'depends': ['mrp', 'sale'],
     'update_xml': ['mrp_jit.xml'],
-    'demo_xml': ['mrp_jit_test.xml'],
+    'demo_xml': ['test/mrp_jit_test.xml'],
     'installable': True,
     'active': False,
     'certificate': '0086634760061',
