@@ -352,11 +352,15 @@ class configmanager(object):
         res = os.path.abspath(os.path.expanduser(value))
         if not os.path.exists(res):
             raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, value))
+
         contains_addons = False
         for f in os.listdir(res):
             modpath = os.path.join(res, f)
-            if os.path.isdir(modpath) and os.path.exists(os.path.join(modpath, '__init__.py')) and \
-            ('|', os.path.exists(os.path.join(modpath, '__openerp__.py')), os.path.exists(os.path.join(modpath, '__terp__.py'))):
+            if os.path.isdir(modpath) and \
+               os.path.exists(os.path.join(modpath, '__init__.py')) and \
+               (os.path.exists(os.path.join(modpath, '__openerp__.py')) or \
+                os.path.exists(os.path.join(modpath, '__terp__.py'))):
+
                 contains_addons = True
                 break
 

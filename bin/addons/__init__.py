@@ -221,7 +221,7 @@ def get_module_as_zip_from_module_directory(module_directory, b64enc=True, src=T
         base = os.path.basename(path)
         for f in tools.osutil.listdir(path, True):
             bf = os.path.basename(f)
-            if not RE_exclude.search(bf) and (src or bf == '__openerp__.py' or bf == '__terp__.py' or not bf.endswith('.py')):
+            if not RE_exclude.search(bf) and (src or bf in ('__openerp__.py', '__terp__.py') or not bf.endswith('.py')):
                 archive.write(os.path.join(path, f), os.path.join(base, f))
 
     archname = StringIO()
@@ -294,15 +294,23 @@ def get_modules():
         plist.extend(listdir(ad))
     return list(set(plist))
 
+def load_information_from_description_file(module):
+    """
+    :param module: The name of the module (sale, purchase, ...)
+    """
+    for filename in ['__openerp__.py', '__terp__.py']:
+        description_file = addons.get_module_resource(module, filename)
+        if os.path.isfile(description_file):
+            return eval(tools.file_open(description_file).read())
+
+    raise Exception('The module %s does not contain a description file: __openerp__.py or __terp__.py (deprecated)')
+
 def get_modules_with_version():
     modules = get_modules()
     res = {}
     for module in modules:
         try:
-            terp = get_module_resource(module, '__openerp__.py')
-            if not os.path.isfile(terp):
-                terp = addons.get_module_resource(module, '__terp__.py')
-            info = eval(tools.file_open(terp).read())
+            info = load_information_from_description_file(module)
             res[module] = "%s.%s" % (release.major_version, info['version'])
         except Exception, e:
             continue
@@ -703,16 +711,14 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         status = {}
     cr = db.cursor()
     if cr:
-       cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
-       if len(cr.fetchall())==0:
-           logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
-           tools.init_db(cr)
-#           cr.execute("update res_users set password=%s where id=%s",('admin',1))
-           # in that case, force --init=all
-           tools.config["init"]["all"] = 1
-           tools.config['update']['all'] = 1
-           if not tools.config['without_demo']:
-               tools.config["demo"]['all'] = 1
+        cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
+        if len(cr.fetchall())==0:
+            logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
+            tools.init_db(cr)
+            tools.config["init"]["all"] = 1
+            tools.config['update']['all'] = 1
+            if not tools.config['without_demo']:
+                tools.config["demo"]['all'] = 1
     force = []
     if force_demo:
         force.append('demo')

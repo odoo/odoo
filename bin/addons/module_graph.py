@@ -41,19 +41,14 @@ print 'digraph G {'
 while len(modules):
     f = modules.pop(0)
     done.append(f)
-    terp_file = os.path.join(f,"__openerp__.py")
-    if not os.path.isfile(terp_file):
-        terp_file = os.path.join(f,"__terp__.py")
-
-    if os.path.isfile(terp_file):
-        info=eval(file(os.path.join(f,"__terp__.py")).read())
-        if info.get('installable', True):
-            for name in info['depends']:
-                if name not in done+modules:
-                    modules.append(name)
-                if not os.path.exists(name):
-                    print '\t%s [color=red]' % (name,)
-                print '\t%s -> %s;' % (f, name)
+    info = addons.load_information_from_description_file(f)
+    if info.get('installable', True):
+        for name in info['depends']:
+            if name not in done+modules:
+                modules.append(name)
+            if not os.path.exists(name):
+                print '\t%s [color=red]' % (name,)
+            print '\t%s -> %s;' % (f, name)
 print '}'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

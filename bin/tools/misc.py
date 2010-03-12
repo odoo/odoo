@@ -50,69 +50,63 @@ def init_db(cr):
     cr.commit()
 
     for i in addons.get_modules():
-        terp_file = addons.get_module_resource(i, '__openerp__.py')
         mod_path = addons.get_module_path(i)
         if not mod_path:
             continue
-        info = False
-#        if os.path.isfile(terp_file) or os.path.isfile(mod_path+'.zip'):
-#            info = eval(file_open(terp_file).read())
-        if not os.path.isfile(terp_file):
-            terp_file = addons.get_module_resource(i, '__terp__.py')
 
-        if os.path.isfile(terp_file) or os.path.isfile(mod_path+'.zip'):
-                info = eval(file_open(terp_file).read())
+        info = addons.load_information_from_description_file(i)
 
-        if info:
-            categs = info.get('category', 'Uncategorized').split('/')
-            p_id = None
-            while categs:
-                if p_id is not None:
-                    cr.execute('select id \
-                            from ir_module_category \
-                            where name=%s and parent_id=%s', (categs[0], p_id))
-                else:
-                    cr.execute('select id \
-                            from ir_module_category \
-                            where name=%s and parent_id is NULL', (categs[0],))
-                c_id = cr.fetchone()
-                if not c_id:
-                    cr.execute('select nextval(\'ir_module_category_id_seq\')')
-                    c_id = cr.fetchone()[0]
-                    cr.execute('insert into ir_module_category \
-                            (id, name, parent_id) \
-                            values (%s, %s, %s)', (c_id, categs[0], p_id))
-                else:
-                    c_id = c_id[0]
-                p_id = c_id
-                categs = categs[1:]
-
-            active = info.get('active', False)
-            installable = info.get('installable', True)
-            if installable:
-                if active:
-                    state = 'to install'
-                else:
-                    state = 'uninstalled'
+        if not info:
+            continue
+        categs = info.get('category', 'Uncategorized').split('/')
+        p_id = None
+        while categs:
+            if p_id is not None:
+                cr.execute('select id \
+                           from ir_module_category \
+                           where name=%s and parent_id=%s', (categs[0], p_id))
             else:
-                state = 'uninstallable'
-            cr.execute('select nextval(\'ir_module_module_id_seq\')')
-            id = cr.fetchone()[0]
-            cr.execute('insert into ir_module_module \
-                    (id, author, website, name, shortdesc, description, \
-                        category_id, state, certificate) \
-                    values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (
-                id, info.get('author', ''),
-                info.get('website', ''), i, info.get('name', False),
-                info.get('description', ''), p_id, state, info.get('certificate')))
-            cr.execute('insert into ir_model_data \
-                (name,model,module, res_id, noupdate) values (%s,%s,%s,%s,%s)', (
-                    'module_meta_information', 'ir.module.module', i, id, True))
-            dependencies = info.get('depends', [])
-            for d in dependencies:
-                cr.execute('insert into ir_module_module_dependency \
-                        (module_id,name) values (%s, %s)', (id, d))
-            cr.commit()
+                cr.execute('select id \
+                           from ir_module_category \
+                           where name=%s and parent_id is NULL', (categs[0],))
+            c_id = cr.fetchone()
+            if not c_id:
+                cr.execute('select nextval(\'ir_module_category_id_seq\')')
+                c_id = cr.fetchone()[0]
+                cr.execute('insert into ir_module_category \
+                        (id, name, parent_id) \
+                        values (%s, %s, %s)', (c_id, categs[0], p_id))
+            else:
+                c_id = c_id[0]
+            p_id = c_id
+            categs = categs[1:]
+
+        active = info.get('active', False)
+        installable = info.get('installable', True)
+        if installable:
+            if active:
+                state = 'to install'
+            else:
+                state = 'uninstalled'
+        else:
+            state = 'uninstallable'
+        cr.execute('select nextval(\'ir_module_module_id_seq\')')
+        id = cr.fetchone()[0]
+        cr.execute('insert into ir_module_module \
+                (id, author, website, name, shortdesc, description, \
+                    category_id, state, certificate) \
+                values (%s, %s, %s, %s, %s, %s, %s, %s, %s)', (
+            id, info.get('author', ''),
+            info.get('website', ''), i, info.get('name', False),
+            info.get('description', ''), p_id, state, info.get('certificate')))
+        cr.execute('insert into ir_model_data \
+            (name,model,module, res_id, noupdate) values (%s,%s,%s,%s,%s)', (
+                'module_meta_information', 'ir.module.module', i, id, True))
+        dependencies = info.get('depends', [])
+        for d in dependencies:
+            cr.execute('insert into ir_module_module_dependency \
+                    (module_id,name) values (%s, %s)', (id, d))
+        cr.commit()
 
 def find_in_path(name):
     if os.name == "nt":
