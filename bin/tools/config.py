@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -83,7 +83,7 @@ class configmanager(object):
             'list_db' : True,
             'timezone' : False, # to override the default TZ
         }
-    
+
         self.misc = {}
 
         hasSSL = check_ssl()
@@ -234,7 +234,7 @@ class configmanager(object):
         keys = ['interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
                 'db_port', 'list_db', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy',
-                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path', 
+                'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
 
         if hasSSL:
@@ -278,7 +278,7 @@ class configmanager(object):
         self.options['translate_modules'].sort()
 
         if self.options['timezone']:
-            # If an explicit TZ was provided in the config, make sure it is known  
+            # If an explicit TZ was provided in the config, make sure it is known
             try:
                 import pytz
                 tz = pytz.timezone(self.options['timezone'])
@@ -352,17 +352,21 @@ class configmanager(object):
         res = os.path.abspath(os.path.expanduser(value))
         if not os.path.exists(res):
             raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, value))
+
         contains_addons = False
         for f in os.listdir(res):
             modpath = os.path.join(res, f)
-            if os.path.isdir(modpath) and os.path.exists(os.path.join(modpath, '__init__.py')) and \
-            os.path.exists(os.path.join(modpath, '__terp__.py')):
+            if os.path.isdir(modpath) and \
+               os.path.exists(os.path.join(modpath, '__init__.py')) and \
+               (os.path.exists(os.path.join(modpath, '__openerp__.py')) or \
+                os.path.exists(os.path.join(modpath, '__terp__.py'))):
+
                 contains_addons = True
                 break
 
         if not contains_addons:
             raise optparse.OptionValueError("option %s: The addons-path %r does not seem to a be a valid Addons Directory!" % (opt, value))
-        
+
         setattr(parser.values, option.dest, res)
 
     def load(self):
@@ -403,7 +407,7 @@ class configmanager(object):
                 p.set('options', opt, loglevelnames.get(self.options[opt], self.options[opt]))
             else:
                 p.set('options', opt, self.options[opt])
-    
+
         for sec in self.misc.keys():
             for opt in self.misc[sec].keys():
                 p.set(sec,opt,self.misc[sec][opt])
