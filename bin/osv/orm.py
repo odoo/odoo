@@ -460,7 +460,9 @@ class orm_template(object):
             return browse_null()
 
     def __export_row(self, cr, uid, row, fields, context=None):
-        
+        if context is None:
+            context = {}
+
         def check_type(field_type):
             if field_type == 'float':
                 return 0.0
@@ -541,7 +543,7 @@ class orm_template(object):
                                     for rr in r :
                                         if isinstance(rr.name, browse_record):
                                             rr = rr.name
-                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id])
+                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
                                         rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
                                         dt += tools.ustr(rr_name or '') + ','
                                     data[fpos] = dt[:-1]
@@ -554,7 +556,7 @@ class orm_template(object):
                     i += 1
                 if i == len(f):
                     if isinstance(r, browse_record):
-                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id])
+                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id], context=context)
                         r = r and r[0] and r[0][1] or ''
                     data[fpos] = tools.ustr(r or '')
         return [data] + lines
