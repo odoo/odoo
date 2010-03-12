@@ -122,7 +122,7 @@ class abstracted_fs:
     def db_list(self):
         #return pooler.pool_dic.keys()
         s = netsvc.LocalService('db')
-        result = s.list()
+        result = s.list(document=True)
         self.db_name_list = []
         for db_name in result:
             db, cr = None, None
