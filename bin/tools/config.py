@@ -89,7 +89,7 @@ class configmanager(object):
         hasSSL = check_ssl()
 
         self._LOGLEVELS = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x))
-                          for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'DEBUG_RPC', 'NOTSET')])
+                          for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'NOTSET')])
 
         version = "%s %s" % (release.description, release.version)
         parser = optparse.OptionParser(version=version)
@@ -120,7 +120,7 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
                           help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
-        parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
+        parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='deprecated since v6.0, replaced by module decimal_precision')
         parser.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
 
         if hasSSL:

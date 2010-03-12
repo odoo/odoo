@@ -644,6 +644,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                             new_query = ' '.join(query.split())
                             if new_query:
                                 cr.execute(new_query)
+                    elif ext == '.yml':
+                        tools.convert_yaml_import(cr, m, fp, idref, mode=mode, **kwargs)
                     else:
                         tools.convert_xml_import(cr, m, fp, idref, mode=mode, **kwargs)
                     fp.close()
@@ -655,6 +657,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                     fp = tools.file_open(opj(m, xml))
                     if ext == '.csv':
                         tools.convert_csv_import(cr, m, os.path.basename(xml), fp.read(), idref, mode=mode, noupdate=True)
+                    elif ext == '.yml':
+                        tools.convert_yaml_import(cr, m, fp, idref, mode=mode, **kwargs)
                     else:
                         tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
                     fp.close()

@@ -25,12 +25,20 @@ import cStringIO
 import marshal
 
 class Myexception(Exception):
+    """
+    custome exception object store 
+    * faultcode
+    * faulestring
+    * args
+    """
+    
     def __init__(self, faultCode, faultString):
         self.faultCode = faultCode
         self.faultString = faultString
         self.args = (faultCode, faultString)
 
 class mysocket:
+
     def __init__(self, sock=None):
         if sock is None:
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -40,14 +48,17 @@ class mysocket:
         # prepare this socket for long operations: it may block for infinite
         # time, but should exit as soon as the net is down
         self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+        
     def connect(self, host, port=False):
         if not port:
             protocol, buf = host.split('//')
             host, port = buf.split(':')
         self.sock.connect((host, int(port)))
+        
     def disconnect(self):
         self.sock.shutdown(socket.SHUT_RDWR)
         self.sock.close()
+        
     def mysend(self, msg, exception=False, traceback=None):
         msg = cPickle.dumps([msg,traceback])
         size = len(msg)
@@ -59,6 +70,7 @@ class mysocket:
             if sent == 0:
                 raise RuntimeError, "socket connection broken"
             totalsent = totalsent + sent
+            
     def myreceive(self):
         buf=''
         while len(buf) < 8:
@@ -89,6 +101,3 @@ class mysocket:
             raise res[0]
         else:
             return res[0]
-
-
-

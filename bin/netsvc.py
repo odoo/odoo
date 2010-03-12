@@ -127,6 +127,7 @@ class ExportService(object):
 LOG_NOTSET = 'notset'
 LOG_DEBUG_RPC = 'debug_rpc'
 LOG_DEBUG = 'debug'
+LOG_TEST = 'test'
 LOG_INFO = 'info'
 LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
@@ -134,6 +135,9 @@ LOG_CRITICAL = 'critical'
 
 logging.DEBUG_RPC = logging.DEBUG - 2
 logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
+
+logging.TEST = logging.INFO - 5
+logging.addLevelName(logging.TEST, 'TEST')
 
 def init_logger():
     import os
@@ -147,9 +151,7 @@ def init_logger():
     if tools.config['syslog']:
         # SysLog Handler
         if os.name == 'nt':
-            handler = logging.handlers.NTEventLogHandler("%s %s" %
-                                                         (release.description,
-                                                          release.version))
+            handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
         formatter = logging.Formatter("%s %s" % (release.description, release.version) + ':%(levelname)s:%(name)s:%(message)s')
@@ -195,6 +197,7 @@ def init_logger():
             'DEBUG_RPC': ('blue', 'white'),
             'DEBUG': ('blue', 'default'),
             'INFO': ('green', 'default'),
+            'TEST': ('white', 'blue'),
             'WARNING': ('yellow', 'default'),
             'ERROR': ('red', 'default'),
             'CRITICAL': ('white', 'red'),
@@ -220,9 +223,10 @@ class Logger(object):
 
         log = logging.getLogger(tools.ustr(name))
 
-        if level == LOG_DEBUG_RPC and not hasattr(log, level):
-            fct = lambda msg, *args, **kwargs: log.log(logging.DEBUG_RPC, msg, *args, **kwargs)
-            setattr(log, LOG_DEBUG_RPC, fct)
+        if level in [LOG_DEBUG_RPC, LOG_TEST] and not hasattr(log, level):
+            fct = lambda msg, *args, **kwargs: log.log(getattr(logging, level.upper()), msg, *args, **kwargs)
+            setattr(log, level, fct)
+
 
         level_method = getattr(log, level)
 

@@ -59,6 +59,7 @@ required_modules = [
     ('pydot', 'pydot module'),
     ('pytz', 'Timezone handling library for Python'),
     ('reportlab', 'reportlab module'),
+    ('yaml', 'YAML parser and emitter for Python'),
 ]
 
 def check_modules():
@@ -174,7 +175,7 @@ options = {
                      "lxml.objectify", "decimal", "xml", "encodings",
                      "dateutil", "wizard", "pychart", "PIL", "pyparsing",
                      "pydot", "asyncore","asynchat", "reportlab", "vobject",
-                     "HTMLParser", "select"],
+                     "HTMLParser", "select", "yaml"],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }

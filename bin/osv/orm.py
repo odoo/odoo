@@ -315,7 +315,7 @@ def get_pg_type(f):
         f_type = (type_dict[type(f)], type_dict[type(f)])
     elif isinstance(f, fields.float):
         if f.digits:
-            f_type = ('numeric', 'NUMERIC(%d,%d)' % (f.digits[0], f.digits[1]))
+            f_type = ('numeric', 'NUMERIC')
         else:
             f_type = ('float8', 'DOUBLE PRECISION')
     elif isinstance(f, (fields.char, fields.reference)):
@@ -337,7 +337,7 @@ def get_pg_type(f):
         f_type = (type_dict[t], type_dict[t])
     elif isinstance(f, fields.function) and f._type == 'float':
         if f.digits:
-            f_type = ('numeric', 'NUMERIC(%d,%d)' % (f.digits[0], f.digits[1]))
+            f_type = ('numeric', 'NUMERIC')
         else:
             f_type = ('float8', 'DOUBLE PRECISION')
     elif isinstance(f, fields.function) and f._type == 'selection':
@@ -1007,7 +1007,7 @@ class orm_template(object):
                 if fields and f not in fields:
                     continue
                 res[f] = {'type': self._columns[f]._type}
-                for arg in ('string', 'readonly', 'states', 'size', 'required',
+                for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
                         'change_default', 'translate', 'help', 'select', 'selectable'):
                     if getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
@@ -1884,13 +1884,10 @@ class orm(orm_template):
         fields_pre = [f for f in float_int_fields if
                    f == self.CONCURRENCY_CHECK_FIELD
                 or (f in self._columns and getattr(self._columns[f], '_classic_write'))]
-        avg_fields = context.get('avg',[])
         for f in fields_pre:
             if f not in ['id','sequence']:
-                if f in avg_fields:
-                    flist += ',avg('+f+') as '+f
-                else:
-                    flist += ',sum('+f+') as '+f
+                operator = fget[f].get('group_operator','sum')
+                flist += ','+operator+'('+f+') as '+f
 
         cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + ' group by '+ groupby + limit_str + offset_str, where_params)
         alldata = {}
@@ -2190,19 +2187,9 @@ class orm(orm_template):
                                 cr.commit()
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
-                                    # Adding upcoming 6 lines to check whether only the size of the fields got changed or not.E.g. :(16,3) to (16,4)
-                                    field_size_change = False
-                                    if f_pg_type in ['int4','numeric','float8']:
-                                        if f.digits:
-                                            field_size = (65535 * f.digits[0]) + f.digits[0] + f.digits[1]
-                                            if field_size != f_pg_size:
-                                                field_size_change = True
-
-                                    if f_pg_type != f_obj_type or field_size_change:
+                                    if f_pg_type != f_obj_type:
                                         if f_pg_type != f_obj_type:
                                             logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed type to %s." % (k, self._table, c[1]))
-                                        if field_size_change:
-                                            logger.notifyChannel('orm', netsvc.LOG_INFO, "column '%s' in table '%s' changed in the size." % (k, self._table))
                                         ok = True
                                         cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                         cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, c[2]))
@@ -2319,6 +2306,8 @@ class orm(orm_template):
         self._columns = self._columns.copy()
         for store_field in self._columns:
             f = self._columns[store_field]
+            if hasattr(f, 'digits_change'):
+                f.digits_change(cr)
             if not isinstance(f, fields.function):
                 continue
             if not f.store:
@@ -2603,8 +2592,6 @@ class orm(orm_template):
         # all fields which need to be post-processed by a simple function (symbol_get)
         fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields_to_read)
         if fields_post:
-            # maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
-            # to get the _symbol_get in each occurence
             for r in res:
                 for f in fields_post:
                     r[f] = self._columns[f]._symbol_get(r[f])

@@ -236,11 +236,12 @@
             <field name="arch" type="xml">
                 <tree string="Partners">
                     <field name="name"/>
-                    <field name="title"/>
                     <field name="ref"/>
+                    <field name="phone"/>
                     <field name="city"/>
                     <field name="country"/>
                     <field name="lang"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -250,11 +251,11 @@
             <field name="model">res.partner</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Partners">
+                <form string="Partners" col='1'>
                     <group col="6" colspan="4">
                         <group colspan="5" col="6">
-                            <field name="name" select="1" colspan="6"/>
-                            <field name="ref" select="1"/>
+                            <field name="name" select="1"/>
+                            <field name="ref"/>
                             <field domain="[('domain', '=', 'partner')]" name="title"/>
                             <field name="lang"/>
                         </group>
@@ -342,6 +343,7 @@
                         <field name="country" select="1"/>
                         <field name="address" select="1"/>
                         <field name="category_id" select="1"/>
+                        <field name="user_id" select="1"/>
                    </group>
                </search>
             </field>
@@ -584,7 +586,9 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('category_id','child_of', [active_id])]</field>
             <field name="context">{'category_id':active_id}</field>
+            <field name="search_view_id" ref="view_res_partner_filter"/>
         </record>
+
         <record id="ir_action_partner_by_category" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
             <field eval="'res.partner.category'" name="model"/>
