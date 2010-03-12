@@ -787,7 +787,7 @@ class stock_picking(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
-        if not context:
+        if context is None:
             context = {}
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
@@ -1350,7 +1350,7 @@ class stock_move(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
         ctx = context.copy()
         for move in self.browse(cr, uid, ids, context=ctx):
