@@ -700,9 +700,9 @@ class mrp_production(osv.osv):
                     pick_type = 'out'
                 address_id = routing_loc.address_id and routing_loc.address_id.id or False
                 routing_loc = routing_loc.id
-            pickname = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.'+pick_type)
+            pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.'+pick_type)
             picking_id = self.pool.get('stock.picking').create(cr, uid, {
-                'name': pickname,
+                'name': pick_name,
                 'origin': (production.origin or '').split(':')[0] +':'+production.name,
                 'type': pick_type,
                 'move_type': 'one',
