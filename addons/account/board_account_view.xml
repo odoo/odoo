@@ -27,7 +27,6 @@
           <field name="view_mode">tree,graph</field>
           <field name="context">{'group_by':['user_type'], 'group_by_no_leaf':1}</field>
           <field name="view_id" ref="account.view_account_entries_report_tree"/>
-          <field name="domain">[('period_id','in','current_year')]</field>
       </record>
       <record id="action_treasory_graph" model="ir.actions.act_window">
           <field name="name">Treasury</field>
