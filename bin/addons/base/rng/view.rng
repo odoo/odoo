@@ -89,7 +89,7 @@
             <rng:attribute name="name"/>
         </rng:element>
     </rng:define>
-    
+
     <rng:define name="html">
         <rng:element name="html">
         	<rng:zeroOrMore>
@@ -139,7 +139,7 @@
             <rng:oneOrMore>
                 <rng:optional><rng:ref name="field"/></rng:optional>
             </rng:oneOrMore>
-            <rng:zeroOrMore>                
+            <rng:zeroOrMore>
                 <rng:optional><rng:ref name="html"/></rng:optional>
             </rng:zeroOrMore>
         </rng:element>
@@ -357,6 +357,7 @@
             <rng:optional><rng:attribute name="rowspan"/></rng:optional>
             <rng:optional><rng:attribute name="align"/></rng:optional>
             <rng:optional><rng:attribute name="selection"/></rng:optional>
+            <rng:optional><rng:attribute name="default_focus"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="attribute" />
@@ -429,7 +430,7 @@
             <rng:oneOrMore>
                 <rng:ref name="field"/>
             </rng:oneOrMore>
-            <rng:zeroOrMore>                
+            <rng:zeroOrMore>
                 <rng:optional><rng:ref name="html"/></rng:optional>
             </rng:zeroOrMore>
         </rng:element>
@@ -442,9 +443,9 @@
             <rng:optional><rng:attribute name="type" /></rng:optional>
             <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:oneOrMore>
-                <rng:ref name="field"/>               
+                <rng:ref name="field"/>
             </rng:oneOrMore>
-            <rng:zeroOrMore>                
+            <rng:zeroOrMore>
                 <rng:optional><rng:ref name="html"/></rng:optional>
             </rng:zeroOrMore>
         </rng:element>
@@ -469,6 +470,7 @@
             <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:optional><rng:attribute name="confirm"/></rng:optional>
             <rng:optional><rng:attribute name="help"/></rng:optional>
+            <rng:optional><rng:attribute name="default_focus"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="attribute" />
