@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -48,7 +48,8 @@
         'hr_expense_workflow.xml',
         'hr_expense_view.xml',
         'hr_expense_report.xml',
-        'process/hr_expense_process.xml'
+        'process/hr_expense_process.xml',
+        'report/hr_expense_report_view.xml'
     ],
     'demo_xml': ['hr.expense.expense.csv'],
     'installable': True,
