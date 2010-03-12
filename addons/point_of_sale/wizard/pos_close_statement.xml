@@ -3,39 +3,39 @@
     <data>        
         <!--  Point of Sale Confirm -->
         
-		<record id="view_pos_open_statement" model="ir.ui.view">
-            <field name="name">Open Statementsffffffff</field>
-            <field name="model">pos.open.statement</field>
+		<record id="view_pos_close_statement" model="ir.ui.view">
+            <field name="name">Close Statements</field>
+            <field name="model">pos.close.statement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Open Statements">
-				     	<label string="Are you sure you want to open the statements ?" colspan="2"/>
+                <form string="Close Statements">
+				     	<label string="Are you sure you want to close the statements ?" colspan="2"/>
 				     	<newline/>
                 		<button icon='gtk-cancel' special="cancel"
                 			string="No" />
-                		<button name="open_statement" string="Yes"
+                		<button name="close_statement" string="Yes"
                 			colspan="1" type="object" icon="gtk-ok"/>
                 </form>
             </field>
         </record>
-		<act_window name="Open Statements"
+
+		<act_window name="Close Statements"
 				res_model="pos.open.statement"
 				src_model="account.bank.statement"
 				view_mode="form"
 				target="new"
 				key2="client_action_multi"    
-			id="act_pos_open_statement"/>
-
-        <record id="action_pos_open_statement" model="ir.actions.act_window">
-            <field name="name">Open Register</field>
+			id="action_pos_open_statement"/>
+   	
+   	
+        <record id="action_pos_close_statement" model="ir.actions.act_window">
+            <field name="name">Close Register</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.open.statement</field>
+            <field name="res_model">pos.close.statement</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="view_id" ref="view_pos_open_statement"/>
             <field name="context">{'record_id' : active_id}</field>
-        </record>
-        
+        </record>        
 	</data>
 </openerp>	        
