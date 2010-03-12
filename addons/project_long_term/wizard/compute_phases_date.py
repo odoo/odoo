@@ -18,14 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+from resource.faces import *
+from new import classobj
 
 import wizard
 import pooler
 from tools.translate import _
-import datetime
-
-from resource.faces import *
-from new import classobj
 
 import working_calendar as wkcal
 
@@ -60,12 +59,13 @@ class wizard_compute_phases(wizard.interface):
             leaves = []
             time_efficiency = 1.0
             resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
+
             if resource_id:
                 # Create a new resource object with
                 # all the attributes of the Resource Class
                 resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
                 time_efficiency = resource.time_efficiency
-                leaves = wkcal.compute_leaves(cr, uid, calendar_id or False , resource_id, resource.calendar_id.id)
+                leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource.id, resource.calendar_id.id)
             phase_resource_obj = classobj(str(phase.responsible_id.name), (Resource,),
                                                {'__doc__': phase.responsible_id.name,
                                                 '__name__': phase.responsible_id.name,
@@ -105,18 +105,19 @@ class wizard_compute_phases(wizard.interface):
                 end_date = e_date
                 date_start = end_date
             # Write the calculated dates back
+            ctx = context.copy()
+            ctx.update({'scheduler': True})
             phase_obj.write(cr, uid, [phase.id], {'date_start': start_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                   'date_end': end_date.strftime('%Y-%m-%d %H:%M:%S')},
-                                                   context={'scheduler': True
-                                                  })
+                                                   context=ctx)
             # Recursive call till all the next phases scheduled
             for phase in phase.next_phase_ids:
                if phase.state in ['draft','open','pending']:
-                   self._phase_schedule(cr, uid, phase, date_start, phase.project_id.resource_calendar_id.id or False)
+                   self._phase_schedule(cr, uid, phase, date_start, phase.project_id.resource_calendar_id.id or False, context=context)
                else:
                    continue
 
-    def _compute_date(self, cr, uid, data, context):
+    def _compute_date(self, cr, uid, data, context={}):
         """
         Compute the phases for scheduling.
         """
@@ -132,7 +133,7 @@ class wizard_compute_phases(wizard.interface):
         else:                        # Else take all the draft,open,pending states phases
             phase_ids = phase_obj.search(cr, uid,[('state', 'in', ['draft', 'open', 'pending']),
                                                   ('previous_phase_ids', '=', False)
-                                                  ])
+                                                  ], context=context)
         phase_ids.sort()
         phase_objs = phase_obj.browse(cr, uid, phase_ids, context=context)
         for phase in phase_objs:
@@ -141,7 +142,7 @@ class wizard_compute_phases(wizard.interface):
                 start_date = datetime.datetime.now().strftime("%Y-%m-%d")
             start_dt = datetime.datetime.strftime((datetime.datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d %H:%M")
             calendar_id = phase.project_id.resource_calendar_id.id
-            self._phase_schedule(cr, uid, phase, start_dt, calendar_id or False)
+            self._phase_schedule(cr, uid, phase, start_dt, calendar_id or False, context=context)
         return {}
 
     def _open_phases_list(self, cr, uid, data, context):
@@ -162,7 +163,7 @@ class wizard_compute_phases(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':compute_form, 'fields':compute_fields, 'state':[
+            'result': {'type': 'form', 'arch': compute_form, 'fields': compute_fields, 'state':[
                 ('end', 'Cancel'),
                 ('compute', 'Compute')
 
@@ -170,7 +171,7 @@ class wizard_compute_phases(wizard.interface):
         },
         'compute': {
             'actions': [_compute_date],
-            'result': {'type': 'action', 'action':_open_phases_list, 'state':'end'},
+            'result': {'type': 'action', 'action': _open_phases_list, 'state': 'end'},
         },
     }
 wizard_compute_phases('wizard.compute.phases')

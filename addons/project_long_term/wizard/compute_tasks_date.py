@@ -18,17 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import wizard
-import pooler
-from tools.translate import _
 import datetime
-
 from resource.faces import *
 from new import classobj
 import operator
 
 import working_calendar as wkcal
+
+import wizard
+import pooler
+from tools.translate import _
 
 compute_form = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
@@ -105,7 +104,7 @@ class wizard_compute_tasks(wizard.interface):
                 try:
                     resource = reduce(operator.or_, resources)
                 except:
-                    raise wizard.except_wizard(_('MemberError'), _('Project must have members assigned !'))
+                    raise wizard.except_wizard(_('Error'), _('Project must have members assigned !'))
                 minimum_time_unit = 1
                 if calendar_id:        # If project has calendar
                     working_days = wkcal.compute_working_calendar(cr, uid, calendar_id)
@@ -131,28 +130,29 @@ class wizard_compute_tasks(wizard.interface):
                 s_date = t.start.to_datetime()
                 e_date = t.end.to_datetime()
                 if loop_no == 0:
-                    project_obj.write(cr, uid, [project_id], {'date' : e_date})
+                    project_obj.write(cr, uid, [project_id], {'date' : e_date}, context=context)
                 else:
+                    ctx = context.copy()
+                    ctx.update({'scheduler': True})
                     user_id = user_obj.search(cr, uid, [('name', '=', t.booked_resource[0].__name__)])
                     task_pool.write(cr, uid, [task_objs[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                          'date_deadline': e_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                          'user_id': user_id[0]},
-                                                                         context={'scheduler': True
-                                                                        })
+                                                                         context=ctx)
                 loop_no +=1
         return {}
 
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':compute_form, 'fields':compute_fields, 'state':[
+            'result': {'type': 'form', 'arch': compute_form, 'fields': compute_fields, 'state': [
                 ('end', 'Cancel'),
                 ('compute', 'Compute')
             ]},
         },
         'compute': {
             'actions': [_compute_date],
-            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
+            'result': {'type': 'form','arch': success_msg,'fields': {}, 'state': [('end', 'Ok')]},
         }
     }
 wizard_compute_tasks('wizard.compute.tasks')

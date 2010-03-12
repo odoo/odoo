@@ -15,22 +15,27 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                        <group col='8' colspan='4'>
-                           <filter icon="terp-hr" domain="[('state','=','draft')]" string="To Confirm"/>
-                           <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
-                           <separator orientation="vertical"/> 
+                           <filter icon="gtk-yes" domain="[('state','=','draft')]" string="To Confirm"/>
+                           <filter icon="gtk-apply" domain="[('state','=','confirm')]" string="To Validate"/>
+                           <separator orientation="vertical"/>
                           <field name="name" select='1'/>
                           <field name="state" select="1">
                               <filter icon="terp-hr" domain="[('state','=','refuse')]" help="Refused Holidays"/>
                               <filter icon="terp-hr" domain="[('state','=','validate')]" help="Validated Holidays"/>
-                          </field>                          
+                          </field>
                           <field name="user_id" select="1" widget="selection">
-                              <filter icon="gtk-execute" help="My Leaves" domain="[('user_id','=',uid)]" />  
-                          </field> 
+                              <filter icon="terp-partner" help="My Leaves" domain="[('user_id','=',uid)]" />
+                          </field>
                           <field name="department_id" select="1" widget="selection">
-                          		<filter icon="gtk-execute" domain="[('department_id','=',context.get('department_id',False))]"
+                          		<filter icon="gtk-home" domain="[('department_id','=',context.get('department_id',False))]"
 								help="My Departments Leaves"/>
                           </field>
                       </group>
+                      <newline/>
+	                  <group colspan="4" col="20" expand='1' string='Group by...'>
+	                      <filter string='State' icon="terp-report" domain="[]" context="{'group_by' : 'state'}" />
+	                      <filter string='Employee Name' icon="terp-partner" domain="[]" context="{'group_by' : 'employee_id'}" />
+	                  </group>
                  </search>
             </field>
         </record>
@@ -148,7 +153,8 @@
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
-                    <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
+                    <!--<field name="number_of_days" string="Number of Days" sum='Remaining Days'/>-->
+                    <field name="number_of_days" string="Number of Days" />
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="holiday_status_id"/>
@@ -159,6 +165,27 @@
         </record>
 
         <!-- My leave dashboard -->
+        <record id="view_hr_holiday_per_user_filter" model="ir.ui.view">
+            <field name="name">hr.holiday.per.user.filter</field>
+            <field name="model">hr.holidays.per.user</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Holiday Per User">
+                       <group col='8' colspan='4'>
+                          <field name="employee_id" select='1' widget="selection"/>
+                          <field name="user_id" select="1" widget="selection"/>
+                          <field name="holiday_status" select="1" widget="selection"/>
+                      </group>
+                      <newline/>
+	                  <group colspan="4" col="20" expand='1' string='Group by...'>
+	                      <filter string='Employee Name' icon="terp-partner" domain="[]" context="{'group_by' : 'employee_id'}" />
+	                      <filter string='Holiday Status' icon="terp-hr" domain="[]" context="{'group_by' : 'holiday_status'}" />
+	                  </group>
+
+                 </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_my_leave_board_form">
             <field name="name">hr.holidays.per.user.form</field>
             <field name="model">hr.holidays.per.user</field>
@@ -189,7 +216,7 @@
                     <field name="max_leaves"/>
                     <field name="leaves_taken" />
                     <field name="remaining_leaves"/>
-                    <field name="notes"/>
+                    <!--<field name="notes"/>-->
                 </tree>
             </field>
         </record>
@@ -211,28 +238,28 @@
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
-     <record model="ir.actions.act_window.view" id="action_open_ask_holidays_tree">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_holiday"/>
-        <field name="act_window_id" ref="open_ask_holidays"/>
-    </record>
+	    <record model="ir.actions.act_window.view" id="action_open_ask_holidays_tree">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_holiday"/>
+	        <field name="act_window_id" ref="open_ask_holidays"/>
+	    </record>
 
-    <record model="ir.actions.act_window.view" id="action_open_ask_holidays_form">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="edit_holiday_new"/>
-        <field name="act_window_id" ref="open_ask_holidays"/>
-    </record>
+	    <record model="ir.actions.act_window.view" id="action_open_ask_holidays_form">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="edit_holiday_new"/>
+	        <field name="act_window_id" ref="open_ask_holidays"/>
+	    </record>
 
 
-   <!--  <menuitem
-          name="Holidays Requests"
-            parent="menu_open_ask_holidays"
-            id="menu_open_ask_holidays_new"
-            action="open_ask_holidays"/>-->
-       <menuitem
-          name="Leaves Requests"
+	   <!--  <menuitem
+	          name="Holidays Requests"
+	            parent="menu_open_ask_holidays"
+	            id="menu_open_ask_holidays_new"
+	            action="open_ask_holidays"/>-->
+       	<menuitem
+            name="Leaves Requests"
             parent="menu_open_ask_holidays"
             id="menu_open_ask_holidays_new"
             action="open_ask_holidays"/>
@@ -246,28 +273,41 @@
             <field name="view_id" ref="allocation_leave_new" />
         </record>
 
-	<record model="ir.actions.act_window.view" id="action_open_allocation_holidays_tree">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_holiday"/>
-        <field name="act_window_id" ref="open_allocation_holidays"/>
-    </record>
+		<record model="ir.actions.act_window.view" id="action_open_allocation_holidays_tree">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_holiday"/>
+	        <field name="act_window_id" ref="open_allocation_holidays"/>
+	    </record>
 
-    <record model="ir.actions.act_window.view" id="action_open_allocation_holidays_form">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="allocation_company_new"/>
-        <field name="act_window_id" ref="open_allocation_holidays"/>
-    </record>
+	    <record model="ir.actions.act_window.view" id="action_open_allocation_holidays_form">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="allocation_company_new"/>
+	        <field name="act_window_id" ref="open_allocation_holidays"/>
+	    </record>
 
 
-    <!-- <menuitem
-          name="Allocation Requests"
-            parent="menu_open_ask_holidays"
-            id="menu_open_allocation_holidays"
-            action="open_allocation_holidays"/>-->
+	    <!-- <menuitem
+	          name="Allocation Requests"
+	            parent="menu_open_ask_holidays"
+	            id="menu_open_allocation_holidays"
+	            action="open_allocation_holidays"/>-->
 
         <!-- holidays status -->
+        <record id="view_hr_holiday_status_filter" model="ir.ui.view">
+            <field name="name">hr.holidays.status.filter</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Holiday Status">
+                       <group col='8' colspan='4'>
+                          <field name="name" select='1'/>
+	                  </group>
+                 </search>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="edit_holiday_status_form">
             <field name="name">hr.holidays.status.form</field>
             <field name="model">hr.holidays.status</field>
@@ -276,7 +316,7 @@
                 <form string="Leave Type">
                     <field colspan="4" name="name" select="1"/>
                     <field name="color_name" select="2"/>
-                    <field name="section_id"  select="1" widget="selection"/>
+                    <field name="section_id" select="2" widget="selection"/>
                     <field name="limit" select="2"/>
                     <field name="active" select="2"/>
                 </form>
@@ -300,6 +340,7 @@
             <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_hr_holiday_status_filter"/>
         </record>
 
         <menuitem sequence="9" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
@@ -326,6 +367,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_my_leave_board_tree"/>
+            <field name="search_view_id" ref="view_hr_holiday_per_user_filter"/>
         </record>
 
 		<menuitem name="Holiday Per User"
