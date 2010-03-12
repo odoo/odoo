@@ -54,13 +54,14 @@ inventory lines, make sure the production lot is assigned to this product.'))
         inv_id = context['active_id']
         inv_line_obj = self.pool.get('stock.inventory.line')
         prodlot_obj = self.pool.get('stock.production.lot')
-
+        
         ir_sequence_obj = self.pool.get('ir.sequence')
         sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+        if not sequence:
+            raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
 
         for linesplit_obj in self.browse(cr, uid, ids):
-            if not sequence:
-                raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
+
             if linesplit_obj.prefix:
                 sequence = linesplit_obj.prefix + '/' + (sequence or '')
 

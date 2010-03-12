@@ -32,7 +32,7 @@ class product_margin(osv.osv_memory):
     _name = 'product.margin'
     _description = 'Product Margin'
 
-    def _action_open_window(self, cr, uid, ids, context):
+    def action_open_window(self, cr, uid, ids, context):
         """
             @summary:
 
