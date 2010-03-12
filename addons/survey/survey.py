@@ -740,9 +740,9 @@ class survey_question_wiz(osv.osv_memory):
                         etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(" Response :- " + str(context['response_no'] + 1) +"/" + str(len(context['response_id'])) )), 'align':"0.0"})
                         if context['response_no'] > 0:
                             etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_forward_previous",'string': tools.ustr("Previous Answer"),'type':"object"})
-                        if context['response_no'] + 1 == len(context['response_id']):
+                        if context['response_no'] + 1 == len(context['response_id']) and context['response_no'] != 0:
                             etree.SubElement(xml_group, 'button', {'colspan':"1",'icon': "gtk-go-forward", 'special' : 'cancel','string': tools.ustr("Done") ,'context' : tools.ustr(context)})
-                        else:
+                        elif context['response_no'] + 1 < len(context['response_id']):
                             etree.SubElement(xml_group, 'button', {'colspan':"1",'icon': "gtk-go-forward", 'name':"action_forward_next",'string': tools.ustr("Next Answer") ,'type':"object",'context' : tools.ustr(context)})
                     if wiz_id:
                         fields["wizardid_" + str(wiz_id)] = {'type':'char', 'size' : 255, 'string':"", 'views':{}}
