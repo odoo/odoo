@@ -58,7 +58,7 @@ inventory lines, make sure the production lot is assigned to this product.'))
         ir_sequence_obj = self.pool.get('ir.sequence')
         sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
         if not sequence:
-            raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
+            raise osv.except_osv(_('Error!'), _('No production sequence defined'))
 
         for linesplit_obj in self.browse(cr, uid, ids):
 

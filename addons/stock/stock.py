@@ -1474,7 +1474,7 @@ class stock_move(osv.osv):
         ir_sequence_obj = self.pool.get('ir.sequence')
         sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
         if not sequence:
-            raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
+            raise osv.except_osv(_('Error!'), _('No production sequence defined'))
         prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix': prefix}, {'product_id': product_id})
         prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
         ref = ','.join(map(lambda x:str(x),ids))

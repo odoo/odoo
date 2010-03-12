@@ -42,7 +42,7 @@ class inventory_merge_stock_zero(osv.osv_memory):
         prod_obj =  pooler.get_pool(cr.dbname).get('product.product')
     
         if len(context['active_ids']) <> 1:
-            raise wizard.except_wizard(_('Warning'), 
+            raise osv.except_osv(_('Warning'), 
                                        _('Please select one and only one inventory !'))
         for id in ids:
             datas = self.read(cr, uid, id)
