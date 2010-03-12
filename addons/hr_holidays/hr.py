@@ -283,6 +283,11 @@ class hr_holidays(osv.osv):
 
     def holidays_confirm(self, cr, uid, ids, *args):
         for record in self.browse(cr, uid, ids):
+#            if not record.employee_id.parent_id:
+#                raise osv.except_osv(_('Warning!'),_('You can not confirm leave for %s while %s has no manager.' %(record.employee_id.name,record.employee_id.name)))
+#            calender_id= self.pool.get('resource.calendar').search(cr, uid, [('company_id','=',record.employee_id.company_id.id),('manager','=',record.employee_id.parent_id.user_id.id)])
+#            if not calender_id:
+#                raise osv.except_osv(_('Warning!'),_('You have to define the calendar resource for %s company.' %(record.employee_id.company_id.name)))
             leave_asked = record.number_of_days_temp
             if record.type == 'remove':
                 if record.employee_id and not record.holiday_status_id.limit:
@@ -298,27 +303,28 @@ class hr_holidays(osv.osv):
             self.write(cr, uid, [record.id], {
                 'state':'confirm',
                 'number_of_days': nb,
-                'user_id': user_id
+                'user_id': user_id,
+                'manager_id': record.employee_id.parent_id and record.employee_id.parent_id.id or False
             })
             vals= {
                    'name':record.name,
                    'date_from':record.date_from,
                    'date_to':record.date_to,
-                   'calendar_id':record.employee_id.calendar_id.id,
-                   'company_id':record.employee_id.company_id.id,
+#                   'calendar_id':calender_id[0],
                    'resource_id':record.employee_id.resource_id.id
                  }
-            #self.pool.get('resource.calendar.leaves').create(cr,uid,vals)
-
+        self.pool.get('resource.calendar.leaves').create(cr,uid,vals, context=context)
         return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
         vals = {
             'state':'refuse',
         }
-        ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
-        if ids2:
-            vals['manager_id'] = ids2[0]
+#        ids2 = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
+#        if ids2:
+#            vals['manager_id'] = ids2[0]
+        for record in self.browse(cr, uid, ids):
+                vals['manager_id']=record.employee_id.parent_id.id
         self.write(cr, uid, ids, vals)
         return True
 
@@ -327,6 +333,9 @@ class hr_holidays(osv.osv):
         self.write(cr, uid, ids, {
             'state':'cancel'
             })
+        for record in self.browse(cr, uid, ids):
+            calender_leave_id= self.pool.get('resource.calendar.leaves').search(cr, uid, [('date_from','=',record.date_from),('date_to','=',record.date_to),('resource_id','=',record.employee_id.resource_id.id)])
+            self.pool.get('resource.calendar.leaves').unlink(cr, uid, calender_leave_id[0])
         return True
 
     def holidays_draft(self, cr, uid, ids, *args):
