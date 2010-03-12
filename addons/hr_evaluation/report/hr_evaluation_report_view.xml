@@ -2,8 +2,8 @@
 <openerp>
 <data>
     <record id="view_evaluation_report_tree" model="ir.ui.view">
-        <field name="name">evaluation.report.tree</field>
-        <field name="model">evaluation.report</field>
+        <field name="name">hr.evaluation.report.tree</field>
+        <field name="model">hr.evaluation.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Evaluations Statistics">
@@ -20,8 +20,8 @@
     </record>
 
     <record id="view_evaluation_report_search" model="ir.ui.view">
-        <field name="name">evaluation.report.search</field>
-        <field name="model">evaluation.report</field>
+        <field name="name">hr.evaluation.report.search</field>
+        <field name="model">hr.evaluation.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Evaluations">
@@ -57,14 +57,14 @@
 
     <record id="action_evaluation_report_all" model="ir.actions.act_window">
         <field name="name">Evaluations</field>
-        <field name="res_model">evaluation.report</field>
+        <field name="res_model">hr.evaluation.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
+        <field name="view_mode">tree</field>
         <field name="search_view_id" ref="view_evaluation_report_search"/>
     </record>
 
     <menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root" sequence="8"/>
-    <menuitem action="action_evaluation_report_all" id="menu_evaluation_report_all" parent="hr.menu_hr_reporting" sequence="3"/>
+    <menuitem action="action_evaluation_report_all" id="menu_evaluation_report_all" parent="hr.menu_hr_reporting" sequence="0"/>
 
 </data>
 </openerp>

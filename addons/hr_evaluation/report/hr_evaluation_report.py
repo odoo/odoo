@@ -23,8 +23,8 @@ import tools
 from osv import fields,osv
 
 
-class evaluation_report(osv.osv):
-    _name = "evaluation.report"
+class hr_evaluation_report(osv.osv):
+    _name = "hr.evaluation.report"
     _description = "Evaluations Statistics"
     _auto = False
     _rec_name = 'date'
@@ -48,9 +48,9 @@ class evaluation_report(osv.osv):
     }
     _order = 'create_date desc'
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'evaluation_report')
+        tools.drop_view_if_exists(cr, 'hr_evaluation_report')
         cr.execute("""
-            create or replace view evaluation_report as (
+            create or replace view hr_evaluation_report as (
                  select
                      min(l.id) as id,
                      s.create_date as create_date,
@@ -70,5 +70,5 @@ class evaluation_report(osv.osv):
                      s.date,s.date_close
             )
         """)
-evaluation_report()
+hr_evaluation_report()
 
