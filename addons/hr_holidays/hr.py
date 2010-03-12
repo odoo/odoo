@@ -191,7 +191,7 @@ class hr_holidays(osv.osv):
                 holiday_id=self.pool.get('hr.holidays.per.user').search(cr, uid, [('employee_id','=', record.employee_id.id),('holiday_status','=',record.holiday_status_id.id)])
                 if holiday_id:
                     obj_holidays_per_user=self.pool.get('hr.holidays.per.user').browse(cr, uid,holiday_id[0])
-                    self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken - record.number_of_days})
+                    self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken + record.number_of_days})
                 if record.case_id:
                     if record.case_id.state <> 'draft':
                         raise osv.except_osv(_('Warning !'),
@@ -335,18 +335,23 @@ class hr_holidays(osv.osv):
         })
         return True
 
-    def check_holidays(self,cr,uid,ids):
-        for record in self.browse(cr, uid, ids):
+    def check_holidays(self,cr,uid,ids, context={}):
+        for record in self.browse(cr, uid, ids, context=context):
             if not record.number_of_days:
-                    raise osv.except_osv(_('Warning!'),_('Wrong leave definition.'))
+                raise osv.except_osv(_('Warning!'),_('Wrong leave definition.'))
             if record.employee_id:
                 leave_asked = record.number_of_days
+                res = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)
                 if leave_asked < 0.00:
                     if not record.holiday_status_id.limit:
-                        leaves_rest = self.pool.get('hr.holidays.status').get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['remaining_leaves']
-
+                        leaves_rest = res[record.holiday_status_id.id]['remaining_leaves']
+                        max_leaves = res[record.holiday_status_id.id]['max_leaves']
                         if leaves_rest < -(leave_asked):
                             raise osv.except_osv(_('Warning!'),_('You Cannot Validate leaves while available leaves are less than asked leaves.'))
+                        else:
+                            leaves_taken = max_leaves -leaves_rest + record.number_of_days_temp
+                            holiday_id = self.pool.get('hr.holidays.per.user').search(cr, uid, [('employee_id','=', record.employee_id.id),('holiday_status','=',record.holiday_status_id.id)])
+                            self.pool.get('hr.holidays.per.user').write(cr,uid,holiday_id[0],{'leaves_taken':leaves_taken})
             else:
                 holiday_ids = []
                 vals = {
