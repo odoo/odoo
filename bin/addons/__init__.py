@@ -41,6 +41,8 @@ import base64
 from zipfile import PyZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
 
+import logging
+
 
 logger = netsvc.Logger()
 
@@ -303,7 +305,8 @@ def load_information_from_description_file(module):
         if os.path.isfile(description_file):
             return eval(tools.file_open(description_file).read())
 
-    raise Exception('The module %s does not contain a description file: __openerp__.py or __terp__.py (deprecated)' % module)
+    logging.warning('The module %s does not contain a description file: __openerp__.py or __terp__.py (deprecated)' % module)
+    return {}
 
 def get_modules_with_version():
     modules = get_modules()
