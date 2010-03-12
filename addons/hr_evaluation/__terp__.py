@@ -33,7 +33,7 @@
                     "security/ir.model.access.csv",
                     "hr_evaluation_view.xml",
                     "hr_evaluation_data.xml",
-                    "report/evaluation_report_view.xml"],
+                    "report/hr_evaluation_report_view.xml"],
     "active": False,
     "installable": True
 }
