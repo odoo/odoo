@@ -32,6 +32,7 @@ import pooler
 
 import netsvc
 from osv import fields
+import addons
 
 import zipfile
 import release
@@ -302,8 +303,8 @@ def load_information_from_description_file(module):
         description_file = addons.get_module_resource(module, filename)
         if os.path.isfile(description_file):
             return eval(tools.file_open(description_file).read())
-
-    raise Exception('The module %s does not contain a description file: __openerp__.py or __terp__.py (deprecated)')
+    return
+#    raise Exception('The module %s does not contain a description file: __openerp__.py or __terp__.py (deprecated)')
 
 def get_modules_with_version():
     modules = get_modules()
