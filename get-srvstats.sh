@@ -2,12 +2,12 @@
 
 # ADMIN_PASSWD='admin'
 method_1() {
-	cat '-' << EOF
+    cat '-' << EOF
 <xml>
 <methodCall>
-	<methodName>get_stats</methodName>
-	<params>
-	</params>
+    <methodName>get_stats</methodName>
+    <params>
+    </params>
 </methodCall>
 EOF
 }

@@ -151,9 +151,7 @@ def init_logger():
     if tools.config['syslog']:
         # SysLog Handler
         if os.name == 'nt':
-            handler = logging.handlers.NTEventLogHandler("%s %s" %
-                                                         (release.description,
-                                                          release.version))
+            handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
         formatter = logging.Formatter("%s %s" % (release.description, release.version) + ':%(levelname)s:%(name)s:%(message)s')

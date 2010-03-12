@@ -66,6 +66,11 @@ for name, value in [('addons_path', tools.config['addons_path']),
                     ('database user', tools.config['db_user'])]:
     logger.notifyChannel("server", netsvc.LOG_INFO, "%s - %s" % ( name, value ))
 
+# Don't allow if the connection to PostgreSQL done by postgres user
+if tools.config['db_user'] == 'postgres':
+    logger.notifyChannel("server", netsvc.LOG_ERROR, "%s" % ("Attempted to connect database with postgres user. This is a security flaws, aborting."))
+    sys.exit(1)
+
 import time
 
 #----------------------------------------------------------

@@ -2,17 +2,17 @@
 
 ADMIN_PASSWD='admin'
 method_1() {
-	cat '-' << EOF
+    cat '-' << EOF
 <xml>
 <methodCall>
-	<methodName>set_loglevel</methodName>
-	<params>
-		<param><value><string>$ADMIN_PASSWD</string></value>
-		</param>
-		<param>
-		<value><string>$1</string></value>
-		</param>
-	</params>
+    <methodName>set_loglevel</methodName>
+    <params>
+        <param><value><string>$ADMIN_PASSWD</string></value>
+        </param>
+        <param>
+        <value><string>$1</string></value>
+        </param>
+    </params>
 </methodCall>
 EOF
 }

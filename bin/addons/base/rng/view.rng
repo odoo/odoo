@@ -31,6 +31,45 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="diagram">
+        <rng:element name="diagram">
+            <rng:optional><rng:attribute name="string"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="node"/>
+                    <rng:ref name="arrow"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="node">
+        <rng:element name="node">
+            <rng:attribute name="object"/>
+            <rng:optional><rng:attribute name="shape"/></rng:optional>
+            <rng:optional><rng:attribute name="bgcolor"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="field"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="arrow">
+        <rng:element name="arrow">
+            <rng:attribute name="object" />
+            <rng:attribute name="source" />
+            <rng:attribute name="destination" />
+            <rng:optional><rng:attribute name="signal"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="field"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="tree">
         <rng:element name="tree">
             <rng:optional><rng:attribute name="string"/></rng:optional>
@@ -359,6 +398,7 @@
             <rng:optional><rng:attribute name="selection"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
+                    <rng:ref name="diagram"/>
                     <rng:ref name="attribute" />
                     <rng:ref name="form"/>
                     <rng:ref name="data"/>
@@ -545,6 +585,7 @@
 
     <rng:start>
         <rng:choice>
+            <rng:ref name="diagram" />
             <rng:ref name="form" />
             <rng:ref name="search" />
             <rng:ref name="group" />

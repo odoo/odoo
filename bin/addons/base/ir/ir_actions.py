@@ -159,7 +159,7 @@ class act_window(osv.osv):
     ]
 
     def get_filters(self, cr, uid, model):
-        cr.execute('select id from ir_act_window a where a.id not in (select act_id from ir_act_window_user_rel) and a.res_model=\''+model+'\' and a.filter=\'1\';')
+        cr.execute('SELECT id FROM ir_act_window a WHERE a.id not in (SELECT act_id FROM ir_act_window_user_rel) AND a.res_model=\''+model+'\' and a.filter=\'1\';')
         all_ids = cr.fetchall()
         filter_ids =  map(lambda x:x[0],all_ids)
         act_ids = self.search(cr,uid,[('res_model','=',model),('filter','=',1),('default_user_ids','in',(','.join(map(str,[uid,])),))])
@@ -377,16 +377,34 @@ server_object_lines()
 class actions_server(osv.osv):
 
     def _select_signals(self, cr, uid, context={}):
-        cr.execute("select distinct t.signal as key, t.signal || ' - [ ' || w.osv || ' ] ' as val from wkf w, wkf_activity a, wkf_transition t "\
-                        " where w.id = a.wkf_id " \
-                        " and t.act_from = a.id " \
-                        " or t.act_to = a.id and t.signal not in (null, NULL)")
+        cr.execute("SELECT distinct w.osv, t.signal FROM wkf w, wkf_activity a, wkf_transition t \
+        WHERE w.id = a.wkf_id  AND t.act_from = a.id OR t.act_to = a.id AND t.signal!='' \
+        AND t.signal not in (null, NULL)")
         result = cr.fetchall() or []
         res = []
         for rs in result:
             if rs[0] is not None and rs[1] is not None:
-                res.append(rs)
+                line = rs[0], "%s - (%s)" % (rs[1], rs[0])
+                res.append(line)
         return res
+    
+    def _select_objects(self, cr, uid, context={}):
+        model_pool = self.pool.get('ir.model')
+        ids = model_pool.search(cr, uid, [('name','not ilike','.')])
+        res = model_pool.read(cr, uid, ids, ['model', 'name'])
+        return [(r['model'], r['name']) for r in res] +  [('','')]
+    
+    def change_object(self, cr, uid, ids, copy_object, state, context={}):
+        if state == 'object_copy':
+            model_pool = self.pool.get('ir.model')
+            model = copy_object.split(',')[0]
+            mid = model_pool.search(cr, uid, [('model','=',model)])
+            return {
+                'value':{'srcmodel_id':mid[0]},
+                'context':context
+            }
+        else:
+            return {}
 
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
@@ -404,6 +422,7 @@ class actions_server(osv.osv):
             ('email','Email'),
             ('sms','SMS'),
             ('object_create','Create Object'),
+            ('object_copy','Copy Object'),
             ('object_write','Write Object'),
             ('other','Multi Actions'),
         ], 'Action Type', required=True, size=32, help="Type of the Action that is to be executed"),
@@ -428,6 +447,7 @@ class actions_server(osv.osv):
         'write_id':fields.char('Write Id', size=256, help="Provide the field name that the record id refers to for the write operation. If it is empty it will refer to the active id of the object."),
         'loop_action':fields.many2one('ir.actions.server', 'Loop Action', help="Select the action that will be executed. Loop action will not be avaliable inside loop."),
         'expression':fields.char('Loop Expression', size=512, help="Enter the field/expression that will return the list. E.g. select the sale order in Object, and you can have loop on the sales order line. Expression = `object.order_line`."),
+        'copy_object': fields.reference('Copy Of', selection=_select_objects, size=256),
     }
     _defaults = {
         'state': lambda *a: 'dummy',
@@ -666,6 +686,26 @@ class actions_server(osv.osv):
                 cr.commit()
                 if action.record_id:
                     self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
+            
+            if action.state == 'object_copy':
+                res = {}
+                for exp in action.fields_lines:
+                    euq = exp.value
+                    if exp.type == 'equation':
+                        obj_pool = self.pool.get(action.model_id.model)
+                        obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+                        expr = eval(euq, {'context':context, 'object': obj, 'time':time})
+                    else:
+                        expr = exp.value
+                    res[exp.col1.name] = expr
+
+                obj_pool = None
+                res_id = False
+                
+                model = action.copy_object.split(',')[0]
+                cid = action.copy_object.split(',')[1]
+                obj_pool = self.pool.get(model)
+                res_id = obj_pool.copy(cr, uid, int(cid), res)
 
         return False
 

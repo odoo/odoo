@@ -2,13 +2,13 @@
 <openerp>
     <data>
         <menuitem id="menu_workflow_root" name="Workflow Definitions" parent="menu_custom"/>
-        
+
         <!--
 	================================
 	Workflows
 	================================
 	-->
-        
+
         <record id="view_workflow_form" model="ir.ui.view">
             <field name="name">workflow.form</field>
             <field name="model">workflow</field>
@@ -23,6 +23,25 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_workflow_diagram" model="ir.ui.view">
+            <field name="name">workflow.diagram</field>
+            <field name="model">workflow</field>
+            <field name="type">diagram</field>
+            <field name="arch" type="xml">
+                <diagram string="Workflow Editor">
+				  <node object="workflow.activity">
+				    <field name="name"/>
+				    <field name="kind"/>
+				  </node>
+				  <arrow object="workflow.transition" source="act_from" destination="act_to" signal="signal">
+				    <field name="act_from"/>
+				    <field name="act_to"/>
+				    <field name="signal"/>
+				  </arrow>
+				</diagram>
+            </field>
+        </record>
         <record id="view_workflow_tree" model="ir.ui.view">
             <field name="name">workflow.tree</field>
             <field name="model">workflow</field>
@@ -35,12 +54,13 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_workflow_form" model="ir.actions.act_window">
             <field name="name">Workflows</field>
             <field name="res_model">workflow</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_workflow_tree"/>
+            <field name="view_mode">tree,form,diagram</field>
         </record>
         <menuitem action="action_workflow_form" id="menu_workflow" parent="base.menu_workflow_root"/>
 
@@ -109,7 +129,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_workflow_activity_form" model="ir.actions.act_window">
             <field name="name">Activities</field>
             <field name="res_model">workflow.activity</field>
@@ -117,14 +137,14 @@
             <field name="view_id" ref="view_workflow_activity_tree"/>
         </record>
         <menuitem action="action_workflow_activity_form" id="menu_workflow_activity" parent="base.menu_workflow_root"/>
-        
-        
+
+
         <!--
 	================================
 	Transitions
 	================================
 	-->
-        
+
         <record id="view_workflow_transition_form" model="ir.ui.view">
             <field name="name">workflow.transition.form</field>
             <field name="model">workflow.transition</field>
@@ -157,8 +177,8 @@
                 </tree>
             </field>
         </record>
-        
-        
+
+
         <record id="action_workflow_transition_form" model="ir.actions.act_window">
             <field name="name">Transitions</field>
             <field name="res_model">workflow.transition</field>
@@ -166,13 +186,13 @@
             <field name="view_id" ref="view_workflow_transition_tree"/>
         </record>
         <menuitem action="action_workflow_transition_form" id="menu_workflow_transition" parent="base.menu_workflow_root"/>
-        
+
         <!--
 	================================
 	Instances
 	================================
 	-->
-        
+
         <record id="view_workflow_instance_form" model="ir.ui.view">
             <field name="name">workflow.instance.form</field>
             <field name="model">workflow.instance</field>
@@ -201,7 +221,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_workflow_instance_form" model="ir.actions.act_window">
             <field name="name">Instances</field>
             <field name="res_model">workflow.instance</field>
@@ -209,13 +229,13 @@
             <field name="view_id" ref="view_workflow_instance_tree"/>
         </record>
         <menuitem action="action_workflow_instance_form" id="menu_workflow_instance" parent="base.menu_low_workflow"/>
-        
+
         <!--
 	================================
 	Workitems
 	================================
 	-->
-        
+
         <record id="view_workflow_workitem_form" model="ir.ui.view">
             <field name="name">workflow.workitem.form</field>
             <field name="model">workflow.workitem</field>
@@ -242,7 +262,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_workflow_workitem_form" model="ir.actions.act_window">
             <field name="name">Workitems</field>
             <field name="res_model">workflow.workitem</field>
@@ -250,6 +270,6 @@
             <field name="view_id" ref="view_workflow_workitem_tree"/>
         </record>
         <menuitem action="action_workflow_workitem_form" id="menu_workflow_workitem" parent="base.menu_low_workflow"/>
-        
+
     </data>
 </openerp>

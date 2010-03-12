@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields,osv
 from lxml import etree
+from tools import graph
 import tools
 import netsvc
 import os
@@ -59,6 +60,7 @@ class view(osv.osv):
             ('mdx','mdx'),
             ('graph', 'Graph'),
             ('calendar', 'Calendar'),
+            ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('search','Search')), 'View Type', required=True),
         'arch': fields.text('View Architecture', required=True),
@@ -129,6 +131,64 @@ class view(osv.osv):
             return result
 
         return super(view, self).write(cr, uid, ids, vals, context)
+
+    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,signal,scale,context={}):
+        nodes=[]
+        nodes_name=[]
+        transitions=[]
+        start=[]
+        tres={}
+        sig={}
+        no_ancester=[]
+        blank_nodes = []
+
+        _Model_Obj=self.pool.get(model)
+        _Node_Obj=self.pool.get(node_obj)
+        _Arrow_Obj=self.pool.get(conn_obj)
+
+        for model_key,model_value in _Model_Obj._columns.items():
+                if model_value._type=='one2many':
+                    if model_value._obj==node_obj:
+                        _Node_Field=model_key
+                        _Model_Field=model_value._fields_id
+                    flag=False
+                    for node_key,node_value in _Node_Obj._columns.items():
+                        if node_value._type=='one2many':
+                             if node_value._obj==conn_obj:
+                                 if src_node in _Arrow_Obj._columns and flag:
+                                    _Source_Field=node_key
+                                 if des_node in _Arrow_Obj._columns and not flag:
+                                    _Destination_Field=node_key
+                                    flag = True
+
+        datas = _Model_Obj.read(cr, uid, id, [],context)
+        for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
+            if a[_Source_Field] or a[_Destination_Field]:
+                nodes_name.append((a['id'],a['name']))
+                nodes.append(a['id'])
+            else:
+                blank_nodes.append({'id': a['id'],'name':a['name']})
+
+            if a.has_key('flow_start') and a['flow_start']:
+                start.append(a['id'])
+            else:
+                if not a[_Source_Field]:
+                    no_ancester.append(a['id'])
+            for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
+                transitions.append((a['id'], t[des_node][0]))
+                tres[str(t['id'])] = (a['id'],t[des_node][0])
+                if t.has_key(str(signal)) and str(t[signal])=='False':
+                    t[signal]=' '
+                sig[str(t['id'])] = (a['id'],t.get(signal,' '))
+        g  = graph(nodes, transitions, no_ancester)
+        g.process(start)
+        g.scale(*scale)
+        result = g.result_get()
+        results = {}
+        for node in nodes_name:
+            results[str(node[0])] = result[node[0]]
+            results[str(node[0])]['name'] = node[1]
+        return {'nodes': results, 'transitions': tres, 'signal' : sig, 'blank_nodes': blank_nodes}
 view()
 
 class view_sc(osv.osv):
