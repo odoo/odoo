@@ -32,7 +32,7 @@ class sale_report(osv.osv):
         'date': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'), 
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),
@@ -57,7 +57,7 @@ class sale_report(osv.osv):
     }
     _order = 'date desc'
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_sale_order_product')
+        tools.drop_view_if_exists(cr, 'sale_report')
         cr.execute("""
             create or replace view sale_report as (
                  select

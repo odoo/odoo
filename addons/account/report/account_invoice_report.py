@@ -58,7 +58,7 @@ class account_invoice_report(osv.osv):
     }
     _order = 'date desc'
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_account_invoice_report')
+        tools.drop_view_if_exists(cr, 'account_invoice_report')
         cr.execute("""
             create or replace view account_invoice_report as (
                  select
