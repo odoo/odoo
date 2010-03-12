@@ -39,6 +39,18 @@ class sale_advance_payment_inv(osv.osv_memory):
         'qtty' : lambda *a: 1
                }
     def create_invoices(self, cr, uid, ids, context={}):
+        """ 
+             @summary: To create invoices.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """        
         list_inv = []
         obj_sale = self.pool.get('sale.order')
         obj_lines = self.pool.get('account.invoice.line')
@@ -130,6 +142,18 @@ class sale_open_invoice(osv.osv_memory):
     }
 
     def open_invoice(self, cr, uid, ids, context):
+        """ 
+             @summary: To open invoice.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """        
         mod_obj = self.pool.get('ir.model.data')
         invoices = []
         #TODO: Can not get invoice ids here

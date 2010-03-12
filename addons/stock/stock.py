@@ -1713,8 +1713,12 @@ class stock_inventory_line(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_qty': fields.float('Quantity'),
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
-        'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]")
+        'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
+#        'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('cancel','Cancelled')), 'State', readonly=True),
     }
+#    _defaults = {
+#        'state': lambda *a: 'draft',
+#    }
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):
         if not product:
             return {}

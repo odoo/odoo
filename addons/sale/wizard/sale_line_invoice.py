@@ -37,11 +37,33 @@ class sale_order_line_make_invoice(osv.osv_memory):
     }
 
     def make_invoices(self, cr, uid, ids, context):
+        """ 
+             @summary: To make invoices.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
+        
+        """        
+
         res = False
         invoices = {}
 
     #TODO: merge with sale.py/make_invoice
         def make_invoice(order, lines):
+            """ 
+                 @summary: To make invoices.
+                
+                 @param order: 
+                 @param lines: 
+                
+                 @return:  
+            
+            """            
             a = order.partner_id.property_account_receivable.id
             if order.partner_id and order.partner_id.property_payment_term.id:
                 pay_term = order.partner_id.property_payment_term.id

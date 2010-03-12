@@ -36,6 +36,18 @@ class stock_move_track(osv.osv_memory):
                  }
     
     def track_lines(self, cr, uid, ids, context={}):
+        """ 
+             @summary:To track stock moves lines
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return: 
+        
+        """                
         datas = self.read(cr, uid, ids)[0]
         move_obj = self.pool.get('stock.move')
         move_obj._track_lines(cr, uid, context['active_id'], datas, context=context)
@@ -55,18 +67,63 @@ class stock_move_consume(osv.osv_memory):
               }
 
     def _get_product_id(self, cr, uid, context):
+        """ 
+             @summary:To get product id
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary 
+             
+             @return: product id
+        
+        """                        
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         return move.product_id.id
     
     def _get_product_qty(self, cr, uid, context):
+        """ 
+             @summary:To get product quantity
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary 
+             
+             @return: quantity
+        
+        """                
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         return move.product_qty
     
     def _get_product_uom(self, cr, uid, context):
+        """ 
+             @summary:To get Unit of measure
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary 
+             
+             @return: uom
+        
+        """                
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         return move.product_uom.id
     
     def _get_location_id(self, cr, uid, context):
+        """ 
+             @summary:To get location id
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary 
+             
+             @return: location id
+        
+        """                
+        
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         return move.location_id.id
     
@@ -78,6 +135,18 @@ class stock_move_consume(osv.osv_memory):
                  }
 
     def do_move_consume(self, cr, uid, ids, context={}):
+        """ 
+             @summary:To move consumed products
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return: 
+        
+        """              
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):            
@@ -99,6 +168,18 @@ class stock_move_scrap(osv.osv_memory):
     }
 
     def move_scrap(self, cr, uid, ids, context={}):
+        """ 
+             @summary:To move scraped products
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return: 
+        
+        """              
         move_obj = self.pool.get('stock.move')        
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):
@@ -128,10 +209,35 @@ class split_in_production_lot(osv.osv_memory):
                  }
 
     def split_lot(self, cr, uid, ids, context=None):
+        """ 
+             @summary:To split a lot
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return: 
+        
+        """                    
         self.split(cr, uid, ids, context.get('active_ids'), context=context)
         return {}
 
     def split(self, cr, uid, ids, move_ids, context=None):
+        """ 
+             @summary:To split stock moves into production lot
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param move_ids: the ID or list of IDs of stock move we want to split
+             @param context: A standard dictionary 
+             
+             @return: 
+        
+        """                    
         prodlot_obj = self.pool.get('stock.production.lot')
         ir_sequence_obj = self.pool.get('ir.sequence')
         move_obj = self.pool.get('stock.move')

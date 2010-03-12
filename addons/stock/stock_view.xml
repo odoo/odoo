@@ -18,7 +18,11 @@
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="prod_lot_id"/>
+					<button name="%(stock.action_view_stock_inventory_line_split)d"
+                    		 		string="Split inventory lines"
+                      		 		type="action" icon="gtk-justify-fill"/>                    
                     <field name="location_id"/>
+                    
                 </tree>
             </field>
         </record>
@@ -87,6 +91,9 @@
                                 <field name="product_uom"/>
                                 <field name="prod_lot_id"/>
                                 <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
+									<button name="%(stock.action_view_stock_inventory_line_split)d"
+                    		 		string="Split inventory lines"
+                      		 		type="action" icon="gtk-justify-fill" states="draft"/>
                             </tree>
                             <form string="Inventory Lines">
                                 <field colspan="4" context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1" domain="[('type','&lt;&gt;','service')]"/>

@@ -37,6 +37,17 @@ class stock_inventory_line_split(osv.osv_memory):
             }
 
     def _check_production_lot(self, cr, uid, context):
+        """ 
+             @summary: to check the availability of production lot. 
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """             
         stock_inventory_line_obj = self.pool.get('stock.inventory.line')
         for inv_obj in stock_inventory_line_obj.browse(cr, uid, \
                             context['active_ids']):
@@ -51,6 +62,18 @@ inventory lines, make sure the production lot is assigned to this product.'))
             }
 
     def split_lines(self, cr, uid, ids, context):
+        """ 
+             @summary: to split stock inventory lines according to production lot
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """             
         inv_id = context['active_id']
         inv_line_obj = self.pool.get('stock.inventory.line')
         prodlot_obj = self.pool.get('stock.production.lot')
