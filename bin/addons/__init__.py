@@ -299,11 +299,11 @@ def load_information_from_description_file(module):
     :param module: The name of the module (sale, purchase, ...)
     """
     for filename in ['__openerp__.py', '__terp__.py']:
-        description_file = addons.get_module_resource(module, filename)
+        description_file = get_module_resource(module, filename)
         if os.path.isfile(description_file):
             return eval(tools.file_open(description_file).read())
 
-    raise Exception('The module %s does not contain a description file: __openerp__.py or __terp__.py (deprecated)')
+    raise Exception('The module %s does not contain a description file: __openerp__.py or __terp__.py (deprecated)' % module)
 
 def get_modules_with_version():
     modules = get_modules()
