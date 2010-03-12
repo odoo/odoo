@@ -39,5 +39,6 @@ import pos_add_product
 import pos_confirm
 import pos_discount
 import pos_get_sale
+import pos_open_statement
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

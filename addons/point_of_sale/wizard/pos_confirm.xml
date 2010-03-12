@@ -4,7 +4,7 @@
         <!--  Point of Sale Confirm -->
         
 		<record id="view_pos_confirm" model="ir.ui.view">
-            <field name="name">Open Statements</field>
+            <field name="name">Sale Confirm</field>
             <field name="model">pos.confirm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -20,7 +20,7 @@
         </record>
 
         <record id="action_pos_confirm" model="ir.actions.act_window">
-            <field name="name">Open Statements</field>
+            <field name="name">Sale Confirm</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.confirm</field>
             <field name="view_type">form</field>
@@ -31,7 +31,7 @@
        <record model="ir.values" id="values_pos_confirm">
             <field name="model_id" ref="point_of_sale.model_pos_order" />
             <field name="object" eval="1" />
-            <field name="name">Open Statements</field>
+            <field name="name">Sale Confirm</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_pos_confirm'))"/>
             <field name="key">action</field>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>        
+        <!--  Point of Sale Confirm -->
+        
+		<record id="view_pos_open_statement" model="ir.ui.view">
+            <field name="name">Open Statements</field>
+            <field name="model">pos.open.statement</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Open Statements">
+				     	<label string="Are you sure you want to open the statements ?" colspan="2"/>
+				     	<newline/>
+                		<button icon='gtk-cancel' special="cancel"
+                			string="No" />
+                		<button name="open_statement" string="Yes"
+                			colspan="1" type="object" icon="gtk-ok"/>
+                </form>
+            </field>
+        </record>
+		<act_window name="Open Statements"
+				res_model="pos.open.statement"
+				src_model="account.bank.statement"
+				view_mode="form"
+				target="new"
+				key2="client_action_multi"    
+			id="act_pos_open_statement"/>
+
+        <record id="action_pos_open_statement" model="ir.actions.act_window">
+            <field name="name">Open Register</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.open.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'record_id' : active_id}</field>
+        </record>
+    
+   
+   <menuitem name="Point of Sale" id="menu_point_root" sequence="10"/>
+   <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="5"/>
+       <menuitem name="Register Management" parent="menu_point_root"
+            id="menu_point_config" sequence="3"/>
+		<menuitem
+            name="Open Register" parent="menu_point_config"
+            string="Open Register"
+            action="action_pos_open_statement"
+            id="menu_open_statement" sequence="1" />
+
+
+        
+	</data>
+</openerp>	        

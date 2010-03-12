@@ -47,6 +47,7 @@ Main features :
         'wizard/pos_confirm.xml',
         'wizard/pos_discount.xml',
         'wizard/pos_get_sale.xml',
+        'wizard/pos_open_statement.xml', 
         'pos_view.xml',
         'pos_sequence.xml',
         'posrule_data.xml',
