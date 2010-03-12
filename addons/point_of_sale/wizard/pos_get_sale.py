@@ -41,10 +41,11 @@ class pos_get_sale(osv.osv_memory):
              @return : nothing
         """        
         this = self.browse(cr, uid, ids[0], context=context)
-        record_id = context and context.get('record_id',False)
+        record_id = context and context.get('active_id',False)
         
         proxy_pos = self.pool.get('pos.order')
         proxy_pick = self.pool.get('stock.picking')
+        proxy_order_line=self.pool.get('pos.order.line')
         
         if record_id:
             order=proxy_pos.browse(cr, uid, record_id, context)
@@ -64,7 +65,7 @@ class pos_get_sale(osv.osv_memory):
             })
         
             for line in pick.move_lines:
-                self.pool.get('pos.order.line').create(cr, uid, {
+                proxy_order_line.create(cr, uid, {
                     'name': line.sale_line_id.name,
                     'order_id': record_id,
                     'qty': line.product_qty,

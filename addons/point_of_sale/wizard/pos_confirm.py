@@ -37,21 +37,22 @@ class pos_confirm(osv.osv_memory):
         """    
        
         this = self.browse(cr, uid, ids[0], context=context)
-        record_id = context and context.get('record_id',False)
-        if isinstance(record_id, (int, long)):
-            record_id=[record_id]
+        record_id = context and context.get('active_id',False)
         if record_id:
-            company_id=self.pool.get('res.users').browse(cr,uid,uid).company_id
-            order_obj = self.pool.get('pos.order')
+            if isinstance(record_id, (int, long)):
+                record_id=[record_id]
+            if record_id:
+                company_id=self.pool.get('res.users').browse(cr,uid,uid).company_id
+                order_obj = self.pool.get('pos.order')
+                
+                for order_id in order_obj.browse(cr, uid, record_id, context=context):
+                    if  order_id.state =='paid':
+                        order_obj.write(cr,uid,[order_id.id],{'journal_entry':True})
+                        order_obj.create_account_move(cr, uid, [order_id.id], context=context)
             
-            for order_id in order_obj.browse(cr, uid, record_id, context=context):
-                if  order_id.state =='paid':
-                    order_obj.write(cr,uid,[order_id.id],{'journal_entry':True})
-                    order_obj.create_account_move(cr, uid, [order_id.id], context=context)
-        
-            wf_service = netsvc.LocalService("workflow")
-            for i in record_id:
-                wf_service.trg_validate(uid, 'pos.order', i, 'done', cr)
+                wf_service = netsvc.LocalService("workflow")
+                for i in record_id:
+                    wf_service.trg_validate(uid, 'pos.order', i, 'done', cr)
         return {}
         
 pos_confirm()
