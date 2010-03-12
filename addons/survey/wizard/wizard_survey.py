@@ -58,7 +58,7 @@ _survey_form = '''<?xml version="1.0"?>
 
 
 _survey_fields = {
-    'partner_ids': {'string':'Partner', 'type':'many2many', 'relation':'res.partner'}, 
+    'partner_ids': {'string':'Partner', 'type':'many2many', 'relation':'res.partner', 'required' : '1'}, 
     'send_mail': {'string':'Send mail for new user', 'type':'boolean', 'default':lambda *a: 1}, 
     'send_mail_existing': {'string':'Send reminder for existing user', 'type':'boolean', 'default':lambda *a: 1}, 
     'mail_subject': {'string':'Subject', 'type':'char', 'default':lambda *a: "New user account.", "size":256}, 
