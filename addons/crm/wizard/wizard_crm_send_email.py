@@ -61,11 +61,17 @@ def _mass_mail_send(self, cr, uid, data, context):
                 'som': False,
                 'canal_id': False,
                 })
-    emails = [data['form']['to']] + (data['form']['cc'] or '').split(',')
+    from_to = tools.email_re.search(data['form']['to']).group(1)
+    emails = []
+    if from_to:
+        emails.append(from_to)
+    for cc in (data['form']['cc'] or '').split(','):
+        if cc:
+            emails.append(tools.email_re.search(cc).group(1))
     emails = filter(None, emails)
     body = data['form']['text']
     if case.user_id.signature:
-        body += '\n\n%s' % (case.user_id.signature)
+        body += '\n\n%s' % (case.user_id.signature).encode('utf8')
     tools.email_send(
         case.user_id.address_id.email,
         emails,

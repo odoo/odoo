@@ -36,13 +36,18 @@ class crm_cases(osv.osv):
     _name = "crm.case"
     _inherit = "crm.case"
 
+    def _decode_header(self, s):
+        from email.Header import decode_header
+        s = decode_header(s)
+        return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
+
     def msg_new(self, cr, uid, msg):                
         mailgate_obj = self.pool.get('mail.gateway')
         msg_body = mailgate_obj.msg_body_get(msg)
         data = {   
-            'name': msg['Subject'],         
-            'email_from': msg['From'],
-            'email_cc': msg['Cc'],            
+            'name': self._decode_header(msg['Subject']),         
+            'email_from': self._decode_header(msg['From']),
+            'email_cc': msg['Cc'] and self._decode_header(msg['Cc']),            
             'user_id': False,
             'description': msg_body['body'],            
         }
@@ -51,7 +56,7 @@ class crm_cases(osv.osv):
             data.update(res)
         res = self.create(cr, uid, data)        
         cases = self.browse(cr, uid, [res])       
-        self._history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])
+        self._history(cr, uid, cases, _('Receive'), history=True, email=self._decode_header(msg['From']))
         return res
     
     def msg_update(self, cr, uid, ids, msg, data={}, default_act='pending'):

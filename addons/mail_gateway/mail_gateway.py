@@ -362,13 +362,11 @@ class mail_gateway(osv.osv):
                 del msg['Subject']
             msg['Subject'] = '[%s] %s' %(str(res_id), subject)            
 
-        em = [user_email, from_email] + (cc_email or '').split(',')
+        em = [user_email or '', from_email] + (cc_email or '').split(',')
         emails = map(self.emails_get, filter(None, em))
-
         mm = [self._decode_header(msg['From']), self._decode_header(msg['To'])]+self._decode_header(msg.get('Cc','')).split(',')
         msg_mails = map(self.emails_get, filter(None, mm))
-
-        emails = filter(lambda m: m and m not in msg_mails, emails)        
+        emails = filter(lambda m: m and m not in msg_mails, emails)
         try:
             self.msg_send(msg, mailgateway.reply_to, emails, priority, res_id)
             if hasattr(self.pool.get(res_model), 'msg_send'):

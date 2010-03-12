@@ -81,7 +81,7 @@ def _mass_mail_send(self, cr, uid, data, context):
     emails = filter(None, emails)
     body = data['form']['text']
     if case.user_id.signature:
-        body += '\n\n%s' % (case.user_id.signature)
+        body += '\n\n%s' % (case.user_id.signature).encode('utf8')
     case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['form']['to'], details=body)
     flag = tools.email_send(
         case.user_id.address_id.email,
