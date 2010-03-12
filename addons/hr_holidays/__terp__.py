@@ -36,9 +36,9 @@
     - An employee can make an ask for more off-days by making a new Allocation It will increase his total of that leave type available (if the request is accepted).
     - There are two ways to print the employee's holidays:
         * The first will allow to choose employees by department and is used by clicking the menu item located in
-                HR / Holidays Request / Print Summary of Holidays
+                HR / Reporting / Holidays / Print Summary of Holidays
         * The second will allow you to choose the holidays report for specific employees. Go on the list
-                HR / Employees / Employees
+                HR / Human Resources / Employees
             then select the ones you want to choose, click on the print icon and select the option
                 'Print Summary of Employee's Holidays'
     - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR' and with the role 'holidays'. You can define these features in the security tab from the user data in
