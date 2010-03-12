@@ -15,22 +15,26 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                        <group col='8' colspan='4'>
-                           <filter icon="terp-hr" domain="[('state','=','draft')]" string="To Confirm"/>
-                           <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
-                           <separator orientation="vertical"/> 
+                           <filter icon="gtk-yes" domain="[('state','=','draft')]" string="To Confirm"/>
+                           <filter icon="gtk-apply" domain="[('state','=','confirm')]" string="To Validate"/>
+                           <separator orientation="vertical"/>
                           <field name="name" select='1'/>
                           <field name="state" select="1">
                               <filter icon="terp-hr" domain="[('state','=','refuse')]" help="Refused Holidays"/>
                               <filter icon="terp-hr" domain="[('state','=','validate')]" help="Validated Holidays"/>
-                          </field>                          
+                          </field>
                           <field name="user_id" select="1" widget="selection">
-                              <filter icon="gtk-execute" help="My Leaves" domain="[('user_id','=',uid)]" />  
-                          </field> 
+                              <filter icon="terp-partner" help="My Leaves" domain="[('user_id','=',uid)]" />
+                          </field>
                           <field name="department_id" select="1" widget="selection">
-                          		<filter icon="gtk-execute" domain="[('department_id','=',context.get('department_id',False))]"
+                          		<filter icon="gtk-home" domain="[('department_id','=',context.get('department_id',False))]"
 								help="My Departments Leaves"/>
                           </field>
                       </group>
+                      <newline/>
+	                  <group col='8' colspan='15' expand='1' string='Group by...'>
+	                      <filter string='State' icon="terp-report" domain="[]" context="{'group_by' : 'state'}" />
+	                  </group>
                  </search>
             </field>
         </record>
@@ -211,28 +215,28 @@
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
-     <record model="ir.actions.act_window.view" id="action_open_ask_holidays_tree">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_holiday"/>
-        <field name="act_window_id" ref="open_ask_holidays"/>
-    </record>
+	    <record model="ir.actions.act_window.view" id="action_open_ask_holidays_tree">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_holiday"/>
+	        <field name="act_window_id" ref="open_ask_holidays"/>
+	    </record>
 
-    <record model="ir.actions.act_window.view" id="action_open_ask_holidays_form">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="edit_holiday_new"/>
-        <field name="act_window_id" ref="open_ask_holidays"/>
-    </record>
+	    <record model="ir.actions.act_window.view" id="action_open_ask_holidays_form">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="edit_holiday_new"/>
+	        <field name="act_window_id" ref="open_ask_holidays"/>
+	    </record>
 
 
-   <!--  <menuitem
-          name="Holidays Requests"
-            parent="menu_open_ask_holidays"
-            id="menu_open_ask_holidays_new"
-            action="open_ask_holidays"/>-->
-       <menuitem
-          name="Leaves Requests"
+	   <!--  <menuitem
+	          name="Holidays Requests"
+	            parent="menu_open_ask_holidays"
+	            id="menu_open_ask_holidays_new"
+	            action="open_ask_holidays"/>-->
+       	<menuitem
+            name="Leaves Requests"
             parent="menu_open_ask_holidays"
             id="menu_open_ask_holidays_new"
             action="open_ask_holidays"/>
@@ -246,26 +250,26 @@
             <field name="view_id" ref="allocation_leave_new" />
         </record>
 
-	<record model="ir.actions.act_window.view" id="action_open_allocation_holidays_tree">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_holiday"/>
-        <field name="act_window_id" ref="open_allocation_holidays"/>
-    </record>
+		<record model="ir.actions.act_window.view" id="action_open_allocation_holidays_tree">
+	        <field name="sequence" eval="1"/>
+	        <field name="view_mode">tree</field>
+	        <field name="view_id" ref="view_holiday"/>
+	        <field name="act_window_id" ref="open_allocation_holidays"/>
+	    </record>
 
-    <record model="ir.actions.act_window.view" id="action_open_allocation_holidays_form">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="allocation_company_new"/>
-        <field name="act_window_id" ref="open_allocation_holidays"/>
-    </record>
+	    <record model="ir.actions.act_window.view" id="action_open_allocation_holidays_form">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">form</field>
+	        <field name="view_id" ref="allocation_company_new"/>
+	        <field name="act_window_id" ref="open_allocation_holidays"/>
+	    </record>
 
 
-    <!-- <menuitem
-          name="Allocation Requests"
-            parent="menu_open_ask_holidays"
-            id="menu_open_allocation_holidays"
-            action="open_allocation_holidays"/>-->
+	    <!-- <menuitem
+	          name="Allocation Requests"
+	            parent="menu_open_ask_holidays"
+	            id="menu_open_allocation_holidays"
+	            action="open_allocation_holidays"/>-->
 
         <!-- holidays status -->
         <record model="ir.ui.view" id="edit_holiday_status_form">

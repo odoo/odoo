@@ -57,7 +57,7 @@
         'hr_holidays_wizard.xml',
         #'process/hr_holidays_process.xml'
     ],
-    'demo_xml': [],
+    'demo_xml': ['hr_holidays_demo.xml'],
     'installable': True,
     'active': False,
     'certificate': '0086579209325',
