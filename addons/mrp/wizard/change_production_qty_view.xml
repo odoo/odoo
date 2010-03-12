@@ -28,18 +28,8 @@
             <field name="res_model">change.production.qty</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{'record_id' : active_id}</field>
+            <field name="target">new</field>            
         </record>
-
-       <record model="ir.values" id="values_change_production_qty">
-            <field name="model_id" ref="mrp.model_mrp_production" />
-            <field name="object" eval="1" />
-            <field name="name">Change Product Qty</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_change_production_qty'))"/>
-            <field name="key">action</field>
-            <field name="model">mrp.production</field>
-        </record>
+       
 	</data>
 </openerp>	

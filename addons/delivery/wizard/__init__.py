@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import delivery_sale_order_wizard
+import delivery_sale_order
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

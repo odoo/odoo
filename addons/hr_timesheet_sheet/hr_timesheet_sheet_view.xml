@@ -7,7 +7,7 @@
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Timesheets" editable="top">
+                <tree string="Timesheets">
                     <field name="user_id"/>
                     <field name="department_id"/>
                     <field name="date_from"/>
@@ -178,15 +178,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                   <group col="10" colspan="4">		                						
-						<filter icon="terp-crm" string="Unvalidated" domain="[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Unvalidated Timesheets"/>
-                       	<separator orientation="vertical"/>
-                       	<field name="state">
-                           <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
-                           <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-						</field>
-						<field name="name" select="1"/>
-						<field name="user_id" select="1" widget="selection">
+                    <group col="10" colspan="4">
+                        <filter icon="terp-crm" string="Unvalidated" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
+                        <filter icon="terp-crm" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Timesheets"/>
+                        <separator orientation="vertical"/>
+                        <field name="state">
+                            <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
+                            <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                        </field>
+                        <field name="name" select="1"/>
+                        <field name="user_id" select="1" widget="selection">
                             <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Timesheet"/>
                         </field>
                         <field name="department_id" widget="selection">
@@ -268,7 +269,7 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="hr_attendance.view_hr_attendance_filter" />
             <field name="arch" type="xml">
-                <field name="action_desc" position="after">
+                <field name="action" position="after">
                     <field name="sheet_id" select="1" />
                 </field>
             </field>
@@ -291,7 +292,18 @@
             <field name="type">tree</field>
             <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
             <field name="arch" type="xml">
-                <field name="action_desc" position="after">
+                <field name="action" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_attendance_tree_who" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
+            <field name="arch" type="xml">
+                <field name="action" position="after">
                     <field name="sheet_id"/>
                 </field>
             </field>

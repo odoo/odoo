@@ -60,7 +60,7 @@
         'security/ir.model.access.csv',
         'mrp_workflow.xml',
         'mrp_data.xml',
-        'mrp_wizard_view.xml',
+        'wizard/mrp_product_produce_view.xml',
         'wizard/make_procurement_view.xml',
         'wizard/change_production_qty_view.xml',
         'wizard/orderpoint_procurement_view.xml',

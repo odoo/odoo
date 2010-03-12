@@ -9,7 +9,7 @@
             <field name="model">mrp.repair.cancel</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Requisition Request">
+                <form string="Cancel Repair Order">
 				    <label string="This operation will cancel the Repair process, but will not cancel it's Invoice. Do you want to continue?" colspan="4"/>
 				    <newline/>
 				    <group col="2" colspan="4">
@@ -20,26 +20,18 @@
                 	</group>
                 </form>
             </field>
-        </record>
+        </record>         
 
         <record id="action_cancel_repair" model="ir.actions.act_window">
-            <field name="name">Cancel Repair</field>
+            <field name="name">Cancel Repair Order</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.repair.cancel</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="context">{'record_id' : active_id}</field>
-        </record>
- 
- 		<record model="ir.values" id="action_cancel_repair_related">
- 			<field name="model_id" ref="mrp_repair.model_mrp_repair" />
-            <field name="object" eval="1" />
-            <field name="name">Cancel Repair</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_cancel_repair'))" />
-            <field name="key">action</field>
-            <field name="model">mrp.repair</field>
-        </record>
+            <field name="context">{'order_id':active_id}</field>
+        </record> 
+ 		
         
 	</data>
 </openerp>	

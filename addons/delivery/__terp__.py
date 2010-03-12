@@ -31,8 +31,7 @@
     'update_xml': [
         'security/ir.model.access.csv',
         'wizard/delivery_sale_order_view.xml',
-        'delivery_view.xml',
-        'delivery_wizard.xml',
+        'delivery_view.xml',        
         'partner_view.xml'
     ],
     'demo_xml': ['delivery_demo.xml'],

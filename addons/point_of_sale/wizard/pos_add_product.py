@@ -45,7 +45,8 @@ class add_product(osv.osv_memory):
              @return : Retrun the add product form again for adding more product
         """        
         this = self.browse(cr, uid, ids[0], context=context)
-        record_id = context and context.get('record_id',False)
+        record_id = context and context.get('active_id',False)
+        assert record_id, _('Active ID is not found')
         if record_id:
              order_obj = self.pool.get('pos.order')
              order_obj.add_product(cr, uid, record_id, this.product_id.id,this.quantity,context=context)

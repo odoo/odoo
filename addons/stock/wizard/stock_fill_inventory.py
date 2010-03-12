@@ -85,7 +85,7 @@ class stock_fill_inventory(osv.osv_memory):
 
                 if(len(product_ids) == 0):
                     raise osv.except_osv(_('Message !'), _('No product in this location.'))
-                return {}
+        return {}
 
 stock_fill_inventory()
 

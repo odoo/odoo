@@ -50,7 +50,7 @@ class inventory_merge_stock_zero(osv.osv_memory):
         
             cr.execute('select distinct location_id,product_id \
                         from stock_inventory_line \
-                        where inventory_id=%s', (context['active_ids'][0],))
+                        where inventory_id=%s', (context['active_id'],))
             inv = cr.fetchall()
             cr.execute('select distinct product_id from stock_move where \
                         location_dest_id=%s or location_id=%s', (loc, loc,))
@@ -59,7 +59,7 @@ class inventory_merge_stock_zero(osv.osv_memory):
                 if (loc, s[0]) not in inv:
                     p = prod_obj.browse(cr, uid, s[0])
                     invent_line_obj.create(cr, uid, {
-                        'inventory_id': context['active_ids'][0], 
+                        'inventory_id': context['active_id'], 
                         'location_id': loc, 
                         'product_id': s[0], 
                         'product_uom': p.uom_id.id, 

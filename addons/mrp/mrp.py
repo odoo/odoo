@@ -190,6 +190,7 @@ class mrp_bom(osv.osv):
         'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
         'multi_level_bom': fields.boolean('Multi-level BoM'),
+
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -377,30 +378,7 @@ class one2many_domain(fields.one2many):
 class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Production'
-    _date_name  = 'date_planned'
-
-    def _get_sale_order(self,cr,uid,ids,field_name=False):
-        move_obj=self.pool.get('stock.move')
-        def get_parent_move(move_id):
-            move = move_obj.browse(cr,uid,move_id)
-            if move.move_dest_id:
-                return get_parent_move(move.move_dest_id.id)
-            return move_id
-        productions=self.read(cr,uid,ids,['id','move_prod_id'])
-        res={}
-        for production in productions:
-            res[production['id']]=False
-            if production.get('move_prod_id',False):
-                parent_move_line=get_parent_move(production['move_prod_id'][0])
-                if parent_move_line:
-                    move = move_obj.browse(cr,uid,parent_move_line)
-                    #TODO: fix me sale module can not be used here,
-                    #as may be mrp can be installed without sale module
-                    if field_name=='name':
-                        res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.name or False
-                    if field_name=='client_order_ref':
-                        res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.client_order_ref or False
-        return res
+    _date_name  = 'date_planned'    
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
         result = {}
@@ -426,11 +404,12 @@ class mrp_production(osv.osv):
             result[prod.id] = prod.date_planned[:10]
         return result
 
-    def _sale_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        return self._get_sale_order(cr,uid,ids,field_name='name')
-
-    def _sale_ref_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        return self._get_sale_order(cr,uid,ids,field_name='client_order_ref')
+    def _ref_calc(self, cr, uid, ids, field_names=None, arg=False, context={}):
+        res = {}
+        for f in field_names:
+            for order_id in ids:
+                res[order_id] = {f:False}
+        return res
 
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
@@ -472,8 +451,8 @@ class mrp_production(osv.osv):
         'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
-        'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name', help='Indicate the name of sale order.'),
-        'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
+        'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sale order.'),
+        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_ref', type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {

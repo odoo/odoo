@@ -32,10 +32,7 @@
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="prod_lot_id"/>
-                    <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
-                  <!--   <button name="%(split_inventory_lots)d"
-                    	string="Split Inventory Lines" type="action"
-                    	icon="gtk-justify-fill" /> -->
+                    <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>                  
                     	 <button name="%(stock.action_view_stock_inventory_line_split)d"
                     		 		string="Split inventory lines"
                       		 		type="action" icon="gtk-justify-fill"/>
@@ -674,10 +671,7 @@
                             <newline/>
                             <field name="move_type"/>
                         </page>
-                    </notebook>
-                    <button
-                    	name="%(stock.action_stock_invoice_onshipping)d"
-                    	string="Create Invoices" type="action" />
+                    </notebook>                    
                 </form>
             </field>
         </record>
@@ -699,8 +693,8 @@
                         <field name="location_dest_id" select="1"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                    </group>
-                    <newline/>
+                    </group>  
+                    <newline/>                   
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
@@ -829,10 +823,7 @@
                             <field name="date_done" select="2"/>
                             <field name="move_type"/>
                         </page>
-                    </notebook>
-					<button
-                     	name="%(stock.action_stock_invoice_onshipping)d"
-                     	string="Create Invoice" type="action" />
+                    </notebook>					
                 </form>
             </field>
         </record>
@@ -852,8 +843,8 @@
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
                         <field name="origin" select="1"/>
-                    </group>
-                    <newline/>
+                    </group> 
+                    <newline/>                    
                     <group expand="1" string="Group By..." colspan="4" col="10">
                         <filter string="Partner" icon="terp-stock" domain="[]"  context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
@@ -1035,9 +1026,9 @@
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
-                   </group>
-                   <newline/>
-                    <group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+                   </group>   
+                    <newline/>                 
+                    <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
 						<filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
@@ -1207,8 +1198,8 @@
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
                         <field name="company_id" select="1" widget="selection" groups="base.group_multi_company" />
-                    </group>
-                    <newline/>
+                    </group>  
+                    <newline/>                   
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
@@ -1261,8 +1252,8 @@
                         <field name="name" select="1"/>
                         <field name="origin" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
-                    </group>
-                    <newline/>
+                    </group>  
+                    <newline/>                   
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
@@ -1381,8 +1372,8 @@
                         <field name="location_id" select="1"/>
                         <field name="location_dest_id" select="1"/>
                         <field name="product_id" select="1"/>
-                    </group>
-                    <newline/>
+                    </group> 
+                    <newline/>                    
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Product" icon="terp-stock" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
@@ -1514,9 +1505,9 @@
                         <field name="origin" string="Latest Requisition" select="1"/>
 	            		<field name="partner_id" string="Supplier" select="1"/>
 	                    <field name="product_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="context.get('report',False)" string="Group By..." colspan="4" col="8">
+                    </group>   
+                    <newline/>                 
+                    <group expand="1" string="Group By..." colspan="4" col="8">
 						<filter string="Product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
 						<filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
 						<filter string="Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
@@ -1630,7 +1621,7 @@
             <field name="key2">tree_but_open</field>
             <field name="model">stock.location</field>
             <field name="name">Open Products</field>
-            <field eval="'ir.actions.wizard,%d'%ref('location_product')" name="value"/>
+            <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
             <field eval="True" name="object"/>
         </record>  
 

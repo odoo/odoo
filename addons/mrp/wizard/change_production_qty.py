@@ -46,17 +46,17 @@ class change_production_qty(osv.osv_memory):
              
              @return: A dictionary which of fields with values. 
         
-        """
-        record_id = context and context.get('record_id',False)
+        """        
         res = {}
+        record_id = context and context.get('active_id',False)
+        if not record_id:
+           return res
         prod_obj = self.pool.get('mrp.production')
         prod = prod_obj.browse(cr, uid, record_id)
-        if prod.state in ('cancel', 'done'):
+        if prod.state in ('in_production','cancel', 'done'):
             raise osv.except_osv(_('Warning !'), _('The production is in "%s" state. You can not change the production quantity anymore') % (prod.state).upper() )
-        if prod.state in ('draft'):
-            return res
-        if record_id:
-            res['product_qty'] = prod.product_qty
+ 
+        res['product_qty'] = prod.product_qty        
         return res
     
     def change_prod_qty(self, cr, uid, ids, context):
@@ -72,37 +72,37 @@ class change_production_qty(osv.osv_memory):
              @return:  
         
         """
-        record_id = context and context.get('record_id',False)
+        record_id = context and context.get('active_id',False)
+        assert record_id, _('Active Id is not found')
         prod_obj = self.pool.get('mrp.production')
-        wiz_qty = self.browse(cr, uid, ids[0])
-        prod = prod_obj.browse(cr, uid,record_id)
-        prod_obj.write(cr, uid,prod.id, {'product_qty': wiz_qty.product_qty})
-        prod_obj.action_compute(cr, uid, [prod.id])
+        product_lines_obj = self.pool.get('mrp.production.product.line')
+        bom_obj = self.pool.get('mrp.bom')
+        for wiz_qty in self.browse(cr, uid, ids):
+            prod = prod_obj.browse(cr, uid,record_id)
+            prod_obj.write(cr, uid,prod.id, {'product_qty': wiz_qty.product_qty})
+            prod_obj.action_compute(cr, uid, [prod.id])
         
-        move_lines_obj = self.pool.get('stock.move')
-        for move in prod.move_lines:
-            bom_point = prod.bom_id
-            bom_id = prod.bom_id.id
-            if not bom_point:
-                bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, prod.product_id.id, prod.product_uom.id)
+            move_lines_obj = self.pool.get('stock.move')
+            for move in prod.move_lines:
+                bom_point = prod.bom_id
+                bom_id = prod.bom_id.id
+                if not bom_point:
+                    bom_id = bom_obj._bom_find(cr, uid, prod.product_id.id, prod.product_uom.id)
+                    if not bom_id:
+                        raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
+                    prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
+                    bom_point = sbom_obj.browse(cr, uid, [bom_id])[0]
+        
                 if not bom_id:
                     raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
-                prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
-                bom_point = self.pool.get('mrp.bom').browse(cr, uid, [bom_id])[0]
-    
-            if not bom_id:
-                raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
-    
-            factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
-            res = self.pool.get('mrp.bom')._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
-            for r in res[0]:
-                if r['product_id']== move.product_id.id:
-                    move_lines_obj.write(cr, uid,move.id, {'product_qty' :  r['product_qty']})
-    
-        product_lines_obj = self.pool.get('mrp.production.product.line')
-    
-        for m in prod.move_created_ids:
-            move_lines_obj.write(cr, uid,m.id, {'product_qty': wiz_qty.product_qty})
+        
+                factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
+                res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
+                for r in res[0]:
+                    if r['product_id']== move.product_id.id:
+                        move_lines_obj.write(cr, uid,move.id, {'product_qty' :  r['product_qty']})
+            for m in prod.move_created_ids:
+                move_lines_obj.write(cr, uid,m.id, {'product_qty': wiz_qty.product_qty})
     
         return {}
     

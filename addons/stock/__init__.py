@@ -26,7 +26,6 @@ import product
 import report
 import wizard
 import report_stock
-import stock_wizard
 
 
 

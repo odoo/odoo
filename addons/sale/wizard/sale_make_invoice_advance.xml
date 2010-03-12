@@ -20,25 +20,14 @@
             </field>
 		</record>
 
-		<record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
-            <field name="name">Advance Invoice</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">sale.advance.payment.inv</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-     		<field name="context">{'record_id' : active_id}</field>
-     	</record>
 
-    	 <record model="ir.values" id="sale_advance_payment_inv1">
-            <field name="model_id" ref="sale.model_sale_order" />
-            <field name="object" eval="1" />
-            <field name="name">Advance Invoice</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_view_sale_advance_payment_inv'))" />
-            <field name="key">action</field>
-            <field name="model">sale.order</field>
-        </record>
+        <act_window name="Advance Invoice"		    
+		    res_model="sale.advance.payment.inv"
+		    src_model="sale.order"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_view_sale_advance_payment_inv"/>	
 
 
     	<record id="view_sale_open_invoice" model="ir.ui.view">

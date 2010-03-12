@@ -22,25 +22,13 @@
             </field>
         </record>
 
-        <record id="action_procurement_compute" model="ir.actions.act_window">
-            <field name="name">Compute Stock Minimum Rules Only</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.procurement.orderpoint.compute</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{'record_id' : active_id}</field>
-        </record>
-        
-       <record model="ir.values" id="procurement_compute_order_point">
-            <field name="model_id" ref="mrp.model_mrp_procurement" />
-            <field name="object" eval="1" />
-            <field name="name">Compute Stock Minimum Rules Only</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_procurement_compute'))" />
-            <field name="key">action</field>
-            <field name="model">mrp.procurement</field>
-        </record>
+        <act_window name="Compute Stock Minimum Rules Only"		    
+		    res_model="mrp.procurement.orderpoint.compute"
+		    src_model="mrp.procurement"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_procurement_compute"/>        
 		
 	</data>
 </openerp>	

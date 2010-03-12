@@ -23,24 +23,13 @@
             </field>
         </record>
 
-        <record id="action_make_invoice" model="ir.actions.act_window">
-            <field name="name">Make Invoice</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.repair.make_invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{'active_ids' : active_ids}</field>
-        </record>
- 
- 		<record model="ir.values" id="action_make_invoice_related">
-            <field name="object" eval="1" />
-            <field name="name">Make Invoice</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_make_invoice'))" />
-            <field name="key2">client_action_multi</field>
-            <field name="key">action</field>
-            <field name="model">mrp.repair</field>
-        </record>
+        <act_window name="Make Invoice"		    
+		    res_model="mrp.repair.make_invoice"
+		    src_model="mrp.repair"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="act_mrp_repair_invoice"/>        
         
 	</data>
 </openerp>	

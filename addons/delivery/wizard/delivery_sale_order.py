@@ -46,8 +46,8 @@ class make_delivery(osv.osv_memory):
              
              @return: A dictionary which of fields with values. 
         
-        """
-        rec_id = context and context.get('record_id',False)
+        """        
+        rec_id = context and context.get('active_id',False)        
         res = {}
         order_obj = self.pool.get('sale.order')
         order = order_obj.browse(cr, uid, rec_id)
@@ -72,35 +72,37 @@ class make_delivery(osv.osv_memory):
              @return:  
         
         """
-        rec_ids = context and context.get('active_ids',False)
+        rec_ids = context and context.get('active_ids',[])
         order_obj = self.pool.get('sale.order')
         line_obj = self.pool.get('sale.order.line')
         grid_obj = self.pool.get('delivery.grid')
         carrier_obj = self.pool.get('delivery.carrier')
         acc_fp_obj = self.pool.get('account.fiscal.position')
         order_objs = order_obj.browse(cr, uid, rec_ids, context)
-        datas = self.browse(cr, uid, ids[0])
-    
-        for order in order_objs:
-            grid_id = carrier_obj.grid_get(cr, uid, [datas.carrier_id.id],order.partner_shipping_id.id)
-            if not grid_id:
-                raise osv.except_osv(_('No grid available !'), _('No grid matching for this carrier !'))
-            
-            grid = grid_obj.browse(cr, uid, [grid_id])[0]
-    
-            taxes = grid.carrier_id.product_id.taxes_id
-            fpos = order.fiscal_position or False
-            taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
-            line_obj.create(cr, uid, {
-                'order_id': order.id,
-                'name': grid.carrier_id.name,
-                'product_uom_qty': 1,
-                'product_uom': grid.carrier_id.product_id.uom_id.id,
-                'product_id': grid.carrier_id.product_id.id,
-                'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
-                'tax_id': [(6,0,taxes_ids)],
-                'type': 'make_to_stock'
-            })
+        for datas in self.browse(cr, uid, ids):    
+            for order in order_objs:
+                grid_id = carrier_obj.grid_get(cr, uid, [datas.carrier_id.id],order.partner_shipping_id.id)
+                if not grid_id:
+                    raise osv.except_osv(_('No grid available !'), _('No grid matching for this carrier !'))
+
+                if not order.state in ('draft'):
+                    raise osv.except_osv(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
+                
+                grid = grid_obj.browse(cr, uid, grid_id)
+        
+                taxes = grid.carrier_id.product_id.taxes_id
+                fpos = order.fiscal_position or False
+                taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
+                line_obj.create(cr, uid, {
+                    'order_id': order.id,
+                    'name': grid.carrier_id.name,
+                    'product_uom_qty': 1,
+                    'product_uom': grid.carrier_id.product_id.uom_id.id,
+                    'product_id': grid.carrier_id.product_id.id,
+                    'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
+                    'tax_id': [(6,0,taxes_ids)],
+                    'type': 'make_to_stock'
+                })
     
         return {}
 

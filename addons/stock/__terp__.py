@@ -42,6 +42,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [
         "stock_data.xml",
+        "wizard/stock_move_view.xml",
         "wizard/stock_inventory_set_stock_zero_view.xml",
         "wizard/stock_fill_inventory_view.xml",
         "wizard/stock_invoice_onshipping_view.xml",
@@ -49,8 +50,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "wizard/stock_inventory_line_split_view.xml",
         "stock_workflow.xml",
         "stock_incoterms.xml",
-        "stock_wizard.xml",
-        "stock_wizard_view.xml",
+        "stock_wizard.xml",        
         "stock_view.xml",
         "stock_report.xml",
         "stock_sequence.xml",

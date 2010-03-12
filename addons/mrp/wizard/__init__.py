@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import mrp_product_produce
 import orderpoint_procurement
 import wizard_procurement
 import schedulers_all

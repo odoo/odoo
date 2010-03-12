@@ -47,7 +47,7 @@ class stock_location_product(osv.osv_memory):
                     'view_mode': 'tree,form', 
                     'res_model': 'product.product', 
                     'type': 'ir.actions.act_window', 
-                    'context': {'location': context['active_ids'][0], 
+                    'context': {'location': context['active_id'], 
                            'from_date': location_obj['from_date'], 
                            'to_date': location_obj['to_date']}, 
                     'domain': [('type', '<>', 'service')], 

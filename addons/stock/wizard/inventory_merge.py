@@ -41,7 +41,6 @@ def do_merge(self, cr, uid, data, context):
     invent_lines = {}
 
     if len(data['ids']) < 2:
-       
         raise wizard.except_wizard(_('Warning'),
             _('Please select at least two inventories.'))
 

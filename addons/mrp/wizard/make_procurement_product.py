@@ -115,7 +115,7 @@ class make_procurement(osv.osv_memory):
              @return: A dictionary which of fields with values. 
         
         """
-        record_id = context and context.get('record_id', False) or False
+        record_id = context and context.get('active_id', False) or False
 
         res = super(make_procurement, self).default_get(cr, uid, fields, context=context)
 

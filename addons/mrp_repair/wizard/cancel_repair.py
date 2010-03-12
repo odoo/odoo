@@ -40,17 +40,16 @@ class repair_cancel(osv.osv_memory):
              @return:  
         
         """
-        record_id = context and context.get('record_id', False) or False
-        if record_id:
-            repair_obj = self.pool.get('mrp.repair').browse(cr, uid, [record_id])
-            
-            if repair_obj[0].invoiced or repair_obj[0].invoice_method == 'none':
-                self.pool.get('mrp.repair').write(cr, uid, record_id, {'state':'cancel'})
-                mrp_line_obj = self.pool.get('mrp.repair.line')
-                for line in repair_obj:
-                    mrp_line_obj.write(cr, uid, [l.id for l in line.operations], {'state': 'cancel'})
-            else:
-                raise osv.except_osv(_('Warning!'),_('Repair is not cancelled. It is not invoiced.'))
+        record_id = context and context.get('active_id', False) or False
+        assert record_id, _('Active ID is not Found')
+        repair_order_obj = self.pool.get('mrp.repair')
+        repair_line_obj = self.pool.get('mrp.repair.line')
+        repair_order = repair_order_obj.browse(cr, uid, record_id)
+        
+        if repair_order.invoiced or repair_order.invoice_method == 'none':
+            repair_order_obj.action_cancel(cr, uid, [record_id], context=context)            
+        else:
+            raise osv.except_osv(_('Warning!'),_('Repair is not cancelled. It is not invoiced.'))
         
         return {}
     
@@ -66,11 +65,11 @@ class repair_cancel(osv.osv_memory):
              @return: New arch of view.
         
         """
-        record_id = context and context.get('record_id', False) or False
+        record_id = context and context.get('order_id', False) or False        
         res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         if record_id:
-            repair_obj = self.pool.get('mrp.repair').browse(cr, uid, [record_id])[0]
-            if not repair_obj.invoice_id:
+            repair_order = self.pool.get('mrp.repair').browse(cr, uid, record_id)
+            if not repair_order.invoiced:
                 res['arch'] = """ <form string="Cancel Repair" colspan="4">
                                 <group col="2" colspan="2">
                                     <label string="Do you want to continue?" colspan="4"/>
