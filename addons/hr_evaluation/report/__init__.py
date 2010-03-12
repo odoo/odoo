@@ -18,24 +18,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-{
-    "name" : "Human Resources Evaluation",
-    "version" : "0.1",
-    "author" : "Tiny",
-    "category" : "Generic Modules/Human Resources",
-    "website" : "http://www.openerp.com",
-    "depends" : ["hr",'hr_recruitment','survey'],
-    "description": "Ability to create employees evaluation.",
-    "init_xml" : [],
-    "demo_xml" : ["hr_evaluation_demo.xml"],
-    "update_xml" : [
-                    "security/ir.model.access.csv",
-                    "hr_evaluation_view.xml",
-                    "hr_evaluation_data.xml",
-                    "report/evaluation_report_view.xml"],
-    "active": False,
-    "installable": True
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+import evaluation_report
