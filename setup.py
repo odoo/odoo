@@ -143,11 +143,14 @@ options = {
         "compressed": 1,
         "optimize": 2,
         "dist_dir": 'dist',
-        "packages": ["lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-                     "lxml.objectify", "decimal", "xml", "encodings",
-                     "mx.DateTime","wizard","pychart","PIL", "pyparsing",
-                     "pydot","asyncore","asynchat", "reportlab", "vobject",
-                     "HTMLParser", "select"],
+        "packages": [
+            "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
+            "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
+            "encodings", "mx.DateTime","wizard","pychart","PIL", "pyparsing",
+            "pydot", "asyncore", "asynchat", "reportlab", "vobject",
+            "HTMLParser", "select", "libxslt", "libxml2", "mako", "poplib",
+            "imaplib", "smtplib", "email",
+        ],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }
