@@ -3067,7 +3067,10 @@ class orm(orm_template):
         if 'state' not in default:
             if 'state' in self._defaults:
                 default['state'] = self._defaults['state'](self, cr, uid, context)
-        data = self.read(cr, uid, [id], context=context)[0]
+        context_wo_lang = context
+        if 'lang' in context:
+            del context_wo_lang['lang']
+        data = self.read(cr, uid, [id], context=context_wo_lang)[0]
         fields = self.fields_get(cr, uid, context=context)
         trans_data=[]
         for f in fields:
@@ -3100,17 +3103,14 @@ class orm(orm_template):
                 data[f] = [(6, 0, data[f])]
 
         trans_obj = self.pool.get('ir.translation')
-        trans_name=''
         for f in fields:
-            trans_flag=True
+            trans_name = ''
             if f in self._columns and self._columns[f].translate:
-                trans_name=self._name+","+f
+                trans_name = self._name+","+f
             elif f in self._inherit_fields and self._inherit_fields[f][2].translate:
-                trans_name=self._inherit_fields[f][0]+","+f
-            else:
-                trans_flag=False
+                trans_name = self._inherit_fields[f][0] + "," + f
 
-            if trans_flag:
+            if trans_name:
                 trans_ids = trans_obj.search(cr, uid, [
                         ('name', '=', trans_name),
                         ('res_id','=',data['id'])
