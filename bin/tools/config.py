@@ -99,8 +99,8 @@ class configmanager(object):
         parser.add_option("-p", "--port", dest="port", help="specify the TCP port", type="int")
         parser.add_option("--net_interface", dest="netinterface", help="specify the TCP IP address for netrpc")
         parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc", type="int")
-        parser.add_option("--no-netrpc", dest="netrpc", action="store_false", default=True, help="disable netrpc")
-        parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", default=True, help="disable xmlrpc")
+        parser.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable netrpc")
+        parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable xmlrpc")
         parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
         parser.add_option("--without-demo", dest="without_demo",
                           help="load demo data for a module (use \"all\" for all modules)", default=False)
