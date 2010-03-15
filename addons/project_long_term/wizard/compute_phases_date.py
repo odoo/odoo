@@ -149,8 +149,9 @@ class wizard_compute_phases(wizard.interface):
         """
         Return the scheduled phases list.
         """
-        mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
-        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+        pool = pooler.get_pool(cr.dbname)
+        mod_obj = pool.get('ir.model.data')
+        act_obj = pool.get('ir.actions.act_window')
         result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_project_phase')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
