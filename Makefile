@@ -9,7 +9,7 @@ module := base
 database := terp
 language := fr_FR
 i18n-import := bin/addons/base/i18n/fr_FR.po
-interrogation_file := bin/addons/quality_integration_server/base_quality_interrogation.py
+interrogation_file := bin/addons/base_quality_interrogation.py
 login := admin
 password := admin
 
