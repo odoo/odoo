@@ -27,7 +27,7 @@
     'description': """Base module for all dashboards.""",
     'author': 'Tiny',
     'depends': ['base'],
-    'update_xml': ['security/ir.model.access.csv', 'board_view.xml'],
+    'update_xml': ['security/ir.model.access.csv', 'wizard/board_menu_create_view.xml', 'board_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
