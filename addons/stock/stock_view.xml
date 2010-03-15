@@ -91,7 +91,8 @@
                                 <field name="product_uom"/>
                                 <field name="prod_lot_id"/>
                                 <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
-									<button name="%(stock.action_view_stock_inventory_line_split)d"
+								<field name="state" invisible="1"/>
+								<button name="%(stock.action_view_stock_inventory_line_split)d"
                     		 		string="Split inventory lines"
                       		 		type="action" icon="gtk-justify-fill" states="draft"/>
                             </tree>
