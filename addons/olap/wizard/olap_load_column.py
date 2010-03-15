@@ -24,17 +24,25 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import time
-
-import wizard
+from osv import fields, osv
+from service import web_services
 import pooler
+import time
+import wizard
 
-class wizard_load_columns(wizard.interface):
-    def _get_table_data(self, cr, uid, data, context={}):
-        pool_obj = pooler.get_pool(cr.dbname)
-        ids_cols=pool_obj.get('olap.database.columns').search(cr, uid, ([('table_id','=',data['id'])]),context={})
-        model_data_ids = pool_obj.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_olap_database_columns_form')],context={})
-        resource_id = pool_obj.get('ir.model.data').read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+class olap_load_column(osv.osv_memory):
+    """ Load Database Column """
+    _name = "olap.load.column"
+    _description = "Olap Load Column"
+
+    def get_table_data(self, cr, uid, ids, context={}):
+        ids_cols=self.pool.get('olap.database.columns').search(cr, uid,\
+                             ([('table_id','=',context['active_id'])]),context={})
+        model_data_ids = self.pool.get('ir.model.data').search(cr,uid,\
+                        [('model','=','ir.ui.view'),\
+                    ('name','=','view_olap_database_columns_form')],context={})
+        resource_id = self.pool.get('ir.model.data').read(cr,uid,\
+                                model_data_ids,fields=['res_id'])[0]['res_id']
         return {
             'domain': "[('id','in', ["+','.join(map(str,ids_cols))+"])]",
             'name': 'Database Columns',
@@ -44,12 +52,10 @@ class wizard_load_columns(wizard.interface):
             'views': [(False,'tree'),(resource_id,'form')],
             'type': 'ir.actions.act_window',
         }
-        
-    states = {
-        'init' : {
-            'actions' : [],
-            'result' : {'type' : 'action' ,'action':_get_table_data,'state':'end'}
-        }
-      }
+    _columns = {
 
-wizard_load_columns('olap.load.column')
+            }
+
+olap_load_column()
+
+# vim: ts=4 sts=4 sw=4 si et
