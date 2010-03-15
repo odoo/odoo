@@ -22,7 +22,6 @@
 
 import wizard_pos_payment
 import wizard_default_journal
-import wizard_refund_order
 import wizard_scan_product
 import wizard_receipt
 import wizard_return
@@ -42,5 +41,6 @@ import pos_get_sale
 import pos_open_statement
 import pos_close_statement
 import pos_box_entries
+import pos_box_out
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

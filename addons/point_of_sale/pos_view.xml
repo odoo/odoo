@@ -844,17 +844,17 @@ invoiced
             string="Refloat"
             action="action_box_entries"
             id="menu_wizard_enter_jrnl" sequence="3" />
-        <wizard
+            
+    <!--    <wizard
             string="Enter negative operations"
             model="account.bank.statement"
             name="pos.out"
             menu="False"
-            id="pos_entries2"/>
+            id="pos_entries2"/>-->
         <menuitem
             name="Output Operations" parent="menu_point_config"
             string="Refloat"
-            action="pos_entries2"
-            type="wizard"
+            action="action_box_out"
             id="menu_wizard_enter_jrnl2" sequence="3" />
 
 <!--        <menuitem name="Sales Waiting Validation" parent="menu_point_config" id="menu_point_ofsale_date_payment"-->

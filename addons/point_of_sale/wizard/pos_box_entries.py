@@ -26,28 +26,29 @@ from tools.misc import UpdateableStr
 from mx import DateTime
 from tools.translate import _
 
-
-class pos_box_entries(osv.osv_memory):
-    _name = 'pos.box.entries'
-    _description = 'Pos Box Entries'
-
-    def _get_journal(self,cr,uid,context):
-        """ 
+def get_journal(self,cr,uid,context):
+    """ 
              @summary:   Make the selection list of Cash Journal  .       
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
              @param context: A standard dictionary 
              @return :Return the list of journal 
-        """            
+    """            
         
-        obj = self.pool.get('account.journal')
-        user = self.pool.get('res.users').browse(cr, uid, uid)
-        ids = obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', user.company_id.id)])
-        res = obj.read(cr, uid, ids, ['id', 'name'], context)
-        res = [(r['id'], r['name']) for r in res]
-        res.insert(0, ('', ''))
-        return res
+    obj = self.pool.get('account.journal')
+    user = self.pool.get('res.users').browse(cr, uid, uid)
+    ids = obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', user.company_id.id)])
+    res = obj.read(cr, uid, ids, ['id', 'name'], context)
+    res = [(r['id'], r['name']) for r in res]
+    res.insert(0, ('', ''))
+    return res
+
+class pos_box_entries(osv.osv_memory):
+    _name = 'pos.box.entries'
+    _description = 'Pos Box Entries'
+
+
     
     def _get_income_product(self,cr,uid,context):
         
@@ -70,7 +71,7 @@ class pos_box_entries(osv.osv_memory):
     
     _columns = {
                 'name': fields.char('Name', size=32,required=True),
-                'journal_id': fields.selection(_get_journal, "Journal",required=True),
+                'journal_id': fields.selection(get_journal, "Journal",required=True),
                 'product_id': fields.selection(_get_income_product, "Operation",required=True),
                 'amount' :fields.float('Amount', digits=(16,2)),
                 'ref':fields.char('Ref', size=32),
