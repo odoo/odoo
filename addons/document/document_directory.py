@@ -65,14 +65,14 @@ class document_directory(osv.osv):
         objid=self.pool.get('ir.model.data')
         try:
             mid = objid._get_id(cr, uid, 'document', 'dir_root')
-            return None # TODO: check why not display root dir 
+            return False # TODO: check why not display root dir 
             if not mid:
-                return None
+                return False
         except Exception, e:
             import netsvc
             logger = netsvc.Logger()
             logger.notifyChannel("document", netsvc.LOG_WARNING, 'Cannot set directory root:'+ str(e))
-            return None
+            return False
         return objid.browse(cr, uid, mid, context=context).res_id
 
     def _get_def_storage(self,cr,uid,context=None):
