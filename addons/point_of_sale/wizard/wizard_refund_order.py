@@ -71,14 +71,14 @@ def _get_pdt_exp(self,cr,uid,context):
     res.insert(0, ('', ''))
     return res
 
-entry_fields = {
-    'journal_id': {'string': 'Journal', 'type': 'selection', 'selection': _get_journal, 'required':True},
-    'product_id': {'string': 'Operation', 'type': 'selection', 'selection':_get_pdt , 'required':True},
-    'amount': {'string': 'Amount', 'type': 'float'},
-    'name': {'string': 'Name', 'type': 'char', 'size': '32', 'required':True},
-    'ref': {'string': 'Ref.', 'type': 'char', 'size': '32'},
-
-}
+#entry_fields = {
+#    'journal_id': {'string': 'Journal', 'type': 'selection', 'selection': _get_journal, 'required':True},
+#    'product_id': {'string': 'Operation', 'type': 'selection', 'selection':_get_pdt , 'required':True},
+#    'amount': {'string': 'Amount', 'type': 'float'},
+#    'name': {'string': 'Name', 'type': 'char', 'size': '32', 'required':True},
+#    'ref': {'string': 'Ref.', 'type': 'char', 'size': '32'},
+#
+#}
 
 out_fields = {
     'journal_id': {'string': 'Journal', 'type': 'selection', 'selection': _get_journal, 'required':True},
@@ -144,67 +144,67 @@ def _get_out(self, cr, uid, data, context):
     statement_line_id = pool.get('account.bank.statement.line').create(cr, uid, args)
     return {}
 
-def _get_in(self, cr, uid, data, context):
-    args = {}
-    pool = pooler.get_pool(cr.dbname)
-    statement_obj = pool.get('account.bank.statement')
-    product_obj = pool.get('product.template')
-    res_obj = pool.get('res.users')
-    curr_company = res_obj.browse(cr,uid,uid).company_id.id
-    statement_id = statement_obj.search(cr,uid, [('journal_id','=',data['form']['journal_id']),('company_id','=',curr_company),('user_id','=',uid),('state','=','open')])
-    if not statement_id:
-        raise wizard.except_wizard(_('Error !'), _('You have to open at least one cashbox'))
-
-    product = pool.get('product.product').browse(cr, uid, data['form']['product_id'])
-    acc_id = product_obj.browse(cr,uid,data['form']['product_id']).property_account_income
-    if not acc_id:
-        raise wizard.except_wizard(_('Error !'), _('please check that account is set to %s')%(product_obj.browse(cr,uid,data['form']['product_id']).name))
-    if statement_id:
-        statement_id = statement_id[0]
-    if not statement_id:
-        statement_id = statement_obj.create(cr,uid,{'date':time.strftime('%Y-%m-%d 00:00:00'),
-                                                    'journal_id':data['form']['journal_id'],
-                                                    'company_id':curr_company,
-                                                    'user_id':uid,
-                                                   })
-
-    args['statement_id'] = statement_id
-    args['journal_id'] =  data['form']['journal_id']
-    if acc_id:
-        args['account_id'] =  acc_id.id
-    args['amount'] = data['form']['amount'] or 0.0
-    args['ref'] = "%s" %(data['form']['ref'] or '')
-    args['name'] = "%s: %s "% (product_obj.browse(cr,uid,data['form']['product_id']).name, data['form']['name'].decode('utf8'))
-    address_u = pool.get('res.users').browse(cr,uid,uid).address_id
-    if address_u:
-        partner_id = address_u.partner_id and address_u.partner_id.id or None
-        args['partner_id'] = partner_id
-    statement_line_id = pool.get('account.bank.statement.line').create(cr, uid, args)
-
-    return {}
-
-class box_entries(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {
-                'type': 'form',
-                'arch': entry_form % u'Entrée de caisse',
-                'fields': entry_fields,
-                'state': [('end', 'Cancel', 'gtk-cancel'), ('next', 'Make entries in the Cashbox', 'gtk-ok')]
-            }
-        },
-        'next': {
-            'actions': [],
-            'result': {
-                'type': 'action',
-                'action': _get_in,
-                'state': 'end'
-            }
-        },
-    }
-
-box_entries('pos.entry')
+#def _get_in(self, cr, uid, data, context):
+#    args = {}
+#    pool = pooler.get_pool(cr.dbname)
+#    statement_obj = pool.get('account.bank.statement')
+#    product_obj = pool.get('product.template')
+#    res_obj = pool.get('res.users')
+#    curr_company = res_obj.browse(cr,uid,uid).company_id.id
+#    statement_id = statement_obj.search(cr,uid, [('journal_id','=',data['form']['journal_id']),('company_id','=',curr_company),('user_id','=',uid),('state','=','open')])
+#    if not statement_id:
+#        raise wizard.except_wizard(_('Error !'), _('You have to open at least one cashbox'))
+#
+#    product = pool.get('product.product').browse(cr, uid, data['form']['product_id'])
+#    acc_id = product_obj.browse(cr,uid,data['form']['product_id']).property_account_income
+#    if not acc_id:
+#        raise wizard.except_wizard(_('Error !'), _('please check that account is set to %s')%(product_obj.browse(cr,uid,data['form']['product_id']).name))
+#    if statement_id:
+#        statement_id = statement_id[0]
+#    if not statement_id:
+#        statement_id = statement_obj.create(cr,uid,{'date':time.strftime('%Y-%m-%d 00:00:00'),
+#                                                    'journal_id':data['form']['journal_id'],
+#                                                    'company_id':curr_company,
+#                                                    'user_id':uid,
+#                                                   })
+#
+#    args['statement_id'] = statement_id
+#    args['journal_id'] =  data['form']['journal_id']
+#    if acc_id:
+#        args['account_id'] =  acc_id.id
+#    args['amount'] = data['form']['amount'] or 0.0
+#    args['ref'] = "%s" %(data['form']['ref'] or '')
+#    args['name'] = "%s: %s "% (product_obj.browse(cr,uid,data['form']['product_id']).name, data['form']['name'].decode('utf8'))
+#    address_u = pool.get('res.users').browse(cr,uid,uid).address_id
+#    if address_u:
+#        partner_id = address_u.partner_id and address_u.partner_id.id or None
+#        args['partner_id'] = partner_id
+#    statement_line_id = pool.get('account.bank.statement.line').create(cr, uid, args)
+#
+#    return {}
+#
+#class box_entries(wizard.interface):
+#    states = {
+#        'init': {
+#            'actions': [],
+#            'result': {
+#                'type': 'form',
+#                'arch': entry_form % u'Entrée de caisse',
+#                'fields': entry_fields,
+#                'state': [('end', 'Cancel', 'gtk-cancel'), ('next', 'Make entries in the Cashbox', 'gtk-ok')]
+#            }
+#        },
+#        'next': {
+#            'actions': [],
+#            'result': {
+#                'type': 'action',
+#                'action': _get_in,
+#                'state': 'end'
+#            }
+#        },
+#    }
+#
+#box_entries('pos.entry')
 
 class box_out(wizard.interface):
     states = {

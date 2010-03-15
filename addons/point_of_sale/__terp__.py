@@ -49,6 +49,7 @@ Main features :
         'wizard/pos_get_sale.xml',
         'wizard/pos_open_statement.xml',
         'wizard/pos_close_statement.xml',  
+        'wizard/pos_box_entries.xml',  
         'pos_view.xml',
         'pos_sequence.xml',
         'posrule_data.xml',
