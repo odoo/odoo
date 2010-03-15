@@ -2996,7 +2996,7 @@ class orm(orm_template):
             if self._inherits[v] not in vals:
                 tocreate[v] = {}
             else:
-                tocreate[v] = {self._inherits[v]:vals[self._inherits[v]]}
+                tocreate[v] = {'id' : vals[self._inherits[v]]}
         (upd0, upd1, upd2) = ('', '', [])
         upd_todo = []
         for v in vals.keys():
@@ -3020,10 +3020,17 @@ class orm(orm_template):
         for table in tocreate:
             if self._inherits[table] in vals:
                 del vals[self._inherits[table]]
-            id = self.pool.get(table).create(cr, user, tocreate[table])
+
+            record_id = tocreate[table].pop('id', None)
+
+            if record_id is None:
+                record_id = self.pool.get(table).create(cr, user, tocreate[table], context=context)
+            else:
+                self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=context)
+
             upd0 += ','+self._inherits[table]
             upd1 += ',%s'
-            upd2.append(id)
+            upd2.append(record_id)
 
         #Start : Set bool fields to be False if they are not touched(to make search more powerful)
         bool_fields = [x for x in self._columns.keys() if self._columns[x]._type=='boolean']
