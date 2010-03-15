@@ -23,27 +23,14 @@
             </field>
   		</record>
   		
-        <record id="action_auction_lots_make_invoice_buyer" model="ir.actions.act_window">
-            <field name="name">Invoice Buyer objects</field>
-            <field name="res_model">auction.lots.make.invoice.buyer</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_auction_lots_make_invoice_buyer"/> 
-           <field name="target">new</field>
-           <field name="context">{'record_id' : active_id}</field>
-        </record>
-        
-        <record id="auction_lots_make_invoice_buyer_values" model="ir.values">
-            <field name="model_id" ref="auction.model_auction_lots" />
-            <field name="object" eval="1" />
-            <field name="name">Invoice Buyer objects</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_auction_lots_make_invoice_buyer'))" />
-            <field name="key">action</field> 
-            <field name="model">auction.lots</field>
-        </record>
-        
-        
+       <act_window name="Invoice Buyer objects"		    
+		    res_model="auction.lots.make.invoice.buyer"
+		    src_model="auction.lots"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_auction_lots_make_invoice_buyer"/>    
+		      		        
         
     </data>
 </openerp>

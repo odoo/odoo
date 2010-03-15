@@ -19,25 +19,12 @@
                </form>
             </field>
   		</record>
-  		
-        <record id="action_auction_lots_able" model="ir.actions.act_window">
-            <field name="name">Mark as taken away</field>
-            <field name="res_model">auction.lots.able</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="view_auction_lots_able"/> 
-           <field name="target">new</field>
-           <field name="context">{'record_id' : active_id}</field>
-        </record>
-        
-        <record id="auction_lots_able_values" model="ir.values">
-            <field name="model_id" ref="auction.model_auction_lots" />
-            <field name="object" eval="1" />
-            <field name="name">Mark as taken away</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_auction_lots_able'))" />
-            <field name="key">action</field> 
-            <field name="model">auction.lots</field>
-        </record>
+        <act_window name="Mark as taken away"		    
+		    res_model="auction.lots.able"
+		    src_model="auction.lots"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_auction_lots_able"/>       
     </data>
 </openerp>
