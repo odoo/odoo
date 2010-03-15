@@ -229,7 +229,7 @@ class ir_values(osv.osv):
                 if r[2]['type'] in ('ir.actions.report.xml','ir.actions.act_window','ir.actions.wizard'):
                     groups = r[2].get('groups_id')
                     if groups:
-                        cr.execute('SELECT COUNT(1) FROM res_groups_users_rel WHERE gid in %s and uid=%s',
+                        cr.execute('SELECT COUNT(1) FROM res_groups_users_rel WHERE gid IN %s AND uid=%s',
                                    (tuple(groups), uid)
                                   )
                         cnt = cr.fetchone()[0]
