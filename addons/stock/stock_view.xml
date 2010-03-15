@@ -588,7 +588,19 @@
                         <field name="min_date" select="1"/>
                         <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                    </group>
+	                    <button name="%(make_picking)d" 
+	                    		states="confirmed,assigned" 
+	                    		string="Make Picking" 
+	                    		type="action" 
+	                    		icon="gtk-go-forward" 
+	                    		help="Make Picking" colspan="2"/>
+	                    <button name="%(return_picking)d" 
+	                    		states="done" 
+	                    		string="Return Picking" 
+	                    		type="action" 
+	                    		icon="gtk-go-back" 
+	                    		help="Return Picking" colspan="2"/>
+	                </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
@@ -744,8 +756,19 @@
                         <field name="min_date" select="1"/>
                         <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-
-                    </group>
+	                    <button name="%(make_picking)d" 
+	                    		states="assigned" 
+	                    		string="Make Picking" 
+	                    		type="action" 
+	                    		icon="gtk-go-forward" 
+	                    		help="Make Picking" colspan="2"/>
+	                    <button name="%(return_picking)d" 
+	                    		states="done" 
+	                    		string="Return Picking" 
+	                    		type="action" 
+	                    		icon="gtk-go-back" 
+	                    		help="Return Picking" colspan="2"/>
+	                </group>
                         <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
@@ -928,7 +951,19 @@
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2" readonly="1"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                    </group>
+	                    <button name="%(make_picking)d" 
+	                    		states="assigned" 
+	                    		string="Make Picking" 
+	                    		type="action" 
+	                    		icon="gtk-go-forward" 
+	                    		help="Make Picking" colspan="2"/>
+	                    <button name="%(return_picking)d" 
+	                    		states="done" 
+	                    		string="Return Picking" 
+	                    		type="action" 
+	                    		icon="gtk-go-back" 
+	                    		help="Return Picking" colspan="2"/>
+	                </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
@@ -1108,7 +1143,19 @@
                         <field name="invoice_state" select="2" string="Invoice Control"/>
                         <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                    </group>
+	                    <button name="%(make_picking)d" 
+	                    		states="confirmed,assigned" 
+	                    		string="Make Picking" 
+	                    		type="action" 
+	                    		icon="gtk-go-forward" 
+	                    		help="Make Picking" colspan="2"/>
+	                    <button name="%(return_picking)d" 
+	                    		states="done" 
+	                    		string="Return Picking" 
+	                    		type="action" 
+	                    		icon="gtk-go-back" 
+	                    		help="Return Picking" colspan="2"/>
+	                </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}">
