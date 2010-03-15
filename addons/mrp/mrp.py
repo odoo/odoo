@@ -1261,7 +1261,7 @@ class stock_warehouse_orderpoint(osv.osv):
             "a requisition to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The requisition quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order'),
+        'procurement_id': fields.many2one('mrp.procurement', 'Latest Requisition'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
