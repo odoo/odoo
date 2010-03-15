@@ -20,11 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from osv import fields, osv
-from service import web_services
-import pooler
-import time
-import wizard
 
 class wiki_create_menu(osv.osv_memory):
     _name = "wiki.create.menu"
@@ -36,7 +31,12 @@ class wiki_create_menu(osv.osv_memory):
     }
 
     def wiki_menu_create(self, cr, uid, ids, context):
-        """ Create Menu On the base of Group id and Action id """
+        """ Create Menu On the base of Group id and Action id
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of create menu’s IDs
+
+        """
 
         for group in self.pool.get('wiki.groups').browse(cr, uid, ids):
             for menu in self.pool.get('wiki.create.menu').browse(cr, uid, ids):

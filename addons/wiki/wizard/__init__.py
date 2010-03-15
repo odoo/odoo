@@ -23,5 +23,6 @@ import wiki_wiki_page_open
 import wiki_create_menu
 import wiki_wiki_help_open
 import wiki_make_index
+import show_diff
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

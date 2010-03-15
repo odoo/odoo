@@ -20,10 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-import time
-import wizard
-import pooler
 
 class wiki_wiki_page_open(osv.osv_memory):
     _name = "wiki.wiki.page.open"
@@ -31,8 +27,13 @@ class wiki_wiki_page_open(osv.osv_memory):
     _columns = {
 
     }
-    def _open_wiki_page(self, cr, uid, ids, context):
-        """ Opens Wiki Page of Group"""
+    def open_wiki_page(self, cr, uid, ids, context):
+        """ Opens Wiki Page of Group
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of open wiki page’s IDs
+        @return : dictionay of open wiki window on give group id
+        """
         for group in self.pool.get('wiki.groups').browse(cr, uid,ids):
 
          for openpage in self.pool.get('wiki.wiki.page.open').browse(cr, uid,ids):

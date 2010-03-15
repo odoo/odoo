@@ -20,10 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-import time
-import wizard
-import pooler
 
 class wiki_make_index(osv.osv_memory):
     _name = "wiki.make.index"
@@ -32,7 +28,12 @@ class wiki_make_index(osv.osv_memory):
     }
 
     def wiki_do_index(self, cr, uid, ids, context):
-        """ Makes Index according to page hierarchy"""
+        """ Makes Index according to page hierarchy
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of wiki index’s IDs
+
+        """
         for index_obj in self.browse(cr,uid,ids):
             wiki_pool = self.pool.get('wiki.wiki')
             cr.execute("Select id, section from wiki_wiki where id = ANY(%s) \

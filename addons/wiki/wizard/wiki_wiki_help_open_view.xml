@@ -9,7 +9,7 @@
               <form string="Open Help">
              	 <separator string="" colspan="6" />
               	 <label string="" colspan="2" />
-                 <button name="_open_wiki_page" string="Basic Wiki Editing" type="object"/>
+                 <button name="open_wiki_page" string="Basic Wiki Editing" type="object"/>
              </form>
             </field>
 		</record>
@@ -22,5 +22,10 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+
+        <act_window id="action_view_wiki_wiki_help_open_vals"
+    		key2="client_action_multi" name="Basic Wiki Editing"
+    		res_model="wiki.wiki.help.open" src_model="wiki.wiki"
+    		view_mode="form" target="new" view_type="form" />
     </data>
 </openerp>

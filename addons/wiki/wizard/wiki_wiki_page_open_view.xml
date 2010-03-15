@@ -9,7 +9,7 @@
               <form string="Open Page">
              	<separator string="" colspan="6" />
               	<label string="" colspan="2" />
-               	<button name="_open_wiki_page" string="Open Wiki Page" type="object"/>
+               	<button name="open_wiki_page" string="Open Wiki Page" type="object"/>
              </form>
             </field>
 		</record>
@@ -22,5 +22,10 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
     	</record>
+
+    	<act_window id="action_view_wiki_wiki_page_open_vals"
+    		key2="client_action_multi" name="Open Wiki Page"
+    		res_model="wiki.wiki.page.open" src_model="wiki.groups"
+    		view_mode="form" target="new" view_type="form" />
     </data>
 </openerp>

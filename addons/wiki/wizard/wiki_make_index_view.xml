@@ -24,7 +24,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="context">{'record_id' : active_id}</field>
     	</record>
+
+		<act_window id="action_view_wiki_make_index_values"
+    		key2="client_action_multi" name="Create Index"
+    		res_model="wiki.make.index" src_model="wiki.wiki"
+    		view_mode="form" target="new" view_type="form" />
 
     </data>
 </openerp>
