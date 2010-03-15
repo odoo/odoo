@@ -118,8 +118,9 @@ class project_phase(osv.osv):
 
     def onchange_project(self, cr, uid, ids, project, context={}):
         result = {}
+        project_obj = self.pool.get('project.project')
         if project:
-            project_id = self.pool.get('project.project').browse(cr, uid, project, context=context)
+            project_id = project_obj.browse(cr, uid, project, context=context)
             if project_id.date_start:
                 result['date_start'] = mx.DateTime.strptime(project_id.date_start, "%Y-%m-%d").strftime('%Y-%m-%d %H:%M:%S')
                 return {'value': result}
@@ -131,6 +132,7 @@ class project_phase(osv.osv):
        """
        uom_obj = self.pool.get('product.uom')
        resource_obj = self.pool.get('resource.resource')
+       cal_obj = self.pool.get('resource.calendar')
        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
        if resource_id:
@@ -139,7 +141,7 @@ class project_phase(osv.osv):
                 calendar_id = cal_id
        default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-       work_times = self.pool.get('resource.calendar').interval_min_get(cr, uid, calendar_id, date_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
+       work_times = cal_obj.interval_min_get(cr, uid, calendar_id, date_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
        dt_start = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [phase.id], {'date_start': dt_start, 'date_end': date_end.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
@@ -149,6 +151,7 @@ class project_phase(osv.osv):
        """
        uom_obj = self.pool.get('product.uom')
        resource_obj = self.pool.get('resource.resource')
+       cal_obj = self.pool.get('resource.calendar')
        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)], context=context)
        if resource_id:
@@ -157,11 +160,14 @@ class project_phase(osv.osv):
                 calendar_id = cal_id
        default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-       work_times = self.pool.get('resource.calendar').interval_get(cr, uid, calendar_id, date_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
+       work_times = cal_obj.interval_get(cr, uid, calendar_id, date_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
        dt_end = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [phase.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'), 'date_end': dt_end}, context=context)
 
     def write(self, cr, uid, ids, vals, context={}):
+        resource_calendar_obj = self.pool.get('resource.calendar')
+        resource_obj = self.pool.get('resource.resource')
+        uom_obj = self.pool.get('product.uom')
         if not context:
             context = {}
         if context.get('scheduler',False):
@@ -169,9 +175,6 @@ class project_phase(osv.osv):
         # Consider calendar and efficiency if the phase is performed by a resource
         # otherwise consider the project's working calendar
         phase = self.browse(cr, uid, ids[0], context=context)
-        resource_calendar_obj = self.pool.get('resource.calendar')
-        resource_obj = self.pool.get('resource.resource')
-        uom_obj = self.pool.get('product.uom')
         calendar_id = phase.project_id.resource_calendar_id.id
         resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)],context=context)
         if resource_id:
@@ -258,12 +261,12 @@ class task(osv.osv):
 
     def onchange_planned(self, cr, uid, ids, project, user_id=False, planned=0.0, effective=0.0, date_start=None, occupation_rate=0.0):
         result = {}
+        resource_obj = self.pool.get('resource.resource')
+        project_pool = self.pool.get('project.project')
+        resource_calendar = self.pool.get('resource.calendar')
         if date_start:
-            resource_obj = self.pool.get('resource.resource')
-            project_pool = self.pool.get('project.project')
             hrs = float(planned / float(occupation_rate))
             calendar_id = project_pool.browse(cr, uid, project).resource_calendar_id.id
-            resource_calendar = self.pool.get('resource.calendar')
             dt_start = mx.DateTime.strptime(date_start, '%Y-%m-%d %H:%M:%S')
             resource_id = resource_obj.search(cr, uid, [('user_id','=',user_id)])
             if resource_id:
@@ -313,7 +316,8 @@ class task(osv.osv):
        self.write(cr, uid, [task.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'),'date_end' : dt_end}, context=context)
 
     def write(self, cr, uid, ids, vals, context={}):
-
+        resource_calendar_obj = self.pool.get('resource.calendar')
+        resource_obj = self.pool.get('resource.resource')
         if not context:
             context = {}
         if context.get('scheduler',False):
@@ -325,8 +329,6 @@ class task(osv.osv):
         if isinstance(ids, list):
             task_id = ids[0]
         task_rec = self.browse(cr, uid, task_id, context=context)
-        resource_calendar_obj = self.pool.get('resource.calendar')
-        resource_obj = self.pool.get('resource.resource')
         calendar_id = task_rec.project_id.resource_calendar_id.id
         hrs = task_rec.planned_hours / task_rec.occupation_rate
         resource_id = resource_obj.search(cr, uid, [('user_id', '=', task_rec.user_id.id)], context=context)
