@@ -1514,6 +1514,10 @@ class orm_template(object):
                 'action': resaction,
                 'relate': resrelate
             }
+        if result['type']=='form' and result['arch'].count("default_focus")>1:
+                msg = "Form View contain more than one default_focus attribute"
+                netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
+                raise except_orm('View Error !',msg)
         return result
 
     _view_look_dom_arch = __view_look_dom_arch
