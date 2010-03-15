@@ -43,7 +43,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
+             @param ids: the ID or list of IDs 
              @param context: A standard dictionary 
              
              @return: A dictionary which of fields with values. 

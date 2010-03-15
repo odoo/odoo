@@ -71,9 +71,14 @@ class make_procurement(osv.osv_memory):
         
         """
         user = self.pool.get('res.users').browse(cr, uid, uid, context).login
+        wh_obj = self.pool.get('stock.warehouse')
+        procurement_obj = self.pool.get('mrp.procurement') 
+        wf_service = netsvc.LocalService("workflow")
+        data_obj = self.pool.get('ir.model.data')
+        
         for proc in self.browse(cr, uid, ids):
-            wh = self.pool.get('stock.warehouse').browse(cr, uid, proc.warehouse_id.id, context)
-            procure_id = self.pool.get('mrp.procurement').create(cr, uid, {
+            wh = wh_obj.browse(cr, uid, proc.warehouse_id.id, context)
+            procure_id = procurement_obj.create(cr, uid, {
                 'name':'INT: '+str(user),
                 'date_planned': proc.date_planned,
                 'product_id': proc.product_id.id,
@@ -82,12 +87,13 @@ class make_procurement(osv.osv_memory):
                 'location_id': wh.lot_stock_id.id,
                 'procure_method':'make_to_order',
             })
-            wf_service = netsvc.LocalService("workflow")
+            
             wf_service.trg_validate(uid, 'mrp.procurement', procure_id, 'button_confirm', cr)
         
-        data_obj = self.pool.get('ir.model.data')
+        
         id2 = data_obj._get_id(cr, uid, 'mrp', 'mrp_procurement_tree_view')
         id3 = data_obj._get_id(cr, uid, 'mrp', 'mrp_procurement_form_view')
+        
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:

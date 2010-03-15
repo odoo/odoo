@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+  		<record id="view_auction_pay_buy" model="ir.ui.view">
+            <field name="name">auction.pay.buy.form</field>
+            <field name="model">auction.pay.buy</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Pay objects">
+                	<group colspan="4" >
+                		 <field name="amount"/>
+                		 <field name="statement_id1" domain="[('state','=','draft')]"/>
+                		 <field name="amount2"/>
+                		 <field name="statement_id2"  domain="[('state','=','draft')]"/>
+                		 <field name="amount3"/>
+                		 <field name="statement_id3"  domain="[('state','=','draft')]"/>
+                		 <newline/>
+                		 <field name="buyer_id"/>
+                		 <field name="total"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-yes"  string="Pay" name="pay_and_reconcile" type="object"/>
+                   </group>
+               </form>
+            </field>
+  		</record>
+  		
+  		<record id="action_auction_pay_buy" model="ir.actions.act_window">
+            <field name="name">Pay objects of the buyer</field>
+            <field name="res_model">auction.pay.buy</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_auction_pay_buy"/> 
+           <field name="target">new</field>
+           <field name="context">{'record_id' : active_id}</field>
+  		</record>
+  		
+  		 <record id="auction_pay_buy_values" model="ir.values">
+            <field name="model_id" ref="auction.model_auction_lots" />
+            <field name="object" eval="1" />
+            <field name="name">Pay objects of the buyer</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_auction_pay_buy'))" />
+            <field name="key">action</field> 
+            <field name="model">auction.lots</field>
+        </record>
+
+    </data>
+</openerp>

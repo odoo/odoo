@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+  		<record id="view_auction_lots_enable" model="ir.ui.view">
+            <field name="name">auction.lots.enable.form</field>
+            <field name="model">auction.lots.enable</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Confirm">
+                	<group colspan="4" >
+                		 <separator string="Confirmation enable taken away" colspan="4"/>
+              			 <newline/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-goto-last"  string="Enable Taken away" name="confirm_enable" type="object"/>
+                   </group>
+               </form>
+            </field>
+  		</record>
+  		
+        <record id="action_auction_lots_enable" model="ir.actions.act_window">
+            <field name="name">Unmark as taken away</field>
+            <field name="res_model">auction.lots.enable</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_auction_lots_enable"/> 
+           <field name="target">new</field>
+           <field name="context">{'record_id' : active_id}</field>
+        </record>
+        
+        <record id="auction_lots_enable_values" model="ir.values">
+            <field name="model_id" ref="auction.model_auction_lots" />
+            <field name="object" eval="1" />
+            <field name="name">Unmark as taken away</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_auction_lots_enable'))" />
+            <field name="key">action</field> 
+            <field name="model">auction.lots</field>
+        </record>
+        
+        
+    </data>
+</openerp>
