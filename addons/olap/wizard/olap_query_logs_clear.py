@@ -24,11 +24,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
 from osv import fields, osv
-from service import web_services
-import pooler
-import time
-import wizard
 
 class olap_query_logs_clear(osv.osv_memory):
     """ Clear the Logs for Given User  """
@@ -47,6 +44,13 @@ class olap_query_logs_clear(osv.osv_memory):
             }
 
     def clear_logs(self,cr,uid,part,context={}):
+        """
+        This function load column
+        @param cr: the current row, from the database cursor,
+        @param uid: the current users ID for security checks,
+        @param ids: List of load column,
+        @return: dictionary of query logs clear message window
+        """
         ids = self.pool.get('olap.query.logs').search(cr,uid,[('user_id','=',uid)])
         self.pool.get('olap.query.logs').unlink(cr, uid,ids,context)
         data_obj = self.pool.get('ir.model.data')
@@ -66,6 +70,7 @@ class olap_query_logs_clear(osv.osv_memory):
 olap_query_logs_clear()
 
 class olap_query_logs_clear_msg(osv.osv_memory):
+    """   Display clear log message    """
     _name = "olap.query.logs.clear.msg"
     _description = "Olap Query Logs Clear Message"
     _columns = {

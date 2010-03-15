@@ -7,7 +7,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="">
-              	<separator string="                    " colspan="4"/> 
+              	<separator string="                        " colspan="4"/>
             	<button name="get_table_data" string="Open" type="object"/>
 			</form>
             </field>
@@ -23,15 +23,10 @@
             <field name="target">new</field>
     	</record>
 
-		<record model="ir.values" id="lap_load_column">
-            <field name="model_id" ref="olap.model_olap_database_columns" />
-            <field name="object" eval="1" />
-            <field name="name">Open Columns</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_olap_load_column'))" />
-            <field name="key">action</field>
-            <field name="model">olap.database.columns</field>
-        </record>
-        
+        <act_window id="action_olap_load_column_values"
+    		key2="client_action_multi" name="Open Columns"
+    		res_model="olap.load.column" src_model="olap.database.columns"
+    		view_mode="form" target="new" view_type="form" />
+
     </data>
 </openerp>

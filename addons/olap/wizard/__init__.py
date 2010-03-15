@@ -29,6 +29,5 @@ import wizard_query_builder
 import wizard_load_data
 import wizard_load_configured_table
 import wizard_test_connection
-#import wizard_application_configure
 import olap_query_logs_clear
 import olap_load_column

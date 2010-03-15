@@ -24,11 +24,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
 from osv import fields, osv
-from service import web_services
-import pooler
-import time
-import wizard
 
 class olap_load_column(osv.osv_memory):
     """ Load Database Column """
@@ -36,7 +33,15 @@ class olap_load_column(osv.osv_memory):
     _description = "Olap Load Column"
 
     def get_table_data(self, cr, uid, ids, context={}):
-        ids_cols=self.pool.get('olap.database.columns').search(cr, uid,\
+        """
+        This function load column
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user\'s ID for security checks,
+        @param ids: List of load column,
+        @return : dictionary of database columns window on give id
+
+        """
+        ids_cols = self.pool.get('olap.database.columns').search(cr, uid,\
                              ([('table_id','=',context['active_id'])]),context={})
         model_data_ids = self.pool.get('ir.model.data').search(cr,uid,\
                         [('model','=','ir.ui.view'),\
