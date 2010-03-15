@@ -23,7 +23,7 @@ import StringIO
 import odt2txt
 
 from content_index import indexer, cntIndex
-
+from subprocess import Popen, PIPE
 
 def _to_unicode(s):
     try:
