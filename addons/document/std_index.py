@@ -55,7 +55,7 @@ class PptIndex(indexer):
         return [ 'application/ms-word']
     
     def _getExtensions(self):
-        return ['.ppt','.pptx']
+        return ['.ppt']
 
     def _doIndexFile(self,fname):
         fp = Popen(['ppthtml', fname], shell=False, stdout=PIPE).stdout
@@ -68,7 +68,7 @@ class DocIndex(indexer):
         return [ 'application/ms-word']
     
     def _getExtensions(self):
-        return ['.doc','.docx']
+        return ['.doc']
 
     def _doIndexFile(self,fname):
         fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
