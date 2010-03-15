@@ -66,7 +66,16 @@ class module_category(osv.osv):
     _description = "Module Category"
 
     def _module_nbr(self,cr,uid, ids, prop, unknow_none,context):
-        cr.execute('select category_id,count(*) from ir_module_module where category_id in ('+','.join(map(str,ids))+') or category_id in (select id from ir_module_category where parent_id in ('+','.join(map(str,ids))+')) group by category_id')
+        cr.execute('SELECT category_id, COUNT(*) \
+                      FROM ir_module_module \
+                     WHERE category_id IN %(ids)s \
+                        OR category_id IN (SELECT id \
+                                             FROM ir_module_category \
+                                            WHERE parent_id IN %(ids)s) \
+                     GROUP BY category_id', {'ids': tuple(ids)}
+
+                    )
+
         result = dict(cr.fetchall())
         for id in ids:
             cr.execute('select id from ir_module_category where parent_id=%s', (id,))

@@ -59,7 +59,7 @@ class ir_property(osv.osv):
     }
     def unlink(self, cr, uid, ids, context={}):
         if ids:
-            cr.execute('delete from ir_model_fields where id in (select fields_id from ir_property where (fields_id is not null) and (id in ('+','.join(map(str,ids))+')))')
+            cr.execute('delete from ir_model_fields where id in (select fields_id from ir_property where (fields_id is not null) and (id in %s))', (tuple(ids),))
         res = super(ir_property, self).unlink(cr, uid, ids, context)
         return res
 
