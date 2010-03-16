@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+<!-- Idea Category  -->
+
     <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="15"/>
         <record model="ir.ui.view" id="view_idea_category_form">
             <field name="name">idea.category.form</field>
@@ -34,9 +37,11 @@
     </record>
     <menuitem name="Configuration" parent="base.menu_tools"
          id="base.menu_lunch_survey_root" sequence="6"/>
-<!--    <menuitem name="Configuration" parent="menu_tools" id="menu_config"/>-->
+
     <menuitem name="Ideas" parent="base.menu_lunch_survey_root" id="menu_ideas"/>
-    <menuitem name="Categories" parent="menu_ideas" id="menu_idea_category" action="action_idea_category"/>
+
+    <menuitem name="Categories" parent="menu_ideas"
+    	id="menu_idea_category" action="action_idea_category" />
 
     <record model="ir.actions.act_window" id="action_idea_category_tree">
         <field name="name">Ideas by Categories</field>
@@ -44,12 +49,15 @@
         <field name="view_type">tree</field>
         <field name="domain">[('parent_id','=',False)]</field>
     </record>
+
     <menuitem name="Ideas" parent="base.menu_tools" id="menu_ideas1" sequence="4"/>
+
     <menuitem
         name="Ideas by Categories" parent="menu_ideas1"
         id="menu_idea_category_tree"
         action="action_idea_category_tree"/>
 
+<!-- Oepn Ideas  -->
 
     <record model="ir.actions.act_window" id="action_idea_idea_categ_open">
         <field name="name">Open Ideas</field>
@@ -66,6 +74,8 @@
         <field name="object" eval="True" />
     </record>
 
+<!-- Idea statistics -->
+
     <record model="ir.ui.view" id="view_idea_stat_form">
         <field name="name">idea.stat.form</field>
         <field name="model">idea.stat</field>
@@ -78,6 +88,8 @@
             </form>
         </field>
     </record>
+
+<!-- Idea Vote  -->
 
     <record model="ir.ui.view" id="view_idea_vote_tree">
         <field name="name">idea.vote.tree</field>
@@ -104,6 +116,8 @@
         </field>
     </record>
 
+<!-- New Idea  -->
+
     <record model="ir.ui.view" id="view_idea_idea_form">
         <field name="name">idea.idea.form</field>
         <field name="model">idea.idea</field>
@@ -115,7 +129,6 @@
                     <field name="title" select="1" />
                     <field name="category_id" select="1"/>
                     <field name="user_id" select="1"/>
-                    <!--<field name="my_vote"/>-->
                     <field name="vote_avg" />
                     <field name="description" colspan="4" select="2" widget="text_wiki"/>
                     <field name="state" select="2"/>
@@ -171,6 +184,8 @@
         </field>
     </record>
 
+<!-- Search Idea  -->
+
     <record model="ir.ui.view" id="view_idea_idea_search">
         <field name="name">idea.idea.search</field>
         <field name="model">idea.idea</field>
@@ -180,8 +195,10 @@
 	        	<group col="10" colspan="4">
 		        	<filter icon="gtk-execute" string="My" domain="[('user_id','=',uid)]" help="My Ideas"/>
 		        	<separator orientation="vertical"/>
-		        	<filter icon="gtk-execute" string="Draft" domain="[('state','=','draft')]" help="Draft Ideas"/>
-		        	<filter icon="gtk-execute" string="Open" domain="[('state','=','open')]" help="Open Ideas"/>
+		        	<filter icon="gtk-execute" string="Draft"
+		        		domain="[('state','=','draft')]" help="Draft Ideas" />
+		        	<filter icon="gtk-execute" string="Open"
+		        		domain="[('state','=','open')]" help="Open Ideas" />
 		        	<separator orientation="vertical"/>
 		            <field name="title" select="1"/>
 		            <field name="category_id" select="1"/>
@@ -190,6 +207,8 @@
 	        </search>
         </field>
     </record>
+
+<!-- Comments on Idea  -->
 
     <record model="ir.ui.view" id="view_idea_comment_tree">
         <field name="name">idea.comment.tree</field>
@@ -265,17 +284,19 @@
         <field name="view_mode">graph,tree</field>
     </record>
 	<menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="5"/>
-<!--    <menuitem name="Reporting" parent="menu_ideas1" id="menu_reporting"/>-->
+
 	<menuitem name="Idea" parent="base.menu_lunch_reporting" id="menu_idea_reporting"/>
-    <menuitem name="Vote Statistics" parent="menu_idea_reporting" id="menu_idea_vote_stat" action="action_idea_vote_stat"/>
 
+	<menuitem name="Vote Statistics" parent="menu_idea_reporting"
+		id="menu_idea_vote_stat" action="action_idea_vote_stat" />
 
-    <record model="ir.actions.act_window" id="action_idea_vote">
+	<record model="ir.actions.act_window" id="action_idea_vote">
         <field name="name">Idea's vote</field>
         <field name="res_model">idea.vote</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
+
     <menuitem name="All Votes" parent="menu_ideas" id="menu_idea_vote" action="action_idea_vote"/>
 
     </data>

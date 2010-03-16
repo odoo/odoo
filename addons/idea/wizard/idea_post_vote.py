@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,24 +15,24 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 from osv import fields, osv
 
 class idea_post_vote(osv.osv_memory):
-    
+
     _name = "idea.post.vote"
     _description = "Post vote"
     _columns = {
-                'vote': fields.selection([('-1', 'Not Voted'), 
-                                          ('0', 'Very Bad'), 
-                                          ('25', 'Bad'), 
-                                          ('50', 'Normal'), 
-                                          ('75', 'Good'), 
+                'vote': fields.selection([('-1', 'Not Voted'),
+                                          ('0', 'Very Bad'),
+                                          ('25', 'Bad'),
+                                          ('50', 'Normal'),
+                                          ('75', 'Good'),
                                           ('100', 'Very Good') ], 'Post Vote', required=True)
                 }
-    
+
     def do_vote(self, cr, uid, ids, context):
         """
         Create idea vote.
@@ -41,10 +41,11 @@ class idea_post_vote(osv.osv_memory):
         @param ids: List of Idea Post vote’s IDs.
         @return: Dictionary {}
         """
+        data = context and context.get('active_id', False) or False
         vote_obj = self.pool.get('idea.vote')
-        for data in self.read(cr, uid, ids):
-            score = str(data['vote'])
-            dic = {'idea_id': context['active_id'], 'user_id': uid, 'score': score }
+        for dovote_obj in self.read(cr, uid, ids):
+            score = str(dovote_obj['vote'])
+            dic = {'idea_id': data, 'user_id': uid, 'score': score }
             vote = vote_obj.create(cr, uid, dic)
             return {}
 
