@@ -49,18 +49,17 @@ class node_context(object):
         context """
     cached_roots = {}
 
-    def __init__(self, cr, uid, context=None):
-        # we don't cache the cr!
+    def __init__(self, cr, uid, context=None):        
         self.dbname = cr.dbname
         self.uid = uid
         self.context = context
         self._dirobj = pooler.get_pool(cr.dbname).get('document.directory')
         assert self._dirobj
-        self.rootdir = self._dirobj._get_root_directory(cr,uid,context)
+        self.rootdir = False #self._dirobj._get_root_directory(cr,uid,context)
 
     def get_uri(self, cr,  uri):
         """ Although this fn passes back to doc.dir, it is needed since
-        it is a potential caching point """        
+        it is a potential caching point """            
         (ndir, duri) =  self._dirobj._locate_child(cr,self.uid, self.rootdir,uri, None, self)          
         while duri:                    
             ndir = ndir.child(cr, duri[0])            
@@ -168,23 +167,23 @@ class node_dir(node_class):
     our_type = 'collection'
     def __init__(self,path, parent, context, dirr, dctx=None):
         super(node_dir,self).__init__(path, parent,context)
-        self.dir_id = dirr.id
+        self.dir_id = dirr and dirr.id or False
         #todo: more info from dirr
         self.mimetype = 'application/x-directory'
             # 'httpd/unix-directory'
-        self.create_date = dirr.create_date        
-        self.domain = dirr.domain
-        self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
+        self.create_date = dirr and dirr.create_date or False
+        self.domain = dirr and dirr.domain or []
+        self.res_model = dirr and dirr.ressource_type_id and dirr.ressource_type_id.model or False
         # TODO: the write date should be MAX(file.write)..
-        self.write_date = dirr.write_date or dirr.create_date
+        self.write_date = dirr and (dirr.write_date or dirr.create_date) or False
         self.content_length = 0
         if dctx:
             self.dctx.update(dctx)
         dc2 = self.context.context
         dc2.update(self.dctx)
         dc2['dir_id'] = self.dir_id
-        self.displayname = dirr.name
-        if dirr.dctx_ids:
+        self.displayname = dirr and dirr.name or False
+        if dirr and dirr.dctx_ids:
             for dfld in dirr.dctx_ids:
                 try:
                     self.dctx['dctx_' + dfld.field] = safe_eval(dfld.expr,dc2)
