@@ -18,36 +18,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
+from osv import fields, osv
 
-import wizard
-import netsvc
-import ir
-import pooler
-
-cancel_form = """<?xml version="1.0"?>
-<form string="Cancel Order">
-    <label string="Are you sure you want to cancel this order ?"/>
-</form>"""
-
-
-cancel_fields = {
-}
-
-def _cancel(self,cr,uid,data,context):
-    return pooler.get_pool(cr.dbname).get('lunch.order').lunch_order_cancel(cr,uid,data['ids'],context)
-
-class order_cancel(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type':'form', 'arch':cancel_form, 'fields':cancel_fields, 'state':[('end','No'),('cancel','Yes')]}
-        },
-        'cancel': {
-            'actions': [_cancel],
-            'result': {'type':'state', 'state':'end'}
-        }
-    }
-order_cancel('lunch.order.cancel')
+class lunch_order_cancel(osv.osv_memory):
+    """
+    Cancel Lunch Order
+    """
+    _name = "lunch.order.cancel"
+    _description = "Cancel Order"
+    
+    def cancel(self, cr, uid, ids, context):
+        """
+        Cancel cashmove entry from cashmoves and update state to draft.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List  Lunch Order Cancel’s IDs
+        """
+        return self.pool.get('lunch.order').lunch_order_cancel(cr, uid, context['active_ids'], context)
+        
+lunch_order_cancel()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

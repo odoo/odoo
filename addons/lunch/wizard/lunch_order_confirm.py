@@ -19,42 +19,33 @@
 #
 ##############################################################################
 
-import wizard
-import netsvc
-import ir
-import pooler
+from osv import fields, osv
 
-confirm_order_form = """<?xml version="1.0"?>
-<form title="Confirm">
-    <separator string="Orders Confirmation" colspan="4"/>
-    <field name="confirm_cashbox"/>
-    <newline/>
-</form>
-"""
+class lunch_order_confirm(osv.osv_memory):
+    """
+    Confirm Lunch Order
+    """
+    _name = "lunch.order.confirm"
+    _description = "confirm Order"
+    _columns = {
+                'confirm_cashbox':fields.many2one('lunch.cashbox', 'Name of box', required=True), 
+                }
+    
+    def confirm(self, cr, uid, ids, context):
+        """
+        confirm Lunch Order.Create cashmoves in launch cashmoves when state is 
+                        confirm in lunch order.
+        @param cr: the current row, from the database cursor, 
+        @param uid: the current user’s ID for security checks, 
+        @param ids: List  Lunch Order confirm’s IDs
+        @return: Dictionary {}.                
+        """
+        order_ref = self.pool.get('lunch.order')
+        for data in self.read(cr, uid, ids):
+            order_ref.confirm(cr, uid, context['active_ids'], data['confirm_cashbox'], context)
+            return {}
 
-confirm_order_fields = {
-    'confirm_cashbox': {'string':'Name of box', 'type':'many2one', 'required':True, 'relation':'lunch.cashbox' },
-}
-
-def _confirm(self,cr,uid,data,context):
-    pool= pooler.get_pool(cr.dbname)
-    order_ref = pool.get('lunch.order')
-    order_ref.confirm(cr,uid,data['ids'],data['form']['confirm_cashbox'],context)
-    return {}
-
-class order_confirm(wizard.interface):
-    states = {
-        'init': {
-            'action':[],
-            'result':{'type' : 'form', 'arch' : confirm_order_form, 'fields' : confirm_order_fields, 'state' : [('end', 'Cancel'),('go', 'Confirm Order') ]},
-        },
-        'go' : {
-            'actions' : [_confirm],
-            'result' : {'type' : 'state', 'state' : 'end'}
-        },
-    }
-order_confirm('lunch.order.confirm')
-
+lunch_order_confirm()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
