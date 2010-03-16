@@ -32,7 +32,7 @@ def _invoice_membership(self, cr, uid, data, context):
     cr.execute('''
             SELECT partner_id, id, type
             FROM res_partner_address
-            WHERE partner_id IN (%s)
+            WHERE partner_id IN %s
             ''', (tuple(partner_ids),))
     fetchal = cr.fetchall()
     if not fetchal:

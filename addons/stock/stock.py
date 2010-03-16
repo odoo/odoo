@@ -370,7 +370,7 @@ class stock_picking(osv.osv):
             sql_str = """update stock_move set
                     date_planned=%s
                 where
-                    picking_id=%d """
+                    picking_id=%s """
             sqlargs = (value, pick.id)
 
             if pick.max_date:
@@ -857,7 +857,7 @@ class stock_production_lot(osv.osv):
                 location_id in %s
             group by
                 prodlot_id
-            having sum(name) ''' + str(args[0][1]) + ' %s'
+            having sum(name) ''' + str(args[0][1]) + ' %s',
                    (tuple(locations), args[0][2]))
         res = cr.fetchall()
         ids = [('id', 'in', map(lambda x: x[0], res))]

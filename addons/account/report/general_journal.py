@@ -105,7 +105,7 @@ class journal_print(report_sxw.rml_parse):
 
     def _sum_debit_period(self, period_id,journal_id=None):
         journals = journal_id or self.journal_ids
-        if not self.journals:
+        if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(debit) FROM account_move_line '
                         'WHERE period_id=%s AND journal_id IN %s '
@@ -115,7 +115,7 @@ class journal_print(report_sxw.rml_parse):
 
     def _sum_credit_period(self, period_id,journal_id=None):
         journals = journal_id or self.journal_ids
-        if not self.journals:
+        if not journals:
             return 0.0
         self.cr.execute('SELECT SUM(credit) FROM account_move_line '
                         'WHERE period_id=%s AND journal_id IN %s '

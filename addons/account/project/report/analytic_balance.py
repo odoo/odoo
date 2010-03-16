@@ -102,22 +102,20 @@ class account_analytic_balance(report_sxw.rml_parse):
             self.acc_data_dict[account_id] = ids
         else:
             ids = self.acc_data_dict[account_id]
-        
+
+        query_params = (tuple(ids), date1, date2)
         if option == "credit" :
             self.cr.execute("SELECT -sum(amount) FROM account_analytic_line \
                     WHERE account_id in %s \
-                        AND date>=%s AND date<=%s AND amount<0",
-                    (tuple(ids),date1, date2))
+                        AND date>=%s AND date<=%s AND amount<0", query_params)
         elif option == "debit" :
             self.cr.execute("SELECT sum(amount) FROM account_analytic_line \
                     WHERE account_id in %s \
-                        AND date>=%s AND date<=%s AND amount>0",
-                    (tuple(ids), date1, date2))
+                        AND date>=%s AND date<=%s AND amount>0", query_params)
         elif option == "quantity" :
             self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line \
-                WHERE account_id in %s \
-                    AND date>=%s AND date<=%s",
-                (tuple(ids), date1, date2))
+                    WHERE account_id in %s \
+                        AND date>=%s AND date<=%s", query_params)
         return self.cr.fetchone()[0] or 0.0
 
     def _move_sum_balance(self, account_id, date1, date2):
@@ -138,21 +136,19 @@ class account_analytic_balance(report_sxw.rml_parse):
         else:
             ids2 = self.acc_sum_list
 
+        query_params = (tuple(ids2), date1, date2)
         if option == "debit" :
             self.cr.execute("SELECT sum(amount) FROM account_analytic_line \
                     WHERE account_id IN %s \
-                        AND date>=%s AND date<=%s AND amount>0",
-                    (tuple(ids2), date1, date2))
+                        AND date>=%s AND date<=%s AND amount>0", query_params)
         elif option == "credit" :
             self.cr.execute("SELECT -sum(amount) FROM account_analytic_line \
                     WHERE account_id IN %s \
-                        AND date>=%s AND date<=%s AND amount<0",
-                    (tuple(ids2), date1, date2))
+                        AND date>=%s AND date<=%s AND amount<0", query_params)
         elif option == "quantity" :
             self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line \
                     WHERE account_id IN %s \
-                        AND date>=%s AND date<=%s",
-                    (tuple(ids2), date1, date2))
+                        AND date>=%s AND date<=%s", query_params)
         return self.cr.fetchone()[0] or 0.0
 
     def _sum_balance(self, accounts, date1, date2):

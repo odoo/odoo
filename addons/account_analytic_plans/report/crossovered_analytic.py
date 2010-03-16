@@ -153,8 +153,8 @@ class crossovered_analytic(report_sxw.rml_parse):
                        "WHERE aal.account_id=aaa.id "\
                        "AND aal.id IN %%s "\
                        "AND (aal.journal_id %s) "\
-                       "AND aal.date>=%s "\
-                       "AND aal.date<=%s "\
+                       "AND aal.date>=%%s "\
+                       "AND aal.date<=%%s "\
                        "GROUP BY aal.account_id, aaa.name, aaa.code "\
                        "ORDER BY aal.account_id" % (
                     journal_filter

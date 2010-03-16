@@ -211,7 +211,7 @@ class payment_line(osv.osv):
             from account_move_line ml
                 inner join payment_line pl
                 on (ml.id = pl.move_line_id)
-            where pl.id in (%s)"""% self.translate(name),
+            where pl.id in %%s"""% self.translate(name),
                    (tuple(ids),))
         res = dict(cr.fetchall())
 
