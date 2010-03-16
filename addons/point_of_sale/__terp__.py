@@ -36,7 +36,7 @@ Main features :
 
     """,
     'author': 'Tiny',
-    'depends': ['sale', 'delivery','report_mrp'],
+    'depends': ['sale', 'delivery'],
 #    'depends': ['sale', 'purchase', 'account', 'account_tax_include','board','mrp','board_manufacturing','delivery','profile_manufacturing','account','multi_company'],
     'init_xml': [
         'security/point_of_sale_security.xml',

@@ -17,6 +17,7 @@
 					<field name="scheduled_date"/>
                    	<field name="reference" />
 					<field name="origin"/>
+					<field name="nbr" string="#Production Orders" />
 					<field name="location_src_id"/>
                    	<field name="location_dest_id" />
                     <field name="state" invisible="1"/>
@@ -39,18 +40,17 @@
             </field>
         </record>
 
-<!--        <record id="view_report_mrp_production_order_graph" model="ir.ui.view">-->
-<!--            <field name="name">mrp.production.order.graph</field>-->
-<!--            <field name="model">mrp.production.order</field>-->
-<!--            <field name="type">graph</field>-->
-<!--            <field name="arch" type="xml">-->
-<!--                <graph orientation="horizontal" string="Helpdesk" type="bar">-->
-<!--                    <field name="state"/>-->
-<!--                    <field name="nbr" operator="+"/>-->
-<!--                    <field group="True" name="user_id"/>-->
-<!--                </graph>-->
-<!--            </field>-->
-<!--        </record>-->
+        <record id="view_report_mrp_production_order_graph" model="ir.ui.view">
+            <field name="name">mrp.production.order.graph</field>
+            <field name="model">mrp.production.order</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Production" type="bar">
+                    <field name="state"/>
+                    <field name="nbr" operator="+"/>
+                </graph>
+            </field>
+        </record>
 
 		<record id="view_report_mrp_production_order_filter" model="ir.ui.view">
             <field name="name">mrp.production.order.select</field>
@@ -89,7 +89,7 @@
             <field name="name">Production Order</field>
             <field name="res_model">mrp.production.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_mrp_production_order_tree"/>
             <field name="search_view_id" ref="view_report_mrp_production_order_filter"/>
         </record>
@@ -101,12 +101,12 @@
 	        <field name="act_window_id" ref="action_report_mrp_production_order"/>
 	    </record>
 
-<!--        <record model="ir.actions.act_window.view" id="action_report_mrp_production_order_graph">-->
-<!--	        <field name="sequence" eval="2"/>-->
-<!--	        <field name="view_mode">graph</field>-->
-<!--	        <field name="view_id" ref="view_report_mrp_production_order_graph"/>-->
-<!--	        <field name="act_window_id" ref="action_report_mrp_production_order"/>-->
-<!--	    </record>-->
+        <record model="ir.actions.act_window.view" id="action_report_mrp_production_order_graph">
+	        <field name="sequence" eval="2"/>
+	        <field name="view_mode">graph</field>
+	        <field name="view_id" ref="view_report_mrp_production_order_graph"/>
+	        <field name="act_window_id" ref="action_report_mrp_production_order"/>
+	    </record>
 
         <menuitem name="Production" action="action_report_mrp_production_order" id="menu_report_mrp_production_orders_tree" parent="next_id_77"/>
 
