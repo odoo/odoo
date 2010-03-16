@@ -28,7 +28,7 @@ import wizard_history_event
 
 
 import crm_lead_to_partner
-import lead2opportunity
+import crm_lead_to_opportunity
 import crm_phonecall2phonecall
 import phonecall2partner
 import phonecall2meeting

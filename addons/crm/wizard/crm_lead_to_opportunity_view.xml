@@ -1,17 +1,8 @@
 <openerp>
   	<data>
+		
+		<!-- Lead to Opportunity view -->
 
-	    
-	   <record id="action_crm_lead2opportunity" model="ir.actions.act_window">
-	      <field name="name">Create Opportunity</field>
-	      <field name="type">ir.actions.act_window</field>
-	      <field name="res_model">crm.lead2opportunity</field>
-	      <field name="view_type">form</field>
-	      <field name="view_mode">form</field>
-	      <field name="target">new</field>
-	      <field name="context">{'record_id' : active_ids}</field>
-	   </record>
-	    
   		<record id="view_crm_lead2opportunity_create" model="ir.ui.view">
 	      <field name="name">crm.lead2opportunity.create</field>
 	      <field name="model">crm.lead2opportunity</field>
@@ -31,6 +22,17 @@
 	      </field>
 	   </record>
 	   
+	   <!-- Lead to Opportunity action -->
 	   
+	   <record id="action_crm_lead2opportunity" model="ir.actions.act_window">
+	      <field name="name">Create Opportunity</field>
+	      <field name="type">ir.actions.act_window</field>
+	      <field name="res_model">crm.lead2opportunity</field>
+	      <field name="view_type">form</field>
+	      <field name="view_mode">form</field>
+	      <field name="target">new</field>
+	      <field name="context">{'record_id' : active_ids}</field>
+	   </record>
+
  	</data>
 </openerp>
