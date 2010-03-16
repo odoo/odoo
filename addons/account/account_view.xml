@@ -668,7 +668,7 @@
             <field eval="True" name="object"/>
         </record>
 
-        <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Making Entries by Line"/>
+        <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries by Line"/>
         <menuitem icon="STOCK_JUSTIFY_FILL" action="action_move_journal_line_form" id="menu_action_move_journal_line_form" parent="account.menu_finance_entries" type="wizard" sequence="5"/>
 
         <!--
@@ -974,7 +974,7 @@
         <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
 
         <record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
-            <field name="name">Making Entries by Move</field>
+            <field name="name">Entries by Move</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
