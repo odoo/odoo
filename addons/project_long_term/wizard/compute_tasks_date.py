@@ -61,8 +61,8 @@ class wizard_compute_tasks(wizard.interface):
                                               ])
         if task_ids:
             task_ids.sort()
-            task_objs = task_pool.browse(cr, uid, task_ids, context=context)
-            calendar_id = project.resource_calendar_id.id
+            tasks = task_pool.browse(cr, uid, task_ids, context=context)
+            calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
             start_date = project.date_start
             if not project.date_start:
                 start_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -74,9 +74,10 @@ class wizard_compute_tasks(wizard.interface):
                 time_efficiency = 1.0
                 resource_id = resource_obj.search(cr, uid, [('user_id', '=', user.id)])
                 if resource_id:
-                    resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
-                    leaves = wkcal.compute_leaves(cr, uid, calendar_id or False , resource_id, resource.calendar_id.id)
-                    time_efficiency = resource.time_efficiency
+#                    resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
+                    resource = resource_obj.read(cr, uid, resource_id, ['calendar_id','time_efficiency'], context=context)[0]
+                    leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id, resource.get('calendar_id')[0])
+                    time_efficiency = resource.get('time_efficiency')
                 resources.append(classobj(str(user.name), (Resource,), {'__doc__': user.name,
                                                                         '__name__': user.name,
                                                                         'vacation': tuple(leaves),
@@ -111,7 +112,7 @@ class wizard_compute_tasks(wizard.interface):
                     vacation = tuple(wkcal.compute_leaves(cr, uid, calendar_id))
                 # Dynamic Creation of tasks
                 i = 0
-                for each_task in task_objs:
+                for each_task in tasks:
                     hours = str(each_task.planned_hours / each_task.occupation_rate)+ 'H'
                     if each_task.priority in priority_dict.keys():
                         priorty = priority_dict[each_task.priority]
@@ -135,7 +136,7 @@ class wizard_compute_tasks(wizard.interface):
                     ctx = context.copy()
                     ctx.update({'scheduler': True})
                     user_id = user_obj.search(cr, uid, [('name', '=', t.booked_resource[0].__name__)])
-                    task_pool.write(cr, uid, [task_objs[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
+                    task_pool.write(cr, uid, [tasks[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                          'date_deadline': e_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                          'user_id': user_id[0]},
                                                                          context=ctx)

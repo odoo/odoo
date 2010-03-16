@@ -113,7 +113,8 @@ class wizard_compute_phases(wizard.interface):
             # Recursive call till all the next phases scheduled
             for phase in phase.next_phase_ids:
                if phase.state in ['draft','open','pending']:
-                   self._phase_schedule(cr, uid, phase, date_start, phase.project_id.resource_calendar_id.id or False, context=context)
+                   id_cal = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
+                   self._phase_schedule(cr, uid, phase, date_start, id_cal, context=context)
                else:
                    continue
 
@@ -135,14 +136,14 @@ class wizard_compute_phases(wizard.interface):
                                                   ('previous_phase_ids', '=', False)
                                                   ], context=context)
         phase_ids.sort()
-        phase_objs = phase_obj.browse(cr, uid, phase_ids, context=context)
-        for phase in phase_objs:
+        phases = phase_obj.browse(cr, uid, phase_ids, context=context)
+        for phase in phases:
             start_date = phase.project_id.date_start
             if not phase.project_id.date_start:
                 start_date = datetime.datetime.now().strftime("%Y-%m-%d")
             start_dt = datetime.datetime.strftime((datetime.datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d %H:%M")
-            calendar_id = phase.project_id.resource_calendar_id.id
-            self._phase_schedule(cr, uid, phase, start_dt, calendar_id or False, context=context)
+            calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
+            self._phase_schedule(cr, uid, phase, start_dt, calendar_id, context=context)
         return {}
 
     def _open_phases_list(self, cr, uid, data, context):
