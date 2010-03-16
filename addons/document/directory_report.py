@@ -45,7 +45,7 @@ class ir_action_report_xml(osv.osv):
                     res[data.get('id')] = False
         return res
 
-    def _model_search(self, cr, uid, obj, name, args):
+    def _model_search(self, cr, uid, obj, name, args, context={}):
         if not len(args):
             return []
         model_id= args[0][2]
