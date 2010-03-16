@@ -1474,7 +1474,7 @@ class stock_move(osv.osv):
         ir_sequence_obj = self.pool.get('ir.sequence')
         sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
         if not sequence:
-            raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
+            raise osv.except_osv(_('Error!'), _('No production sequence defined'))
         prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix': prefix}, {'product_id': product_id})
         prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
         ref = ','.join(map(lambda x:str(x),ids))
@@ -1713,8 +1713,10 @@ class stock_inventory_line(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_qty': fields.float('Quantity'),
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
-        'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]")
+        'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
+        'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
     }
+
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):
         if not product:
             return {}

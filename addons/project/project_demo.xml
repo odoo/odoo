@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
+
         <!--
 	Resource: project.project
 	-->
         <record id="base.main_company" model="res.company">
             <field name="project_time_mode_id" ref="product.uom_hour"></field>
         </record>
-        
+
 		<!-- Task Types -->
         <record id="project_tt_specification" model="project.task.type">
             <field name="sequence">1</field>
@@ -26,7 +26,7 @@
             <field name="sequence">4</field>
             <field name="name">Merge</field>
         </record>
-		
+
 		<!-- Projects -->
         <record id="project_project_9" model="project.project">
             <field name="warn_manager">1</field>
@@ -39,7 +39,6 @@
             <field name="priority">10</field>
             <field name="parent_id" ref="project_project_9"/>
             <field name="name">Study + Prototype</field>
-            <field model="account.analytic.account" name="category_id" search="[('name','=', 'Seagate P1')]"/>
             <field name="manager" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development')])]" name="type_ids"/>
         </record>
@@ -47,7 +46,6 @@
             <field name="priority">20</field>
             <field name="parent_id" ref="project_project_9"/>
             <field name="name">Specific Developements</field>
-            <field model="account.analytic.account" name="category_id" search="[('name','=', 'Seagate P1')]"/>
             <field name="manager" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_specification'), ref('project_tt_development')])]" name="type_ids"/>
         </record>
@@ -55,11 +53,10 @@
             <field name="priority">30</field>
             <field name="parent_id" ref="project_project_9"/>
             <field name="name">Install, data import, configuration</field>
-            <field model="account.analytic.account" name="category_id" search="[('name','=', 'Seagate P1')]"/>
             <field name="manager" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('project_tt_development')])]" name="type_ids"/>
         </record>
-        
+
 		<!-- Tasks -->
         <record id="project_task_116" model="project.task">
             <field name="planned_hours">38.0</field>

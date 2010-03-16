@@ -30,17 +30,9 @@
 			<!--<wizard string="Cancel" model="pos.order"
 				name="pos.cancel" id="pos_cancel" multi="True"/>-->
 
-		<wizard
-        string="Confirm"
-        model="pos.order"
-				name="pos.confirm"
-        id="pos_confirm"
-			  multi="True"
-			  menu="True"
-        />
-
+<!--
 		<wizard string="Discount" model="pos.order"
-				name="pos.discount" id="pos_discount" menu="False"/>
+				name="pos.discount" id="pos_discount" menu="False"/>-->
 
 <!--		<wizard id="wizard_pos_payment_report" menu="False"
 				model="pos.order" name="pos.payment.report" string="All paid lines for the current User"/-->
@@ -68,18 +60,12 @@
 
 		<wizard string="Scan Product" model="pos.order"
 				name="pos.scan_product" id="pos_scan_product"/-->
-  		<wizard
+<!--  		<wizard
         	id="close_statement"
         	model="account.bank.statement"
-        	menu="False"
+        	menu="True"
         	name="statement.close"
-        	string="Close Statements"/>
-  		<wizard
-        	id="open_statement"
-        	model="account.bank.statement"
-        	menu="False"
-        	name="statement.open"
-        	string="Open Statements"/>
+        	string="Close Statements"/>-->
 
 
        <wizard

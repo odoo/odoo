@@ -125,14 +125,17 @@ class account_bank_statement(osv.osv):
          }
 
     def create(self, cr, uid, vals, context=None):
-        open_jrnl = self.search(cr, uid, [('company_id', '=', vals['company_id']), ('journal_id', '=', vals['journal_id']), ('state', '=', 'open')])
-        if open_jrnl:
-            raise osv.except_osv('Error', u'Une caisse de type espèce est déjà ouverte')
-        if 'starting_details_ids' in vals:
-            vals['starting_details_ids'] = starting_details_ids = map(list, vals['starting_details_ids'])
-            for i in starting_details_ids:
-                if i and i[0] and i[1]:
-                    i[0], i[1] = 0, 0
+        
+        company_id = vals and vals.get('company_id',False)
+        if company_id:
+            open_jrnl = self.search(cr, uid, [('company_id', '=', vals['company_id']), ('journal_id', '=', vals['journal_id']), ('state', '=', 'open')])
+            if open_jrnl:
+                raise osv.except_osv('Error', u'Une caisse de type espèce est déjà ouverte')
+            if 'starting_details_ids' in vals:
+                vals['starting_details_ids'] = starting_details_ids = map(list, vals['starting_details_ids'])
+                for i in starting_details_ids:
+                    if i and i[0] and i[1]:
+                        i[0], i[1] = 0, 0
         res = super(account_bank_statement, self).create(cr, uid, vals, context=context)
         return res
 

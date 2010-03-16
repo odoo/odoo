@@ -55,7 +55,7 @@ class change_production_qty(osv.osv_memory):
         prod = prod_obj.browse(cr, uid, record_id)
         if prod.state in ('in_production','cancel', 'done'):
             raise osv.except_osv(_('Warning !'), _('The production is in "%s" state. You can not change the production quantity anymore') % (prod.state).upper() )
-        
+ 
         res['product_qty'] = prod.product_qty        
         return res
     
@@ -101,9 +101,6 @@ class change_production_qty(osv.osv_memory):
                 for r in res[0]:
                     if r['product_id']== move.product_id.id:
                         move_lines_obj.write(cr, uid,move.id, {'product_qty' :  r['product_qty']})
-        
-            
-        
             for m in prod.move_created_ids:
                 move_lines_obj.write(cr, uid,m.id, {'product_qty': wiz_qty.product_qty})
     

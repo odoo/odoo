@@ -162,7 +162,7 @@
 			<field name="arch" type="xml">
 				<tree string="Registration">
 					<field name="id"/>
-					<field name="create_date"/>
+					<field name="date"/>
 					<field name="event_id"/>
 					<field name="partner_id"/>
 					<field name="nb_register"/>
@@ -331,7 +331,7 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_event_registration">
-			<field name="name">Registration by Event</field>
+			<field name="name">Events On Registrations</field>
 			<field name="res_model">report.event.registration</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,graph</field>

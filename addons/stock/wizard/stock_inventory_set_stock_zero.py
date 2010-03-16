@@ -29,20 +29,32 @@ import time
 import wizard
 
 
-class inventory_merge_stock_zero(osv.osv_memory):
-    _name = "stock.inventory.merge.stock.zero"
+class inventory_set_stock_zero(osv.osv_memory):
+    _name = "stock.inventory.set.stock.zero"
     _description = "Set Stock to 0"
     _columns = {
             'location_id': fields.many2one('stock.location', 'Location', required=True), 
             }
     
     def do_merge(self, cr, uid, ids, context):
+        """ 
+             @summary:To set stock to Zero 
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """            
         invent_obj = pooler.get_pool(cr.dbname).get('stock.inventory')
         invent_line_obj = pooler.get_pool(cr.dbname).get('stock.inventory.line')
         prod_obj =  pooler.get_pool(cr.dbname).get('product.product')
     
         if len(context['active_ids']) <> 1:
-            raise wizard.except_wizard(_('Warning'), 
+            raise osv.except_osv(_('Warning'), 
                                        _('Please select one and only one inventory !'))
         for id in ids:
             datas = self.read(cr, uid, id)
@@ -67,6 +79,6 @@ class inventory_merge_stock_zero(osv.osv_memory):
                         })
         return {}
 
-inventory_merge_stock_zero()
+inventory_set_stock_zero()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

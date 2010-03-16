@@ -2,9 +2,9 @@
 <openerp>
     <data>
 
-    	<record id="view_inventory_merge_stock_zero" model="ir.ui.view">
+    	<record id="view_inventory_set_stock_zero" model="ir.ui.view">
             <field name="name">Set Stock to Zero</field>
-            <field name="model">stock.inventory.merge.stock.zero</field>
+            <field name="model">stock.inventory.set.stock.zero</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="Set Stock to Zero">
@@ -20,12 +20,12 @@
 		</record>
 
         <act_window name="Set Stock to Zero"		    
-		    res_model="stock.inventory.merge.stock.zero"
+		    res_model="stock.inventory.set.stock.zero"
 		    src_model="stock.inventory"
 		    view_mode="form"
 		    target="new"        
             key2="client_action_multi"    
-		    id="action_view_inventory_merge_stock_zero"/>			
+		    id="action_view_inventory_set_stock_zero"/>			
         
     </data>
 </openerp>

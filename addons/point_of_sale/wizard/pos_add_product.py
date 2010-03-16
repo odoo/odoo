@@ -42,7 +42,7 @@ class add_product(osv.osv_memory):
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
              @param context: A standard dictionary 
-             @return : Retrun the add product form again for addin more product
+             @return : Retrun the add product form again for adding more product
         """        
         this = self.browse(cr, uid, ids[0], context=context)
         record_id = context and context.get('active_id',False)
