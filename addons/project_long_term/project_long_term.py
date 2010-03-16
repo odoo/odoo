@@ -136,7 +136,9 @@ class project_phase(osv.osv):
        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
        if resource_id:
-            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
+#            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
+            res = resource_obj.read(cr, uid, resource_id[0], ['calendar_id'], context=context)[0]
+            cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:
                 calendar_id = cal_id
        default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]
@@ -155,7 +157,9 @@ class project_phase(osv.osv):
        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)], context=context)
        if resource_id:
-            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
+#            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
+            res = resource_obj.read(cr, uid, resource_id[0], ['calendar_id'], context=context)[0]
+            cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:
                 calendar_id = cal_id
        default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]

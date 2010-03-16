@@ -135,8 +135,8 @@ class wizard_compute_phases(wizard.interface):
                                                   ('previous_phase_ids', '=', False)
                                                   ], context=context)
         phase_ids.sort()
-        phase_objs = phase_obj.browse(cr, uid, phase_ids, context=context)
-        for phase in phase_objs:
+        phases = phase_obj.browse(cr, uid, phase_ids, context=context)
+        for phase in phases:
             start_date = phase.project_id.date_start
             if not phase.project_id.date_start:
                 start_date = datetime.datetime.now().strftime("%Y-%m-%d")
