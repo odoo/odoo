@@ -32,7 +32,7 @@ ARCH = '''<?xml version="1.0"?>
 FIELDS = {
     'pickings': {
         'string': 'Picking',
-        'type': 'one2many',
+        'type': 'many2many',
         'relation': 'stock.picking',
         'readonly': True,
     },
@@ -52,8 +52,7 @@ def _make_packing(obj, cursor, user, data, context):
     wkf_service = netsvc.LocalService('workflow')
     pool = pooler.get_pool(cursor.dbname)
     picking_obj = pool.get('stock.picking')
-    ids = [x[1] for x in data['form']['pickings']]
-
+    ids = data['form']['pickings'][0][2]
     picking_obj.force_assign(cursor, user, ids)
     picking_obj.action_move(cursor, user, ids)
     for picking_id in ids:

@@ -36,12 +36,34 @@ class sale_order_line_make_invoice(osv.osv_memory):
         'grouped' : lambda *a: False
     }
 
-    def makeInvoices(self, cr, uid, ids, context):
+    def make_invoices(self, cr, uid, ids, context):
+        """ 
+             @summary: To make invoices.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
+        
+        """        
+
         res = False
         invoices = {}
 
     #TODO: merge with sale.py/make_invoice
         def make_invoice(order, lines):
+            """ 
+                 @summary: To make invoices.
+                
+                 @param order: 
+                 @param lines: 
+                
+                 @return:  
+            
+            """            
             a = order.partner_id.property_account_receivable.id
             if order.partner_id and order.partner_id.property_payment_term.id:
                 pay_term = order.partner_id.property_payment_term.id
@@ -65,26 +87,28 @@ class sale_order_line_make_invoice(osv.osv_memory):
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
             return inv_id
 
-        for line in self.pool.get('sale.order.line').browse(cr,uid,context['active_ids']):
+        sales_order_line_obj = self.pool.get('sale.order.line')
+        sales_order_obj = self.pool.get('sale.order')
+        wf_service = netsvc.LocalService('workflow')
+        for line in sales_order_line_obj.browse(cr,uid,context['active_ids']):
             if (not line.invoiced) and (line.state not in ('draft','cancel')):
                 if not line.order_id.id in invoices:
                     invoices[line.order_id.id] = []
-                line_id = self.pool.get('sale.order.line').invoice_line_create(cr, uid,
+                line_id = sales_order_line_obj.invoice_line_create(cr, uid,
                         [line.id])
                 for lid in line_id:
                     invoices[line.order_id.id].append((line, lid))
-                self.pool.get('sale.order.line').write(cr, uid, [line.id],
+                sales_order_line_obj.write(cr, uid, [line.id],
                         {'invoiced': True})
             flag = True
-            data_sale = self.pool.get('sale.order').browse(cr,uid,line.order_id.id)
+            data_sale = sales_order_obj.browse(cr,uid,line.order_id.id)
             for line in data_sale.order_line:
                 if not line.invoiced:
                     flag = False
                     break
             if flag:
-                wf_service = netsvc.LocalService('workflow')
                 wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
-                self.pool.get('sale.order').write(cr,uid,[line.order_id.id],{'state' : 'progress'})
+                sales_order_obj.write(cr,uid,[line.order_id.id],{'state' : 'progress'})
 
         for result in invoices.values():
             order = result[0][0].order_id

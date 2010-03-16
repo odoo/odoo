@@ -188,7 +188,9 @@ class mrp_bom(osv.osv):
         'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
         'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
-        'company_id': fields.many2one('res.company','Company',required=True),        
+        'company_id': fields.many2one('res.company','Company',required=True),
+        'multi_level_bom': fields.boolean('Multi-level BoM'),
+
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -196,7 +198,8 @@ class mrp_bom(osv.osv):
         'product_qty': lambda *a: 1.0,
         'product_rounding': lambda *a: 1.0,
         'type': lambda *a: 'normal',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c),        
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.bom', context=c),
+        'multi_level_bom': lambda *a: 0, 
     }
     _order = "sequence"
     _sql_constraints = [
@@ -697,7 +700,9 @@ class mrp_production(osv.osv):
                     pick_type = 'out'
                 address_id = routing_loc.address_id and routing_loc.address_id.id or False
                 routing_loc = routing_loc.id
+            pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.'+pick_type)
             picking_id = self.pool.get('stock.picking').create(cr, uid, {
+                'name': pick_name,
                 'origin': (production.origin or '').split(':')[0] +':'+production.name,
                 'type': pick_type,
                 'move_type': 'one',
@@ -1256,7 +1261,7 @@ class stock_warehouse_orderpoint(osv.osv):
             "a requisition to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The requisition quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order'),
+        'procurement_id': fields.many2one('mrp.procurement', 'Latest Requisition'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {

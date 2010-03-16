@@ -394,7 +394,9 @@ class purchase_order(osv.osv):
             istate = 'none'
             if order.invoice_method=='picking':
                 istate = '2binvoiced'
+            pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in')
             picking_id = self.pool.get('stock.picking').create(cr, uid, {
+                'name': pick_name,
                 'origin': order.name+((order.origin and (':'+order.origin)) or ''),
                 'type': 'in',
                 'address_id': order.dest_address_id.id or order.partner_address_id.id,

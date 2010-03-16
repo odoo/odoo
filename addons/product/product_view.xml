@@ -302,9 +302,11 @@
                 <form string="Units of Measure">
                     <field name="name" select="1"/>
                     <field name="category_id" select="1"/>
-                    <field name="factor" select="1"/>
-                    <field name="factor_inv" select="1"/>
+                    <field name="factor" select="1" attrs="{'readonly':[('uom_factor','=','bigger')]}"/>
+					<field name="factor_inv_data" select="1" string="Factor Data" attrs="{'readonly':[('uom_factor','=','smaller')]}"/>
+                    <field name="factor_inv" invisible="1"/>
                     <field name="rounding"/>
+                    <field name="uom_factor"/>
                     <field name="active"/>
                 </form>
             </field>

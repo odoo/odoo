@@ -398,7 +398,9 @@ class mrp_repair(osv.osv):
                 self.pool.get('mrp.repair.line').write(cr, uid, [move.id], {'move_id': move_id})
 
             if repair.deliver_bool:
+                pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
                 picking = self.pool.get('stock.picking').create(cr, uid, {
+                    'name': pick_name,
                     'origin': repair.name,
                     'state': 'draft',
                     'move_type': 'one',

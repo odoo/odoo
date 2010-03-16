@@ -38,10 +38,24 @@ class sale_advance_payment_inv(osv.osv_memory):
     _default = {
         'qtty' : lambda *a: 1
                }
-    def createInvoices(self, cr, uid, ids, context={}):
+    def create_invoices(self, cr, uid, ids, context={}):
+        """ 
+             @summary: To create invoices.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """        
         list_inv = []
         obj_sale = self.pool.get('sale.order')
         obj_lines = self.pool.get('account.invoice.line')
+        inv_obj = self.pool.get('account.invoice')
+        
         for sale_adv_obj in self.browse(cr, uid, ids):
             for sale in obj_sale.browse(cr, uid, context['active_ids']):
                 address_contact = False
@@ -83,7 +97,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                     'payment_term':sale.payment_term.id,
                     'fiscal_position': sale.partner_id.property_account_position.id
                     }
-                inv_obj = self.pool.get('account.invoice')
+                
                 inv_id = inv_obj.create(cr, uid, inv)
 
                 for inv in sale.invoice_ids:
@@ -128,15 +142,27 @@ class sale_open_invoice(osv.osv_memory):
     }
 
     def open_invoice(self, cr, uid, ids, context):
+        """ 
+             @summary: To open invoice.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """        
         mod_obj = self.pool.get('ir.model.data')
         invoices = []
         #TODO: Can not get invoice ids here
         for advance_pay in self.browse(cr, uid, ids):
             result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
             id = mod_obj.read(cr, uid, result, ['res_id'])
-            model_data_ids = self.pool.get('ir.model.data').search(cr, uid,
+            model_data_ids = mod_obj.search(cr, uid,
                              [('model', '=', 'ir.ui.view'), ('name', '=', 'invoice_form')])
-            resource_id = self.pool.get('ir.model.data').read(cr, uid, model_data_ids,
+            resource_id = mod_obj.read(cr, uid, model_data_ids,
                                             fields=['res_id'])[0]['res_id']
         return {
 #            'domain': "[('id','in', ["+','.join(map(str, invoices))+"])]", # TODO

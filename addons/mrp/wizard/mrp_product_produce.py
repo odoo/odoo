@@ -34,6 +34,16 @@ class mrp_product_produce(osv.osv_memory):
     }
 
     def _get_product_qty(self, cr, uid, context):
+        """ 
+             @summary: to obtain product quantity
+        
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary
+             @return: quantity 
+        
+        """        
         prod = self.pool.get('mrp.production').browse(cr, uid, 
                                 context['active_id'], context=context)
         done = 0.0
@@ -47,6 +57,17 @@ class mrp_product_produce(osv.osv_memory):
                  }
 
     def do_produce(self, cr, uid, ids, context={}):
+        """ 
+             @summary: to check the product type
+        
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary
+             @return:  
+        
+        """               
         prod_obj = self.pool.get('mrp.production')
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):

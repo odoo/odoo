@@ -2,18 +2,47 @@
 <openerp>
     <data noupdate="1">
         <!--
-    Sequences for pickings
+    Sequence types for pickings
     -->
 
-        <record id="seq_type_picking" model="ir.sequence.type">
-            <field name="name">Picking</field>
-            <field name="code">stock.picking</field>
+        <record id="seq_type_picking_in" model="ir.sequence.type">
+            <field name="name">Picking IN</field>
+            <field name="code">stock.picking.in</field>
+        </record>
+        
+        <record id="seq_type_picking_out" model="ir.sequence.type">
+            <field name="name">Picking OUT</field>
+            <field name="code">stock.picking.out</field>
+        </record>
+        
+        <record id="seq_type_picking_internal" model="ir.sequence.type">
+            <field name="name">Picking INT</field>
+            <field name="code">stock.picking.internal</field>
         </record>
 
-        <record id="seq_picking" model="ir.sequence">
-            <field name="name">Picking</field>
-            <field name="code">stock.picking</field>
-            <field name="prefix">PACK</field>
+		<!--
+    		Sequences for pickings
+    	-->
+
+        <record id="seq_picking_in" model="ir.sequence">
+            <field name="name">Picking IN</field>
+            <field name="code">stock.picking.in</field>
+            <field name="prefix">IN/</field>
+            <field name="padding">5</field>
+        </record>
+        
+        <record id="seq_picking_out" model="ir.sequence">
+            <field name="name">Picking OUT</field>
+            <field name="code">stock.picking.out</field>
+            <field name="prefix">OUT/</field>
+            <field name="padding">5</field>
+        </record>
+        
+        <record id="seq_picking_internal" model="ir.sequence">
+            <field name="name">Picking INT</field>
+            <field name="code">stock.picking.internal</field>
+            <field name="prefix">INT/</field>
+            <field name="padding">5</field>
         </record>
 
         <!--

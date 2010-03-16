@@ -593,7 +593,9 @@ class sale_order(osv.osv):
                     location_id = order.shop_id.warehouse_id.lot_stock_id.id
                     if not picking_id:
                         loc_dest_id = order.partner_id.property_stock_customer.id
+                        pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
                         picking_id = self.pool.get('stock.picking').create(cr, uid, {
+                            'name': pick_name,
                             'origin': order.name,
                             'type': 'out',
                             'state': 'auto',

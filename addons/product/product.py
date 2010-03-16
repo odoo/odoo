@@ -82,9 +82,9 @@ class product_uom(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',
             help="Unit of Measure of a category can be converted between each others in the same category."),
-        'factor': fields.float('Rate', digits=(12, 6), required=True,
+        'factor': fields.float('Ratio', digits=(12, 6), required=True,
             help='The coefficient for the formula:\n' \
-                    '1 (base unit) = coeff (this unit). Rate = 1 / Factor.'),
+                    '1 (base unit) = coeff (this unit). Ratio = 1 / Factor.'),
         'factor_inv': fields.function(_factor, digits=(12, 6),
             method=True, string='Factor',
             help='The coefficient for the formula:\n' \
@@ -93,6 +93,9 @@ class product_uom(osv.osv):
         'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True,
             help="The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the unit of measure without removing it."),
+        'uom_factor': fields.selection([('bigger','Bigger than the Default'),
+                                        ('smaller','Smaller than the Default'),
+                                        ('','')],'UoM Factor'),
     }
 
     _defaults = {
@@ -100,6 +103,7 @@ class product_uom(osv.osv):
         'factor_inv': lambda *a: 1.0,
         'active': lambda *a: 1,
         'rounding': lambda *a: 0.01,
+        'uom_factor': lambda *a: 'smaller',
     }
 
     _sql_constraints = [
