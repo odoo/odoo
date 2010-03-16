@@ -74,7 +74,7 @@ def _mass_mail_send(self, cr, uid, data, context):
 
     case = case_pool.browse(cr,uid,data['ids'])[0]
     case_pool.write(cr, uid, [case.id], {
-                'som': False,
+        #'som': False,
                 'canal_id': False,
                 })
     emails = [data['form']['to']] + (data['form']['cc'] or '').split(',')
