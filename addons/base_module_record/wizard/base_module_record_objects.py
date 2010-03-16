@@ -24,6 +24,7 @@ import osv
 import pooler
 import time
 import base_module_save
+
 info = '''<?xml version="1.0"?>
 <form string="Module Recording">
     <label string="Thanks For using Module Recorder" colspan="4" align="0.0"/>
@@ -36,14 +37,14 @@ intro_start_form = '''<?xml version="1.0"?>
     <field name="filter_cond"/>
     <separator string="Choose objects to record" colspan="4"/>
     <field name="objects" colspan="4" nolabel="1"/>
-
+    <group><field name="info_yaml"/></group>
 </form>'''
 
 intro_start_fields = {
     'check_date':  {'string':"Record from Date",'type':'datetime','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')},
     'objects':{'string': 'Objects', 'type': 'many2many', 'relation': 'ir.model', 'help': 'List of objects to be recorded'},
     'filter_cond':{'string':'Records only', 'type':'selection','selection':[('created','Created'),('modified','Modified'),('created_modified','Created & Modified')], 'required':True, 'default': lambda *args:'created'},
-
+    'info_yaml': {'string':'YAML','type':'boolean'}
 }
 
 def _info_default(self, cr, uid, data, context):
@@ -87,12 +88,16 @@ def _record_objects(self, cr, uid, data, context):
                       continue
         search_ids=obj_pool.search(cr,uid,search_condition)
         for s_id in search_ids:
-             args=(cr.dbname,uid,user,obj_name,'copy',s_id,{},context)
+             args=(cr.dbname,uid,obj_name,'copy',s_id,{},context)
              mod.recording_data.append(('query',args, {}, s_id))
     return {}
 
 def inter_call(self,cr,uid,data,context):
     res=base_module_save._create_module(self,cr, uid, data, context)
+    return res
+
+def _create_yaml(self,cr,uid,data,context):
+    res=base_module_save._create_yaml(self,cr, uid, data, context)
     return res
 
 class base_module_record_objects(wizard.interface):
@@ -111,9 +116,13 @@ class base_module_record_objects(wizard.interface):
          },
          'record': {
             'actions': [],
-            'result': {'type':'action','action':_record_objects,'state':'intro'}
+            'result': {'type':'action','action':_record_objects,'state':'check'}
                 },
-         'intro': {
+         'check': {
+            'actions': [],
+            'result': {'type':'choice','next_state':base_module_save._check}
+        },
+         'info': {
             'actions': [],
             'result': {
                 'type':'form',
@@ -134,6 +143,17 @@ class base_module_record_objects(wizard.interface):
                 'state':[('end', 'Close', 'gtk-ok'),]
                 },
                 },
+         'save_yaml': {
+            'actions': [_create_yaml],
+            'result': {
+                'type':'form',
+                'arch':base_module_save.yaml_save_form,
+                'fields': base_module_save.yaml_save_fields,
+                'state':[
+                    ('end', 'Close', 'gtk-ok'),
+                ]
+            }
+         },
          'end': {
             'actions': [],
             'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','OK')]}

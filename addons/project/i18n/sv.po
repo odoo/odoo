@@ -1,19 +1,19 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* project
+# 	* project
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-09 14:59+0000\n"
+"PO-Revision-Date: 2010-03-11 15:55+0000\n"
 "Last-Translator: Anders Eriksson <ae@mobilasystem.se>\n"
-"Language-Team: \n"
+"Language-Team: <> <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-10 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-03-12 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -54,7 +54,7 @@ msgstr "Öppna avslutade aktiviteter"
 #. module: project
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ogiltigt modellnamn i åtgärdsdefinitionen."
 
 #. module: project
 #: wizard_field:project.task.delegate,init,planned_hours_me:0
@@ -64,7 +64,7 @@ msgstr "Timmar som ska valideras"
 #. module: project
 #: field:project.project,progress_rate:0
 msgid "Progress"
-msgstr "Upparbetning"
+msgstr "Upparbetat"
 
 #. module: project
 #: help:config.compute.remaining,remaining_hours:0
@@ -89,7 +89,7 @@ msgstr "Projektmedlemmar"
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
 msgid "Task by delegate"
-msgstr "Uppgifter per delegerare"
+msgstr "Aktiviteter per delegerare"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_my_project_my_run
@@ -174,7 +174,7 @@ msgid ""
 "works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
 "    "
 msgstr ""
-"Projekt modulen administrerar projekt med flera noivåer, aktivitet, "
+"Projektmodulen administrerar projekt med flera nivåer, aktivitet, "
 "rapporterat arbete osv. Modulen kan användas för planering, aktiviteter "
 "osv.\n"
 "    "
@@ -207,6 +207,8 @@ msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task."
 msgstr ""
+"Beräknad tid för dig för att godkänna det arbete utfört av den användaren "
+"som du delegerade denna uppgift."
 
 #. module: project
 #: view:project.project:0
@@ -329,7 +331,7 @@ msgstr "Tilläggsinformation"
 #: field:project.project,partner_id:0
 #: field:project.task,partner_id:0
 msgid "Partner"
-msgstr "Partner"
+msgstr "Företag"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -533,12 +535,12 @@ msgstr "Aktivitetsdetaljer"
 #. module: project
 #: model:process.node,name:project.process_node_triggerinvoice0
 msgid "Trigger Invoice"
-msgstr ""
+msgstr "Skapar faktura"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
 msgid "Draft Open task"
-msgstr ""
+msgstr "Utkast öppna ärenden"
 
 #. module: project
 #: view:project.project:0
@@ -564,7 +566,7 @@ msgstr "Delegera"
 #. module: project
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Ogiltig XML för Vy-arkitektur!"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
@@ -599,7 +601,7 @@ msgstr "Ny aktivitet"
 #. module: project
 #: help:project.project,timesheet_id:0
 msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr ""
+msgstr "Tidsplanera arbetstid för att justera Gantt-diagramet."
 
 #. module: project
 #: view:project.project:0
@@ -665,7 +667,7 @@ msgstr "E-mails"
 #. module: project
 #: model:process.node,note:project.process_node_triggerinvoice0
 msgid "Trigger invoices from sale order lines"
-msgstr ""
+msgstr "Utlös faktura från försäljningsorderrader"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -704,11 +706,13 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed."
 msgstr ""
+"Ny status på dina egna ärenden. Ärenden som väntar kommer att återupptas "
+"automatiskt när den delegerade uppgiften är stängd."
 
 #. module: project
 #: field:res.company,project_time_mode:0
 msgid "Project Time Unit"
-msgstr "Prejektets tidsenhet"
+msgstr "Projektets tidsenhet"
 
 #. module: project
 #: field:project.project,complete_name:0
@@ -788,6 +792,9 @@ msgid ""
 "If you use the timesheet linked to projects (project_timesheet module), "
 "don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Detta kommer att ställa in måttenhet som används i projekt och uppgifter.\n"
+"Om du använder tidrapporter knutna till projekt (project_timesheet modulen), "
+"glöm inte att ställa in rätt måttenhet för dina anställda."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
@@ -797,7 +804,7 @@ msgstr "Användarens projekt"
 #. module: project
 #: view:project.project:0
 msgid "Reactivate Project"
-msgstr "Reaktivera projekt"
+msgstr "Återaktivera projektet"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -857,7 +864,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
 msgid "Month works"
-msgstr ""
+msgstr "Månadsarbetstid"
 
 #. module: project
 #: model:ir.actions.report.xml,name:project.report_project_project_gantt
@@ -868,7 +875,7 @@ msgstr "Gantt diagram"
 #. module: project
 #: field:project.project,warn_customer:0
 msgid "Warn Partner"
-msgstr "Varna partner"
+msgstr "Varna företag"
 
 #. module: project
 #: field:project.project,state:0
@@ -946,7 +953,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Reactivate"
-msgstr ""
+msgstr "Återaktivera"
 
 #. module: project
 #: field:project.task,parent_id:0
@@ -971,17 +978,17 @@ msgstr "Skicka epost till kunden"
 #. module: project
 #: field:project.project,warn_manager:0
 msgid "Warn Manager"
-msgstr ""
+msgstr "Varna projektledaren"
 
 #. module: project
 #: model:ir.model,name:project.model_config_compute_remaining
 msgid "config.compute.remaining"
-msgstr ""
+msgstr "config.compute.remaining"
 
 #. module: project
 #: wizard_button:project.task.close,mail_ask,close:0
 msgid "Quiet close"
-msgstr ""
+msgstr "Tyst stängning"
 
 #. module: project
 #: help:project.task.delegate,init,prefix:0
@@ -991,7 +998,7 @@ msgstr "Ny title på din egen aktivitet för att bekräfta nedlagt arbete."
 #. module: project
 #: field:project.task,progress:0
 msgid "Progress (%)"
-msgstr "Upparbetning (%)"
+msgstr "Upparbetat (%)"
 
 #. module: project
 #: field:project.task,description:0
@@ -1014,7 +1021,7 @@ msgstr "Projektstruktur"
 #. module: project
 #: wizard_view:project.task.delegate,init:0
 msgid "Validation Task"
-msgstr ""
+msgstr "Granska ärende"
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -1043,7 +1050,7 @@ msgstr "Delegera aktivitet"
 #. module: project
 #: field:project.project,tasks:0
 msgid "Project tasks"
-msgstr "Projektuppgifter"
+msgstr "Projektaktiviteter"
 
 #. module: project
 #: help:project.project,warn_manager:0
@@ -1062,7 +1069,7 @@ msgstr "Ny funktion"
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
 msgid "Encode your working hours."
-msgstr ""
+msgstr "Koda dina arbetstimmar"
 
 #. module: project
 #: wizard_field:project.task.delegate,init,prefix:0
@@ -1108,7 +1115,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Partner Info"
-msgstr "Partnerinfo"
+msgstr "Företagsinfo"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_config_compute_remaining
@@ -1118,7 +1125,7 @@ msgstr "Beräkna återstående timmar"
 #. module: project
 #: wizard_field:project.task.delegate,init,state:0
 msgid "Validation State"
-msgstr ""
+msgstr "Granskningsstatus"
 
 #. module: project
 #: constraint:project.project:0
@@ -1148,7 +1155,7 @@ msgstr "Slutdatum: %(date_stop)s"
 #. module: project
 #: field:project.project,date_end:0
 msgid "Expected End"
-msgstr "Förvantat slut"
+msgstr "Förväntat slutdatum"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
