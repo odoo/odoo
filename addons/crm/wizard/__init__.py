@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import crm_opportunity_wizard
 import crm_phonecall_wizard
 
 import wizard_crm_send_email
@@ -29,12 +28,15 @@ import wizard_history_event
 
 import crm_lead_to_partner
 import crm_lead_to_opportunity
+
+import crm_opportunity_to_meeting
+
 import crm_phonecall2phonecall
 import phonecall2partner
 import phonecall2meeting
 import phonecall_to_opportunity
 import opportunity2partner
-import opportunity2meeting
+
 import opportunity2phonecall
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

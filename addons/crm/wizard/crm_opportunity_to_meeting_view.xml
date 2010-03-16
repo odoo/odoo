@@ -1,17 +1,28 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+	    <!-- Opportunity to meeting view -->
+
         <record model="ir.ui.view" id="opportunity2meeting_view">
             <field name="name">crm.opportunity2meeting.form</field>
             <field name="model">crm.opportunity2meeting</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Convert To Meeting ">
-                        <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
-                        <button name="action_makeMeeting" type="object" string="_Apply" icon="gtk-apply" />
+                <form string="Convert To Meeting">
+                	<label string="Are you sure to schedule a meeting for this Opportunity?" colspan="4"/>
+                	<newline/>
+                	<separator colspan="4" string=""/>
+                	<button name="action_cancel" string="_Cancel"
+                		icon="gtk-cancel" special="cancel" />
+                	<button name="action_makeMeeting" type="object"
+                		string="_Schedule" icon="gtk-go-forward" />
                 </form>
             </field>
         </record>
+		
+		<!-- Opportunity to meeting action -->
+
         <record model="ir.actions.act_window" id="opportunity2meeting_act">
             <field name="name">Convert To Meeting</field>
             <field name="res_model">crm.opportunity2meeting</field>
@@ -21,5 +32,6 @@
             <field name="target">new</field>
          	<field name="context">{'record_id' : active_id}</field>
         </record>
+
     </data>
 </openerp>   
