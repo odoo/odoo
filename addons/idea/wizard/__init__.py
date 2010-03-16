@@ -18,5 +18,5 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import idea_vote
+import idea_post_vote
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
