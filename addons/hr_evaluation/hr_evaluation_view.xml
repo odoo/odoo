@@ -57,6 +57,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Evaluation Plan Phase">
+                 <notebook>
+                   <page string="General">
                     <field name="plan_id" invisible="1"/>
                     <group col="6" colspan="4">
                         <field name="name"/>
@@ -84,6 +86,15 @@
                             <field name="send_anonymous_employee"/>
                         </group>
                     </group>
+                    </page>
+                    <page string="Mail Settings">
+                        <field name="mail_feature"/>
+                        <newline/>
+                        <separator string="Mail Body"/>
+                        <newline/>
+                        <field name="mail_body" colspan="4" nolabel="1"/>
+                    </page>
+                  </notebook>
                 </form>
             </field>
         </record>
