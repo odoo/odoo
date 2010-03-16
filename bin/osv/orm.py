@@ -370,6 +370,10 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
+    def view_init(self, cr , uid , fields_list, context=None):
+        """Override this method to do specific things when a view on the object is opened."""
+        pass
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
         raise _('The read_group method is not implemented on this object !')
 
@@ -1697,6 +1701,7 @@ class orm_memory(orm_template):
         return id_new
 
     def default_get(self, cr, uid, fields_list, context=None):
+        self.view_init(cr, uid, fields_list, context)
         if not context:
             context = {}
         value = {}
