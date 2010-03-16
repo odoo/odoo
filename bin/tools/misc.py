@@ -850,7 +850,7 @@ def get_user_companies(cr, user):
     user_comp = cr.fetchone()[0]
     if not user_comp:
         return []
-    return _get_company_children(cr, [user_comp])
+    return [user_comp] + _get_company_children(cr, [user_comp])
 
 def mod10r(number):
     """
