@@ -417,11 +417,11 @@ def trans_generate(lang, modules, dbname=None):
 
     query = 'SELECT name, model, res_id, module'    \
             '  FROM ir_model_data'
-    if not 'all' in modules:
-        query += ' WHERE module IN (%s)' % ','.join(['%s']*len(modules))
+    if 'all' not in modules:
+        query += ' WHERE module IN %s'
     query += ' ORDER BY module, model, name'
 
-    query_param = not 'all' in modules and modules or None
+    query_param = 'all' not in modules and (tuple(modules),) or None
     cr.execute(query, query_param)
 
     _to_translate = []
