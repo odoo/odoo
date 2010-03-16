@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 from osv import fields, osv
@@ -26,7 +26,7 @@ class lunch_order_cancel(osv.osv_memory):
     """
     _name = "lunch.order.cancel"
     _description = "Cancel Order"
-    
+
     def cancel(self, cr, uid, ids, context):
         """
         Cancel cashmove entry from cashmoves and update state to draft.
@@ -34,8 +34,9 @@ class lunch_order_cancel(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List  Lunch Order Cancel’s IDs
         """
-        return self.pool.get('lunch.order').lunch_order_cancel(cr, uid, context['active_ids'], context)
-        
+        data = context and context.get('active_ids', []) or []
+        return self.pool.get('lunch.order').lunch_order_cancel(cr, uid, data, context)
+
 lunch_order_cancel()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

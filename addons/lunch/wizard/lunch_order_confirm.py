@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -28,21 +28,22 @@ class lunch_order_confirm(osv.osv_memory):
     _name = "lunch.order.confirm"
     _description = "confirm Order"
     _columns = {
-                'confirm_cashbox':fields.many2one('lunch.cashbox', 'Name of box', required=True), 
+                'confirm_cashbox':fields.many2one('lunch.cashbox', 'Name of box', required=True),
                 }
-    
+
     def confirm(self, cr, uid, ids, context):
         """
-        confirm Lunch Order.Create cashmoves in launch cashmoves when state is 
+        confirm Lunch Order.Create cashmoves in launch cashmoves when state is
                         confirm in lunch order.
-        @param cr: the current row, from the database cursor, 
-        @param uid: the current user’s ID for security checks, 
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
         @param ids: List  Lunch Order confirm’s IDs
-        @return: Dictionary {}.                
+        @return: Dictionary {}.
         """
+        data = context and context.get('active_ids', []) or []
         order_ref = self.pool.get('lunch.order')
-        for data in self.read(cr, uid, ids):
-            order_ref.confirm(cr, uid, context['active_ids'], data['confirm_cashbox'], context)
+        for confirm_obj in self.read(cr, uid, ids):
+            order_ref.confirm(cr, uid, data, confirm_obj['confirm_cashbox'], context)
             return {}
 
 lunch_order_confirm()
