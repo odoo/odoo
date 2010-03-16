@@ -22,11 +22,13 @@
 from osv import fields, osv
 
 class wiki_wiki_page_open(osv.osv_memory):
+    """ wizard Open Page """
     _name = "wiki.wiki.page.open"
     _description = "wiz open page"
     _columns = {
 
     }
+
     def open_wiki_page(self, cr, uid, ids, context):
         """ Opens Wiki Page of Group
         @param cr: the current row, from the database cursor,
@@ -35,8 +37,6 @@ class wiki_wiki_page_open(osv.osv_memory):
         @return : dictionay of open wiki window on give group id
         """
         for group in self.pool.get('wiki.groups').browse(cr, uid,ids):
-
-         for openpage in self.pool.get('wiki.wiki.page.open').browse(cr, uid,ids):
 
             value = {
                 'domain': "[('group_id','=',%d)]" % (group.id),

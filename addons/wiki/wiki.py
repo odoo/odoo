@@ -36,6 +36,7 @@ class Wiki(osv.osv):
 Wiki()
 
 class WikiGroup(osv.osv):
+    """ Wiki Groups """
     _name = "wiki.groups"
     _description="Wiki Groups"
     _order = 'name'
@@ -54,7 +55,9 @@ class WikiGroup(osv.osv):
     }
 WikiGroup()
 
+
 class GroupLink(osv.osv):
+    """ Apply Group Link """
     _name = "wiki.groups.link"
     _description="Wiki Groups Links"
     _rec_name = 'action_id'
@@ -63,6 +66,7 @@ class GroupLink(osv.osv):
        'action_id': fields.many2one('ir.ui.menu', 'Menu')
     }
 GroupLink()
+
 
 class Wiki(osv.osv):
     _inherit="wiki.wiki"
@@ -86,7 +90,7 @@ class Wiki(osv.osv):
         'parent_id':fields.many2one('wiki.wiki', 'Parent Page'),
         'child_ids':fields.one2many('wiki.wiki', 'parent_id', 'Child Pages'),
     }
-    
+
     def onchange_group_id(self, cr, uid, ids, group_id, content, context={}):
         if (not group_id) or content:
             return {}
@@ -141,7 +145,9 @@ class Wiki(osv.osv):
 
 Wiki()
 
+
 class History(osv.osv):
+    """ Wiki History """
     _name="wiki.wiki.history"
     _description="Wiki History"
     _rec_name="date_time"
@@ -157,6 +163,7 @@ class History(osv.osv):
     _defaults = {
         'write_uid': lambda obj,cr,uid,context: uid,
     }
+
     def getDiff(self, cr, uid, v1, v2, context={}):
         import difflib
         history_pool = self.pool.get('wiki.wiki.history')
@@ -166,5 +173,7 @@ class History(osv.osv):
         line2 = text2.splitlines(1)
         diff = difflib.HtmlDiff()
         return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
+
 History()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

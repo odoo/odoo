@@ -22,6 +22,7 @@
 from osv import fields, osv
 
 class wiki_make_index(osv.osv_memory):
+    """ Create Index For Selected Page """
     _name = "wiki.make.index"
     _description = "Create Index"
     _columns = {
@@ -34,10 +35,11 @@ class wiki_make_index(osv.osv_memory):
         @param ids: List of wiki index’s IDs
 
         """
+        data = context and context.get('active_ids', []) or []
         for index_obj in self.browse(cr,uid,ids):
             wiki_pool = self.pool.get('wiki.wiki')
             cr.execute("Select id, section from wiki_wiki where id = ANY(%s) \
-                            order by section " ,(context['active_ids'],))
+                            order by section " ,(data,))
             lst0 = cr.fetchall()
             lst = []
             s_ids = {}
