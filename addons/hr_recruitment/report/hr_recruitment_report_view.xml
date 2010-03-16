@@ -21,17 +21,17 @@
         </field>
     </record>
 
-    <!--record id="view_hr_recruitment_report_graph" model="ir.ui.view">
+    <record id="view_hr_recruitment_report_graph" model="ir.ui.view">
          <field name="name">hr.recruitment.report.graph</field>
          <field name="model">hr.recruitment.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Recruitments Statistics" type="bar">
-                 <field name="employee_id"/>
-                 <field name="number_of_days_temp" operator="+"/>
+                 <field name="job_id"/>
+                 <field name="nbr" operator="+"/>
              </graph>
          </field>
-    </record-->
+    </record>
 
     <record id="view_hr_recruitment_report_search" model="ir.ui.view">
         <field name="name">hr.recruitment.report.search</field>

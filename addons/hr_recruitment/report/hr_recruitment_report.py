@@ -55,7 +55,8 @@ class hr_recruitment_report(osv.osv):
                      s.type_id,
                      s.department_id,
                      s.priority,
-                     s.stage_id
+                     s.stage_id,
+                     count(*) as nbr
                  from hr_applicant s
                  group by
                      s.date,s.state,s.company_id,s.user_id,s.stage_id,s.type_id,s.priority,
