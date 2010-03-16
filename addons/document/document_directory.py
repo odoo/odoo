@@ -64,8 +64,7 @@ class document_directory(osv.osv):
     def _get_root_directory(self, cr,uid, context=None):
         objid=self.pool.get('ir.model.data')
         try:
-            mid = objid._get_id(cr, uid, 'document', 'dir_root')
-            return False # TODO: check why not display root dir 
+            mid = objid._get_id(cr, uid, 'document', 'dir_root')            
             if not mid:
                 return False
         except Exception, e:
@@ -199,8 +198,8 @@ class document_directory(osv.osv):
             path.append(duri[0])
             duri = duri[1:]
             did = nid[0]
-        
-        return (nodes.node_dir(path, nparent,ncontext,self.browse(cr,uid,did, context)), duri)
+        root_node = did and self.browse(cr,uid,did, context) or False
+        return (nodes.node_dir(path, nparent,ncontext, root_node), duri)
 
         
         nid = self.search(cr,uid,[('parent_id','=',did),('name','=',duri[0]),('type','=','ressource')], context=context)
