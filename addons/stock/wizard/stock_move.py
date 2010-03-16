@@ -66,73 +66,27 @@ class stock_move_consume(osv.osv_memory):
         'location_id': fields.many2one('stock.location', 'Location', required=True)
               }
 
-    def _get_product_id(self, cr, uid, context):
+    def default_get(self, cr, uid, fields_list, context=None):
         """ 
-             @summary:To get product id
+             Get default values
             
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
+             @param fields_list: List of fields for default value 
              @param context: A standard dictionary 
              
-             @return: product id
+             @return: default values of fields_list
         
-        """                        
+        """
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
-        return move.product_id.id
-    
-    def _get_product_qty(self, cr, uid, context):
-        """ 
-             @summary:To get product quantity
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             
-             @return: quantity
-        
-        """                
-        move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
-        return move.product_qty
-    
-    def _get_product_uom(self, cr, uid, context):
-        """ 
-             @summary:To get Unit of measure
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             
-             @return: uom
-        
-        """                
-        move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
-        return move.product_uom.id
-    
-    def _get_location_id(self, cr, uid, context):
-        """ 
-             @summary:To get location id
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             
-             @return: location id
-        
-        """                
-        
-        move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
-        return move.location_id.id
-    
-    _defaults = {
-                 'product_id': _get_product_id, 
-                 'product_qty': _get_product_qty, 
-                 'product_uom': _get_product_uom, 
-                 'location_id': _get_location_id
-                 }
+        val = {
+               'product_id':  move.product_id.id, 
+               'product_uom': move.product_uom.id, 
+               'product_qty': move.product_qty, 
+               'location_id': move.location_id.id, 
+               }
+        return val
 
     def do_move_consume(self, cr, uid, ids, context={}):
         """ 
