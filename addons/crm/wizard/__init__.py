@@ -35,7 +35,6 @@ import crm_phonecall2phonecall
 import phonecall2partner
 import phonecall2meeting
 import phonecall_to_opportunity
-import opportunity2partner
 
 import opportunity2phonecall
 

@@ -75,11 +75,6 @@
                     <group col="3" colspan="2">
                         <separator colspan="3" string="Contacts"/>
                         <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
-						<button string="Create a Partner"
-                        icon="terp-crm"
-                        name="%(action_crm_opportunity2partner)d"
-                        type="action"
-                        attrs="{'invisible':[('partner_id','!=',False)]}" />
                         <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
                         <field name="email_from" string="Email"/>
                         <field name="phone"/>
