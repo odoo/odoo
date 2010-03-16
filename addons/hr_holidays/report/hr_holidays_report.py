@@ -28,7 +28,7 @@ class hr_holidays_report(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.date('Date', readonly=True),
+        'date': fields.datetime('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
@@ -52,9 +52,9 @@ class hr_holidays_report(osv.osv):
             create or replace view hr_holidays_report as (
                  select
                      min(s.id) as id,
-                     s.create_date as date,
-                     to_char(s.date_from,'YYYY/mm/dd') as date_from,
-                     to_char(s.date_to,'YYYY/mm/dd') as date_to,
+                     date_trunc('seconds',s.create_date) as date,
+                     date_trunc('day',s.date_from) as date_from,
+                     date_trunc('day',s.date_to) as date_to,
                      s.number_of_days_temp,
                      s.employee_id,
                      s.user_id as user_id,
