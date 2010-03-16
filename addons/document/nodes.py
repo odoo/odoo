@@ -599,7 +599,33 @@ class node_file(node_class):
             self.storage_id = fil.parent_id.storage_id.id
         else:
             self.storage_id = None                       
-            
+
+    def fix_ppath(self, cr, fbro):
+        """Sometimes we may init this w/o path, parent.
+        This function fills the missing path from the file browse object
+        
+        Note: this may be an expensive operation, do on demand. However,
+        once caching is in, we might want to do that at init time and keep
+        this object anyway
+        """
+        if self.path or self.parent:
+            return
+        assert fbro
+        uid = self.context.uid
+        
+        dirpath = []
+        if fbro.parent_id:
+            dirobj = self.context._dirobj.pool.get('document.directory')
+            dirpath = dirobj.get_full_path(cr, uid, fbro.parent_id.id, context=self.context.context)
+        if fbro.datas_fname:
+            dirpath.append(fbro.datas_fname)
+        else:
+            dirpath.append(fbro.name)
+        
+        if len(dirpath)>1:
+            self.path = dirpath
+        else:
+            self.path = dirpath[0]   
     
     def get_data(self, cr, fil_obj = None):
         """ Retrieve the data for some file. 

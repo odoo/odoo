@@ -65,9 +65,10 @@ class document_directory(osv.osv):
         objid=self.pool.get('ir.model.data')
         try:
             mid = objid._get_id(cr, uid, 'document', 'dir_root')
-            return False # TODO: check why not display root dir 
             if not mid:
                 return False
+            root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']
+            return root_id
         except Exception, e:
             import netsvc
             logger = netsvc.Logger()
@@ -110,6 +111,21 @@ class document_directory(osv.osv):
                 d2 = d2.parent_id
             res.append((d.id, s))
         return res
+
+    def get_full_path(self, cr, uid, dir_id, context=None):
+        """ Return the full path to this directory, in a list, root first
+        """
+        def _parent(dir_id, path):
+            parent=self.browse(cr,uid,dir_id)
+            if parent.parent_id and not parent.ressource_parent_type_id:
+                _parent(parent.parent_id.id,path)
+                path.append(parent.name)
+            else:
+                path.append(parent.name)
+                return path
+        path = []
+        _parent(dir_id, path)
+        return path
 
     def ol_get_resource_path(self,cr,uid,dir_id,res_model,res_id):
         # this method will be used in process module
