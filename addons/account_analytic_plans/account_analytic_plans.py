@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 from lxml import etree
@@ -85,7 +85,7 @@ class account_analytic_plan_instance(osv.osv):
     _columns={
         'name':fields.char('Analytic Distribution',size=64),
         'code':fields.char('Distribution Code',size=16),
-        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal', required=True),
+        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal' ),
         'account_ids':fields.one2many('account.analytic.plan.instance.line','plan_id','Account Id'),
         'account1_ids':one2many_mod2('account.analytic.plan.instance.line','plan_id','Account1 Id'),
         'account2_ids':one2many_mod2('account.analytic.plan.instance.line','plan_id','Account2 Id'),
@@ -258,8 +258,8 @@ class account_invoice_line(osv.osv):
         res ['analytics_id']=line.analytics_id and line.analytics_id.id or False
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, context=None):
-        res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, context)
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
+        res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context=context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context)
         if rec and rec.analytics_id:
             res_prod['value'].update({'analytics_id':rec.analytics_id.id})
@@ -284,6 +284,9 @@ class account_move_line(osv.osv):
         super(account_move_line, self).create_analytic_lines(cr, uid, ids, context)
         for line in self.browse(cr, uid, ids, context):
            if line.analytics_id:
+               if not line.journal_id.analytic_journal_id:
+                   raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (line.journal_id.name,))
+
                toremove = self.pool.get('account.analytic.line').search(cr, uid, [('move_id','=',line.id)], context=context)
                if toremove:
                     line.unlink(cr, uid, toremove, context=context)
@@ -300,7 +303,7 @@ class account_move_line(osv.osv):
                        'amount': amt,
                        'general_account_id': line.account_id.id,
                        'move_id': line.id,
-                       'journal_id': line.analytics_id.journal_id.id,
+                       'journal_id': line.journal_id.analytic_journal_id.id,
                        'ref': line.ref,
                    }
                    ali_id=self.pool.get('account.analytic.line').create(cr,uid,al_vals)
