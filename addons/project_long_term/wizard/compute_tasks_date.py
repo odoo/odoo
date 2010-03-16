@@ -62,7 +62,7 @@ class wizard_compute_tasks(wizard.interface):
         if task_ids:
             task_ids.sort()
             tasks = task_pool.browse(cr, uid, task_ids, context=context)
-            calendar_id = project.resource_calendar_id.id
+            calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
             start_date = project.date_start
             if not project.date_start:
                 start_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -76,7 +76,7 @@ class wizard_compute_tasks(wizard.interface):
                 if resource_id:
 #                    resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
                     resource = resource_obj.read(cr, uid, resource_id, ['calendar_id','time_efficiency'], context=context)[0]
-                    leaves = wkcal.compute_leaves(cr, uid, calendar_id or False , resource_id, resource.get('calendar_id')[0])
+                    leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id, resource.get('calendar_id')[0])
                     time_efficiency = resource.get('time_efficiency')
                 resources.append(classobj(str(user.name), (Resource,), {'__doc__': user.name,
                                                                         '__name__': user.name,

@@ -179,7 +179,7 @@ class project_phase(osv.osv):
         # Consider calendar and efficiency if the phase is performed by a resource
         # otherwise consider the project's working calendar
         phase = self.browse(cr, uid, ids[0], context=context)
-        calendar_id = phase.project_id.resource_calendar_id.id
+        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
         resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)],context=context)
         if resource_id:
                 cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
@@ -192,13 +192,13 @@ class project_phase(osv.osv):
         # for previous and next phases respectively based on valid condition
         if vals.get('date_start', False) and vals['date_start'] < phase.date_start:
                 dt_start = mx.DateTime.strptime(vals['date_start'],'%Y-%m-%d %H:%M:%S')
-                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id or False, dt_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
+                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
                 vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
                 for prv_phase in phase.previous_phase_ids:
                     self._check_date_start(cr, uid, prv_phase, dt_start, context=context)
         if vals.get('date_end', False) and vals['date_end'] > phase.date_end:
                 dt_end = mx.DateTime.strptime(vals['date_end'],'%Y-%m-%d %H:%M:%S')
-                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id or False, dt_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
+                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
                 vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
                 for next_phase in phase.next_phase_ids:
                     self._check_date_end(cr, uid, next_phase, dt_end, context=context)
@@ -278,7 +278,7 @@ class task(osv.osv):
                 hrs = planned / (float(occupation_rate) * resource.time_efficiency)
                 if resource.calendar_id.id:
                     calendar_id = resource.calendar_id.id
-            work_times = resource_calendar.interval_get(cr, uid, calendar_id or False, dt_start, hrs or 0.0, resource.id or False)
+            work_times = resource_calendar.interval_get(cr, uid, calendar_id, dt_start, hrs or 0.0, resource.id or False)
             result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
         result['remaining_hours'] = planned - effective
         return {'value' : result}
@@ -289,15 +289,15 @@ class task(osv.osv):
        """
        resource_calendar_obj = self.pool.get('resource.calendar')
        resource_obj = self.pool.get('resource.resource')
-       calendar_id = task.project_id.resource_calendar_id.id
+       calendar_id = task.project_id.resource_calendar_id and task.project_id.resource_calendar_id.id or False
        hours = task.planned_hours / task.occupation_rate
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', task.user_id.id)], context=context)
        if resource_id:
             resource = resource_obj.browse(cr, uid, resource_id[0], context=context)
             if resource.calendar_id.id:
-                calendar_id = resource.calendar_id.id
+                calendar_id = resource.calendar_id and resource.calendar_id.id or False
             hours = task.planned_hours / (float(task.occupation_rate) * resource.time_efficiency)
-       work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id or False, date_end, hours or 0.0, resource_id or False)
+       work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, date_end, hours or 0.0, resource_id or False)
        dt_start = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [task.id], {'date_start' : dt_start,'date_end' : date_end.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -307,15 +307,15 @@ class task(osv.osv):
        """
        resource_calendar_obj = self.pool.get('resource.calendar')
        resource_obj = self.pool.get('resource.resource')
-       calendar_id = task.project_id.resource_calendar_id.id
+       calendar_id = task.project_id.resource_calendar_id and task.project_id.resource_calendar_id.id or False
        hours = task.planned_hours / task.occupation_rate
        resource_id = resource_obj.search(cr,uid,[('user_id', '=', task.user_id.id)], context=context)
        if resource_id:
             resource = resource_obj.browse(cr, uid, resource_id[0], context=context)
             if resource.calendar_id.id:
-                calendar_id = resource.calendar_id.id
+                calendar_id = resource.calendar_id and resource.calendar_id.id or False
             hours = task.planned_hours / (float(task.occupation_rate) * resource.time_efficiency)
-       work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id or False, date_start, hours or 0.0, resource.id or False)
+       work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, date_start, hours or 0.0, resource.id or False)
        dt_end = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [task.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'),'date_end' : dt_end}, context=context)
 
@@ -333,27 +333,27 @@ class task(osv.osv):
         if isinstance(ids, list):
             task_id = ids[0]
         task_rec = self.browse(cr, uid, task_id, context=context)
-        calendar_id = task_rec.project_id.resource_calendar_id.id
+        calendar_id = task_rec.project_id.resource_calendar_id and task_rec.project_id.resource_calendar_id.id or False
         hrs = task_rec.planned_hours / task_rec.occupation_rate
         resource_id = resource_obj.search(cr, uid, [('user_id', '=', task_rec.user_id.id)], context=context)
         if resource_id:
             resource = resource_obj.browse(cr, uid, resource_id[0], context=context)
             if resource.calendar_id.id:
-                calendar_id = resource.calendar_id.id
+                calendar_id = resource.calendar_id and resource.calendar_id.id or False
             hrs = task_rec.planned_hours / (float(task_rec.occupation_rate) * resource.time_efficiency)
 
         # Change the date_start and date_end
         # for previous and next tasks respectively based on valid condition
         if vals.get('date_start', False) and vals['date_start'] < task_rec.date_start:
             dt_start = mx.DateTime.strptime(vals['date_start'], '%Y-%m-%d %H:%M:%S')
-            work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id or False, dt_start, hrs or 0.0, resource.id or False)
+            work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, hrs or 0.0, resource.id or False)
             vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
             super(task, self).write(cr, uid, ids, vals, context=context)
             for prv_task in task_rec.parent_ids:
                self._check_date_start(cr, uid, prv_task, dt_start)
         if vals.get('date_end', False) and vals['date_end'] > task_rec.date_end:
             dt_end = mx.DateTime.strptime(vals['date_end'], '%Y-%m-%d %H:%M:%S')
-            work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id or False, dt_end, hrs or 0.0, resource.id or False)
+            work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, hrs or 0.0, resource.id or False)
             vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
             super(task, self).write(cr, uid, ids, vals, context=context)
             for next_task in task_rec.child_ids:
