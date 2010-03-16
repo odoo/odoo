@@ -247,6 +247,15 @@ class browse_record(object):
                             new_data[n] = browse_null()
                     elif f._type in ('one2many', 'many2many') and len(data[n]):
                         new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
+                    elif f._type in ('reference'):
+                        if data[n]:
+                            ref_obj, ref_id = data[n].split(',')
+                            ref_id = long(ref_id)
+                            obj = self._table.pool.get(ref_obj)
+                            compids = False
+                            new_data[n] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                        else:
+                            new_data[n] = browse_null()
                     else:
                         new_data[n] = data[n]
                 self._data[data['id']].update(new_data)
@@ -1481,7 +1490,7 @@ class orm_template(object):
             if context and context.get('active_id',False):
                 data_menu = self.pool.get('ir.ui.menu').browse(cr, user, context['active_id'], context).action
                 if data_menu:
-                    act_id = int(data_menu.split(',')[1])
+                    act_id = data_menu.id
                     if act_id:
                         data_action = self.pool.get('ir.actions.act_window').browse(cr, user, [act_id], context)[0]
                         result['submenu'] = getattr(data_action,'menus', False)
