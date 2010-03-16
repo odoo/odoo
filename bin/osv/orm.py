@@ -1008,7 +1008,7 @@ class orm_template(object):
                     continue
                 res[f] = {'type': self._columns[f]._type}
                 for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
-                        'change_default', 'translate', 'help', 'select', 'selectable'):
+                        'change_default', 'translate', 'help', 'select', 'selectable','parent_field'):
                     if getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
                 if not read_access:
