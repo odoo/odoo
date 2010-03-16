@@ -21,13 +21,14 @@
 
 from osv import fields,osv
 import mx.DateTime
+import tools
 
-class  report_task_user_pipeline_open (osv.osv):
-    _name = "report.task.user.pipeline.open"
-    _description = "Tasks by user and project"
+class  task_report(osv.osv):
+    _name = "task.report"
+    _description = "Project task report"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Task',size=64,required=False, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
@@ -36,17 +37,36 @@ class  report_task_user_pipeline_open (osv.osv):
         'task_progress': fields.float('Task Progress', readonly=True),
         'company_id' : fields.many2one('res.company', 'Company'),
         'task_state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done'),('no','No Task')], 'Status', readonly=True),
+        'project_id':fields.many2one('project.project', 'Project'),
+        'year': fields.char('Year',size=64,required=False, readonly=True),
+        'date_start': fields.datetime('Starting Date',readonly=True),
+        'date_end': fields.datetime('Ending Date',readonly=True),
+        'date_deadline': fields.date('Deadline',readonly=True),
+        'type': fields.many2one('project.task.type', 'Stage'),
+        'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
+        'assign_to': fields.many2one('res.users', 'Assigned to', readonly=True),
+        'remaining_hrs': fields.float('Remaining Hours', readonly=True),
     }
 
     def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'task_report')
         cr.execute('''
-            create or replace view report_task_user_pipeline_open as (
+            create or replace view task_report as (
                 select
                     min(t.id) as id,
-                    to_char(t.create_date, 'YYYY') as name,
+                    to_char(t.create_date, 'YYYY') as year,
                     to_char(t.create_date,'MM') as month,
                     u.id as user_id,
                     u.company_id as company_id,
+                    t.name as name,
+                    t.project_id as project_id,
+                    to_char(t.date_start,'YYYY/mm/dd') as date_start,
+                    to_char(t.date_end,'YYYY/mm/dd') as date_end,
+                    to_char(t.date_deadline,'YYYY/mm/dd') as date_deadline,
+                    t.type as type,
+                    t.priority as priority,
+                    t.user_id as assign_to,
+                    t.remaining_hours as remaining_hrs,
                     count(t.*) as task_nbr,
                     sum(t.planned_hours) as task_hrs,
                     sum(t.planned_hours * (100 - t.progress) / 100) as task_progress,
@@ -59,46 +79,11 @@ class  report_task_user_pipeline_open (osv.osv):
                     u.active
                 group by
                     to_char(t.create_date, 'YYYY'),to_char(t.create_date,'MM'),u.id, u.company_id, t.state
+                    ,t.name,t.project_id,t.type,t.priority,
+                    t.user_id,t.remaining_hours,to_char(t.date_start,'YYYY/mm/dd'),to_char(t.date_end,'YYYY/mm/dd'),to_char(t.date_deadline,'YYYY/mm/dd')
             )
         ''')
-report_task_user_pipeline_open()
-
-class  report_closed_task(osv.osv):
-    _name = "report.closed.task"
-    _description = "Closed Task Report"
-    _auto = False
-    _columns = {
-        'sequence': fields.integer('Sequence', readonly=True, help="Gives the sequence order when displaying a list of closed task reports."),
-        'name': fields.char('Task summary', size=128, readonly=True),
-        'project_id': fields.many2one('project.project', 'Project', readonly=True),
-        'user_id': fields.many2one('res.users', 'Assigned to', readonly=True),
-        'date_deadline': fields.datetime('Deadline', readonly=True),
-        'planned_hours': fields.float('Planned Hours', readonly=True),
-        'delay_hours': fields.float('Delay Hours', readonly=True),
-        'progress': fields.float('Progress (%)', readonly=True),
-        'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance', readonly=True),
-        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True),
-        'remaining_hours': fields.float('Remaining Hours', readonly=True),
-        'date_end' : fields.datetime('Date Closed', readonly=True)
-    }
-
-    def init(self, cr):
-        cr.execute('''
-            create or replace view report_closed_task as (
-                select
-                   tsk.id as id, tsk.sequence as sequence, tsk.name as name,
-                   tsk.project_id as project_id, tsk.user_id as user_id,
-                   tsk.date_deadline as date_deadline, tsk.planned_hours as planned_hours,
-                   tsk.delay_hours as delay_hours, tsk.progress as progress,
-                   tsk.priority as priority, tsk.state as state,
-                   tsk.remaining_hours as remaining_hours, tsk.date_end as date_end
-                from
-                    project_task tsk
-              where
-                    (tsk.date_end <= CURRENT_DATE AND tsk.date_end > (CURRENT_DATE-15))
-            )
-        ''')
-report_closed_task()
+task_report()
 
 class report_timesheet_task_user(osv.osv):
     _name = "report.timesheet.task.user"

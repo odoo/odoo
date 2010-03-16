@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-	<!--
-	Project Bug 
-	-->
+ <!-- Report for project issue -->
         <record id="view_project_issue_report_tree" model="ir.ui.view">
             <field name="name">project.issue.report.tree</field>
             <field name="model">project.issue.report</field>
@@ -12,19 +10,22 @@
 				<tree string="Project Issue">
 	              	<field name="name" />
 					<field name="month"/>
+					<field name="priority" />
+					<field name="stage_id" />
+					<field name="type_id" string="Type"/>
+					<field name="project_id" invisible="1"/>
+					<field name="company_id" invisible="1"/>
                 	<field name="nbr" string="#Project Issue"/>
-                    <field name="amount_revenue"/>
-                    <field name="probability"/>
-                    <field name="amount_revenue_prob" widget="progress"/>
                     <field name="delay_close"/>
                     <field name="state" invisible="1"/>
                     <field name="section_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="stage_id"  invisible="1"/>
                     <field name="categ_id" invisible="1"/>
+                    <field name="date_closed" invisible="1"/>
                 </tree>
             </field>
-        </record>       
+        </record>
         <record id="view_project_issue_report_graph" model="ir.ui.view">
             <field name="name">project.issue.report.graph</field>
             <field name="model">project.issue.report</field>
@@ -43,22 +44,64 @@
             <field name="inherit_id" ref="crm.view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]' position='after'>
-					<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
+               <data>
+                <xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Year"]' position='replace'>
+                    	<filter string="This Year" icon="terp-sale" domain="[('name','=',time.strftime('%%Y'))]"/>
+           		</xpath>
+            	<xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Month"]' position='replace'>
+                    	<filter string="This Month" icon="terp-sale" domain="[('month','=',time.strftime('%%m'))]"  />
             	</xpath>
+                <xpath expr='//search[@string="Search"]/group[1]/filter[@string="Lost"]' position='after'>
+                        <separator orientation="vertical"/>
+                    	<filter string="Closed Today" icon="terp-sale" domain="[('date_closed','=',time.strftime('%%Y/%%m/%%d'))]" />
+            	</xpath>
+               	<xpath expr='//search[@string="Search"]/group[1]/field[3]' position='after'>
+						<field name="project_id" widget="selection"/>
+            	</xpath>
+               	<xpath expr='//search[@string="Search"]/group[@string="Group By..."]' position='before'>
+               	       <newline/>
+                		<group expand="1" string="Extended options..." colspan="10" col="12">
+                    		<filter icon="terp-sale"
+                    		string="Highest"
+                    		domain="[('priority','=','1')]"/>
+                    		<filter icon="terp-sale"
+                    		string="High"
+                    		domain="[('priority','=','2')]"/>
+                    		<filter icon="terp-sale"
+                    		string="Normal"
+                    		domain="[('priority','=','3')]"/>
+                    		<filter icon="terp-sale"
+                    		string="Low"
+                    		domain="[('priority','=','4')]"/>
+                    		<filter icon="terp-sale"
+                    		string="Lowest"
+                    		domain="[('priority','=','5')]"/>
+                		</group>
+                		<newline/>
+				</xpath>
+				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Company"]' position='replace'>
+					<filter string="Company" icon="terp-sale" domain="[]" context="{'group_by':'company_id'}"/>
+            	</xpath>
+				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Category"]' position='after'>
+            		<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
+            		<separator orientation="vertical"/>
+            		<filter string="Project" icon="terp-sale" domain="[]" context="{'group_by':'project_id'}"/>
+            		<filter string="Type" icon="terp-sale" domain="[]" context="{'group_by':'type_id'}"/>
+            	</xpath>
+                </data>
             </field>
         </record>
 
         <record id="action_project_issue_report" model="ir.actions.act_window">
-            <field name="name">Project Issue Report</field>
+            <field name="name">Project Issue</field>
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_project_issue_report_tree"/>
             <field name="search_view_id" ref="view_project_issue_report_filter"/>
         </record>
-        
-                               	
+
+
        	<record model="ir.actions.act_window.view" id="action_project_issue_report_tree">
 	        <field name="sequence" eval="1"/>
 	        <field name="view_mode">tree</field>
@@ -70,9 +113,9 @@
 	        <field name="view_mode">graph</field>
 	        <field name="view_id" ref="view_project_issue_report_graph"/>
 	        <field name="act_window_id" ref="action_project_issue_report"/>
-	    </record>              
+	    </record>
         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
-        <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>        
+        <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
         <menuitem action="action_project_issue_report" id="menu_project_issue_report_tree" parent="base.menu_project_report"/>
   </data>
 </openerp>
