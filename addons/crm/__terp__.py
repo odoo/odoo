@@ -62,7 +62,7 @@ between mails and Open ERP.""",
 
     'update_xml': [
         'wizard/crm_phonecall2phonecall.xml',
-        'wizard/lead_to_partner_view.xml',
+        'wizard/crm_lead_to_partner_view.xml',
         'wizard/phonecall2meeting.xml',
         'wizard/phonecall2partner_view.xml',
         'wizard/phonecall2opportunity.xml',
@@ -74,7 +74,6 @@ between mails and Open ERP.""",
         'crm_view.xml',
          
         'crm_action_rule_view.xml', 
-        #'crm_lead_wizard.xml', 
         'crm_lead_view.xml', 
         'crm_lead_menu.xml', 
         'crm_meeting_view.xml', 
