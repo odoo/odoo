@@ -18,9 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-import confirm
-import cancel
-import reset_box
+import lunch_order_confirm
+import lunch_order_cancel
+import lunch_cashbox_clean
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

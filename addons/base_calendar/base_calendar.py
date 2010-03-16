@@ -775,7 +775,7 @@ rule or repeating pattern for anexception to a recurrence set"),
         'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
         'recurrent_uid': fields.integer('Recurrent ID'), 
         'recurrent_id': fields.datetime('Recurrent ID date'), 
-        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, string='Timezone'), 
+        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, string='Timezone', store=True), 
         'user_id': fields.many2one('res.users', 'Responsible'), 
         'freq': fields.selection([('None', 'No Repeat'), \
                             ('secondly', 'Secondly'), \

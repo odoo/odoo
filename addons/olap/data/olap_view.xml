@@ -47,7 +47,9 @@
         id="menu_bi_conf_tools"
         parent="menu_bi_configuration"/>
 
-
+	<menuitem name="Clear Logs" action="action_view_olap_query_logs_clear" icon="STOCK_EXECUTE"
+         id="menu_bi_clear_logs" sequence="30" parent="menu_bi_conf_tools"/>
+         
     <record model="ir.actions.url" id="menu_url_cube_browser">
             <field name="name">name_menu_url_cube_browser</field>
             <field name="url">http://localhost:8080/browser</field>

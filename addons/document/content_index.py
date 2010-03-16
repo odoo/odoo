@@ -158,7 +158,8 @@ class contentIndex():
                     os.write(fd, content)
                     os.close(fd)
             
-                fp = Popen(['file','-b','--mime-type',fname], shell=False, stdout=PIPE).stdout
+                #fp = Popen(['file','-b','--mime-type',fname], shell=False, stdout=PIPE).stdout
+                fp = Popen(['file','-b',fname], shell=False, stdout=PIPE).stdout
                 result = fp.read()
                 fp.close()
                 mime2 = result.strip()

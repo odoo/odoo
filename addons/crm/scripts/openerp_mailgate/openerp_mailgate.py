@@ -29,7 +29,6 @@ import os
 import binascii
 import time, socket
 
-
 email_re = re.compile(r"""
     ([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
     @                                # mandatory @ sign
@@ -186,8 +185,8 @@ class email_parser(object):
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'])
-            #self.rpc(self.model, 'case_open', [id])
+            self.rpc(self.model, 'history', [id], 'send', False, msg['From'], message['body'])
+            self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
                 e = '\n\nThe Specified user does not have an access to the CRM case.'
@@ -302,7 +301,7 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+        self.rpc(self.model, 'history', [id], 'send', False, msg['From'], message['body'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -334,7 +333,7 @@ class email_parser(object):
             'description':body, 
         }
         self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+        self.rpc(self.model, 'history', [id], 'send', False, msg['From'], message['body'])
         return id
 
     def msg_test(self, msg, case_str):

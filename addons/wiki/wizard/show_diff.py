@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,16 +15,15 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields,osv
-from tools.translate import _
 
 class showdiff(osv.osv_memory):
     _name = 'wizard.wiki.history.show_diff'
-    
+
     def _get_diff(self, cr, uid, ctx):
         history = self.pool.get('wiki.wiki.history')
         ids = ctx.get('active_ids')

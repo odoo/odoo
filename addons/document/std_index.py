@@ -21,7 +21,7 @@
 
 import StringIO
 import odt2txt
-
+from subprocess import Popen, PIPE
 from content_index import indexer, cntIndex
 from subprocess import Popen, PIPE
 
@@ -50,6 +50,19 @@ class TxtIndex(indexer):
         
 cntIndex.register(TxtIndex())
 
+class PptIndex(indexer):
+    def _getMimeTypes(self):
+        return [ 'application/ms-word']
+    
+    def _getExtensions(self):
+        return ['.ppt']
+
+    def _doIndexFile(self,fname):
+        fp = Popen(['ppthtml', fname], shell=False, stdout=PIPE).stdout
+        return _to_unicode( fp.read())
+
+cntIndex.register(PptIndex())
+
 class DocIndex(indexer):
     def _getMimeTypes(self):
         return [ 'application/ms-word']
@@ -58,7 +71,7 @@ class DocIndex(indexer):
         return ['.doc']
 
     def _doIndexFile(self,fname):
-        fp = Popen(['antiword',fname], shell=False, stdout=PIPE).stdout
+        fp = Popen(['antiword', fname], shell=False, stdout=PIPE).stdout
         return _to_unicode( fp.read())
 
 cntIndex.register(DocIndex())

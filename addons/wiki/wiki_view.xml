@@ -6,18 +6,6 @@
         <menuitem name="Wiki" id="menu_wiki_configuration" parent="base.menu_document_configuration" sequence="2"/>
         <menuitem id="base.menu_document2" name="Collaborative Content" parent="base.menu_document"/>
 
-        <wizard
-            id="wizard_group_menu_create"
-            string="Create Menu"
-            menu="True"
-            name="wiki.create.menu"/>
-
-        <wizard
-            id="wizard_open_page"
-            string="Open Page"
-            menu="True"
-            name="wiki.wiki.page.open"/>
-
         <record model="ir.ui.view" id="wiki_group_tree">
             <field name="name">wiki.groups.tree</field>
             <field name="model">wiki.groups</field>
@@ -49,11 +37,11 @@
                         <field name="template" colspan="4" nolabel="1" widget="text_wiki"/>
                     </page>
                     </notebook>
-                    <button
-                        name="%(wizard_group_menu_create)d"
-                        string="Create a Menu"
-                        type="action"
-                        target="new" icon="gtk-justify-fill"/>
+                     <button
+			 	    	name="%(wiki.action_wiki_create_menu)d"
+			 	    	string="Create Menu"
+			 	     	type="action"
+			 	     	icon="gtk-justify-fill" />
                 </form>
             </field>
         </record>
@@ -234,12 +222,6 @@
             res_model="wiki.wiki"
             src_model="wiki.groups"/>
 
-        <wizard
-            id="wizard_open_page"
-            string="Open Wiki Pages"
-            name="wiki.wiki.page.open"
-            model="wiki.groups"/>
-
         <record id="ir_open_wiki_pages" model="ir.values">
             <field name="key2">tree_but_open</field>
             <field name="model">wiki.groups</field>
@@ -247,14 +229,5 @@
             <field eval="'ir.actions.wizard,%d'%wizard_open_page" name="value"/>
             <field eval="True" name="object"/>
         </record>
-
-        <!--record id="ir_open_account_account" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'wiki.groups'" name="model"/>
-            <field name="name">Search a Page</field>
-           <field eval="'ir.actions.act_window,%d'%act_wiki_group_open" name="value"/>
-            <field eval="True" name="object">
-        </record-->
-
     </data>
 </openerp>

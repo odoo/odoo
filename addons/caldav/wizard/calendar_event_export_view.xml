@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+  		<record id="view_calendar_event_export" model="ir.ui.view">
+            <field name="name">calendar.event.export.form</field>
+            <field name="model">calendar.event.export</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Export ICS">
+                	<group colspan="4" >
+                		 <field name="name"/>
+              			 <field name="file_path" colspan="4" width="300"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                    	<button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
+                   </group>
+               </form>
+            </field>
+  		</record>
+  		
+        <record id="action_calendar_event_export" model="ir.actions.act_window">
+            <field name="name">Export .ics File</field>
+            <field name="res_model">calendar.event.export</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_calendar_event_export"/> 
+           <field name="target">new</field>
+           <field name="context">{'record_id':active_id}</field>
+        </record>
+              
+<!--        <record id="action_calendar_event_export_values" model="ir.values">-->
+<!--            <field name="model_id" ref="caldav.model_basic_calendar" />-->
+<!--            <field name="object" eval="1" />-->
+<!--            <field name="name">Export .ics File</field>-->
+<!--            <field name="key2">client_action_multi</field>-->
+<!--            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_calendar_event_export'))"/>-->
+<!--            <field name="key">action</field> -->
+<!--            <field name="model">basic.calendar</field>-->
+<!--        </record>-->
+
+
+    	<act_window id="action_calendar_event_export_values"
+    		key2="client_action_multi" name="Export .ics File"
+    		res_model="calendar.event.export" src_model="basic.calendar"
+    		view_mode="form" target="new" view_type="form" />
+
+    </data>
+</openerp>

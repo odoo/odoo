@@ -34,7 +34,7 @@
             <field name="view_mode">form,tree</field>
         </record>
 
-        <wizard id="wizard_board_create_menu" model="board.board" multi="True" name="board.board.menu.create" string="Create Board Menu" />
+        <!-- <wizard id="wizard_board_create_menu" model="board.board" multi="True" name="board.board.menu.create" string="Create Board Menu" /> -->
 
         <record id="view_board_tree" model="ir.ui.view">
             <field name="name">board.board.tree</field>
@@ -54,7 +54,7 @@
             <field name="arch" type="xml">
                 <form string="Dashboard">
                     <field name="name" select="1"/>
-                    <button colspan="2" name="%(wizard_board_create_menu)d" string="Create Menu" type="action" icon="gtk-justify-fill"/>
+                    <button colspan="2" name="%(action_board_menu_create)d" string="Create Menu" type="action" icon="gtk-justify-fill"/>
                     <field colspan="4" name="line_ids">
                         <tree string="Dashboard View">
                             <field name="name"/>

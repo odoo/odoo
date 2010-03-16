@@ -154,20 +154,16 @@ class opportunity2meeting(wizard.interface):
         partner_id = opportunity.partner_id and opportunity.partner_id.id or False
         name = opportunity.name
         email = opportunity.email_from
-        section_id = opportunity.section_id and opportunity.section_id.id or False
+        section_id = opportunity.section_id and opportunity.section_id.id or False        
         return {            
             'name': _('Meetings'),
-            'domain' : "[('user_id','=',%s), ('opportunity_id', '=', %s)]"%(uid, data['id']),  
-            'context': {'default_partner_id': partner_id, 
-                        'default_opportunity_id': data['id'], 
-                        'default_section_id': section_id, 
-                        'default_email_from': email, 
-                        'default_state':'open', 'default_name':name},
+            'domain' : "[('user_id','=',%s)]"%(uid),  
+            'context': {'default_partner_id': partner_id, 'default_section_id': section_id, 'default_email_from': email, 'default_state':'open', 'default_name':name},
             'view_type': 'form',
-            'view_mode': 'tree,form,calendar',
+            'view_mode': 'calendar,form,tree',
             'res_model': 'crm.meeting',
             'view_id': False,
-            'views': [(id3, 'tree'), (id2, 'form'), (id1, 'calendar')], 
+            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree')],
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id']
             }

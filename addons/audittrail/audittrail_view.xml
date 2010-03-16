@@ -124,8 +124,8 @@
 		</record>
 		<menuitem name="Logs" id="menu_action_audittrail_log_tree" action="action_audittrail_log_tree" parent="menu_action_audittrail"/>
 
-		<wizard string="View log" menu="False" model="audittrail.log" name="audittrail.view.log" id="wizard_audittrail_log"/>
-		<menuitem name="View Logs" id="menu_action_log_tree2" action="wizard_audittrail_log" type="wizard" parent="menu_action_audittrail"/>
+		<!--  <wizard string="View log" menu="False" model="audittrail.log" name="audittrail.view.log" id="wizard_audittrail_log"/>-->
+		<menuitem name="View Logs" id="menu_action_log_tree2" action="action_audittrail_view_log"  parent="menu_action_audittrail"/>
 
 </data>
 </openerp>

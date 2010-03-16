@@ -10,8 +10,10 @@
     """,
     "init_xml" :  ["data/olap_data.xml"],
     "update_xml" : [
-        "data/olap_view.xml",
+        "wizard/olap_query_logs_clear_view.xml",
+        "wizard/olap_load_column_view.xml",
         "data/olap_wizard.xml",
+        "data/olap_view.xml",
         "data/olap_cube_view.xml",
         "data/olap_fact_view.xml",
         "data/olap_cube_workflow.xml",

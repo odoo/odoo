@@ -207,6 +207,7 @@ class CalDAV(object):
     def create_ics(self, cr, uid, datas, name, ical, context=None):
         if not datas:
             return
+        timezones = []
         for data in datas:
             tzval = None
             vevent = ical.add(name)
@@ -246,11 +247,12 @@ class CalDAV(object):
                         alarm_obj = self.pool.get('basic.calendar.alarm')
                         vevent = alarm_obj.export_cal(cr, uid, model, \
                                     data[map_field][0], vevent, context=ctx)
-                    elif field == 'vtimezone' and data[map_field]:
+                    elif field == 'vtimezone' and data[map_field] and data[map_field] not in timezones:
                         tzval = data[map_field]
                         tz_obj = self.pool.get('basic.calendar.timezone')
                         ical = tz_obj.export_cal(cr, uid, None, \
                                      data[map_field], ical, context=context)
+                        timezones.append(data[map_field])
                     elif data[map_field]:
                         if map_type in ("char", "text"):
                             if field in ('exdate'):

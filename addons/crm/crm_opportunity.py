@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from datetime import datetime
 from osv import fields,osv,orm
 import crm
 
@@ -35,6 +36,39 @@ class crm_opportunity(osv.osv):
     _description = "Opportunity Cases"
     _order = "id desc"
     _inherit = 'crm.case'
+
+    def _compute_openday(self, cr, uid, ids, name, args, context={}):
+        result = {}
+        for r in self.browse(cr, uid, ids , context):
+            result[r.id] = 0
+            model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.opportunity')])
+            log_obj = self.pool.get('crm.case.log')
+            hist_id = log_obj.search(cr, uid, [('model_id', '=', model_id[0]), \
+                                                     ('res_id', '=', r.id), \
+                                                     ('name', '=', 'Open')])
+
+            if hist_id:
+                # Considering last log for opening case
+                log = log_obj.browse(cr, uid, hist_id[-1])
+                date_lead_open = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
+                date_log_open = datetime.strptime(log.date, "%Y-%m-%d %H:%M:%S")
+                ans = date_lead_open - date_log_open
+                duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                result[r.id] = abs(int(duration))
+        return result
+
+    def _compute_closeday(self, cr, uid, ids, name, args, context={}):
+        result = {}
+        for r in self.browse(cr, uid, ids , context):
+            result[r.id] = 0
+            if r.date_closed:
+                date_create = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
+                date_close = datetime.strptime(r.date_closed, "%Y-%m-%d %H:%M:%S")
+                ans = date_close - date_create
+                duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                result[r.id] = abs(int(duration))
+        return result
+
     _columns = {
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
@@ -52,7 +86,13 @@ class crm_opportunity(osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-    }
+
+        'day_open': fields.function(_compute_openday, string='Days to Open', \
+                                method=True, type="integer", store=True),
+        'day_close': fields.function(_compute_closeday, string='Days to Close', \
+                                method=True, type="integer", store=True),
+       }
+
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
         if not stage_id:
             return {'value':{}}
@@ -64,16 +104,16 @@ class crm_opportunity(osv.osv):
     def stage_next(self, cr, uid, ids, context={}):
         res = super(crm_opportunity, self).stage_next(cr, uid, ids, context=context)
         for case in self.browse(cr, uid, ids, context):
-            if case.stage_id and case.stage_id.on_change:                                
+            if case.stage_id and case.stage_id.on_change:
                 self.write(cr, uid, [case.id], {'probability': case.stage_id.probability})
         return res
 
     def stage_previous(self, cr, uid, ids, context={}):
         res = super(crm_opportunity, self).stage_previous(cr, uid, ids, context=context)
         for case in self.browse(cr, uid, ids, context):
-            if case.stage_id and case.stage_id.on_change:                                
+            if case.stage_id and case.stage_id.on_change:
                 self.write(cr, uid, [case.id], {'probability': case.stage_id.probability})
-        return res 
+        return res
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.opportunity', context=c),

@@ -27,8 +27,10 @@
     "category" : "Generic Modules/Others",
     "init_xml": [],
     "update_xml": [
-        'security/ir.model.access.csv', 
-        'lunch_wizard.xml', 
+        'security/ir.model.access.csv',
+        'wizard/lunch_order_cancel_view.xml',
+        'wizard/lunch_order_confirm_view.xml',
+        'wizard/lunch_cashbox_clean_view.xml', 
         'lunch_view.xml', 
         'lunch_report.xml',
         #'process/lunch_process.xml'

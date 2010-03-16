@@ -78,15 +78,15 @@ class partner_create(wizard.interface):
         for case in case_obj.browse(cr, uid, data['ids']):
             if data['form']['action'] == 'create':
                 partner_id = partner_obj.create(cr, uid, {
-                    'name': case.partner_name or case.name,
+                    'name': case.partner_contact or case.name,
                     'user_id': case.user_id.id,
                     'comment': case.description,
                 })
                 contact_id = contact_obj.create(cr, uid, {
                     'partner_id': partner_id,
                     'name': case.name,
-                    'phone': case.phone,
-                    'mobile': case.mobile,
+                    'phone': case.partner_phone,
+                    'mobile': case.partner_mobile,
                     'email': case.email_from
                 })
 

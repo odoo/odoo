@@ -49,12 +49,12 @@
                 <field name="partner_phone"/>                
                 <field name="user_id"/>
                 <button string="Opportunity" 
-                    name="%(wizard_crm_phonecall_opportunity_set)d"
+                    name="%(phonecall2opportunity_act)d"
                     states="draft,open,pending"
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
                     states="draft,open,pending"
-                    name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
+                    name="%(phonecall2meeting_act)d"  type="action" />
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                 <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
@@ -75,26 +75,29 @@
                     <field name="date" string="Planned Date"/>
                     <field name="user_id"/>
                     <button string="Schedule a Meeting"
-                        name="%(wizard_crm_phonecall_meeting_set)d"
+                        name="%(phonecall2meeting_act)d"
                         icon="gtk-redo"
                         type="action" />
-                    <newline/>
-
                     <field name="partner_phone"/>
                     <field name="duration"/>
                     <field name="section_id" colspan="1" widget="selection" />
-
                     <button string="Convert to Opportunity"
-                        name="%(wizard_crm_phonecall_opportunity_set)d"
+                        name="%(phonecall2opportunity_act)d"
                         icon="gtk-index" type="action"
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+					<label colspan="6"  string=""/>                                 
+	                <button string="Schedule Call Other" 
+	                 icon="gtk-redo"
+                    name="%(phonecall_to_phonecall_act)d"
+                    type="action"  />
+ 					               
                 </group>
                 <group col="3" colspan="2">
                     <separator colspan="3" string="Contacts" />
                     <field name="partner_id" />
                     <button string="Create a Partner"
                         icon="terp-crm"
-                        name="%(wizard_crm_phonecall_partner_create)d"
+                        name="%(action_crm_phonecall2partner)d"
                         type="action"
                         attrs="{'invisible':[('partner_id','!=',False)]}" />
                     <newline/>
