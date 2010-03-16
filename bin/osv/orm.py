@@ -383,7 +383,7 @@ class orm_template(object):
             model_id = cr.fetchone()[0]
         if 'module' in context:
             name_id = 'model_'+self._name.replace('.','_')
-            cr.execute('select * from ir_model_data where name=%s and res_id=%s', (name_id,model_id))
+            cr.execute('select * from ir_model_data where name=%s and res_id=%s and module=%s', (name_id,model_id,context['module']))
             if not cr.rowcount:
                 cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
                     (name_id, context['module'], 'ir.model', model_id)
@@ -711,6 +711,7 @@ class orm_template(object):
                             else:
                                 module, xml_id = current_module, line[i]
                             id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
+
                             res_res_id = ir_model_data_obj.read(cr, uid, [id],
                                                 ['res_id'])
                             if res_res_id:
