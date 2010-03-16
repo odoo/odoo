@@ -41,7 +41,8 @@ class crm_lead2partner(osv.osv_memory):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Board Lead to Partner's IDs
+        @param fields: List of fields for default value 
+        @param context: A standard dictionary for contextual values 
 
         @return : Partner id if any for selected lead.
         """
@@ -51,7 +52,7 @@ class crm_lead2partner(osv.osv_memory):
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
-        rec_ids = context and context.get('active_ids', False)
+        rec_ids = context and context.get('active_ids', [])
         value={}
         for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
             if lead.partner_id:
@@ -79,7 +80,8 @@ class crm_lead2partner(osv.osv_memory):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Board Lead to Partner's IDs
+        @param ids: List of Lead to Partner's IDs
+        @param context: A standard dictionary for contextual values
 
         @return : Dictionary value for next form.
         """
@@ -106,7 +108,8 @@ class crm_lead2partner(osv.osv_memory):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Board Lead to Partner's IDs
+        @param ids: List of Lead to Partner's IDs
+        @param context: A standard dictionary for contextual values
 
         @return : Dictionary {}.
         """
@@ -119,7 +122,7 @@ class crm_lead2partner(osv.osv_memory):
         partner_ids = []
         partner_id = False
         contact_id = False
-        rec_ids = context and context.get('active_ids', False)
+        rec_ids = context and context.get('active_ids', [])
         
         for data in self.browse(cr, uid, ids):
             for lead in lead_obj.browse(cr, uid, rec_ids):
@@ -161,21 +164,25 @@ class crm_lead2partner(osv.osv_memory):
                 lead_obj.write(cr, uid, [lead.id], vals)
         return partner_ids
 
-    def make_partner(self, cr, uid, ids, context):
+    def make_partner(self, cr, uid, ids, context=None):
         """
         This function Makes partner based on action.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Board Lead to Partner's IDs
+        @param ids: List of Lead to Partner's IDs
+        @param context: A standard dictionary for contextual values
 
         @return : Dictionary value for created Partner form.
         """
+        if not context:
+            context = {}
 
         partner_ids = self._create_partner(cr, uid, ids, context)
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
+
         value = {
             'domain': "[]", 
             'view_type': 'form', 
