@@ -41,7 +41,7 @@ class lunch_cashbox_clean(osv.osv_memory):
 ##    print to_unactive
 ##    cashmove_ref.write(cr,uid,to_unactive,{'active':False})            
          for (user_id, box_id, amount) in res:
-            cashmove_ref.createcr, uid, {'name': 'Summary for user' + str(user_id), 
+            cashmove_ref.create(cr, uid, {'name': 'Summary for user' + str(user_id), 
                         'amount': amount, 
                         'user_cashmove': user_id, 
                         'box': box_id, 
