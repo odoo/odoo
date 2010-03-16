@@ -2271,7 +2271,7 @@ class orm(orm_template):
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
-                    cr.execute(query, (tuple(sub_ids),) + d2)
+                    cr.execute(query, [tuple(sub_ids)] + d2)
                     if cr.rowcount != len(set(sub_ids)):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % self._description)
@@ -2456,13 +2456,13 @@ class orm(orm_template):
         for i in range(0, len(ids), cr.IN_MAX):
             sub_ids = ids[i:i+cr.IN_MAX]
             if d1:
-                cr.execute('SELECT id' + from_where, (tuple(sub_ids),) + d2)
+                cr.execute('SELECT id' + from_where, [tuple(sub_ids)] + d2)
                 if not cr.rowcount == len(set(sub_ids)):
                     raise except_orm(_('AccessError'),
                             _('You try to bypass an access rule (Document type: %s).') % \
                                     self._description)
 
-                cr.execute('DELETE' + from_where, (tuple(sub_ids),) + d2)
+                cr.execute('DELETE' + from_where, [tuple(sub_ids)] + d2)
             else:
                 cr.execute('DELETE' + from_where, (tuple(sub_ids),))
 
@@ -2594,13 +2594,13 @@ class orm(orm_template):
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = set(ids[i:i+cr.IN_MAX])
                 if d1:
-                    cr.execute(select_query, (tuple(sub_ids),) + d2)
+                    cr.execute(select_query, [tuple(sub_ids)] + d2)
                     if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule (Document type: %s).') % \
                                         self._description)
 
-                    cr.execute(update_query, upd1 + (tuple(sub_ids),) + d2)
+                    cr.execute(update_query, upd1 + [tuple(sub_ids)] + d2)
                 else:
                     cr.execute(select_query, (tuple(sub_ids),))
                     if cr.rowcount != len(sub_ids):
