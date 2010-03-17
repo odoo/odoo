@@ -195,6 +195,8 @@ class event_registration(osv.osv):
         reg_ids=self.browse(cr,uid,ids)
         for reg_id in reg_ids:
             src = reg_id.event_id.reply_to or False
+            if not reg_id.email_from:
+                raise osv.except_osv(_('Warning!'), _('You should specify Partner Email for registration "%s" !')%(reg_id.name,))
             dest = [reg_id.email_from]
             if reg_id.email_cc:
                 dest += [reg_id.email_cc]
@@ -208,6 +210,8 @@ class event_registration(osv.osv):
         reg_ids=self.browse(cr,uid,ids)
         for reg_id in reg_ids:
             src = reg_id.event_id.reply_to or False
+            if not reg_id.email_from:
+                raise osv.except_osv(_('Warning!'), _('You should specify Partner Email for registration "%s" !')%(reg_id.name,))
             dest = [reg_id.email_from]
             if reg_id.email_cc:
                 dest += [reg_id.email_cc]
