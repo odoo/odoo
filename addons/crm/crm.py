@@ -357,7 +357,7 @@ class crm_case(osv.osv):
                 'section_id': case.section_id.id
             }
             obj = self.pool.get('crm.case.log')
-            if history and case.description:
+            if history:
                 obj = self.pool.get('crm.case.history')
                 data['description'] = details or case.description
                 data['email'] = email or \
