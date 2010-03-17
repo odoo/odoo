@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,12 +29,12 @@ class project_project(osv.osv):
     _description = 'project.project'
 
     def write(self, cr, uid, ids,vals, *args, **kwargs):
-        if 'date_end' in vals and vals['date_end']:
+        if 'date' in vals and vals['date']:
             data_project = self.browse(cr,uid,ids)
             for prj in data_project:
-                c= date(*time.strptime(vals['date_end'],'%Y-%m-%d')[:3])
-                if prj.date_end:
-                    d= date(*time.strptime(prj.date_end,'%Y-%m-%d')[:3])
+                c= date(*time.strptime(vals['date'],'%Y-%m-%d')[:3])
+                if prj.date:
+                    d= date(*time.strptime(prj.date,'%Y-%m-%d')[:3])
                     for task in prj.tasks:
                         start_dt = (datetime(*time.strptime(task.date_start,'%Y-%m-%d  %H:%M:%S')[:6])+(c-d)).strftime('%Y-%m-%d %H:%M:%S')
                         if task.date_deadline:
@@ -42,7 +42,7 @@ class project_project(osv.osv):
                             self.pool.get('project.task').write(cr,uid,task.id,{'date_start':start_dt, 'date_deadline':deadline_dt})
                         else:
                             self.pool.get('project.task').write(cr,uid,task.id,{'date_start':start_dt})
-        return super(project_project,self).write(cr, uid, ids,vals, *args, **kwargs)
+        return super(project_project,self).write(cr, uid, ids, vals, *args, **kwargs)
 
 project_project()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
