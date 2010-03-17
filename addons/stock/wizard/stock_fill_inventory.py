@@ -39,7 +39,7 @@ class stock_fill_inventory(osv.osv_memory):
 
     def fill_inventory(self, cr, uid, ids, context):
         """ 
-             @summary: To fill stock inventory according to products available in the selected locations..
+             To fill stock inventory according to products available in the selected locations..
             
              @param self: The object pointer.
              @param cr: A database cursor

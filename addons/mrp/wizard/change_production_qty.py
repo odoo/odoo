@@ -36,7 +36,7 @@ class change_production_qty(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context):
         """ 
-             @summary: To get default values for the object.
+             To get default values for the object.
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -61,7 +61,7 @@ class change_production_qty(osv.osv_memory):
     
     def change_prod_qty(self, cr, uid, ids, context):
         """ 
-             @summary: Changes the Quantity of Product.
+             Changes the Quantity of Product.
             
              @param self: The object pointer.
              @param cr: A database cursor

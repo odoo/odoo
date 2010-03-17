@@ -30,7 +30,7 @@ class pos_open_statement(osv.osv_memory):
     
     def open_statement(self, cr, uid, ids, context):
         """ 
-             @summary: open the statements          
+             Open the statements          
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in

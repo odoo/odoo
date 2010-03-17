@@ -35,7 +35,7 @@ class mrp_product_produce(osv.osv_memory):
 
     def _get_product_qty(self, cr, uid, context):
         """ 
-             @summary: to obtain product quantity
+             To obtain product quantity
         
              @param self: The object pointer.
              @param cr: A database cursor
@@ -58,7 +58,7 @@ class mrp_product_produce(osv.osv_memory):
 
     def do_produce(self, cr, uid, ids, context={}):
         """ 
-             @summary: to check the product type
+             To check the product type
         
              @param self: The object pointer.
              @param cr: A database cursor

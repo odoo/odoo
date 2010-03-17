@@ -37,7 +37,7 @@ class add_product(osv.osv_memory):
     
     def select_product(self, cr, uid, ids, context):
         """ 
-             @summary: To get the product and quantity and add in order .            
+             To get the product and quantity and add in order .            
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in

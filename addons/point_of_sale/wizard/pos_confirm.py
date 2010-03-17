@@ -28,7 +28,7 @@ class pos_confirm(osv.osv_memory):
     _description = 'Point of Sale Confirm'
     def action_confirm(self, cr, uid, ids, context):
         """ 
-             @summary:   Confirm the order and close the sales  .            
+             Confirm the order and close the sales  .            
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in

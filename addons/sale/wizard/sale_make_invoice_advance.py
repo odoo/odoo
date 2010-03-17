@@ -40,7 +40,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                }
     def create_invoices(self, cr, uid, ids, context={}):
         """ 
-             @summary: To create invoices.
+             To create invoices.
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -143,7 +143,7 @@ class sale_open_invoice(osv.osv_memory):
 
     def open_invoice(self, cr, uid, ids, context):
         """ 
-             @summary: To open invoice.
+             To open invoice.
             
              @param self: The object pointer.
              @param cr: A database cursor

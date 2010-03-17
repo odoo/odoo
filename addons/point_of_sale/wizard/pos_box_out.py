@@ -35,7 +35,7 @@ class pos_box_out(osv.osv_memory):
     def _get_expense_product(self,cr,uid,context):
         
         """ 
-             @summary:   Make the selection list of expense product.            
+             Make the selection list of expense product.            
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
@@ -64,7 +64,7 @@ class pos_box_out(osv.osv_memory):
     def get_out(self, cr, uid, ids, context):
         
         """ 
-             @summary:  Create the entries in the CashBox   .            
+             Create the entries in the CashBox   .            
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in

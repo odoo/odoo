@@ -38,7 +38,7 @@ class stock_inventory_line_split(osv.osv_memory):
 
     def _check_production_lot(self, cr, uid, context):
         """ 
-             @summary: to check the availability of production lot. 
+             To check the availability of production lot. 
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -63,7 +63,7 @@ inventory lines, make sure the production lot is assigned to this product.'))
 
     def split_lines(self, cr, uid, ids, context):
         """ 
-             @summary: to split stock inventory lines according to production lot
+             To split stock inventory lines according to production lot
             
              @param self: The object pointer.
              @param cr: A database cursor

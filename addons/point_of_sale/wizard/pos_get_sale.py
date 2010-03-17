@@ -33,7 +33,7 @@ class pos_get_sale(osv.osv_memory):
     
     def sale_complete(self, cr, uid, ids, context):
         """ 
-             @summary: Select the picking order and add the in Point of sale order          
+             Select the picking order and add the in Point of sale order          
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in

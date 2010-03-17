@@ -31,7 +31,7 @@ class change_standard_price(osv.osv_memory):
     
     def default_get(self, cr, uid, fields, context):
         """ 
-             @summary: To get default values for the object.
+             To get default values for the object.
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -50,8 +50,8 @@ class change_standard_price(osv.osv_memory):
     
     def change_price(self, cr, uid, ids, context):
         """ 
-             @summary: Changes the Standard Price of Product. 
-                       And creates an account move accordingly.
+             Changes the Standard Price of Product. 
+             And creates an account move accordingly.
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -68,6 +68,7 @@ class change_standard_price(osv.osv_memory):
         lot_obj = self.pool.get('stock.report.prodlots')
         move_obj = self.pool.get('account.move')
         move_line_obj = self.pool.get('account.move.line')
+        data_obj = self.pool.get('ir.model.data')
         
         res = self.read(cr, uid, ids[0], ['new_price'])
         new_price = res.get('new_price',[])
@@ -85,7 +86,7 @@ class change_standard_price(osv.osv_memory):
             
         for lots in lot_obj.browse(cr, uid, lot_ids):
             qty += lots.name
-
+        
         if stock_input_acc and stock_output_acc:
             move_id = move_obj.create(cr, uid, {'journal_id': data.categ_id.property_stock_journal.id})
             if diff > 0:
@@ -125,7 +126,23 @@ class change_standard_price(osv.osv_memory):
         else:
             raise osv.except_osv(_('Warning!'),_('No Accounts are defined for ' 
                         'this product on its location.\nCan\'t create Move.'))
-        return {}
+        
+        id2 = data_obj._get_id(cr, uid, 'account', 'view_move_tree')
+        id3 = data_obj._get_id(cr, uid, 'account', 'view_move_form')
+        
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        
+        return {
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'account.move',
+                'res_id' : move_id,
+                'views': [(id3,'form'),(id2,'tree')],
+                'type': 'ir.actions.act_window',
+        }
 
 change_standard_price()
 

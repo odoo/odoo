@@ -37,7 +37,7 @@ class pos_discount(osv.osv_memory):
     
     def apply_discount(self, cr, uid, ids, context):
         """ 
-             @summary: To give the discount of  product and check the  .            
+             To give the discount of  product and check the  .            
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
@@ -82,7 +82,7 @@ class pos_discount(osv.osv_memory):
     
     def check_discount(self, cr, uid, record_id,discount, context):
         """ 
-             @summary: Check the discount of define by company  .            
+             Check the discount of define by company  .            
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
