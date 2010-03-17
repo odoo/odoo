@@ -27,12 +27,16 @@ class board_menu_create(osv.osv_memory):
     Create Menu
     """
     def check_views(self, cr, uid, context):
-        
+        """
+        check dashboard view on menu name field.
+        @return: False 
+        """
         data = context and context.get('active_id', False) or False
         if data:
             board = self.pool.get('board.board').browse(cr, uid, data)
             if not board.line_ids:
-                raise osv.except_osv(_('User Error!'), _('Please Insert Dashboard View(s) !'))    
+                raise osv.except_osv(_('User Error!'), 
+                                     _('Please Insert Dashboard View(s) !'))    
             return False
     
     def board_menu_create(self, cr, uid, ids, context=None):
@@ -44,7 +48,7 @@ class board_menu_create(osv.osv_memory):
         @return : Dictionary {}.
         """
         if not context:
-            context={}
+            context = {}
              
         context_id = context and context.get('active_id', False) or False
         if context_id:
@@ -63,7 +67,7 @@ class board_menu_create(osv.osv_memory):
                 'name': data.get('menu_name'),
                 'parent_id': data.get('menu_parent_id'),
                 'icon': 'STOCK_SELECT_COLOR',
-                'action': 'ir.actions.act_window,'+str(action_id)
+                'action': 'ir.actions.act_window,' + str(action_id)
                 }, context=context)
         #End Loop
         return {}
@@ -71,11 +75,11 @@ class board_menu_create(osv.osv_memory):
     _name = "board.menu.create"
     _description = "Menu Create"
     _columns = {
-             'menu_name':fields.char('Menu Name', size=64, required=True),
-             'menu_parent_id':fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
+             'menu_name': fields.char('Menu Name', size=64, required=True),
+             'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
           }
     _defaults = {
-            'menu_name':check_views,
+            'menu_name': check_views,
           }
 
 board_menu_create()

@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
+from osv import fields, osv
 import time
-from osv import fields,osv
 
 class board_board(osv.osv):
     """
@@ -29,20 +29,28 @@ class board_board(osv.osv):
     _name = 'board.board'
     _description = "Board"
     
-    def create_view(self, cr, uid, ids, context):
-
-        board = self.pool.get('board.board').browse(cr, uid, ids, context)
+    def create_view(self, cr, uid, ids, context=None):
+        """
+        Create  view
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Board's IDs
+        @return: arch of xml view.
+        """
+        if not context:
+            context = {}
+        board = self.pool.get('board.board').browse(cr, uid, ids, context=context)
         left = []
         right = []
         #start Loop
         for line in board.line_ids:
             linestr = '<action string="%s" name="%d" colspan="4"' % (line.name, line.action_id.id)
             if line.height:
-                linestr+=(' height="%d"' % (line.height,))
+                linestr += (' height="%d"' % (line.height, ))
             if line.width:
-                linestr+=(' width="%d"' % (line.width,))
+                linestr += (' width="%d"' % (line.width, ))
             linestr += '/>'
-            if line.position=='left':
+            if line.position == 'left':
                 left.append(linestr)
             else:
                 right.append(linestr)
@@ -58,23 +66,40 @@ class board_board(osv.osv):
                 </child2>
             </hpaned>
             </form>""" % ('\n'.join(left), '\n'.join(right))
-
+        
         return arch
 
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context = {}):
+        
+        """
+        Writes values in one or several fields.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Board's IDs
+        @param vals: dictionary with values to update. 
+                     dictionary must be with the form: {‘name_of_the_field’: value, ...}.
+        @return: True
+        """
         result = super(board_board, self).write(cr, uid, ids, vals, context)
         cr.commit()
 
         board = self.pool.get('board.board').browse(cr, uid, ids[0])
-
         view = self.create_view(cr, uid, ids[0], context)
         id = board.view_id.id
-        cr.execute("update ir_ui_view set arch=%s where id=%s" , (view, id))
+        cr.execute("update ir_ui_view set arch=%s where id=%s", (view, id))
         cr.commit()
-
         return result
 
     def create(self, cr, user, vals, context=None):
+        """
+        create new record.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param vals: dictionary of values for every field.
+                      dictionary must use this form: {‘name_of_the_field’: value, ...}
+        @return: id of new created record of board.board.
+        """
+        
         if not context:
             context = {}
             
@@ -83,41 +108,45 @@ class board_board(osv.osv):
         id = super(board_board, self).create(cr, user, vals, context)
         view_id = self.pool.get('ir.ui.view').create(cr, user, {
             'name': vals['name'],
-            'model':'board.board',
-            'priority':16,
+            'model': 'board.board',
+            'priority': 16,
             'type': 'form',
             'arch': self.create_view(cr, user, id, context),
         })
 
         super(board_board, self).write(cr, user, [id], {'view_id': view_id}, context)
-
+        
         return id
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        """
+        Overrides orm field_view_get.
+        @return: Dictionary of Fields, arch and toolbar.
+        """
         if not context:
-            context={}
+            context = {}
             
         res = {}
         res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
 
-        vids = self.pool.get('ir.ui.view.custom').search(cr, user, [('user_id','=',user), ('ref_id','=',view_id)])
+        vids = self.pool.get('ir.ui.view.custom').search(cr, user, [('user_id', '=', user), ('ref_id' ,'=', view_id)])
         if vids:
             view_id = vids[0]
             arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id)
             res['arch'] = arch.arch
 
-        res['toolbar'] = {'print':[],'action':[],'relate':[]}
+        res['toolbar'] = {'print': [], 'action': [], 'relate': []}
         return res
 
     _columns = {
-        'name': fields.char('Dashboard', size=64, required=True),
-        'view_id': fields.many2one('ir.ui.view', 'Board View'),
+        'name': fields.char('Dashboard', size=64, required=True), 
+        'view_id': fields.many2one('ir.ui.view', 'Board View'), 
         'line_ids': fields.one2many('board.board.line', 'board_id', 'Action Views')
     }
 
     # the following lines added to let the button on dashboard work.
     _defaults = {
-        'name': lambda *args: 'Dashboard'
+        'name':  lambda *args:  'Dashboard'
     }
 
 board_board()
@@ -158,6 +187,9 @@ class board_note_type(osv.osv):
 board_note_type()
 
 def _type_get(self, cr, uid, context={}):
+    """
+    Get by default Note type.
+    """
     obj = self.pool.get('board.note.type')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['name'], context)
@@ -179,8 +211,8 @@ class board_note(osv.osv):
         'type': fields.selection(_type_get, 'Note type', size=64),
     }
     _defaults = {
-        'user_id': lambda object,cr,uid,context: uid,
-        'date': lambda object,cr,uid,context: time.strftime('%Y-%m-%d'),
+        'user_id': lambda object, cr, uid, context: uid, 
+        'date': lambda object, cr, uid, context: time.strftime('%Y-%m-%d'), 
     }
 board_note()
 
