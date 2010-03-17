@@ -173,7 +173,9 @@
                 <search string="Search Holiday Per User">
                        <group col='8' colspan='4'>
                           <field name="employee_id" select='1' widget="selection"/>
-                          <field name="user_id" select="1" widget="selection"/>
+                          <field name="user_id" select="1" widget="selection">
+	                          	<filter icon="terp-partner" help="My Holidays" domain="[('user_id','=',uid)]"/>
+	                      </field>
                           <field name="holiday_status" select="1" widget="selection"/>
                       </group>
                       <newline/>
