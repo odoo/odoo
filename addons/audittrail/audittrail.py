@@ -23,10 +23,8 @@ from osv import fields, osv
 from osv.osv import osv_pool
 from tools.translate import _
 import ir
-import netsvc
 import pooler
-import string
-import time, copy
+import time
 
 class audittrail_rule(osv.osv):
     """
@@ -62,6 +60,13 @@ class audittrail_rule(osv.osv):
     __functions = {}
 
     def subscribe(self, cr, uid, ids, *args):
+        """
+        subscriber Rule on object and apply action on that object.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Auddittrail RUle’s IDs.
+        @return: True 
+        """
         obj_action = self.pool.get('ir.actions.act_window')
         obj_model = self.pool.get('ir.model.data')
         #start Loop
@@ -76,7 +81,7 @@ class audittrail_rule(osv.osv):
                  "name":'View Log', 
                  "res_model":'audittrail.log', 
                  "src_model": thisrule.object_id.model, 
-                 "domain":"[('object_id','=',"+str(thisrule.object_id.id)+"), ('res_id', '=', active_id)]"
+                 "domain":"[('object_id','=', "+str(thisrule.object_id.id)+"), ('res_id', '=', active_id)]"
 
             }
             id = obj_action.create(cr, uid, val)
@@ -88,7 +93,13 @@ class audittrail_rule(osv.osv):
         return True
 
     def unsubscribe(self, cr, uid, ids, *args):
-        
+        """
+        unsubscribe  Rule on object
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Auddittrail RUle’s IDs.
+        @return: True 
+        """
         obj_action = self.pool.get('ir.actions.act_window')
         obj_model = self.pool.get('ir.model.data')
         val_obj = self.pool.get('ir.values')
@@ -114,7 +125,6 @@ class audittrail_log(osv.osv):
     """
     For Audittrail Log
     """
-    
     _name = 'audittrail.log'
     _description = "Audittrail Log"
     _columns = {
@@ -161,13 +171,13 @@ audittrail_log_line()
 class audittrail_objects_proxy(osv_pool):
     
     def get_value_text(self, cr, uid, field_name, values, object, context=None):
+        
         if not context:
             context = {}
         pool = pooler.get_pool(cr.dbname)
         obj = pool.get(object.model)
         obj_ids = pool.get('ir.model').search(cr, uid, [('model', '=', object.model)])
-        model_object = pool.get('ir.model').browse(cr, uid, obj_ids)[0]
-        f_id= pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', object.id)])
+        f_id = pool.get('ir.model.fields').search(cr, uid, [('name', '=', field_name), ('model_id', '=', object.id)])
         if f_id:
             field = pool.get('ir.model.fields').read(cr, uid, f_id)[0]
             model = field['relation']
@@ -177,14 +187,14 @@ class audittrail_objects_proxy(osv_pool):
                     if type(values) == tuple:
                         values = values[0]
                     val = pool.get(model).read(cr, uid, [values], [pool.get(model)._rec_name])
-                    if len(val):
+                    if val:
                         return val[0][pool.get(model)._rec_name]
             elif field['ttype'] == 'many2many':
                 value = []
                 if values:
                     for id in values:
                         val = pool.get(model).read(cr, uid, [id], [pool.get(model)._rec_name])
-                        if len(val):
+                        if val:
                             value.append(val[0][pool.get(model)._rec_name])
                 return value
 
@@ -194,7 +204,7 @@ class audittrail_objects_proxy(osv_pool):
                     for id in values:
                         val = pool.get(model).read(cr, uid, [id], [pool.get(model)._rec_name])
 
-                        if len(val):
+                        if val:
                             value.append(val[0][pool.get(model)._rec_name])
                     return value
             return values
@@ -211,7 +221,7 @@ class audittrail_objects_proxy(osv_pool):
                 f_id = pool.get('ir.model.fields').search(cr, uid, [('name', '=', line['name']), ('model_id', 'in', (object.id, inherits_ids[0]))])
             else:
                 f_id = pool.get('ir.model.fields').search(cr, uid, [('name', '=', line['name']), ('model_id', '=', object.id)])
-            if len(f_id):
+            if f_id:
                 fields = pool.get('ir.model.fields').read(cr, uid, f_id)
                 old_value = 'old_value' in line and  line['old_value'] or ''
                 new_value = 'new_value' in line and  line['new_value'] or ''
@@ -243,7 +253,7 @@ class audittrail_objects_proxy(osv_pool):
             new_value = pool.get(model_object.model).read(cr, uid, [res_id], args[0].keys())[0]
             if 'id' in new_value:
                 del new_value['id']
-            if not len(logged_uids) or uid in logged_uids:
+            if not logged_uids or uid in logged_uids:
                 resource_name = pool.get(model_object.model).name_get(cr, uid, [res_id])
                 resource_name = resource_name and resource_name[0][1] or ''
                 id = pool.get('audittrail.log').create(cr, uid, {"method": method , "object_id": model_object.id, "user_id": uid, "res_id": res_id, "name": resource_name})
@@ -272,7 +282,7 @@ class audittrail_objects_proxy(osv_pool):
                 cr.commit()
                 if res:
                     new_values = pool.get(model_object.model).read(cr, uid, res_ids, args[1].keys())[0]
-                    if not len(logged_uids) or uid in logged_uids:
+                    if not logged_uids or uid in logged_uids:
                         resource_name = pool.get(model_object.model).name_get(cr, uid, [res_id])
                         resource_name = resource_name and resource_name[0][1] or ''
                         id = pool.get('audittrail.log').create(cr, uid, {"method": method, "object_id": model_object.id, "user_id": uid, "res_id": res_id, "name": resource_name})
@@ -303,7 +313,7 @@ class audittrail_objects_proxy(osv_pool):
             else:
                 old_values[res['id']] = res
             for res_id in old_values:
-                if not len(logged_uids) or uid in logged_uids:
+                if not logged_uids or uid in logged_uids:
                     resource_name = pool.get(model_object.model).name_get(cr, uid, [res_id])
                     resource_name = resource_name and resource_name[0][1] or ''
                     id = pool.get('audittrail.log').create(cr, uid, {"method": method , "object_id": model_object.id, "user_id": uid, "res_id": res_id, "name": resource_name})
@@ -322,13 +332,13 @@ class audittrail_objects_proxy(osv_pool):
             return res
 
         if method in ('unlink'):
-            res_ids=args[0]
-            old_values={}
+            res_ids = args[0]
+            old_values = {}
             for res_id in res_ids:
-                old_values[res_id]=pool.get(model_object.model).read(cr, uid, res_id, [])
+                old_values[res_id] = pool.get(model_object.model).read(cr, uid, res_id, [])
 
             for res_id in res_ids:
-                if not len(logged_uids) or uid in logged_uids:
+                if not logged_uids or uid in logged_uids:
                     resource_name = pool.get(model_object.model).name_get(cr, uid, [res_id])
                     resource_name = resource_name and resource_name[0][1] or ''
                     id = pool.get('audittrail.log').create(cr, uid, {"method": method , "object_id": model_object.id, "user_id": uid, "res_id": res_id, "name": resource_name})
@@ -352,29 +362,29 @@ class audittrail_objects_proxy(osv_pool):
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
         cr.autocommit(True)
-        obj=pool.get(object)
+        obj = pool.get(object)
         logged_uids = []
         fct_src = super(audittrail_objects_proxy, self).execute
 
         def my_fct(db, uid, object, method, *args):
             field = method
             rule = False
-            obj_ids= pool.get('ir.model').search(cr, uid, [('model', '=', object)])
+            obj_ids = pool.get('ir.model').search(cr, uid, [('model', '=', object)])
             for obj_name in pool.obj_list():
                 if obj_name == 'audittrail.rule':
                     rule = True
             if not rule:
                 return fct_src(db, uid, object, method, *args)
-            if not len(obj_ids):
+            if not obj_ids:
                 return fct_src(db, uid, object, method, *args)
             rule_ids = pool.get('audittrail.rule').search(cr, uid, [('object_id', '=', obj_ids[0]), ('state', '=', 'subscribed')])
-            if not len(rule_ids):
+            if not rule_ids:
                 return fct_src(db, uid, object, method, *args)
 
             for thisrule in pool.get('audittrail.rule').browse(cr, uid, rule_ids):
                 for user in thisrule.user_id:
                     logged_uids.append(user.id)
-                if not len(logged_uids) or uid in logged_uids:
+                if not logged_uids or uid in logged_uids:
                     if field in ('read', 'write', 'create', 'unlink'):
                         if getattr(thisrule, 'log_'+field):
                             return self.log_fct(db, uid, object, method, fct_src, *args)
