@@ -23,13 +23,18 @@ import time
 from osv import fields,osv
 
 class board_board(osv.osv):
+    """
+    Board
+    """
     _name = 'board.board'
-
+    _description = "Board"
+    
     def create_view(self, cr, uid, ids, context):
 
         board = self.pool.get('board.board').browse(cr, uid, ids, context)
         left = []
         right = []
+        #start Loop
         for line in board.line_ids:
             linestr = '<action string="%s" name="%d" colspan="4"' % (line.name, line.action_id.id)
             if line.height:
@@ -41,6 +46,7 @@ class board_board(osv.osv):
                 left.append(linestr)
             else:
                 right.append(linestr)
+        #End Loop
         arch = """<?xml version="1.0"?>
             <form string="My Board">
             <hpaned>
@@ -69,6 +75,9 @@ class board_board(osv.osv):
         return result
 
     def create(self, cr, user, vals, context=None):
+        if not context:
+            context = {}
+            
         if not 'name' in vals:
             return False
         id = super(board_board, self).create(cr, user, vals, context)
@@ -85,6 +94,9 @@ class board_board(osv.osv):
         return id
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if not context:
+            context={}
+            
         res = {}
         res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
 
@@ -110,8 +122,13 @@ class board_board(osv.osv):
 
 board_board()
 
+
 class board_line(osv.osv):
+    """
+    Board Line
+    """
     _name = 'board.board.line'
+    _description = "Board Line"
     _order = 'position,sequence'
     _columns = {
         'name': fields.char('Title', size=64, required=True),
@@ -120,15 +137,21 @@ class board_line(osv.osv):
         'width': fields.integer('Width'),
         'board_id': fields.many2one('board.board', 'Dashboard', required=True, ondelete='cascade'),
         'action_id': fields.many2one('ir.actions.act_window', 'Action', required=True),
-        'position': fields.selection([('left','Left'),('right','Right')], 'Position', required=True)
+        'position': fields.selection([('left','Left'),
+                                      ('right','Right')], 'Position', required=True)
     }
     _defaults = {
         'position': lambda *args: 'left'
     }
 board_line()
 
+
 class board_note_type(osv.osv):
+    """
+    Board note Type
+    """
     _name = 'board.note.type'
+    _description = "NOte Type"
     _columns = {
         'name': fields.char('Note Type', size=64, required=True),
     }
@@ -141,8 +164,13 @@ def _type_get(self, cr, uid, context={}):
     res = [(r['name'], r['name']) for r in res]
     return res
 
+
 class board_note(osv.osv):
+    """
+    Board Note
+    """
     _name = 'board.note'
+    _description = "Note"
     _columns = {
         'name': fields.char('Subject', size=128, required=True),
         'note': fields.text('Note'),
@@ -157,4 +185,3 @@ class board_note(osv.osv):
 board_note()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
