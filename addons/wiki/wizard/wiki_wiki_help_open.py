@@ -26,10 +26,9 @@ class wiki_wiki_help_open(osv.osv_memory):
     """ Basic Wiki Editing """
     _name = "wiki.wiki.help.open"
     _description = "Basic Wiki Editing"
-    _columns = {
-    }
 
     def open_wiki_page(self, cr, uid, ids, context):
+
         """ Opens Wiki Page for Editing
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
