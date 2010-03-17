@@ -44,45 +44,64 @@ class workflow(osv.osv):
         wf_service.clear_cache(cr, user)
         return super(workflow, self).write(cr, user, ids, vals, context=context)
 
+    def get_active_workitems(self, cr, uid, res, res_id, context={}):
+        
+        cr.execute('select * from wkf where osv=%s limit 1',(res,))
+        wkfinfo = cr.dictfetchone()
+        workitems = []
+        
+        if wkfinfo:
+            cr.execute('SELECT id FROM wkf_instance \
+                            WHERE res_id=%s AND wkf_id=%s \
+                            ORDER BY state LIMIT 1',
+                            (res_id, wkfinfo['id']))
+            inst_id = cr.fetchone()
+         
+            cr.execute('select act_id,count(*) from wkf_workitem where inst_id=%s group by act_id', (inst_id,))
+            workitems = dict(cr.fetchall())        
+         
+        return {'wkf': wkfinfo, 'workitems':  workitems}
+
+
     #
     # scale =  (vertical-distance, horizontal-distance, min-node-width(optional), min-node-height(optional), margin(default=20))
     #
 
 
-    def graph_get(self, cr, uid, id, scale, context={}):
-
-        nodes= []
-        nodes_name = []
-        transitions = []
-        start = []
-        tres = {}
-        no_ancester = []
-        workflow = self.browse(cr, uid, id, context)
-        for a in workflow.activities:
-            nodes_name.append((a.id,a.name))
-            nodes.append(a.id)
-            if a.flow_start:
-                start.append(a.id)
-            else:
-                if not a.in_transitions:
-                    no_ancester.append(a.id)
-
-            for t in a.out_transitions:
-                transitions.append((a.id, t.act_to.id))
-                tres[t.id] = (a.id, t.act_to.id)
-
-
-        g  = graph(nodes, transitions, no_ancester)
-        g.process(start)
-        g.scale(*scale)
-        result = g.result_get()
-        results = {}
-
-        for node in nodes_name:
-            results[str(node[0])] = result[node[0]]
-            results[str(node[0])]['name'] = node[1]
-
-        return {'nodes': results, 'transitions': tres}
+#    def graph_get(self, cr, uid, id, scale, context={}):
+#
+#        nodes= []
+#        nodes_name = []
+#        transitions = []
+#        start = []
+#        tres = {}
+#        no_ancester = []
+#        workflow = self.browse(cr, uid, id, context)
+#        for a in workflow.activities:
+#            nodes_name.append((a.id,a.name))
+#            nodes.append(a.id)
+#            if a.flow_start:
+#                start.append(a.id)
+#            else:
+#                if not a.in_transitions:
+#                    no_ancester.append(a.id)
+#
+#            for t in a.out_transitions:
+#                transitions.append((a.id, t.act_to.id))
+#                tres[t.id] = (a.id, t.act_to.id)
+#
+#
+#        g  = graph(nodes, transitions, no_ancester)
+#        g.process(start)
+#        g.scale(*scale)
+#        result = g.result_get()
+#        results = {}
+#
+#        for node in nodes_name:
+#            results[str(node[0])] = result[node[0]]
+#            results[str(node[0])]['name'] = node[1]
+#
+#        return {'nodes': results, 'transitions': tres}
 
 
     def create(self, cr, user, vals, context=None):

@@ -247,6 +247,15 @@ class browse_record(object):
                             new_data[n] = browse_null()
                     elif f._type in ('one2many', 'many2many') and len(data[n]):
                         new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
+                    elif f._type in ('reference'):
+                        if data[n]:
+                            ref_obj, ref_id = data[n].split(',')
+                            ref_id = long(ref_id)
+                            obj = self._table.pool.get(ref_obj)
+                            compids = False
+                            new_data[n] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                        else:
+                            new_data[n] = browse_null()
                     else:
                         new_data[n] = data[n]
                 self._data[data['id']].update(new_data)
@@ -370,6 +379,10 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
+    def view_init(self, cr , uid , fields_list, context=None):
+        """Override this method to do specific things when a view on the object is opened."""
+        pass
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
         raise _('The read_group method is not implemented on this object !')
 
@@ -383,7 +396,7 @@ class orm_template(object):
             model_id = cr.fetchone()[0]
         if 'module' in context:
             name_id = 'model_'+self._name.replace('.','_')
-            cr.execute('select * from ir_model_data where name=%s and res_id=%s', (name_id,model_id))
+            cr.execute('select * from ir_model_data where name=%s and res_id=%s and module=%s', (name_id,model_id,context['module']))
             if not cr.rowcount:
                 cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
                     (name_id, context['module'], 'ir.model', model_id)
@@ -711,6 +724,7 @@ class orm_template(object):
                             else:
                                 module, xml_id = current_module, line[i]
                             id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
+
                             res_res_id = ir_model_data_obj.read(cr, uid, [id],
                                                 ['res_id'])
                             if res_res_id:
@@ -1008,7 +1022,7 @@ class orm_template(object):
                     continue
                 res[f] = {'type': self._columns[f]._type}
                 for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
-                        'change_default', 'translate', 'help', 'select', 'selectable'):
+                        'change_default', 'translate', 'help', 'select', 'selectable','parent_field'):
                     if getattr(self._columns[f], arg):
                         res[f][arg] = getattr(self._columns[f], arg)
                 if not read_access:
@@ -1188,7 +1202,21 @@ class orm_template(object):
             button.set('readonly', str(int(not can_click)))
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
-        fields = self.fields_get(cr, user, fields_def.keys(), context)
+
+        #code for diagram view.
+        fields={}
+        if node.tag=='diagram':
+            if node.getchildren()[0].tag=='node':
+               node_fields=self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
+            if node.getchildren()[1].tag=='arrow':
+               arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
+            for key,value in node_fields.items():
+                fields[key]=value
+            for key,value in arrow_fields.items():
+                fields[key]=value
+        else:
+            fields = self.fields_get(cr, user, fields_def.keys(), context)
+
         for field in fields_def:
             if field == 'id':
                 # sometime, the view may containt the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
@@ -1204,7 +1232,6 @@ class orm_template(object):
                 msg += "\n\nEither you wrongly customised this view, or some modules bringing those views are not compatible with your current data model"
                 netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
                 raise except_orm('View error', msg)
-
         return arch, fields
 
     def __get_default_calendar_view(self):
@@ -1463,7 +1490,7 @@ class orm_template(object):
             if context and context.get('active_id',False):
                 data_menu = self.pool.get('ir.ui.menu').browse(cr, user, context['active_id'], context).action
                 if data_menu:
-                    act_id = int(data_menu.split(',')[1])
+                    act_id = data_menu.id
                     if act_id:
                         data_action = self.pool.get('ir.actions.act_window').browse(cr, user, [act_id], context)[0]
                         result['submenu'] = getattr(data_action,'menus', False)
@@ -1501,6 +1528,10 @@ class orm_template(object):
                 'action': resaction,
                 'relate': resrelate
             }
+        if result['type']=='form' and result['arch'].count("default_focus")>1:
+                msg = "Form View contain more than one default_focus attribute"
+                netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
+                raise except_orm('View Error !',msg)
         return result
 
     _view_look_dom_arch = __view_look_dom_arch
@@ -1679,6 +1710,7 @@ class orm_memory(orm_template):
         return id_new
 
     def default_get(self, cr, uid, fields_list, context=None):
+        self.view_init(cr, uid, fields_list, context)
         if not context:
             context = {}
         value = {}
