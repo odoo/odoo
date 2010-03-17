@@ -87,7 +87,7 @@ class change_standard_price(osv.osv_memory):
         for lots in lot_obj.browse(cr, uid, lot_ids):
             qty += lots.name
         
-        if stock_input_acc and stock_output_acc:
+        if stock_input_acc and stock_output_acc and lot_ids:
             move_id = move_obj.create(cr, uid, {'journal_id': data.categ_id.property_stock_journal.id})
             if diff > 0:
                 credit = qty * diff
