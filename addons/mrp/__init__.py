@@ -20,6 +20,7 @@
 ##############################################################################
 
 import mrp
+import stock
 import installer
 import wizard
 import report
