@@ -41,7 +41,8 @@
         'purchase_wizard.xml',
         'stock_view.xml',
         'partner_view.xml',
-        'process/purchase_process.xml'
+        'process/purchase_process.xml',
+        'report/purchase_report_view.xml',
     ],
     'demo_xml': ['purchase_demo.xml'],
     'installable': True,

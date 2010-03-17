@@ -42,10 +42,11 @@ system to store and search in your CV base.
         'hr_recruitment_wizard.xml',
         'hr_recruitment_view.xml',
         'hr_recruitment_menu.xml',
-        'report_hr_recruitment_view.xml',
+#        'report_hr_recruitment_view.xml',
         'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
         'board_hr_recruitment_statistical_view.xml',
+        'report/hr_recruitment_report_view.xml'
      ],
     'demo_xml': [
         'hr_recruitment_demo.xml'

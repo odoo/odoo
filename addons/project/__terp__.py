@@ -40,6 +40,7 @@ works done on tasks, eso. It is able to render planning, order tasks, eso.
         "project_report.xml",
         "process/task_process.xml",
         "project_installer.xml",
+        "report/project_report_view.xml"
     ],
     'demo_xml': [
         'project_demo.xml'
