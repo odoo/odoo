@@ -65,34 +65,35 @@ class crm_lead2opportunity(osv.osv_memory):
                 id2 = data_obj.browse(cr, uid, id2, context=context).res_id
             if id3:
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
-        for this in self.browse(cr, uid, ids, context=context):
+            
             lead = lead_obj.browse(cr, uid, record_id, context=context)
-            new_opportunity_id = opp_obj.create(cr, uid, {
-                    'name': this.name, 
-                    'planned_revenue': this.planned_revenue, 
-                    'probability': this.probability, 
-                    'partner_id': lead.partner_id and lead.partner_id.id or False , 
-                    'section_id': lead.section_id and lead.section_id.id or False, 
-                    'description': lead.description or False, 
-                    'date_deadline': lead.date_deadline or False, 
-                    'partner_address_id': lead.partner_address_id and \
-                                    lead.partner_address_id.id or False , 
-                    'priority': lead.priority, 
-                    'phone': lead.phone, 
-                    'email_from': lead.email_from
-                })
 
-            new_opportunity = opp_obj.browse(cr, uid, new_opportunity_id)
-            vals = {
-                    'partner_id': this.partner_id and this.partner_id.id or False, 
-                    }
-            if not lead.opportunity_id:
-                    vals.update({'opportunity_id' : new_opportunity.id})
-
-            lead_obj.write(cr, uid, [lead.id], vals)
-            lead_obj.case_close(cr, uid, [lead.id])
-            opp_obj.case_open(cr, uid, [new_opportunity_id])
+            for this in self.browse(cr, uid, ids, context=context):
+                new_opportunity_id = opp_obj.create(cr, uid, {
+                        'name': this.name, 
+                        'planned_revenue': this.planned_revenue, 
+                        'probability': this.probability, 
+                        'partner_id': lead.partner_id and lead.partner_id.id or False , 
+                        'section_id': lead.section_id and lead.section_id.id or False, 
+                        'description': lead.description or False, 
+                        'date_deadline': lead.date_deadline or False, 
+                        'partner_address_id': lead.partner_address_id and \
+                                        lead.partner_address_id.id or False , 
+                        'priority': lead.priority, 
+                        'phone': lead.phone, 
+                        'email_from': lead.email_from
+                    })
+    
+                new_opportunity = opp_obj.browse(cr, uid, new_opportunity_id)
+                vals = {
+                        'partner_id': this.partner_id and this.partner_id.id or False, 
+                        }
+                if not lead.opportunity_id:
+                        vals.update({'opportunity_id' : new_opportunity.id})
+    
+                lead_obj.write(cr, uid, [lead.id], vals)
+                lead_obj.case_close(cr, uid, [lead.id])
+                opp_obj.case_open(cr, uid, [new_opportunity_id])
 
             value = {
                     'name': _('Opportunity'), 

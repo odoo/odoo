@@ -1,88 +1,131 @@
-# -*- encoding: utf-8 -*-
-############################################################################################
+# -*- coding: utf-8 -*-
+##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    Copyright (C) 2008-2009 AJM Technologies S.A. (<http://www.ajm.lu). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-############################################################################################
-############################################################################################
+##############################################################################
 
 from osv import osv, fields
-import netsvc
-import time
-import tools
-import mx.DateTime
-from tools import config
 from tools.translate import _
-import tools
 
 class crm_phonecall2phonecall(osv.osv_memory):
+    """ Converts Phonecall to Phonecall"""
+
     _name = 'crm.phonecall2phonecall'
     _description = 'Phonecall To Phonecall'
 
     def action_cancel(self, cr, uid, ids, context=None):
+        """
+        Closes Phonecall to Phonecall form
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Phonecall to Phonecall's IDs
+        @param context: A standard dictionary for contextual values
+        """
         return {'type':'ir.actions.act_window_close'}
 
     def action_apply(self, cr, uid, ids, context=None):
-        this = self.browse(cr, uid, ids)[0]
-        values={}
-        record_id = context and context.get('record_id', False) or False
+        """
+        This converts Phonecall to Phonecall and opens Phonecall view
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Phonecall to Phonecall IDs
+        @param context: A standard dictionary for contextual values
+
+        @return : Dictionary value for created Opportunity form
+        """
+        res = {}
+        record_id = context and context.get('active_id', False) or False
+        phonecall_obj = self.pool.get('crm.phonecall')
+
         if record_id:
-            for case in self.pool.get('crm.phonecall').browse(cr, uid, [record_id], context=context):
-                values['name']=this.name
-                values['user_id']=this.user_id and this.user_id.id
-                values['categ_id']=case.categ_id and case.categ_id.id or False
-                values['section_id']=case.section_id and case.section_id.id
-                values['description']=case.description or ''
-                values['partner_id']=case.partner_id.id
-                values['partner_address_id']=case.partner_address_id.id
-                values['partner_mobile']=case.partner_mobile or False
-                values['priority']=case.priority
-                values['partner_phone']=case.partner_phone or False
-                values['date']=this.date
-                phonecall_proxy = self.pool.get('crm.phonecall')
-                phonecall_id = phonecall_proxy.create(cr, uid, values, context=context)
-            value = {            
+            data_obj = self.pool.get('ir.model.data')
+            
+            # Get Phonecall views
+            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
+            res = data_obj.read(cr, uid, result, ['res_id'])
+            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
+            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
+            if id2:
+                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+            if id3:
+                id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+
+            phonecall = phonecall_obj.browse(cr, uid, record_id, context=context)
+
+            for this in self.browse(cr, uid, ids, context=context):
+                values = {
+                        'name': this.name, 
+                        'user_id': this.user_id and this.user_id.id, 
+                        'categ_id': phonecall.categ_id and phonecall.categ_id.id or False, 
+                        'section_id': phonecall.section_id and phonecall.section_id.id, 
+                        'description': phonecall.description or '', 
+                        'partner_id': phonecall.partner_id.id, 
+                        'partner_address_id': phonecall.partner_address_id.id, 
+                        'partner_mobile': phonecall.partner_mobile or False, 
+                        'priority': phonecall.priority, 
+                        'partner_phone': phonecall.partner_phone or False, 
+                        'date': this.date
+                          }
+                phonecall_id = phonecall_obj.create(cr, uid, values, context=context)
+            print phonecall_id
+            res = {
                 'name': _('Phone Call'),
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'crm.phonecall',
                 'view_id': False,
+                'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
                 'res_id': phonecall_id
                 }
-        return value
+        return res
 
     _columns = {
-        'name' : fields.char('Call summary', size=64, required=True, select=1),
-        'user_id' : fields.many2one('res.users',"Assign To"),
-        'date': fields.datetime('Date'),
-        'section_id':fields.many2one('crm.case.section','Sales Team'),
-
-    }
+                'name' : fields.char('Call summary', size=64, required=True, select=1),
+                'user_id' : fields.many2one('res.users',"Assign To"),
+                'date': fields.datetime('Date'),
+                'section_id':fields.many2one('crm.case.section','Sales Team'),
+                }
+    
     def default_get(self, cr, uid, fields, context=None):
-        record_id = context and context.get('record_id', False) or False
-        res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
+        """
+        This function gets default values
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+
+        @return : default values of fields.
+        """
+        record_id = context and context.get('active_id', False) or False
         if record_id:
-            phonecall_id = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
-            res['name']=phonecall_id.name
-            res['user_id']=phonecall_id.user_id and phonecall_id.user_id.id or False
-            res['date']=phonecall_id.date 
-            res['section_id']=phonecall_id.section_id and phonecall_id.section_id.id or False 
+            phonecall = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
+            res = {
+                    'name': phonecall.name, 
+                    'user_id': phonecall.user_id and phonecall.user_id.id or False, 
+                    'date': phonecall.date, 
+                    'section_id': phonecall.section_id and phonecall.section_id.id or False
+                   }
         return res
+
 crm_phonecall2phonecall()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

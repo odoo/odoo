@@ -68,7 +68,6 @@ class crm_opportunity2meeting(osv.osv_memory):
             if id3:
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
-        for this in self.browse(cr, uid, ids, context=context):
             opp = opp_obj.browse(cr, uid, record_id, context=context)
             context = {
                         'default_opportunity_id': opp.id, 
