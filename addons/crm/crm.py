@@ -156,6 +156,7 @@ class crm_case_stage(osv.osv):
         'object_id': fields.many2one('ir.model','Object Name'),
         'probability': fields.float('Probability (%)', required=True),
         'on_change': fields.boolean('Change Probability Automatically',help="Change Probability on next and previous stages."),
+        'requirements': fields.text('Requirements')
     }
     def _find_object_id(self, cr, uid, context=None):
         object_id = context and context.get('object_id', False) or False
