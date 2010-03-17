@@ -2,19 +2,19 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRl (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
+#    it under the terms of the GNU Affero General Public license as
 #    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+#    license, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+#    MERCHANTABIlITY or FITNESS FOR A PARTICUlAR PURPOSE.  See the
+#    GNU Affero General Public license for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
+#    You should have received a copy of the GNU Affero General Public license
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -22,25 +22,29 @@
 from osv import fields, osv
 
 class wiki_make_index(osv.osv_memory):
+    """ Create Index For Selected Page """
+
     _name = "wiki.make.index"
     _description = "Create Index"
-    _columns = {
-    }
 
     def wiki_do_index(self, cr, uid, ids, context):
+
         """ Makes Index according to page hierarchy
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of wiki index’s IDs
+        @param ids: list of wiki index’s IDs
 
         """
-        for index_obj in self.browse(cr,uid,ids):
+        data = context and context.get('active_ids', []) or []
+
+        for index_obj in self.browse(cr, uid, ids):
             wiki_pool = self.pool.get('wiki.wiki')
             cr.execute("Select id, section from wiki_wiki where id = ANY(%s) \
-                            order by section " ,(context['active_ids'],))
+                            order by section ", (data,))
             lst0 = cr.fetchall()
             lst = []
             s_ids = {}
+
             for l in lst0:
                 s_ids[l[1]] = l[0]
                 lst.append(l[1])
@@ -80,6 +84,7 @@ class wiki_make_index(osv.osv_memory):
 
             for rs in result:
                 wiki_pool.write(cr, uid, [rs[1]], {'section':rs[0]})
+
         return {}
 
 wiki_make_index()

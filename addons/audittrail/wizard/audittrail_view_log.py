@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,31 +15,26 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
-import netsvc
-import pooler
 import time
-import tools
-import wizard
 
 class audittrail_view_log(osv.osv_memory):
     
     _name = "audittrail.view.log"
     _description = "View Log"
-    _columns ={
-               'from':fields.datetime('Log From'),
-               'to':fields.datetime('Log To', required = True)
-               }
-    _defaults = {
-                 'to': lambda *a: time.strftime("%Y-%m-%d %H:%M:%S"),
+    _columns = {
+              'from':fields.datetime('Log From'),
+              'to':fields.datetime('Log To', required = True)
              }
+    _defaults = {
+             'to': lambda *a: time.strftime("%Y-%m-%d %H:%M:%S"),
+           }
     
-    def log_open_window(self, cr, uid, ids, context):
+    def log_open_window(self, cr, uid, ids, context=None):
         """
         Open Log  form from given date range..
         @param cr: the current row, from the database cursor,
@@ -47,26 +42,28 @@ class audittrail_view_log(osv.osv_memory):
         @param ids: List of audittrail view log’s IDs.
         @return: Dictionary of  audittrail log form on given date range.
         """
+        if not context:
+            context = {}
+            
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
         result = mod_obj._get_id(cr, uid, 'audittrail', 'action_audittrail_log_tree')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id])[0]
-        log_obj= self.pool.get(result['res_model'])
-        log_id = log_obj.search(cr, uid, [])
-        log_model=log_obj.read(cr, uid,log_id,['object_id'])  
-        for datas in self.read(cr, uid, ids):     
-            if not datas['from']:
-                if  datas['to'] <> time.strftime("%Y-%m-%d %H:%M:%S"):
-                    result['domain'] = str([('timestamp', '<',datas['to'])])                
+        #log_obj = self.pool.get(result['res_model'])
+        #log_id = log_obj.search(cr, uid, [])
+        #log_model = log_obj.read(cr, uid, log_id, ['object_id'])  
+
+        #start Loop 
+        for datas in self.read(cr, uid, ids):
+            if not datas.get('from', None):
+                if  datas.get('to') <> time.strftime("%Y-%m-%d %H:%M:%S"):
+                    result['domain'] = str([('timestamp', '<', datas.get('to'))])                
                 else:
-                        pass
+                    pass
             else:
-                result['domain'] = str([('timestamp', '>',datas['from']),('timestamp', '<',datas['to'])])
+                result['domain'] = str([('timestamp', '>', datas.get('from', None)), ('timestamp', '<', datas.get('to'))])
+        #End Loop        
         return result
 
 audittrail_view_log()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

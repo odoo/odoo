@@ -27,12 +27,19 @@ class board_menu_create(osv.osv_memory):
     Create Menu
     """
     def check_views(self, cr, uid, context):
-        board = self.pool.get('board.board').browse(cr, uid, context['active_id'])
-        if not board.line_ids:
-            raise osv.except_osv(_('User Error!'), _('Please Insert Dashboard View(s) !'))    
-        return False
+        """
+        check dashboard view on menu name field.
+        @return: False 
+        """
+        data = context and context.get('active_id', False) or False
+        if data:
+            board = self.pool.get('board.board').browse(cr, uid, data)
+            if not board.line_ids:
+                raise osv.except_osv(_('User Error!'), 
+                                     _('Please Insert Dashboard View(s) !'))    
+            return False
     
-    def board_menu_create(self, cr, uid, ids, context):
+    def board_menu_create(self, cr, uid, ids, context=None):
         """
         Create Menu.
         @param cr: the current row, from the database cursor,
@@ -40,32 +47,39 @@ class board_menu_create(osv.osv_memory):
         @param ids: List of Board Menu Create's IDs
         @return : Dictionary {}.
         """
-        board = self.pool.get('board.board').browse(cr, uid, context['active_id'])
-        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, {
-            'name': board.name,
-            'view_type':'form',
-            'view_mode':'form',
-            'res_model': 'board.board',
-            'view_id': board.view_id.id,
-            })
+        if not context:
+            context = {}
+             
+        context_id = context and context.get('active_id', False) or False
+        if context_id:
+            board = self.pool.get('board.board').browse(cr, uid, context_id)
+            action_id = self.pool.get('ir.actions.act_window').create(cr, uid, {
+                'name': board.name,
+                'view_type':'form',
+                'view_mode':'form',
+                'res_model': 'board.board',
+                'view_id': board.view_id.id,
+                })
+        obj_menu = self.pool.get('ir.ui.menu') 
+        #start Loop    
         for data in self.read(cr, uid, ids):
-            self.pool.get('ir.ui.menu').create(cr, uid, {
-                'name': data['menu_name'],
-                'parent_id': data['menu_parent_id'],
+            obj_menu.create(cr, uid, {
+                'name': data.get('menu_name'),
+                'parent_id': data.get('menu_parent_id'),
                 'icon': 'STOCK_SELECT_COLOR',
-                'action': 'ir.actions.act_window,'+str(action_id)
-                }, context)
-        
+                'action': 'ir.actions.act_window,' + str(action_id)
+                }, context=context)
+        #End Loop
         return {}
     
     _name = "board.menu.create"
     _description = "Menu Create"
     _columns = {
-             'menu_name':fields.char('Menu Name', size=64, required=True),
-             'menu_parent_id':fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
+             'menu_name': fields.char('Menu Name', size=64, required=True),
+             'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
           }
     _defaults = {
-            'menu_name':check_views,
+            'menu_name': check_views,
           }
 
 board_menu_create()

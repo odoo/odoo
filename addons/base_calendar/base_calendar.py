@@ -51,6 +51,7 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None):
     return re_dates
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
+    
     if base_calendar_id and isinstance(base_calendar_id, (str, unicode)):
         res = base_calendar_id.split('-')
         if len(res) >= 2:
@@ -220,10 +221,12 @@ class invite_attendee_wizard(osv.osv_memory):
             res_obj = obj.browse(cr, uid, context['active_id'])
             type = datas.get('type')
             att_obj = self.pool.get('calendar.attendee')
-            vals = {}
+            vals = []
             mail_to = []
+            attendees = []
+            
             if not model == 'calendar.attendee':
-                vals = {'ref': '%s,%s' % (model, base_calendar_id2real_id(context['active_id']))}
+                ref = {'ref': '%s,%s' % (model, base_calendar_id2real_id(context['active_id']))}
     
             if type == 'internal':
                 user_obj = self.pool.get('res.users')
@@ -231,20 +234,28 @@ class invite_attendee_wizard(osv.osv_memory):
                     raise osv.except_osv(_('Error!'), ("Please select any User"))
                 for user_id in datas.get('user_ids'):
                     user = user_obj.browse(cr, uid, user_id)
-                    vals.update({'user_id': user_id, 
-                                         'email': user.address_id.email})
+                    res = {
+                           'user_id': user_id, 
+                           'email': user.address_id.email
+                           }
+                    res.update(ref)
+                    vals.append(res)
                     if user.address_id.email:
                         mail_to.append(user.address_id.email)
                     
             elif  type == 'external' and datas.get('email'):
-                vals.update({'email': datas['email']})
+                vals.append({'email': datas['email']})
                 mail_to.append(datas['email'])
+
             elif  type == 'partner':
                 add_obj = self.pool.get('res.partner.address')
                 for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
-                    vals.update({
-                                 'partner_address_id': contact.id, 
-                                 'email': contact.email})
+                    res = {
+                           'partner_address_id': contact.id, 
+                           'email': contact.email
+                           }
+                    res.update(ref)
+                    vals.append(res)
                     if contact.email:
                         mail_to.append(contact.email)
     
@@ -254,17 +265,23 @@ class invite_attendee_wizard(osv.osv_memory):
                     'parent_ids' : [(4, att.id)],
                     'ref': att.ref
                 })
+
+            for att_val in vals:
+                attendees.append(int(att_obj.create(cr, uid, att_val, context=context)))
+
+            if model_field:
+                for attendee in attendees:
+                    obj.write(cr, uid, res_obj.id, {model_field: [(4, attendee)]})
+
             if datas.get('send_mail'):
                 if not mail_to:
                     name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
                                        self._columns['type'].selection))
                     raise osv.except_osv(_('Error!'), ("%s must have an email \
     Address to send mail") % (name[0]))
-                att_obj._send_mail(cr, uid, [att_id], mail_to, \
+                att_obj._send_mail(cr, uid, attendees, mail_to, \
                        email_from=tools.config.get('email_from', False))
-            att_id = att_obj.create(cr, uid, vals)
-            if model_field:
-                obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
+
         return {}
 
 
@@ -719,8 +736,11 @@ class calendar_event(osv.osv):
     def onchange_dates(self, cr, uid, ids, start_date, duration=False, end_date=False, context={}):
         if not start_date:
             return {}
-        start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         value = {}
+        if not end_date and not duration:
+            duration = 8.00
+            value['duration'] = 8.00
+        start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         if end_date and not duration:
             end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
             diff = end - start
@@ -832,19 +852,22 @@ rule or repeating pattern for anexception to a recurrence set"),
         new_id = self.copy(cr, uid, event_id, default=defaults, context=context)
         return new_id
 
-    def modify_all(self, cr, uid, event_id, defaults, context=None, *args):
-        event_id = base_calendar_id2real_id(event_id)
-        defaults.pop('id')
-        defaults.update({'table': self._table})
-
-        qry = "UPDATE %(table)s set name='%(name)s', \
-                        date='%(date)s', date_deadline='%(date_deadline)s'"
-        if defaults.get('alarm_id'):
-            qry += ", alarm_id=%(alarm_id)s"
-        if defaults.get('location'):
-            qry += ", location='%(location)s'"
-        qry += "WHERE id=%s" % (event_id)
-        cr.execute(qry % (defaults))
+    def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
+        #start Loop
+        for event_id in event_ids:
+            event_id = base_calendar_id2real_id(event_id)
+            defaults.pop('id')
+            defaults.update({'table': self._table})
+    
+            qry = "UPDATE %(table)s set name='%(name)s', \
+                            date='%(date)s', date_deadline='%(date_deadline)s'"
+            if defaults.get('alarm_id'):
+                qry += ", alarm_id=%(alarm_id)s"
+            if defaults.get('location'):
+                qry += ", location='%(location)s'"
+            qry += "WHERE id=%s" % (event_id)
+            cr.execute(qry % (defaults))
+            #End Loop
         return True
 
     def get_recurrent_ids(self, cr, uid, select, base_start_date, base_until_date, limit=100):

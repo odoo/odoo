@@ -50,11 +50,12 @@ class crm_opportunity2meeting(osv.osv_memory):
         @return : Dictionary value for created Meeting view
         """
         value = {}
-        record_ids = context and context.get('active_ids', []) or []
-        if record_ids:
+        record_id = context and context.get('active_id', False) or False
+        if record_id:
             opp_obj = self.pool.get('crm.opportunity')
             data_obj = self.pool.get('ir.model.data')
-
+            
+            # Get meeting views
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
             res = data_obj.read(cr, uid, result, ['res_id'])
             id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
@@ -68,28 +69,28 @@ class crm_opportunity2meeting(osv.osv_memory):
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         for this in self.browse(cr, uid, ids, context=context):
-            for opp in opp_obj.browse(cr, uid, record_ids, context=context):
-                context = {
-                            'default_opportunity_id': opp.id, 
-                            'default_partner_id': opp.partner_id and opp.partner_id.id or False, 
-                            'default_section_id': opp.section_id and opp.section_id.id or False, 
-                            'default_email_from': opp.email_from, 
-                            'default_state': 'open', 
-                            'default_name': opp.name
-                        }
-                        
-                value = {
-                    'name': _('Meetings'), 
-                    'domain' : "[('user_id','=',%s)]" % (uid), 
-                    'context': context, 
-                    'view_type': 'form', 
-                    'view_mode': 'calendar,form,tree', 
-                    'res_model': 'crm.meeting', 
-                    'view_id': False, 
-                    'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')], 
-                    'type': 'ir.actions.act_window', 
-                    'search_view_id': res['res_id']
+            opp = opp_obj.browse(cr, uid, record_id, context=context)
+            context = {
+                        'default_opportunity_id': opp.id, 
+                        'default_partner_id': opp.partner_id and opp.partner_id.id or False, 
+                        'default_section_id': opp.section_id and opp.section_id.id or False, 
+                        'default_email_from': opp.email_from, 
+                        'default_state': 'open', 
+                        'default_name': opp.name
                     }
+                    
+            value = {
+                'name': _('Meetings'), 
+                'domain' : "[('user_id','=',%s)]" % (uid), 
+                'context': context, 
+                'view_type': 'form', 
+                'view_mode': 'calendar,form,tree', 
+                'res_model': 'crm.meeting', 
+                'view_id': False, 
+                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')], 
+                'type': 'ir.actions.act_window', 
+                'search_view_id': res['res_id']
+                }
 
         return value
 

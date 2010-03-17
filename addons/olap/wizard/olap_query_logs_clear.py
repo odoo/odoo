@@ -28,7 +28,6 @@
 from osv import fields, osv
 
 class olap_query_logs_clear(osv.osv_memory):
-    """ Clear the Logs for Given User  """
     _name = "olap.query.logs.clear"
     _description = "Olap Query Logs Clear"
     _columns = {
@@ -69,6 +68,7 @@ class olap_query_logs_clear(osv.osv_memory):
 
 olap_query_logs_clear()
 
+
 class olap_query_logs_clear_msg(osv.osv_memory):
     """   Display clear log message    """
     _name = "olap.query.logs.clear.msg"
@@ -77,4 +77,5 @@ class olap_query_logs_clear_msg(osv.osv_memory):
 
             }
 olap_query_logs_clear_msg()
+
 # vim: ts=4 sts=4 sw=4 si et

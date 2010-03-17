@@ -19,12 +19,20 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
+from tools.translate import _
 
 class showdiff(osv.osv_memory):
+    """ Disp[ay Difference for History """
+
     _name = 'wizard.wiki.history.show_diff'
 
     def _get_diff(self, cr, uid, ctx):
+
+        """ @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        """
+
         history = self.pool.get('wiki.wiki.history')
         ids = ctx.get('active_ids')
         diff = ""
@@ -36,7 +44,7 @@ class showdiff(osv.osv_memory):
 
         elif len(ids) == 1:
             old = history.browse(cr, uid, ids[0])
-            nids = history.search(cr, uid, [('wiki_id','=',old.wiki_id.id)])
+            nids = history.search(cr, uid, [('wiki_id', '=', old.wiki_id.id)])
             nids.sort()
             diff = history.getDiff(cr, uid, ids[0], nids[-1])
         else:
@@ -44,10 +52,13 @@ class showdiff(osv.osv_memory):
         return diff
 
     _columns = {
-        'diff': fields.text('Diff'),
+        'diff': fields.text('Diff'), 
     }
+
     _defaults = {
         'diff': _get_diff
     }
+
 showdiff()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

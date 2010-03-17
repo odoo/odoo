@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+    
+    <!-- Audittrail View Log  wizard-->
+    
   		<record id="view_audittrail_view_log" model="ir.ui.view">
             <field name="name">audittrail.view.log.form</field>
             <field name="model">audittrail.view.log</field>
@@ -14,12 +17,16 @@
                     </group>
                        	<separator string="" colspan="4" />
                     <group colspan="4" col="6">
-                    	<button  icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button  icon="gtk-open" string="Open Logs" name="log_open_window" type="object"/>
-                   </group>
+                    	<button icon="gtk-cancel" special="cancel"
+                    		string="Cancel" />
+                    	<button icon="gtk-open" string="Open Logs"
+                    		name="log_open_window" type="object" />
+                    </group>
                </form>
             </field>
   		</record>
+  
+  <!-- action for audittrail view log wizard -->
   		
         <record id="action_audittrail_view_log" model="ir.actions.act_window">
             <field name="name">View log</field>

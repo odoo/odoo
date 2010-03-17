@@ -28,7 +28,6 @@
 from osv import fields, osv
 
 class olap_load_column(osv.osv_memory):
-    """ Load Database Column """
     _name = "olap.load.column"
     _description = "Olap Load Column"
 
@@ -38,11 +37,12 @@ class olap_load_column(osv.osv_memory):
         @param cr: the current row, from the database cursor,
         @param uid: the current user\'s ID for security checks,
         @param ids: List of load column,
-        @return : dictionary of database columns window on give id
+        @return: dictionary of database columns window on give id
 
         """
+        data = context and context.get('active_id', False) or False
         ids_cols = self.pool.get('olap.database.columns').search(cr, uid,\
-                             ([('table_id','=',context['active_id'])]),context={})
+                             ([('table_id','=',data)]),context={})
         model_data_ids = self.pool.get('ir.model.data').search(cr,uid,\
                         [('model','=','ir.ui.view'),\
                     ('name','=','view_olap_database_columns_form')],context={})

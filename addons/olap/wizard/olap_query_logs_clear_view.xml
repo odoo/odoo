@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+<!-- Create Logs  -->
+
     	<record id="view_olap_query_logs_clear" model="ir.ui.view">
-            <field name="name">Create Logs</field>
+            <field name="name">Clear Logs</field>
             <field name="model">olap.query.logs.clear</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -19,7 +22,7 @@
 		</record>
 
 		<record id="action_view_olap_query_logs_clear" model="ir.actions.act_window">
-            <field name="name">Create Logs </field>
+            <field name="name">Clear Logs </field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">olap.query.logs.clear</field>
             <field name="view_type">form</field>
@@ -28,7 +31,7 @@
     	</record>
 
 		<record id="view_olap_query_logs_clear_msg" model="ir.ui.view">
-            <field name="name">Create Logs Message</field>
+            <field name="name">Clear Logs Message</field>
             <field name="model">olap.query.logs.clear.msg</field>
             <field name="type">form</field>
             <field name="arch" type="xml">

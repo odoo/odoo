@@ -19,14 +19,7 @@
 #
 ##############################################################################
 
-
 from osv import fields, osv
-from tools.translate import _
-import netsvc
-import pooler
-import time
-import tools
-import wizard
 
 class report_menu_create(osv.osv_memory):
     """
@@ -34,40 +27,47 @@ class report_menu_create(osv.osv_memory):
     """
     _name = "report.menu.create"
     _description = "Menu Create"
-    _columns ={
+    _columns = {
               'menu_name':fields.char('Menu Name', size=64, required=True),
               'menu_parent_id':fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
                }
     
-    def report_menu_create(self, cr, uid, ids, context):
+    def report_menu_create(self, cr, uid, ids, context=None):
         """
         Create Menu.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of Report Menu Create's IDs
+        @return : Dictionary {}.
         """
-        board = self.pool.get('base_report_creator.report').browse(cr, uid, context['active_id'])
-        view = board.view_type1
-        if board.view_type2:
-            view+=','+board.view_type2
-        if board.view_type3:
-            view+=','+board.view_type3
-        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, {
-            'name': board.name,
-            'view_type':'form',
-            'view_mode':view,
-            'context': "{'report_id':%d}" % (board.id,),
-            'res_model': 'base_report_creator.report'
-            })
+        if not context:
+            context={}
+        context_id = context and context.get('active_id', False) or False
+        if context_id:
+            board = self.pool.get('base_report_creator.report').browse(cr, uid, context_id)
+            view = board.view_type1
+            if board.view_type2:
+                view+=','+board.view_type2
+            if board.view_type3:
+                view+=','+board.view_type3
+            action_id = self.pool.get('ir.actions.act_window').create(cr, uid, {
+                'name': board.name,
+                'view_type':'form',
+                'view_mode':view,
+                'context': "{'report_id':%d}" % (board.id,),
+                'res_model': 'base_report_creator.report'
+                })
+        obj_menu = self.pool.get('ir.ui.menu')
+        #start Loop
         for data in self.read(cr, uid, ids):
-            self.pool.get('ir.ui.menu').create(cr, uid, {
-                'name': data['menu_name'],
-                'parent_id': data['menu_parent_id'],
+            obj_menu.create(cr, uid, {
+                'name': data.get('menu_name'),
+                'parent_id': data.get('menu_parent_id'),
                 'icon': 'STOCK_SELECT_COLOR',
                 'action': 'ir.actions.act_window,'+str(action_id)
-                }, context)
+                }, context=context)
             return {}
-    
+        #End Loop
 report_menu_create()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
