@@ -51,6 +51,7 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None):
     return re_dates
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
+    
     if base_calendar_id and isinstance(base_calendar_id, (str, unicode)):
         res = base_calendar_id.split('-')
         if len(res) >= 2:
@@ -832,19 +833,22 @@ rule or repeating pattern for anexception to a recurrence set"),
         new_id = self.copy(cr, uid, event_id, default=defaults, context=context)
         return new_id
 
-    def modify_all(self, cr, uid, event_id, defaults, context=None, *args):
-        event_id = base_calendar_id2real_id(event_id)
-        defaults.pop('id')
-        defaults.update({'table': self._table})
-
-        qry = "UPDATE %(table)s set name='%(name)s', \
-                        date='%(date)s', date_deadline='%(date_deadline)s'"
-        if defaults.get('alarm_id'):
-            qry += ", alarm_id=%(alarm_id)s"
-        if defaults.get('location'):
-            qry += ", location='%(location)s'"
-        qry += "WHERE id=%s" % (event_id)
-        cr.execute(qry % (defaults))
+    def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
+        #start Loop
+        for event_id in event_ids:
+            event_id = base_calendar_id2real_id(event_id)
+            defaults.pop('id')
+            defaults.update({'table': self._table})
+    
+            qry = "UPDATE %(table)s set name='%(name)s', \
+                            date='%(date)s', date_deadline='%(date_deadline)s'"
+            if defaults.get('alarm_id'):
+                qry += ", alarm_id=%(alarm_id)s"
+            if defaults.get('location'):
+                qry += ", location='%(location)s'"
+            qry += "WHERE id=%s" % (event_id)
+            cr.execute(qry % (defaults))
+            #End Loop
         return True
 
     def get_recurrent_ids(self, cr, uid, select, base_start_date, base_until_date, limit=100):
