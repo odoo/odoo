@@ -65,7 +65,7 @@ class crm_lead(osv.osv):
     _columns = {
         'categ_id': fields.many2one('crm.case.categ', 'Lead Source', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"), 
         'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.lead')]"), 
-        'partner_name': fields.char("Lead Name", size=64), 
+        'partner_name': fields.char("Contact Name", size=64), 
 
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
         'date_closed': fields.datetime('Closed', readonly=True), 
@@ -78,6 +78,7 @@ class crm_lead(osv.osv):
                                 method=True, type="integer", store=True), 
         'day_close': fields.function(_compute_closeday, string='Days to Close', \
                                 method=True, type="integer", store=True), 
+        'function_name' : fields.char('Function', size=64),
         }
 
     _defaults = {

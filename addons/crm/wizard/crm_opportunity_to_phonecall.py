@@ -23,6 +23,8 @@ from osv import osv, fields
 from tools.translate import _
 
 class crm_opportunity2phonecall(osv.osv_memory):
+    """Converts Opportunity to Phonecall"""
+
     _name = 'crm.opportunity2phonecall'
     _description = 'Opportunity to Phonecall'
 
@@ -85,8 +87,11 @@ class crm_opportunity2phonecall(osv.osv_memory):
         result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
 
-        # Select the view
         data_obj = self.pool.get('ir.model.data')
+        categ_id = mod_obj._get_id(cr, uid, 'crm', 'categ_phone1')
+        categ_id = data_obj.browse(cr, uid, categ_id, context=context).res_id
+        
+        # Select the view
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
         id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
         if id2:
@@ -100,7 +105,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
                         'name' : opp.name, 
                         'case_id' : opp.id , 
                         'user_id' : this.user_id and this.user_id.id or False, 
-                        'categ_id' : opp.categ_id and opp.categ_id.id or False, 
+                        'categ_id' : categ_id, 
                         'description' : opp.description or False, 
                         'date' : this.date, 
                         'section_id' : opp.section_id and opp.section_id.id or False, 

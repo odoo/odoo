@@ -34,7 +34,7 @@ import crm_opportunity_to_phonecall
 import crm_phonecall2phonecall
 import phonecall2partner
 import phonecall2meeting
-import phonecall_to_opportunity
+import crm_phonecall_to_opportunity
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

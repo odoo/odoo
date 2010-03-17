@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
 	<data>
-<!--	Following wizard is remaining to implement in osv_memory-->
-		<!--  
+	    <!--<delete model="ir.actions.wizard" search="[('wiz_name','like','auction.lots.')]"/>-->
+
 		<wizard string="Send to website"
 			model="auction.lots"
 			name="auction.lots.send.aie"
@@ -20,6 +20,45 @@
 		multi="1"
 		id="wizard_map_user"/>
 
+		<wizard string="Change Auction Date"
+		 model="auction.lots"
+		 name="auction.lots.auction_move"
+		multi="1"
+		 id="wizard_change_auction"/>
+
+		<!--wizard string="Pay objects of the seller"
+		model="auction.lots"
+		name="auction.pay.sel"
+		id="wizard_lots_pay"/-->
+		<wizard string="Pay objects of the buyer"
+		model="auction.lots"
+		name="auction.pay.buy"
+		id="wizard_pay"/>
+
+		<wizard
+			string="Gestion emporte"
+			model="auction.dates"
+			name="auction.taken"
+			multi="1"
+			id="wizard_emporte"/>
+
+	<menuitem name="Tools Bar Codes"
+		id="auction_outils_menu"
+		parent="auction_menu_root" sequence="5"
+		/>
+
+	<menuitem name="Deliveries Management"
+		action="wizard_emporte"
+		type="wizard"
+		id="menu_wizard_emporte"
+		parent="auction_outils_menu"
+		/>
+
+		<!--wizard string="Cancel payment"
+		model="auction.lots"
+		name="auction.lots.cancel"
+		multi="1"
+		id="wizard_cancel_pay"/-->
 
 		<wizard string="Numerotation (per lot)"
 		model="auction.lots"
@@ -33,13 +72,56 @@
 		 multi="1"
 		id="wizard_numerotate_automatic"/>
 
+		<wizard string="SMS Send"
+		 model="auction.lots"
+		 name="auction.lots.sms_send"
+		multi="1"
+ 		id="wizard_sms"/>
+
+		 <!--wizard string="Invoice"
+		 model="auction.lots"
+		 name="auction.lots.invoice"
+		 multi="1"
+		 id="wizard_invoicing"/-->
+
+
+		<wizard string="Invoice Seller objects"
+			model="auction.lots"
+			name="auction.lots.make_invoice"
+		multi="1"
+			id="wizard_invoice"/>
+
+		<wizard string="Invoice Buyer objects"
+			model="auction.lots"
+			name="auction.lots.make_invoice_buyer"
+			id="wizard_invoice_buyer1"/>
+
+		<wizard string="Unmark as taken away"
+			model="auction.lots"
+			name="auction.lots.enable"
+			multi="1"
+			id="auction_wizard_enable_taken"/>
+
+		<wizard string="Mark as taken away"
+			model="auction.lots"
+			name="auction.lots.able"
+			multi="1"
+			id="auction_wizard_able_taken"/>
+
 			<wizard
 			id="auction_catalog_flagy"
 			string="Auction Catalog Flagey"
 			model="auction.dates"
 			name="auction.catalog.flagey"
 			keyword="client_print_multi"/>
- -->
+
+<wizard string="Mark as paid for seller"
+			model="auction.lots"
+			name="auction.payer.sel"
+			multi="1"
+			id="auction_wizard_payer_sel"/>
+
+
 
 	</data>
 </openerp>

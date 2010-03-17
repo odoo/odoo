@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-#remaining make_invoice
-import sale_line_invoice
-import sale_make_invoice_advance
+from make_invoice import make_invoice
 
+import wizard_sale_line_invoice
+import make_invoice_advance
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -111,15 +111,19 @@ class base_module_record(osv.osv):
         return obj.module+'.'+obj.name, obj.noupdate
 
     def _create_record(self, cr, uid, doc, model, data, record_id, noupdate=False):
+        
+        data_pool = self.pool.get('ir.model.data')
+        model_pool = self.pool.get(model)
+        
         record = doc.createElement('record')
         record.setAttribute("id", record_id)
         record.setAttribute("model", model)
         record_list = [record]
-        lids  = self.pool.get('ir.model.data').search(cr, uid, [('model','=',model)])
-        res = self.pool.get('ir.model.data').read(cr, uid, lids[:1], ['module'])
+        lids  = data_pool.search(cr, uid, [('model','=',model)])
+        res = data_pool.read(cr, uid, lids[:1], ['module'])
         if res:
             self.depends[res[0]['module']]=True
-        fields = self.pool.get(model).fields_get(cr, uid)
+        fields = model_pool.fields_get(cr, uid)
         for key,val in data.items():
             if not (val or (fields[key]['type']=='boolean')):
                 continue
@@ -142,9 +146,11 @@ class base_module_record(osv.osv):
                     id,update = self._get_id(cr, uid, fields[key]['relation'], val)
                     noupdate = noupdate or update
                 if not id:
+                    relation_pool = self.pool.get(fields[key]['relation'])
+                    
                     field.setAttribute("model", fields[key]['relation'])
-                    fld_nm = self.pool.get(fields[key]['relation'])._rec_name
-                    name = self.pool.get(fields[key]['relation']).read(cr, uid, val,[fld_nm])[fld_nm] or False
+                    fld_nm = relation_pool._rec_name
+                    name = relation_pool.read(cr, uid, val,[fld_nm])[fld_nm] or False
                     field.setAttribute("search", str([(str(fld_nm) ,'=', name)]))
                 else:
                     field.setAttribute("ref", id)
@@ -152,10 +158,10 @@ class base_module_record(osv.osv):
             elif fields[key]['type'] in ('one2many',):
                 for valitem in (val or []):
                     if valitem[0] in (0,1):
-                        if key in self.pool.get(model)._columns:
-                            fname = self.pool.get(model)._columns[key]._fields_id
+                        if key in model_pool._columns:
+                            fname = model_pool._columns[key]._fields_id
                         else:
-                            fname = self.pool.get(model)._inherit_fields[key][2]._fields_id
+                            fname = model_pool._inherit_fields[key][2]._fields_id
                         valitem[2][fname] = record_id
                         newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
                         if not newid:
@@ -190,14 +196,18 @@ class base_module_record(osv.osv):
 
     def _create_yaml_record(self, cr, uid, model, data, record_id):
         record={'model': model, 'id': str(record_id)}
-        lids  = self.pool.get('ir.model.data').search(cr, uid, [('model','=',model)])
-        res = self.pool.get('ir.model.data').read(cr, uid, lids[:1], ['module'])
+        
+        model_pool = self.pool.get(model)
+        data_pool = self.pool.get('ir.model.data')
+        
+        lids  = data_pool.search(cr, uid, [('model','=',model)])
+        res = data_pool.read(cr, uid, lids[:1], ['module'])
         attrs={}
         if res:
             self.depends[res[0]['module']]=True
-        fields = self.pool.get(model).fields_get(cr, uid)
+        fields = model_pool.fields_get(cr, uid)
         defaults={}
-        defaults[model] = self.pool.get(model).default_get(cr, uid, data)
+        defaults[model] = model_pool.default_get(cr, uid, data)
         for key,val in data.items():  
             if ((key in defaults[model]) and (val ==  defaults[model][key])) and not(fields[key].get('required',False)):
                 continue
@@ -210,19 +220,19 @@ class base_module_record(osv.osv):
             elif fields[key]['type'] in ('integer','float'):
                 attrs[key] = val
             elif fields[key]['type'] in ('many2one',):
-                if type(val) in (type(''),type(u'')):
+                if type(val) in (type(''), type(u'')):
                     id = val
                 else:
-                    id,update = self._get_id(cr, uid, fields[key]['relation'], val)
+                    id, update = self._get_id(cr, uid, fields[key]['relation'], val)
                 attrs[key] = str(id)
             elif fields[key]['type'] in ('one2many',):
                 items=[[]]
                 for valitem in (val or []):
                     if valitem[0] in (0,1):
-                        if key in self.pool.get(model)._columns:
-                            fname = self.pool.get(model)._columns[key]._fields_id
+                        if key in model_pool._columns:
+                            fname = model_pool._columns[key]._fields_id
                         else:
-                            fname = self.pool.get(model)._inherit_fields[key][2]._fields_id
+                            fname = model_pool._inherit_fields[key][2]._fields_id
                         valitem[2][fname] = record_id
                         newid,update = self._get_id(cr, uid, fields[key]['relation'], valitem[1])
                         if not newid:

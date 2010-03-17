@@ -223,7 +223,7 @@ class stock_location(osv.osv):
         # Take the user company and pricetype
         price_type_id=self.pool.get('res.users').browse(cr,uid,uid).company_id.property_valuation_price_type.id
         pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)
-
+        
         if not product_ids:
             product_ids = product_obj.search(cr, uid, [])
 
@@ -254,10 +254,10 @@ class stock_location(osv.osv):
                         continue
                     product = products_by_id[product_id]
                     quantity_total += qty[product_id]
-
+                    
                     # Compute based on pricetype
                     # Choose the right filed standard_price to read
-                    amount_unit=product.price_get(pricetype.field, context)[product.id]
+                    amount_unit=product.price_get(pricetype.field, context)[product.id] 
                     price = qty[product_id] * amount_unit
                     # price = qty[product_id] * product.standard_price
 
@@ -661,13 +661,13 @@ class stock_picking(osv.osv):
         '''Return comment string for invoice'''
         return picking.note or ''
 
-    def _get_price_unit_invoice(self, cr, users, move_line, type):
+    def _get_price_unit_invoice(self, cursor, user, move_line, type):
         '''Return the price unit for the move line'''
         if type in ('in_invoice', 'in_refund'):
             # Take the user company and pricetype
-            price_type_id=self.pool.get('res.users').browse(cr, users, users).company_id.property_valuation_price_type.id
-            pricetype=self.pool.get('product.price.type').browse(cr, users, price_type_id)
-            amount_unit=move_line.product_id.price_get(pricetype.field, context={})[move_line.product_id.id]
+            price_type_id=self.pool.get('res.users').browse(cr,users,users).company_id.property_valuation_price_type.id
+            pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)            
+            amount_unit=move_line.product_id.price_get(pricetype.field, context)[move_line.product_id.id] 
             return amount_unit
         else:
             return move_line.product_id.list_price
@@ -1383,12 +1383,12 @@ class stock_move(osv.osv):
                     # Base computation on valuation price type
                     else:
                         company_id=move.company_id.id
-
+                        
                         pricetype=self.pool.get('product.price.type').browse(cr,uid,move.company_id.property_valuation_price_type.id)
                         amount_unit=move.product_id.price_get(pricetype.field, context)[move.product_id.id]
                         amount=amount_unit * q or 1.0
                         # amount = q * move.product_id.standard_price
-
+                    
                     partner_id = False
                     if move.picking_id:
                         partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
@@ -1434,7 +1434,7 @@ class stock_move(osv.osv):
                 raise osv.except_osv(_('UserError'),
                         _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
-            cr, uid, ids, context=context)
+            cr, uid, ids, context=context)    
 
     def _create_lot(self, cr, uid, ids, product_id, prefix=False):
         prodlot_obj = self.pool.get('stock.production.lot')
@@ -1442,31 +1442,23 @@ class stock_move(osv.osv):
         sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
         if not sequence:
             raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
-        new_move = []
-
-        def _create_lot(move_id, product_id):
-            prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix': prefix}, {'product_id': product_id})
-            prodlot = prodlot_obj.browse(cr, uid, prodlot_id)
-            ref = '%d' % (move_id)
-            if prodlot.ref:
-                ref = '%s, %s' % (prodlot.ref, ref)
-            prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
-            return prodlot_id
         prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix': prefix}, {'product_id': product_id})
-        prodlot = prodlot_obj.browse(cr, uid, prodlot_id)
+        prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
         ref = ','.join(map(lambda x:str(x),ids))
         if prodlot.ref:
-            ref = '%s, %s' % (prodlot.ref, ref)
+            ref = '%s, %s' % (prodlot.ref, ref) 
         prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
         return prodlot_id
 
     def split_lines(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
+        
 
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
 
         res = []
-        for move in self.browse(cr, uid, ids):
+
+        for move in self.browse(cr, uid, ids):            
             if split_by_qty <= 0 or quantity == 0:
                 return res
 
@@ -1478,18 +1470,8 @@ class stock_move(osv.osv):
             update_val = {
                 'product_qty': split_by_qty,
                 'product_uos_qty': uos_qty,
-                }
-
-            for idx in range(int(quantity//split_by_qty)):
-                if idx:
-                    current_move = self.copy(cr, uid, move.id, {'state': move.state})
-                    new_move.append(current_move)
-                else:
-                    update_val = {
-                        'product_qty': split_by_qty,
-                        'product_uos_qty': uos_qty,
-                        }
-            for idx in range(int(quantity//split_by_qty)):
+            }                         
+            for idx in range(int(quantity//split_by_qty)):                 
                 if not idx and move.product_qty<=quantity:
                     current_move = move.id
                 else:
@@ -1499,154 +1481,94 @@ class stock_move(osv.osv):
                     update_val['prodlot_id'] = self._create_lot(cr, uid, [current_move], move.product_id.id)
 
                 self.write(cr, uid, [current_move], update_val)
-            if quantity_rest > 0:
-                idx = int(quantity//split_by_qty)
-
-            if quantity_rest > 0:
-                idx = int(quantity//split_by_qty)
+        
+            
+            if quantity_rest > 0:    
+                idx = int(quantity//split_by_qty)            
                 update_val['product_qty'] = quantity_rest
-                update_val['product_uos_qty'] = uos_qty_rest
-                if idx:
-                    current_move = self.copy(cr, uid, move.id, {'state': move.state})
-                    new_move.append(current_move)
-                update_val['product_uos_qty'] = uos_qty_rest
-                if not idx and move.product_qty<=quantity:
-                    current_move = move.id
+                update_val['product_uos_qty'] = uos_qty_rest    
+                if not idx and move.product_qty<=quantity:        
+                    current_move = move.id                    
                 else:
-                    current_move = move.id
-                update_val['prodlot_id'] = _create_lot(current_move, move.product_id.id)
-                current_move = self.copy(cr, uid, move.id, {'state': move.state})
-
+                    current_move = self.copy(cr, uid, move.id, {'state': move.state}) 
+                                                    
                 res.append(current_move)
-
-
-                if with_lot:
+                 
+                
+                if with_lot:             
                     update_val['prodlot_id'] = self._create_lot(cr, uid, [current_move], move.product_id.id)
 
                 self.write(cr, uid, [current_move], update_val)
-        return res
+        return res    
 
-    def consume_moves(self, cr, uid, ids, quantity, location_id=False, location_dest_id=False, consume=True, context=None):
+    def consume_moves(self, cr, uid, ids, quantity, location_id=False, location_dest_id=False, consume=True, context=None):        
         if not context:
             context = {}
-            context = {}
-
+                
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
 
-        for move in self.browse(cr, uid, ids, context=context):
-
-            res = []
-        for move in self.browse(cr, uid, ids, context=context):
+        res = []       
+        for move in self.browse(cr, uid, ids, context=context):            
             move_qty = move.product_qty
             quantity_rest = move.product_qty
 
-            quantity_rest -= quantity
+            quantity_rest -= quantity            
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
             if quantity_rest <= 0:
-                quantity_rest = quantity
-                break
-
-            default_val = {
-                'product_qty': quantity,
-                'product_uos_qty': uos_qty,
-                'location_id': location_id or move.location_id.id,
-            }
-            if move.product_id.track_production:
-                new_move = self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
-            else:
-                current_move = self.copy(cr, uid, move.id, default_val)
-                new_move.append(current_move)
-
-            update_val = {}
-            if quantity_rest > 0:
-                quantity_rest = 0
+                quantity_rest = 0 
                 uos_qty_rest = 0
                 quantity = move.product_qty
-
+ 
             uos_qty = quantity / move_qty * move.product_uos_qty
 
-            if quantity_rest > 0:
+            if quantity_rest > 0:  
                 default_val = {
-                    'product_qty': quantity,
-                    'product_uos_qty': uos_qty,
-                    'state': move.state,
+                    'product_qty': quantity, 
+                    'product_uos_qty': uos_qty, 
+                    'state': move.state, 
                 }
                 if location_dest_id:
-                   default_val.update({'location_dest_id': location_dest_id})
+                   default_val.update({'location_dest_id': location_dest_id}) 
                 if location_id:
-                   default_val.update({'location_id': location_id})
-
+                   default_val.update({'location_id': location_id}) 
+                
                 if move.product_id.track_production and location_id:
                     res += self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
                 else:
                     current_move = self.copy(cr, uid, move.id, default_val)
                     res += [current_move]
 
-                update_val = {}
+                update_val = {}                                  
                 update_val['product_qty'] = quantity_rest
-                update_val['product_uos_qty'] = uos_qty_rest
-                self.write(cr, uid, [move.id], update_val)
+                update_val['product_uos_qty'] = uos_qty_rest                          
+                self.write(cr, uid, [move.id], update_val) 
 
-                self.action_done(cr, uid, new_move)
-                return new_move
-                update_val['product_uos_qty'] = uos_qty_rest
-                self.write(cr, uid, [move.id], update_val)
-
-            else:
-                quantity_rest = quantity
+            else: 
+                quantity_rest = quantity    
                 uos_qty_rest =  uos_qty
-
+                
                 if move.product_id.track_production and location_id:
                     res += self.split_lines(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
-                else:
-                    res += [move.id]
-                    update_val = {}
+                else:                     
+                    res += [move.id] 
+                    update_val = {}                                  
                     update_val['product_qty'] = quantity_rest
                     update_val['product_uos_qty'] = uos_qty_rest
                     if location_dest_id:
-                       update_val.update({'location_dest_id': location_dest_id})
+                       update_val.update({'location_dest_id': location_dest_id}) 
                     if location_id:
-                       update_val.update({'location_id': location_id})
+                       update_val.update({'location_id': location_id}) 
 
                     self.write(cr, uid, [move.id], update_val)
 
         if consume:
-            self.action_done(cr, uid, res)
+            self.action_done(cr, uid, res)        
         return res
 
     def scrap_moves(self, cr, uid, ids, quantity, location_dest_id, context=None):
-        new_move = []
-        if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
-
-        for move in self.browse(cr, uid, ids, context=context):
-            location = move.location_dest_id.id
-            move_qty = move.product_qty
-            quantity_rest = move.product_qty
-
-            quantity_rest -= quantity
-            uos_qty = quantity / move_qty * move.product_uos_qty
-            uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
-            if quantity_rest <= 0:
-                quantity_rest = quantity
-                break
-
-            default_val = {
-                'product_qty': quantity,
-                'product_uos_qty': uos_qty,
-                'location_dest_id': location_dest_id,
-                'state': move.state
-            }
-            current_move = self.copy(cr, uid, move.id, default_val)
-            new_move.append(current_move)
-            update_val = {}
-            if quantity_rest > 0:
-                update_val['product_qty'] = quantity_rest
-                update_val['product_uos_qty'] = uos_qty_rest
-                self.write(cr, uid, [move.id], update_val)
-        return new_move
         return self.consume_moves(cr, uid, ids, quantity, location_id=False, location_dest_id=location_dest_id, consume=False, context=context)
+
 stock_move()
 
 
@@ -1677,7 +1599,7 @@ class stock_inventory(osv.osv):
             move_line = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-
+                
                 # price = line.product_id.standard_price or 0.0
                 amount = self.pool.get('stock.location')._product_get(cr, uid, line.location_id.id, [pid], {'uom': line.product_uom.id})[pid]
                 change = line.product_qty - amount

@@ -215,8 +215,8 @@ class document_directory(osv.osv):
             path.append(duri[0])
             duri = duri[1:]
             did = nid[0]
-        
-        return (nodes.node_dir(path, nparent,ncontext,self.browse(cr,uid,did, context)), duri)
+        root_node = did and self.browse(cr,uid,did, context) or False
+        return (nodes.node_dir(path, nparent,ncontext, root_node), duri)
 
         
         nid = self.search(cr,uid,[('parent_id','=',did),('name','=',duri[0]),('type','=','ressource')], context=context)

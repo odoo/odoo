@@ -39,7 +39,7 @@ def _action_open_window(self, cr, uid, data, context):
     id = mod_obj.read(cr, uid, result, ['res_id'])        
 
     return {
-        'name': _('Analytic Entries'),
+        'name': _('Analytic Entries by line'),
         'view_type': 'form',
         "view_mode": 'tree,form',
         'res_model': 'account.analytic.line',
@@ -71,11 +71,11 @@ class account_analytic_line(wizard.interface):
     }
 
     states = {
-      'init': {
+        'init': {
             'actions': [],
             'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel','gtk-cancel'),('open', 'Open Entries','gtk-ok')]}
         },
-    'open': {
+        'open': {
             'actions': [],
             'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
         }

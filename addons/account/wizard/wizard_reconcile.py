@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from tools.translate import _
+import wizard
 import netsvc
+import time
 import osv
 import pooler
-import time
-import wizard
+from datetime import datetime
+from tools.translate import _
 
 _transaction_form = '''<?xml version="1.0"?>
 <form string="Reconciliation">
@@ -39,10 +39,10 @@ _transaction_form = '''<?xml version="1.0"?>
 </form>'''
 
 _transaction_fields = {
-    'trans_nbr': {'string':'# of Transaction', 'type':'integer', 'readonly':True}, 
-    'credit': {'string':'Credit amount', 'type':'float', 'readonly':True}, 
-    'debit': {'string':'Debit amount', 'type':'float', 'readonly':True}, 
-    'writeoff': {'string':'Write-Off amount', 'type':'float', 'readonly':True}, 
+    'trans_nbr': {'string':'# of Transaction', 'type':'integer', 'readonly':True},
+    'credit': {'string':'Credit amount', 'type':'float', 'readonly':True},
+    'debit': {'string':'Debit amount', 'type':'float', 'readonly':True},
+    'writeoff': {'string':'Write-Off amount', 'type':'float', 'readonly':True},
 }
 
 def _trans_rec_get(self, cr, uid, data, context=None):
@@ -83,12 +83,12 @@ def _trans_rec_reconcile(self, cr, uid, data, context=None):
     journal_id = form.get('journal_id', False)
     context['comment'] = form.get('comment', False)
     context['analytic_id'] = form.get('analytic_id', False)
-    account_move_line_obj.reconcile(cr, uid, data['ids'], 'manual', account_id, 
+    account_move_line_obj.reconcile(cr, uid, data['ids'], 'manual', account_id,
             period_id, journal_id, context=context)
     return {}
 
 def _partial_check(self, cr, uid, data, context):
-    if _trans_rec_get(self, cr, uid, data, context)['writeoff'] == 0:
+    if _trans_rec_get(self,cr,uid, data, context)['writeoff'] == 0:
         return 'init_full'
     return 'init_partial'
 
@@ -104,11 +104,11 @@ _transaction_add_form = '''<?xml version="1.0"?>
 </form>'''
 
 _transaction_add_fields = {
-    'journal_id': {'string': 'Write-Off Journal', 'type': 'many2one', 'relation':'account.journal', 'required':True}, 
-    'writeoff_acc_id': {'string':'Write-Off account', 'type':'many2one', 'relation':'account.account', 'required':True}, 
-    'date_p': {'string':'Date', 'type':'date'}, 
-    'comment': {'string':'Comment', 'type':'char', 'size': 64, 'required':True}, 
-    'analytic_id': {'string':'Analytic Account', 'type': 'many2one', 'relation':'account.analytic.account'}, 
+    'journal_id': {'string': 'Write-Off Journal', 'type': 'many2one', 'relation':'account.journal', 'required':True},
+    'writeoff_acc_id': {'string':'Write-Off account', 'type':'many2one', 'relation':'account.account', 'required':True},
+    'date_p': {'string':'Date','type':'date'},
+    'comment': {'string':'Comment','type':'char', 'size': 64, 'required':True},
+    'analytic_id': {'string':'Analytic Account', 'type': 'many2one', 'relation':'account.analytic.account'},
 }
 
 def _trans_rec_addendum(self, cr, uid, data, context={}):
@@ -119,27 +119,27 @@ def _trans_rec_addendum(self, cr, uid, data, context={}):
 class wiz_reconcile(wizard.interface):
     states = {
         'init': {
-            'actions': [], 
+            'actions': [],
             'result': {'type': 'choice', 'next_state': _partial_check}
-        }, 
+        },
         'init_full': {
-            'actions': [_trans_rec_get], 
-            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end', 'Cancel'), ('reconcile', 'Reconcile')]}
-        }, 
+            'actions': [_trans_rec_get],
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('reconcile','Reconcile')]}
+        },
         'init_partial': {
-            'actions': [_trans_rec_get], 
-            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end', 'Cancel'), ('addendum', 'Reconcile With Write-Off'), ('partial', 'Partial Reconcile')]}
-        }, 
+            'actions': [_trans_rec_get],
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('addendum','Reconcile With Write-Off'),('partial','Partial Reconcile')]}
+        },
         'addendum': {
-            'actions': [_trans_rec_addendum], 
-            'result': {'type': 'form', 'arch':_transaction_add_form, 'fields':_transaction_add_fields, 'state':[('end', 'Cancel'), ('reconcile', 'Reconcile')]}
-        }, 
+            'actions': [_trans_rec_addendum],
+            'result': {'type': 'form', 'arch':_transaction_add_form, 'fields':_transaction_add_fields, 'state':[('end','Cancel'),('reconcile','Reconcile')]}
+        },
         'reconcile': {
-            'actions': [_trans_rec_reconcile], 
+            'actions': [_trans_rec_reconcile],
             'result': {'type': 'state', 'state':'end'}
-        }, 
+        },
         'partial': {
-            'actions': [_trans_rec_reconcile_partial], 
+            'actions': [_trans_rec_reconcile_partial],
             'result': {'type': 'state', 'state':'end'}
         }
     }

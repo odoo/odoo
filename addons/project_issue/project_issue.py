@@ -76,8 +76,6 @@ class project_issue(osv.osv):
     _columns = {
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
-        'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-        'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'planned_revenue': fields.float('Planned Revenue'),
@@ -95,12 +93,16 @@ class project_issue(osv.osv):
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
-        'probability': fields.float('Probability (%)'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'day_open': fields.function(_compute_openday, string='Days to Open', \
                                 method=True, type="integer", store=True),
         'day_close': fields.function(_compute_closeday, string='Days to Close', \
                                 method=True, type="integer", store=True),
+        'assigned_to' : fields.many2one('res.users', 'Assigned to'),
+        'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
+        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
+                                                domain="[('partner_id', '=', partner_id)]",
+                                                required=True),
     }
 
     def _get_project(self, cr, uid, context):
@@ -134,11 +136,25 @@ class project_issue(osv.osv):
         return {'value':{'probability':stage.probability}}
 
     _defaults = {
-           'project_id':_get_project,
-           'probability':lambda *a:0.0,
-           'planned_cost':lambda *a:0.0,
-           'planned_revenue':lambda *a:0.0,
-          }
+        'project_id':_get_project,
+    }
 
 project_issue()
+
+class account_analytic_line(osv.osv):
+    _inherit = 'account.analytic.line'
+    _columns = {
+        'create_date' : fields.datetime('Create Date', readonly=True),
+    }
+
+account_analytic_line()
+
+class hr_analytic_issue(osv.osv):
+    _inherit = 'hr.analytic.timesheet'
+
+    _columns = {
+        'issue_id' : fields.many2one('project.issue', 'Issue'),
+    }
+
+hr_analytic_issue()
 
