@@ -25,29 +25,10 @@ import tools
 from osv import fields,osv,orm
 from tools.translate import _
 
-#class ir_model_fields(osv.osv):
-#   _inherit = 'ir.model.fields'
-#   def _get_models(self, cr, uid, model_name, level=1):
-#       if not level:
-#           return []
-#       result = [model_name]
-#       print model_name
-#       for field,data in self.pool.get(model_name).fields_get(cr, uid).items():
-#           if data.get('relation', False):
-#               result += self._get_models(cr, uid, data['relation'], level-1)
-#       return result
-#   def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None):
-#       if context and ('model_id' in context):
-#           model_name = self.pool.get("ir.model").browse(cr, uid, context['model_id'], context).model
-#           models = self._get_models(cr, uid, model_name, context.get('model_level',2))
-#           models = map(lambda x: self.pool.get('ir.model').search(cr, uid, [('model','=',x)])[0], models)
-#           args.append(('model_id','in',models))
-#           print args
-#       return super(ir_model_fields, self).search(cr, uid, args, offset, limit, order, context)
-#ir_model_fields()
-
-
 class report_creator(osv.osv):
+    """
+    Report Creator
+    """
     _name = "base_report_creator.report"
     _description = "Report"
     model_set_id = False
@@ -55,8 +36,11 @@ class report_creator(osv.osv):
     # Should request only used fields
     #
     def export_data(self, cr, uid, ids, fields_to_export, context=None):
+        if not context:
+            context = {}
         data_l = self.read(cr, uid, ids, ['sql_query'], context)
         final_datas =[]
+        #start Loop
         for i in data_l:
             datas = []
             for key,value in i.items():
@@ -67,6 +51,7 @@ class report_creator(osv.osv):
                 else:
                     datas.append(str(value))
             final_datas += [datas]
+            #End Loop
         return {'datas':final_datas}
         
     def fields_get(self, cr, user, fields=None, context=None):
@@ -74,8 +59,10 @@ class report_creator(osv.osv):
             return super(report_creator, self).fields_get(cr, user, fields, context)
         report = self.browse(cr, user, context['report_id'])
         models = {}
+        #Start Loop
         for model in report.model_ids:
             models[model.model] = self.pool.get(model.model).fields_get(cr, user, context=context)
+        #End Loop
         fields = {}
         i = 0
         for f in report.field_ids:
@@ -173,7 +160,7 @@ class report_creator(osv.osv):
         }
         return result
 
-    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+    def read(self, cr, user, ids, fields = None, context = None, load = '_classic_read'):
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).read(cr, user, ids, fields, context, load)
         ctx = context or {}
@@ -198,43 +185,39 @@ class report_creator(osv.osv):
         return res
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        context_id = context and context.get('report_id', False) or False
+        
         if (not context) or 'report_id' not in context:
             return super(report_creator, self).search(cr, user, args, offset, limit, order, context, count)
-        report = self.browse(cr, user, context['report_id'])
-        i = 0
-        fields = {}
-        for f in report.field_ids:
-            if f.field_id.model:
-                fields['field'+str(i)] = (f.field_id.model, f.field_id.name)
-                i+=1
-            else:
-                fields['column_count'] = (False, 'Count')   
-        newargs = []
-        newargs2 = []
-        for a in args:
-            if fields[a[0]][0]:
-                res = self.pool.get(fields[a[0]][0])._where_calc(cr, user, [[fields[a[0]][1],a[1],a[2]]], active_test=False, context=context)
-                newargs+=res[0]
-                newargs2+=res[1]
-            else:
-                newargs += [("count(*) " + a[1] +" " + str(a[2]))]
-        ctx = context or {}
-        ctx['getid'] = True
-        report = self._sql_query_get(cr, user, [context['report_id']], 'sql_query', None, ctx, where_plus=newargs, limit=limit, offset=offset)
-        query = report[context['report_id']]
-        cr.execute(query, newargs2)
-        result = cr.fetchall()
-        return map(lambda x: x[0], result)
+        if context_id:
+            report = self.browse(cr, user, context_id)
+            i = 0
+            fields = {}
+            for f in report.field_ids:
+                if f.field_id.model:
+                    fields['field'+str(i)] = (f.field_id.model, f.field_id.name)
+                    i+=1
+                else:
+                    fields['column_count'] = (False, 'Count')   
+            newargs = []
+            newargs2 = []
+            for a in args:
+                if fields[a[0]][0]:
+                    res = self.pool.get(fields[a[0]][0])._where_calc(cr, user, [[fields[a[0]][1],a[1],a[2]]], active_test = False, context = context)
+                    newargs+=res[0]
+                    newargs2+=res[1]
+                else:
+                    newargs += [("count(*) " + a[1] +" " + str(a[2]))]
+            ctx = context or {}
+            ctx['getid'] = True
+            report = self._sql_query_get(cr, user, [context_id], 'sql_query', None, ctx, where_plus = newargs, limit=limit, offset=offset)
+            query = report[context_id]
+            cr.execute(query, newargs2)
+            result = cr.fetchall()
+            return map(lambda x: x[0], result)
 
     def _path_get(self,cr, uid, models, filter_ids=[]):
-#       ret_str = """   sale_order_line
-#   left join sale_order on (sale_order_line.order_id=sale_order.id)
-#   left join res_partner on (res_partner.id=sale_order.partner_id)"""
-#       where_list = []
-#       for filter_id in filter_ids:
-#           where_list.append(filter_id.expression)
-#       if where_list:
-#           ret_str+="\nwhere\n\t"+" and\n\t".join(where_list)
+        
         self.model_set_id = False
         model_dict = {}
         from_list = []
@@ -366,13 +349,26 @@ class report_creator(osv.osv):
 
     _columns = {
         'name': fields.char('Report Name',size=64, required=True),
-        'type': fields.selection([('list','Rows And Columns Report'),], 'Report Type',required=True),#('sum','Summation Report')
+        'type': fields.selection([('list', 'Rows And Columns Report'), ], 'Report Type', required=True),#('sum','Summation Report')
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the report without removing it."),
-        'view_type1': fields.selection([('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'First View', required=True),
-        'view_type2': fields.selection([('','/'),('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Second View'),
-        'view_type3': fields.selection([('','/'),('form','Form'),('tree','Tree'),('graph','Graph'),('calendar','Calendar')], 'Third View'),
-        'view_graph_type': fields.selection([('pie','Pie Chart'),('bar','Bar Chart')], 'Graph Type', required=True),
-        'view_graph_orientation': fields.selection([('horz','Horizontal'),('vert','Vertical')], 'Graph Orientation', required=True),
+        'view_type1': fields.selection([('form','Form'),
+                                        ('tree','Tree'),
+                                        ('graph','Graph'),
+                                        ('calendar','Calendar')], 'First View', required=True),
+        'view_type2': fields.selection([('','/'),
+                                        ('form','Form'),
+                                        ('tree','Tree'),
+                                        ('graph','Graph'),
+                                        ('calendar','Calendar')], 'Second View'),
+        'view_type3': fields.selection([('','/'),
+                                        ('form','Form'),
+                                        ('tree','Tree'),
+                                        ('graph','Graph'),
+                                        ('calendar','Calendar')], 'Third View'),
+        'view_graph_type': fields.selection([('pie','Pie Chart'),
+                                             ('bar','Bar Chart')], 'Graph Type', required=True),
+        'view_graph_orientation': fields.selection([('horz','Horizontal'),
+                                                    ('vert','Vertical')], 'Graph Orientation', required=True),
         'model_ids': fields.many2many('ir.model', 'base_report_creator_report_model_rel', 'report_id','model_id', 'Reported Objects'),
         'field_ids': fields.one2many('base_report_creator.report.fields', 'report_id', 'Fields to Display'),
         'filter_ids': fields.one2many('base_report_creator.report.filter', 'report_id', 'Filters'),
@@ -449,6 +445,9 @@ class report_creator(osv.osv):
 report_creator()
 
 class report_creator_field(osv.osv):
+    """
+    Report Creator Field
+    """
     _name = "base_report_creator.report.fields"
     _description = "Display Fields"
     _rec_name = 'field_id'
@@ -457,9 +456,18 @@ class report_creator_field(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of fields."),
         'field_id': fields.many2one('ir.model.fields', 'Field'),
         'report_id': fields.many2one('base_report_creator.report','Report', on_delete='cascade'),
-        'group_method': fields.selection([('group','Grouped'),('sum','Sum'),('min','Minimum'),('count','Count'),('max','Maximum'),('avg','Average')], 'Grouping Method', required=True),
-        'graph_mode': fields.selection([('','/'),('x','X Axis'),('y','Y Axis')], 'Graph Mode'),
-        'calendar_mode': fields.selection([('','/'),('date_start','Starting Date'),('date_end','Ending Date'),('date_delay','Delay'),('date_stop','End Date'),('color','Unique Colors')], 'Calendar Mode'),
+        'group_method': fields.selection([('group','Grouped'),
+                                          ('sum','Sum'),
+                                          ('min','Minimum'),
+                                          ('count','Count'),
+                                          ('max','Maximum'),
+                                          ('avg','Average')], 'Grouping Method', required=True),
+        'graph_mode': fields.selection([('','/'), 
+                                        ('x','X Axis'),
+                                        ('y','Y Axis')], 'Graph Mode'),
+        'calendar_mode': fields.selection([('','/'),
+                                           ('date_start','Starting Date'),
+                                           ('date_end','Ending Date'),('date_delay','Delay'),('date_stop','End Date'),('color','Unique Colors')], 'Calendar Mode'),
     }
     _defaults = {
         'group_method': lambda *args: 'group',
@@ -468,17 +476,20 @@ class report_creator_field(osv.osv):
 report_creator_field()
 
 class report_creator_filter(osv.osv):
+    """
+    Report Creator Filter
+    """
     _name = "base_report_creator.report.filter"
     _description = "Report Filters"
     _columns = {
         'name': fields.char('Filter Name',size=64, required=True),
-        'expression': fields.text('Value', required=True,help='Provide an expression for the field based on which you want to filter the records.\n e.g. res_partner.id=3'),
-        'report_id': fields.many2one('base_report_creator.report','Report', on_delete='cascade'),
-        'condition' : fields.selection([('and','AND'),('or','OR')], 'Condition')
+        'expression': fields.text('Value', required=True, help='Provide an expression for the field based on which you want to filter the records.\n e.g. res_partner.id=3'),
+        'report_id': fields.many2one('base_report_creator.report', 'Report', on_delete='cascade'),
+        'condition' : fields.selection([('and','AND'),
+                                        ('or','OR')], 'Condition')
     }
     _defaults = {
         'condition': lambda *args: 'and',
     }
 report_creator_filter()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
