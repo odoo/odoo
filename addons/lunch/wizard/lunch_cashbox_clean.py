@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 
 class lunch_cashbox_clean(osv.osv_memory):
@@ -26,6 +27,7 @@ class lunch_cashbox_clean(osv.osv_memory):
      _description = "clean cashbox"
 
      def set_to_zero(self, cr, uid, ids, context):
+
          """
          clean Cashbox. set active fields False.
          @param cr: the current row, from the database cursor,
@@ -33,14 +35,18 @@ class lunch_cashbox_clean(osv.osv_memory):
          @param ids: List  Lunch cashbox Clean’s IDs
          @return:Dictionary {}.
          """
+
          data = context and context.get('active_ids', []) or []
          cashmove_ref = self.pool.get('lunch.cashmove')
+
          cr.execute("select user_cashmove, box,sum(amount) from lunch_cashmove \
                  where active = 't' and box in (%s) group by user_cashmove, \
                      box" % ','.join(map(str, data)))
          res = cr.fetchall()
+
          cr.execute("update lunch_cashmove set active = 'f' where active= 't' \
              and box in (%s)" % ','.join(map(str, data)))
+
          for (user_id, box_id, amount) in res:
             cashmove_ref.create(cr, uid, {'name': 'Summary for user' + str(user_id),
                         'amount': amount,
