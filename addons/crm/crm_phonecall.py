@@ -42,7 +42,7 @@ class crm_phonecall(osv.osv):
         'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),
     }
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d')
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')
     }
 crm_phonecall()
 

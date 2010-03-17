@@ -1136,7 +1136,8 @@ class account_invoice_line(osv.osv):
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
         'note': fields.text('Notes', translate=True),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
     }
     _defaults = {
         'quantity': lambda *a: 1,
