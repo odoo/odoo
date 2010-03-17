@@ -11,10 +11,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Picking">
-					<field name="name" />
-					<field name="month"/>
-					<field name="address_id" />
 					<field name="reference" />
+					<field name="address_id" />
 					<field name="origin" />
 					<field name="order_date" />
 					<field name="type" />
@@ -22,6 +20,8 @@
 					<field name="state" invisible="1"/>
 					<field name="order_date" invisible="1"/>
 					<field name="expected_date" invisible="1"/>
+					<field name="name" invisible="1"/>
+					<field name="month" invisible="1"/>
 				</tree>
             </field>
         </record>
@@ -61,7 +61,8 @@
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]" default="1"/>
                         <separator orientation="vertical"/>
   						<filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
-						<filter string="Expected Date" icon="terp-hr" domain="[('expected_date',=,time.strftime('%%m/%%d/%%Y'))]"/>
+  						<filter string="Order Date" icon="terp-stock" domain="[('order_date',=,time.strftime('%%m/%%d/%%Y'))]"  />
+  						<filter string="Expected Date" icon="terp-hr" domain="[('expected_date',=,time.strftime('%%m/%%d/%%Y'))]"/>
 						<separator orientation="vertical"/>
 						<field name="reference" />
 						<field name="origin" />
@@ -85,7 +86,6 @@
                    <group expand="1" string="Group By..." colspan="4" col="5">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'order_date'}"/>
                         <separator orientation="vertical"/>
                     	<filter string="Month" icon="terp-sale" domain="[]" context="{'group_by':'month'}"/>
                     	<filter string="Year" icon="terp-sale" domain="[]" context="{'group_by':'name'}"/>
