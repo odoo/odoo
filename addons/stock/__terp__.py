@@ -53,6 +53,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "product_view.xml",
         "partner_view.xml",
         "report/report_stock_view.xml",
+        "report/report_stock_picking_view.xml",
         "security/stock_security.xml",
         "security/ir.model.access.csv",
     ],
