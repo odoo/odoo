@@ -63,13 +63,13 @@ class account_analytic_account(osv.osv):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not ids2:
             return res
-            
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
@@ -78,18 +78,18 @@ class account_analytic_account(osv.osv):
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency<0 and a.id =ANY(%s) GROUP BY a.id",(ids2,))
         r = dict(cr.fetchall())
         return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
-        
+
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not ids2:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
@@ -98,48 +98,48 @@ class account_analytic_account(osv.osv):
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE l.amount_currency>0 and a.id =ANY(%s) GROUP BY a.id" ,(ids2,))
         r= dict(cr.fetchall())
         return self._compute_currency_for_level_tree(cr, uid, ids, ids2, r, acc_set, context)
-        
+
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not ids2:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
         cr.execute("SELECT a.id, COALESCE(SUM(l.amount_currency),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id "+where_date+") WHERE a.id =ANY(%s) GROUP BY a.id",(ids2,))
-        
+
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
 
         return self._compute_currency_for_level_tree(cr, uid, ids, ids2, res, acc_set, context)
-                
+
     def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
         #XXX must convert into one uom
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
+
         if not ids2:
             return res
-        
+
         where_date = ''
         if context.get('from_date',False):
             where_date += " AND l.date >= '" + context['from_date'] + "'"
         if context.get('to_date',False):
             where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
+
         cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
                 FROM account_analytic_account a \
                     LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
@@ -182,7 +182,7 @@ class account_analytic_account(osv.osv):
     def _get_account_currency(self, cr, uid, ids, field_name, arg, context={}):
         result=self._get_company_currency(cr, uid, ids, field_name, arg, context={})
         return result
-            
+
     _columns = {
         'name' : fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
@@ -192,10 +192,10 @@ class account_analytic_account(osv.osv):
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
-        'balance' : fields.function(_balance_calc, method=True, type='float', string='Balance'),
-        'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit'),
-        'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit'),
-        'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity'),
+        'balance' : fields.function(_balance_calc, method=True, type='float', string='Balance',store=True),
+        'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit',store=True),
+        'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit',store=True),
+        'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity',store=True),
         'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
         'partner_id' : fields.many2one('res.partner', 'Associated Partner'),
         'contact_id' : fields.many2one('res.partner.address', 'Contact'),
