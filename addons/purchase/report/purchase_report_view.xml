@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_purchase_order_graph">
+            <field name="name">product.month.graph</field>
+            <field name="model">report.purchase.order</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Purchase Orders Statistics" type="bar">
+                    <field name="product_id"/>
+                    <field name="quantity" operator="+"/>
+                    <field name="price_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_purchase_order_tree" model="ir.ui.view">
+            <field name="name">report.purchase.order.tree</field>
+            <field name="model">report.purchase.order</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Orders Statistics">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="warehouse_id" invisible="1"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="date" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="count"/>
+                    <field name="quantity"/>
+                    <field name="price_total"/>
+                    <field name="price_average"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_purchase_order_search" model="ir.ui.view">
+        <field name="name">report.purchase.order.search</field>
+        <field name="model">report.purchase.order</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Purchase Orders">
+                <filter icon="terp-purchase"
+                    string="This Year"
+                    domain="[('name','=',time.strftime('%%Y'))]"
+                    default="1"
+                    help="Purchase orders of the year"/>
+                <filter icon="terp-purchase"
+                    string="This Month"
+                    default="1"
+                    domain="[('month','=',time.strftime('%%m'))]"
+                    help="Purchase orders of this month"/>
+                <separator orientation="vertical"/>
+                <filter icon="terp-purchase"
+                    string="Quotations"
+                    domain="[('state','=','draft')]"/>
+                <filter icon="terp-purchase"
+                    string="Purchase"
+                    default="1"
+                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
+                <separator orientation="vertical"/>
+                <field name="product_id"/>
+                <field name="user_id" widget="selection">
+                    <filter icon="terp-purchase"
+                        string="My Purchases"
+                        domain="[('user_id','=',uid)]"/>
+                </field>
+                <field name="partner_id"/>
+                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+
+                <newline/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}"/>
+                    <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
+                    <filter string="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}" default="1"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
+                    <filter string="Product Category" icon="terp-purchase" context="{'group_by':'category_id'}"/>
+                    <filter string="Partner" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
+                    <filter string="State" icon="terp-purchase" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Month" icon="terp-purchase" context="{'group_by':'date'}"/>
+                    <filter string="Year" icon="terp-purchase" context="{'group_by':'name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_purchase_order_report_all" model="ir.actions.act_window">
+        <field name="name">Purchase Orders</field>
+        <field name="res_model">report.purchase.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="search_view_id" ref="view_purchase_order_search"/>
+    </record>
+
+    <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"/>
+    <menuitem action="action_purchase_order_report_all" id="menu_action_purchase_order_report_all" parent="base.next_id_73" sequence="3"/>
+
+    </data>
+</openerp>
