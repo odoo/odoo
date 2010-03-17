@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -40,6 +40,8 @@ import re
 import base64
 from zipfile import PyZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
+
+import logging
 
 
 logger = netsvc.Logger()
@@ -89,7 +91,7 @@ class Graph(dict):
 
         ## and we update the default values with values from the database
         additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
-        
+
         for package in self.values():
             for k, v in additional_data[package.name].items():
                 setattr(package, k, v)
@@ -221,7 +223,7 @@ def get_module_as_zip_from_module_directory(module_directory, b64enc=True, src=T
         base = os.path.basename(path)
         for f in tools.osutil.listdir(path, True):
             bf = os.path.basename(f)
-            if not RE_exclude.search(bf) and (src or bf == '__terp__.py' or not bf.endswith('.py')):
+            if not RE_exclude.search(bf) and (src or bf in ('__openerp__.py', '__terp__.py') or not bf.endswith('.py')):
                 archive.write(os.path.join(path, f), os.path.join(base, f))
 
     archname = StringIO()
@@ -294,13 +296,24 @@ def get_modules():
         plist.extend(listdir(ad))
     return list(set(plist))
 
+def load_information_from_description_file(module):
+    """
+    :param module: The name of the module (sale, purchase, ...)
+    """
+    for filename in ['__openerp__.py', '__terp__.py']:
+        description_file = get_module_resource(module, filename)
+        if os.path.isfile(description_file):
+            return eval(tools.file_open(description_file).read())
+
+    logging.warning('The module %s does not contain a description file: __openerp__.py or __terp__.py (deprecated)' % module)
+    return {}
+
 def get_modules_with_version():
     modules = get_modules()
     res = {}
     for module in modules:
-        terp = get_module_resource(module, '__terp__.py')
         try:
-            info = eval(tools.file_open(terp).read())
+            info = load_information_from_description_file(module)
             res[module] = "%s.%s" % (release.major_version, info['version'])
         except Exception, e:
             continue
@@ -318,12 +331,16 @@ def upgrade_graph(graph, cr, module_list, force=None):
     len_graph = len(graph)
     for module in module_list:
         mod_path = get_module_path(module)
-        terp_file = get_module_resource(module, '__terp__.py')
+        terp_file = get_module_resource(module, '__openerp__.py')
+        if not os.path.isfile(terp_file):
+            terp_file = get_module_resource(module, '__terp__.py')
+
         if not mod_path or not terp_file:
             global not_loaded
             not_loaded.append(module)
             logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable' % (module))
             raise osv.osv.except_osv('Error!',"Module '%s' was not found" % (module,))
+
 
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
             try:
@@ -337,7 +354,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
 
     dependencies = dict([(p, deps) for p, deps, data in packages])
     current, later = set([p for p, dep, data in packages]), set()
-    
+
     while packages and current > later:
         package, deps, data = packages[0]
 
@@ -378,7 +395,7 @@ def init_module_objects(cr, module_name, obj_list):
         try:
             result = obj._auto_init(cr, {'module': module_name})
         except Exception, e:
-            raise 
+            raise
         if result:
             todo += result
         if hasattr(obj, 'init'):
@@ -588,7 +605,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
     modobj = None
 
     logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
-    
+
     for package in graph:
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
         migrations.migrate_module(package, 'pre')
@@ -597,7 +614,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_objects(cr, package.name, modules)
         cr.commit()
-        
+
     for package in graph:
         status['progress'] = (float(statusi)+0.1) / len(graph)
         m = package.name
@@ -697,16 +714,14 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         status = {}
     cr = db.cursor()
     if cr:
-       cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
-       if len(cr.fetchall())==0:    
-           logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
-           tools.init_db(cr)
-#           cr.execute("update res_users set password=%s where id=%s",('admin',1))
-           # in that case, force --init=all
-           tools.config["init"]["all"] = 1
-           tools.config['update']['all'] = 1
-           if not tools.config['without_demo']:
-               tools.config["demo"]['all'] = 1 
+        cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
+        if len(cr.fetchall())==0:
+            logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
+            tools.init_db(cr)
+            tools.config["init"]["all"] = 1
+            tools.config['update']['all'] = 1
+            if not tools.config['without_demo']:
+                tools.config["demo"]['all'] = 1
     force = []
     if force_demo:
         force.append('demo')
@@ -716,7 +731,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
         graph = create_graph(cr, ['base'], force)
-
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         global not_loaded
@@ -761,6 +775,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             if new_modules_in_graph == 0:
                 # nothing to load
                 break
+
             logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
             r = load_module_graph(cr, graph, status, report=report)
             has_updates = has_updates or r

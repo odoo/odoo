@@ -64,15 +64,13 @@ class module(osv.osv):
     _description = "Module"
 
     def get_module_info(self, name):
+        info = {}
         try:
-            f = tools.file_open(os.path.join(name, '__terp__.py'))
-            data = f.read()
-            info = eval(data)
+            info = addons.load_information_from_description_file(name)
             if 'version' in info:
                 info['version'] = release.major_version + '.' + info['version']
-            f.close()
         except:
-            return {}
+            pass
         return info
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context={}):

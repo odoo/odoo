@@ -77,7 +77,7 @@ def check_modules():
 
 def find_addons():
     for root, _, names in os.walk(join('bin', 'addons')):
-        if '__terp__.py' in names:
+        if '__openerp__.py' in names or '__terp__.py' in names:
             yield basename(root), root
     #look for extra modules
     try:
@@ -86,7 +86,12 @@ def find_addons():
             mname = mname.strip()
             if not mname:
                 continue
-            if os.path.exists(join(empath, mname, '__terp__.py')):
+
+            terp = join(empath, mname, '__openerp__.py')
+            if not os.path.exists(terp):
+                terp = join(empath, mname, '__terp__.py')
+
+            if os.path.exists(terp):
                 yield mname, join(empath, mname)
             else:
                 print "Module %s specified, but no valid path." % mname
