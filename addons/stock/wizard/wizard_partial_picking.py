@@ -103,6 +103,7 @@ def _get_moves(self, cr, uid, data, context):
 def _do_split(self, cr, uid, data, context):
     move_obj = pooler.get_pool(cr.dbname).get('stock.move')
     pick_obj = pooler.get_pool(cr.dbname).get('stock.picking')
+    delivery_obj = pooler.get_pool(cr.dbname).get('stock.delivery')
     pick = pick_obj.browse(cr, uid, [data['id']])[0]
     new_picking = None
     new_moves = []
@@ -171,6 +172,20 @@ def _do_split(self, cr, uid, data, context):
                     'move_dest_id': False,
                     'price_unit': move.price_unit,
                 })
+            partner_id = False
+            if move.picking_id:
+                    partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
+            delivery_id = delivery_obj.search(cr,uid, [('partner_id','=',partner_id)])   
+            if  not  delivery_id :
+                delivery_id = delivery_obj.create(cr, uid, {
+                        'partner_id': partner_id,
+                        'date': move.date,
+                    }, context=context)   
+                delivery_obj.write(cr, uid, [delivery_id], {'product_delivered': [(4, new_obj)]})
+            if not isinstance(delivery_id, (int, long)): 
+               delivery_id=delivery_id[0]
+               delivery_obj.write(cr, uid, [delivery_id], {'product_delivered': [(4, new_obj)]})
+                        
         move_obj.write(cr, uid, [move.id],
                 {
                     'product_qty' : move.product_qty - data['form']['move%s' % move.id],

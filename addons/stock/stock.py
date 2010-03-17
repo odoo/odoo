@@ -951,7 +951,10 @@ class stock_production_lot_revision(osv.osv):
     }
 
 stock_production_lot_revision()
-
+    
+class stock_delivery(osv.osv):
+    _name = "stock.delivery"
+stock_delivery()
 # ----------------------------------------------------
 # Move
 # ----------------------------------------------------
@@ -1035,6 +1038,7 @@ class stock_move(osv.osv):
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
+        'delivered_id': fields.many2one('stock.delivery', 'Product delivered'),
     }
     _constraints = [
         (_check_tracking,
@@ -1748,7 +1752,22 @@ class stock_warehouse(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
     }
 stock_warehouse()
+    
+class stock_delivery(osv.osv):
+    
+    """ Tracability of partialdeliveries """
+    
+    _name = "stock.delivery"
+    _description = "Delivery"
+    _rec_name = 'partner_id'
+    _columns = {
+        'date': fields.datetime('Date'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'product_delivered':fields.one2many('stock.move', 'delivered_id', 'Product Delivered', domain=[('picking_id.type','=','in')]),
+    }
 
+    
+stock_delivery()
 
 # Move wizard :
 #    get confirm or assign stock move lines of partner and put in current picking.
