@@ -40,7 +40,7 @@ success_msg = """<?xml version="1.0" ?>
 </form>"""
 
 compute_fields = {
-    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project', 'required':'True'},
+    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project', 'required':True},
 }
 
 class wizard_compute_tasks(wizard.interface):
@@ -118,7 +118,7 @@ class wizard_compute_tasks(wizard.interface):
                         priorty = priority_dict[each_task.priority]
                     if each_task.user_id:
                        for resource in resources:
-                            if resource.__name__ == each_task.user_id.name:
+                            if resource.__name__ == each_task.user_id.name: # check me!!
                                task = create_tasks(i, hours, priorty, resource)
                     else:
                         task = create_tasks(i, hours, priorty)

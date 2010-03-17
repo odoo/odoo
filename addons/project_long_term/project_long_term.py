@@ -265,20 +265,24 @@ class task(osv.osv):
 
     def onchange_planned(self, cr, uid, ids, project, user_id=False, planned=0.0, effective=0.0, date_start=None, occupation_rate=0.0):
         result = {}
+        resource = False
         resource_obj = self.pool.get('resource.resource')
         project_pool = self.pool.get('project.project')
         resource_calendar = self.pool.get('resource.calendar')
+        if not project:
+            return {'value' : result}
         if date_start:
             hrs = float(planned / float(occupation_rate))
             calendar_id = project_pool.browse(cr, uid, project).resource_calendar_id.id
             dt_start = mx.DateTime.strptime(date_start, '%Y-%m-%d %H:%M:%S')
             resource_id = resource_obj.search(cr, uid, [('user_id','=',user_id)])
             if resource_id:
-                resource = resource_obj.browse(cr, uid, resource_id)[0]
-                hrs = planned / (float(occupation_rate) * resource.time_efficiency)
-                if resource.calendar_id.id:
-                    calendar_id = resource.calendar_id.id
-            work_times = resource_calendar.interval_get(cr, uid, calendar_id, dt_start, hrs or 0.0, resource.id or False)
+                resource_data = resource_obj.browse(cr, uid, resource_id)[0]
+                resource = resource_data.id
+                hrs = planned / (float(occupation_rate) * resource_data.time_efficiency)
+                if resource_data.calendar_id.id:
+                    calendar_id = resource_data.calendar_id.id
+            work_times = resource_calendar.interval_get(cr, uid, calendar_id, dt_start, hrs or 0.0, resource or False)
             result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
         result['remaining_hours'] = planned - effective
         return {'value' : result}
