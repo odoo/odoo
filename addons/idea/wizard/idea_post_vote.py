@@ -18,12 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 
 class idea_post_vote(osv.osv_memory):
+    """ Post Vote For Idea """
 
     _name = "idea.post.vote"
     _description = "Post vote"
+
     _columns = {
                 'vote': fields.selection([('-1', 'Not Voted'),
                                           ('0', 'Very Bad'),
@@ -34,6 +37,7 @@ class idea_post_vote(osv.osv_memory):
                 }
 
     def do_vote(self, cr, uid, ids, context):
+
         """
         Create idea vote.
         @param cr: the current row, from the database cursor,
@@ -41,10 +45,12 @@ class idea_post_vote(osv.osv_memory):
         @param ids: List of Idea Post vote’s IDs.
         @return: Dictionary {}
         """
+
         data = context and context.get('active_id', False) or False
         vote_obj = self.pool.get('idea.vote')
-        for dovote_obj in self.read(cr, uid, ids):
-            score = str(dovote_obj['vote'])
+
+        for do_vote_obj in self.read(cr, uid, ids):
+            score = str(do_vote_obj['vote'])
             dic = {'idea_id': data, 'user_id': uid, 'score': score }
             vote = vote_obj.create(cr, uid, dic)
             return {}
