@@ -81,6 +81,7 @@ class _column(object):
         self.select = select
         self.selectable = True
         self.group_operator = args.get('group_operator', False)
+        self.parent_field = args.get('parent_field', False)
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
@@ -365,7 +366,8 @@ class one2many(_column):
     _prefetch = False
     _type = 'one2many'
 
-    def __init__(self, obj, fields_id, string='unknown', limit=None, **args):
+    def __init__(self, obj, fields_id, string='unknown', limit=20, **args):
+        args.update({'parent_field':fields_id})
         _column.__init__(self, string=string, **args)
         self._obj = obj
         self._fields_id = fields_id
