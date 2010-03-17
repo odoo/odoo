@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-<!-- Open Column  -->
+<!-- Open Column From View -->
 
     	<record id="view_olap_load_column" model="ir.ui.view">
             <field name="name">Open Columns</field>
@@ -16,6 +16,8 @@
             </field>
 		</record>
 
+<!-- Open Column Action -->
+
 		<record id="action_olap_load_column" model="ir.actions.act_window">
             <field name="name">Open Columns</field>
             <field name="type">ir.actions.act_window</field>
@@ -25,6 +27,8 @@
             <field name="context">{'record_id' : active_id}</field>
             <field name="target">new</field>
     	</record>
+
+<!-- Open Column Action Window -->
 
         <act_window id="action_olap_load_column_values"
     		key2="client_action_multi" name="Open Columns"
