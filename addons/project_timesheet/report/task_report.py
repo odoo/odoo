@@ -118,10 +118,14 @@ class report_timesheet_task_user(osv.osv):
         return result
 
     _columns = {
-        'name': fields.date('Month',readonly=True),
+        'name': fields.char('Name',size=64),
+        'year': fields.char('Year',size=64,required=False, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'timesheet_hrs': fields.function(get_hrs_timesheet, method=True, string="Timesheet Hours"),
         'task_hrs': fields.function(_get_task_hours, method=True, string="Task Hours"),
+
       }
 
 
@@ -130,7 +134,9 @@ class report_timesheet_task_user(osv.osv):
         select
          ((r.id*12)+to_number(months.m_id,'99'))::integer as id,
                months.name as name,
-               r.id as user_id
+               r.id as user_id,
+               to_char(to_date(months.name, 'YYYY/MM/DD'),'YYYY') as year,
+               to_char(to_date(months.name, 'YYYY/MM/DD'),'MM') as month
         from res_users r,
                 (select to_char(p.date,'YYYY-MM-01') as name,
             to_char(p.date,'MM') as m_id
@@ -139,7 +145,13 @@ class report_timesheet_task_user(osv.osv):
             union
                 select to_char(h.name,'YYYY-MM-01') as name,
                 to_char(h.name,'MM') as m_id
-                from hr_timesheet_sheet_sheet_day h) as months) """)
+                from hr_timesheet_sheet_sheet_day h) as months
+
+            group by
+                r.id,months.m_id,months.name,
+                to_char(to_date(months.name, 'YYYY/MM/DD'),'YYYY') ,
+                to_char(to_date(months.name, 'YYYY/MM/DD'),'MM')
+              ) """)
 
 report_timesheet_task_user()
 
