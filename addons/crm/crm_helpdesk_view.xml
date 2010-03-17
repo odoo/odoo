@@ -122,7 +122,8 @@
         <field name="model">crm.helpdesk</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Helpdesk Support Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+            <tree string="Helpdesk Support Tree"
+                colors="black:state=='open';blue:state=='pending';grey:state in ('cancel','close')">
                 <field name="id"/>
                 <field name="name" string="Query Description" />
                 <field name="partner_id" string="Partner"/>

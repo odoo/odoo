@@ -62,13 +62,13 @@
                     default="1"
                     domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
                 <separator orientation="vertical"/>
-                <field name="product_id"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-sale"
-                        string="My Sales"
+                        help="My Sales"
                         domain="[('user_id','=',uid)]"/>
                 </field>
                 <field name="partner_id"/>
+                <field name="product_id"/>
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 
                 <newline/>
