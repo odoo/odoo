@@ -46,10 +46,11 @@ class lunch_product(osv.osv):
 
         """ Get category name
         @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,"""
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values"""
 
         obj = self.pool.get('lunch.category')
-        cat_ids = obj.search(cr,uid,[])
+        cat_ids = obj.search(cr, uid, [])
         res = obj.read(cr, uid, cat_ids, ['name', 'category'])
         return [(str(r['id']), r['name']) for r in res]+ [('0','')]
 
@@ -80,7 +81,8 @@ class lunch_cashbox(osv.osv):
         """ count available amount
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of create menu’s IDs """
+        @param ids: List of create menu’s IDs
+        @param context: A standard dictionary for contextual values """
 
         cr.execute("SELECT box,sum(amount) from lunch_cashmove where active = 't' group by box")
         amount = dict(cr.fetchall())
@@ -98,7 +100,7 @@ lunch_cashbox()
 
 
 class lunch_cashmove(osv.osv):
-    """ Move cah """
+    """ Move cash """
 
     _name = 'lunch.cashmove'
     _description = "Move cash"
@@ -131,7 +133,8 @@ class lunch_order(osv.osv):
         """ Get Price of Product
          @param cr: the current row, from the database cursor,
          @param uid: the current user’s ID for security checks,
-         @param ids: List of Lunch order’s IDs"""
+         @param ids: List of Lunch order’s IDs
+         @param context: A standard dictionary for contextual values """
 
         res = {}
         for price in self.browse(cr, uid, ids):
@@ -158,12 +161,13 @@ class lunch_order(osv.osv):
         'state': lambda self,cr,uid,context: 'draft',
     }
 
-    def confirm(self,cr,uid,ids,box,context):
+    def confirm(self, cr, uid, ids, box, context):
 
         """ confirm order
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of confirm order’s IDs """
+        @param ids: List of confirm order’s IDs
+        @param context: A standard dictionary for contextual values """
 
         cashmove_ref = self.pool.get('lunch.cashmove')
         for order in self.browse(cr, uid, ids):
@@ -183,7 +187,8 @@ class lunch_order(osv.osv):
         """" cancel order
          @param cr: the current row, from the database cursor,
          @param uid: the current user’s ID for security checks,
-         @param ids: List of create menu’s IDs """
+         @param ids: List of create menu’s IDs
+         @param context: A standard dictionary for contextual values """
 
         orders = self.browse(cr, uid, ids)
         for order in orders:
@@ -199,7 +204,8 @@ class lunch_order(osv.osv):
         """ Get price for Product
          @param cr: the current row, from the database cursor,
          @param uid: the current user’s ID for security checks,
-         @param ids: List of create menu’s IDs """
+         @param ids: List of create menu’s IDs
+         @product: Product To Ordered """
 
         if not product:
             return {'value': {'price': 0.0}}
