@@ -35,6 +35,18 @@ class purchase_order_group(osv.osv_memory):
 		} 
 
 	def merge_orders(self, cr, uid, ids, context):
+		""" 
+		     To merge similar type of purchase orders.
+		    
+		     @param self: The object pointer.
+		     @param cr: A database cursor
+		     @param uid: ID of the user currently logged in
+		     @param ids: the ID or list of IDs 
+		     @param context: A standard dictionary 
+		     
+		     @return: purchase order view
+			
+		"""      		
 	        order_obj = self.pool.get('purchase.order')
 		mod_obj =self.pool.get('ir.model.data')
 		result = mod_obj._get_id(cr, uid, 'purchase', 'view_purchase_order_filter')
@@ -43,6 +55,14 @@ class purchase_order_group(osv.osv_memory):
 
  	
 		def make_key(br, fields):
+			""" 
+			     Returns tuple indicating the value corresponding to fields
+			    
+			     @param br: record object
+			     @param fields: name of fields
+			     @return: Returns tuple indicating the value corresponding to fields
+				
+			"""      			
 			list_key = []
 			for field in fields:
 			    field_val = getattr(br, field)
@@ -65,7 +85,6 @@ class purchase_order_group(osv.osv_memory):
     
 		for porder in [order for order in order_obj.browse(cr, uid, context['active_ids']) if order.state == 'draft']:
 			order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id'))
-
 			new_order = new_orders.setdefault(order_key, ({}, []))
 			new_order[1].append(porder.id)
 			order_infos = new_order[0]
@@ -139,9 +158,5 @@ class purchase_order_group(osv.osv_memory):
 		'type': 'ir.actions.act_window',
 		'search_view_id': id['res_id']
 		}
-
-		     
-
-   
 purchase_order_group()
 

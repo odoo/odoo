@@ -31,16 +31,14 @@
             </field>
 		</record>
 
-	<record id="action_view_purchase_order_group" model="ir.actions.act_window">
-			<field name="name">Merge Purchase order</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">purchase.order.group</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="target">new</field>
-			<field name="view_id" ref="view_purchase_order_group"/>
-		</record>
-			
+         <act_window name="Merge Purchase orders"		    
+		    res_model="purchase.order.group"
+		    src_model="purchase.order"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_view_purchase_order_group"/>	
+		    			
     </data>
 </openerp>
 
