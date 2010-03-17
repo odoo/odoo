@@ -45,32 +45,12 @@
 	                    <field name="user_id" select="1" widget="selection">
 	            			<filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]" default="1"/>
                 		</field>
-                		<!--newline/>
-                		<group expand="1" string="Extended options..." colspan="10" col="12">
-                    		<filter icon="terp-project"
-                    		string="Very urgent"
-                    		domain="[('priority','=','0')]"/>
-                    		<filter icon="terp-project"
-                    		string="Urgent"
-                    		domain="[('priority','=','1')]"/>
-                    		<filter icon="terp-project"
-                    		string="Medium"
-                    		domain="[('priority','=','2')]"/>
-                    		<filter icon="terp-project"
-                    		string="Low"
-                    		domain="[('priority','=','3')]"/>
-                    		<filter icon="terp-project"
-                    		string="Very Low"
-                    		domain="[('priority','=','4')]"/>
-                		</group-->
 	                    <newline/>
                 		<group expand="1" string="Group By..." colspan="10" col="11">
                     		<filter string="User" icon="terp-project" context="{'group_by':'user_id'}" />
                     		<filter string="Project" icon="terp-project" context="{'group_by':'project_id'}" />
-                    		<!--filter string="Company" icon="terp-project" context="{'group_by':'company_id'}" /-->
                  			<separator orientation="vertical"/>
                  			<filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
-                 			<!--filter string="Stage" icon="terp-project" context="{'group_by':'type'}"/-->
    							<separator orientation="vertical"/>
                     		<filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
                     		<filter string="Year" icon="terp-project" context="{'group_by':'name'}"/>
