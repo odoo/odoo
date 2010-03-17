@@ -1112,7 +1112,8 @@ class mrp_procurement(osv.osv):
         @return  : True
         """
         res = self.make_mo(cr, uid, ids, context=context)
-        return 1 #TO CHECK: why workflow is generated error if return True
+        res = res.values()
+        return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
 
     def make_mo(self, cr, uid, ids, context={}):
         """
@@ -1157,7 +1158,8 @@ class mrp_procurement(osv.osv):
         @return  : True
         """
         res = self.make_po(cr, uid, ids, context=context)
-        return 1 #TO CHECK: why workflow is generated error if return True
+        res = res.values()
+        return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
 
     def make_po(self, cr, uid, ids, context={}):
         """
