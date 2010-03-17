@@ -208,7 +208,13 @@ class product_category(osv.osv):
         'parent_id': fields.many2one('product.category','Parent Category', select=True),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
+        'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
     }
+    
+    _defaults = {
+        'type' : lambda *a : 'normal',
+    }
+    
     _order = "sequence"
     def _check_recursion(self, cr, uid, ids):
         level = 100
