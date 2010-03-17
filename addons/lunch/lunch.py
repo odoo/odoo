@@ -169,12 +169,12 @@ class lunch_order(osv.osv):
         for order in self.browse(cr, uid, ids):
             if order.state == 'confirmed':
                 continue
-            new_id = cashmove_ref.createcr, uid, {'name': order.product.name+' order',
+            new_id = cashmove_ref.create(cr, uid, {'name': order.product.name+' order',
                             'amount':-order.product.price,
                             'user_cashmove':order.user_id.id,
                             'box':box,
                             'active':True,
-                            }
+                            })
             self.write(cr, uid, [order.id], {'cashmove': new_id, 'state': 'confirmed'})
         return {}
 
@@ -189,7 +189,8 @@ class lunch_order(osv.osv):
         for order in orders:
             if not order.cashmove:
                 continue
-        self.pool.get('lunch.cashmove').unlink(cr, uid, [order.cashmove.id])
+        if order.cashmove.id:
+            self.pool.get('lunch.cashmove').unlink(cr, uid, [order.cashmove.id])
         self.write(cr, uid, ids, {'state':'draft'})
         return {}
 
