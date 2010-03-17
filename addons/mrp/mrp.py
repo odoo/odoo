@@ -1107,7 +1107,20 @@ class mrp_procurement(osv.osv):
         return True
 
     def action_produce_assign_product(self, cr, uid, ids, context={}):
-        produce_id = False
+        """
+        @summary : This is action which call from workflow to assign production order to procuments
+        @return  : True
+        """
+        res = self.make_mo(cr, uid, ids, context=context)
+        return 1 #TO CHECK: why workflow is generated error if return True
+
+    def make_mo(self, cr, uid, ids, context={}):
+        """
+        @summary : Make Manufecturing(production) order from procurement
+        
+        @return : New created Production Orders procurement wise 
+        """
+        res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
@@ -1128,6 +1141,7 @@ class mrp_procurement(osv.osv):
                 'move_prod_id': res_id,
                 'company_id': procurement.company_id.id,
             })
+            res[procurement.id] = produce_id
             self.write(cr, uid, [procurement.id], {'state':'running'})
             bom_result = self.pool.get('mrp.production').action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
@@ -1135,10 +1149,23 @@ class mrp_procurement(osv.osv):
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
             self.pool.get('stock.move').write(cr, uid, [res_id],
                     {'location_id':procurement.location_id.id})
-        return produce_id
-
+        return res
+    
     def action_po_assign(self, cr, uid, ids, context={}):
-        purchase_id = False
+        """
+        @summary : This is action which call from workflow to assign purchase order to procuments
+        @return  : True
+        """
+        res = self.make_po(cr, uid, ids, context=context)
+        return 1 #TO CHECK: why workflow is generated error if return True
+
+    def make_po(self, cr, uid, ids, context={}):
+        """
+        @summary : Make purchase order from procurement
+        
+        @return : New created Purchase Orders procurement wise
+        """
+        res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
@@ -1190,8 +1217,9 @@ class mrp_procurement(osv.osv):
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             })
+            res[procurement.id] = purchase_id
             self.write(cr, uid, [procurement.id], {'state':'running', 'purchase_id':purchase_id})
-        return purchase_id
+        return res
 
     def action_cancel(self, cr, uid, ids):
         todo = []
