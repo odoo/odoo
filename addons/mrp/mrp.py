@@ -577,7 +577,23 @@ class mrp_production(osv.osv):
                res = False        
         return res
 
-    def do_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
+    def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
+        """ 
+             @summary: To produce final product base on production mode (consume/consume&produce).
+                       If Production mode is consume, all stock move lines of raw materials will be done/consumed.
+                       If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
+                                    and stock move lines of final product will be also done/produced.
+        
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param production_id: the ID of mrp.production object
+             @param production_qty: specify qty to produce
+             @param production_mode: specify production mode (consume/consume&produce).
+
+             @return:  True
+        
+        """              
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id)
         
@@ -585,6 +601,7 @@ class mrp_production(osv.osv):
         final_product_todo = []        
         
         if production_mode in ['consume','consume_produce']:
+            # To consume remaining qty of raw materials 
             consumed_products = {}
             produced_qty = 0
             for consumed_product in production.move_lines2:
@@ -602,9 +619,10 @@ class mrp_production(osv.osv):
                 if rest_qty > production.product_qty:
                    rest_qty = production.product_qty            
                 if rest_qty > 0:
-                    stock_mov_obj.consume_moves(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
+                    stock_mov_obj.action_consume(cr, uid, [raw_product.id], rest_qty, production.location_src_id.id, context=context)
 
         if production_mode == 'consume_produce':
+            # To produce remaining qty of final product
             vals = {'state':'confirmed'}
             final_product_todo = [x.id for x in production.move_created_ids]
             stock_mov_obj.write(cr, uid, final_product_todo, vals)
@@ -620,7 +638,7 @@ class mrp_production(osv.osv):
                 if rest_qty <= production_qty:
                    production_qty = rest_qty 
                 if rest_qty > 0 :
-                    stock_mov_obj.consume_moves(cr, uid, [produce_product.id], production_qty, production.location_dest_id.id, context=context)            
+                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, production.location_dest_id.id, context=context)            
         
         
         for raw_product in production.move_lines2: 
