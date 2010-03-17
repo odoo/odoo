@@ -7,12 +7,12 @@ class crm_fundraising_report(osv.osv):
     _inherit = "crm.case.report"
     _columns = {
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.fundraising')]"),
-        'probability': fields.float('Avg. Probability', readonly=True),
+        'probability': fields.float('Avg. Probability', readonly=True ,group_operator='avg'),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner'),       
-        'company_id': fields.many2one('res.company','Company'),  
+        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'company_id': fields.many2one('res.company','Company'),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'crm_fundraising_report')
@@ -32,7 +32,7 @@ class crm_fundraising_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
-                    sum(planned_revenue) as amount_revenue,                    
+                    sum(planned_revenue) as amount_revenue,
                     sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
                     avg(probability)::decimal(16,2) as probability,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
