@@ -100,9 +100,7 @@ class ir_ui_menu(osv.osv):
 
             if menu.action:
                 # we check if the user has access to the action of the menu
-                m, oid = menu.action.split(',', 1)
-                data = self.pool.get(m).browse(cr, 1, int(oid))
-
+                data = menu.action
                 if data:
                     model_field = { 'ir.actions.act_window':    'res_model',
                                     'ir.actions.report.custom': 'model',
@@ -111,7 +109,7 @@ class ir_ui_menu(osv.osv):
                                     'ir.actions.server':        'model_id',
                                   }
 
-                    field = model_field.get(m)
+                    field = model_field.get(menu.action._name)
                     if field and data[field]:
                         if not modelaccess.check(cr, uid, data[field], raise_exception=False):
                             continue
