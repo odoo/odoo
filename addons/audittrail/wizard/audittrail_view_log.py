@@ -50,9 +50,10 @@ class audittrail_view_log(osv.osv_memory):
         result = mod_obj._get_id(cr, uid, 'audittrail', 'action_audittrail_log_tree')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id])[0]
-        log_obj = self.pool.get(result['res_model'])
+        #log_obj = self.pool.get(result['res_model'])
         #log_id = log_obj.search(cr, uid, [])
         #log_model = log_obj.read(cr, uid, log_id, ['object_id'])  
+
         #start Loop 
         for datas in self.read(cr, uid, ids):
             if not datas.get('from', None):
