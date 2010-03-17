@@ -35,15 +35,15 @@ class wiki_wiki_help_open(osv.osv_memory):
         @param ids: List of wiki page’s IDs
 
         """
-        pages = self.pool.get('wiki.wiki').search(cr, uid, [('name','=','Basic Wiki Editing')])
+        pages = self.pool.get('wiki.wiki').search(cr, uid, [('name', '=', 'Basic Wiki Editing')])
 
         value = {
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'wiki.wiki',
-            'view_id': False,
-            'res_id': pages[0],
-            'type': 'ir.actions.act_window',
+            'view_type': 'form', 
+            'view_mode': 'form,tree', 
+            'res_model': 'wiki.wiki', 
+            'view_id': False, 
+            'res_id': pages[0], 
+            'type': 'ir.actions.act_window', 
         }
 
         return value

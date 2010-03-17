@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv
+from tools.translate import _
 
 class showdiff(osv.osv_memory):
     """ Disp[ay Difference for History """
@@ -43,7 +44,7 @@ class showdiff(osv.osv_memory):
 
         elif len(ids) == 1:
             old = history.browse(cr, uid, ids[0])
-            nids = history.search(cr, uid, [('wiki_id','=',old.wiki_id.id)])
+            nids = history.search(cr, uid, [('wiki_id', '=', old.wiki_id.id)])
             nids.sort()
             diff = history.getDiff(cr, uid, ids[0], nids[-1])
         else:
@@ -51,7 +52,7 @@ class showdiff(osv.osv_memory):
         return diff
 
     _columns = {
-        'diff': fields.text('Diff'),
+        'diff': fields.text('Diff'), 
     }
 
     _defaults = {
