@@ -29,102 +29,78 @@ import time
 import wizard
 
 class stock_inventory_line_split(osv.osv_memory):
+    _inherit = "stock.move.split"
     _name = "stock.inventory.line.split"
     _description = "Split inventory lines"
-    _columns = {
-            'prefix': fields.char('Prefix', size=64), 
-            'quantity': fields.float('Quantity per lot'), 
-            }
 
-    def _check_production_lot(self, cr, uid, context):
-        """ 
-             @summary: to check the availability of production lot. 
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             
-             @return:  
-        
-        """             
-        stock_inventory_line_obj = self.pool.get('stock.inventory.line')
-        for inv_obj in stock_inventory_line_obj.browse(cr, uid, \
-                            context['active_ids']):
-            if not inv_obj.prod_lot_id:
-                raise osv.except_osv(_('Caution!'), _('Before splitting the \
-inventory lines, make sure the production lot is assigned to this product.'))
-            return
+    
+
+    def _get_product_id(self, cr, uid, context):
+        line = self.pool.get('stock.inventory.line').browse(cr, uid, context['active_id'], context=context)
+        return line.product_id.id
 
     _defaults = {
-            'quantity': lambda *a: '1', 
-            'prefix': _check_production_lot, 
-            }
+        'product_id': _get_product_id, 
+    }
+    
 
-    def split_lines(self, cr, uid, ids, context):
+    def split(self, cr, uid, ids, line_ids, context=None):
         """ 
-             @summary: to split stock inventory lines according to production lot
+             @summary:To split Inventory lines into production lot
             
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
              @param ids: the ID or list of IDs if we want more than one 
+             @param line_ids: the ID or list of IDs of inventory lines we want to split
              @param context: A standard dictionary 
              
-             @return:  
+             @return: 
         
-        """             
-        inv_id = context['active_id']
-        inv_line_obj = self.pool.get('stock.inventory.line')
+        """                    
         prodlot_obj = self.pool.get('stock.production.lot')
-        
         ir_sequence_obj = self.pool.get('ir.sequence')
-        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-        if not sequence:
-            raise osv.except_osv(_('Error!'), _('No production sequence defined'))
+        line_obj = self.pool.get('stock.inventory.line')
+        new_line = []        
+        for data in self.browse(cr, uid, ids):
+            for inv_line in line_obj.browse(cr, uid, line_ids):
+                line_qty = inv_line.product_qty
+                quantity_rest = inv_line.product_qty                
+                new_line = []                            
+                for line in data.line_ids:
+                    quantity = line.quantity
+                    
 
-        for linesplit_obj in self.browse(cr, uid, ids):
-
-            if linesplit_obj.prefix:
-                sequence = linesplit_obj.prefix + '/' + (sequence or '')
-
-            inv = inv_line_obj.browse(cr, uid, [inv_id])[0]
-            quantity = linesplit_obj.quantity
-            prodlot_obj.write(cr, uid, inv.prod_lot_id.id, {'name': sequence})
-
-            if quantity <= 0 or inv.product_qty == 0:
-                return {}
-
-            quantity_rest = inv.product_qty % quantity
-
-            update_val = {
-                    'product_qty': quantity, 
-            }
-
-            new_line = []
-            for idx in range(int(inv.product_qty // quantity)):
-                if idx:
-                    current_line = inv_line_obj.copy(cr, uid, inv.id, 
-                                 {'prod_lot_id': inv.prod_lot_id.id})
+                    if quantity <= 0 or line_qty == 0:
+                        continue
+                    quantity_rest -= quantity                    
+                    if quantity_rest <= 0:
+                        quantity_rest = quantity
+                        break
+                    default_val = {
+                        'product_qty': quantity,                         
+                    }
+                    current_line = line_obj.copy(cr, uid, inv_line.id, default_val)
                     new_line.append(current_line)
-                else:
-                    current_line = inv.id
-                    inv_line_obj.write(cr, uid, [current_line], update_val)
+                    prodlot_id = False
+                    if line.use_exist and line.name:
+                        prodlot_id = prodlot_obj.search(cr, uid, [('prefix','=',line.name),('product_id','=',data.product_id.id)])
+                        if prodlot_id:
+                            prodlot_id = prodlot_id[0]                    
+                    if not prodlot_id:
+                        sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+                        prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix' : line.name}, 
+                                                 {'product_id': data.product_id.id})                    
+                    line_obj.write(cr, uid, [current_line], {'prod_lot_id': prodlot_id})
+                    prodlot = prodlot_obj.browse(cr, uid, prodlot_id)                    
+                    
+                    update_val = {}
+                    if quantity_rest > 0:                        
+                        update_val['product_qty'] = quantity_rest                                            
+                        line_obj.write(cr, uid, [inv_line.id], update_val)
 
-            if quantity_rest > 0:
-                idx = int(inv.product_qty // quantity)
-                update_val['product_qty'] = quantity_rest
-
-                if idx:
-                    current_line = inv_line_obj.copy(cr, uid, inv.id, 
-                                 {'prod_lot_id': inv.prod_lot_id.id})
-                    new_line.append(current_line)
-                else:
-                    current_line = inv_line_obj.id
-                inv_line_obj.write(cr, uid, [current_line], update_val)
-
-            return {}
-
+                    
+        return new_line
 stock_inventory_line_split()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
