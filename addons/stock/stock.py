@@ -1462,7 +1462,7 @@ class stock_move(osv.osv):
         @ param location_id : specify scrap location
         @ param context: context arguments
 
-        @ return: True
+        @ return: Scraped lines
         '''   
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
@@ -1479,7 +1479,7 @@ class stock_move(osv.osv):
             new_move = self.copy(cr, uid, move.id, default_val)
             res += [new_move]  
                   
-        return True
+        return res
 
     def action_split(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
         '''
@@ -1493,7 +1493,7 @@ class stock_move(osv.osv):
         @ param with_lot : if true, prodcution lot will assign for split line otherwise not.
         @ param context: context arguments
 
-        @ return: True
+        @ return: splited move lines
         '''   
 
         if quantity <= 0:
@@ -1555,7 +1555,7 @@ class stock_move(osv.osv):
         @ param location_id : specify source location         
         @ param context: context arguments
 
-        @ return: True
+        @ return: Consumed lines
         '''   
         if not context:
             context = {}
