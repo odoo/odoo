@@ -144,10 +144,10 @@
             <font color="white"> </font>
           </para>
           <para style="terp_default_Bold_9">Invoice address :</para>
-          <para style="terp_default_9">[[ o.partner_invoice_id.title or '' ]] [[ o.partner_invoice_id.name or '' ]] </para>
+          <para style="terp_default_9">[[ o.partner_invoice_id.title or '' ]] [[ o.partner_invoice_id.name or '' ]]</para>
           <para style="terp_default_9">[[ o.partner_invoice_id.street ]] [[ o.partner_invoice_id.street2 and (', %s' % o.partner_invoice_id.street2 or '') ]]</para>
           <para style="terp_default_9">[[ o.partner_invoice_id.zip or '' ]] [[ o.partner_invoice_id.city or '' ]]</para>
-          <para style="terp_default_9">[[ o.partner_invoice_id.state_id and o.partner_invoice_id.state_id.name or '' ]] [[ o.partner_invoice_id.country_id and o.partner_invoice_id.country_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_invoice_id.state_id and o.partner_invoice_id.state_id.name or '' ]][[ o.partner_invoice_id.country_id and o.partner_invoice_id.country_id.name or '' ]]</para>
         </td>
         <td>
           <para style="terp_default_8">
@@ -187,7 +187,8 @@
           <para style="terp_tblheader_General_Centre">Your Reference </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">[[ o.state=='draft' and 'Quotation Date' or 'Date Ordered' ]]</para>
+          <para style="terp_tblheader_General_Centre">[[ o.state=='draft' and removeParentNode('para') ]] Date Ordered</para>
+          <para style="terp_tblheader_General_Centre">[[ o.state &lt;&gt; 'draft' and removeParentNode('para') ]] Quotation Date</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Our Salesman </para>
@@ -240,7 +241,7 @@
     </blockTable>
     <section>
       <para style="terp_default_1">[[repeatIn(o.order_line,'line')]]</para>
-      <blockTable colWidths="208.0,99.0,43.0,21.0,59.0,43.0,65.0" style="Table5">
+      <blockTable colWidths="207.0,99.0,43.0,21.0,59.0,43.0,65.0" style="Table5">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
