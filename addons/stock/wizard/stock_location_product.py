@@ -31,7 +31,7 @@ class stock_location_product(osv.osv_memory):
 
     def action_open_window(self, cr, uid, ids, context):
         """ 
-             @summary:To open location wise product information specific to given duration
+             To open location wise product information specific to given duration
             
              @param self: The object pointer.
              @param cr: A database cursor

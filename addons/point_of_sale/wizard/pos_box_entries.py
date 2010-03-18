@@ -28,7 +28,7 @@ from tools.translate import _
 
 def get_journal(self,cr,uid,context):
     """ 
-             @summary:   Make the selection list of Cash Journal  .       
+             Make the selection list of Cash Journal  .       
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
@@ -53,7 +53,7 @@ class pos_box_entries(osv.osv_memory):
     def _get_income_product(self,cr,uid,context):
         
         """ 
-             @summary:   Make the selection list of purchasing  products.            
+             Make the selection list of purchasing  products.            
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
@@ -84,7 +84,7 @@ class pos_box_entries(osv.osv_memory):
 
         
         """ 
-             @summary:  Create the entry of statement in journal   .            
+             Create the entry of statement in journal   .            
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in

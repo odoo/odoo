@@ -30,7 +30,7 @@ class make_procurement(osv.osv_memory):
     
     def onchange_product_id(self, cr, uid, ids, prod_id):
         """ 
-             @summary: On Change of Product ID getting the value of related UoM.
+             On Change of Product ID getting the value of related UoM.
         
              @param self: The object pointer.
              @param cr: A database cursor
@@ -59,7 +59,7 @@ class make_procurement(osv.osv_memory):
     
     def make_procurement(self, cr, uid, ids, context=None):
         """ 
-             @summary: Creates procurement order for selected product.
+             Creates procurement order for selected product.
         
              @param self: The object pointer.
              @param cr: A database cursor
@@ -110,7 +110,7 @@ class make_procurement(osv.osv_memory):
     
     def default_get(self, cr, uid, fields, context=None):
         """ 
-             @summary: To get default values for the object.
+             To get default values for the object.
             
              @param self: The object pointer.
              @param cr: A database cursor

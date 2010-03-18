@@ -29,7 +29,7 @@ class repair_cancel(osv.osv_memory):
 
     def cancel_repair(self, cr, uid, ids, context):
         """ 
-             @summary: Cancels the repair
+             Cancels the repair
         
              @param self: The object pointer.
              @param cr: A database cursor
@@ -55,7 +55,7 @@ class repair_cancel(osv.osv_memory):
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ 
-             @summary: Changes the view dynamically
+             Changes the view dynamically
         
              @param self: The object pointer.
              @param cr: A database cursor

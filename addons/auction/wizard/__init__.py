@@ -19,18 +19,6 @@
 #
 ##############################################################################
 
-#import wizard_aie_send
-#import wizard_aie_send_result
-#import wizard_lots_buyer_map
-#import wizard_lots_cancel
-#import wizard_lots_invoice
-#import wizard_lots_numerotate
-#import wizard_lots_pay
-#import wizard_pay
-#import wizard_lot_date_move
-#import wizard_transfer_unsold_object
-#import auction_catalog_flagey
-
 import auction_lots_able
 import auction_lots_enable
 import auction_lots_make_invoice_buyer

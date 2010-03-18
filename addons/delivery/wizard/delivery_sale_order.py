@@ -36,7 +36,7 @@ class make_delivery(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context):
         """ 
-             @summary: To get default values for the object.
+             To get default values for the object.
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -63,7 +63,7 @@ class make_delivery(osv.osv_memory):
     
     def delivery_set(self, cr, uid, ids, context):
         """ 
-             @summary: Adds delivery costs to Sale Order Line.
+             Adds delivery costs to Sale Order Line.
             
              @param self: The object pointer.
              @param cr: A database cursor

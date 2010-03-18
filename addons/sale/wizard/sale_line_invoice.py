@@ -38,7 +38,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
 
     def make_invoices(self, cr, uid, ids, context):
         """ 
-             @summary: To make invoices.
+             To make invoices.
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -56,7 +56,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
     #TODO: merge with sale.py/make_invoice
         def make_invoice(order, lines):
             """ 
-                 @summary: To make invoices.
+                 To make invoices.
                 
                  @param order: 
                  @param lines: 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_purchase_order_group" model="ir.ui.view">
+            <field name="name">Merger Purchase Orders</field>
+            <field name="model">purchase.order.group</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+               <form string="Merge orders">
+        			<separator string="Are you sure you want to merge these orders ?" colspan="4"/>
+       				<newline/>
+    				<label string="Please note that:" colspan="4"/>
+				<newline/>
+      				<label string="-orders will only be merged if:" colspan="4"/>
+        			<newline/>
+    				<label string="* their status is draft" colspan="4"/>
+				<newline/>
+    				<label string="* they belong to the same partner" colspan="4"/>
+				<newline/>
+    				<label string="* are going to the same location" colspan="4"/>
+				<newline/>
+    				<label string="* have the same pricelist" colspan="4"/>
+				<newline/>
+    				<label string="- lines will only be merged if:" colspan="4"/>
+				<newline/>
+    				<label string="* they are exactly the same except for the quantity and unit" colspan="4"/>
+        			<separator string="" colspan="4" />
+					<button special="cancel" string="Cancel" />
+            	    <button name="merge_orders" string="Merge orders" type="object" />
+    			</form>
+            </field>
+		</record>
+
+         <act_window name="Merge Purchase orders"		    
+		    res_model="purchase.order.group"
+		    src_model="purchase.order"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_view_purchase_order_group"/>	
+		    			
+    </data>
+</openerp>
+

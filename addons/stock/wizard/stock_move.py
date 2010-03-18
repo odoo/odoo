@@ -37,7 +37,7 @@ class stock_move_track(osv.osv_memory):
     
     def track_lines(self, cr, uid, ids, context={}):
         """ 
-             @summary:To track stock moves lines
+             To track stock moves lines
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -90,7 +90,7 @@ class stock_move_consume(osv.osv_memory):
 
     def do_move_consume(self, cr, uid, ids, context={}):
         """ 
-             @summary:To move consumed products
+             To move consumed products
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -123,7 +123,7 @@ class stock_move_scrap(osv.osv_memory):
 
     def move_scrap(self, cr, uid, ids, context={}):
         """ 
-             @summary:To move scraped products
+             To move scraped products
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -164,7 +164,7 @@ class split_in_production_lot(osv.osv_memory):
 
     def split_lot(self, cr, uid, ids, context=None):
         """ 
-             @summary:To split a lot
+             To split a lot
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -180,7 +180,7 @@ class split_in_production_lot(osv.osv_memory):
 
     def split(self, cr, uid, ids, move_ids, context=None):
         """ 
-             @summary:To split stock moves into production lot
+             To split stock moves into production lot
             
              @param self: The object pointer.
              @param cr: A database cursor

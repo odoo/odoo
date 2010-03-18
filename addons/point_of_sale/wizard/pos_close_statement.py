@@ -31,7 +31,7 @@ class pos_close_statement(osv.osv_memory):
     
     def close_statement(self, cr, uid, ids, context):
         """ 
-             @summary: Close the statements          
+             Close the statements          
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in

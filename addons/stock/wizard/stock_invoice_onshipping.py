@@ -43,7 +43,7 @@ class stock_invoice_onshipping(osv.osv_memory):
 
     def _get_type(self, cr, uid, context):
         """ 
-             @summary:To get invoice type
+             To get invoice type
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -82,7 +82,7 @@ class stock_invoice_onshipping(osv.osv_memory):
 
     def create_invoice(self, cr, uid, ids, context):
         """ 
-             @summary:To create invoice
+             To create invoice
             
              @param self: The object pointer.
              @param cr: A database cursor

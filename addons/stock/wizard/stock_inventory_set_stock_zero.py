@@ -38,7 +38,7 @@ class inventory_set_stock_zero(osv.osv_memory):
     
     def do_merge(self, cr, uid, ids, context):
         """ 
-             @summary:To set stock to Zero 
+             To set stock to Zero 
             
              @param self: The object pointer.
              @param cr: A database cursor

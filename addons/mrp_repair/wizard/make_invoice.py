@@ -32,7 +32,7 @@ class make_invoice(osv.osv_memory):
 
     def make_invoices(self, cr, uid, ids, context):
         """ 
-             @summary: Generates invoice(s) of selected records.
+             Generates invoice(s) of selected records.
         
              @param self: The object pointer.
              @param cr: A database cursor

@@ -36,7 +36,7 @@ class stock_inventory_line_split(osv.osv_memory):
     
     def default_get(self, cr, uid, fields, context):
         """ 
-             @summary: To get default values for the object.
+             To check the availability of production lot. 
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -61,7 +61,7 @@ class stock_inventory_line_split(osv.osv_memory):
 
     def split(self, cr, uid, ids, line_ids, context=None):
         """ 
-             @summary:To split Inventory lines into production lot
+             To split stock inventory lines according to production lot
             
              @param self: The object pointer.
              @param cr: A database cursor
