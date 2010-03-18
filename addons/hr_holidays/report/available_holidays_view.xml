@@ -62,14 +62,7 @@
 	                    string="This Month"
 	                    domain="[('month','=',time.strftime('%%m'))]"
 	                    help="Leaves of this month"/>
-	                <!--separator orientation="vertical"/>
-	                <filter icon="terp-hr"
-	                    string="Today's Start Leave"
-	                    domain="[('date_from','=',time.strftime('%%Y/%%m/%%d'))]"/>
-	                <filter icon="terp-hr"
-	                    string="Today's End Leave"
-	                    domain="[('date_to','=',time.strftime('%%Y/%%m/%%d'))]"/>
-	                <separator orientation="vertical"/-->
+	                <separator orientation="vertical"/>
 	                <field name="employee_id"/>
 	                <field name="user_id" widget="selection">
 	                    <filter icon="terp-sale"
