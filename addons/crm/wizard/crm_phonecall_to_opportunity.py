@@ -50,11 +50,12 @@ class crm_phonecall2opportunity(osv.osv_memory):
         @param context: A standard dictionary for contextual values
 
         """
+        phonecall_obj = self.pool.get('crm.phonecall')
         record_id = context and context.get('active_id', False) or False
         case = phonecall_obj.browse(cr, uid, record_id, context=context)
         if case.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning"), _("Closed/Cancelled Phone \
-                        Call Could not convert into Opportunity"))
+Call Could not convert into Opportunity"))
 
 
     def action_apply(self, cr, uid, ids, context=None):
@@ -136,12 +137,14 @@ class crm_phonecall2opportunity(osv.osv_memory):
         @return : default values of fields.
         """
         record_id = context and context.get('active_id', False) or False
+        res = super(crm_phonecall2opportunity, self).default_get(cr, uid, fields, context=context)
+
         if record_id:
             phonecall = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
-            res = {
-                    'name': phonecall.name,
-                    'partner_id': phonecall.partner_id and phonecall.partner_id.id or False
-                   }
+            if 'name' in fields:
+                res.update({'name': phonecall.name})
+            if 'partner_id' in fields:
+                res.update({'partner_id': phonecall.partner_id and phonecall.partner_id.id or False})
         return res
 
 crm_phonecall2opportunity()
