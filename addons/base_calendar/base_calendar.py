@@ -598,17 +598,15 @@ request was delegated to"),
         """
         if not context:
             context = {}
-        
-        for vals in self.read(cr, uid, ids, context=context):
-            user = vals.get('user_id')
+        for vals in self.browse(cr, uid, ids, context=context):
+            user = vals.user_id
             if user:
-                ref = vals.get('ref', None)
-                
-                if ref:
-                    if ref.user_id.id != user[0]:
-                        defaults = {'user_id':  user[0]}
-                        new_event = model_obj.copy(cr, uid, event, default=defaults, context=context)
-            self.write(cr, uid, ids, {'state': 'accepted'}, context)
+                mod_obj = self.pool.get(vals.ref._name)
+                if vals.ref:
+                    if vals.ref.user_id.id != user.id:
+                        defaults = {'user_id':  user.id}
+                        new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
+            self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
         return True
 
     def do_decline(self, cr, uid, ids, context=None, *args):
