@@ -100,8 +100,10 @@ class ir_ui_menu(osv.osv):
 
             if menu.action:
                 # we check if the user has access to the action of the menu
-                m, oid = menu.action.split(',', 1)
-                data = self.pool.get(m).browse(cr, 1, int(oid))
+                #m, oid = menu.action.split(',', 1)
+                #data = self.pool.get(m).browse(cr, 1, int(oid))
+                data = menu.action
+                m = data._name
 
                 if data:
                     model_field = { 'ir.actions.act_window':    'res_model',
