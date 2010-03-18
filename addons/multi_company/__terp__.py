@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,8 +24,9 @@
     'name': 'Multi Company',
     'version': '1.0',
     'category': 'Custom',
-    'description': """This module add the possibility to easily manage 
-    the default value for each object
+    'description': """
+    Multicompany module is for managing a multicompany environment.
+    This module is the base module for other multicompany modules.
     """,
     'author': 'Tiny,SYLEAM',
     'website': 'http://www.openerp.com/',
