@@ -34,11 +34,8 @@ This module implements a dashboard for project member that includes:
     'author': 'Tiny',
     'depends': [
         'project',
-        'report_timesheet',
         'board',
         'project_planning',
-        'report_analytic_line',
-        'report_task',
         'hr_timesheet_sheet',
         'project_issue',
         'resource'
