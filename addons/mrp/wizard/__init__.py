@@ -24,7 +24,7 @@ import orderpoint_procurement
 import wizard_procurement
 import schedulers_all
 import mrp_price
-import wizard_workcenter_load
+import mrp_workcenter_load
 import wizard_track_prod
 import change_production_qty
 import make_procurement_product
