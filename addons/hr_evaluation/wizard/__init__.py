@@ -19,10 +19,7 @@
 #
 ##############################################################################
 
-import hr_evaluation
-import wizard
-import report
+import hr_evaluation_mail
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

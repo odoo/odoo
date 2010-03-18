@@ -44,7 +44,7 @@
         </record>
         <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="3"/>
 
-        <menuitem
+       <menuitem
             name="Periodic Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="3"/>
         <menuitem
             parent="menu_eval_hr_config"
@@ -88,11 +88,17 @@
                     </group>
                     </page>
                     <page string="Mail Settings">
-                        <field name="mail_feature"/>
+                        <field name="mail_feature" colspan="4"/>
                         <newline/>
                         <separator string="Mail Body"/>
                         <newline/>
                         <field name="mail_body" colspan="4" nolabel="1"/>
+                        <newline/>
+                        <separator string="Legend" colspan ="4"/>
+                          <label string=" (employee_name)s: Partner name" colspan="2"/>
+                          <label string="(user_signature)s: User name" colspan="2"/>
+                          <label string="(date)s: Current Date" colspan="2"/>
+                          <label string="(eval_name)s:Evaluation Name" colspan="2"/>
                     </page>
                   </notebook>
                 </form>
@@ -320,5 +326,9 @@
             id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
 
+      <menuitem name="Evaluation Reminders" parent="menu_eval_hr"
+           id="menu_eval_send_mail"
+           action="action_hr_evaluation_send_mail"
+           sequence="45"/>
     </data>
 </openerp>
