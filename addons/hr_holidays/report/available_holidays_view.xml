@@ -12,7 +12,13 @@
                <tree string="Available Holidays">
                     <field name="employee_id"/>
                     <field name="holiday_status_id"/>
+                    <field name="max_leave"/>
+                    <field name="taken_leaves"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="remaining_leave"/>
+                    <field name="year" invisible="1"/>
+                	<field name="month" invisible="1"/>
+                	<field name="date" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -42,6 +48,48 @@
             </field>
         </record>
 
+        <record id="view_hr_available_holidays_report_search" model="ir.ui.view">
+	        <field name="name">available.holidays.report.search</field>
+	        <field name="model">available.holidays.report</field>
+	        <field name="type">search</field>
+	        <field name="arch" type="xml">
+	            <search string="Leaves">
+	                <filter icon="terp-hr"
+	                    string="This Year"
+	                    domain="[('year','=',time.strftime('%%Y'))]"
+	                    help="Leaves of the year"/>
+	                <filter icon="terp-hr"
+	                    string="This Month"
+	                    domain="[('month','=',time.strftime('%%m'))]"
+	                    help="Leaves of this month"/>
+	                <!--separator orientation="vertical"/>
+	                <filter icon="terp-hr"
+	                    string="Today's Start Leave"
+	                    domain="[('date_from','=',time.strftime('%%Y/%%m/%%d'))]"/>
+	                <filter icon="terp-hr"
+	                    string="Today's End Leave"
+	                    domain="[('date_to','=',time.strftime('%%Y/%%m/%%d'))]"/>
+	                <separator orientation="vertical"/-->
+	                <field name="employee_id"/>
+	                <field name="user_id" widget="selection">
+	                    <filter icon="terp-sale"
+	                        string="My Leaves"
+	                        default="1"
+	                        domain="[('user_id','=',uid)]"/>
+	                </field>
+	                <newline/>
+	                <group expand="1" string="Group By..." colspan="10" col="12">
+	                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="Month" icon="terp-sale" context="{'group_by':'date'}"/>
+	                    <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
+	                </group>
+	            </search>
+	        </field>
+	    </record>
+
 
 
         <record id="action_hr_available_holidays_report" model="ir.actions.act_window">
@@ -49,7 +97,7 @@
             <field name="res_model">available.holidays.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="view_id" ref="view_hr_available_holidays_report_tree"/>
+            <field name="view_id" ref="view_hr_available_holidays_report_search"/>
 
         </record>
 
