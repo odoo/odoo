@@ -29,24 +29,33 @@ import wizard
 
 class auction_pay_buy(osv.osv_memory):
     
-    def _start(self, cr, uid, context):
-        rec = self.pool.get('auction.lots').browse(cr, uid, context['active_ids'], context)
-        amount1 = 0.0
-        for r in rec:
-            amount1+= r.buyer_price
-            if r.is_ok:
-                raise osv.except_osv('Error !', 'Some lots of the selection are already paid.')
-        return amount1
-    
-    def _value_buyer_id(self, cr, uid, context={}):
-        """
-        For default buyer id value
-        @return:auction lots buyer id in buyer id field.
-        """
-        lots= self.pool.get('auction.lots').browse(cr, uid, context['active_ids'])
-        for lot in lots:
-            buyer=lot and lot.ach_uid.id or False
-        return buyer
+    def default_get(self, cr, uid, fields, context):
+        """ 
+             @summary: To get default values for the object.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
+        
+        """        
+        res = {}
+        record_id = context and context.get('active_id',False)
+        if not record_id:
+           return res
+
+        lot= self.pool.get('auction.lots').browse(cr, uid, record_id)
+        if lot.is_ok :
+           raise osv.except_osv('Error !', 'Some lots of the selection are already paid.')
+         
+        res['amount']=lot.buyer_price
+        res['total']=lot.buyer_price
+        res['buyer_id']=lot.ach_uid and lot.ach_uid.id or False
+        res['objects'] = len(context['active_ids'])
+        return res
     
     def pay_and_reconcile(self, cr, uid, ids, context):
         """
@@ -103,12 +112,6 @@ class auction_pay_buy(osv.osv_memory):
                'statement_id3':fields.many2one('account.bank.statement', 'Statement'), 
                'total': fields.float('Amount paid', digits = (16, int(tools.config['price_accuracy'])), readonly =True), 
                }
-    _defaults={
-               'amount' : _start,
-               'total' : _start,
-               'buyer_id' : _value_buyer_id
-               }
-    
 auction_pay_buy()
 
 

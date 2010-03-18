@@ -28,34 +28,29 @@ import wizard
 
 class auction_lots_make_invoice_buyer(osv.osv_memory):
     
-    def _value_amount(self, cr, uid, context={}):
-        """
-        For Amount default value
-        @return:default auction lots amount value in amount fields. 
-        """
-        lots= self.pool.get('auction.lots').browse(cr, uid, context['active_ids'])
-        amount_total=0.0
-        for lot in lots:
-            amount_total+=lot.buyer_price
-        return amount_total
+    def default_get(self, cr, uid, fields, context):
+        """ 
+             @summary: To get default values for the object.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
         
-    def _value_object(self, cr, uid, context={}):
-        """
-        For object default value.
-        @return:length of id  in Object field.
-        """
-        object = len(context['active_ids'])
-        return object
-    
-    def _value_buyer_id(self, cr, uid, context={}):
-        """
-        For default buyer id value
-        @return:auction lots buyer id in buyer id field.
-        """
-        lots= self.pool.get('auction.lots').browse(cr, uid, context['active_ids'])
-        for lot in lots:
-            buyer=lot and lot.ach_uid.id or False
-        return buyer  
+        """        
+        res = {}
+        record_id = context and context.get('active_id',False)
+        if not record_id:
+           return res
+
+        lot= self.pool.get('auction.lots').browse(cr, uid, record_id)
+        res['amount']=lot.buyer_price
+        res['buyer_id']=lot.ach_uid and lot.ach_uid.id or False
+        res['objects'] = len(context['active_ids'])
+        return res
 
     def makeInvoices(self, cr, uid, ids, context):
         """
@@ -100,11 +95,7 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
                'buyer_id':fields.many2one('res.partner', 'Buyer', required=True), 
                }
     _defaults={
-               'amount':_value_amount,
-               'objects':_value_object,
                'number':lambda *a: False,
-               'buyer_id':_value_buyer_id
-               
                }
 
 auction_lots_make_invoice_buyer()
