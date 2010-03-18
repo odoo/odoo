@@ -30,8 +30,8 @@ class pos_details(osv.osv_memory):
     _description = 'Order Details'
 
     _columns = {
-                'date_start': fields.datetime('Date Start',),
-                'date_end': fields.datetime('Date End'),
+                'date_start': fields.date('Date Start',),
+                'date_end': fields.date('Date End'),
     }
     
     def print_report(self, cr, uid, ids, context=None):
@@ -44,14 +44,16 @@ class pos_details(osv.osv_memory):
              @param context: A standard dictionary 
              @return : retrun report
         """        
-#        reportname='report.pos.details'
-#        srv = netsvc.LocalService(reportname)
-##        pdf, _ = srv.create(cr, uid, ids, {}, context=context)
+        datas = {'ids' : context.get('active_ids',[])}
+        res = self.read(cr, uid, ids, ['date_start','date_end'])
+        res = res and res[0] or {}        
+        datas['form'] = res
         
         return { 
                 'type' : 'ir.actions.report.xml',
                 'report_name':'pos.details',
-                 }
+                'datas' : datas,               
+       }
 
 pos_details()
 
