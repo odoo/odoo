@@ -47,20 +47,19 @@ class make_delivery(osv.osv_memory):
              @return: A dictionary which of fields with values. 
         
         """        
-        rec_id = context and context.get('active_id',False)        
-        res = {}
-        
         res = super(make_delivery, self).default_get(cr, uid, fields, context=context)
         order_obj = self.pool.get('sale.order')
-        order = order_obj.browse(cr, uid, rec_id)
-    
-        if not order.state in ('draft'):
-            raise osv.except_osv(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
-    
-        carrier_id = order.partner_id.property_delivery_carrier.id
-        res['carrier_id'] = carrier_id
+        for order in order_obj.browse(cr, uid, context.get('active_ids', [])):
+             res.update({'carrier_id': order.partner_id.property_delivery_carrier.id})
         return res
     
+    def view_init(self, cr , uid , fields_list, context=None):
+         order_obj = self.pool.get('sale.order')
+         for order in order_obj.browse(cr, uid, context.get('active_ids', [])):     
+             if not order.state in ('draft'):
+                 raise osv.except_osv(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
+         pass     
+        
     def delivery_set(self, cr, uid, ids, context):
         """ 
              Adds delivery costs to Sale Order Line.
