@@ -71,13 +71,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stage">
+                    <separator string="Stage Definition" colspan="4"/>
                     <field name="name" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
                     <field name="object_id" invisible="1" />
                     <field name="sequence"/>
                     <field name="probability"/>
                     <field name="on_change"/>
-                    
+                    <separator string="Requirements" colspan="4"/>
+                    <field name="requirements" nolabel="1" colspan="4"/>
                 </form>
             </field>
         </record>
@@ -632,7 +634,7 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="category_id" position="after">
-                    <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1" widget="selection"/>
                     </field>
                 </field>
         </record>

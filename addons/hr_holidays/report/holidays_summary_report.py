@@ -44,7 +44,6 @@ def strToDate(dt):
 
 def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
     display={}
-
     if dept==0:
         count=0
         p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr,uid,[('employee_id','in',[empid,False]), ('type', '=', 'remove')])

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -36,7 +36,9 @@ reports, eso.""",
         'security/ir.model.access.csv',
         'hr_timesheet_invoice_view.xml',
         'hr_timesheet_invoice_wizard.xml',
-        'hr_timesheet_invoice_report.xml'
+        'hr_timesheet_invoice_report.xml',
+        'report/report_analytic_view.xml',
+        'report/hr_timesheet_invoice_report_view.xml',
     ],
     'demo_xml': ['hr_timesheet_invoice_demo.xml'],
     'installable': True,

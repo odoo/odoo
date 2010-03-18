@@ -74,17 +74,14 @@ class calendar_attendee(osv.osv):
             result[id] = {}
             if name == 'categ_id':
                 if attdata.ref:
-                    model, res_id = tuple(attdata.ref.split(','))
-                    model_obj = self.pool.get(model)
-                    obj = model_obj.read(cr, uid, res_id, ['categ_id'])[0]
-                    result[id][name] = obj.get('categ_id')
+                    result[id][name] = (attdata.ref.categ_id.id,attdata.ref.categ_id.name,)
                 else:
                     result[id][name] = False
         return result
     _columns = {
         'categ_id': fields.function(_compute_data, method=True, \
                         string='Event Type', type="many2one", \
-                        relation="crm.case.categ", multi='categ_id'), 
+                        relation="crm.case.categ", multi='categ_id'),
     }
 calendar_attendee()
 

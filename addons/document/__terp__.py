@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,14 +24,14 @@
     'name': 'Integrated Document Management System',
     'version': '1.99',
     'category': 'Generic Modules/Others',
-    'description': """This is a complete document management system:    
+    'description': """This is a complete document management system:
     * User Authentication
     * Document Indexation
 
-    ATTENTION: 
-    - When you install this module in a running company that have already PDF files stored into the database, 
-      you will lose them all. 
-    - After installing this module PDF's are not longer stored into the database, 
+    ATTENTION:
+    - When you install this module in a running company that have already PDF files stored into the database,
+      you will lose them all.
+    - After installing this module PDF's are not longer stored into the database,
       but in the servers rootpad like /server/bin/filestore.
 """,
     'author': 'Tiny',
@@ -42,7 +42,8 @@
         'document_view.xml',
         'document_data.xml',
         'security/document_security.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'report/document_report_view.xml'
     ],
     'demo_xml': [ 'document_demo.xml',],
     'installable': True,

@@ -32,7 +32,7 @@
     * List of procurement in exception
     """,
     'author': 'Tiny',
-    'depends': ['board', 'mrp', 'stock', 'report_mrp'],
+    'depends': ['board', 'mrp', 'stock' ],
     'update_xml': ['board_manufacturing_view.xml'],
     'demo_xml': ['board_manufacturing_demo.xml'],
     'installable': True,
