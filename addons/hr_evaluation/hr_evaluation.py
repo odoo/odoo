@@ -282,6 +282,7 @@ class survey_request(osv.osv):
     _columns = {
         'is_evaluation':fields.boolean('Is Evaluation?'),
     }
+
 survey_request()
 
 class hr_evaluation_interview(osv.osv):
@@ -337,4 +338,5 @@ class hr_evaluation_interview(osv.osv):
         return True
 
 hr_evaluation_interview()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1
