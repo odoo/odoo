@@ -53,12 +53,9 @@ class change_production_qty(osv.osv_memory):
            return res
         prod_obj = self.pool.get('mrp.production')
         prod = prod_obj.browse(cr, uid, record_id)
-        if prod.state in ('in_production','cancel', 'done'):
-            raise osv.except_osv(_('Warning !'), _('The production is in "%s" state. You can not change the production quantity anymore') % (prod.state).upper() )
- 
         res['product_qty'] = prod.product_qty        
         return res
-    
+        
     def change_prod_qty(self, cr, uid, ids, context):
         """ 
              Changes the Quantity of Product.
