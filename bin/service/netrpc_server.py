@@ -30,6 +30,7 @@ import os
 import socket
 
 import tiny_socket
+
 class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
     def __init__(self, sock, threads):
         threading.Thread.__init__(self)
@@ -119,8 +120,8 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
                         "Netrpc: %d threads" % len(self.threads))
             self.socket.close()
         except Exception, e:
-            netsvc.Logger().notifyChannel("web-services", netsvc.LOG_WARNING,
-                        "Netrpc: closing because of exception %s" % str(e))
+            import logging
+            logging.getLogger('web-services').warning("Netrpc: closing because of exception %s" % str(e))
             self.socket.close()
             return False
 
