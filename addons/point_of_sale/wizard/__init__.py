@@ -42,5 +42,6 @@ import pos_open_statement
 import pos_close_statement
 import pos_box_entries
 import pos_box_out
+import pos_details
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

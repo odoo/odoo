@@ -51,6 +51,7 @@ Main features :
         'wizard/pos_close_statement.xml',  
         'wizard/pos_box_entries.xml',  
         'wizard/pos_box_out.xml',  
+        'wizard/pos_details.xml',
         'pos_view.xml',
         'pos_sequence.xml',
         'posrule_data.xml',
