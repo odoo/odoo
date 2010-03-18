@@ -224,7 +224,8 @@ class invite_attendee_wizard(osv.osv_memory):
             vals = []
             mail_to = []
             attendees = []
-            
+            ref = {}
+
             if not model == 'calendar.attendee':
                 ref = {'ref': '%s,%s' % (model, base_calendar_id2real_id(context['active_id']))}
     
@@ -242,9 +243,11 @@ class invite_attendee_wizard(osv.osv_memory):
                     vals.append(res)
                     if user.address_id.email:
                         mail_to.append(user.address_id.email)
-                    
+
             elif  type == 'external' and datas.get('email'):
-                vals.append({'email': datas['email']})
+                res = {'email': datas['email']}
+                res.update(ref)
+                vals.append(res)
                 mail_to.append(datas['email'])
 
             elif  type == 'partner':
@@ -258,16 +261,15 @@ class invite_attendee_wizard(osv.osv_memory):
                     vals.append(res)
                     if contact.email:
                         mail_to.append(contact.email)
-    
-            if model == 'calendar.attendee':
-                att = att_obj.browse(cr, uid, context['active_id'])
-                vals.update({
-                    'parent_ids' : [(4, att.id)],
-                    'ref': att.ref
-                })
 
+            att = att_obj.browse(cr, uid, context['active_id'])
             for att_val in vals:
-                attendees.append(int(att_obj.create(cr, uid, att_val, context=context)))
+                if model == 'calendar.attendee':
+                    att_val.update({
+                        'parent_ids' : [(4, att.id)],
+                        'ref': att.ref._name + ',' + str(att.ref.id)
+                    })
+                attendees.append(att_obj.create(cr, uid, att_val))
 
             if model_field:
                 for attendee in attendees:
@@ -497,8 +499,7 @@ request was delegated to"),
             if user:
                 ref = vals.get('ref', None)
                 if ref:
-                    event_ref = ref
-                    if event_ref.user_id.id != user[0]:
+                    if ref.user_id.id != user[0]:
                         defaults = {'user_id':  user[0]}
                         new_event = model_obj.copy(cr, uid, event, default=defaults, context=context)
             self.write(cr, uid, invite, {'state': 'accepted'}, context)
@@ -507,7 +508,9 @@ request was delegated to"),
     def do_decline(self, cr, uid, ids, context=None, *args):
         self.write(cr, uid, ids, {'state': 'declined'}, context)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
+        if not context:
+            context = {}
         if not vals.get("email") and vals.get("cn"):
             cnval = vals.get("cn").split(':')
             email =  filter(lambda x:x.__contains__('@'), cnval)
