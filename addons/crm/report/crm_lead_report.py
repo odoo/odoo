@@ -42,8 +42,10 @@ class crm_lead_report(osv.osv):
     }
     def init(self, cr):
 
-        """ @param cr: the current row, from the database cursor
-            CRM Lead Report"""
+        """
+            CRM Lead Report
+            @param cr: the current row, from the database cursor
+        """
 
         tools.drop_view_if_exists(cr, 'crm_lead_report')
         cr.execute("""

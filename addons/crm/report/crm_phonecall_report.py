@@ -41,8 +41,9 @@ class crm_phonecall_report(osv.osv):
 
     def init(self, cr):
 
-        """ @param cr: the current row, from the database cursor,
-            Phone Calls By User And Section """
+        """ Phone Calls By User And Section
+            @param cr: the current row, from the database cursor,
+        """
 
         tools.drop_view_if_exists(cr, 'crm_phonecall_report')
         cr.execute("""

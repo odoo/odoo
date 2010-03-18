@@ -45,9 +45,9 @@ class crm_claim_report(osv.osv):
 
     def init(self, cr):
 
-        """
+        """ Display Number of cases And Section Name
         @param cr: the current row, from the database cursor,
-        Display Number of cases And Section Name """
+         """
 
         tools.drop_view_if_exists(cr, 'crm_claim_report')
         cr.execute("""

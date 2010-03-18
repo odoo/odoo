@@ -42,8 +42,10 @@ class crm_helpdesk_report(osv.osv):
 
     def init(self, cr):
 
-        """@param cr: the current row, from the database cursor
-           Display Deadline ,Responsible user, partner ,Department """
+        """
+            Display Deadline ,Responsible user, partner ,Department
+            @param cr: the current row, from the database cursor
+        """
 
         tools.drop_view_if_exists(cr, 'crm_helpdesk_report')
         cr.execute("""

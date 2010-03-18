@@ -52,7 +52,6 @@ class crm_phonecall2partner(osv.osv_memory):
                  raise osv.except_osv(_('Warning !'),
                     _('A partner is already defined on this phonecall.'))
 
-
     def _select_partner(self, cr, uid, context=None):
         """
         This function Searches for Partner from selected phonecall.

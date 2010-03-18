@@ -45,8 +45,9 @@ class crm_fundraising_report(osv.osv):
 
     def init(self, cr):
 
-        """ @param cr: the current row, from the database cursor
-            Display Number of cases and Average Probability """
+        """  Display Number of cases and Average Probability
+            @param cr: the current row, from the database cursor
+        """
 
         tools.drop_view_if_exists(cr, 'crm_fundraising_report')
         cr.execute("""
