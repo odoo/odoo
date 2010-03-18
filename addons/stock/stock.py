@@ -546,6 +546,8 @@ class stock_picking(osv.osv):
     def action_assign(self, cr, uid, ids, *args):
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
+            if not move_ids:
+                raise osv.except_osv(_('Warning !'),_('Not Available. Moves are not confirmed.'))
             self.pool.get('stock.move').action_assign(cr, uid, move_ids)
         return True
 
@@ -1279,7 +1281,7 @@ class stock_move(osv.osv):
         if done:
             count += len(done)
             self.write(cr, uid, done, {'state': 'assigned'})
-
+            
         if count:
             for pick_id in pickings:
                 wf_service = netsvc.LocalService("workflow")
