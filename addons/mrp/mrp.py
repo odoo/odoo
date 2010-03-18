@@ -605,11 +605,15 @@ class mrp_production(osv.osv):
             consumed_products = {}
             produced_qty = 0
             for consumed_product in production.move_lines2:
+                if consumed_product.scraped:
+                    continue
                 if not consumed_products.get(consumed_product.product_id.id, False):
                     consumed_products[consumed_product.product_id.id] = 0
                 consumed_products[consumed_product.product_id.id] += consumed_product.product_qty
             
             for produced_product in production.move_created_ids2:
+                if produced_product.scraped:
+                    continue
                 produced_qty += produced_product.product_qty
 
             for raw_product in production.move_lines:                
@@ -628,6 +632,8 @@ class mrp_production(osv.osv):
             stock_mov_obj.write(cr, uid, final_product_todo, vals)
             produced_products = {}
             for produced_product in production.move_created_ids2:
+                if produced_product.scraped:
+                    continue
                 if not produced_products.get(produced_product.product_id.id, False):
                     produced_products[produced_product.product_id.id] = 0
                 produced_products[produced_product.product_id.id] += produced_product.product_qty

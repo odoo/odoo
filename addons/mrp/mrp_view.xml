@@ -485,6 +485,8 @@
                                     <field name="product_id" />
 				                    <field name="product_qty"  string="Qty"/>
 				                    <field name="product_uom"  string="UOM"/>
+                                    <field name="location_id"  string="Source Loc."/>
+
                                     <field name="state" invisible="1"/>
 				                    <button name="%(stock.move_consume)d"
 				                    	string="Consume Products" type="action"
@@ -499,13 +501,14 @@
 
                             <field colspan="2" name="move_lines2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                            			widget="one2many_list" mode="tree,form" height="275">
-                           		<tree string="Consumed Products" editable="bottom" colors="red:state=='cancel';black:state=='done';">
+                           		<tree string="Consumed Products" editable="bottom" colors="red:scraped==True">
                            			<field name="product_id" readonly="1"/>
                            			<field name="product_qty" readonly="1" string="Qty"/>
-				                    <field name="product_uom" readonly="1" string="UOM"/>
-                                    <field name="location_dest_id"  readonly="1" string="Destination"/>
+				                    <field name="product_uom" readonly="1" string="UOM"/>                                    
+                                    <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
 				                    <field name="prodlot_id" />
                                     <field name="state" invisible="1"/>
+                                    <field name="scraped" invisible="1"/>
                            			<button
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
@@ -538,6 +541,7 @@
                                     <field name="product_id" />
 				                    <field name="product_qty"  string="Qty"/>
 				                    <field name="product_uom"  string="UOM"/>
+                                    <field name="location_id"  string="Source Loc."/>
                                     <field name="state" invisible="1"/>
 				                    <button name="%(stock.move_consume)d"
 				                    	string="Consume Products" type="action"
@@ -552,13 +556,14 @@
 
                             <field colspan="2" name="move_created_ids2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                            			widget="one2many_list" mode="tree,form" height="275">
-                           		<tree string="Finished Products" editable="bottom">
+                           		<tree string="Finished Products" editable="bottom" colors="red:scraped==True">
                            			<field name="product_id" readonly="1"/>
-                           			<field name="product_qty" readonly="1"/>
-                           			<field name="product_uom" readonly="1" />                           			
-                           			<field name="location_id" readonly="1"/>
+                           			<field name="product_qty" readonly="1" string="Qty"/>
+				                    <field name="product_uom" readonly="1" string="UOM"/>
+                                    <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                            			<field name="prodlot_id" />
                                     <field name="state" invisible="1"/>
+                                    <field name="scraped" invisible="1"/>
                            			<button name="%(stock.track_line)d"
                                             string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                            			<button name="%(stock.move_scrap)d"

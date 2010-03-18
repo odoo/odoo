@@ -22,11 +22,9 @@
 from stock import *
 import partner
 import product
-
 import report
 import wizard
-import report_stock
-
+import stock_wizard
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

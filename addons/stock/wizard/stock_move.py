@@ -232,7 +232,7 @@ class split_in_production_lot(osv.osv_memory):
                                                  {'product_id': move.product_id.id})                    
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id})
                     prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
-                    ref = '%d' % (current_move)
+                    ref = '%d' % (move.id)
                     if prodlot.ref:
                         ref = '%s, %s' % (prodlot.ref, ref) 
                     prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
