@@ -34,14 +34,29 @@ class stock_inventory_line_split(osv.osv_memory):
     _description = "Split inventory lines"
 
     
+    def default_get(self, cr, uid, fields, context):
+        """ 
+             @summary: To get default values for the object.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
+        
+        """        
+        res = {}
+        record_id = context and context.get('active_id',False)
+        res = super(stock_inventory_line_split, self).default_get(cr, uid, fields, context=context)
+        if not record_id:
+           return res
 
-    def _get_product_id(self, cr, uid, context):
-        line = self.pool.get('stock.inventory.line').browse(cr, uid, context['active_id'], context=context)
-        return line.product_id.id
-
-    _defaults = {
-        'product_id': _get_product_id, 
-    }
+        lot=  self.pool.get('stock.inventory.line').browse(cr, uid, record_id)
+        res['product_id']=line.product_id.id
+        return res
+    
     
 
     def split(self, cr, uid, ids, line_ids, context=None):

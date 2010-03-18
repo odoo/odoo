@@ -49,6 +49,8 @@ class make_delivery(osv.osv_memory):
         """        
         rec_id = context and context.get('active_id',False)        
         res = {}
+        
+        res = super(make_delivery, self).default_get(cr, uid, fields, context=context)
         order_obj = self.pool.get('sale.order')
         order = order_obj.browse(cr, uid, rec_id)
     

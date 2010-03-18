@@ -43,6 +43,7 @@ class auction_lots_make_invoice(osv.osv_memory):
         
         """        
         res = {}
+        res = super(auction_lots_make_invoice, self).default_get(cr, uid, fields, context=context)        
         record_id = context and context.get('active_id',False)
         if not record_id:
            return res
