@@ -7,7 +7,8 @@
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Timesheets">
+                <tree string="Timesheets"
+                    colors="blue:state == 'draft';grey:state == 'done'">
                     <field name="user_id"/>
                     <field name="department_id"/>
                     <field name="date_from"/>
@@ -156,9 +157,11 @@
                                     <field name="total_difference" widget="float_time" groups="hr_attendance.group_hr_attendance"/>
                                 </tree>
                             </field>
-                            <field name="total_attendance" widget="float_time"/>
-                            <field name="total_timesheet" widget="float_time"/>
-                            <field name="total_difference" widget="float_time"/>
+                            <group colspan="4" col="6">
+                                <field name="total_attendance" widget="float_time"/>
+                                <field name="total_timesheet" widget="float_time"/>
+                                <field name="total_difference" widget="float_time"/>
+                            </group>
                         </page>
                     </notebook>
                     <field name="state"/>
@@ -182,10 +185,7 @@
                         <filter icon="terp-crm" string="Unvalidated" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-crm" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
-                        <field name="state">
-                            <filter icon="terp-hr" domain="[('state','=','draft')]" help="Draft Timesheets"/>
-                            <filter icon="terp-hr" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
-                        </field>
+                        <field name="state" />
                         <field name="name" select="1"/>
                         <field name="user_id" select="1" widget="selection">
                             <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Timesheet"/>

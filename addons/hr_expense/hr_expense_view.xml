@@ -26,7 +26,8 @@
             <field name="model">hr.expense.expense</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Expenses">
+                <tree string="Expenses"
+                    colors="blue:state == 'draft'">
                     <field name="date"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
@@ -66,8 +67,8 @@
             <field name="arch" type="xml">
                 <form string="Expenses Sheet">
                     <group colspan="4" col="6">
-                        <field name="name" select="1"/>
                         <field name="employee_id" select="1"/>
+                        <field name="name" select="1"/>
                         <field name="id" select="2"/>
                         <field name="date" select="1"/>
                         <field name="amount"/>
@@ -127,39 +128,42 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Expense">
-                <group col="20" colspan="4">
-                      <filter
-                        icon="terp-hr"
-                        domain="[('state','=','draft')]"
-                        string="Draft"
-                        help="Draft Expense"/>
-                      <filter
-                        icon="terp-hr"
-                        domain="[('state','=','confirm')]"
-                        string="To Validate"
-                        help="Confirmed Expense"/>
-                      <filter
-                        icon="terp-hr"
-                        domain="[('state','=','accepted')]"
-                        string="To Pay"
-                        help="Expenses to Invoice"/>
-                      <separator orientation="vertical"/>
-                      <field name="name" select='1'/>
-                      <field name="user_id" select="1" widget="selection">
-                          <filter
-                            icon="gtk-execute"
-                            help="My Expenses"
+                    <group col="20" colspan="4">
+                        <filter
+                            icon="terp-hr"
+                            string="My Expenses"
                             default="1"
                             domain="[('user_id','=',uid)]"/>
-                      </field>
-                      <field name="state" select="1"/>
-                      <field name="department_id" widget="selection">
-                      	<filter icon="terp-crm"
-								domain="[('department_id','=',context.get('department_id',False))]"
-								help="Expenses of My Department"/>
-						</field>
-                 </group>
-                 </search>
+                        <filter icon="terp-hr"
+                            domain="[('department_id','=',context.get('department_id',False))]"
+                            string="Expenses of My Department"/>
+                        <separator orientation="vertical" />
+                        <filter
+                            icon="terp-hr"
+                            domain="[('state','=','draft')]"
+                            string="Draft"
+                            help="Draft Expense"/>
+                        <filter
+                            icon="terp-hr"
+                            domain="[('state','=','confirm')]"
+                            string="To Validate"
+                            help="Confirmed Expense"/>
+                        <filter
+                            icon="terp-hr"
+                            domain="[('state','=','accepted')]"
+                            string="To Pay"
+                            help="Expenses to Invoice"/>
+                        <separator orientation="vertical"/>
+                        <field name="user_id" select="1" widget="selection" />
+                        <field name="name" select='1'/>
+                        <field name="department_id" widget="selection" />
+                        <field name="state" select="1"/>
+                    </group>
+                    <newline />
+                    <group expand="1" string="Group By..." colspan="11" col="11">
+                        <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 

@@ -7,24 +7,26 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Leave">
-                       <group col='8' colspan='4'>
-                           <filter icon="terp-hr" domain="[('state','=','draft')]" string="To Confirm"/>
-                           <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
-                           <separator orientation="vertical"/> 
-                          <field name="name" select='1'/>
-                          <field name="state" select="1">
-                              <filter icon="terp-hr" domain="[('state','=','refuse')]" help="Refused Holidays"/>
-                              <filter icon="terp-hr" domain="[('state','=','validate')]" help="Validated Holidays"/>
-                          </field>                          
-                          <field name="user_id" select="1" widget="selection">
-                              <filter icon="gtk-execute" help="My Leaves" domain="[('user_id','=',uid)]" />  
-                          </field> 
-                          <field name="department_id" select="1" widget="selection">
-                          		<filter icon="gtk-execute" domain="[('department_id','=',context.get('department_id',False))]"
-								help="My Departments Leaves"/>
-                          </field>
-                      </group>
-                 </search>
+                    <group col='8' colspan='4'>
+                        <filter icon="terp-hr" domain="[('state','=','draft')]" string="To Confirm"/>
+                        <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
+                        <filter icon="terp-hr" domain="[('department_id','=',context.get('department_id',False))]"
+                            string="My Departments Leaves"/>
+                        <filter icon="terp-hr" help="My Leaves" domain="[('user_id','=',uid)]" string="My Leaves"/>  
+                        <separator orientation="vertical"/> 
+                        <field name="user_id" select="1" widget="selection" />
+                        <field name="department_id" select="1" widget="selection" />
+                        <field name="name" select='1'/>
+                        <field name="state" select="1">
+                            <filter icon="terp-hr" domain="[('state','=','refuse')]" help="Refused Holidays"/>
+                            <filter icon="terp-hr" domain="[('state','=','validate')]" help="Validated Holidays"/>
+                        </field>                          
+                    </group>
+                    <newline />
+                    <group expand="1" string="Group By..." colspan="11" col="11">
+                        <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -134,16 +136,17 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Leaves">
-                    <field name="name"/>
+                <tree string="Leaves"
+                    colors="red:state == 'refuse';grey:state == 'cancel'">
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
                     <field name="date_from"/>
                     <field name="date_to"/>
+                    <field name="name"/>
                     <field name="holiday_status_id"/>
-                    <field name="state"/>
                     <field name="type"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
