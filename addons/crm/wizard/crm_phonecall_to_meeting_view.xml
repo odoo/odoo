@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+	    <!-- Phonecall to meeting view -->
+
         <record model="ir.ui.view" id="phonecall2phonecall2meeting_view">
             <field name="name">crm.phonecall2meeting.form</field>
             <field name="model">crm.phonecall2meeting</field>
@@ -8,10 +11,13 @@
             <field name="arch" type="xml">
                 <form string="Convert To Meeting ">
                         <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
-                        <button name="action_makeMeeting" type="object" string="_Apply" icon="gtk-apply" />
+                        <button name="action_make_meeting" type="object" string="_Convert" icon="gtk-convert" />
                 </form>
             </field>
         </record>
+
+	    <!-- Phonecall to meeting action -->
+
         <record model="ir.actions.act_window" id="phonecall2meeting_act">
             <field name="name">Convert To Meeting</field>
             <field name="res_model">crm.phonecall2meeting</field>
@@ -19,7 +25,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="phonecall2phonecall2meeting_view"/>
             <field name="target">new</field>
-         	<field name="context">{'record_id' : active_id}</field>
         </record>
+
     </data>
 </openerp>   

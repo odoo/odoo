@@ -31,9 +31,9 @@ import crm_lead_to_opportunity
 import crm_opportunity_to_meeting
 import crm_opportunity_to_phonecall
 
-import crm_phonecall2phonecall
+import crm_phonecall_to_phonecall
 import crm_phonecall_to_partner
-import phonecall2meeting
+import crm_phonecall_to_meeting
 import crm_phonecall_to_opportunity
 
 
