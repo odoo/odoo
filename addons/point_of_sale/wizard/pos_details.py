@@ -30,32 +30,30 @@ class pos_details(osv.osv_memory):
     _description = 'Order Details'
 
     _columns = {
-                'date_start': fields.date('Date Start',),
-                'date_end': fields.date('Date End'),
+        'date_start': fields.date('Date Start'),
+        'date_end': fields.date('Date End'),
     }
     
-    def print_report(self, cr, uid, ids, context=None):
-
+    def print_report(self, cr, uid, ids, context={}):
         """ 
-             @summary: To get the date and print the report           
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             @return : retrun report
-        """        
-        datas = {'ids' : context.get('active_ids',[])}
-        res = self.read(cr, uid, ids, ['date_start','date_end'])
+         To get the date and print the report           
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary 
+         @return : retrun report
+        """
+        
+        datas = {'ids' : context.get('active_ids', [])}
+        res = self.read(cr, uid, ids, ['date_start','date_end'], context)
         res = res and res[0] or {}        
         datas['form'] = res
         
         return { 
-                'type' : 'ir.actions.report.xml',
-                'report_name':'pos.details',
-                'datas' : datas,               
+            'type':'ir.actions.report.xml',
+            'report_name':'pos.details',
+            'datas':datas,               
        }
-
 pos_details()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
