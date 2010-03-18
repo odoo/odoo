@@ -81,7 +81,7 @@ class stock_move_consume(osv.osv_memory):
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):            
-            move_obj.consume_moves(cr, uid, move_ids, 
+            move_obj.action_consume(cr, uid, move_ids, 
                              data['product_qty'], data['location_id'], 
                              context=context)
         return {}
@@ -102,7 +102,7 @@ class stock_move_scrap(osv.osv_memory):
         move_obj = self.pool.get('stock.move')        
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):
-            move_obj.scrap_moves(cr, uid, move_ids, 
+            move_obj.action_scrap(cr, uid, move_ids, 
                              data['product_qty'], data['location_id'], 
                              context=context)
         return {}
@@ -172,7 +172,7 @@ class split_in_production_lot(osv.osv_memory):
                                                  {'product_id': move.product_id.id})                    
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id})
                     prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
-                    ref = '%d' % (current_move)
+                    ref = '%d' % (move.id)
                     if prodlot.ref:
                         ref = '%s, %s' % (prodlot.ref, ref) 
                     prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
