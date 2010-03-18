@@ -55,6 +55,9 @@
         'hr_view.xml',
         'hr_holidays_wizard.xml',
         'hr_holidays_report.xml',
+        'report/hr_holidays_report_view.xml',
+        'report/available_holidays_view.xml'
+
         #'process/hr_holidays_process.xml'
     ],
     'demo_xml': [],

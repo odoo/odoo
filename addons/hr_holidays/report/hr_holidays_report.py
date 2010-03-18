@@ -63,6 +63,7 @@ class hr_holidays_report(osv.osv):
                      s.state
                      from
                  hr_holidays s
+                 where type='remove'
                  group by
                      s.create_date,s.state,s.date_from,s.date_to,
                      s.number_of_days_temp,s.employee_id,s.user_id
