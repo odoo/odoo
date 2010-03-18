@@ -28,7 +28,7 @@ import time
 
 class audittrail_rule(osv.osv):
     """
-    For Auddittrail RUle
+    For Auddittrail Rule
     """
     _name = 'audittrail.rule'
     _description = "Audittrail Rule"
@@ -61,10 +61,10 @@ class audittrail_rule(osv.osv):
 
     def subscribe(self, cr, uid, ids, *args):
         """
-        subscriber Rule on object and apply action on that object.
+        Subscribe Rule for auditing changes on object and apply shortcut for logs on that object.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Auddittrail RUle’s IDs.
+        @param ids: List of Auddittrail Rule’s IDs.
         @return: True 
         """
         obj_action = self.pool.get('ir.actions.act_window')
@@ -94,10 +94,10 @@ class audittrail_rule(osv.osv):
 
     def unsubscribe(self, cr, uid, ids, *args):
         """
-        unsubscribe  Rule on object
+        Unsubscribe Auditing Rule on object
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Auddittrail RUle’s IDs.
+        @param ids: List of Auddittrail Rule’s IDs.
         @return: True 
         """
         obj_action = self.pool.get('ir.actions.act_window')
@@ -126,6 +126,7 @@ class audittrail_log(osv.osv):
     """
     _name = 'audittrail.log'
     _description = "Audittrail Log"
+
     _columns = {
         "name": fields.char("Name", size=32), 
         "object_id": fields.many2one('ir.model', 'Object'), 
@@ -138,6 +139,7 @@ class audittrail_log(osv.osv):
         "res_id": fields.integer('Resource Id'), 
         "line_ids": fields.one2many('audittrail.log.line', 'log_id', 'Log lines'), 
     }
+
     _defaults = {
         "timestamp": lambda *a: time.strftime("%Y-%m-%d %H:%M:%S")
     }
@@ -166,11 +168,20 @@ class audittrail_log_line(osv.osv):
 audittrail_log_line()
 
 
-
 class audittrail_objects_proxy(osv_pool):
+    """ Uses Object proxy for auditing changes on object of subscribed Rules"""
     
     def get_value_text(self, cr, uid, field_name, values, object, context=None):
-        
+        """
+        Gets textual values for the fields
+        e.g.: For field of type many2one it gives its name value instead of id
+
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param field_name: List of fields for text values 
+        @param values: Values for field to be converted into textual values  
+        @return: values: List of textual values for given fields 
+        """
         if not context:
             context = {}
         pool = pooler.get_pool(cr.dbname)
@@ -207,6 +218,15 @@ class audittrail_objects_proxy(osv_pool):
             return values
 
     def create_log_line(self, cr, uid, id, object, lines=[]):
+        """
+        Creates lines for changed fields with its old and new values
+
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param object: Object who's values are being changed
+        @param lines: List of values for line is to be created
+        """
+        
         pool = pooler.get_pool(cr.dbname)
         obj = pool.get(object.model)
         #start Loop
@@ -245,6 +265,16 @@ class audittrail_objects_proxy(osv_pool):
         return True
 
     def log_fct(self, db, uid, object, method, fct_src, *args):
+        """
+        Logging function: This function is performs logging oprations according to method
+        @param db: the current database
+        @param uid: the current user’s ID for security checks,
+        @param object: Object who's values are being changed
+        @param method: method to log: create, read, write, unlink 
+        @param fct_src: execute method of Object proxy
+        
+        @return: Returns result as per method of Object proxy 
+        """
         logged_uids = []
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
@@ -368,6 +398,15 @@ class audittrail_objects_proxy(osv_pool):
         cr.close()
 
     def execute(self, db, uid, object, method, *args, **kw):
+        """
+        Overrides Object Proxy execute method
+        @param db: the current database
+        @param uid: the current user’s ID for security checks,
+        @param object: Object who's values are being changed
+        @param method: method to log: create, read, write, unlink 
+        
+        @return: Returns result as per method of Object proxy 
+        """
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
         cr.autocommit(True)
