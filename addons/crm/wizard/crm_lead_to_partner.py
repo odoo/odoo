@@ -31,9 +31,27 @@ class crm_lead2partner(osv.osv_memory):
     _columns = {
         'action': fields.selection([('exist', 'Link to an existing partner'), \
                                     ('create', 'Create a new partner')], \
-                                    'Action', required=True), 
+                                    'Action', required=True),
         'partner_id': fields.many2one('res.partner', 'Partner')
         }
+
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+
+        """
+
+        lead_obj = self.pool.get('crm.lead')
+        rec_ids = context and context.get('active_ids', [])
+        for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
+            if lead.partner_id:
+                     raise osv.except_osv(_('Warning !'),
+                        _('A partner is already defined on this lead.'))
 
     def _select_partner(self, cr, uid, context=None):
         """
@@ -41,8 +59,8 @@ class crm_lead2partner(osv.osv_memory):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value 
-        @param context: A standard dictionary for contextual values 
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
 
         @return : Partner id if any for selected lead.
         """
@@ -55,10 +73,6 @@ class crm_lead2partner(osv.osv_memory):
         rec_ids = context and context.get('active_ids', [])
         value={}
         for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
-            if lead.partner_id:
-                 raise osv.except_osv(_('Warning !'), 
-                    _('A partner is already defined on this lead.'))
-
             partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
             if not partner_ids and lead.email_from:
                 address_ids = contact_obj.search(cr, uid, [('email', '=', lead.email_from)])
@@ -70,7 +84,7 @@ class crm_lead2partner(osv.osv_memory):
         return partner_id
 
     _defaults = {
-        'action': lambda *a:'exist', 
+        'action': lambda *a:'exist',
         'partner_id': _select_partner
         }
 
@@ -92,13 +106,13 @@ class crm_lead2partner(osv.osv_memory):
         view_id = view_obj.search(cr, uid, [('model', '=', 'crm.lead2partner'), \
                                      ('name', '=', 'crm.lead2partner.view')])
         return {
-            'view_mode': 'form', 
-            'view_type': 'form', 
-            'view_id': view_id or False, 
-            'res_model': 'crm.lead2partner', 
-            'context': context, 
-            'type': 'ir.actions.act_window', 
-            'target': 'new', 
+            'view_mode': 'form',
+            'view_type': 'form',
+            'view_id': view_id or False,
+            'res_model': 'crm.lead2partner',
+            'context': context,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
             }
 
 
@@ -123,32 +137,32 @@ class crm_lead2partner(osv.osv_memory):
         partner_id = False
         contact_id = False
         rec_ids = context and context.get('active_ids', [])
-        
+
         for data in self.browse(cr, uid, ids):
             for lead in lead_obj.browse(cr, uid, rec_ids):
                 if data.action == 'create':
                     partner_id = partner_obj.create(cr, uid, {
-                        'name': lead.partner_name or lead.name, 
-                        'user_id': lead.user_id.id, 
-                        'comment': lead.description, 
+                        'name': lead.partner_name or lead.name,
+                        'user_id': lead.user_id.id,
+                        'comment': lead.description,
                     })
                     contact_id = contact_obj.create(cr, uid, {
-                        'partner_id': partner_id, 
-                        'name': lead.name, 
-                        'phone': lead.phone, 
-                        'mobile': lead.mobile, 
-                        'email': lead.email_from, 
-                        'fax': lead.fax, 
-                        'title': lead.title, 
-                        'function': lead.function and lead.function.id or False, 
-                        'street': lead.street, 
-                        'street2': lead.street2, 
-                        'zip': lead.zip, 
-                        'city': lead.city, 
-                        'country_id': lead.country_id and lead.country_id.id or False, 
-                        'state_id': lead.state_id and lead.state_id.id or False, 
+                        'partner_id': partner_id,
+                        'name': lead.name,
+                        'phone': lead.phone,
+                        'mobile': lead.mobile,
+                        'email': lead.email_from,
+                        'fax': lead.fax,
+                        'title': lead.title,
+                        'function': lead.function and lead.function.id or False,
+                        'street': lead.street,
+                        'street2': lead.street2,
+                        'zip': lead.zip,
+                        'city': lead.city,
+                        'country_id': lead.country_id and lead.country_id.id or False,
+                        'state_id': lead.state_id and lead.state_id.id or False,
                     })
-    
+
                 else:
                     if data.partner_id:
                         partner_id = data.partner_id.id
@@ -184,14 +198,14 @@ class crm_lead2partner(osv.osv_memory):
         res = mod_obj.read(cr, uid, result, ['res_id'])
 
         value = {
-            'domain': "[]", 
-            'view_type': 'form', 
-            'view_mode': 'form,tree', 
-            'res_model': 'res.partner', 
-            'res_id': partner_ids and int(partner_ids[0]) or False, 
-            'view_id': False, 
-            'context': context, 
-            'type': 'ir.actions.act_window', 
+            'domain': "[]",
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'res.partner',
+            'res_id': partner_ids and int(partner_ids[0]) or False,
+            'view_id': False,
+            'context': context,
+            'type': 'ir.actions.act_window',
             'search_view_id': res['res_id']
         }
         return value
