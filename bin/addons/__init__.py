@@ -32,6 +32,7 @@ import pooler
 
 import netsvc
 from osv import fields
+import addons
 
 import zipfile
 import release
@@ -301,7 +302,7 @@ def load_information_from_description_file(module):
     :param module: The name of the module (sale, purchase, ...)
     """
     for filename in ['__openerp__.py', '__terp__.py']:
-        description_file = get_module_resource(module, filename)
+        description_file = addons.get_module_resource(module, filename)
         if os.path.isfile(description_file):
             return eval(tools.file_open(description_file).read())
 

@@ -159,7 +159,7 @@ class act_window(osv.osv):
     ]
 
     def get_filters(self, cr, uid, model):
-        cr.execute('select id from ir_act_window a where a.id not in (select act_id from ir_act_window_user_rel) and a.res_model=\''+model+'\' and a.filter=\'1\';')
+        cr.execute('SELECT id FROM ir_act_window a WHERE a.id not in (SELECT act_id FROM ir_act_window_user_rel) AND a.res_model=\''+model+'\' and a.filter=\'1\';')
         all_ids = cr.fetchall()
         filter_ids =  map(lambda x:x[0],all_ids)
         act_ids = self.search(cr,uid,[('res_model','=',model),('filter','=',1),('default_user_ids','in',(','.join(map(str,[uid,])),))])
@@ -377,7 +377,9 @@ server_object_lines()
 class actions_server(osv.osv):
 
     def _select_signals(self, cr, uid, context={}):
-        cr.execute("select distinct w.osv, t.signal from wkf w, wkf_activity a, wkf_transition t where w.id = a.wkf_id  and t.act_from = a.id  or t.act_to = a.id and t.signal!='' and t.signal not in (null, NULL)")
+        cr.execute("SELECT distinct w.osv, t.signal FROM wkf w, wkf_activity a, wkf_transition t \
+        WHERE w.id = a.wkf_id  AND t.act_from = a.id OR t.act_to = a.id AND t.signal!='' \
+        AND t.signal not in (null, NULL)")
         result = cr.fetchall() or []
         res = []
         for rs in result:

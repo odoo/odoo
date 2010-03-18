@@ -182,6 +182,17 @@
           Partner Titles
           =======================
         -->
+        <record id="view_partner_title_tree" model="ir.ui.view">
+            <field name="name">res.partner.title.tree</field>
+            <field name="model">res.partner.title</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Partner Titles">
+                    <field name="name" select="1"/>
+                    <field name="shortcut" select="1"/>
+                </tree>
+            </field>
+        </record>
         <record id="view_partner_title_form" model="ir.ui.view">
             <field name="name">res.partner.title.form</field>
             <field name="model">res.partner.title</field>
@@ -340,8 +351,8 @@
                             default="context.get('default_supplier',False)"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
-                        <field name="country" select="1"/>
                         <field name="address" select="1"/>
+                        <field name="country" select="1"/>
                         <field name="category_id" select="1"/>
                         <field name="user_id" select="1"/>
                    </group>
@@ -555,6 +566,7 @@
             <field name="arch" type="xml">
                 <tree string="Partner Categories">
                     <field name="complete_name"/>
+                    <field name="active" />
                 </tree>
             </field>
         </record>

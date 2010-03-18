@@ -309,6 +309,7 @@ class res_partner_address(osv.osv):
     }
     _defaults = {
         'active': lambda *a: 1,
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner.address', context=c),
     }
 
     def name_get(self, cr, user, ids, context={}):
