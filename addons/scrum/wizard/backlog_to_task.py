@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -34,10 +34,10 @@ btt_fields = {
     'user_id' : {'string':'Assign To', 'type':'many2one', 'relation':'res.users'},
 }
 
-def _do_create(self, cr, uid, data, context):
+def _do_create(self, cr, uid, data, context={}):
     pool = pooler.get_pool(cr.dbname)
-    backlogs = pool.get('scrum.product.backlog').browse(cr, uid, data['ids'])
-    mod_obj = pool.get('ir.model.data') 
+    backlogs = pool.get('scrum.product.backlog').browse(cr, uid, data['ids'], context=context)
+    mod_obj = pool.get('ir.model.data')
     result = mod_obj._get_id(cr, uid, 'project', 'view_task_search_form')
     id = mod_obj.read(cr, uid, result, ['res_id'])
     ids = []
@@ -48,10 +48,10 @@ def _do_create(self, cr, uid, data, context):
             'name': backlog.name,
             'description': backlog.note,
             'project_id': backlog.project_id.id,
-            'user_id': data['form']['user_id'] or (backlog.user_id and backlog.user_id.id) or uid,
-            'planned_hours': backlog.planned_hours
+            'user_id': data['form']['user_id'] or False,
+            'planned_hours': backlog.planned_hours,
+            'remaining_hours':backlog.expected_hours,
         }))
-
     value = {
         'domain': "[('product_backlog_id','in',["+','.join(map(str,data['ids']))+"])]",
         'name': 'Open Backlog Tasks',
@@ -60,7 +60,7 @@ def _do_create(self, cr, uid, data, context):
         'res_model': 'project.task',
         'view_id': False,
         'type': 'ir.actions.act_window',
-        'search_view_id': id['res_id']
+        'search_view_id': id['res_id'],
     }
     return value
 
