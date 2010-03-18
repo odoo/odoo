@@ -41,16 +41,14 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
              @return: A dictionary which of fields with values. 
         
         """        
-        res = {}
-        record_id = context and context.get('active_id',False)
         res = super(auction_lots_make_invoice_buyer, self).default_get(cr, uid, fields, context=context)
-        if not record_id:
-           return res
-
-        lot= self.pool.get('auction.lots').browse(cr, uid, record_id)
-        res['amount']=lot.buyer_price
-        res['buyer_id']=lot.ach_uid and lot.ach_uid.id or False
-        res['objects'] = len(context['active_ids'])
+        for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
+            if 'amount' in fields:
+                res.update({'amount': lot.buyer_price})                
+            if 'buyer_id' in fields:
+                res.update({'buyer_id': lot.ach_uid and lot.ach_uid.id or False})                        
+            if 'objects' in fields:
+                res.update({'objects': len(context['active_ids'])})   
         return res
 
     def makeInvoices(self, cr, uid, ids, context):

@@ -42,20 +42,14 @@ class auction_pay_buy(osv.osv_memory):
              @return: A dictionary which of fields with values. 
         
         """        
-        res = {}
-        res = super(auction_pay_buy, self).default_get(cr, uid, fields, context=context)              
-        record_id = context and context.get('active_id',False)
-        if not record_id:
-           return res
-
-        lot= self.pool.get('auction.lots').browse(cr, uid, record_id)
-        if lot.is_ok :
-           raise osv.except_osv('Error !', 'Some lots of the selection are already paid.')
-         
-        res['amount']=lot.buyer_price
-        res['total']=lot.buyer_price
-        res['buyer_id']=lot.ach_uid and lot.ach_uid.id or False
-        res['objects'] = len(context['active_ids'])
+        res = super(auction_pay_buy, self).default_get(cr, uid, fields, context=context)       
+        for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
+            if 'amount' in fields:
+                res.update({'amount': lot.buyer_price})                
+            if 'buyer_id' in fields:
+                res.update({'buyer_id': lot.ach_uid and lot.ach_uid.id or False})                        
+            if 'total' in fields:
+                res.update({'total': lot.buyer_price})     
         return res
     
     def pay_and_reconcile(self, cr, uid, ids, context):
