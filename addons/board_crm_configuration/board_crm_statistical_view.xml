@@ -6,40 +6,38 @@
          -->
         <record model="ir.ui.view" id="view_crm_lead_stage_graph1">
             <field name="name">Leads By Stage - Graph</field>
-            <field name="model">report.crm.lead.section.stage</field>
+            <field name="model">crm.lead.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Leads By Stage" type="pie">
                     <field name="stage_id"/>
                     <field name="nbr" operator="+"/>
-                    <field name="state" group="True"/>
                 </graph>
             </field>
         </record>
 
         <record model="ir.ui.view" id="view_crm_opportunity_categ_graph">
             <field name="name">report.crm.opportunity.categ.graph</field>
-            <field name="model">report.crm.opportunity.categ</field>
+            <field name="model">crm.opportunity.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Opportunity by Sections and Categories" type="bar" orientation="horizontal">
                     <field name="categ_id"/>
                     <field name="nbr" operator="+"/>
-                    <field name="state" group="True"/>
                 </graph>
             </field>
         </record>
 
         <act_window name="Opportunities By Categories"
             domain="[('state','!=','done'),('state','!=','cancel')]"
-            res_model="report.crm.opportunity.categ"
+            res_model="crm.opportunity.report"
             view_type="form"
             view_mode="graph,tree,form"
             view_id="view_crm_opportunity_categ_graph"
             id="act_oppor_categ"/>
 
         <record model="ir.actions.act_window" id="act_leads_state">
-            <field name="res_model">report.crm.lead.section.stage</field>
+            <field name="res_model">crm.lead.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_lead_stage_graph1"/>
@@ -48,7 +46,7 @@
 
         <act_window name="Leads Of The Month By User"
             domain="[('month','=',time.strftime('%%m')),('state','!=','cancel')]"
-            res_model="report.crm.lead.user"
+            res_model="crm.lead.report"
             view_type="form"
             view_mode="graph,tree,form"
             view_id="view_crm_lead_stage_graph1"

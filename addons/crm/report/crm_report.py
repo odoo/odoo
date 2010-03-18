@@ -39,14 +39,14 @@ class crm_case_report(osv.osv):
         res = {}
         state_perc = 0.0
         avg_ans = 0.0
-        
+
         for case in self.browse(cr, uid, ids, context):
             if field_name != 'avg_answers':
                 state = field_name[5:]
                 cr.execute("select count(*) from crm_opportunity where section_id =%s and state='%s'"%(case.section_id.id,state))
                 state_cases = cr.fetchone()[0]
                 perc_state = (state_cases / float(case.nbr) ) * 100
-                
+
                 res[case.id] = perc_state
             else:
                 model_name = self._name.split('report.')
@@ -57,24 +57,24 @@ class crm_case_report(osv.osv):
 
                     cr.execute("select count(*) from crm_case_log l, ir_model m  where l.model_id=m.id and m.model = '%s'" , model_name)
                     logs = cr.fetchone()[0]
-                    
+
                     avg_ans = logs / case.nbr
-                    res[case.id] = avg_ans       
-        
+                    res[case.id] = avg_ans
+
         return res
 
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),        
+        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'avg_answers': fields.function(_get_data,string='Avg. Answers', method=True,type="integer"),
-        'perc_done': fields.function(_get_data,string='%Done', method=True,type="float"),
-        'perc_cancel': fields.function(_get_data,string='%Cancel', method=True,type="float"),
+#        'avg_answers': fields.function(_get_data,string='Avg. Answers', method=True,type="integer"),
+#        'perc_done': fields.function(_get_data,string='%Done', method=True,type="float"),
+#        'perc_cancel': fields.function(_get_data,string='%Cancel', method=True,type="float"),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
-        'company_id': fields.many2one('res.company','Company',readonly=True),                                  
+        'company_id': fields.many2one('res.company','Company',readonly=True),
     }
     _order = 'name desc, user_id'
     def init(self, cr):
@@ -100,7 +100,7 @@ class report_crm_case_service_dashboard(osv.osv):
     _name = "report.crm.case.service.dashboard"
     _description = "Report of Closed and Open CRM Cases within past 15 days"
     _auto = False
-    _columns = {        
+    _columns = {
         'date_deadline': fields.datetime('Deadline', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
         'user_id': fields.many2one('res.users', 'Responsible', readonly=True),
@@ -108,13 +108,13 @@ class report_crm_case_service_dashboard(osv.osv):
         'create_date' : fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
-    
+
     def init(self, cr):
         cr.execute("""create or replace view report_crm_case_service_dashboard as (
             select
                 cse.id as id, cse.date_deadline as date_deadline,
                 cse.name as name, cse.user_id as user_id,
-                 cse.state as state,
+                cse.state as state,
                 cse.create_date as create_date
             from
                 crm_case cse
