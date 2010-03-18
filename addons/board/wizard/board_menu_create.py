@@ -46,6 +46,7 @@ class board_menu_create(osv.osv_memory):
                                      _('Please Insert Dashboard View(s) !'))
             return False
 
+
     def board_menu_create(self, cr, uid, ids, context=None):
         """
         Create Menu.
