@@ -19,31 +19,37 @@
 #
 ##############################################################################
 
-import wizard
+from osv import fields, osv
 
-price_form = '''<?xml version="1.0"?>
-<form string="Paid ?">
-    <field name="number"/>
-</form>'''
-
-price_fields = {
-    'number': {'string':'Number of products to produce', 'type':'integer', 'required':True},
-}
-
-class wizard_price(wizard.interface):
-    states = {
-        'init': {
-            'actions': [], 
-            'result': {'type':'form', 'arch':price_form, 'fields':price_fields, 'state':[('end','Cancel'),('price','Print product price') ]}
-        },
-        'price': {
-            'actions': [],
-            'result': {'type':'print', 'report':'product.price', 'state':'end'}
-        }
+class mrp_price(osv.osv_memory):
+    _name = 'mrp.product_price'
+    _description = 'Product Price'
+    _columns = {
+        'number': fields.integer('Number of products to produce', required=True),
     }
-wizard_price('product_price')
+    
+    def print_report(self, cr, uid, ids, context=None):
+        """ 
+             To print the report of Product cost structure
+                        
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary 
+             
+             @return : Report
+        """        
+        datas = {'ids' : context.get('active_ids',[])}
+        res = self.read(cr, uid, ids, ['number'])
+        res = res and res[0] or {}        
+        datas['form'] = res
+        
+        return { 
+                'type' : 'ir.actions.report.xml',
+                'report_name':'product.price',
+                'datas' : datas,               
+       }
 
-
+mrp_price()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
