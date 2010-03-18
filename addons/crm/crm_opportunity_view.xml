@@ -215,23 +215,23 @@
                 />
                 <separator orientation="vertical"/>
                 <field name="name" string="Opportunity"/>
+                <field name="partner_id"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
                         domain="[('user_id','=',uid)]"
                         help="My Opportunities" default="1"
                     />
                 </field>
-                <field name="partner_id"/>
-                <field name="state">
-                    <filter icon="gtk-media-rewind"
-                        string="New and open opportunities"
-                        default="1"
-                        domain="[('state','in',('draft','open'))]"/>
-                </field>
                 <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection">
                     <filter icon="terp-crm"
                         domain="[('section_id','=',context.get('section_id',False))]"
                         help="My section"/>
+                </field>
+                <field name="state">
+                    <filter icon="gtk-media-rewind"
+                        help="New and open opportunities"
+                        default="1"
+                        domain="[('state','in',('draft','open'))]" />
                 </field>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="4">

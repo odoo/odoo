@@ -72,11 +72,7 @@ def _mass_mail_send(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     case_pool=pool.get(data.get('model'))
 
-    case = case_pool.browse(cr,uid,data['ids'])[0]
-    case_pool.write(cr, uid, [case.id], {
-        #'som': False,
-                'canal_id': False,
-                })
+    case = case_pool.browse(cr,uid,data['ids'])[0]    
     emails = [data['form']['to']] + (data['form']['cc'] or '').split(',')
     emails = filter(None, emails)
     body = data['form']['text']
