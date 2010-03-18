@@ -114,6 +114,27 @@ class crm_lead2opportunity(osv.osv_memory):
         'planned_revenue': fields.float('Expected Revenue'), 
         'partner_id': fields.many2one('res.partner', 'Partner'), 
     }
+    
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+
+        """
+        lead_obj = self.pool.get('crm.lead')
+
+        for lead in lead_obj.browse(cr, uid, context.get('active_ids', [])):
+            if lead.state in ['done', 'cancel']:
+                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
+Leads Could not convert into Opportunity"))
+            if lead.state != 'open':
+                raise osv.except_osv(_('Warning !'), _('Lead should be in \
+\'Open\' state before converting to Opportunity.'))
+        return True
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -127,19 +148,13 @@ class crm_lead2opportunity(osv.osv_memory):
         @return : default values of fields.
         """
         lead_obj = self.pool.get('crm.lead')
-        res = {}
+        res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
+
         for lead in lead_obj.browse(cr, uid, context.get('active_ids', [])):
-            if lead.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
-Leads Could not convert into Opportunity"))
-            if lead.state != 'open':
-                raise osv.except_osv(_('Warning !'), _('Lead should be in \
-\'Open\' state before converting to Opportunity.'))
-            
-            res = {
-                    'name': lead.partner_name, 
-                    'partner_id': lead.partner_id and lead.partner_id.id or False, 
-                   }
+            if 'name' in fields:
+                res.update({'name': lead.partner_name})
+            if 'partner_id' in fields:
+                res.update({'partner_id': lead.partner_id and lead.partner_id.id or False})
         return res
 
 crm_lead2opportunity()
