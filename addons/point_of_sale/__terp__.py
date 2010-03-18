@@ -51,7 +51,7 @@ Main features :
         'wizard/pos_close_statement.xml',  
         'wizard/pos_box_entries.xml',  
         'wizard/pos_box_out.xml', 
-        'wizard/pos_details.xml',  
+       
         'pos_view.xml',
         'pos_sequence.xml',
         'posrule_data.xml',
@@ -65,6 +65,7 @@ Main features :
     'update_xml': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
+        'wizard/pos_details.xml',  
         'pos_report.xml',
         'pos_wizard.xml',
         'pos_view.xml',
