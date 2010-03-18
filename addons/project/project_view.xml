@@ -329,10 +329,11 @@
                 <tree colors="grey:state in ('cancelled','done');blue:remaining_hours&lt;0;red:bool(date_deadline) and (date_deadline&lt;current_date) and (state in ('draft','open'));black:state not in ('cancelled','done')" string="Tasks">
                     <field name="sequence" invisible="1"/>
                     <field name="name"/>
-                    <field name="planned_hours" widget="float_time" on_change="onchange_planned(planned_hours, effective_hours)" invisible="not context.get('set_visible',False)"/>
                     <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                     <field name="user_id"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
+                    <field name="planned_hours" widget="float_time" />
+                    <field name="total_hours" widget="float_time"/>
                     <field name="remaining_hours" widget="float_time" sum="Remaining Hours" invisible="context.get('set_visible',False)"/>
                     <field name="date_deadline" invisible="context.get('set_visible',False)"/>
                     <field name="type" groups="base.group_extended" invisible="context.get('set_visible',False)"/>
