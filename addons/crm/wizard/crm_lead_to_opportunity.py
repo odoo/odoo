@@ -127,8 +127,7 @@ class crm_lead2opportunity(osv.osv_memory):
         @return : default values of fields.
         """
         lead_obj = self.pool.get('crm.lead')
-        res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
-
+        res = {}
         for lead in lead_obj.browse(cr, uid, context.get('active_ids', [])):
             if lead.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
@@ -136,9 +135,11 @@ Leads Could not convert into Opportunity"))
             if lead.state != 'open':
                 raise osv.except_osv(_('Warning !'), _('Lead should be in \
 \'Open\' state before converting to Opportunity.'))
-
-            res['name'] = lead.partner_name
-            res['partner_id'] = lead.partner_id and lead.partner_id.id or False
+            
+            res = {
+                    'name': lead.partner_name, 
+                    'partner_id': lead.partner_id and lead.partner_id.id or False, 
+                   }
         return res
 
 crm_lead2opportunity()
