@@ -26,7 +26,6 @@ import wizard_scan_product
 import wizard_receipt
 import wizard_return
 import wizard_pos_payment_report
-import wizard_pos_sales_user
 import wizard_pos_sales_user_today
 import wizard_pos_payment_report_date
 import wizard_pos_payment_report_user
