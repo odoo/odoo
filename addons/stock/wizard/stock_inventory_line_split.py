@@ -47,18 +47,13 @@ class stock_inventory_line_split(osv.osv_memory):
              @return: A dictionary which of fields with values. 
         
         """        
-        res = {}
         record_id = context and context.get('active_id',False)
         res = super(stock_inventory_line_split, self).default_get(cr, uid, fields, context=context)
-        if not record_id:
-           return res
-
-        lot=  self.pool.get('stock.inventory.line').browse(cr, uid, record_id)
-        res['product_id']=line.product_id.id
+        line=  self.pool.get('stock.inventory.line').browse(cr, uid, record_id)        
+        if 'product_id' in fields:
+            res.update({'product_id':line.product_id.id})       
         return res
     
-    
-
     def split(self, cr, uid, ids, line_ids, context=None):
         """ 
              To split stock inventory lines according to production lot

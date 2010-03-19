@@ -42,10 +42,11 @@ class change_standard_price(osv.osv_memory):
              @return: A dictionary which of fields with values. 
         
         """ 
-        rec_id = context and context.get('active_id', False)
-        res = {}
-        price = self.pool.get('product.product').browse(cr, uid, rec_id)
-        res['new_price'] = price.standard_price
+
+        res = super(change_standard_price, self).default_get(cr, uid, fields, context=context)   
+        price = self.pool.get('product.product').browse(cr, uid, context.get('active_id', False))
+        if 'new_price' in fields:
+            res.update({'new_price':price.standard_price})         
         return res
     
     def change_price(self, cr, uid, ids, context):

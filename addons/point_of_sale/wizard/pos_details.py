@@ -30,8 +30,8 @@ class pos_details(osv.osv_memory):
     _description = 'Sales Details'
 
     _columns = {
-        'date_start': fields.date('Date Start'),
-        'date_end': fields.date('Date End'),
+        'date_start': fields.date('Date Start',required=True),
+        'date_end': fields.date('Date End',required=True)
     }
     
     def print_report(self, cr, uid, ids, context={}):

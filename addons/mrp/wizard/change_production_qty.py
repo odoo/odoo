@@ -47,13 +47,11 @@ class change_production_qty(osv.osv_memory):
              @return: A dictionary which of fields with values. 
         
         """        
-        res = {}
-        record_id = context and context.get('active_id',False)
-        if not record_id:
-           return res
+        res = super(change_production_qty, self).default_get(cr, uid, fields, context=context)        
         prod_obj = self.pool.get('mrp.production')
-        prod = prod_obj.browse(cr, uid, record_id)
-        res['product_qty'] = prod.product_qty        
+        prod = prod_obj.browse(cr, uid, context.get('active_id'))
+        if 'product_qty' in fields:
+            res.update({'product_qty': prod.product_qty})  
         return res
         
     def change_prod_qty(self, cr, uid, ids, context):
