@@ -46,7 +46,7 @@ class pos_discount(osv.osv_memory):
          @return : nothing
         """        
         this = self.browse(cr, uid, ids[0], context=context)
-        record_id = context and context.get('record_id', False)
+        record_id = context and context.get('active_id', False)
         if isinstance(record_id, (int, long)):
             record_id=[record_id]
         
