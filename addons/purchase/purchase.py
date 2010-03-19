@@ -508,7 +508,7 @@ class purchase_order_line(osv.osv):
                     'uom': uom,
                     'date': date_order,
                     })[pricelist]
-        dt = (DateTime.now() + DateTime.RelativeDateTime(days=seller_delay or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
+        dt = (DateTime.now() + DateTime.RelativeDateTime(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
         prod_name = prod.partner_ref
 
 
