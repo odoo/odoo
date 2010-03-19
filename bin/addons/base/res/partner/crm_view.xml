@@ -2,6 +2,17 @@
 <openerp>
     <data>
 
+        <record id="res_partner_canal-view-tree" model="ir.ui.view">
+            <field name="name">res.partner.canal.tree</field>
+            <field name="model">res.partner.canal</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Channels">
+                    <field name="name" select="1"/>
+                    <field name="active" select="1"/>
+                </tree>
+            </field>
+        </record>
         <record id="res_partner_canal-view" model="ir.ui.view">
             <field name="name">res.partner.canal.form</field>
             <field name="model">res.partner.canal</field>

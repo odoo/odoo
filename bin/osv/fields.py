@@ -366,7 +366,7 @@ class one2many(_column):
     _prefetch = False
     _type = 'one2many'
 
-    def __init__(self, obj, fields_id, string='unknown', limit=20, **args):
+    def __init__(self, obj, fields_id, string='unknown', limit=None, **args):
         args.update({'parent_field':fields_id})
         _column.__init__(self, string=string, **args)
         self._obj = obj
