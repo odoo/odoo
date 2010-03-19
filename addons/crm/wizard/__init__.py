@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import crm_send_new_email
+import crm_send_email
 import wizard_history_event
 
 import crm_lead_to_partner

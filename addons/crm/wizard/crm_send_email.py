@@ -27,7 +27,7 @@ import tools
 
 class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
-    _name = "crm.send.new.mail"
+    _name = "crm.send.mail"
     _description = "Case Send new email"
 
     _columns = {
