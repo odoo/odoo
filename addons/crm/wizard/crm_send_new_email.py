@@ -20,16 +20,10 @@
 #
 ##############################################################################
 
-from mx.DateTime import now
-
-import wizard
-import netsvc
-import ir
-import pooler
-import tools
-import base64
-from tools.translate import _
 from osv import osv, fields
+from tools.translate import _
+import base64
+import tools
 
 class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
@@ -183,7 +177,14 @@ class crm_send_new_email(osv.osv_memory):
             if 'to' in fields:
                 res.update({'to': hist.email})
             if 'text' in fields:
-                res.update({'text': '>' + hist.description.replace('\n', '\n> ')})
+                header = '-------- Original Message --------'
+                sender = 'From: ' + case.user_id.address_id.email
+                to = 'To: ' + hist.email
+                sentdate = 'Sent: ' + hist.date
+                desc = '\n' + hist.description
+                original = [header, sender, to, sentdate, desc]
+                original = '\n'.join(original)
+                res.update({'text': '\n\n' + original})
             if 'subject' in fields:
                 res.update({'subject': case.name or ''})
         return res
