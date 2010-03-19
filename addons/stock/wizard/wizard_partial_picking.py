@@ -198,7 +198,8 @@ def _do_split(self, cr, uid, data, context):
                         'name':  pick.name,                                 
                         'partner_id': partner_id,
                         'date': move.date,
-                        'product_delivered':[(6,0, [new_obj])]
+                        'product_delivered':[(6,0, [new_obj])],
+                        'picking_id':move.picking_id.id
                     }, context=context)   
             if not isinstance(delivery_id, (int, long)): 
                delivery_id=delivery_id[0]

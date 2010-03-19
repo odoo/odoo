@@ -1770,6 +1770,7 @@ class stock_delivery(osv.osv):
         'date': fields.datetime('Date'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'product_delivered':fields.one2many('stock.move', 'delivered_id', 'Product Delivered', domain=[('picking_id.type','=','in')]),
+        'picking_id': fields.many2one('stock.picking', 'Picking list'),
     }
 
     
