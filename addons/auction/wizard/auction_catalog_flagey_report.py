@@ -27,6 +27,15 @@ class auction_catalog_flagey(osv.osv_memory):
     _description = 'Auction Catalog Flagey'
     
     def default_get(self, cr, uid, fields, context):
+        """ 
+         To get default values for the object.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param fields: List of fields for which we want default values 
+         @param context: A standard dictionary 
+         @return: A dictionary which of fields with values. 
+        """
         res = super(auction_catalog_flagey, self).default_get(cr, uid, fields, context=context)
         return res
     
@@ -40,6 +49,15 @@ class auction_catalog_flagey(osv.osv_memory):
         pass
     
     def print_report(self, cr, uid, ids, context):
+        """ 
+         Prints auction catalog flagey report.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param ids: List of IDs selected 
+         @param context: A standard dictionary 
+         @return: Report  
+        """
         datas = {'ids': context.get('active_ids',[])}
         return {
             'type': 'ir.actions.report.xml',
