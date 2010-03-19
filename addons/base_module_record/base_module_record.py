@@ -372,6 +372,13 @@ class base_module_record(osv.osv):
             self.ids[(rec[2], result)] = id
             record = self._create_yaml_record(cr, uid, rec[2], rec[4], id)
             return record
+        if self.mode=="workflow":
+            id,update = self._get_id(cr, uid, rec[2], rec[4])
+            data = {}
+            data['model'] = rec[2]
+            data['action'] = rec[3]
+            data['ref'] = id
+            return data
         data=self.get_copy_data(cr,uid,rec[2],rec[4],rec[5])
         copy_rec=(rec[0],rec[1],rec[2],rec[3],rec[4],data,rec[5])
         rec=copy_rec
@@ -394,7 +401,7 @@ class base_module_record(osv.osv):
             doc.appendChild(terp)
             for rec in self.recording_data:
                 if rec[0]=='workflow':
-                    rec_id,noupdate = self._get_id(cr, uid, rec[1][3], rec[1][5])
+                    rec_id,noupdate = self._get_id(cr, uid, rec[1][2], rec[1][4])
                     if not rec_id:
                         continue
                     data = doc.createElement("data")
@@ -433,6 +440,15 @@ class record(yaml.YAMLObject):
     def __repr__(self):
         return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
 
+class workflow(yaml.YAMLObject):
+    yaml_tag = u'!workflow'
+    def __init__(self, model, action, ref=None):
+        self.model = model
+        self.ref = ref
+        self.action=action
+    def __repr__(self):
+        return '!workflow {model: %s, action: %s, ref: %s}' % (str(self.model,), str(self.action,), str(self.ref,))
+        
 class ref(yaml.YAMLObject):
     yaml_tag = u'!ref'
     def __init__(self, expr="False"):
@@ -453,11 +469,20 @@ class eval(yaml.YAMLObject):
                     self.mode="create"
                 elif rec[1][3] == 'copy':
                     self.mode="copy"
+                elif rec[0] == 'workflow':
+                    self.mode="workflow"
                 else:
                     continue
-                record= self._generate_object_yaml(cr, uid, rec[1],rec[3])
-                strg+="object=yaml.load(unicode('''\n !record %s \n''','iso-8859-1'))"%record
-                strg+='''
+                if self.mode == "workflow":
+                    record= self._generate_object_yaml(cr, uid, rec[1],rec[0])
+                    strg+="object=yaml.load(unicode('''\n !workflow %s \n''','iso-8859-1'))"%record
+                    strg+='''
+print object
+'''
+                else:
+                    record= self._generate_object_yaml(cr, uid, rec[1],rec[3])
+                    strg+="object=yaml.load(unicode('''\n !record %s \n''','iso-8859-1'))"%record
+                    strg+='''
 print object
 attrs=yaml.dump(object.attrs, default_flow_style=False)
 print attrs \n\n'''
@@ -476,6 +501,8 @@ print attrs \n\n'''
                 line=line.replace("''","'")
                 if line.find('!record') == 0:
                     line = "- \n" + "  " + line
+                elif line.find('!workflow') == 0:
+                    line = "- \n" + "  " + line                    
                 elif line.find('- -') != -1:
                     line=line.replace('- -','  -')
                     line = "    " + line
