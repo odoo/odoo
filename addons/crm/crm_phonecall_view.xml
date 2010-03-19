@@ -54,7 +54,7 @@
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
                     states="draft,open,pending"
-                    name="%(phonecall2meeting_act)d"  type="action" />
+                    name="%(wizard_crm_phonecall_meeting_set)d"  type="action" />
                 <field name="state"/>
                 <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                 <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
@@ -75,7 +75,7 @@
                     <field name="date" string="Planned Date"/>
                     <field name="user_id"/>
                     <button string="Schedule a Meeting"
-                        name="%(phonecall2meeting_act)d"
+                        name="%(wizard_crm_phonecall_meeting_set)d"
                         icon="gtk-redo"
                         type="action" />
                     <field name="partner_phone"/>

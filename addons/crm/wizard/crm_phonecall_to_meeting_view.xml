@@ -2,6 +2,16 @@
 <openerp>
     <data>
 
+<!--  Old wizard -->
+
+	<wizard
+            id="wizard_crm_phonecall_meeting_set"
+            keyword="client_action_multi"
+            model="crm.phonecall"
+            name="crm.phonecall.meeting_set"
+            multi="True"
+            string="Schedule Meeting"/>
+            
 	    <!-- Phonecall to meeting view -->
 
         <record model="ir.ui.view" id="phonecall2phonecall2meeting_view">
