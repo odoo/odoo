@@ -29,7 +29,7 @@ class analytic_report(osv.osv):
     _columns = {
         'date_start': fields.date('Date Start', readonly=True),
         'date_end': fields.date('Date End',readonly=True),
-        'name' : fields.char('Account', size=128, readonly=True),
+        'name' : fields.char('Analytic Account', size=128, readonly=True),
         'partner_id' : fields.many2one('res.partner', 'Associated Partner',readonly=True),
         'journal_id' : fields.many2one('account.analytic.journal', 'Analytic Journal', readonly=True),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', readonly=True),

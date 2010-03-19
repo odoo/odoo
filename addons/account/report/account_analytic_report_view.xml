@@ -7,11 +7,11 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Analytic Accounts Statistics">
-            	<field name="parent_id" invisible="1"/>
+            	<field name="parent_id" invisible="1" string="Analytic Account"/>
             	<field name="product_id" invisible="1"/>
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="journal_id"/>
+                <field name="journal_id" string="Analytic Journal"/>
                 <field name="user_id"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
@@ -83,8 +83,8 @@
                     <filter string="User" icon="terp-account" context="{'group_by':'user_id'}" default="1"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
-                    <filter string="Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
-                    <filter string="Parent Account" icon="terp-account" context="{'group_by':'parent_id'}"/>
+                    <filter string="Analytic Journal" icon="terp-account" context="{'group_by':'journal_id'}"/>
+                    <filter string="Analytic Account" icon="terp-account" context="{'group_by':'parent_id'}"/>
                     <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Month" icon="terp-account" context="{'group_by':'month'}"/>
