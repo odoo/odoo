@@ -33,7 +33,8 @@ class calendar_event_import(osv.osv_memory):
     Import Calendar Event.
     """
     cnt = 0
-    def _process_imp_ics(self, cr, uid, ids, context=None):
+
+    def process_imp_ics(self, cr, uid, ids, context=None):
         """
         Process Import ics File.
         @param cr: the current row, from the database cursor,
