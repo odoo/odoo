@@ -9,9 +9,14 @@
             <field name="model">crm.phonecall2meeting</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Convert To Meeting ">
-                        <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
-                        <button name="action_make_meeting" type="object" string="_Convert" icon="gtk-convert" />
+                <form string="Convert To Meeting">
+                	<label string="Are you sure to schedule a Meeting for this Phonecall?" colspan="4"/>
+                	<newline/>
+                	<separator colspan="4" string=""/>
+                	<button name="action_cancel" string="_Cancel"
+                		icon="gtk-cancel" special="cancel" />
+                	<button name="action_make_meeting" type="object"
+                		string="_Schedule" icon="gtk-go-forward" />
                 </form>
             </field>
         </record>
