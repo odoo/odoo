@@ -294,14 +294,15 @@ class invite_attendee_wizard(osv.osv_memory):
                         mail_to.append(contact.email)
 
             att = att_obj.browse(cr, uid, context_id)
+           
             for att_val in vals:
                 if model == 'calendar.attendee':
-                    att_val.update({
-                        'parent_ids': [(4, att.id)], 
-                        'ref': att.ref._name + ',' + str(att.ref.id)
-                    })
+                    if ref:
+                        att_val.update({
+                            'parent_ids': [(4, att.id)], 
+                            'ref': att.ref._name + ',' +str(att.ref.id)
+                            })
                 attendees.append(att_obj.create(cr, uid, att_val))
-
             if model_field:
                 for attendee in attendees:
                     obj.write(cr, uid, res_obj.id, {model_field: [(4, attendee)]})
@@ -534,7 +535,6 @@ request was delegated to"),
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
@@ -598,15 +598,18 @@ request was delegated to"),
         """
         if not context:
             context = {}
+
         for vals in self.browse(cr, uid, ids, context=context):
             user = vals.user_id
             if user:
+
                 mod_obj = self.pool.get(vals.ref._name)
                 if vals.ref:
                     if vals.ref.user_id.id != user.id:
                         defaults = {'user_id':  user.id}
                         new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
+
         return True
 
     def do_decline(self, cr, uid, ids, context=None, *args):
