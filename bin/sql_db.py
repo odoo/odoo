@@ -51,7 +51,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 
 import tools
-from tools.func import wraps
+from tools.func import wraps, partial
 from datetime import datetime as mdt
 from datetime import timedelta
 import threading
@@ -224,7 +224,7 @@ class ConnectionPool(object):
         self._connections = []
         self._maxconn = max(maxconn, 1)
         self._lock = threading.Lock()
-        self._logger = netsvc.Logger()
+        self._log = partial(netsvc.Logger().notifyChannel, 'ConnectionPool')
 
     def __repr__(self):
         used = len([1 for c, u in self._connections[:] if u])
@@ -232,8 +232,8 @@ class ConnectionPool(object):
         return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
 
     def _debug(self, msg):
-        self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, repr(self))
-        self._logger.notifyChannel('ConnectionPool', netsvc.LOG_DEBUG, msg)
+        msg = "%s %s" % (repr(self), msg)
+        self._log(netsvc.LOG_DEBUG, msg)
 
     @locked
     def borrow(self, dsn):
@@ -291,13 +291,11 @@ class ConnectionPool(object):
 
 
 class Connection(object):
-    def _debug(self, msg):
-        self._logger.notifyChannel('Connection', netsvc.LOG_DEBUG, msg)
-
     def __init__(self, pool, dbname):
         self.dbname = dbname
         self._pool = pool
-        self._logger = netsvc.Logger()
+        self._debug = partial(netsvc.Logger().notifyChannel, 'Connection',
+                              netsvc.LOG_DEBUG)
 
     def cursor(self, serialized=False):
         cursor_type = serialized and 'serialized ' or ''
