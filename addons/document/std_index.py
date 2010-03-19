@@ -58,7 +58,7 @@ class PptxIndex(indexer):
         return ['.pptx']
 
     def _doIndexFile(self,fname):
-        # f you want to Download docx2txt package then used  http://sourceforge.net/projects/pptx2txt/" link.
+        # Download pptx2txt package then used  http://sourceforge.net/projects/pptx2txt/" link.
         # To install this tool, just copy pptx2txt.pl to appropriate place (e.g. /usr/bin directory)
         fp = Popen(['pptx2txt.pl', fname], shell=False, stdout=PIPE).stdout
         fp.read()
