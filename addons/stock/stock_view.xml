@@ -1756,6 +1756,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Product">
+                		<field name="name"/>
 	                    <field name="date"/>
 	                    <field name="partner_id"/>
 	                    <separator string="Product Delivered Information" colspan="4" />
@@ -1778,7 +1779,8 @@
             <field name="model">stock.delivery</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Product">
+                <tree string="Delivered Product">	
+                	<field name="name"/>
                     <field name="date"/>
                     <field name="partner_id"/>
                     <field name="product_delivered"/>
@@ -1787,7 +1789,7 @@
         </record>
 	    
     	<record id="action_stock_delivery" model="ir.actions.act_window">
-            <field name="name">Delivery Products</field>
+            <field name="name">Delivered Products</field>
             <field name="res_model">stock.delivery</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>

@@ -37,6 +37,7 @@ _moves_arch_end = '''<?xml version="1.0"?>
     <label string="The picking has been successfully made !" colspan="4"/>
     <field name="back_order_notification" colspan="4" nolabel="1"/>
 </form>'''
+
 _moves_fields_end = {
     'back_order_notification': {'string':'Back Order' ,'type':'text', 'readonly':True}
                      }
@@ -63,7 +64,8 @@ def _get_moves(self, cr, uid, data, context):
         quantity = m.product_qty
         if m.state!='assigned':
             quantity = 0
-
+            _moves_fields
+            
         _moves_arch_lst.append('<field name="move%s" />' % (m.id,))
         _moves_fields['move%s' % m.id] = {
                 'string': _to_xml(m.name),
@@ -92,10 +94,22 @@ def _get_moves(self, cr, uid, data, context):
             _moves_fields['currency%s' % m.id] = {'string': 'Currency',
                     'type': 'many2one', 'relation': 'res.currency',
                     'required': True, 'default': make_default(currency)}
+        
+                    
+        _moves_arch_lst.append('<newline/>')
 
+                
         _moves_arch_lst.append('<newline/>')
         res.setdefault('moves', []).append(m.id)
-
+    
+    _moves_arch_lst.append('<field name="partner_id%d"/>' % (m.id,))
+    _moves_fields['partner_id%s' % m.id] ={'string':'Partner', 
+            'type':'many2one', 'relation':'res.partner', 'required' : '1'}
+    _moves_arch_lst.append('<newline/>')
+    _moves_arch_lst.append('<field name="address_id%d"/>' % (m.id,))
+    
+    _moves_fields['address_id%s' % m.id] ={'string':'Delivery Address', 
+                                                'type':'many2one', 'relation':'res.partner.address', 'required' : '1'}
     _moves_arch_lst.append('</form>')
     _moves_arch.string = '\n'.join(_moves_arch_lst)
     return res
@@ -163,6 +177,7 @@ def _do_split(self, cr, uid, data, context):
                         'state':'draft',
                     })
         if data['form']['move%s' % move.id] != 0:
+
             new_obj = move_obj.copy(cr, uid, move.id,
                 {
                     'product_qty' : data['form']['move%s' % move.id],
@@ -170,18 +185,21 @@ def _do_split(self, cr, uid, data, context):
                     'picking_id' : new_picking,
                     'state': 'assigned',
                     'move_dest_id': False,
+                    'partner_id': data['form']['partner_id%s' % move.id],
+                    'address_id': data['form']['address_id%s' % move.id],
                     'price_unit': move.price_unit,
                 })
             partner_id = False
             if move.picking_id:
                     partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
-            delivery_id = delivery_obj.search(cr,uid, [('partner_id','=',partner_id)])   
+            delivery_id = delivery_obj.search(cr,uid, [('name','=',pick.name)]) 
             if  not  delivery_id :
                 delivery_id = delivery_obj.create(cr, uid, {
+                        'name':  pick.name,                                 
                         'partner_id': partner_id,
                         'date': move.date,
+                        'product_delivered':[(6,0, [new_obj])]
                     }, context=context)   
-                delivery_obj.write(cr, uid, [delivery_id], {'product_delivered': [(4, new_obj)]})
             if not isinstance(delivery_id, (int, long)): 
                delivery_id=delivery_id[0]
                delivery_obj.write(cr, uid, [delivery_id], {'product_delivered': [(4, new_obj)]})
@@ -190,6 +208,7 @@ def _do_split(self, cr, uid, data, context):
                 {
                     'product_qty' : move.product_qty - data['form']['move%s' % move.id],
                     'product_uos_qty':move.product_qty - data['form']['move%s' % move.id],
+                  #  'delivered_id':delivery_id
                 })
 
     if new_picking:

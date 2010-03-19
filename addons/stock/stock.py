@@ -1765,8 +1765,8 @@ class stock_delivery(osv.osv):
     
     _name = "stock.delivery"
     _description = "Delivery"
-    _rec_name = 'partner_id'
     _columns = {
+        'name': fields.char('Name', size=60, required=True),  
         'date': fields.datetime('Date'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'product_delivered':fields.one2many('stock.move', 'delivered_id', 'Product Delivered', domain=[('picking_id.type','=','in')]),
