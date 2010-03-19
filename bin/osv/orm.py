@@ -1872,7 +1872,7 @@ class orm(orm_template):
             fields = self._columns.keys()
 
         (where_clause, where_params, tables) = self._where_calc(cr, uid, domain, context=context)
-        dom = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
+        dom = self.pool.get('ir.rule').domain_get(cr, uid, self._name, 'read', context=context)
         where_clause = where_clause + dom[0]
         where_params = where_params + dom[1]
         for t in dom[2]:
@@ -2474,6 +2474,7 @@ class orm(orm_template):
     #
     # Update objects that uses this one to update their _inherits fields
     #
+
     def _inherits_reload_src(self):
         for obj in self.pool.obj_pool.values():
             if self._name in obj._inherits:
@@ -2540,8 +2541,7 @@ class orm(orm_template):
             fields_to_read = self._columns.keys()
 
         # construct a clause for the rules :
-        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
-
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
                            f == self.CONCURRENCY_CHECK_FIELD
@@ -2724,6 +2724,29 @@ class orm(orm_template):
                     if res and res[0]:
                         raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
 
+    def check_access_rule(self, cr, uid, ids, mode, context={}):
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, mode, context=context)
+        if d1:
+            d1 = ' and '+' and '.join(d1)
+
+        for i in range(0, len(ids), cr.IN_MAX):
+            sub_ids = ids[i:i+cr.IN_MAX]
+            ids_str = string.join(map(str, sub_ids), ',')
+            if d1:
+                cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
+                        'WHERE '+self._table+'.id IN ('+ids_str+')'+d1, d2)
+                if not cr.rowcount == len(sub_ids):
+                    raise except_orm(_('AccessError'),
+                                     _('You try to bypass an access rule to '+mode+
+                                    ' (Document type: %s).') % self._name)
+            else:
+                cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
+                if not cr.rowcount == len(sub_ids):
+                    raise except_orm(_('AccessError'),
+                                     _('You try to ' +mode+ ' a record that doesn\'t exist (Document type: %s).')
+                                      % self._name)
+        return ids_str
+
     def unlink(self, cr, uid, ids, context=None):
         if not ids:
             return True
@@ -2753,23 +2776,9 @@ class orm(orm_template):
         #   ids2 = [x[self._inherits[key]] for x in res]
         #   self.pool.get(key).unlink(cr, uid, ids2)
 
-        d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
-        if d1:
-            d1 = ' AND '+' and '.join(d1)
-
-        for i in range(0, len(ids), cr.IN_MAX):
-            sub_ids = ids[i:i+cr.IN_MAX]
-            str_d = string.join(('%s',)*len(sub_ids), ',')
-            if d1:
-                cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                        'WHERE '+self._table+'.id IN ('+str_d+')'+d1, sub_ids+d2)
-                if not cr.rowcount == len(sub_ids):
-                    raise except_orm(_('AccessError'),
-                            _('You try to bypass an access rule (Document type: %s).') % \
-                                    self._description)
-
-            cr.execute('delete from '+self._table+' ' \
-                    'where id in ('+str_d+')', sub_ids)
+        ids_str = self.check_access_rule(cr, uid, ids, 'unlink', context=context)
+        cr.execute('delete from '+self._table+' ' \
+                    'where id in ('+ids_str+')', ids)
 
         for order, object, store_ids, fields in result_store:
             if object<>self._name:
@@ -2868,28 +2877,8 @@ class orm(orm_template):
             upd1.append(user)
 
         if len(upd0):
-
-            d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
-            if d1:
-                d1 = ' and '+' and '.join(d1)
-
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                ids_str = string.join(map(str, sub_ids), ',')
-                if d1:
-                    cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                            'WHERE '+self._table+'.id IN ('+ids_str+')'+d1, d2)
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
-                        raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule while writing (Document type: %s).') % \
-                                        self._description)
-                else:
-                    cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
-                        raise except_orm(_('AccessError'),
-                                _('You try to write on an record that doesn\'t exist ' \
-                                        '(Document type: %s).') % self._description)
-                cr.execute('update '+self._table+' set '+string.join(upd0, ',')+' ' \
+            ids_str = self.check_access_rule(cr, user, ids, 'write', context=context)
+            cr.execute('update '+self._table+' set '+string.join(upd0, ',')+' ' \
                     'where id in ('+ids_str+')', upd1)
 
             if totranslate:
@@ -3128,6 +3117,15 @@ class orm(orm_template):
             upd1 += ',%s,now()'
             upd2.append(user)
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'create', context=context)
+        if d1:
+            d1 = ' AND '+' AND '.join(d1)
+            cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
+                    'WHERE '+self._table+'.id = ' +str(id_new)+d1,d2)
+            if not cr.rowcount:
+                raise except_orm(_('AccessError'),
+                                 _('You try to bypass an access rule to create (Document type: %s).') \
+                                  % self._name)        
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store:
@@ -3334,7 +3332,7 @@ class orm(orm_template):
             context = {}
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
-        dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
+        dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
         qu1 = qu1 + dom[0]
         qu2 = qu2 + dom[1]
         for t in dom[2]:

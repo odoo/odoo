@@ -369,7 +369,7 @@
                             <separator colspan="4" string="Select Groups" />
                             <field name="groups_id" nolabel="1" colspan="4" />
                         </page>
-                    </notebook>                   
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -431,7 +431,7 @@
         <menuitem action="ir_action_wizard" id="menu_ir_action_wizard" parent="base.next_id_6"/>
 
         <!-- Companies -->
-        <menuitem id="menu_res_company_global" 
+        <menuitem id="menu_res_company_global"
             parent="base.menu_administration"
             name="Companies"
             sequence="5"/>
@@ -570,7 +570,7 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
-                    <field name="inherit_id"/>                    
+                    <field name="inherit_id"/>
                     <field name="priority"/>
                     <field name="field_parent"/>
                 </tree>
@@ -1176,6 +1176,11 @@
                     <separator colspan="4" string="Manual domain setup"/>
                     <field name="domain_force"/>
                     <label colspan="4" string="If you don't force the domain, it will use the simple domain setup"/>
+                    <newline/>
+                    <field name="perm_read"/>
+                    <field name="perm_write"/>
+                    <field name="perm_create"/>
+                    <field name="perm_unlink"/>
                 </form>
             </field>
         </record>
@@ -1187,6 +1192,10 @@
             <field name="arch" type="xml">
                 <tree string="Test">
                     <field name="domain"/>
+                    <field name="perm_read"/>
+                    <field name="perm_write"/>
+                    <field name="perm_create"/>
+                    <field name="perm_unlink"/>
                 </tree>
             </field>
         </record>
