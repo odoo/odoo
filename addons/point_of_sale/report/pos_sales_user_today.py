@@ -36,7 +36,7 @@ class pos_sales_user_today(report_sxw.rml_parse):
 
     def _get_data(self,form):
         data={}
-        ids = form['user_id'][0][-1]
+        ids = form['user_id']
         idss = map(str, ids)
 
         self.cr.execute("select po.name as pos,po.date_order,ru.name as user,po.state,rc.name " \

@@ -26,7 +26,7 @@ import wizard_scan_product
 import wizard_receipt
 import wizard_return
 import wizard_pos_payment_report
-import wizard_pos_sales_user_today
+
 import wizard_pos_payment_report_date
 import wizard_pos_payment_report_user
 import wizard_pos_sales_user_current_user
@@ -42,6 +42,8 @@ import pos_close_statement
 import pos_box_entries
 import pos_box_out
 import pos_details
+import pos_sales_user
+import pos_sales_user_today
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
