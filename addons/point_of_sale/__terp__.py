@@ -54,6 +54,7 @@ Main features :
         'wizard/pos_box_out.xml',
         'wizard/pos_sales_user.xml',
         #'wizard/all_closed_cashbox_of_the_day.xml',  
+        'wizard/pos_sales_user_current_user.xml',
         'wizard/pos_sale_user_today.xml',          
         'pos_report.xml',
         'pos_wizard.xml',
