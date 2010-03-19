@@ -49,11 +49,14 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
         opp_obj = self.pool.get('crm.opportunity')
         record_ids = context and context.get('active_ids', []) or []
-        res = {}
+        res = super(crm_opportunity2phonecall, self).default_get(cr, uid, fields, context=context)
         for opp in opp_obj.browse(cr, uid, record_ids, context=context):
-            res['name'] = opp.name
-            res['user_id'] = opp.user_id and opp.user_id.id or False
-            res['section_id'] = opp.section_id and opp.section_id.id or False
+            if 'name' in fields:
+                res.update({'name': opp.name})
+            if 'user_id' in fields:
+                res.update({'user_id': opp.user_id and opp.user_id.id or False})
+            if 'section_id' in fields:
+                res.update({'section_id': opp.section_id and opp.section_id.id or False})
         return res
 
     def action_cancel(self, cr, uid, ids, context=None):

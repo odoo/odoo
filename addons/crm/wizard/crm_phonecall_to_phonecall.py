@@ -115,15 +115,19 @@ class crm_phonecall2phonecall(osv.osv_memory):
 
         @return : default values of fields.
         """
+        res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
         if record_id:
             phonecall = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
-            res = {
-                    'name': phonecall.name, 
-                    'user_id': phonecall.user_id and phonecall.user_id.id or False, 
-                    'date': phonecall.date, 
-                    'section_id': phonecall.section_id and phonecall.section_id.id or False
-                   }
+            if 'name' in fields:
+                res.update({'name': phonecall.name})
+            if 'user_id' in fields:
+                res.update({'user_id': phonecall.user_id and phonecall.user_id.id or False})
+            if 'date' in fields:
+                res.update({'date': phonecall.date})
+            if 'section_id' in fields:
+                res.update({'section_id': phonecall.section_id and phonecall.section_id.id or False})
+
         return res
 
 crm_phonecall2phonecall()
