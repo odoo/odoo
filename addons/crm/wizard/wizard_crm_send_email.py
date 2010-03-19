@@ -56,11 +56,7 @@ def _mass_mail_send(self, cr, uid, data, context):
     model = hist_obj.log_id.model_id.model
     model_pool = pool.get(model)
     case = model_pool.browse(cr, uid, hist_obj.log_id.res_id)
-    model_pool._history(cr, uid, [case], _('Send'), history=True, email=False)
-    model_pool.write(cr, uid, [case.id], {
-                'som': False,
-                'canal_id': False,
-                })
+    model_pool._history(cr, uid, [case], _('Send'), history=True, email=False)    
     emails = [data['form']['to']] + (data['form']['cc'] or '').split(',')
     emails = filter(None, emails)
     body = data['form']['text']

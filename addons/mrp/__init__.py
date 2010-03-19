@@ -20,6 +20,7 @@
 ##############################################################################
 
 import mrp
+import stock
 import installer
 import mrp_wizard
 import wizard

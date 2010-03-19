@@ -1035,6 +1035,7 @@ class stock_move(osv.osv):
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
+        'scraped': fields.boolean('Scraped'),
     }
     _constraints = [
         (_check_tracking,
@@ -1071,6 +1072,7 @@ class stock_move(osv.osv):
         'location_dest_id': _default_location_destination,
         'state': lambda *a: 'draft',
         'priority': lambda *a: '1',
+        'scraped' : lambda *a:False,
         'product_qty': lambda *a: 1.0,
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -1450,8 +1452,52 @@ class stock_move(osv.osv):
         prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
         return prodlot_id
 
-    def split_lines(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
+    def action_scrap(self, cr, uid, ids, quantity, location_id, context=None):
+        '''
+        Move the scrap/damaged product into scrap location
 
+        @ param cr: the database cursor
+        @ param uid: the user id
+        @ param ids: ids of stock move object to be scraped
+        @ param quantity : specify scrap qty
+        @ param location_id : specify scrap location
+        @ param context: context arguments
+
+        @ return: Scraped lines
+        '''
+        if quantity <= 0:
+            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+        res = []
+        for move in self.browse(cr, uid, ids, context=context):
+            move_qty = move.product_qty
+            uos_qty = quantity / move_qty * move.product_uos_qty
+            default_val = {
+                    'product_qty': quantity,
+                    'product_uos_qty': uos_qty,
+                    'state': move.state,
+                    'scraped' : True,
+                    'location_dest_id': location_id
+                }
+            new_move = self.copy(cr, uid, move.id, default_val)
+            #self.write(cr, uid, [new_move], {'move_history_ids':[(4,move.id)]}) #TODO : to track scrap moves
+            res += [new_move]
+        self.action_done(cr, uid, res)
+        return res
+
+    def action_split(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
+        '''
+        Split Stock Move lines into production lot which specified split by quantity.
+
+        @ param cr: the database cursor
+        @ param uid: the user id
+        @ param ids: ids of stock move object to be splited
+        @ param split_by_qty : specify split by qty
+        @ param prefix : specify prefix of production lot
+        @ param with_lot : if true, prodcution lot will assign for split line otherwise not.
+        @ param context: context arguments
+
+        @ return: splited move lines
+        '''
 
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
@@ -1501,7 +1547,19 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [current_move], update_val)
         return res
 
-    def consume_moves(self, cr, uid, ids, quantity, location_id=False, location_dest_id=False, consume=True, context=None):
+    def action_consume(self, cr, uid, ids, quantity, location_id=False,  context=None):
+        '''
+        Consumed product with specific quatity from specific source location
+
+        @ param cr: the database cursor
+        @ param uid: the user id
+        @ param ids: ids of stock move object to be consumed
+        @ param quantity : specify consume quantity
+        @ param location_id : specify source location
+        @ param context: context arguments
+
+        @ return: Consumed lines
+        '''
         if not context:
             context = {}
 
@@ -1513,8 +1571,10 @@ class stock_move(osv.osv):
             move_qty = move.product_qty
             quantity_rest = move.product_qty
 
+
             quantity_rest -= quantity
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
+
             if quantity_rest <= 0:
                 quantity_rest = 0
                 uos_qty_rest = 0
@@ -1527,14 +1587,11 @@ class stock_move(osv.osv):
                     'product_qty': quantity,
                     'product_uos_qty': uos_qty,
                     'state': move.state,
+                    'location_id': location_id
                 }
-                if location_dest_id:
-                   default_val.update({'location_dest_id': location_dest_id})
-                if location_id:
-                   default_val.update({'location_id': location_id})
-
                 if move.product_id.track_production and location_id:
-                    res += self.split_lines(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
+                    # IF product has checked track for production lot, move lines will be split by 1
+                    res += self.action_split(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
                 else:
                     current_move = self.copy(cr, uid, move.id, default_val)
                     res += [current_move]
@@ -1550,25 +1607,20 @@ class stock_move(osv.osv):
 
                 if move.product_id.track_production and location_id:
                     res += self.split_lines(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
+
                 else:
                     res += [move.id]
-                    update_val = {}
-                    update_val['product_qty'] = quantity_rest
-                    update_val['product_uos_qty'] = uos_qty_rest
-                    if location_dest_id:
-                       update_val.update({'location_dest_id': location_dest_id})
-                    if location_id:
-                       update_val.update({'location_id': location_id})
+                    update_val = {
+                        'product_qty' : quantity_rest,
+                        'product_uos_qty' : uos_qty_rest,
+                        'location_id': location_id
+                    }
 
                     self.write(cr, uid, [move.id], update_val)
 
         if consume:
             self.action_done(cr, uid, res)
         return res
-
-    def scrap_moves(self, cr, uid, ids, quantity, location_dest_id, context=None):
-        return self.consume_moves(cr, uid, ids, quantity, location_id=False, location_dest_id=location_dest_id, consume=False, context=context)
-
 stock_move()
 
 
