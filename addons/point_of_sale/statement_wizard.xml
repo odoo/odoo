@@ -16,17 +16,10 @@
 -->
 
 
-       <wizard
-        	id="wizard_all_closed_cashbox_of_the_day"
-        	model="account.bank.statement"
-        	menu="False"
-        	name="all.closed.cashbox.of.the.day"
-        	string="All Cashboxes Of the day"/>
-
+       
        <menuitem icon="STOCK_PRINT"
-       			 action="wizard_all_closed_cashbox_of_the_day"
+       			 action="action_report_all_closed_cashbox_of_the_day"
 				 id="menu_all_closed_cashbox_of_the_day"
-				 parent="menu_point_report_register"
-				 type="wizard"/>
+				 parent="menu_point_report_register"/>
     </data>
 </openerp>
