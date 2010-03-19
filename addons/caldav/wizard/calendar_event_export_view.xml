@@ -26,18 +26,7 @@
             <field name="view_mode">tree,form</field>
            <field name="view_id" ref="view_calendar_event_export"/> 
            <field name="target">new</field>
-           <field name="context">{'record_id':active_id}</field>
         </record>
-              
-<!--        <record id="action_calendar_event_export_values" model="ir.values">-->
-<!--            <field name="model_id" ref="caldav.model_basic_calendar" />-->
-<!--            <field name="object" eval="1" />-->
-<!--            <field name="name">Export .ics File</field>-->
-<!--            <field name="key2">client_action_multi</field>-->
-<!--            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_calendar_event_export'))"/>-->
-<!--            <field name="key">action</field> -->
-<!--            <field name="model">basic.calendar</field>-->
-<!--        </record>-->
 
 
     	<act_window id="action_calendar_event_export_values"
