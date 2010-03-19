@@ -186,7 +186,8 @@ class Cursor(object):
         # part because browse records keep a reference to the cursor.
         del self._obj
         self.__closed = True
-        self._pool.give_back(self._cnx)
+        keep_in_pool = self.dbname not in ('template1', 'template0', 'postgres')
+        self._pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     @check
     def autocommit(self, on):
@@ -268,12 +269,14 @@ class ConnectionPool(object):
         return result
 
     @locked
-    def give_back(self, connection):
+    def give_back(self, connection, keep_in_pool=True):
         self._debug('Give back connection to %s' % (connection.dsn,))
         for i, (cnx, used) in enumerate(self._connections):
             if cnx is connection:
                 self._connections.pop(i)
-                self._connections.append((cnx, False))
+                if keep_in_pool:
+                    self._connections.append((cnx, False))
+                    self._debug('Put connection to %s in pool' % (cnx.dsn,))
                 break
         else:
             raise PoolError('This connection does not below to the pool')
