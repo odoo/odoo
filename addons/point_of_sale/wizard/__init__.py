@@ -27,9 +27,9 @@ import wizard_receipt
 import wizard_return
 import wizard_pos_payment_report
 
-import wizard_pos_payment_report_date
-import wizard_pos_payment_report_user
-
+import pos_payment_report_user
+import pos_payment_report_date
+import wizard_pos_sales_user_current_user
 import wizard_pos_details
 #import wizard_open_statement
 import wizard_all_closed_cashbox_of_the_day

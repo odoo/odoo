@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+                <data>
+                        <record id="pos_payment_report_date_form" model="ir.ui.view">
+                                <field name="name">pos.payment.report.date.form</field>
+                                <field name="model">pos.payment.report.date</field>
+                                <field name="type">form</field>
+                                <field name="arch" type="xml">
+                                <form string="Sale by Date and User">
+                                            <field name="date_start"/>
+                                            <field name="date_end"/>
+                                            <field name="user_id"/>
+                                                <button icon='gtk-cancel' special="cancel"
+                                                string="Close" />
+                                                <button name="print_report" string="Print Report"
+                                                colspan="1" type="object" icon="gtk-ok" />
+                                </form>
+                                </field>
+                        </record>
+                        
+                        <act_window name="Sales lines Report"
+                        res_model="pos.payment.report.date"
+                        src_model="pos.order"
+                        view_mode="form"
+                        target="new"        
+                        key2="client_action_multi"    
+                        id="action_report_pos_payment_repport_date"/> 
+                </data>
+</openerp>              
