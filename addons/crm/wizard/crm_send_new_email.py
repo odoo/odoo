@@ -31,14 +31,14 @@ class crm_send_new_email(osv.osv_memory):
     _description = "Case Send new email"
 
     _columns = {
-                'to' : fields.char('To', size=64, required=True), 
-                'cc' : fields.char('CC', size=128), 
-                'subject' : fields.char('Subject', size=128, required=True), 
-                'text' : fields.text('Message', required=True), 
-                'state': fields.selection([('done', 'Done'), ('pending', 'Pending'), ('unchanged', 'Unchanged')], string='State', required=True), 
-                'doc1': fields.binary("Attachment1"), 
-                'doc2': fields.binary("Attachment2"), 
-                'doc3': fields.binary("Attachment3"), 
+                'to' : fields.char('To', size=64, required=True),
+                'cc' : fields.char('CC', size=128),
+                'subject': fields.char('Subject', size=128, required=True),
+                'text': fields.text('Message', required=True),
+                'state': fields.selection([('done', 'Done'), ('pending', 'Pending'), ('unchanged', 'Unchanged')], string='State', required=True),
+                'doc1': fields.binary("Attachment1"),
+                'doc2': fields.binary("Attachment2"),
+                'doc3': fields.binary("Attachment3"),
                 }
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -62,7 +62,7 @@ class crm_send_new_email(osv.osv_memory):
         """
         if not context:
             context = {}
-        
+
         if not context.get('model'):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
 
@@ -73,7 +73,7 @@ class crm_send_new_email(osv.osv_memory):
         for data in self.read(cr, uid, ids, context=context):
             attach = filter(lambda x: x, [data['doc1'], data['doc2'], data['doc3']])
             attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
-            
+
             if context.get('mail', 'new') == 'new':
                 case = case_pool.browse(cr, uid, res_id)
             else:
@@ -92,13 +92,13 @@ class crm_send_new_email(osv.osv_memory):
             case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['to'], details=body)
 
             flag = tools.email_send(
-                case.user_id.address_id.email, 
-                emails, 
-                data['subject'], 
-                case_pool.format_body(body), 
-                attach=attach, 
-                reply_to=case.section_id.reply_to, 
-                openobject_id=str(case.id), 
+                case.user_id.address_id.email,
+                emails,
+                data['subject'],
+                case_pool.format_body(body),
+                attach=attach,
+                reply_to=case.section_id.reply_to,
+                openobject_id=str(case.id),
                 subtype="html"
             )
             if flag:
@@ -115,7 +115,7 @@ class crm_send_new_email(osv.osv_memory):
 #            else:
 #                raise osv.except_osv(_('Warning!'), _("Email not sent !"))
         return {}
-    
+
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
@@ -129,10 +129,10 @@ class crm_send_new_email(osv.osv_memory):
         """
         if not context:
             context = {}
-        
+
         if not context.get('model'):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
-        
+
         res = super(crm_send_new_email, self).default_get(cr, uid, fields, context=context)
 
         if context.get('mail') == 'reply':
@@ -155,7 +155,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'state' in fields:
                 res.update({'state': 'done'})
         return res
-    
+
     def get_reply_defaults(self, cr, uid, fields, context=None):
         """
         This function gets default values for reply mail
@@ -201,7 +201,7 @@ class crm_send_new_email(osv.osv_memory):
         """
         if not context:
             context = {}
-        
+
         if not context.get('model'):
             raise osv.except_osv(_('Error'), _('Can not send mail!'))
         model = context.get('model')

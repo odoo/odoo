@@ -146,6 +146,7 @@ class crm_lead2partner(osv.osv_memory):
                         'user_id': lead.user_id.id,
                         'comment': lead.description,
                     })
+                    function_id = self.pool.get('res.partner.function').search(cr,uid,[('name','=',lead.function_name)])
                     contact_id = contact_obj.create(cr, uid, {
                         'partner_id': partner_id,
                         'name': lead.name,
@@ -154,7 +155,7 @@ class crm_lead2partner(osv.osv_memory):
                         'email': lead.email_from,
                         'fax': lead.fax,
                         'title': lead.title,
-                        'function': lead.function and lead.function.id or False,
+                        'function': function_id and function_id[0] or False,
                         'street': lead.street,
                         'street2': lead.street2,
                         'zip': lead.zip,
