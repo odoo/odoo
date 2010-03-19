@@ -27,7 +27,7 @@ import time
 
 class pos_details(osv.osv_memory):
     _name = 'pos.details'
-    _description = 'Order Details'
+    _description = 'Sales Details'
 
     _columns = {
         'date_start': fields.date('Date Start'),
