@@ -32,6 +32,10 @@ def one_in(setA, setB):
             return True
     return False
 
+def cond(C, X, Y):
+    if C: return X
+    return Y
+
 class many2many_unique(fields.many2many):
     def set(self, cr, obj, id, name, values, user=None, context=None):
         if not values:
@@ -64,12 +68,17 @@ class ir_ui_menu(osv.osv):
         # radical but this doesn't frequently happen
         self._cache = {}
 
-    def search(self, cr, uid, args, offset=0, limit=2000, order=None,
-            context=None, count=False):
-        if context is None:
-            context = {}
-        ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order, context=context, count=(count and uid==1))
-        if uid==1:
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
+               context=None, count=False):
+
+        super_offset = cond(uid == 1, offset, 0)
+        super_limit = cond(uid == 1, limit, None)
+        super_count = cond(uid == 1, count, False)
+
+        ids = super(ir_ui_menu, self).search(cr, uid, args, super_offset,
+                                             super_limit, order,
+                                             context=context, count=super_count)
+        if uid == 1:
             return ids
 
         if not ids:
@@ -122,6 +131,11 @@ class ir_ui_menu(osv.osv):
 
             result.append(menu.id)
             self._cache[key] = True
+
+        if offset:
+            result = result[long(offset):]
+        if limit:
+            result = result[:long(limit)]
 
         if count:
             return len(result)
