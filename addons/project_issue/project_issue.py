@@ -19,20 +19,17 @@
 #
 ##############################################################################
 
-import time
-import re
-import os
-import base64
-
-from tools.translate import _
-
-import tools
+from crm import crm
+from datetime import datetime, timedelta
 from osv import fields,osv,orm
 from osv.orm import except_orm
-from datetime import datetime, timedelta
-
-from crm import crm
+from tools.translate import _
+import base64
+import os
+import re
 import time
+import time
+import tools
 
 
 class project_issue(osv.osv):
@@ -78,15 +75,9 @@ class project_issue(osv.osv):
         'date': fields.datetime('Date'),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
-        'planned_revenue': fields.float('Planned Revenue'),
-        'planned_cost': fields.float('Planned Costs'),
-        'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
-                                                                       "the partner mentality in relation to our services.The scale has" \
-                                                                       "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
         'categ_id': fields.many2one('crm.case.categ','Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Bug Type', domain="[('object_id.model', '=', 'project.issue')]"),
-
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Severity'),
+        'type_id': fields.many2one('crm.case.resource.type', 'Version', domain="[('object_id.model', '=', 'project.issue')]"),
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
@@ -133,7 +124,7 @@ class project_issue(osv.osv):
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
-        return {'value':{'probability':stage.probability}}
+        return {'value':{}}
 
     _defaults = {
         'project_id':_get_project,
