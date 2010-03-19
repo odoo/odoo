@@ -65,7 +65,7 @@ class repair_cancel(osv.osv_memory):
              @return: New arch of view.
         
         """
-        record_id = context and context.get('order_id', False) or False        
+        record_id = context and context.get('active_id', False) or False        
         res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         if record_id:
             repair_order = self.pool.get('mrp.repair').browse(cr, uid, record_id)
