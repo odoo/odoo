@@ -31,15 +31,15 @@ class crm_send_new_email(osv.osv_memory):
     _description = "Case Send new email"
 
     _columns = {
-                'to' : fields.char('To', size=64, required=True),
-                'cc' : fields.char('CC', size=128),
-                'subject': fields.char('Subject', size=128, required=True),
-                'text': fields.text('Message', required=True),
-                'state': fields.selection([('done', 'Done'), ('pending', 'Pending'), ('unchanged', 'Unchanged')], string='State', required=True),
-                'doc1': fields.binary("Attachment1"),
-                'doc2': fields.binary("Attachment2"),
-                'doc3': fields.binary("Attachment3"),
-                }
+        'to' : fields.char('To', size=64, required=True),
+        'cc' : fields.char('CC', size=128),
+        'subject': fields.char('Subject', size=128, required=True),
+        'text': fields.text('Message', required=True),
+        'state': fields.selection([('done', 'Done'), ('pending', 'Pending'), ('unchanged', 'Unchanged')], string='State', required=True),
+        'doc1': fields.binary("Attachment1"),
+        'doc2': fields.binary("Attachment2"),
+        'doc3': fields.binary("Attachment3"),
+    }
 
     def action_cancel(self, cr, uid, ids, context=None):
         """
@@ -60,6 +60,9 @@ class crm_send_new_email(osv.osv_memory):
         @param ids: List of Phonecall to Opportunity's IDs
         @param context: A standard dictionary for contextual values
         """
+        
+        hist_obj = self.pool.get('crm.case.history')
+        
         if not context:
             context = {}
 
@@ -77,7 +80,6 @@ class crm_send_new_email(osv.osv_memory):
             if context.get('mail', 'new') == 'new':
                 case = case_pool.browse(cr, uid, res_id)
             else:
-                hist_obj = self.pool.get('crm.case.history')
                 hist = hist_obj.browse(cr, uid, res_id)
                 model = hist.log_id.model_id.model
                 model_pool = self.pool.get(model)
