@@ -64,7 +64,7 @@ class change_standard_price(osv.osv_memory):
         
         """
         rec_id = context and context.get('active_id', False)
-        prod_obj = self.pool.get('product.template')
+        prod_obj = self.pool.get('product.product')
         location_obj = self.pool.get('stock.location')
         lot_obj = self.pool.get('stock.report.prodlots')
         move_obj = self.pool.get('account.move')
@@ -78,52 +78,53 @@ class change_standard_price(osv.osv_memory):
         prod_obj.write(cr, uid, rec_id, {'standard_price': new_price})
         
         loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
-        lot_ids = lot_obj.search(cr, uid, [('location_id', 'in', loc_ids),('product_id','=',rec_id)])
         qty = 0
-        debit = 0.0
-        credit = 0.0
+        amount_diff = 0.0
+        amount_diff = 0.0
         stock_input_acc = data.property_stock_account_input.id or data.categ_id.property_stock_account_input_categ.id
         stock_output_acc = data.property_stock_account_output.id or data.categ_id.property_stock_account_output_categ.id
-            
-        for lots in lot_obj.browse(cr, uid, lot_ids):
-            qty += lots.name
         
-        if stock_input_acc and stock_output_acc and lot_ids:
-            move_id = move_obj.create(cr, uid, {'journal_id': data.categ_id.property_stock_journal.id})
-            if diff > 0:
-                credit = qty * diff
-                move_line_obj.create(cr, uid, {
-                                'name': data.name,
-                                'account_id': stock_input_acc,
-                                'credit': credit,
-                                'move_id': move_id
-                                })
-                for lots in lot_obj.browse(cr, uid, lot_ids):
-                    credit = lots.name * diff
-                    move_line_obj.create(cr, uid, {
+        company_id = False
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if user.company_id:
+            company_id = user.company_id.id
+           
+        if stock_input_acc and stock_output_acc:
+            move_id = move_obj.create(cr, uid, {'journal_id': data.categ_id.property_stock_journal.id, 'company_id': company_id})
+            for location_id in location_obj.browse(cr, uid, loc_ids):
+                product = prod_obj.browse(cr, uid, rec_id, context.update({'location':location_id}))
+                qty = product.qty_available
+                if qty:
+                    if diff > 0:                
+                        amount_diff = qty * diff        
+                        move_line_obj.create(cr, uid, {
+                                    'name': data.name,
+                                    'account_id': stock_input_acc,
+                                    'debit': amount_diff,
+                                    'move_id': move_id,
+                                    })
+                        move_line_obj.create(cr, uid, {
                                     'name': 'Expense',
-                                    'account_id': lots.location_id.account_id.id,
-                                    'debit': credit,
-                                    'move_id': move_id
+                                    'account_id': location_id.account_id.id,
+                                    'credit': amount_diff,
+                                    'move_id': move_id,
                                     })
-            elif diff < 0:
-                debit = qty * -diff
-                move_line_obj.create(cr, uid, {
-                                'name': data.name,
-                                'account_id': stock_output_acc,
-                                'debit': debit,
-                                'move_id': move_id
-                                })
-                for lots in lot_obj.browse(cr, uid, lot_ids):
-                    debit = lots.name * -diff
-                    move_line_obj.create(cr, uid, {
+                    elif diff < 0:               
+                        amount_diff = qty * -diff
+                        move_line_obj.create(cr, uid, {
+                                    'name': data.name,
+                                    'account_id': stock_output_acc,
+                                    'credit': amount_diff,
+                                    'move_id': move_id,
+                                    })
+                        move_line_obj.create(cr, uid, {
                                     'name': 'Income',
-                                    'account_id': lots.location_id.account_id.id,
-                                    'credit': debit,
-                                    'move_id': move_id
+                                    'account_id': location_id.account_id.id,
+                                    'debit': amount_diff,
+                                    'move_id': move_id,
                                     })
-            else:
-                raise osv.except_osv(_('Warning!'),_('No Change in Price.'))
+                    else:
+                        raise osv.except_osv(_('Warning!'),_('No Change in Price.'))
         else:
             raise osv.except_osv(_('Warning!'),_('No Accounts are defined for ' 
                         'this product on its location.\nCan\'t create Move.'))
