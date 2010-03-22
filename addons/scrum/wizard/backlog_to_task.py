@@ -55,6 +55,7 @@ def _do_create(self, cr, uid, data, context={}):
     value = {
         'domain': "[('product_backlog_id','in',["+','.join(map(str,data['ids']))+"])]",
         'name': 'Open Backlog Tasks',
+        'res_id': ids,
         'view_type': 'form',
         'view_mode': 'tree,form',
         'res_model': 'project.task',
