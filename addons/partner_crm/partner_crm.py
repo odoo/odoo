@@ -30,7 +30,7 @@ class res_partner(osv.osv):
                 'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
                                                      'Meetings'), 
                 'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
-                'invoice_ids': fields.one2many('account.invoice', 'partner_id', 'Invoices'), 
+                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'), 
                 'contract_ids': fields.one2many('account.analytic.account', \
                                                     'partner_id', 'Contracts'), 
                 }
