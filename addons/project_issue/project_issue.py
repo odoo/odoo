@@ -19,18 +19,17 @@
 #
 ##############################################################################
 
-from crm import crm
-from datetime import datetime, timedelta
-from osv import fields,osv,orm
-from osv.orm import except_orm
-from tools.translate import _
 import base64
 import os
 import re
 import time
 import time
 import tools
-
+from crm import crm
+from datetime import datetime, timedelta
+from osv import fields,osv,orm
+from osv.orm import except_orm
+from tools.translate import _
 
 class project_issue(osv.osv):
     _name = "project.issue"

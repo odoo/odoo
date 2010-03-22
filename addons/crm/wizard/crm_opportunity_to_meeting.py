@@ -128,13 +128,13 @@ class crm_opportunity2meeting(osv.osv_memory):
 
             opp = opp_obj.browse(cr, uid, record_id, context=context)
             context = {
-                        'default_opportunity_id': opp.id, 
-                        'default_partner_id': opp.partner_id and opp.partner_id.id or False, 
-                        'default_section_id': opp.section_id and opp.section_id.id or False, 
-                        'default_email_from': opp.email_from, 
-                        'default_state': 'open', 
-                        'default_name': opp.name
-                    }
+                'default_opportunity_id': opp.id, 
+                'default_partner_id': opp.partner_id and opp.partner_id.id or False, 
+                'default_section_id': opp.section_id and opp.section_id.id or False, 
+                'default_email_from': opp.email_from, 
+                'default_state': 'open', 
+                'default_name': opp.name
+            }
                     
             value = {
                 'name': _('Meetings'), 
@@ -147,7 +147,7 @@ class crm_opportunity2meeting(osv.osv_memory):
                 'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')], 
                 'type': 'ir.actions.act_window', 
                 'search_view_id': res['res_id']
-                }
+            }
 
         return value
 
