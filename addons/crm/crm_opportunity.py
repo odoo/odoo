@@ -32,12 +32,22 @@ AVAILABLE_STATES = [
 ]
 
 class crm_opportunity(osv.osv):
+    """ Opportunity Cases """
+
     _name = "crm.opportunity"
     _description = "Opportunity Cases"
     _order = "id desc"
     _inherit = 'crm.case'
 
     def _compute_openday(self, cr, uid, ids, name, args, context={}):
+
+        """
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Openday’s IDs
+        @return: difference between current date and log date
+        @param context: A standard dictionary for contextual values
+        """
         result = {}
         for r in self.browse(cr, uid, ids , context):
             result[r.id] = 0
@@ -58,9 +68,18 @@ class crm_opportunity(osv.osv):
         return result
 
     def _compute_closeday(self, cr, uid, ids, name, args, context={}):
+
+        """
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of closeday’s IDs
+        @return: difference between current date and closed date
+        @param context: A standard dictionary for contextual values
+        """
         result = {}
         for r in self.browse(cr, uid, ids , context):
             result[r.id] = 0
+
             if r.date_closed:
                 date_create = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
                 date_close = datetime.strptime(r.date_closed, "%Y-%m-%d %H:%M:%S")
@@ -70,14 +89,19 @@ class crm_opportunity(osv.osv):
         return result
 
     _columns = {
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Resource Type', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
+                     domain="[('section_id','=',section_id),\
+                    ('object_id.model', '=', 'crm.opportunity')]"),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+                     domain="[('section_id','=',section_id), \
+                    ('object_id.model', '=', 'crm.opportunity')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Resource Type',\
+                    domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'probability': fields.float('Probability (%)'),
         'planned_revenue': fields.float('Expected Revenue'),
-        'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-        'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
+        'ref': fields.reference('Reference', selection=crm._links_get, size=128),
+        'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'date_closed': fields.datetime('Closed', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesman'),
         'phone': fields.char("Phone", size=64),
@@ -94,14 +118,29 @@ class crm_opportunity(osv.osv):
        }
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of stage’s IDs
+            @stage_id: change state id on run time """
+
         if not stage_id:
             return {'value':{}}
+
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability':stage.probability}}
 
     def stage_next(self, cr, uid, ids, context={}):
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of stage next’s IDs
+            @param context: A standard dictionary for contextual values """
+
         res = super(crm_opportunity, self).stage_next(cr, uid, ids, context=context)
         for case in self.browse(cr, uid, ids, context):
             if case.stage_id and case.stage_id.on_change:
@@ -109,6 +148,13 @@ class crm_opportunity(osv.osv):
         return res
 
     def stage_previous(self, cr, uid, ids, context={}):
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of stage previous’s IDs
+            @param context: A standard dictionary for contextual values """
+
         res = super(crm_opportunity, self).stage_previous(cr, uid, ids, context=context)
         for case in self.browse(cr, uid, ids, context):
             if case.stage_id and case.stage_id.on_change:

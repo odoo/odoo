@@ -24,26 +24,38 @@ import crm
 import time
 
 class crm_phonecall(osv.osv):
+    """ Phonecall Cases """
+
     _name = "crm.phonecall"
     _description = "Phonecall Cases"
     _order = "id desc"
     _inherit = 'crm.case'
+
     _columns = {
         'duration': fields.float('Duration'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.phonecall')]"),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+                        domain="[('section_id','=',section_id),\
+                        ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_phone': fields.char('Phone', size=32),
-        'partner_contact': fields.related('partner_address_id', 'name', type="char", string="Contact", size=128),
+        'partner_contact': fields.related('partner_address_id', 'name',\
+                                 type="char", string="Contact", size=128),
         'partner_mobile': fields.char('Mobile', size=32),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
-                                                                " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
+        'canal_id': fields.many2one('res.partner.canal', 'Channel',\
+                        help="The channels represent the different communication\
+                         modes available with the customer." \
+                        " With each commercial opportunity, you can indicate\
+                         the canall which is this opportunity source."),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'),
     }
+
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
+
 crm_phonecall()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

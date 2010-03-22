@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    	
+
     	<!-- Opportunity to Phonecall view -->
-    	
+
         <record model="ir.ui.view" id="opportunity2phonecall_view">
             <field name="name">crm.opportunity2phonecall.form</field>
             <field name="model">crm.opportunity2phonecall</field>
@@ -25,9 +25,9 @@
                 </form>
             </field>
         </record>
-		
+
 		<!-- Opportunity to Phonecall action -->
-		
+
  		<record model="ir.actions.act_window" id="opportunity2phonecall_act">
             <field name="name">Schedule Call</field>
             <field name="res_model">crm.opportunity2phonecall</field>
@@ -35,8 +35,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="opportunity2phonecall_view"/>
             <field name="target">new</field>
-         	<field name="context">{'record_id' : active_id}</field>
         </record>
-        
+
     </data>
-</openerp>   
+</openerp>

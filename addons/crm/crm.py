@@ -116,6 +116,7 @@ class crm_case_section(osv.osv):
             return []
         reads = self.read(cr, uid, ids, ['name', 'parent_id'], context)
         res = []
+
         for record in reads:
             name = record['name']
             if record['parent_id']:
@@ -178,9 +179,11 @@ class crm_case_resource_type(osv.osv):
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
         return ids and ids[0]
+
     _defaults = {
         'object_id' : _find_object_id
     }
+
 crm_case_resource_type()
 
 
@@ -215,6 +218,7 @@ class crm_case_stage(osv.osv):
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
         return ids and ids[0]
+
     _defaults = {
         'sequence': lambda *args: 1,
         'probability': lambda *args: 0.0,
@@ -295,11 +299,14 @@ class crm_case(osv.osv):
         if 'history_line' in field_names:
             history_obj = self.pool.get('crm.case.history')
             name = 'history_line'
+
         if 'log_ids' in field_names:
             history_obj = self.pool.get('crm.case.log')
             name = 'log_ids'
+
         if not history_obj:
             return result
+
         for case in self.browse(cr, uid, ids, context):
             model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
             history_ids = history_obj.search(cr, uid, [('model_id', '=', model_ids[0]),\
@@ -495,6 +502,7 @@ class crm_case(osv.osv):
         s = self.get_stage_dict(cr, uid, ids, context=context)
         for case in self.browse(cr, uid, ids, context):
             section = (case.section_id.id or False)
+
             if section in s:
                 st = case.stage_id.id  or False
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
@@ -519,8 +527,10 @@ class crm_case(osv.osv):
         value = {}
         if not name:
             value['name'] = case.name
+
         if (not partner_id) and case.partner_id:
             value['partner_id'] = case.partner_id.id
+
             if case.partner_address_id:
                 value['partner_address_id'] = case.partner_address_id.id
             if case.email_from:
@@ -552,6 +562,7 @@ class crm_case(osv.osv):
 
 
         model_obj = self.pool.get('ir.model')
+
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
             data = {
@@ -562,6 +573,7 @@ class crm_case(osv.osv):
                 'res_id': case.id,
                 'section_id': case.section_id.id
             }
+
             obj = self.pool.get('crm.case.log')
             if history:
                 obj = self.pool.get('crm.case.history')
@@ -636,12 +648,15 @@ class crm_case(osv.osv):
             if not case.email_from:
                 raise osv.except_osv(_('Error!'),
                         _('You must put a Partner eMail to use this action!'))
+
             if not case.user_id:
                 raise osv.except_osv(_('Error!'),
                         _('You must define a responsible user for this case in order to use this action!'))
+
             if not case.description:
                 raise osv.except_osv(_('Error!'),
                         _('Can not send mail with empty body,you should have description in the body'))
+
         self.__history(cr, uid, cases, _('Send'), history=True, email=False)
         for case in cases:
             self.write(cr, uid, [case.id], {
@@ -735,6 +750,7 @@ class crm_case(osv.osv):
         cases = self.browse(cr, uid, ids)
         for case in cases:
             data = {'active': True, 'user_id': False}
+
             if case.section_id.parent_id:
                 data['section_id'] = case.section_id.parent_id.id
                 if case.section_id.parent_id.user_id:
@@ -868,6 +884,7 @@ class crm_case_history(osv.osv):
             res[hist.id] = (hist.email or '/') + ' (' + str(hist.date) + ')\n'
             res[hist.id] += (hist.description or '')
         return res
+
     _columns = {
         'description': fields.text('Description'),
         'note': fields.function(_note_get, method=True, string="Description", type="text"),
@@ -944,6 +961,7 @@ class crm_email_add_cc_wizard(osv.osv_memory):
             openobject_id = str(case.id),
             subtype = "html"
         )
+
         if flag:
             model_pool.write(cr, uid, case.id, {'email_cc' : case.email_cc and case.email_cc + ',' + email or email})
         else:

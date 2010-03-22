@@ -2,9 +2,8 @@
 <openerp>
 <data>
 
-	# ------------------------------------------------------
-    # Helpdesk Support Categories
-    # ------------------------------------------------------
+<!-- Helpdesk Support Categories Form View -->
+
     <record id="crm_helpdesk_categ_action" model="ir.actions.act_window">
         <field name="name">Helpdesk Categories</field>
         <field name="res_model">crm.case.categ</field>
@@ -13,11 +12,11 @@
         <field name="domain">[('object_id.model', '=', 'crm.helpdesk')]</field>
 		<field name="context">{'object_id':'crm.helpdesk'}</field>
     </record>
-	<menuitem action="crm_helpdesk_categ_action" id="menu_crm_case_helpdesk-act" parent="crm.menu_crm_case_categ"/>
-    # ------------------------------------------------------
-    # Helpdesk Support
-    # ------------------------------------------------------
 
+    <menuitem action="crm_helpdesk_categ_action"
+    	id="menu_crm_case_helpdesk-act" parent="crm.menu_crm_case_categ" />
+
+<!--  Helpdesk Support Form View -->
 
     <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
         <field name="name">CRM - Helpdesk Support Form</field>
@@ -34,11 +33,18 @@
                     <page string="General">
                     	<separator colspan="4" string="Communication"/>
                         <group col="7" colspan="4">
-                            <field  name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" select="1"/>
-                            <field  name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" select="2"/>
+                            <field name="partner_id"
+                            	on_change="onchange_partner_id(partner_id, email_from)"
+                            	select="1" />
+                            <field name="partner_address_id"
+                            	on_change="onchange_partner_address_id(partner_address_id, email_from)"
+                            	select="2" />
 
-                            <field  name="email_from" select="2"/>
-                            <button name="remind_partner" states="open,pending" string="Send Reminder" type="object" icon="gtk-go-forward"/>
+                            <field name="email_from" select="2" />
+                            <button name="remind_partner"
+                            	states="open,pending"
+                            	string="Send Reminder" type="object"
+                            	icon="gtk-go-forward" />
 
                         </group>
                         <separator colspan="4" string="Categorization"/>
@@ -46,7 +52,10 @@
                             <field name="priority"/>
                             <field name="section_id" widget="selection"/>
                             <field name="user_id" select="1"/>
-                            <button name="remind_user" states="open,pending" string="Send Reminder" type="object" icon="gtk-go-forward"/>
+                            <button name="remind_user"
+                            	states="open,pending"
+                            	string="Send Reminder" type="object"
+                            	icon="gtk-go-forward" />
                         </group>
 
                         <separator colspan="4" string="Details"/>
@@ -55,12 +64,26 @@
                         <separator colspan="4"/>
                         <group col="8" colspan="4">
                             <field name="state" select="1"/>
-                            <button name="case_close" states="open,draft,pending" string="Close" type="object" icon="gtk-close"/>
-                            <button name="case_open" states="draft,pending" string="Open" type="object" icon="gtk-go-forward"/>
-                            <button name="case_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-                            <button name="case_pending" states="draft,open" string="Pending" type="object" icon="gtk-media-pause"/>
-                            <button name="case_escalate" states="open,draft,pending" string="Escalate" type="object" icon="gtk-go-up"/>
-                            <button name="case_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert"/>
+                            <button name="case_close"
+                            	states="open,draft,pending" string="Close"
+                            	type="object" icon="gtk-close" />
+                            <button name="case_open"
+                            	states="draft,pending" string="Open"
+                            	type="object" icon="gtk-go-forward" />
+                            <button name="case_cancel"
+                            	states="draft,open,pending" string="Cancel"
+                            	type="object" icon="gtk-cancel" />
+                            <button name="case_pending"
+                            	states="draft,open" string="Pending"
+                            	type="object" icon="gtk-media-pause" />
+                            <button name="case_escalate"
+                            	states="open,draft,pending"
+                            	string="Escalate" type="object"
+                            	icon="gtk-go-up" />
+                            <button name="case_reset"
+                            	states="done,cancel"
+                            	string="Reset to Draft" type="object"
+                            	icon="gtk-convert" />
                         </group>
                     </page>
                     <page string="History" groups="base.group_extended">
@@ -125,6 +148,9 @@
             </form>
         </field>
     </record>
+
+<!-- Helpdesk Support Tree View  -->
+
     <record model="ir.ui.view" id="crm_case_tree_view_helpdesk">
         <field name="name">CRM - Helpdesk Support Tree</field>
         <field name="model">crm.helpdesk</field>
@@ -140,15 +166,28 @@
                 <field name="user_id"/>
                 <field name="section_id" string="Section" />
                 <field name="state"/>
-                <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-close"/>
-                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
-                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                <button name="case_close" string="Done"
+                	states="open,draft,pending" type="object"
+                	icon="gtk-close" />
+                <button name="case_open" string="Open"
+                	states="draft,pending" type="object"
+                	icon="gtk-go-forward" />
+                <button name="case_cancel" string="Cancel"
+                	states="draft,open,pending" type="object"
+                	icon="gtk-cancel" />
+                <button name="case_pending" string="Pending"
+                	states="draft,open" type="object"
+                	icon="gtk-media-pause" />
+                <button name="case_escalate" string="Escalate"
+                	states="open,draft,pending" type="object"
+                	icon="gtk-go-up" />
+                <button name="case_reset" string="Reset to Draft"
+                	states="done,cancel" type="object" icon="gtk-convert" />
             </tree>
         </field>
     </record>
+
+<!--  Helpdesk Support Calendar View -->
 
     <record model="ir.ui.view" id="crm_case_helpdesk_calendar_view">
         <field name="name">CRM - Helpdesk Support Calendar</field>
@@ -163,6 +202,8 @@
             </calendar>
         </field>
     </record>
+
+<!-- Helpdesk Support Search View  -->
 
     <record id="view_crm_case_helpdesk_filter" model="ir.ui.view">
         <field name="name">CRM - Helpdesk Search</field>
@@ -184,18 +225,25 @@
                 <field name="name" select='1' string="Query"/>
                 <field name="partner_id" />
                 <field name="user_id" select="1" widget="selection">
-                    <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Helpdesk Requests" default="1"/>
+                    <filter icon="terp-partner"
+                    	domain="[('user_id','=',uid)]"
+                    	help="My Helpdesk Requests" default="1" />
                 </field>
-                <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
-                    <filter icon="terp-crm"
-                        domain="[('section_id','=',context.get('section_id',False))]"
-                        help="My section"/>
+                <field name="section_id"
+                	default="context.get('section_id', False)" select="1"
+                	widget="selection" string="Section">
+                	<filter icon="terp-crm"
+                		domain="[('section_id','=',context.get('section_id',False))]"
+                		help="My section" />
                 </field>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="12" col="20">
-                    <filter string="Customer" icon="terp-crm" domain="[]" context="{'group_by':'partner_id'}"/>
-                    <filter string="State" icon="terp-crm" domain="[]"  context="{'group_by':'state'}"/>
-                    <filter string="Priority" icon="terp-crm" domain="[]"  context="{'group_by':'priority'}"/>
+                    <filter string="Customer" icon="terp-crm"
+                    	domain="[]" context="{'group_by':'partner_id'}" />
+                    <filter string="State" icon="terp-crm" domain="[]"
+                    	context="{'group_by':'state'}" />
+                    <filter string="Priority" icon="terp-crm"
+                    	domain="[]" context="{'group_by':'priority'}" />
                 </group>
             </search>
         </field>
