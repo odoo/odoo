@@ -514,9 +514,9 @@ class orm_template(object):
                                 cols = selection_field(self._inherits)
                             if cols and cols._type == 'selection':
                                 sel_list = cols.selection
-                                if type(sel_list) == type([]):
-                                    r = [x[1] for x in sel_list if r==x[0]][0]
-
+                                if r and type(sel_list) == type([]):
+                                    r = [x[1] for x in sel_list if r==x[0]]
+                                    r = r and r[0] or False
                     if not r:
                         if f[i] in self._columns: 
                             r = check_type(self._columns[f[i]]._type)
