@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-import wizard_survey
+import survey_send_invitation
 import survey_print_statistics
 import survey_print_answer
 import survey_browse_answer
