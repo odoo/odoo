@@ -301,11 +301,12 @@ class mrp_bom(osv.osv):
         rev_ids = res[0]['revision_ids']
         idx = 1
         new_idx = []
+        bom_rev_obj = self.pool.get('mrp.bom.revision')
         for rev_id in rev_ids:
             if res[0]['revision_type'] == 'numeric':
-                self.pool.get('mrp.bom.revision').write(cr, uid, [rev_id], {'indice' : idx})
+                bom_rev_obj.write(cr, uid, [rev_id], {'indice' : idx})
             else:
-                self.pool.get('mrp.bom.revision').write(cr, uid, [rev_id], {'indice' : "%c"%(idx+96,)})
+                bom_rev_obj.write(cr, uid, [rev_id], {'indice' : "%c"%(idx+96,)})
             idx+=1
         return True
 
@@ -514,15 +515,18 @@ class mrp_production(osv.osv):
 
     def action_compute(self, cr, uid, ids, properties=[]):
         results = []
+        bom_obj = self.pool.get('mrp.bom')
+        prod_line_obj = self.pool.get('mrp.production.product.line')
+        workcenter_line_obj = self.pool.get('mrp.production.workcenter.line')
         for production in self.browse(cr, uid, ids):
             cr.execute('delete from mrp_production_product_line where production_id=%s', (production.id,))
             cr.execute('delete from mrp_production_workcenter_line where production_id=%s', (production.id,))
             bom_point = production.bom_id
             bom_id = production.bom_id.id
             if not bom_point:
-                bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, production.product_id.id, production.product_uom.id, properties)
+                bom_id = bom_obj._bom_find(cr, uid, production.product_id.id, production.product_uom.id, properties)
                 if bom_id:
-                    bom_point = self.pool.get('mrp.bom').browse(cr, uid, bom_id)
+                    bom_point = bom_obj.browse(cr, uid, bom_id)
                     routing_id = bom_point.routing_id.id or False
                     self.write(cr, uid, [production.id], {'bom_id': bom_id, 'routing_id': routing_id})
 
@@ -533,32 +537,34 @@ class mrp_production(osv.osv):
             #   self.write(cr, uid, [production.id], {'location_src_id': bom_point.routing_id.location_id.id})
 
             factor = production.product_qty * production.product_uom.factor / bom_point.product_uom.factor
-            res = self.pool.get('mrp.bom')._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
+            res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
             results = res[0]
             results2 = res[1]
             for line in results:
                 line['production_id'] = production.id
-                self.pool.get('mrp.production.product.line').create(cr, uid, line)
+                prod_line_obj.create(cr, uid, line)
             for line in results2:
                 line['production_id'] = production.id
-                self.pool.get('mrp.production.workcenter.line').create(cr, uid, line)
+                workcenter_line_obj.create(cr, uid, line)
         return len(results)
 
     def action_cancel(self, cr, uid, ids):
+        move_obj = self.pool.get('stock.move')
         for production in self.browse(cr, uid, ids):
             if production.move_created_ids:
-                self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in production.move_created_ids])
-            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in production.move_lines])
+                move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
+            move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
         self.write(cr, uid, ids, {'state':'cancel'}) #,'move_lines':[(6,0,[])]})
         return True
 
     #XXX: may be a bug here; lot_lines are unreserved for a few seconds;
     #     between the end of the picking list and the call to this function
     def action_ready(self, cr, uid, ids):
+        move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state':'ready'})
         for production in self.browse(cr, uid, ids):
             if production.move_prod_id:
-                self.pool.get('stock.move').write(cr, uid, [production.move_prod_id.id],
+                move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id':production.location_dest_id.id})
         return True
 
@@ -579,10 +585,10 @@ class mrp_production(osv.osv):
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
         """ 
-             @summary: To produce final product base on production mode (consume/consume&produce).
-                       If Production mode is consume, all stock move lines of raw materials will be done/consumed.
-                       If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
-                                    and stock move lines of final product will be also done/produced.
+            To produce final product base on production mode (consume/consume&produce).
+            If Production mode is consume, all stock move lines of raw materials will be done/consumed.
+            If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
+            and stock move lines of final product will be also done/produced.
         
              @param self: The object pointer.
              @param cr: A database cursor
@@ -662,6 +668,7 @@ class mrp_production(osv.osv):
 
     def _costs_generate(self, cr, uid, production):
         amount = 0.0
+        analytic_line_obj = self.pool.get('account.analytic.line')
         for wc_line in production.workcenter_lines:
             wc = wc_line.workcenter_id
             if wc.costs_journal_id and wc.costs_general_account_id:
@@ -669,7 +676,7 @@ class mrp_production(osv.osv):
                 account = wc.costs_hour_account_id.id
                 if value and account:
                     amount += value
-                    self.pool.get('account.analytic.line').create(cr, uid, {
+                    analytic_line_obj.create(cr, uid, {
                         'name': wc_line.name+' (H)',
                         'amount': value,
                         'account_id': account,
@@ -682,7 +689,7 @@ class mrp_production(osv.osv):
                 account = wc.costs_cycle_account_id.id
                 if value and account:
                     amount += value
-                    self.pool.get('account.analytic.line').create(cr, uid, {
+                    analytic_line_obj.create(cr, uid, {
                         'name': wc_line.name+' (C)',
                         'amount': value,
                         'account_id': account,
@@ -711,6 +718,10 @@ class mrp_production(osv.osv):
     def action_confirm(self, cr, uid, ids):
         picking_id=False
         proc_ids = []
+        seq_obj = self.pool.get('ir.sequence')
+        pick_obj = self.pool.get('stock.picking')
+        move_obj = self.pool.get('stock.move')
+        proc_obj = self.pool.get('mrp.procurement')
         for production in self.browse(cr, uid, ids):
             if not production.product_lines:
                 self.action_compute(cr, uid, [production.id])
@@ -724,8 +735,8 @@ class mrp_production(osv.osv):
                     pick_type = 'out'
                 address_id = routing_loc.address_id and routing_loc.address_id.id or False
                 routing_loc = routing_loc.id
-            pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.'+pick_type)
-            picking_id = self.pool.get('stock.picking').create(cr, uid, {
+            pick_name = seq_obj.get(cr, uid, 'stock.picking.'+pick_type)
+            picking_id = pick_obj.create(cr, uid, {
                 'name': pick_name,
                 'origin': (production.origin or '').split(':')[0] +':'+production.name,
                 'type': pick_type,
@@ -751,7 +762,7 @@ class mrp_production(osv.osv):
                 'state': 'waiting',
                 'company_id': production.company_id.id,
             }
-            res_final_id = self.pool.get('stock.move').create(cr, uid, data)
+            res_final_id = move_obj.create(cr, uid, data)
 
             self.write(cr, uid, [production.id], {'move_created_ids': [(6, 0, [res_final_id])]})
             moves = []
@@ -759,7 +770,7 @@ class mrp_production(osv.osv):
                 move_id=False
                 newdate = production.date_planned
                 if line.product_id.type in ('product', 'consu'):
-                    res_dest_id = self.pool.get('stock.move').create(cr, uid, {
+                    res_dest_id = move_obj.create(cr, uid, {
                         'name':'PROD:'+production.name,
                         'date_planned': production.date_planned,
                         'product_id': line.product_id.id,
@@ -774,7 +785,7 @@ class mrp_production(osv.osv):
                         'company_id': production.company_id.id,
                     })
                     moves.append(res_dest_id)
-                    move_id = self.pool.get('stock.move').create(cr, uid, {
+                    move_id = move_obj.create(cr, uid, {
                         'name':'PROD:'+production.name,
                         'picking_id':picking_id,
                         'product_id': line.product_id.id,
@@ -789,7 +800,7 @@ class mrp_production(osv.osv):
                         'state': 'waiting',
                         'company_id': production.company_id.id,
                     })
-                proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+                proc_id = proc_obj.create(cr, uid, {
                     'name': (production.origin or '').split(':')[0] + ':' + production.name,
                     'origin': (production.origin or '').split(':')[0] + ':' + production.name,
                     'date_planned': newdate,
@@ -1039,6 +1050,7 @@ class mrp_procurement(osv.osv):
 
     def check_buy(self, cr, uid, ids):
         user = self.pool.get('res.users').browse(cr, uid, uid)
+        partner_obj = self.pool.get('res.partner')
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_id.product_tmpl_id.supply_method<>'buy':
                 return False
@@ -1049,7 +1061,7 @@ class mrp_procurement(osv.osv):
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
                     return False
-            address_id = self.pool.get('res.partner').address_get(cr, uid, [partner.id], ['delivery'])['delivery']
+            address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
                 cr.execute('update mrp_procurement set message=%s where id=%s', (_('No address defined for the supplier'), procurement.id))
                 return False
@@ -1062,6 +1074,7 @@ class mrp_procurement(osv.osv):
         return False
 
     def action_confirm(self, cr, uid, ids, context={}):
+        move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_qty <= 0.00:
                 raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Requisition Order(s), it should not be less than 1!'))
@@ -1070,7 +1083,7 @@ class mrp_procurement(osv.osv):
                     source = procurement.location_id.id
                     if procurement.procure_method=='make_to_order':
                         source = procurement.product_id.product_tmpl_id.property_stock_procurement.id
-                    id = self.pool.get('stock.move').create(cr, uid, {
+                    id = move_obj.create(cr, uid, {
                         'name': 'PROC:'+procurement.name,
                         'location_id': source,
                         'location_dest_id': procurement.location_id.id,
@@ -1085,7 +1098,7 @@ class mrp_procurement(osv.osv):
                 else:
                     # TODO: check this
                     if procurement.procure_method=='make_to_stock' and procurement.move_id.state in ('waiting',):
-                        id = self.pool.get('stock.move').write(cr, uid, [procurement.move_id.id], {'state':'confirmed'})
+                        id = move_obj.write(cr, uid, [procurement.move_id.id], {'state':'confirmed'})
         self.write(cr, uid, ids, {'state':'confirmed','message':''})
         return True
 
@@ -1114,7 +1127,7 @@ class mrp_procurement(osv.osv):
 
     def action_produce_assign_product(self, cr, uid, ids, context={}):
         """
-        @summary : This is action which call from workflow to assign production order to procuments
+        This is action which call from workflow to assign production order to procuments
         @return  : True
         """
         res = self.make_mo(cr, uid, ids, context=context)
@@ -1123,18 +1136,21 @@ class mrp_procurement(osv.osv):
 
     def make_mo(self, cr, uid, ids, context={}):
         """
-        @summary : Make Manufecturing(production) order from procurement
+        Make Manufecturing(production) order from procurement
         
         @return : New created Production Orders procurement wise 
         """
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
+        production_obj = self.pool.get('mrp.production')
+        move_obj = self.pool.get('stock.move')
+        wf_service = netsvc.LocalService("workflow")
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
             loc_id = procurement.location_id.id
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
             newdate = newdate - DateTime.RelativeDateTime(days=company.manufacturing_lead)
-            produce_id = self.pool.get('mrp.production').create(cr, uid, {
+            produce_id = production_obj.create(cr, uid, {
                 'origin': procurement.origin,
                 'product_id': procurement.product_id.id,
                 'product_qty': procurement.product_qty,
@@ -1150,17 +1166,16 @@ class mrp_procurement(osv.osv):
             })
             res[procurement.id] = produce_id
             self.write(cr, uid, [procurement.id], {'state':'running'})
-            bom_result = self.pool.get('mrp.production').action_compute(cr, uid,
+            bom_result = production_obj.action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
-            wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
-            self.pool.get('stock.move').write(cr, uid, [res_id],
+            move_obj.write(cr, uid, [res_id],
                     {'location_id':procurement.location_id.id})
         return res
     
     def action_po_assign(self, cr, uid, ids, context={}):
         """
-        @summary : This is action which call from workflow to assign purchase order to procuments
+        This is action which call from workflow to assign purchase order to procuments
         @return  : True
         """
         res = self.make_po(cr, uid, ids, context=context)
@@ -1169,26 +1184,32 @@ class mrp_procurement(osv.osv):
 
     def make_po(self, cr, uid, ids, context={}):
         """
-        @summary : Make purchase order from procurement
+        Make purchase order from procurement
         
         @return : New created Purchase Orders procurement wise
         """
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
+        partner_obj = self.pool.get('res.partner')
+        uom_obj = self.pool.get('product.uom')
+        pricelist_obj = self.pool.get('product.pricelist')
+        prod_obj = self.pool.get('product.product')
+        acc_pos_obj = self.pool.get('account.fiscal.position')
+        po_obj = self.pool.get('purchase.order')
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_ids[0].name
             partner_id = partner.id
-            address_id = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['delivery'])['delivery']
+            address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
 
             uom_id = procurement.product_id.uom_po_id.id
 
-            qty = self.pool.get('product.uom')._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
+            qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
             if procurement.product_id.seller_ids[0].qty:
                 qty=max(qty,procurement.product_id.seller_ids[0].qty)
 
-            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
+            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
@@ -1197,7 +1218,7 @@ class mrp_procurement(osv.osv):
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang':partner.lang, 'partner_id':partner_id})
 
-            product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
+            product = prod_obj.browse(cr,uid,procurement.product_id.id,context=context)
 
             line = {
                 'name': product.partner_ref,
@@ -1211,11 +1232,11 @@ class mrp_procurement(osv.osv):
             }
 
             taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
-            taxes = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes_ids)
+            taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
             line.update({
                 'taxes_id':[(6,0,taxes)]
             })
-            purchase_id = self.pool.get('purchase.order').create(cr, uid, {
+            purchase_id = po_obj.create(cr, uid, {
                 'origin': procurement.origin,
                 'partner_id': partner_id,
                 'partner_address_id': address_id,
@@ -1232,6 +1253,7 @@ class mrp_procurement(osv.osv):
     def action_cancel(self, cr, uid, ids):
         todo = []
         todo2 = []
+        move_obj = self.pool.get('stock.move')
         for proc in self.browse(cr, uid, ids):
             if proc.close_move:
                 if proc.move_id.state not in ('done','cancel'):
@@ -1240,9 +1262,9 @@ class mrp_procurement(osv.osv):
                 if proc.move_id and proc.move_id.state=='waiting':
                     todo.append(proc.move_id.id)
         if len(todo2):
-            self.pool.get('stock.move').action_cancel(cr, uid, todo2)
+            move_obj.action_cancel(cr, uid, todo2)
         if len(todo):
-            self.pool.get('stock.move').write(cr, uid, todo, {'state':'assigned'})
+            move_obj.write(cr, uid, todo, {'state':'assigned'})
         self.write(cr, uid, ids, {'state':'cancel'})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -1265,10 +1287,11 @@ class mrp_procurement(osv.osv):
         return res
 
     def action_done(self, cr, uid, ids):
+        move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
             if procurement.move_id:
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
-                    self.pool.get('stock.move').action_done(cr, uid, [procurement.move_id.id])
+                    move_obj.action_done(cr, uid, [procurement.move_id.id])
         res = self.write(cr, uid, ids, {'state':'done', 'date_close':time.strftime('%Y-%m-%d')})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
