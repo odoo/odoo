@@ -19,6 +19,7 @@
 #
 ##############################################################################
 from osv import fields, osv
+from tools.translate import _
 
 class event_partners_list(osv.osv_memory):
     """ Event Partners """
@@ -40,7 +41,7 @@ class event_partners_list(osv.osv_memory):
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {
             'domain': "[('id','in', ["+','.join(map(str, list_partner))+"])]",
-            'name': 'Event Partners',
+            'name': _('Event Partners'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'res.partner',

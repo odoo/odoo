@@ -75,8 +75,8 @@ class hr_evaluation_plan_phase(osv.osv):
     }
     _defaults = {
         'sequence' : lambda *a: 1,
-        'email_subject':'''Regarding ''',
-        'mail_body' : lambda *a:'''
+        'email_subject':_('''Regarding '''),
+        'mail_body' : lambda *a:_('''
 Date : %(date)s
 
 Dear %(employee_name)s,
@@ -90,7 +90,7 @@ Thanks,
 --
 %(user_signature)s
 
-        ''',
+        '''),
     }
 
 
