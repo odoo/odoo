@@ -37,8 +37,10 @@
                    'survey_que_wizard.xml',
                    'survey_wizard.xml',
                    'survey_view.xml',
-                   'security/ir.model.access.csv'
-                   ,'wizard/survey_print_statistics.xml'],
+                   'security/ir.model.access.csv',
+                   'wizard/survey_print_statistics.xml',
+                   'wizard/survey_print_answer.xml',
+                   'wizard/survey_browse_answer.xml'],
     'demo_xml': ['survey_demo.xml'],
     'installable': True,
     'active': False,
