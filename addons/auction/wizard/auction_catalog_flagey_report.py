@@ -39,7 +39,7 @@ class auction_catalog_flagey(osv.osv_memory):
         res = super(auction_catalog_flagey, self).default_get(cr, uid, fields, context=context)
         return res
     
-    def view_init(self, cr, uid, fields_list, context):
+    def view_init(self, cr, uid, fields, context):
         current_auction = self.pool.get('auction.dates').browse(cr,uid,context.get('active_ids', []))
         v_lots = self.pool.get('auction.lots').search(cr,uid,[('auction_id','=',current_auction.id)])
         v_ids = self.pool.get('auction.lots').browse(cr,uid,v_lots)

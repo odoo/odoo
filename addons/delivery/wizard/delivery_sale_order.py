@@ -53,7 +53,7 @@ class make_delivery(osv.osv_memory):
              res.update({'carrier_id': order.partner_id.property_delivery_carrier.id})
         return res
     
-    def view_init(self, cr , uid , fields_list, context=None):
+    def view_init(self, cr , uid , fields, context=None):
          order_obj = self.pool.get('sale.order')
          for order in order_obj.browse(cr, uid, context.get('active_ids', [])):     
              if not order.state in ('draft'):
