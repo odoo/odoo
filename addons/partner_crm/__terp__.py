@@ -25,19 +25,18 @@
     'version': '1.0', 
     'category': 'Generic Modules/Base', 
     'description': """
-This module adds the following one2many fields on the bottom partner form:
+This module allows a salesman to have a direct overlook at all events related to this partner directly from the partner form.
+
+It adds the following fields on the partner form:
 
     * Opportunities
     * Meetings
     * Phone Calls
-    * Invoices (=invoice.line )
+    * Invoices
        - group by product_id
-    * Contracts (= analytic.account)
-    * Timesheets (= partner_id of the analytic account linked to this timesheet)
-        - group by date
+    * Contracts
+    * Timesheets
 
-It allows a salesman to have a direct overlook at all events related to this partner directly from the partner form.
-Take care of security rules, add security (read, not write/create/delete) on the group that give access to partners for the objects defined above.
     """, 
     'author': 'Tiny', 
     'website': 'http://www.openerp.com', 
