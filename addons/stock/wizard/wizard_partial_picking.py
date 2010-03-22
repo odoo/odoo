@@ -57,7 +57,20 @@ def _get_moves(self, cr, uid, data, context):
 
     _moves_fields.clear()
     _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make picking">']
-
+    _moves_arch_lst.append('<field name="partner_id%d"/>' % (pick.id,))
+    _moves_fields['partner_id%s' % pick.id] ={'string':'Partner', 
+            'type':'many2one', 'relation':'res.partner', 'required' : '1','default': make_default(pick.address_id.partner_id.id)}
+    _moves_arch_lst.append('<newline/>')
+    _moves_arch_lst.append('<field name="address_id%d"/>' % (pick.id))
+    
+    _moves_fields['address_id%s' % pick.id] ={'string':'Delivery Address', 
+                                                'type':'many2one', 'relation':'res.partner.address', 'required' : '1','default': make_default(pick.address_id.id)}
+    
+    _moves_arch_lst.append('<field name="date%d"/>' % (pick.id))
+    
+    _moves_fields['date%s' % pick.id] ={'string':'Date', 
+                                                'type':'date', 'required' : '1','default': make_default(pick.date)}
+    
     for m in pick.move_lines:
         if m.state in ('done', 'cancel'):
             continue
@@ -102,14 +115,6 @@ def _get_moves(self, cr, uid, data, context):
         _moves_arch_lst.append('<newline/>')
         res.setdefault('moves', []).append(m.id)
     
-    _moves_arch_lst.append('<field name="partner_id%d"/>' % (m.id,))
-    _moves_fields['partner_id%s' % m.id] ={'string':'Partner', 
-            'type':'many2one', 'relation':'res.partner', 'required' : '1'}
-    _moves_arch_lst.append('<newline/>')
-    _moves_arch_lst.append('<field name="address_id%d"/>' % (m.id,))
-    
-    _moves_fields['address_id%s' % m.id] ={'string':'Delivery Address', 
-                                                'type':'many2one', 'relation':'res.partner.address', 'required' : '1'}
     _moves_arch_lst.append('</form>')
     _moves_arch.string = '\n'.join(_moves_arch_lst)
     return res
@@ -177,7 +182,7 @@ def _do_split(self, cr, uid, data, context):
                         'state':'draft',
                     })
         if data['form']['move%s' % move.id] != 0:
-
+            
             new_obj = move_obj.copy(cr, uid, move.id,
                 {
                     'product_qty' : data['form']['move%s' % move.id],
@@ -185,18 +190,15 @@ def _do_split(self, cr, uid, data, context):
                     'picking_id' : new_picking,
                     'state': 'assigned',
                     'move_dest_id': False,
-                    'partner_id': data['form']['partner_id%s' % move.id],
-                    'address_id': data['form']['address_id%s' % move.id],
+                    'partner_id': data['form']['partner_id%s' % pick.id],
+                    'address_id': data['form']['address_id%s' % pick.id],
                     'price_unit': move.price_unit,
                 })
-            partner_id = False
-            if move.picking_id:
-                    partner_id = move.picking_id.address_id and (move.picking_id.address_id.partner_id and move.picking_id.address_id.partner_id.id or False) or False
             delivery_id = delivery_obj.search(cr,uid, [('name','=',pick.name)]) 
             if  not  delivery_id :
                 delivery_id = delivery_obj.create(cr, uid, {
                         'name':  pick.name,                                 
-                        'partner_id': partner_id,
+                        'partner_id': data['form']['partner_id%s' % pick.id],
                         'date': move.date,
                         'product_delivered':[(6,0, [new_obj])],
                         'picking_id':move.picking_id.id
