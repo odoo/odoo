@@ -447,7 +447,7 @@ class workflow(yaml.YAMLObject):
         self.ref = ref
         self.action=action
     def __repr__(self):
-        return '!workflow {model: %s, action: %s ref: %s}:' % (str(self.model,), str(self.action,), str(self.ref,))
+        return '!workflow {model: %s, action: %s, ref: %s}' % (str(self.model,), str(self.action,), str(self.ref,))
         
 class ref(yaml.YAMLObject):
     yaml_tag = u'!ref'

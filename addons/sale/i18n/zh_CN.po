@@ -4,22 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0_rc3\n"
+"Project-Id-Version: OpenERP Server 5.0.6\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-04 15:14+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"PO-Revision-Date: 2010-03-20 10:13+0000\n"
+"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-03-21 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Partial Delivery"
-msgstr "分批出货"
+msgstr "部分交付"
 
 #. module: sale
 #: view:sale.order:0
@@ -39,34 +39,34 @@ msgstr "送货单"
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
 msgid "Allotment Partner"
-msgstr "分配业务伙伴"
+msgstr "分配给业务伙伴"
 
 #. module: sale
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "操作定义中使用了无效的模式名称。"
+msgstr "在这动作定义中有无效的模块名"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Waiting Schedule"
-msgstr "等待MRP计算"
+msgstr "等待调度"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
 msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
-msgstr "如果您没有足够的库存可以一次运输所有货物，您是否可以接受分批出货?"
+msgstr "如果你没足够的库存可以一次提供,可以接受部分货物不?"
 
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
-msgstr "备货"
+msgstr "来自库存"
 
 #. module: sale
 #: field:sale.config.picking_policy,step:0
 msgid "Steps To Deliver a Sale Order"
-msgstr "完成销售订单的步骤"
+msgstr "步骤提供销售订单"
 
 #. module: sale
 #: wizard_field:sale.advance_payment_inv,init,qtty:0
@@ -77,7 +77,7 @@ msgstr "数量"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "You invoice has been successfully created !"
-msgstr "您的发票已成功创建！"
+msgstr "你的发票已经成功创建!"
 
 #. module: sale
 #: view:sale.order:0
@@ -105,27 +105,27 @@ msgstr "发票异常"
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this invoice"
-msgstr "此是该发票生成的运货清单."
+msgstr "这领料/提货单已产生在此发票上."
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
 msgid "Delivery, from the warehouse to the customer."
-msgstr "送货，从仓库到客户"
+msgstr "送货,从仓库到客户"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
 msgid "sale.config.picking_policy"
-msgstr "sale.config.picking_policy"
+msgstr "销售设置领料/提货方式"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_validate0
 msgid "Validate"
-msgstr "审核"
+msgstr "确认"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Make Invoice"
-msgstr "生成发票"
+msgstr "建立发票"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -137,7 +137,7 @@ msgstr "小计"
 msgid ""
 "Whenever confirm button is clicked, the draft state is moved to manual. that "
 "is, quotation is moved to  sale order."
-msgstr "当点击确认按钮草稿状态将转到手动.报价单转到销售订单."
+msgstr "当点击确认按钮草稿状态将转为手动.报价单转为销售订单."
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
@@ -161,7 +161,7 @@ msgstr "手动指定"
 #: view:sale.order.line:0
 #: field:sale.order.line,notes:0
 msgid "Notes"
-msgstr "注解"
+msgstr "备注"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
@@ -177,12 +177,12 @@ msgstr "税款"
 #. module: sale
 #: rml:sale.order:0
 msgid "Net Total :"
-msgstr "净总额："
+msgstr "净合计:"
 
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Shipping Policy"
-msgstr "发运策略"
+msgstr "运送方式"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.order.line,state:0
@@ -192,12 +192,12 @@ msgstr "已取消"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Shipping Exception"
-msgstr "送货异常"
+msgstr "运送异常"
 
 #. module: sale
 #: field:sale.order,amount_total:0
 msgid "Total"
-msgstr "总计"
+msgstr "合计"
 
 #. module: sale
 #: field:sale.order,origin:0
@@ -212,7 +212,7 @@ msgstr "发票地址"
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Outgoing Products"
-msgstr "发出货品"
+msgstr "发出的产品"
 
 #. module: sale
 #: view:sale.order:0
@@ -222,23 +222,23 @@ msgstr "参考"
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr "一次性发出"
+msgstr "所有一起"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleprocurement0
 msgid "Procurement is created after confirmation of sale order."
-msgstr "销售订单确认后生成需求单"
+msgstr "确认销售订单后创建产品需求"
 
 #. module: sale
 #: field:sale.order,project_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "分析科目"
+msgstr "辅助核算项目"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "TVA :"
-msgstr "增值税："
+msgstr "增值税:"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -253,7 +253,7 @@ msgstr "额外信息"
 #. module: sale
 #: rml:sale.order:0
 msgid "Fax :"
-msgstr "传真："
+msgstr "传真:"
 
 #. module: sale
 #: field:sale.order.line,price_net:0
@@ -264,12 +264,12 @@ msgstr "净价"
 #: model:ir.actions.act_window,name:sale.action_order_tree9
 #: model:ir.ui.menu,name:sale.menu_action_order_tree9
 msgid "My sales order in progress"
-msgstr "我的处理中订单"
+msgstr "我的销售订单进展"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr "数量（销售单位）"
+msgstr "数量(销售单位)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -279,17 +279,18 @@ msgid ""
 "choose if you invoice based on ordered or shipped quantities. If the product "
 "is a service, shipped quantities means hours spent on the associated tasks."
 msgstr ""
-"销售订单将自动创建发票草稿。订单数量和送货数量可能不一致，开票时必须选择基于订单数量还是送货数量。如果该产品是一种服务，发货量是相关的任务所花费的小时数"
+"销售订单将自动创建发票(发票草稿).订单和送货数量可能不相同.如果你的发票基于已订购或送货数量你必须选择你必须选择.如果产品是一个服务运送数量以任务花费的"
+"小时数计算."
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Confirmed"
-msgstr "已审核"
+msgstr "已确认"
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
 msgid "Default Payment Term"
-msgstr "默认付款期限"
+msgstr "默认付款条件"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_all
@@ -305,7 +306,7 @@ msgstr "确认"
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Shipping Address"
-msgstr "发运地址"
+msgstr "运送地址"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -315,13 +316,13 @@ msgstr "已运数量"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Sales Orders"
-msgstr "基于销售订单开票"
+msgstr "发票基于销售订单"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
 #: view:sale.shop:0
 msgid "Sale Shop"
-msgstr "销售点"
+msgstr "销售商店"
 
 #. module: sale
 #: field:sale.shop,warehouse_id:0
@@ -342,19 +343,19 @@ msgstr "订单明细"
 #. module: sale
 #: rml:sale.order:0
 msgid "Disc.(%)"
-msgstr "折扣（％）"
+msgstr "折扣(%)"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 #: field:sale.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr "发票明细"
+msgstr "发票行"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
 msgid "Force Assignation"
-msgstr "强制分配"
+msgstr "强制指定"
 
 #. module: sale
 #: view:sale.order:0
@@ -366,30 +367,30 @@ msgstr "未完税金额"
 msgid ""
 "Packing list is created when 'Assign' is being clicked after confirming the "
 "sale order. This transaction moves the sale order to packing list."
-msgstr "确认销售订单后点击‘分配’时创建发货分拣清单.销售订单转到发货分拣单"
+msgstr "确认销售订单点击‘指定’后创建包装单.销售订单转为包装单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree8
 #: model:ir.ui.menu,name:sale.menu_action_order_tree8
 msgid "My sales order waiting Invoice"
-msgstr "我的待开票订单"
+msgstr "我的待开票的销售订单"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Shipping address :"
-msgstr "货运地址："
+msgstr "运送地址:"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
 msgid ""
 "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
 "will automatic create after delivery."
-msgstr "当你选择交货方式=‘送货后自动产生发票’.送货后将自动创建发票."
+msgstr "当你选择运送方式=‘送货后自动产生发票’.将在送货后自动创建发票."
 
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr "一次性出货"
+msgstr "完成送货"
 
 #. module: sale
 #: view:sale.order:0
@@ -399,7 +400,7 @@ msgstr "手动添加描述"
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr "数量（计量单位）"
+msgstr "数量(计量单位)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree1
@@ -416,27 +417,27 @@ msgstr "已订数量"
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sale Order Procurement"
-msgstr "销售订单需求单"
+msgstr "销售单产品需求"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Packing"
-msgstr "分拣单"
+msgstr "包装"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Total :"
-msgstr "总计："
+msgstr "合计:"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Order"
-msgstr "审核订单"
+msgstr "确认订单"
 
 #. module: sale
 #: field:sale.order,name:0
 msgid "Order Reference"
-msgstr "订单编号"
+msgstr "订单参考"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -459,17 +460,17 @@ msgstr "设置"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on Order After Delivery"
-msgstr "送货后按订单开发票"
+msgstr "按发票运送"
 
 #. module: sale
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效的 XML 视图结构"
+msgstr "无效XML视图结构!"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Packing"
-msgstr "相关的分拣单"
+msgstr "相关的包装"
 
 #. module: sale
 #: field:sale.shop,payment_account_id:0
@@ -479,12 +480,12 @@ msgstr "付款科目"
 #. module: sale
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "错误：销售单位必须和计量单位在不同的分类。"
+msgstr "错误:销售单位必须和计量单位在不同的分类."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
 msgid "Customer Ref"
-msgstr "客户引用"
+msgstr "客户参考"
 
 #. module: sale
 #: view:sale.order:0
@@ -495,7 +496,7 @@ msgstr "销售订单"
 #: model:process.node,name:sale.process_node_saleprocurement0
 #: field:sale.order.line,procurement_id:0
 msgid "Procurement"
-msgstr "需求单"
+msgstr "产品需求"
 
 #. module: sale
 #: view:sale.shop:0
@@ -511,7 +512,7 @@ msgstr "关闭"
 #: model:process.node,name:sale.process_node_invoice0
 #: model:process.node,name:sale.process_node_invoiceafterdelivery0
 msgid "Draft Invoice"
-msgstr "草稿发票"
+msgstr "发票草稿"
 
 #. module: sale
 #: wizard_field:sale.order.line.make_invoice,init,grouped:0
@@ -533,18 +534,18 @@ msgstr "降价 (%)"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
 msgid "Draft customer invoice, to be reviewed by accountant."
-msgstr "会计人员即将审查的客户发票草稿"
+msgstr "会计人员审查的客户发票草稿"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree3
 #: model:ir.ui.menu,name:sale.menu_action_order_tree3
 msgid "Sales Order To Be Invoiced"
-msgstr "要开票的销售订单"
+msgstr "销售订单开发票"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Procurement for each line"
-msgstr "每订单行的需求单"
+msgstr "产品需求明细"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree10
@@ -555,7 +556,7 @@ msgstr "我的报价单"
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
 msgid "Invoices"
-msgstr "发票列表"
+msgstr "发票"
 
 #. module: sale
 #: view:sale.order:0
@@ -565,7 +566,7 @@ msgstr "订单明细"
 #. module: sale
 #: field:sale.config.picking_policy,picking_policy:0
 msgid "Packing Default Policy"
-msgstr "默认出货方式"
+msgstr "包装默认方式"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
@@ -575,7 +576,7 @@ msgstr "管理送货和发票进展"
 #. module: sale
 #: field:sale.config.picking_policy,order_policy:0
 msgid "Shipping Default Policy"
-msgstr "默认交货方式"
+msgstr "默认运送方式"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -608,18 +609,18 @@ msgstr "业务员"
 msgid ""
 "In sale order , procuerement for each line and it comes into the procurement "
 "order"
-msgstr "每销售订单行均计算需求并生成需求单"
+msgstr "在销售订单产品需求的每个明细并都转为产品需求单."
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Taxes :"
-msgstr "税捐 :"
+msgstr "税:"
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
 #: field:sale.order.line,invoiced:0
 msgid "Invoiced"
-msgstr "已开票"
+msgstr "已开发票"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.advance_payment
@@ -642,7 +643,7 @@ msgstr "未开票明细"
 msgid ""
 "This Configuration step use to set default picking policy when make sale "
 "order"
-msgstr "这设置步骤用来设定建立销售订单的默认出货方式"
+msgstr "这设置步骤用来设定建立销售订单的默认领料/提货方式"
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
@@ -661,13 +662,13 @@ msgstr "创建发票"
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "错误：默认计量单位和采购计量单位必须在同一分类下。"
+msgstr "错误:默认的计量单位和这货物的计量单位必须是同一类型."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
 #: model:ir.ui.menu,name:sale.menu_action_order_tree7
 msgid "My sales in shipping exception"
-msgstr "我的销售运输异常"
+msgstr "我销售的运输异常"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -683,7 +684,7 @@ msgstr "销售异常"
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr "订货"
+msgstr "来自订单"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -693,12 +694,12 @@ msgstr "草稿"
 #. module: sale
 #: field:sale.order,invoiced:0
 msgid "Paid"
-msgstr "已付"
+msgstr "支付"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Procurement Corrected"
-msgstr "需求单已更正"
+msgstr "产品需求已修正"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -709,12 +710,12 @@ msgstr "交货及手动开发票"
 #: model:process.transition,name:sale.process_transition_saleorderprocurement0
 #: model:process.transition,name:sale.process_transition_saleprocurement0
 msgid "Sale Procurement"
-msgstr "销售需求单"
+msgstr "销售产品需求"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sale Order Logistic"
-msgstr "配置销售订单物流"
+msgstr "设置销售订单逻辑"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -729,17 +730,17 @@ msgstr "状态"
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Packing Policy"
-msgstr "分拣策略"
+msgstr "包装方式"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
 msgid "Product sales"
-msgstr "货品销售"
+msgstr "产品销售"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Our Salesman"
-msgstr "我方销售员"
+msgstr "业务员"
 
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,init,create:0
@@ -749,7 +750,7 @@ msgstr "创建预付款发票"
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
 msgid "One procurement for each product."
-msgstr "每个产品的需求单"
+msgstr "每个产品的产品需求"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_form
@@ -760,12 +761,12 @@ msgstr "销售订单"
 #. module: sale
 #: field:product.product,pricelist_sale:0
 msgid "Sale Pricelists"
-msgstr "销售价格列表"
+msgstr "销售价格表"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "Direct Delivery"
-msgstr "直接运送"
+msgstr "直接送货"
 
 #. module: sale
 #: view:sale.order:0
@@ -783,14 +784,14 @@ msgstr "报价"
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance Product"
-msgstr "Advance Product"
+msgstr "预付产品"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoice0
 msgid ""
 "Invoice is created when 'Create Invoice' is being clicked after confirming "
 "the sale order. This transaction moves the sale order to invoices."
-msgstr "确认订单后点击‘创建发票’则会创建一个新的发票。这笔交易把销售订单转移到发票"
+msgstr "确认销售订单点击‘创建发票’创建发票.销售订单转为发票."
 
 #. module: sale
 #: view:sale.order:0
@@ -813,17 +814,17 @@ msgstr "增值税"
 #: model:ir.actions.act_window,name:sale.action_order_tree4
 #: model:ir.ui.menu,name:sale.menu_action_order_tree4
 msgid "Sales Order in Progress"
-msgstr "销售订单在进展中"
+msgstr "销售订单进展"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
 msgid "Assign"
-msgstr "分配"
+msgstr "指定"
 
 #. module: sale
 #: view:sale.order:0
 msgid "History"
-msgstr "历史记录"
+msgstr "日志"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -839,18 +840,16 @@ msgid ""
 "  - The 'Invoice from the packing' choice is used to create an invoice "
 "during the packing process."
 msgstr ""
-"付运条款是用于同步发票与送货.\\n\n"
-"  - ‘送货前付款’选项将会先生成发票，按此发票付款完成后生成分拣单.\\n\n"
-"  - ‘交货及手动开发票’选项将直接创建分拣单并在用户手动点击‘发票’后生成发\n"
-"票.\\n\"\n"
-"  - ‘送货后按订单开发票’选项将会在所有分拣单完成后按照销售订单生成草稿发\n"
-"票.\\n\"\n"
-"  - ‘按发货分拣单开发票’选项用于在准备发货过程中创建发票."
+"运输策略是用来同步发票和交货操作\n"
+"  在运输前付款将先产生发票和包装单后支付发票\n"
+"  运输和手动开发票将创建包装单并等待用户手动开发票\n"
+"  发票在交货后将在销售订单建立所有包装单后产生发票\n"
+"  发票来自包装是用户在包装的时候生成发票"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Your Reference"
-msgstr "您的编号"
+msgstr "你参考"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -866,12 +865,12 @@ msgstr "销售订单明细"
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Sequence"
-msgstr "序号"
+msgstr "序列"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Sales"
-msgstr "销售订单"
+msgstr "销售"
 
 #. module: sale
 #: view:sale.order:0
@@ -882,12 +881,12 @@ msgstr "数量"
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
 msgid "Packing OUT is created for stockable products."
-msgstr "为可库存货品创建发货分拣单"
+msgstr "可库存物产品发出包装"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Other data"
-msgstr "其他数据"
+msgstr "其它数据"
 
 #. module: sale
 #: wizard_field:sale.advance_payment_inv,init,amount:0
@@ -899,12 +898,12 @@ msgstr "单价"
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "应税设定"
+msgstr "财务结构"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Invoice address :"
-msgstr "发票地址："
+msgstr "发票地址:"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
@@ -933,6 +932,8 @@ msgid ""
 "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
 "for the scheduler to run on the date 'Date Ordered'."
 msgstr ""
+"给出这报价单或销售订单的状态这异常状态是在发票确认(发票异常)或在包装单处理(送货异常)自动设定时取消操作发生的.这\"等待调度表\"状态是在发票已确认但"
+"在等待在\"日期排序\"内运行调度."
 
 #. module: sale
 #: view:sale.order:0
@@ -943,40 +944,40 @@ msgstr "计量单位"
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr "包装数量"
+msgstr "包装数"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
 msgid ""
 "Confirming the packing list moves them to delivery order. This can be done "
 "by clicking on 'Validate' button."
-msgstr "点击‘确认’按钮把分拣单转到送货单"
+msgstr "点击‘确认’按钮.确认包装单转为送货单"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "In Progress"
-msgstr "在进程中"
+msgstr "进展"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,init:0
 msgid "Advance Payment"
-msgstr "预付款"
+msgstr "预付款支付"
 
 #. module: sale
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
 msgid "Confirm sale order and Create invoice."
-msgstr "确认销售订单并生成发票"
+msgstr "确认销售订单并创建发票"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Packing List & Delivery Order"
-msgstr "发货分拣单及送货单"
+msgstr "包装单&送货单"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1003,12 +1004,12 @@ msgstr "你确定要创建发票吗?"
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
 msgid "Invoice based on packing lists"
-msgstr "按分拣单生成发票"
+msgstr "发票基于包装单"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Set Default"
-msgstr "设为默认"
+msgstr "设为草稿"
 
 #. module: sale
 #: view:sale.order:0
@@ -1018,7 +1019,7 @@ msgstr "销售订单"
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Quotation (A sale order in draft state)"
-msgstr "报价（一份销售订单草稿）"
+msgstr "报价(销售订单在草稿状态)"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
@@ -1039,12 +1040,12 @@ msgstr "产品"
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,create,open:0
 msgid "Open Advance Invoice"
-msgstr "打开预付发票"
+msgstr "待处理预付款发票"
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
 msgid "Ordering Contact"
-msgstr "订单联系人"
+msgstr "订购联系"
 
 #. module: sale
 #: rml:sale.order:0
@@ -1060,22 +1061,22 @@ msgstr "价格"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Deliver"
-msgstr "运送"
+msgstr "送货"
 
 #. module: sale
 #: model:ir.actions.report.xml,name:sale.report_sale_order
 msgid "Quotation / Order"
-msgstr "报价/订单"
+msgstr "报价单/订单"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Tel. :"
-msgstr "电话："
+msgstr "电话:"
 
 #. module: sale
 #: rml:sale.order:0
 msgid "Quotation N°"
-msgstr "报价编号"
+msgstr "报价单号"
 
 #. module: sale
 #: field:stock.move,sale_line_id:0
@@ -1085,18 +1086,18 @@ msgstr "销售订单明细"
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
-msgstr "取消分配"
+msgstr "取消指定"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice from the Packing"
-msgstr "按发货分拣单生成发票"
+msgstr "发票来自包装"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
 #: model:ir.actions.wizard,name:sale.wizard_sale_order_make_invoice
 msgid "Make invoices"
-msgstr "创建发票"
+msgstr "建立发票"
 
 #. module: sale
 #: help:sale.order,partner_order_id:0
@@ -1113,7 +1114,7 @@ msgstr "客户"
 #. module: sale
 #: field:product.product,pricelist_purchase:0
 msgid "Purchase Pricelists"
-msgstr "采购价格列表"
+msgstr "采购价格表"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1127,7 +1128,7 @@ msgstr "销售订单"
 #. module: sale
 #: field:sale.config.picking_policy,name:0
 msgid "Name"
-msgstr "姓名"
+msgstr "名称"
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1138,12 +1139,12 @@ msgstr "开票依据"
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
 #: model:ir.ui.menu,name:sale.menu_action_order_tree_new
 msgid "New Quotation"
-msgstr "新报价"
+msgstr "新报价单"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Total amount"
-msgstr "总金额"
+msgstr "金额合计"
 
 #. module: sale
 #: rml:sale.order:0
@@ -1154,7 +1155,7 @@ msgstr "订购日期"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr "货品销售单位"
+msgstr "产品销售单位"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1173,12 +1174,12 @@ msgid ""
 "in your warehouse and partner locations. This will configure the most common "
 "and simple methods to deliver products to the customer in one or two "
 "operations by the worker."
-msgstr ""
+msgstr "默认情况下系统能管理复杂的路线和从你的仓库到业务伙伴库位的路径.这将设置最常见和最简单的方法把产品交付给客户通过一、两个操作."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sale Order"
-msgstr "设置销售订单出货方式"
+msgstr "销售订单设置领料/提货方式"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_order0
@@ -1198,7 +1199,7 @@ msgstr "已更正发票"
 #. module: sale
 #: field:sale.order.line,delay:0
 msgid "Delivery Delay"
-msgstr "货运延期"
+msgstr "运送延期"
 
 #. module: sale
 #: view:sale.order:0
@@ -1218,7 +1219,7 @@ msgstr "付款条件"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Payment Before Delivery"
-msgstr "交货前付款"
+msgstr "运送前付款"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -1226,7 +1227,7 @@ msgid ""
 "This is the list of invoices that have been generated for this sale order. "
 "The same sale order may have been invoiced in several times (by line for "
 "example)."
-msgstr "这是该销售订单生成的发票列表.同一销售订单可能已经开发票几次（比如按行开具）."
+msgstr "这是发票列表已经产生销售订单.上述销售订单可能已经开发票."
 
 #. module: sale
 #: view:sale.order:0
@@ -1242,18 +1243,18 @@ msgstr "重量"
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "After confirming order, Create the invoice."
-msgstr "确认订单后创建发票。"
+msgstr "创建这发票"
 
 #. module: sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "错误：无效的(EAN)条码"
+msgstr "错误:无效EAN编码"
 
 #. module: sale
 #: field:sale.order,picked_rate:0
 #: field:sale.order,shipped:0
 msgid "Picked"
-msgstr "已提货"
+msgstr "已领料/退货"
 
 #. module: sale
 #: view:sale.shop:0
@@ -1263,7 +1264,7 @@ msgstr "会计"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr "按送货单开发票"
+msgstr "发票基于送货单"
 
 #. module: sale
 #: view:sale.order:0
@@ -1279,4 +1280,39 @@ msgstr "我的销售订单"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 msgid "Sale Order line"
-msgstr "订单明细"
+msgstr "销售订单明细"
+
+#~ msgid ""
+#~ "\n"
+#~ "    The base module to manage quotations and sales orders.\n"
+#~ "\n"
+#~ "    * Workflow with validation steps:\n"
+#~ "        - Quotation -> Sale order -> Invoice\n"
+#~ "    * Invoicing methods:\n"
+#~ "        - Invoice on order (before or after shipping)\n"
+#~ "        - Invoice on delivery\n"
+#~ "        - Invoice on timesheets\n"
+#~ "        - Advance invoice\n"
+#~ "    * Partners preferences (shipping, invoicing, incoterm, ...)\n"
+#~ "    * Products stocks and prices\n"
+#~ "    * Delivery methods:\n"
+#~ "        - all at once, multi-parcel\n"
+#~ "        - delivery costs\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    这基础模块管理报价和销售订单\n"
+#~ "\n"
+#~ "\t* 工作流批准的步骤:\n"
+#~ "\t\t- 报价 -》 销售订单 -》 发票\n"
+#~ "\t*开票方式:\n"
+#~ "\t\t- 发票基于订单(之前和之后运输)\n"
+#~ "\t\t- 发票基于送货单\n"
+#~ "\t\t- 发票基于时间表\n"
+#~ "\t\t- 预付款发票\n"
+#~ "\t*业务伙伴优先级(运输单,发票,国际贸易术语)\n"
+#~ "    *库存产品和价格\n"
+#~ "\t*送货方式:\n"
+#~ "\t\t- 多业务伙伴一起\n"
+#~ "\t\t- 送货成本\n"
+#~ "    "

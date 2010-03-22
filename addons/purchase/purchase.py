@@ -522,7 +522,7 @@ class purchase_order_line(osv.osv):
                         'uom': uom,
                         'date': date_order,
                         })[pricelist]
-        dt = (datetime.now() + relativedelta(days=seller_delay or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
+        dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id])[0][1]
 
 
