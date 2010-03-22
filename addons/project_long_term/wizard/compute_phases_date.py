@@ -65,7 +65,7 @@ class wizard_compute_phases(wizard.interface):
                 resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
                 time_efficiency = resource.time_efficiency
                 leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource.id, resource.calendar_id.id)
-            phase_resource_obj = classobj(str(phase.responsible_id.name), (Resource,),
+            phase_resource_obj = classobj((phase.responsible_id.name.encode('utf8')), (Resource,),
                                                {'__doc__': phase.responsible_id.name,
                                                 '__name__': phase.responsible_id.name,
                                                 'vacation': tuple(leaves),

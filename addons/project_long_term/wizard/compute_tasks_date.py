@@ -72,13 +72,13 @@ class wizard_compute_tasks(wizard.interface):
             for user in project.members:
                 leaves = []
                 time_efficiency = 1.0
-                resource_id = resource_obj.search(cr, uid, [('user_id', '=', user.id)])
+                resource_id = resource_obj.search(cr, uid, [('user_id', '=', user.id)], context=context)
                 if resource_id:
 #                    resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
                     resource = resource_obj.read(cr, uid, resource_id, ['calendar_id','time_efficiency'], context=context)[0]
-                    leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id, resource.get('calendar_id')[0])
+                    leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id[0], resource.get('calendar_id')[0])
                     time_efficiency = resource.get('time_efficiency')
-                resources.append(classobj(str(user.name), (Resource,), {'__doc__': user.name,
+                resources.append(classobj((user.name.encode('utf8')), (Resource,), {'__doc__': user.name,
                                                                         '__name__': user.name,
                                                                         'vacation': tuple(leaves),
                                                                         'efficiency': time_efficiency
