@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="view_hr_holidays_report_tree" model="ir.ui.view">
+        <field name="name">hr.holidays.report.tree</field>
+        <field name="model">hr.holidays.report</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Leaves Statistics">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="number_of_days_temp"/>
+                <field name="year" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_holidays_report_graph" model="ir.ui.view">
+         <field name="name">hr.holidays.report.graph</field>
+         <field name="model">hr.holidays.report</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Leaves Statistics" type="bar">
+                 <field name="employee_id"/>
+                 <field name="number_of_days_temp" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="view_hr_holidays_report_search" model="ir.ui.view">
+        <field name="name">hr.holidays.report.search</field>
+        <field name="model">hr.holidays.report</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Leaves">
+                <filter icon="terp-hr"
+                    string="This Year"
+                    domain="[('year','=',time.strftime('%%Y'))]"
+                    help="Leaves of the year"/>
+                <filter icon="terp-hr"
+                    string="This Month"
+                    domain="[('month','=',time.strftime('%%m'))]"
+                    help="Leaves of this month"/>
+                <separator orientation="vertical"/>
+                <filter icon="terp-hr"
+                    string="Today's Start Leave"
+                    domain="[('date_from','=',time.strftime('%%Y/%%m/%%d'))]"/>
+                <filter icon="terp-hr"
+                    string="Today's End Leave"
+                    domain="[('date_to','=',time.strftime('%%Y/%%m/%%d'))]"/>
+                <separator orientation="vertical"/>
+                <field name="employee_id"/>
+                <field name="user_id" widget="selection">
+                    <filter icon="terp-sale"
+                        string="My Leaves"
+                        default="1"
+                        domain="[('user_id','=',uid)]"/>
+                </field>
+                <newline/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Month" icon="terp-sale" context="{'group_by':'date'}"/>
+                    <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_holidays_report_all" model="ir.actions.act_window">
+        <field name="name">Leaves</field>
+        <field name="res_model">hr.holidays.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="search_view_id" ref="view_hr_holidays_report_search"/>
+    </record>
+
+    <menuitem action="action_hr_holidays_report_all" id="menu_hr_holidays_report_all" parent="hr.menu_hr_reporting" sequence="0"/>
+
+</data>
+</openerp>

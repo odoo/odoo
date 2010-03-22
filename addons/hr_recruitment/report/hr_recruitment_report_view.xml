@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="view_hr_recruitment_report_tree" model="ir.ui.view">
+        <field name="name">hr.recruitment.report.tree</field>
+        <field name="model">hr.recruitment.report</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Recruitments Statistics">
+                <field name="date"/>
+                <field name="user_id"/>
+                <field name="job_id"/>
+                <field name="stage_id"/>
+                <field name="department_id"/>
+                <field name="type_id"/>
+                <field name="company_id"/>
+                <field name="state"/>
+                <field name="name" invisible="1"/>
+                <field name="month" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_recruitment_report_graph" model="ir.ui.view">
+         <field name="name">hr.recruitment.report.graph</field>
+         <field name="model">hr.recruitment.report</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Recruitments Statistics" type="bar">
+                 <field name="job_id"/>
+                 <field name="nbr" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="view_hr_recruitment_report_search" model="ir.ui.view">
+        <field name="name">hr.recruitment.report.search</field>
+        <field name="model">hr.recruitment.report</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Recruitments">
+                <filter icon="terp-hr"
+                    string="This Year"
+                    domain="[('year','=',time.strftime('%%Y'))]"
+                    help="Recruitments of the year"/>
+                <filter icon="terp-hr"
+                    string="This Month"
+                    domain="[('month','=',time.strftime('%%m'))]"
+                    help="Recruitments of this month"/>
+                <separator orientation="vertical"/>
+                <filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
+				<filter string="Won" icon="terp-hr" domain="[('state','=','done')]"/>
+				<filter string="Lost" icon="terp-hr" domain="[('state','=','cancel')]"/>
+                <separator orientation="vertical"/>
+                <field name="company_id" widget="selection"/>
+                <field name="user_id" widget="selection">
+                    <filter icon="terp-sale"
+                        string="My Recruitments"
+                        default="1"
+                        domain="[('user_id','=',uid)]"/>
+                </field>
+                <newline/>
+                <group expand="1" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-hr"
+                    		string="Not Good"
+                    		domain="[('priority','=','5')]"/>
+                    <filter icon="terp-hr"
+                    		string="On Average"
+                    		domain="[('priority','=','4')]"/>
+                    <filter icon="terp-hr"
+                    		string="Good"
+                    		domain="[('priority','=','3')]"/>
+                    <filter icon="terp-hr"
+                    		string="Very Good"
+                    		domain="[('priority','=','2')]"/>
+                    <filter icon="terp-hr"
+                    		string="Excellent"
+                    		domain="[('priority','=','1')]"/>
+                </group>
+
+                <newline/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                   <filter string="User" icon="terp-hr" domain="[]" context="{'group_by':'user_id'}" default="1" />
+                   <filter string="Company" icon="terp-hr" domain="[]" context="{'group_by':'company_id'}"/>
+                   <filter string="Stage" icon="terp-hr" domain="[]" context="{'group_by':'stage_id'}"/>
+                   <separator orientation="vertical"/>
+                   <filter string="State" icon="terp-hr" domain="[]" context="{'group_by':'state'}"/>
+                   <filter string="Jobs" icon="terp-sale" domain="[]" context="{'group_by':'job_id'}"/>
+                   <filter string="Department" icon="terp-hr" domain="[]" context="{'group_by':'department_id'}"/>
+                   <filter string="Degree" icon="terp-hr" domain="[]" context="{'group_by':'type_id'}"/>
+            	   <separator orientation="vertical"/>
+            	   <filter string="Month" icon="terp-hr" domain="[]" context="{'group_by':'month'}"/>
+            	   <filter string="Year" icon="terp-hr" domain="[]" context="{'group_by':'name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_recruitment_report_all" model="ir.actions.act_window">
+        <field name="name">Recruitments</field>
+        <field name="res_model">hr.recruitment.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
+    </record>
+	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root"/>
+    <menuitem action="action_hr_recruitment_report_all" id="menu_hr_recruitment_report_all" parent="hr.menu_hr_reporting" sequence="0"/>
+
+</data>
+</openerp>

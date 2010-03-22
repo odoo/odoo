@@ -77,7 +77,7 @@ class document_file(osv.osv):
         # the directory id now is mandatory. It can still be computed automatically.
         'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True),
         'file_size': fields.integer('File Size', required=True),
-        'file_type': fields.char('Content Type', size=64),
+        'file_type': fields.char('Content Type', size=128),
         # If ir.attachment contained any data before document is installed, preserve
         # the data, don't drop the column!
         'db_datas': fields.binary('Data', oldname='datas'),
@@ -157,6 +157,8 @@ class document_file(osv.osv):
             context = {}
         vals['title'] = vals['name']
         vals['parent_id'] = context.get('parent_id', False) or vals.get('parent_id', False)
+        if not vals['parent_id']:
+            vals['parent_id'] = self.pool.get('document.directory')._get_root_directory(cr,uid, context)
         if not vals.get('res_id', False) and context.get('default_res_id', False):
             vals['res_id'] = context.get('default_res_id', False)
         if not vals.get('res_model', False) and context.get('default_res_model', False):

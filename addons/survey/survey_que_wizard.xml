@@ -78,37 +78,5 @@
 			<field name="target">new</field>
 		</record>
 		
-
-		<!--
-			Browse Response Wizard (Survey print answer) 
-		 -->
-		 
-		<record id="view_survey_answer" model="ir.ui.view">
-			<field name="name">Survey</field>
-			<field name="model">survey.print.answer</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Survey">
-					<separator colspan="4"  string =  "Select Survey and related response"/>
-					<field name="survey_id" width="250"/>
-					<field name="response_id" domain="[('survey_id','=', survey_id)]"/>
-					<separator colspan="4" />
-					<label align="0.0" colspan="2" string="" />
-					<button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
-					<button colspan="1" icon="gtk-go-forward" name="action_next" string="Start" type="object"/>
-				</form>
-			</field>
-		</record>
-
-		<record id="action_browse_survey_response"
-			model="ir.actions.act_window">
-			<field name="name">Answer Survey</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">survey.print.answer</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="target">new</field>
-		</record>
-
 	</data>
 </openerp>

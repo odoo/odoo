@@ -30,9 +30,9 @@
             <field name="arch" type="xml">
                 <tree string="Sale Shop">
                     <field name="name"/>
+                    <field name="warehouse_id"/>
                     <field name="pricelist_id"/>
                     <field name="project_id"/>
-                    <field name="warehouse_id"/>
                 </tree>
             </field>
         </record>
@@ -80,6 +80,7 @@
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>
                     <field name="partner_shipping_id"/>
+                    <field name="user_id" />
                     <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount"/>
@@ -224,7 +225,7 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Dates" colspan="2"/>
-                                <field name="create_date"/>
+                                <field name="create_date" widget="datetime"/>
                                 <field name="date_confirm"/>
                             </group>
                             <separator colspan="4" string="Notes"/>
@@ -428,15 +429,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Uninvoiced Lines">
-                	<filter icon="terp-purchase" string="Shipped"
-                		domain="[('state','=','done')]"
-                		separator="1" />
-                	<filter icon="terp-purchase" string="Uninvoiced"
-                		domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"  default="1"
-                		separator="1" />
-                	<separator orientation="vertical"/>
-                    <field name="order_id" select="1"/>
+                    <filter icon="terp-purchase" string="Shipped"
+                        domain="[('state','=','done')]"
+                        separator="1" />
+                    <filter icon="terp-purchase" string="Uninvoiced"
+                        domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"  default="1"
+                        separator="1" />
+                    <separator orientation="vertical"/>
                     <field name="product_id" select="1"/>
+                    <field name="order_id" select="1"/>
                     <field name="order_partner_id" select="1"/>
                     <field name="state" select="1"/>
                     <newline />

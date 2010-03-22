@@ -44,6 +44,10 @@ class crm_helpdesk(osv.osv):
             'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.helpdesk')]"),
             'duration': fields.float('Duration'),
     }
+    _defaults = {
+        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+    }
 
 crm_helpdesk()
 

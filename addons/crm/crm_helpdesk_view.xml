@@ -50,7 +50,8 @@
                         </group>
 
                         <separator colspan="4" string="Details"/>
-                        <field name="description" colspan="4" nolabel="1"/>
+                        <field name="description" colspan="4"
+                            	nolabel="1" widget="text_tag" readonly="1" />
                         <separator colspan="4"/>
                         <group col="8" colspan="4">
                             <field name="state" select="1"/>
@@ -103,7 +104,11 @@
                                </group>
                                <newline/>
                                <field name="description" colspan="4" nolabel="1"/>
-                               <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
+                               <button colspan="4"
+                               	string="Reply to Last Email"
+                               	name="%(crm.action_crm_reply_mail)d"
+                               	context="{'mail':'reply', 'model': 'crm.helpdesk'}"
+                               	icon="gtk-undo" type="action" />
                            </form>
                            <tree string="Communication history">
                                <field name="description"/>
@@ -111,7 +116,10 @@
                                <field name="date"/>
                            </tree>
                        </field>
-                       <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+                       <button colspan="4" string="Send New Email"
+                       	name="%(crm.action_crm_send_mail)d"
+                       	context="{'mail':'new', 'model': 'crm.helpdesk'}" icon="gtk-go-forward"
+                       	type="action" />
                     </page>
                 </notebook>
             </form>
@@ -122,7 +130,8 @@
         <field name="model">crm.helpdesk</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Helpdesk Support Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+            <tree string="Helpdesk Support Tree"
+                colors="black:state=='open';blue:state=='pending';grey:state in ('cancel','close')">
                 <field name="id"/>
                 <field name="name" string="Query Description" />
                 <field name="partner_id" string="Partner"/>

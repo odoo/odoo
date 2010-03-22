@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 
 class olap_load_column(osv.osv_memory):
     _name = "olap.load.column"

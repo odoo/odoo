@@ -1,6 +1,16 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+    
+<!--  Old wizard -->
+
+	<wizard
+            id="wizard_crm_opportunity_meeting_set"
+            keyword="client_action_multi"
+            model="crm.opportunity"
+			name="crm.opportunity.meeting_set"
+			menu="False"
+            string="Schedule Meeting"/>	
 
 	    <!-- Opportunity to meeting view -->
 
@@ -30,7 +40,6 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="opportunity2meeting_view"/>
             <field name="target">new</field>
-         	<field name="context">{'record_id' : active_id}</field>
         </record>
 
     </data>

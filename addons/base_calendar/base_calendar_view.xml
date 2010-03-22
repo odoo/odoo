@@ -71,8 +71,10 @@
                             <group colspan="4" col="4">
                                 <field name="user_id" string="Invited User"/>
                                 <newline/>
-                                <field name="partner_address_id" string="Partner Contact"/>
-                                <field name="partner_id" string="Partner" readonly="1"/>
+                                <field name="partner_address_id"
+                                	string="Partner Contact" />
+                                <field name="partner_id"
+                                	string="Partner" readonly="1" />
                                 <field name="role" string="Role" />
                                 <field name="cutype" string="Invitation type" />
                                 <field name="rsvp" /> 
@@ -96,17 +98,21 @@
             		</notebook>
             		<group col="6" colspan="4">
 	                        <field name="state" select="2" />
-	                        <button name="do_tentative" states="needs-action,declined,accepted"
+	                        <button name="do_tentative"
+	                        	states="needs-action,declined,accepted"
 	                        	string="Uncertain" type="object"
 	                        	icon="terp-crm" />
-	                        <button name="do_accept" string="Accept" states="needs-action,tentative,declined"
+	                        <button name="do_accept" string="Accept"
+	                        	states="needs-action,tentative,declined"
 	                        	type="object" icon="gtk-apply" />
-	                        <button name="do_decline" string="Decline"  states="needs-action,tentative,accepted"
+	                        <button name="do_decline" string="Decline"
+	                        	states="needs-action,tentative,accepted"
 	                        	type="object" icon="gtk-cancel" />
 	                        <button
 	                        	name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
 	                        	string="Delegate" type="action"
-	                        	icon="gtk-sort-descending" states="needs-action,tentative,declined,accepted"
+	                        	icon="gtk-sort-descending"
+	                        	states="needs-action,tentative,declined,accepted"
 	                        	context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
             		</group>
             	</form>
@@ -159,8 +165,8 @@
 			            <field name="name" select="1"/>                        			    
 			            <field name="trigger_interval" select="1"/>
 			            <field name="trigger_duration" select="1"/>
-			            <field name="trigger_related" select="1"/>
 			            <field name="trigger_occurs" select="1"/>			            
+			            <field name="trigger_related" select="1"/>
 		            </tree>
                 </field>
             </record>

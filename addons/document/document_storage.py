@@ -266,6 +266,8 @@ class document_storage(osv.osv):
         try:
             icont = ''
             mime = ira.file_type
+            if not mime:
+                mime = ""
             try:
                 mime, icont = cntIndex.doIndex(data, ira.datas_fname,
                 ira.file_type or None, fname)

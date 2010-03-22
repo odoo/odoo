@@ -31,7 +31,8 @@
     "demo_xml" : ["hr_evaluation_demo.xml"],
     "update_xml" : [
                     "security/ir.model.access.csv",
-                    "hr_evaluation_view.xml"],
+                    "hr_evaluation_view.xml",
+                    "report/hr_evaluation_report_view.xml"],
     "active": False,
     "installable": True
 }

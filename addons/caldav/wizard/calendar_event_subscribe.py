@@ -34,7 +34,8 @@ class calendar_event_subscribe(osv.osv_memory):
     Subscribe  Calendar Event.
     """
     cnt = 0
-    def _process_imp_ics(self, cr, uid, ids, context=None):
+
+    def process_imp_ics(self, cr, uid, ids, context=None):
         """
         process ics file.
         @param cr: the current row, from the database cursor,
@@ -84,6 +85,5 @@ class calendar_event_subscribe(osv.osv_memory):
                }
     
 calendar_event_subscribe()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

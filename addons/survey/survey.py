@@ -1812,44 +1812,4 @@ class survey_request(osv.osv):
 
 survey_request()
 
-
-class survey_print_answer(osv.osv_memory):
-    _name = 'survey.print.answer'
-
-    def _get_survey(self, cr, uid, context=None):
-        surv_obj = self.pool.get("survey")
-        surv_resp_obj = self.pool.get("survey.response")
-        result = []
-        for sur in surv_obj.browse(cr, uid, surv_obj.search(cr, uid, [])):
-            if surv_resp_obj.search(cr, uid, [('survey_id', '=', sur.id)]):
-                result.append((sur.id, sur.title))
-        return result
-
-    _columns = {
-        'survey_id': fields.selection(_get_survey, "Survey", required="1"),
-        'response_id': fields.many2one("survey.response", "Survey Response"),
-    }
-
-    def action_next(self, cr, uid, ids, context=None):
-        record = self.read(cr, uid, ids, [])[0]
-        if record['response_id']:
-            res_id = [(record['response_id'])]
-        else:
-            sur_response_obj = self.pool.get('survey.response')
-            res_id = sur_response_obj.search(cr, uid, [('survey_id', '=',int(record['survey_id']))])
-        context.update({'active' : True,'survey_id' : record['survey_id'], 'response_id' : res_id, 'response_no' : 0})
-        search_obj = self.pool.get('ir.ui.view')
-        search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'survey.question.wiz',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'search_view_id':search_id[0],
-            'context' : context
-         }
-
-survey_print_answer()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

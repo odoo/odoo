@@ -21,6 +21,64 @@
 
 from osv import osv
 from tools.translate import _
+import wizard
+import pooler
+
+#===============================================================================
+# Put original wizard because of action in init
+# Remove it after solution foraction in init
+#===============================================================================
+
+class opportunity2meeting(wizard.interface):
+
+    def _makeMeeting(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        opportunity_case_obj = pool.get('crm.opportunity')                
+        data_obj = pool.get('ir.model.data')
+        result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
+        id = data_obj.read(cr, uid, result, ['res_id'])
+        id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
+        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
+        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
+        if id1:
+            id1 = data_obj.browse(cr, uid, id1, context=context).res_id
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        opportunity = opportunity_case_obj.browse(cr, uid, data['id'], context=context)
+        partner_id = opportunity.partner_id and opportunity.partner_id.id or False
+        name = opportunity.name
+        email = opportunity.email_from
+        section_id = opportunity.section_id and opportunity.section_id.id or False
+        return {            
+            'name': _('Meetings'),
+            'domain' : "[('user_id','=',%s), ('opportunity_id', '=', %s)]"%(uid, data['id']),  
+            'context': {'default_partner_id': partner_id, 
+                        'default_opportunity_id': data['id'], 
+                        'default_section_id': section_id, 
+                        'default_email_from': email, 
+                        'default_state':'open', 'default_name':name},
+            'view_type': 'form',
+            'view_mode': 'tree,form,calendar',
+            'res_model': 'crm.meeting',
+            'view_id': False,
+            'views': [(id1, 'calendar'), (id3, 'tree'), (id2, 'form')], 
+            'type': 'ir.actions.act_window',
+            'search_view_id': id['res_id']
+            }
+
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'order'}
+        },
+        'order': {
+            'actions': [],
+            'result': {'type': 'state', 'state': 'end'}
+        }
+    }
+opportunity2meeting('crm.opportunity.meeting_set')
 
 class crm_opportunity2meeting(osv.osv_memory):
     _name = 'crm.opportunity2meeting'
