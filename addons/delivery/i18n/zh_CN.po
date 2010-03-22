@@ -4,23 +4,23 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.6\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-01-08 03:52+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2010-03-20 07:47+0000\n"
+"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-03-21 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须以“x_”开始且不能包含任何特殊字符！"
+msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -30,7 +30,7 @@ msgstr ">="
 #. module: delivery
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "销售与采购"
+msgstr "销售&采购"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -40,12 +40,12 @@ msgstr "目的地"
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
 msgid "Delivery by Poste"
-msgstr "由邮政运输"
+msgstr "邮递送货"
 
 #. module: delivery
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效的 XML 视图结构"
+msgstr "无效XML视图结构!"
 
 #. module: delivery
 #: constraint:res.partner:0
@@ -60,22 +60,22 @@ msgstr "状态"
 #. module: delivery
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "在行动定义中的模式名称无效"
+msgstr "在这动作定义中有无效的模块名"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packing."
-msgstr "当按分拣单发票时使用该送货方式。"
+msgstr "这送货方式将用在包装的发票上"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr "运费网格"
+msgstr "送货网"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr "从邮编"
+msgstr "开始邮编"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -85,19 +85,19 @@ msgstr "固定的"
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "表格明细"
+msgstr "网格明细"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr "货运价格表"
+msgstr "送货价格表"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree5
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree5
 msgid "Generate Draft Invoices On Receptions"
-msgstr "收货时产生发票草稿"
+msgstr "在接收产生发票草稿"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -107,17 +107,17 @@ msgstr "运费表格行"
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "运输"
+msgstr "送货"
 
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr "表格明细"
+msgstr "网格明细"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr "表格"
+msgstr "网格"
 
 #. module: delivery
 #: view:res.partner:0
@@ -133,13 +133,13 @@ msgstr "现用"
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Grid definition"
-msgstr "表格定义"
+msgstr "网格定义"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Weight * Volume"
-msgstr "重量＊体积"
+msgstr "重量* 体积"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -149,7 +149,7 @@ msgstr "="
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr "产品递送"
+msgstr "产品送货"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -174,7 +174,7 @@ msgstr "名称"
 #. module: delivery
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "错误：销售单位必须和计量单位在不同的分类。"
+msgstr "错误:销售单位必须和计量单位在不同的分类."
 
 #. module: delivery
 #: field:delivery.grid,country_ids:0
@@ -185,7 +185,7 @@ msgstr "国家"
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "错误：默认计量单位和采购计量单位必须在同一分类中。"
+msgstr "错误:默认的计量单位和这货物的计量单位必须是同一类型."
 
 #. module: delivery
 #: view:sale.order:0
@@ -214,7 +214,7 @@ msgstr "运费表格名称"
 #: field:delivery.grid,carrier_id:0
 #: field:stock.picking,carrier_id:0
 msgid "Carrier"
-msgstr "货运公司"
+msgstr "运输公司"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -231,7 +231,7 @@ msgstr "最大值"
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,delivery:0
 msgid "Add Delivery Costs"
-msgstr "添加运输费用"
+msgstr "增加送货成本"
 
 #. module: delivery
 #: wizard_field:delivery.sale.order,init,carrier_id:0
@@ -259,7 +259,7 @@ msgstr "运输公司和送货"
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "运费表格"
+msgstr "送货网"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -271,12 +271,12 @@ msgstr "重量"
 #. module: delivery
 #: field:delivery.grid,sequence:0
 msgid "Sequence"
-msgstr "序号"
+msgstr "序列"
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
-msgstr "承运业务伙伴"
+msgstr "运输业务伙伴"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
@@ -284,24 +284,24 @@ msgid ""
 "Allows you to add delivery methods in sales orders and packing. You can "
 "define your own carrier and delivery grids for prices. When creating "
 "invoices from picking, Open ERP is able to add and compute the shipping line."
-msgstr "让你在销售单和分拣单中增加送货方式。你能定义自己的运输公司和运费表格的价格。当根据分拣单创建发票时，系统可以增加并计算运输明细"
+msgstr "允许你在销售单和包装中增加送货方式.你能定义自己的运输公司和送货网的价格.当创建领料/提货发票时,系统可以增加和计算运输明细"
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr "至邮编"
+msgstr "到达邮编"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packing to be invoiced"
-msgstr "将开发票的分拣单"
+msgstr "包装要开发票"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on packing."
-msgstr "如果你计划基于分拣单开运输发票请填写这字段"
+msgstr "如果你计划基于包装开运输发票请完整填写这字段"
 
 #. module: delivery
 #: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
@@ -311,12 +311,12 @@ msgstr "送货成本"
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
 msgid "Sale Price"
-msgstr "售价"
+msgstr "销售价格"
 
 #. module: delivery
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "错误：无效的条码"
+msgstr "错误:无效EAN编码"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -343,9 +343,12 @@ msgstr "价格"
 #. module: delivery
 #: constraint:res.partner:0
 msgid "The VAT doesn't seem to be correct."
-msgstr "增值税似乎不正确。"
+msgstr "这增值税似乎不正确"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "价格类型"
+
+#~ msgid "<="
+#~ msgstr "<="
