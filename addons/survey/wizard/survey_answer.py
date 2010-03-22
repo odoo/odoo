@@ -1,5 +1,3 @@
-
-
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
@@ -467,7 +465,6 @@ class survey_question_wiz(osv.osv_memory):
                 tot_page_id = self.pool.get('survey').browse(cr, uid, context.get('survey_id',False))
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
-        r
         esponse_obj = self.pool.get('survey.response')
         surv_name_wiz = self.pool.get('survey.name.wiz')
         
@@ -773,7 +770,7 @@ class survey_question_wiz(osv.osv_memory):
                     if not select_count:
                         resp_obj.write(cr, uid, resp_id, {'state':'skip'})
 
-                    if que_rec[also'numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
+                    if que_rec['numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
                         raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg'])))
