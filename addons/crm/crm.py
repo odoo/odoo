@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
+import time
 from datetime import datetime
 from datetime import timedelta
+
+import tools
 from osv import fields
 from osv import osv
 from tools.translate import _
-import time
-import tools
-
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -102,7 +102,7 @@ class crm_case_section(osv.osv):
     ]
     
     def name_get(self, cr, uid, ids, context={}):
-        """Overrides orm  """
+        """Overrides orm"""
         if not len(ids):
             return []
         reads = self.read(cr, uid, ids, ['name', 'parent_id'], context)
@@ -124,32 +124,36 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
         'object_id': fields.many2one('ir.model', 'Object Name'), 
     }
+    
     def _find_object_id(self, cr, uid, context=None):
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
-        return ids and ids[0] 
+        return ids and ids[0]
+        
     _defaults = {        
         'object_id' : _find_object_id
-    }
-#               
+    }   
 crm_case_categ()
 
 class crm_case_resource_type(osv.osv):
     _name = "crm.case.resource.type"
     _description = "Resource Type of case"
     _rec_name = "name"
+    
     _columns = {
         'name': fields.char('Case Resource Type', size=64, required=True, translate=True), 
         'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
         'object_id': fields.many2one('ir.model', 'Object Name'), 
     }
+    
     def _find_object_id(self, cr, uid, context=None):
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
         return ids and ids[0] 
+    
     _defaults = {
         'object_id' : _find_object_id
-    }    
+    }
 crm_case_resource_type()
 
 
@@ -158,6 +162,7 @@ class crm_case_stage(osv.osv):
     _description = "Stage of case"
     _rec_name = 'name'
     _order = "sequence"
+    
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True), 
         'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
@@ -167,10 +172,12 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', help="Change Probability on next and previous stages."), 
         'requirements': fields.text('Requirements')
     }
+    
     def _find_object_id(self, cr, uid, context=None):
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
-        return ids and ids[0]     
+        return ids and ids[0]
+        
     _defaults = {
         'sequence': lambda *args: 1, 
         'probability': lambda *args: 0.0, 
@@ -184,7 +191,6 @@ def _links_get(self, cr, uid, context={}):
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
     return [(r['object'], r['name']) for r in res]
-
 
 class crm_case(osv.osv):
     _name = "crm.case"
@@ -254,10 +260,12 @@ class crm_case(osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'company_id': fields.many2one('res.company', 'Company'), 
     }
+    
     def _get_default_partner_address(self, cr, uid, context):
         if not context.get('portal', False):
             return False
         return self.pool.get('res.users').browse(cr, uid, uid, context).address_id.id
+        
     def _get_default_partner(self, cr, uid, context):
         if not context.get('portal', False):
             return False
@@ -265,6 +273,7 @@ class crm_case(osv.osv):
         if not user.address_id:
             return False
         return user.address_id.partner_id.id
+        
     def _get_default_email(self, cr, uid, context):
         if not context.get('portal', False):
             return False
@@ -272,6 +281,7 @@ class crm_case(osv.osv):
         if not user.address_id:
             return False
         return user.address_id.email
+        
     def _get_default_user(self, cr, uid, context):
         if context.get('portal', False):
             return False
@@ -555,6 +565,7 @@ class crm_case_history(osv.osv):
             res[hist.id] = (hist.email or '/') + ' (' + str(hist.date) + ')\n'
             res[hist.id] += (hist.description or '')
         return res
+        
     _columns = {
         'description': fields.text('Description'), 
         'note': fields.function(_note_get, method=True, string="Description", type="text"), 
@@ -633,7 +644,6 @@ class res_partner(osv.osv):
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
     }
-
 res_partner()
 
 

@@ -19,7 +19,11 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+
+from osv import orm
+from osv import osv
+from osv import fields
+
 import crm
 
 class crm_helpdesk(osv.osv):
