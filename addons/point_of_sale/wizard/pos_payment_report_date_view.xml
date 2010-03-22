@@ -2,20 +2,22 @@
 <openerp>
 	<data>
 		<record id="pos_payment_report_date_form" model="ir.ui.view">
-		        <field name="name">pos.payment.report.date.form</field>
-		        <field name="model">pos.payment.report.date</field>
-		        <field name="type">form</field>
-		        <field name="arch" type="xml">
-		        <form string="Sale by Date and User">
-		                    <field name="date_start"/>
-		                    <field name="date_end"/>
-		                    <field name="user_id"/>
-		                        <button icon='gtk-cancel' special="cancel"
-		                        string="Close" />
-		                        <button name="print_report" string="Print Report"
-		                        colspan="1" type="object" icon="gtk-ok" />
-		        </form>
-		        </field>
+			<field name="name">pos.payment.report.date.form</field>
+		    <field name="model">pos.payment.report.date</field>
+		    <field name="type">form</field>
+		    <field name="arch" type="xml">
+		    <form string="Sale by Date and User">
+			     <group col="2" colspan="4">
+					<field name="date_start"/>
+	                <field name="date_end"/>
+	                <field name="user_id"/>
+					<button icon='gtk-cancel' special="cancel"
+	                    string="Close" />
+				<button name="print_report" string="Print Report"
+	                    colspan="1" type="object" icon="gtk-print" />
+			     </group>               
+		    </form>
+		    </field>
 		</record>
 
         <record id="action_report_pos_payment_repport_date" model="ir.actions.act_window">
