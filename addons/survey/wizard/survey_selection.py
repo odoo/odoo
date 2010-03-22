@@ -28,14 +28,14 @@ class survey_name_wiz(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context={}):
         """
-            Set the default value in survey_id field. if open this wizard in survey form then set the default value in survey_id = active survey id.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param fields: List of Survey statistics IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for created survey statistics report
+        Set the default value in survey_id field. if open this wizard in survey form then set the default value in survey_id = active survey id.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of Survey statistics IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for created survey statistics report
         """
         if not context:
             context = {}
@@ -46,14 +46,14 @@ class survey_name_wiz(osv.osv_memory):
 
     def _get_survey(self, cr, uid, context=None):
         """
-            Set the value In survey_id field. 
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of Survey statistics IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for created survey statistics report
+        Set the value In survey_id field. 
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Survey statistics IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for created survey statistics report
         """
         surv_obj = self.pool.get("survey")
         result = []
@@ -90,14 +90,16 @@ class survey_name_wiz(osv.osv_memory):
 
     def action_next(self, cr, uid, ids, context=None):
         """
-            Start the survey, Increment in started survey field but if set the max_response_limit of survey then check the current user how many times start this survey. if current user max_response_limit is reach then this user can not start this survey(Raise Exception).
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of Survey IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for open survey question wizard.
+        Start the survey, Increment in started survey field but if set the max_response_limit of 
+        survey then check the current user how many times start this survey. if current user max_response_limit 
+        is reach then this user can not start this survey(Raise Exception).
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Survey IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for open survey question wizard.
         """
         survey_obj = self.pool.get('survey')
         search_obj = self.pool.get('ir.ui.view')

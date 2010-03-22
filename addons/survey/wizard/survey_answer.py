@@ -378,7 +378,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     if sur_rec['send_response']:
                         survey_data = survey_obj.browse(cr, uid, int(survey_id))
-                        response_id = surv_name_wiz.read(cr,uid,context.get('sur_name_id',False))['response']
+                        response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
                         context.update({'response_id':response_id})
                         report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
                         attachments = []
@@ -395,9 +395,10 @@ class survey_question_wiz(osv.osv_memory):
                         os.remove(tools.config['addons_path'] + '/survey/report/' + survey_data.title + ".pdf")
                         user_email = False
                         resp_email = False
-
-                        if user_obj.browse(cr, uid, uid).address_id.id:
-                            cr.execute("select email from res_partner_address where id =%d" % user_obj.browse(cr, uid, uid).address_id.id)
+                        
+                        address_id = user_obj.browse(cr, uid, uid).address_id.id
+                        if address_id:
+                            cr.execute("select email from res_partner_address where id =%d" % address_id)
                             user_email = cr.fetchone()[0]
                         resp_id = survey_data.responsible_id.address_id
 
@@ -405,8 +406,9 @@ class survey_question_wiz(osv.osv_memory):
                             cr.execute("select email from res_partner_address where id =%d" % resp_id.id)
                             resp_email = cr.fetchone()[0]
                         if user_email and resp_email:
-                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_obj.browse(cr, uid, uid).name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
-                            tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_obj.browse(cr, uid, uid).name) , mail, attach = attachments)
+                            user_name = user_obj.browse(cr, uid, uid).name
+                            mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
+                            tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_name) , mail, attach = attachments)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Response')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
@@ -421,16 +423,16 @@ class survey_question_wiz(osv.osv_memory):
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False, context=None):
         """
-           If any user give answer of survey then last create report of this answer and if 'E-mail Notification on Response' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param res_ids: List of survey answer IDs,
-            @param report_name: name of the report,
-            @param file_name: To give file name of the report,
-            @param context: A standard dictionary for contextual values,
-            @return : Dictionary value for created report with file name.
+        If any user give answer of survey then last create report of this answer and if 'E-mail Notification on Response' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param res_ids: List of survey answer IDs,
+        @param report_name: name of the report,
+        @param file_name: To give file name of the report,
+        @param context: A standard dictionary for contextual values,
+        @return : Dictionary value for created report with file nameself.
         """
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))
@@ -450,14 +452,14 @@ class survey_question_wiz(osv.osv_memory):
 
     def default_get(self, cr, uid, fields_list, context=None):
         """
-            Assign Default value in particular field. If Browse Answers wizard run then read the value into database and Assigne to a particular fields.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param fields_list: List of fields of current view,
-            @param context: A standard dictionary for contextual values,
-            @return : Dictionary value for fields list with value.
+        Assign Default value in particular field. If Browse Answers wizard run then read the value into database and Assigne to a particular fields.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields_list: List of fields of current view,
+        @param context: A standard dictionary for contextual values,
+        @return : Dictionary value for fields list with value.
         """
         value = {}
         for field in fields_list:
@@ -465,7 +467,8 @@ class survey_question_wiz(osv.osv_memory):
                 tot_page_id = self.pool.get('survey').browse(cr, uid, context.get('survey_id',False))
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
-        response_obj = self.pool.get('survey.response')
+        r
+        esponse_obj = self.pool.get('survey.response')
         surv_name_wiz = self.pool.get('survey.name.wiz')
         
         if context.has_key('response_id') and context.get('response_id') and int(context['response_id'][0]) > 0:
@@ -530,14 +533,14 @@ class survey_question_wiz(osv.osv_memory):
 
     def create(self, cr, uid, vals, context=None):
         """
-            Create the Answer of survey and store in survey.response object, and if set validation of question then check the value of question if value is wrong then raise the exception.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param vals: Values,
-            @param context: A standard dictionary for contextual values
-            @return : True.
+        Create the Answer of survey and store in survey.response object, and if set validation of question then check the value of question if value is wrong then raise the exception.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param vals: Values,
+        @param context: A standard dictionary for contextual values
+        @return : True.
         """
         if context.has_key('active') and context.get('active',False):
             return True
@@ -988,90 +991,90 @@ class survey_question_wiz(osv.osv_memory):
 
     def action_new_question(self,cr, uid, ids, context):
         """
-            New survey.Question form.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open new survey.Qestion form.
+        New survey.Question form.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open new survey.Qestion form.
         """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.question'),('name','=','survey_question_wizard_test')])
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.question',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'view_id': view_id,
-                'context': context
-                }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'view_id': view_id,
+            'context': context
+        }
 
     def action_new_page(self, cr, uid, ids, context):
         """
-            New survey.Page form.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open new survey.page form.
+        New survey.Page form.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open new survey.page form.
         """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.page'),('name','=','survey_page_wizard_test')])
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.page',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'view_id': view_id,
-                'context': context
-                }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.page',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'view_id': view_id,
+            'context': context
+        }
 
     def action_edit_page(self,cr, uid, ids, context):
         """
-            Edit survey.page.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open Edit survey.page form.
+        Edit survey.page.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open Edit survey.page form.
         """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.page'),('name','=','survey_page_wizard_test')])
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.page',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'res_id' : int(context.get('page_id',0)),
-                'view_id': view_id,
-                'context': context
-                }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.page',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_id' : int(context.get('page_id',0)),
+            'view_id': view_id,
+            'context': context
+        }
 
     def action_delete_page(self,cr, uid, ids, context):
         """
-            Delete survey.page.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open next survey.page form, but delete the selected page.
+        Delete survey.page.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open next survey.page form, but delete the selected page.
         """
         for key,val in context.items():
             if type(key) == type(True):
@@ -1082,51 +1085,51 @@ class survey_question_wiz(osv.osv_memory):
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'transfer':True, 'page_no' : context.get('page_number',False) })
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.question.wiz',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'search_view_id':search_id[0],
-                'context': context
-                }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'search_view_id':search_id[0],
+            'context': context
+        }
 
     def action_edit_question(self,cr, uid, ids, context):
         """
-            Edit survey.question.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open Edit survey.question form.
+        Edit survey.question.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open Edit survey.question form.
         """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
         view_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.question'),('name','=','survey_question_wizard_test')])
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.question',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'res_id' : int(context.get('question_id',0)),
-                'view_id': view_id,
-                'context': context
-                }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_id' : int(context.get('question_id',0)),
+            'view_id': view_id,
+            'context': context
+        }
 
     def action_delete_question(self,cr, uid, ids, context):
         """
-            Edit survey.question.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open same survey.page form, but delete the selected survey.question in current survey.page.
+        Delete survey.question.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open same survey.page form, but delete the selected survey.question in current survey.page.
         """
         for key,val in context.items():
             if type(key) == type(True):
@@ -1149,14 +1152,14 @@ class survey_question_wiz(osv.osv_memory):
 
     def action_forward_previous(self, cr, uid, ids, context=None):
         """
-            Goes to previous Survey Answer.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open Previous Answer form.
+        Goes to previous Survey Answer.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open Previous Answer form.
         """
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
@@ -1167,25 +1170,25 @@ class survey_question_wiz(osv.osv_memory):
         if context.get('response_no',0) + 1 > len(context.get('response_id',0)):
             return {}
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.question.wiz',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'search_view_id':search_id[0],
-                'context': context
-                }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'search_view_id':search_id[0],
+            'context': context
+        }
 
     def action_forward_next(self, cr, uid, ids, context=None):
         """
-            Goes to Next Survey Answer.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open Next Answer form.
+        Goes to Next Survey Answer.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open Next Answer form.
         """
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
@@ -1196,64 +1199,64 @@ class survey_question_wiz(osv.osv_memory):
         if context.get('response_no',0) + 1 > len(context.get('response_id',0)):
             return {}
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.question.wiz',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'search_view_id':search_id[0],
-                'context': context
-                }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'search_view_id':search_id[0],
+            'context': context
+        }
 
     def action_next(self, cr, uid, ids, context=None):
         """
-            Goes to Next page.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open Next survey.page form.
+        Goes to Next page.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open Next survey.page form.
         """
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'transfer':True, 'page':'next'})
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.question.wiz',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'search_view_id':search_id[0],
-                'context': context
-                }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'search_view_id':search_id[0],
+            'context': context
+        }
 
     def action_previous(self, cr, uid, ids, context=None):
         """
-            Goes to previous page.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.question.wiz IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for Open Previous survey.page form.
+        Goes to previous page.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.question.wiz IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for Open Previous survey.page form.
         """
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'transfer':True, 'page':'previous'})
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.question.wiz',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'search_view_id':search_id[0],
-                'context': context
-                }
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'search_view_id':search_id[0],
+            'context': context
+        }
 
 survey_question_wiz()
 

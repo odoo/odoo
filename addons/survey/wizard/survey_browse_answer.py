@@ -26,14 +26,15 @@ from tools.translate import _
 
 class survey_browse_answer(osv.osv_memory):
     _name = 'survey.browse.answer'
+    
     def _get_survey(self, cr, uid, context=None):
         """
-            Set the value in survey_id field,
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param context: A standard dictionary for contextual values,
-            @return : Tuple in list with values.
+        Set the value in survey_id field,
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param context: A standard dictionary for contextual values,
+        @return : Tuple in list with values.
         """        
         surv_obj = self.pool.get("survey")
         surv_resp_obj = self.pool.get("survey.response")
@@ -50,14 +51,15 @@ class survey_browse_answer(osv.osv_memory):
 
     def action_next(self, cr, uid, ids, context=None):
         """
-            Open Browse Response wizard. if you select only survey_id then this wizard open with all response_ids and if you select survey_id and response_id then open the particular response of the survey.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of survey.browse.answer IDs,
-            @param context: A standard dictionary for contextual values,
-            @return : Dictionary value for Open the browse answer wizard.
+        Open Browse Response wizard. if you select only survey_id then this wizard open with all response_ids and 
+        if you select survey_id and response_id then open the particular response of the survey.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of survey.browse.answer IDs,
+        @param context: A standard dictionary for contextual values,
+        @return : Dictionary value for Open the browse answer wizard.
         """
         record = self.read(cr, uid, ids, [])
         record = record and record[0] or {} 

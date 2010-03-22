@@ -31,14 +31,14 @@ class survey_print_statistics(osv.osv_memory):
 
     def action_next(self, cr, uid, ids, context=None):
         """
-           Print Survey Statistics in pdf format.
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of Survey statistics IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for created survey statistics report
+        Print Survey Statistics in pdf format.
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Survey statistics IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for created survey statistics report
         """
         datas = {'ids' : context.get('active_ids', [])}
         res = self.read(cr, uid, ids, ['survey_ids'], context)
@@ -46,10 +46,10 @@ class survey_print_statistics(osv.osv_memory):
         datas['form'] = res
         datas['model'] = 'survey.print.statistics'
         return { 
-                    'type':'ir.actions.report.xml',
-                    'report_name':'survey.analysis',
-                    'datas':datas,               
-               }
+            'type':'ir.actions.report.xml',
+            'report_name':'survey.analysis',
+            'datas':datas,               
+        }
 
 survey_print_statistics()
 
