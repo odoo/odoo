@@ -66,17 +66,17 @@ class stock_move_consume(osv.osv_memory):
         'location_id': fields.many2one('stock.location', 'Location', required=True)
     }
 
-    def default_get(self, cr, uid, fields_list, context=None):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
              Get default values
             
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param fields_list: List of fields for default value 
+             @param fields: List of fields for default value 
              @param context: A standard dictionary 
              
-             @return: default values of fields_list
+             @return: default values of fields
         
         """
         res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)        
@@ -152,17 +152,17 @@ class split_in_production_lot(osv.osv_memory):
     _name = "stock.move.split"
     _description = "Split in Production lots"
     
-    def default_get(self, cr, uid, fields_list, context=None):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
              Get default values
             
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param fields_list: List of fields for default value 
+             @param fields: List of fields for default value 
              @param context: A standard dictionary 
              
-             @return: default values of fields_list
+             @return: default values of fields
         
         """
         
