@@ -90,24 +90,24 @@ class crm_send_new_email(osv.osv_memory):
                 body += '\n\n%s' % (case.user_id.signature)
 
             case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['to'], details=body)
-
+            email_from = (case.user_id and case.user_id.address_id and \
+                            case.user_id.address_id.email) or tools.config.get('email_from',False)
             flag = tools.email_send(
-                case.user_id.address_id.email,
+                email_from,
                 emails,
                 data['subject'],
                 case_pool.format_body(body),
                 attach=attach,
                 reply_to=case.section_id.reply_to,
-                openobject_id=str(case.id),
-                subtype="html"
-            )
+                openobject_id=str(case.id),                
+            )           
             if flag:
                 if data['state'] == 'unchanged':
                     pass
                 elif data['state'] == 'done':
-                    case_pool.case_close(cr, uid, [data['id']])
+                    case_pool.case_close(cr, uid, [case.id])
                 elif data['state'] == 'pending':
-                    case_pool.case_pending(cr, uid, [data['id']])
+                    case_pool.case_pending(cr, uid, [case.id])
                 cr.commit()
 
 #            Commented because form does not close due to raise
@@ -153,7 +153,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'text' in fields:
                 res.update({'text': case.description or ''})
             if 'state' in fields:
-                res.update({'state': 'done'})
+                res.update({'state': 'pending'})
         return res
 
     def get_reply_defaults(self, cr, uid, fields, context=None):
@@ -174,19 +174,21 @@ class crm_send_new_email(osv.osv_memory):
             model = hist.log_id.model_id.model
             model_pool = self.pool.get(model)
             case = model_pool.browse(cr, uid, hist.log_id.res_id)
-            if 'to' in fields:
+            if 'to' in fields and hist.email:
                 res.update({'to': hist.email})
             if 'text' in fields:
-                header = '-------- Original Message --------'
-                sender = 'From: ' + case.user_id.address_id.email
-                to = 'To: ' + hist.email
-                sentdate = 'Sent: ' + hist.date
-                desc = '\n' + hist.description
+                header = '-------- Original Message --------'                
+                sender = 'From: %s' %(hist.email_from or tools.config.get('email_from',False))                
+                to = 'To: %s' % (hist.email)
+                sentdate = 'Sent: %s' % (hist.date)
+                desc = '\n%s'%(hist.description)
                 original = [header, sender, to, sentdate, desc]
                 original = '\n'.join(original)
-                res.update({'text': '\n\n' + original})
+                res.update({'text': '\n\n%s'%(original)})
             if 'subject' in fields:
-                res.update({'subject': case.name or ''})
+                res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')}) 
+            #if 'state' in fields:
+            #    res.update({'state': 'pending'})       
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
