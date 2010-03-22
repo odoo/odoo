@@ -61,6 +61,7 @@ between mails and Open ERP.""",
     ],
 
     'update_xml': [
+        'wizard/crm_send_email_view.xml', 
         'crm_wizard.xml',
         'crm_view.xml',
         'crm_action_rule_view.xml',
