@@ -48,7 +48,7 @@
                         <field name="responsible_id"/>
                         <field name="date_start"/>
                         <field name="date_end"/>
-                        <field name="duration"/>
+                        <field name="duration" widget="float_time"/>
                         <field name="product_uom"/>
                     </group>
                     <notebook colspan="4">
@@ -83,10 +83,10 @@
                                 <separator string="Scheduling" colspan="2"/>
                                 <field name="sequence"/>
                             </group>
-                           <separator colspan="4" string="Next Phases"/>
-                           <field colspan="4" name="next_phase_ids" nolabel="1"/>
                            <separator colspan="4" string="Previous Phases"/>
                            <field colspan="4" name="previous_phase_ids" nolabel="1"/>
+                           <separator colspan="4" string="Next Phases"/>
+                           <field colspan="4" name="next_phase_ids" nolabel="1"/>
                         </page>
                         <page string="Task Detail">
                             <separator colspan="4" string="Project's Tasks"/>
