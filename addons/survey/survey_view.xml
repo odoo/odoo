@@ -243,8 +243,6 @@
                         string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
 					<button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                         string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
-					<button name="%(wizard_print_survey)d" states="open,draft,close,cancel"
-                                	string="Print Survey" type="action" icon="gtk-print" context="{'active':True,'survey_id': active_id}"/>
 					<button name="%(survey_browse_response)d" states="open,draft,close,cancel"
                                 	string="Print Answer" type="action" icon="gtk-print"/>
                 </tree>

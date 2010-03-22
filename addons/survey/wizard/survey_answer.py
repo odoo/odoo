@@ -36,6 +36,17 @@ class survey_question_wiz(osv.osv_memory):
         'name': fields.integer('Number'),
     }
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
+        """
+            Fields View Get method :- generate the new view and display the survey pages of selected survey. 
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param view_id : view id of the current object.
+            @param view_type : which type of view is create. like :- form, tree ,search etc...
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for created view of particular survey pages.
+        """
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
         surv_name_wiz = self.pool.get('survey.name.wiz')
         survey_obj = self.pool.get('survey')
@@ -401,6 +412,18 @@ class survey_question_wiz(osv.osv_memory):
         return result
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False, context=None):
+        """
+           If any user give answer of survey then last create report of this answer and if 'E-mail Notification on Response' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param res_ids: List of survey answer IDs,
+            @param report_name: name of the report,
+            @param file_name: To give file name of the report,
+            @param context: A standard dictionary for contextual values,
+            @return : Dictionary value for created report with file name.
+        """
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
@@ -418,6 +441,16 @@ class survey_question_wiz(osv.osv_memory):
         return (True, ret_file_name)
 
     def default_get(self, cr, uid, fields_list, context=None):
+        """
+            Assign Default value in particular field. If Browse Answers wizard run then read the value into database and Assigne to a particular fields.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param fields_list: List of fields of current view,
+            @param context: A standard dictionary for contextual values,
+            @return : Dictionary value for fields list with value.
+        """
         value = {}
         for field in fields_list:
             if field.split('_')[0] == 'progress':
@@ -488,6 +521,16 @@ class survey_question_wiz(osv.osv_memory):
         return value
 
     def create(self, cr, uid, vals, context=None):
+        """
+            Create the Answer of survey and store in survey.response object, and if set validation of question then check the value of question if value is wrong then raise the exception.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param vals: Values,
+            @param context: A standard dictionary for contextual values
+            @return : True.
+        """
         if context.has_key('active') and context.get('active',False):
             return True
 
@@ -719,7 +762,7 @@ class survey_question_wiz(osv.osv_memory):
                     if not select_count:
                         resp_obj.write(cr, uid, resp_id, {'state':'skip'})
 
-                    if que_rec['numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
+                    if que_rec[also'numeric_required_sum'] and numeric_sum > que_rec['numeric_required_sum']:
                         for res in resp_id_list:
                             sur_name_read['store_ans'].pop(res)
                         raise osv.except_osv(_('Error re !'), _("'" + que_rec['question'] + "' " + tools.ustr(que_rec['numeric_required_sum_err_msg'])))
@@ -936,6 +979,16 @@ class survey_question_wiz(osv.osv_memory):
         return True
 
     def action_new_question(self,cr, uid, ids, context):
+        """
+            New survey.Question form.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open new survey.Qestion form.
+        """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -951,6 +1004,16 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_new_page(self, cr, uid, ids, context):
+        """
+            New survey.Page form.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open new survey.page form.
+        """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -966,6 +1029,16 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_edit_page(self,cr, uid, ids, context):
+        """
+            Edit survey.page.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open Edit survey.page form.
+        """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -982,6 +1055,16 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_delete_page(self,cr, uid, ids, context):
+        """
+            Delete survey.page.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open next survey.page form, but delete the selected page.
+        """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1001,6 +1084,16 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_edit_question(self,cr, uid, ids, context):
+        """
+            Edit survey.question.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open Edit survey.question form.
+        """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1017,6 +1110,16 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_delete_question(self,cr, uid, ids, context):
+        """
+            Edit survey.question.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open same survey.page form, but delete the selected survey.question in current survey.page.
+        """
         for key,val in context.items():
             if type(key) == type(True):
                 context.pop(key)
@@ -1037,6 +1140,16 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_forward_previous(self, cr, uid, ids, context=None):
+        """
+            Goes to previous Survey Answer.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open Previous Answer form.
+        """
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
@@ -1056,6 +1169,16 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_forward_next(self, cr, uid, ids, context=None):
+        """
+            Goes to Next Survey Answer.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open Next Answer form.
+        """
         search_obj = self.pool.get('ir.ui.view')
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
@@ -1075,6 +1198,16 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_next(self, cr, uid, ids, context=None):
+        """
+            Goes to Next page.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open Next survey.page form.
+        """
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
@@ -1090,6 +1223,16 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
     def action_previous(self, cr, uid, ids, context=None):
+        """
+            Goes to previous page.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of survey.question.wiz IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for Open Previous survey.page form.
+        """
         surv_name_wiz = self.pool.get('survey.name.wiz')
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
@@ -1105,6 +1248,5 @@ class survey_question_wiz(osv.osv_memory):
                 }
 
 survey_question_wiz()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

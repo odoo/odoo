@@ -41,6 +41,16 @@ class survey_print_answer(osv.osv_memory):
     }
 
     def action_next(self, cr, uid, ids, context=None):
+        """
+           Print Survey Answer in pdf format.
+           
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of print answer IDs
+            @param context: A standard dictionary for contextual values
+            @return : Dictionary value for created survey answer report
+        """
         datas = {'ids' : context.get('active_ids', [])}
         res = self.read(cr, uid, ids, ['response_ids', 'orientation', 'paper_size', 'page_number', 'without_pagebreak'], context)
         res = res and res[0] or {}  
