@@ -210,6 +210,9 @@ class crm_send_new_email(osv.osv_memory):
         mod_obj = self.pool.get(model)
         if context.get('mail') == 'reply':
             return True
+        if tools.config.get('email_from')
+            return True
+
         for case in mod_obj.browse(cr, uid, context.get('active_ids', [])):
             if not case.user_id:
                 raise osv.except_osv(_('Error'), _('You must define a responsible user for this case in order to use this action!'))
