@@ -1,3 +1,4 @@
+
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
@@ -20,7 +21,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
+from osv import fields
 from tools.translate import _
 
 class survey_print(osv.osv_memory):
@@ -34,35 +36,35 @@ class survey_print(osv.osv_memory):
     }
 
     _defaults = {
-            'orientation': lambda *a:'vertical',
-            'paper_size': lambda *a:'letter',
-            'survey_title':lambda *a: 0,
-            'page_number':lambda *a: 0,
-            'without_pagebreak':lambda *a: 0
+        'orientation': lambda *a:'vertical',
+        'paper_size': lambda *a:'letter',
+        'survey_title':lambda *a: 0,
+        'page_number':lambda *a: 0,
+        'without_pagebreak':lambda *a: 0
     }
 
     def action_next(self, cr, uid, ids, context=None):
         """
-           Print Survey Form(print template of the survey).
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of Survey IDs
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for print survey form.
+        Print Survey Form(print template of the survey).
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Survey IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for print survey form.
         """
+        
         datas = {'ids' : context.get('active_ids', [])}
         res = self.read(cr, uid, ids, ['survey_title', 'orientation', 'paper_size', 'page_number', 'without_pagebreak'], context)
         res = res and res[0] or {}  
         datas['form'] = res
         datas['model'] = 'survey.print'
         return { 
-                    'type':'ir.actions.report.xml',
-                    'report_name':'survey.form',
-                    'datas':datas,               
-               }
-
+            'type':'ir.actions.report.xml',
+            'report_name':'survey.form',
+            'datas':datas,               
+        }
 survey_print()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

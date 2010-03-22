@@ -1,3 +1,5 @@
+
+
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
@@ -19,16 +21,17 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import fields, osv
+import os
 import datetime
-from tools.translate import _
 from lxml import etree
-from tools import to_xml
 from time import strftime
+
 import tools
 import netsvc
-import os
+from osv import osv
+from osv import fields
+from tools import to_xml
+from tools.translate import _
 
 class survey_question_wiz(osv.osv_memory):
     _name = 'survey.question.wiz'
@@ -37,17 +40,19 @@ class survey_question_wiz(osv.osv_memory):
     }
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
         """
-            Fields View Get method :- generate the new view and display the survey pages of selected survey. 
-           
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param view_id : view id of the current object.
-            @param view_type : which type of view is create. like :- form, tree ,search etc...
-            @param context: A standard dictionary for contextual values
-            @return : Dictionary value for created view of particular survey pages.
+        Fields View Get method :- generate the new view and display the survey pages of selected survey. 
+       
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param view_id : view id of the current object.
+        @param view_type : which type of view is create. like :- form, tree ,search etc...
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for created view of particular survey pages.
         """
+        
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
+        
         surv_name_wiz = self.pool.get('survey.name.wiz')
         survey_obj = self.pool.get('survey')
         page_obj = self.pool.get('survey.page')
@@ -61,22 +66,25 @@ class survey_question_wiz(osv.osv_memory):
             wiz_id = 0
             if not context.has_key('sur_name_id'):
                 res_data = {
-                        'survey_id' : context.get('survey_id', False),
-                        'page_no' :-1,
-                        'page':'next',
-                        'transfer' :1,
-                        'response':0
+                    'survey_id' : context.get('survey_id', False),
+                    'page_no' :-1,
+                    'page':'next',
+                    'transfer' :1,
+                    'response':0
                 }
                 wiz_id = surv_name_wiz.create(cr, uid, res_data)
+                #TODO: change to the browse, use read if only need to read few columns values
                 sur_name_rec = surv_name_wiz.read(cr, uid, wiz_id, [])
                 context.update({'sur_name_id' :wiz_id})
             else:
-                sur_name_rec = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))
+                sur_name_rec = surv_name_wiz.read(cr, uid, context.get('sur_name_id', False))
 
             if context.has_key('active_id'):
                 context.pop('active_id')
 
             survey_id = context.get('survey_id', False)
+            #TODO: change to the browse, use read if only need to read few columns values
+            # this will fire select * from quary 
             sur_rec = survey_obj.read(cr, uid, survey_id, [])
             p_id = sur_rec['page_ids']
             total_pages = len(p_id)
