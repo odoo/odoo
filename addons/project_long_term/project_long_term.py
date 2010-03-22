@@ -301,7 +301,7 @@ class task(osv.osv):
             if resource.calendar_id.id:
                 calendar_id = resource.calendar_id and resource.calendar_id.id or False
             hours = task.planned_hours / (float(task.occupation_rate) * resource.time_efficiency)
-       work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, date_end, hours or 0.0, resource_id or False)
+       work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, date_end, hours or 0.0, resource_id and resource_id[0] or False)
        dt_start = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [task.id], {'date_start' : dt_start,'date_end' : date_end.strftime('%Y-%m-%d %H:%M:%S')})
 
@@ -319,7 +319,7 @@ class task(osv.osv):
             if resource.calendar_id.id:
                 calendar_id = resource.calendar_id and resource.calendar_id.id or False
             hours = task.planned_hours / (float(task.occupation_rate) * resource.time_efficiency)
-       work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, date_start, hours or 0.0, resource.id or False)
+       work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, date_start, hours or 0.0, resource_id and resource_id[0] or False)
        dt_end = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [task.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'),'date_end' : dt_end}, context=context)
 
