@@ -206,7 +206,7 @@ class email_parser(object):
 #                       'file_name':'file data',
 #                   }
 #   }
-#   #
+
     def msg_body_get(self, msg):
         message = {};
         message['body'] = '';
@@ -215,7 +215,7 @@ class email_parser(object):
         counter = 1;
         def replace(match):
             return ''
-            
+
         for part in msg.walk():
             if part.get_content_maintype() == 'multipart':
                 continue
@@ -264,7 +264,7 @@ class email_parser(object):
         body['body'] = body_data
 
         data = {
-            'description': body['body'], 
+#            'description': body['body'],
         }
         act = 'case_pending'
         if 'state' in actions:
@@ -291,7 +291,7 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], body['body'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -318,11 +318,11 @@ class email_parser(object):
         body = message['body']
         act = 'case_open'
         self.rpc(self.model, act, [id])
-        body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
-        data = {
-            'description':body, 
-        }
-        self.rpc(self.model, 'write', [id], data)
+        #body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
+        #data = {
+        #    'description':body, 
+        #}
+        #self.rpc(self.model, 'write', [id], data)
         self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
         return id
 
