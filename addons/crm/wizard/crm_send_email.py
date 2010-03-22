@@ -147,7 +147,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'to' in fields:
                 res.update({'to': case.email_from})
             if 'subject' in fields:
-                res.update({'subject': case.name})
+                res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')}) 
             if 'cc' in fields:
                 res.update({'cc': case.email_cc or ''})
             if 'text' in fields:
@@ -210,7 +210,7 @@ class crm_send_new_email(osv.osv_memory):
         mod_obj = self.pool.get(model)
         if context.get('mail') == 'reply':
             return True
-        if tools.config.get('email_from')
+        if tools.config.get('email_from'):
             return True
 
         for case in mod_obj.browse(cr, uid, context.get('active_ids', [])):
