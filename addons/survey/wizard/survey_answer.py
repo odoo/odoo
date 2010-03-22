@@ -71,11 +71,10 @@ class survey_question_wiz(osv.osv_memory):
                     'response':0
                 }
                 wiz_id = surv_name_wiz.create(cr, uid, res_data)
-                #TODO: change to the browse, use read if only need to read few columns values
-                sur_name_rec = surv_name_wiz.read(cr, uid, wiz_id, [])
+                sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id)
                 context.update({'sur_name_id' :wiz_id})
             else:
-                sur_name_rec = surv_name_wiz.read(cr, uid, context.get('sur_name_id', False))
+                sur_name_rec = surv_name_wiz.browse(cr, uid, context.get('sur_name_id', False))
 
             if context.has_key('active_id'):
                 context.pop('active_id')
@@ -83,7 +82,7 @@ class survey_question_wiz(osv.osv_memory):
             survey_id = context.get('survey_id', False)
             #TODO: change to the browse, use read if only need to read few columns values
             # this will fire select * from quary 
-            sur_rec = survey_obj.read(cr, uid, survey_id, [])
+            sur_rec = survey_obj.read(cr, uid, survey_id, ['page_ids', 'max_response_limit', 'state', 'tot_start_survey', 'tot_comp_survey', 'send_response'])
             p_id = sur_rec['page_ids']
             total_pages = len(p_id)
             pre_button = False
@@ -92,44 +91,45 @@ class survey_question_wiz(osv.osv_memory):
             if context.has_key('response_id') and context.get('response_id', False) and int(context['response_id'][0]) > 0:
                 readonly = 1
 
-            if not sur_name_rec['page_no'] + 1 :
+            if not sur_name_rec.page_no + 1 :
                 surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'store_ans':{}})
 
-            sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))
-            page_number = int(sur_name_rec['page_no'])
-            if sur_name_read['transfer'] or not sur_name_rec['page_no'] + 1:
+            sur_name_read = surv_name_wiz.browse(cr, uid, context.get('sur_name_id',False))
+            page_number = int(sur_name_rec.page_no)
+            if sur_name_read.transfer or not sur_name_rec.page_no + 1:
                 surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'transfer':False})
                 flag = False
                 fields = {}
-                if sur_name_read['page'] == "next" or sur_name_rec['page_no'] == -1:
-                    if total_pages > sur_name_rec['page_no'] + 1:
-                        if ((context.has_key('active') and not context.get('active', False)) or not context.has_key('active')) and not sur_name_rec['page_no'] + 1:
+                if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
+                    if total_pages > sur_name_rec.page_no + 1:
+                        if ((context.has_key('active') and not context.get('active', False)) or not context.has_key('active')) and not sur_name_rec.page_no + 1:
                             if sur_rec['state'] != "open" :
                                 raise osv.except_osv(_('Warning !'),_("You can not give answer because of survey is not open for answer"))
                             cr.execute('select count(id) from survey_history where user_id=%s\
                                                     and survey_id=%s' % (uid,survey_id))
                             res = cr.fetchone()[0]
-                            user_limit = survey_obj.read(cr, uid, survey_id, ['response_user'])['response_user']
+                            user_limit = survey_obj.browse(cr, uid, survey_id)
+                            user_limit = user_limit.response_user
                             if user_limit and res >= user_limit:
                                 raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (user_limit))
 
-                        if sur_rec['max_response_limit'] and sur_rec['max_response_limit'] <= sur_rec['tot_start_survey'] and not sur_name_rec['page_no'] + 1:
+                        if sur_rec['max_response_limit'] and sur_rec['max_response_limit'] <= sur_rec['tot_start_survey'] and not sur_name_rec.page_no + 1:
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
 
-                        p_id = p_id[sur_name_rec['page_no'] + 1]
-                        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'page_no' : sur_name_rec['page_no'] + 1})
+                        p_id = p_id[sur_name_rec.page_no + 1]
+                        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'page_no' : sur_name_rec.page_no + 1})
                         flag = True
                         page_number += 1
-                    if sur_name_rec['page_no'] > - 1:
+                    if sur_name_rec.page_no > - 1:
                         pre_button = True
                 else:
-                    if sur_name_rec['page_no'] != 0:
-                        p_id = p_id[sur_name_rec['page_no'] - 1]
-                        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'page_no' : sur_name_rec['page_no'] - 1})
+                    if sur_name_rec.page_no != 0:
+                        p_id = p_id[sur_name_rec.page_no - 1]
+                        surv_name_wiz.write(cr, uid, [context.get('sur_name_id', False)], {'page_no' : sur_name_rec.page_no - 1})
                         flag = True
                         page_number -= 1
 
-                    if sur_name_rec['page_no'] > 1:
+                    if sur_name_rec.page_no > 1:
                         pre_button = True
                 if flag:
                     pag_rec = page_obj.read(cr, uid, p_id)
@@ -171,7 +171,7 @@ class survey_question_wiz(osv.osv_memory):
                             xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '2'})
                             etree.SubElement(xml_group, 'separator', {'string': star+to_xml(separator_string), 'colspan': '3'})
                             xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
-                            context.update({'question_id' : tools.ustr(que),'page_number' : sur_name_rec['page_no'] , 'transfer' : sur_name_read['transfer'], 'page_id' : p_id})
+                            context.update({'question_id' : tools.ustr(que),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer, 'page_id' : p_id})
                             etree.SubElement(xml_group1, 'button', {'string' :'','icon': "gtk-edit", 'type' :'object', 'name':"action_edit_question", 'context' : tools.ustr(context)})
                             etree.SubElement(xml_group1, 'button', {'string' :'','icon': "gtk-delete", 'type' :'object','name':"action_delete_question", 'context' : tools.ustr(context)})
                         else:
@@ -359,7 +359,7 @@ class survey_question_wiz(osv.osv_memory):
 
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
                         etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
-                        context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec['page_no'] , 'transfer' : sur_name_read['transfer']})
+                        context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
                         etree.SubElement(xml_group3, 'button', {'string' :'Add Page','icon': "gtk-new", 'type' :'object','name':"action_new_page", 'context' : tools.ustr(context)})
                         etree.SubElement(xml_group3, 'button', {'string' :'Edit Page','icon': "gtk-edit", 'type' :'object','name':"action_edit_page", 'context' : tools.ustr(context)})
@@ -372,7 +372,7 @@ class survey_question_wiz(osv.osv_memory):
                     result['context'] = context
                 else:
                     survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec['tot_comp_survey'] + 1})
-                    sur_response_obj.write(cr, uid, [sur_name_read['response']], {'state' : 'done'})
+                    sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
 
                     if sur_rec['send_response']:
                         survey_data = survey_obj.browse(cr, uid, int(survey_id))
