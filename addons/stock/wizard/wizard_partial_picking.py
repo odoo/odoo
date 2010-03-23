@@ -199,6 +199,7 @@ def _do_split(self, cr, uid, data, context):
                 delivery_id = delivery_obj.create(cr, uid, {
                         'name':  pick.name,                                 
                         'partner_id': data['form']['partner_id%s' % pick.id],
+                        'address_id': data['form']['address_id%s' % pick.id],
                         'date': move.date,
                         'product_delivered':[(6,0, [new_obj])],
                         'picking_id':move.picking_id.id
