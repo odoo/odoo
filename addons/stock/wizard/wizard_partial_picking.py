@@ -56,21 +56,26 @@ def _get_moves(self, cr, uid, data, context):
     res = {}
 
     _moves_fields.clear()
+    #TODO: cleanup and  this code..
+    
     _moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make picking">']
     _moves_arch_lst.append('<field name="partner_id%d"/>' % (pick.id,))
     _moves_fields['partner_id%s' % pick.id] ={'string':'Partner', 
             'type':'many2one', 'relation':'res.partner', 'required' : '1','default': make_default(pick.address_id.partner_id.id)}
-    _moves_arch_lst.append('<newline/>')
     _moves_arch_lst.append('<field name="address_id%d"/>' % (pick.id))
     
     _moves_fields['address_id%s' % pick.id] ={'string':'Delivery Address', 
                                                 'type':'many2one', 'relation':'res.partner.address', 'required' : '1','default': make_default(pick.address_id.id)}
-    
+    _moves_arch_lst.append('<newline/>')
     _moves_arch_lst.append('<field name="date%d"/>' % (pick.id))
     
     _moves_fields['date%s' % pick.id] ={'string':'Date', 
                                                 'type':'date', 'required' : '1','default': make_default(pick.date)}
-    
+    _moves_arch_lst.append('<newline/>')
+    _moves_arch_lst.append('<separator string="Product Detail" colspan="4"/>')
+    _moves_arch_lst.append('<label string="Product" align="0.0" />')
+    _moves_arch_lst.append('<label string="Quantity" align="10.0" />')
+    _moves_arch_lst.append('<label string="UOM" align="10.0" />')
     for m in pick.move_lines:
         if m.state in ('done', 'cancel'):
             continue
@@ -78,12 +83,24 @@ def _get_moves(self, cr, uid, data, context):
         if m.state!='assigned':
             quantity = 0
             _moves_fields
-            
-        _moves_arch_lst.append('<field name="move%s" />' % (m.id,))
+    
+        _moves_arch_lst.append('<group colspan="6" col="3">')    
+        _moves_arch_lst.append('<field name="name%s"  nolabel="1" />' % (m.id,))
+        _moves_fields['name%s' % m.id] = {
+                'string': 'Product',
+                'type' : 'char', 'required' : True, 'default' : make_default(m.name)}
+        _moves_arch_lst.append('<field name="move%s" nolabel="1" />' % (m.id,))
         _moves_fields['move%s' % m.id] = {
-                'string': _to_xml(m.name),
+                'string': 'Quantity',
                 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
-
+        
+        _moves_arch_lst.append('<field name="uom%s" nolabel="1"/>'% (m.id,))
+        
+        _moves_fields['uom%s' % m.id] = {'string': 'UOM', 'type': 'many2one',
+                    'relation': 'product.uom', 'required': True,
+                    'default': make_default(m.product_uom.id)}        
+        
+        _moves_arch_lst.append('</group>')            
         if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
             price=0
             if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
