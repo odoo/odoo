@@ -177,7 +177,7 @@ def _do_split(self, cr, uid, data, context):
 
             new_picking = pick_obj.copy(cr, uid, pick.id,
                     {
-                        'name': pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
+                        'name': pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
                         'move_lines' : [],
                         'state':'draft',
                     })
