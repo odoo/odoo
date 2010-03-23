@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    
+
     <!-- Claims categories  -->
-   
+
     <record id="crm_claim_categ_action" model="ir.actions.act_window">
         <field name="name">Claim Categories</field>
         <field name="res_model">crm.case.categ</field>
@@ -12,12 +12,12 @@
         <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
         <field name="context">{'object_id':'crm.claim'}</field>
     </record>
-    
+
     <menuitem action="crm_claim_categ_action"
     	id="menu_crm_case_claim-act" parent="crm.menu_crm_case_categ" />
 
     <!-- Claim Stages -->
- 
+
     <record id="crm_claim_stage_act" model="ir.actions.act_window">
         <field name="name">Claim Stages</field>
         <field name="res_model">crm.case.stage</field>
@@ -26,7 +26,7 @@
         <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
         <field name="context">{'object_id':'crm.claim'}</field>
     </record>
-        
+
     <menuitem action="crm_claim_stage_act"
         	id="menu_crm_claim_stage_act" parent="crm.menu_crm_case_stage" />
 
@@ -40,13 +40,13 @@
         <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
         <field name="context">{'object_id':'crm.claim'}</field>
     </record>
-        
+
     <menuitem action="crm_claim_resource_act"
         	id="menu_crm_claim_stage_act"
         	parent="crm.menu_crm_case_resource_type" />
 
         <!-- Claims    -->
-    
+
     <record model="ir.ui.view" id="crm_case_claims_tree_view">
         <field name="name">CRM - Claims Tree</field>
         <field name="model">crm.claim</field>
@@ -115,7 +115,7 @@
                             <field name="stage_id" select="1" nolabel="1"/>
                             <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
-                        <field name="categ_id" select="1" widget="selection"                            
+                        <field name="categ_id" select="1" widget="selection"
                             domain="[('object_id.model', '=', 'crm.claim')]" />
                         <field name="type_id" string="Type of Action" select="1"
                             domain="[('object_id.model', '=', 'crm.claim')]" />
@@ -131,11 +131,21 @@
                     <separator colspan="4" string=""/>
                     <group col="8" colspan="4">
                         <field name="state" select="1"/>
-                        <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-                        <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                        <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                        <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                        <button name="case_close" string="Done"
+                        	states="open,draft,pending" type="object"
+                        	icon="gtk-jump-to" />
+                        <button name="case_open" string="Open"
+                        	states="draft,pending" type="object"
+                        	icon="gtk-go-forward" />
+                        <button name="case_cancel" string="Cancel"
+                        	states="draft,open,pending" type="object"
+                        	icon="gtk-cancel" />
+                        <button name="case_pending" string="Pending"
+                        	states="draft,open" type="object"
+                        	icon="gtk-media-pause" />
+                        <button name="case_reset"
+                        	string="Reset to Draft" states="done,cancel"
+                        	type="object" icon="gtk-convert" />
                     </group>
                 </page>
                 <page string="History" groups="base.group_extended">
@@ -263,11 +273,12 @@
 	                   		domain="[('user_id','=', False)]"
 	                   		help="Unassigned Claims" />
                    </field>
-                   <field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
-	                   	<filter icon="terp-crm"
-                           domain="[('section_id','=',context.get('section_id',False))]"
-                           help="My section"
-                           />
+                   <field name="section_id" select="1"
+                   	widget="selection" string="Section"
+                   	default="context.get('section_id', False)">
+                   	<filter icon="terp-crm"
+                   		domain="[('section_id','=',context.get('section_id',False))]"
+                   		help="My section" />
                    </field>
                    <newline/>
                    <group expand="1" string="Group By..." colspan="10" col="20">
@@ -281,6 +292,6 @@
                </search>
            </field>
         </record>
-        
+
      </data>
 </openerp>

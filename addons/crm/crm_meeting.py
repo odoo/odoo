@@ -26,63 +26,84 @@ from datetime import datetime, timedelta
 
 class crm_opportunity(osv.osv):
     _name = 'crm.opportunity'
-crm_opportunity()    
+crm_opportunity()
 
 
 class crm_phonecall(osv.osv):
+    """ CRM Phonecall """
+
     _name = 'crm.phonecall'
+
 crm_phonecall()
 
 
 class crm_meeting(osv.osv):
+    """ CRM Meeting Cases """
+
     _name = 'crm.meeting'
     _description = "Meeting Cases"
     _order = "id desc"
-    _inherit = ["crm.case", "calendar.event"]   
+    _inherit = ["crm.case", "calendar.event"]
 
-    _columns = { 
+    _columns = {
         'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
                         domain="[('object_id.model', '=', 'crm.meeting')]", \
-            ), 
-        'phonecall_id':fields.many2one ('crm.phonecall', 'Phonecall'), 
-        'opportunity_id':fields.many2one ('crm.opportunity', 'Opportunity'), 
-        'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel', 'event_id', 'attendee_id', 'Attendees'), 
-        'date_closed': fields.datetime('Closed', readonly=True), 
-        'date_deadline': fields.datetime('Deadline'), 
-        'state': fields.selection([('open', 'Confirmed'), 
-                                    ('draft', 'Unconfirmed'), 
-                                    ('cancel', 'Cancelled'), 
+            ),
+        'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
+        'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
+        'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel',\
+                                 'event_id', 'attendee_id', 'Attendees'),
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'date_deadline': fields.datetime('Deadline'),
+        'state': fields.selection([('open', 'Confirmed'),
+                                    ('draft', 'Unconfirmed'),
+                                    ('cancel', 'Cancelled'),
                                     ('done', 'Done')], 'State', \
                                     size=16, readonly=True)
     }
-    
+
     _defaults = {
         'state': lambda *a: 'draft',
     }
-    
+
 crm_meeting()
 
 class calendar_attendee(osv.osv):
+    """ Calendar Attendee """
+
     _inherit = 'calendar.attendee'
+    _description = 'Calendar Attendee'
 
-    def _compute_data(self, cr, uid, ids, name, arg, context):        
-        name = name[0]
-        result = super(calendar_attendee, self)._compute_data(cr, uid, ids, name, arg, context)
+    def _compute_data(self, cr, uid, ids, name, arg, context):
 
-        for attdata in self.browse(cr, uid, ids, context=context):
+       """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of compute data’s IDs
+        @param context: A standard dictionary for contextual values
+
+        """
+
+       name = name[0]
+       result = super(calendar_attendee, self)._compute_data(cr, uid, ids, name, arg, context)
+
+       for attdata in self.browse(cr, uid, ids, context=context):
             id = attdata.id
             result[id] = {}
             if name == 'categ_id':
                 if attdata.ref:
-                    result[id][name] = (attdata.ref.categ_id.id,attdata.ref.categ_id.name,)
+                    result[id][name] = (attdata.ref.categ_id.id, attdata.ref.categ_id.name,)
                 else:
                     result[id][name] = False
-        return result
+       return result
+
     _columns = {
         'categ_id': fields.function(_compute_data, method=True, \
                         string='Event Type', type="many2one", \
                         relation="crm.case.categ", multi='categ_id'),
     }
+
 calendar_attendee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

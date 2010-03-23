@@ -151,26 +151,11 @@
         id="menu_base_report_creator_action"
         action="base_report_creator_action_tree"/>
 
-    <wizard
-        id="wizard_report_open"
-        string="Open Report"
-        name="base_report_creator.report.open"/>
-
-    <record model="ir.values" id="ir_open_report">
-        <field name="key2" eval="'tree_but_open'"/>
-        <field name="model" eval="'base_report_creator.report'"/>
-        <field name="name">Browse Report</field>
-        <field name="value" eval="'ir.actions.wizard,%d'%wizard_report_open"/>
-        <field name="object" eval="True"/>
-    </record>
-    
-    <record model="ir.values" id="ir_open_report_multi">
-        <field name="key2" eval="'client_action_multi'"/>
-        <field name="model" eval="'base_report_creator.report'"/>
-        <field name="name">Browse Report</field>
-        <field name="value" eval="'ir.actions.wizard,%d'%wizard_report_open"/>
-        <field name="object" eval="True"/>
-    </record>
-
+    <act_window id="action_report_open"
+    		key2="client_action_multi" name="Open Report"
+    		res_model="report.open" src_model="base_report_creator.report"
+    		view_mode="form" target="new" view_type="form" />
+    		
+ 
     </data>
 </openerp>

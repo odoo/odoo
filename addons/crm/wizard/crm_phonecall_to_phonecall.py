@@ -56,7 +56,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
 
         if record_id:
             data_obj = self.pool.get('ir.model.data')
-            
+
             # Get Phonecall views
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
             res = data_obj.read(cr, uid, result, ['res_id'])
@@ -71,16 +71,16 @@ class crm_phonecall2phonecall(osv.osv_memory):
 
             for this in self.browse(cr, uid, ids, context=context):
                 values = {
-                        'name': this.name, 
-                        'user_id': this.user_id and this.user_id.id, 
-                        'categ_id': phonecall.categ_id and phonecall.categ_id.id or False, 
-                        'section_id': phonecall.section_id and phonecall.section_id.id, 
-                        'description': phonecall.description or '', 
-                        'partner_id': phonecall.partner_id.id, 
-                        'partner_address_id': phonecall.partner_address_id.id, 
-                        'partner_mobile': phonecall.partner_mobile or False, 
-                        'priority': phonecall.priority, 
-                        'partner_phone': phonecall.partner_phone or False, 
+                        'name': this.name,
+                        'user_id': this.user_id and this.user_id.id,
+                        'categ_id': phonecall.categ_id and phonecall.categ_id.id or False,
+                        'section_id': phonecall.section_id and phonecall.section_id.id,
+                        'description': phonecall.description or '',
+                        'partner_id': phonecall.partner_id.id,
+                        'partner_address_id': phonecall.partner_address_id.id,
+                        'partner_mobile': phonecall.partner_mobile or False,
+                        'priority': phonecall.priority,
+                        'partner_phone': phonecall.partner_phone or False,
                         'date': this.date
                           }
                 phonecall_id = phonecall_obj.create(cr, uid, values, context=context)
@@ -103,7 +103,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 'date': fields.datetime('Date'),
                 'section_id':fields.many2one('crm.case.section','Sales Team'),
                 }
-    
+
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
@@ -117,8 +117,10 @@ class crm_phonecall2phonecall(osv.osv_memory):
         """
         res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
+
         if record_id:
             phonecall = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
+
             if 'name' in fields:
                 res.update({'name': phonecall.name})
             if 'user_id' in fields:

@@ -19,21 +19,36 @@
 #
 ##############################################################################
 
-import crm_send_email
-import wizard_history_event
 
-import crm_lead_to_partner
-import crm_lead_to_opportunity
+{
+    'name': 'Detailed info on partner form', 
+    'version': '1.0', 
+    'category': 'Generic Modules/Base', 
+    'description': """
+This module allows a salesman to have a direct overlook at all events related to this partner directly from the partner form.
 
-import crm_opportunity_to_meeting
-import crm_opportunity_to_phonecall
+It adds the following fields on the partner form:
 
-import crm_phonecall_to_phonecall
-import crm_phonecall_to_partner
-import crm_phonecall_to_meeting
-import crm_phonecall_to_opportunity
-import crm_partner_to_opportunity
+    * Opportunities
+    * Meetings
+    * Phone Calls
+    * Invoices
+       - group by product_id
+    * Contracts
+    * Timesheets
 
+    """, 
+    'author': 'Tiny', 
+    'website': 'http://www.openerp.com', 
+    'depends': ['crm', 'account_analytic_analysis'], 
+    'init_xml': [], 
+    'update_xml': [
+                   'security/ir.model.access.csv', 
+                   'partner_crm_view.xml'
+                   ], 
+    'demo_xml': [], 
+    'installable': True, 
+    'active': False, 
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

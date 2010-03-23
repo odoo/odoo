@@ -19,21 +19,22 @@
 #
 ##############################################################################
 
-import crm_send_email
-import wizard_history_event
+from osv import osv, fields
 
-import crm_lead_to_partner
-import crm_lead_to_opportunity
+class res_partner(osv.osv):
+    """ Inherits partner and adds more information in the partner form """
+    _inherit = 'res.partner'
+    
+    _columns = {
+                'opportunity_ids': fields.one2many('crm.opportunity', 'partner_id', 'Opportunities'), 
+                'meeting_ids': fields.one2many('crm.meeting', 'partner_id',\
+                                                     'Meetings'), 
+                'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id', 'Phonecalls'), 
+                'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices'), 
+                'contract_ids': fields.one2many('account.analytic.account', \
+                                                    'partner_id', 'Contracts'), 
+                }
 
-import crm_opportunity_to_meeting
-import crm_opportunity_to_phonecall
-
-import crm_phonecall_to_phonecall
-import crm_phonecall_to_partner
-import crm_phonecall_to_meeting
-import crm_phonecall_to_opportunity
-import crm_partner_to_opportunity
-
+res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
