@@ -64,6 +64,7 @@ class change_standard_price(osv.osv_memory):
         
         """
         rec_id = context and context.get('active_id', False)
+        assert rec_id, _('Active ID is not set in Context')
         prod_obj = self.pool.get('product.product')
         location_obj = self.pool.get('stock.location')
         lot_obj = self.pool.get('stock.report.prodlots')
@@ -71,64 +72,72 @@ class change_standard_price(osv.osv_memory):
         move_line_obj = self.pool.get('account.move.line')
         data_obj = self.pool.get('ir.model.data')
         
-        res = self.read(cr, uid, ids[0], ['new_price'])
-        new_price = res.get('new_price',[])
-        data = prod_obj.browse(cr, uid, rec_id)
-        diff = data.standard_price - new_price
-        prod_obj.write(cr, uid, rec_id, {'standard_price': new_price})
-        
+        res = self.browse(cr, uid, ids)
+        new_price = res[0].new_price
         loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
-        qty = 0
-        amount_diff = 0.0
-        amount_diff = 0.0
-        stock_input_acc = data.property_stock_account_input.id or data.categ_id.property_stock_account_input_categ.id
-        stock_output_acc = data.property_stock_account_output.id or data.categ_id.property_stock_account_output_categ.id
-        
-        company_id = False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if user.company_id:
-            company_id = user.company_id.id
-           
-        if stock_input_acc and stock_output_acc:
-            move_id = move_obj.create(cr, uid, {'journal_id': data.categ_id.property_stock_journal.id, 'company_id': company_id})
-            for location_id in location_obj.browse(cr, uid, loc_ids):
-                product = prod_obj.browse(cr, uid, rec_id, context.update({'location':location_id}))
-                qty = product.qty_available
-                if qty:
-                    if diff > 0:                
-                        amount_diff = qty * diff        
-                        move_line_obj.create(cr, uid, {
-                                    'name': data.name,
-                                    'account_id': stock_input_acc,
-                                    'debit': amount_diff,
-                                    'move_id': move_id,
-                                    })
-                        move_line_obj.create(cr, uid, {
-                                    'name': 'Expense',
-                                    'account_id': location_id.account_id.id,
-                                    'credit': amount_diff,
-                                    'move_id': move_id,
-                                    })
-                    elif diff < 0:               
-                        amount_diff = qty * -diff
-                        move_line_obj.create(cr, uid, {
-                                    'name': data.name,
-                                    'account_id': stock_output_acc,
-                                    'credit': amount_diff,
-                                    'move_id': move_id,
-                                    })
-                        move_line_obj.create(cr, uid, {
-                                    'name': 'Income',
-                                    'account_id': location_id.account_id.id,
-                                    'debit': amount_diff,
-                                    'move_id': move_id,
-                                    })
-                    else:
-                        raise osv.except_osv(_('Warning!'),_('No Change in Price.'))
-        else:
-            raise osv.except_osv(_('Warning!'),_('No Accounts are defined for ' 
-                        'this product on its location.\nCan\'t create Move.'))
-        
+        move_ids = []
+        for location in location_obj.browse(cr, uid, loc_ids):
+            c = context.copy()
+            c.update({'location':location.id})
+            product = prod_obj.browse(cr, uid, rec_id, context=c)
+            qty = product.qty_available
+            diff = product.standard_price - new_price                        
+            assert diff, _("Do not found any different between standard price and new price")
+            if qty:
+                location_account = location.account_id and location.account_id.id or False
+                stock_input_acc = product.property_stock_account_input and product.property_stock_account_input.id or False 
+                if not stock_input_acc:
+                    stock_input_acc = product.categ_id.property_stock_account_input_categ and product.categ_id.property_stock_account_input_categ.id or False
+                stock_output_acc = product.property_stock_account_output and product.property_stock_account_output.id or False
+                if not stock_output_acc:
+                    stock_output_acc = product.categ_id.property_stock_account_output_categ and product.categ_id.property_stock_account_output_categ.id or False
+            
+            
+                journal_id = product.categ_id.property_stock_journal and product.categ_id.property_stock_journal.id or False
+                company_id = location.company_id and location.company_id.id or False                
+                assert location_account, _('Inventory Account is not specified for Location: %s' % (location.name))
+                assert journal_id, _('Stock Journal is not specified in Product Category')
+                assert company_id, _('Company is not specified in Location')
+                move_id = move_obj.create(cr, uid, {
+                            'journal_id': journal_id, 
+                            'company_id': company_id
+                            }) 
+                move_ids.append(move_id)    
+                if diff > 0:    
+                    assert stock_input_acc, _('Stock Input Account is not specified for Product: %s' %(product.name))
+                           
+                    amount_diff = qty * diff        
+                    move_line_obj.create(cr, uid, {
+                                'name': product.name,
+                                'account_id': stock_input_acc,
+                                'debit': amount_diff,
+                                'move_id': move_id,
+                                })
+                    move_line_obj.create(cr, uid, {
+                                'name': location.name,
+                                'account_id': location_account,
+                                'credit': amount_diff,
+                                'move_id': move_id,
+                                })
+                elif diff < 0: 
+                    assert stock_output_acc, _('Stock Output Account is not specified for Product: %s' %(product.name))
+                               
+                    amount_diff = qty * -diff
+                    move_line_obj.create(cr, uid, {
+                                'name': product.name,
+                                'account_id': stock_output_acc,
+                                'credit': amount_diff,
+                                'move_id': move_id,
+                                })
+                    move_line_obj.create(cr, uid, {
+                                'name': location.name,
+                                'account_id': location_account,
+                                'debit': amount_diff,
+                                'move_id': move_id,
+                                })                   
+            
+        prod_obj.write(cr, uid, rec_id, {'standard_price': new_price})
+
         id2 = data_obj._get_id(cr, uid, 'account', 'view_move_tree')
         id3 = data_obj._get_id(cr, uid, 'account', 'view_move_form')
         
@@ -141,8 +150,8 @@ class change_standard_price(osv.osv_memory):
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'account.move',
-                'res_id' : move_id,
-                'views': [(id3,'form'),(id2,'tree')],
+                'res_id' : move_ids,
+                'views': [(id2,'tree'),(id3,'form')],
                 'type': 'ir.actions.act_window',
         }
 
