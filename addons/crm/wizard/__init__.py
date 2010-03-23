@@ -20,7 +20,7 @@
 ##############################################################################
 
 import crm_send_email
-import wizard_history_event
+import crm_email_add_cc
 
 import crm_lead_to_partner
 import crm_lead_to_opportunity
@@ -33,7 +33,6 @@ import crm_phonecall_to_partner
 import crm_phonecall_to_meeting
 import crm_phonecall_to_opportunity
 import crm_partner_to_opportunity
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

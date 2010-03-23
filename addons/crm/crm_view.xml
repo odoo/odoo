@@ -194,41 +194,6 @@
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
 
-<!-- CRM Email Add CC Form View  -->
-
-       <record id="view_crm_email_add_cc_wizard" model="ir.ui.view">
-            <field name="name">Add CC</field>
-            <field name="model">crm.email.add.cc</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Add CC">
-                    <field name="name"/>
-                    <field name="subject"/>
-                    <separator string="" colspan="4"/>
-                    <newline/>
-                    <field name="user_id"
-                        attrs="{ 'required' : [('name','=','user')]}"
-                        on_change="change_email(user_id, partner_id)"/>
-                    <field name="partner_id"
-                        attrs="{'required' : [('name','=','partner')]}"
-                        on_change="change_email(user_id, partner_id)"/>
-                    <field name="email"/>
-                    <button name="add_cc" string="Ok" type="object" icon="gtk-go-forward"/>
-                </form>
-            </field>
-        </record>
-
-<!-- CRM Email Add CC Action  -->
-
-        <record id="action_view_crm_email_add_cc_wizard" model="ir.actions.act_window">
-            <field name="name">Add CC</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">crm.email.add.cc</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
 <!-- Cases Tree View  -->
 
         <record id="crm_case_log_tree-view" model="ir.ui.view">
