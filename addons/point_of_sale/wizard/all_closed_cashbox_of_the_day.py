@@ -37,7 +37,8 @@ class all_closed_cashbox_of_the_day(osv.osv_memory):
     def print_report(self, cr, uid, ids, context=None):
 
         """ 
-             @summary: To get the date and print the report           
+             To get the date and print the report 
+                       
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in

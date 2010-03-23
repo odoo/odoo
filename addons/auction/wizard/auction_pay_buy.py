@@ -31,7 +31,7 @@ class auction_pay_buy(osv.osv_memory):
     
     def default_get(self, cr, uid, fields, context):
         """ 
-             @summary: To get default values for the object.
+             To get default values for the object.
             
              @param self: The object pointer.
              @param cr: A database cursor
