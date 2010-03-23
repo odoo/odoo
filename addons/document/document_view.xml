@@ -88,16 +88,13 @@
         action="action_document_directory_tree"
         id="menu_document_directories_tree"
         parent="menu_document_configuration"/>
-
-    <record model="ir.actions.url" id="action_document_browse">
-        <field name="name">Browse Files</field>
-        <field name="url">ftp://localhost:8021/</field>
-    </record>
+        
+	<wizard id="wizard_document_browse" name="browse.file.ftp" string="Browse Files Using FTP"/>
     <menuitem
         name="Browse Files Using FTP"
-        action="action_document_browse"
+        action="wizard_document_browse"
         id="menu_document_browse"
-        type="url"
+        type="wizard"
         icon="STOCK_EXECUTE"
         parent="menu_document"/>
 
