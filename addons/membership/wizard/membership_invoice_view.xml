@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+  	  <record id="view_membership_invoice_view" model="ir.ui.view">
+            <field name="name">membership.invoice.view.form</field>
+            <field name="model">membership.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Membership Invoice">
+                	<group colspan="4" >
+                     	<field name="product_id" context="{'product':membership_product}" domain="[('membership','=',True)]"/>
+                    </group>
+                    <group colspan="4" col="6">
+                        <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
+           	            <button  icon="gtk-ok" string="Confirm" name="membership_invoice" type="object"/>
+                    </group>
+                </form>
+            </field>
+  	  </record>
+
+       <record id="action_membership_invoice_view" model="ir.actions.act_window">
+           <field name="name">Membership Invoice</field>
+           <field name="res_model">membership.invoice</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">tree,form</field>
+          <field name="view_id" ref="view_membership_invoice_view"/>
+          <field name="target">new</field>
+       </record>
+
+		<record id="action_idea_post_vote_values" model="ir.values">
+	            <field name="model_id" ref="base.model_res_partner" />
+	            <field name="object" eval="1" />
+	            <field name="name">vote</field>
+	            <field name="key2">client_action_multi</field>
+	            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_membership_invoice_view'))"/>
+	            <field name="key">action</field>
+	            <field name="model">res.partner</field>
+	    </record>
+
+    </data>
+</openerp>

@@ -33,7 +33,7 @@
 					"l10n_ch"
                 ],
     "author" : "Camptocamp",
-    "description": "Swiws account chart that add also tax template definition",
+    "description": "Swiss account chart that also add tax template definition",
     "website" : "camptocamp.com",
     "category" : "Localisation/Account Charts",
     "init_xml" : [

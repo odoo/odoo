@@ -34,8 +34,9 @@
 	"author" : "Tiny",
 	"category" : "Generic Modules/Others",
 	"website": "http://www.openerp.com",
-	"description": """ With this module, the WebDAV server for the documents is activated. You can then use any compatible browser to remotely see the attachments of OpenObject.
-	
+	"description": """ With this module, the WebDAV server for the documents is activated.
+	You can then use any compatible browser to remotely see the attachments of OpenObject.
+
 	After installation, the webDAV server can be controlled by a [webdav] section in the server's config.
 """,
 	"depends" : ["base", "document"],

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,23 +23,23 @@
 {
     'name': 'Planning Management Module',
     'version': '1.0',
-    'category': 'Generic Modules/Human Ressources',
+    'category': 'Generic Modules/Human Resources',
     'description': """
 This module helps you to manage your plannings.
 
-This module is based on the analytic accounting and is totally integrated with 
+This module is based on the analytic accounting and is totally integrated with
 * the timesheets encoding
 * the holidays management
 * the project management
 
-So that, each department manager can know if someone in his team has still unaloccated time for a given planning (taking in consideration the validated leaves) or if he still needs to encode tasks. 
+So that, each department manager can know if someone in his team has still unaloccated time for a given planning (taking in consideration the validated leaves) or if he still needs to encode tasks.
 
 At the end of the month, the planning manager can also check if the encoded timesheets are respecting the planned time on each analytic account.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': [
-        'project', 
+        'project',
         'hr_timesheet',
         'hr_holidays',
     ],
@@ -50,7 +50,7 @@ At the end of the month, the planning manager can also check if the encoded time
         'project_planning_report.xml'
     ],
     'demo_xml': [
-        #'report_account_analytic.planning.csv', 
+        #'report_account_analytic.planning.csv',
         'project_planning_demo.xml',
     ],
     'installable': True,

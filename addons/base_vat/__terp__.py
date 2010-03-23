@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,7 +24,12 @@
     'name': 'Base VAT - To check VAT number validity',
     'version': '1.0',
     'category': 'Generic Modules/Base',
-    'description': """Enable the VAT Number for the partner. Check the validity of that VAT Number.""",
+    'description': """
+    Enable the VAT Number for the partner. Check the validity of that VAT Number.
+
+    This module follows the methods stated at http://sima-pc.com/nif.php for
+    checking the validity of VAT Number assinged to partners in European countries.
+    """,
     'author': 'Tiny',
     'depends': ['base', 'account'],
     'update_xml': ['base_vat_data.xml'],

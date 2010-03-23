@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,16 +14,18 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 {
     "name" : "Purchase - Purchase Tender",
     "version" : "0.1",
     "author" : "Tiny",
-    "category" : "Generic Modules/Purchase",
+    "category" : "Generic Modules/Sales & Purchases",
     "website" : "http://www.openerp.com",
-    "description": """ This module allows you to manage your Purchase Tenders. When a purchase order is created, you now have the opportunity to save the related tender. 
+    "description": """
+    This module allows you to manage your Purchase Tenders.
+    When a purchase order is created, you now have the opportunity to save the related tender.
     This new object will regroup and will allow you to easily keep track and order all your purchase orders.
 """,
     "depends" : ["purchase"],

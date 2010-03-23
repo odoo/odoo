@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -53,6 +53,17 @@
 	"website" : "http://www.axelor.com/",
 	"depends" : ["base","crm"],
 	"category" : "Generic Modules/Thunderbird interface",
+	"description": '''
+                  This module is required for the thuderbird plug-in to work
+                  properly.
+
+                  This allows you to select an object that you’d like to add
+                  to your email and its attachments. You can select a partner, a task,
+                  a project, an analytical account, or any other object and attach selected
+                  mail as .eml file in attachment of selected record.
+
+                  You can create new case in crm using Create Case button.
+                  Select a section for which you want to create case.''',
 	"init_xml" : [],
 	"demo_xml" : [],
 	"update_xml" : ['security/ir.model.access.csv'],
