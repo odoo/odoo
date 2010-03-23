@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,7 +24,9 @@
     'name': 'Integrated FTP Server with Document Management System',
     'version': '1.99',
     'category': 'Generic Modules/Others',
-    'description': """This is a support FTP Interface with document management system:    
+    'description': """This is a support FTP Interface with document management system.
+    With this module you would not only be able to access documents through open erp
+    also you would be able to connect with them through the file system using the FTP protocol.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
@@ -32,7 +34,7 @@
     'init_xml': [],
     'update_xml': [
         'document_ftp_view.xml',
-        'security/ir.model.access.csv'        
+        'security/ir.model.access.csv'
     ],
     'demo_xml': [],
     'installable': True,

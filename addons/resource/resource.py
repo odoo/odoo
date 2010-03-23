@@ -21,6 +21,7 @@
 import mx.DateTime
 import time
 import math
+
 from osv import fields, osv
 from tools.translate import _
 
@@ -34,7 +35,7 @@ class resource_calendar(osv.osv):
         'manager' : fields.many2one('res.users', 'Workgroup manager'),
     }
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', c)
     }
 
     def interval_min_get(self, cr, uid, id, dt_from, hours, resource=False):
@@ -152,9 +153,9 @@ class resource_resource(osv.osv):
         'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the resource record without removing it."),
         'company_id' : fields.many2one('res.company', 'Company', required=True),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
-        'user_id' : fields.many2one('res.users', 'User',help='Related user name for the resource to manage its access.'),
-        'time_efficiency' : fields.float('Efficiency factor', size=8, required=True,help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
-        'calendar_id' : fields.many2one("resource.calendar", "Working time",help="Define the schedule of resource"),
+        'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
+        'time_efficiency' : fields.float('Efficiency factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
+        'calendar_id' : fields.many2one("resource.calendar", "Working time", help="Define the schedule of resource"),
     }
     _defaults = {
         'resource_type' : lambda *a: 'user',
@@ -187,7 +188,7 @@ class resource_calendar_leaves(osv.osv):
         'date_to' : fields.datetime('End Date', required=True),
         'resource_id' : fields.many2one("resource.resource", "Resource", help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"),
     }
-    def check_dates(self, cr, uid, ids):
+    def check_dates(self, cr, uid, ids, context={}):
          leave = self.read(cr, uid, ids[0], ['date_from', 'date_to'])
          if leave['date_from'] and leave['date_to']:
              if leave['date_from'] > leave['date_to']:
@@ -198,7 +199,7 @@ class resource_calendar_leaves(osv.osv):
         (check_dates, 'Error! leave start-date must be lower then leave end-date.', ['date_from', 'date_to'])
     ]
 
-    def onchange_resource(self,cr,uid,ids,resource):
+    def onchange_resource(self,cr, uid, ids, resource, context={}):
         result = {}
         if resource:
             resource_pool = self.pool.get('resource.resource')

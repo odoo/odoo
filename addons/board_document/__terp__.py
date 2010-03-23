@@ -24,7 +24,13 @@
     'name': 'Dashboard for Document Management',
     'version': '1.0',
     'category': 'Board/Document',
-    'description': """ This module implements a dashboard for Document """,
+    'description': """
+    This module implements a dashboard for Document that includes:
+        * New Files (list)
+        * Files by Resource Type (graph)
+        * Files by Partner (graph)
+        * Files by Month (graph)
+    """,
     'author': 'Tiny',
     'depends': ['board', 'document'],
     'update_xml': ['board_document_view.xml'],

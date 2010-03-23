@@ -23,7 +23,7 @@
     'name': 'Document Management - Wiki - FAQ',
     'version': '1.0',
     'category': 'Generic Modules/Others',
-    'description': """FAQ Template
+    'description': """This module provides a wiki FAQ Template
     """,
     'author': 'Tiny',
     'website': 'http://openerp.com',

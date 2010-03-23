@@ -23,7 +23,7 @@
 {
     'name': 'HR - Recruitement',
     'version': '1.0',
-    'category': 'Generic Modules/HR',
+    'category': 'Generic Modules/Human Resources',
     'description': """
 Manages job positions and the recruitement process. It's integrated with the
 survey module to allows you to define interview for different jobs.
@@ -36,19 +36,20 @@ system to store and search in your CV base.
     'website': 'http://www.openerp.com',
     'depends': ['hr','survey','crm'],
     'init_xml': [
-        'hr_hr_data.xml'
+        'hr_recruitment_data.xml'
     ],
     'update_xml': [
-        'hr_hr_wizard.xml',
-        'hr_hr_view.xml',
-        'hr_hr_menu.xml',
-        'security/hr_hr_security.xml',
+        'hr_recruitment_wizard.xml',
+        'hr_recruitment_view.xml',
+        'hr_recruitment_menu.xml',
+#        'report_hr_recruitment_view.xml',
+        'security/hr_recruitment_security.xml',
         'security/ir.model.access.csv',
-        'board_hr_hr_statistical_view.xml',
+        'board_hr_recruitment_statistical_view.xml',
         'report/hr_recruitment_report_view.xml'
      ],
     'demo_xml': [
-        'hr_hr_demo.xml'
+        'hr_recruitment_demo.xml'
     ],
     'installable': True,
     'active': False,

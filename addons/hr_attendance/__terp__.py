@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,7 +24,12 @@
     'name': 'Attendances Of Employees',
     'version': '1.1',
     'category': 'Generic Modules/Human Resources',
-    'description': """This module aims to manage employee's attendances.""",
+    'description': """
+    This module aims to manage employee's attendances.
+
+    Keeps account of the attendances of the employees on the basis of the
+    actions(Sign in/Sign out) performed by them.
+       """,
     'author': 'Tiny',
     'depends': ['base', 'hr'],
     'update_xml': [

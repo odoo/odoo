@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from osv import fields
-from osv import osv
+from osv import fields, osv
 
 class res_company(osv.osv):
     _inherit = 'res.company'
@@ -29,10 +28,9 @@ class res_company(osv.osv):
             help='This will set the unit of measure used in projects and tasks.\n' \
 "If you use the timesheet linked to projects (project_timesheet module), don't " \
 "forget to setup the right unit of measure in your employees.",
-          
+
         ),
     }
-
 res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

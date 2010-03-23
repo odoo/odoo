@@ -18,24 +18,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from lxml import etree
 import mx.DateTime
 import time
+
 from tools.translate import _
 from osv import fields, osv
-
 
 class project_phase(osv.osv):
     _name = "project.phase"
     _description = "Project Phase"
 
-    def _check_recursion(self, cr, uid, ids):
-         obj_self = self.browse(cr, uid, ids[0])
-         prev_ids = obj_self.previous_phase_ids
-         next_ids = obj_self.next_phase_ids
+    def _check_recursion(self, cr, uid, ids, context={}):
+         data_phase = self.browse(cr, uid, ids[0], context=context)
+         prev_ids = data_phase.previous_phase_ids
+         next_ids = data_phase.next_phase_ids
          # it should nither be in prev_ids nor in next_ids
-         if (obj_self in prev_ids) or (obj_self in next_ids):
+         if (data_phase in prev_ids) or (data_phase in next_ids):
              return False
          ids = [id for id in prev_ids if id in next_ids]
          # both prev_ids and next_ids must be unique
@@ -48,7 +47,7 @@ class project_phase(osv.osv):
          while prev_ids:
              cr.execute('select distinct prv_phase_id from project_phase_rel where next_phase_id in ('+','.join(map(str, prev_ids))+')')
              prv_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
-             if obj_self.id in prv_phase_ids:
+             if data_phase.id in prv_phase_ids:
                  return False
              ids = [id for id in prv_phase_ids if id in next_ids]
              if ids:
@@ -58,7 +57,7 @@ class project_phase(osv.osv):
          while next_ids:
              cr.execute('select distinct next_phase_id from project_phase_rel where prv_phase_id in ('+','.join(map(str, next_ids))+')')
              next_phase_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
-             if obj_self.id in next_phase_ids:
+             if data_phase.id in next_phase_ids:
                  return False
              ids = [id for id in next_phase_ids if id in prev_ids]
              if ids:
@@ -66,33 +65,30 @@ class project_phase(osv.osv):
              next_ids = next_phase_ids
          return True
 
-    def _check_dates(self, cr, uid, ids):
-         phase = self.read(cr, uid, ids[0], ['date_start', 'date_end'])
-         if phase['date_start'] and phase['date_end']:
-             if phase['date_start'] > phase['date_end']:
-                 return False
+    def _check_dates(self, cr, uid, ids, context={}):
+         phase = self.read(cr, uid, ids[0], ['date_start', 'date_end'], context=context)
+         if phase['date_start'] and phase['date_end'] and phase['date_start'] > phase['date_end']:
+             return False
          return True
 
-    def _check_constraint_start(self, cr, uid, ids):
-         phase = self.read(cr, uid, ids[0], ['date_start', 'constraint_date_start'])
-         if phase['date_start'] and phase['constraint_date_start']:
-             if phase['date_start'] < phase['constraint_date_start']:
-                 return False
+    def _check_constraint_start(self, cr, uid, ids, context={}):
+         phase = self.read(cr, uid, ids[0], ['date_start', 'constraint_date_start'], context=context)
+         if phase['date_start'] and phase['constraint_date_start'] and phase['date_start'] < phase['constraint_date_start']:
+             return False
          return True
 
-    def _check_constraint_end(self, cr, uid, ids):
-         phase = self.read(cr, uid, ids[0], ['date_end', 'constraint_date_end'])
-         if phase['date_end'] and phase['constraint_date_end']:
-             if phase['date_end'] > phase['constraint_date_end']:
-                 return False
+    def _check_constraint_end(self, cr, uid, ids, context={}):
+         phase = self.read(cr, uid, ids[0], ['date_end', 'constraint_date_end'], context=context)
+         if phase['date_end'] and phase['constraint_date_end'] and phase['date_end'] > phase['constraint_date_end']:
+             return False
          return True
 
     _columns = {
         'name': fields.char("Phase Name", size=64, required=True),
         'date_start': fields.datetime('Starting Date'),
         'date_end': fields.datetime('End Date'),
-        'constraint_date_start': fields.datetime('Constraint Starting Date'),
-        'constraint_date_end': fields.datetime('Constraint End Date'),
+        'constraint_date_start': fields.datetime('Start Date', help='force the phase to start after this date'),
+        'constraint_date_end': fields.datetime('End Date', help='force the phase to finish before this date'),
         'project_id': fields.many2one('project.project', 'Project', required=True),
         'next_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'prv_phase_id', 'next_phase_id', 'Next Phases'),
         'previous_phase_ids': fields.many2many('project.phase', 'project_phase_rel', 'next_phase_id', 'prv_phase_id', 'Previous Phases'),
@@ -120,73 +116,73 @@ class project_phase(osv.osv):
         (_check_constraint_end, 'Error! Phase must end-before Constraint End Date.', ['date_end', 'constraint_date_end']),
     ]
 
-    def onchange_project(self, cr, uid, ids, project):
+    def onchange_project(self, cr, uid, ids, project, context={}):
         result = {}
+        project_obj = self.pool.get('project.project')
         if project:
-          project_obj = self.pool.get('project.project')
-          project_id = project_obj.browse(cr, uid, project)
-          if project_id.date_start:
-              result['date_start'] = mx.DateTime.strptime(project_id.date_start, "%Y-%m-%d").strftime('%Y-%m-%d %H:%M:%S')
-              return {'value': result}
+            project_id = project_obj.browse(cr, uid, project, context=context)
+            if project_id.date_start:
+                result['date_start'] = mx.DateTime.strptime(project_id.date_start, "%Y-%m-%d").strftime('%Y-%m-%d %H:%M:%S')
+                return {'value': result}
         return {'value': {'date_start': []}}
 
-    def _check_date_start(self, cr, uid, phase, date_end, context=None):
+    def _check_date_start(self, cr, uid, phase, date_end, context={}):
        """
        Check And Compute date_end of phase if change in date_start < older time.
        """
-       resource_calendar_obj = self.pool.get('resource.calendar')
        uom_obj = self.pool.get('product.uom')
        resource_obj = self.pool.get('resource.resource')
-       calendar_id = phase.project_id.resource_calendar_id.id
+       cal_obj = self.pool.get('resource.calendar')
+       calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
        if resource_id:
-            cal_id = resource_obj.browse(cr, uid, resource_id[0]).calendar_id.id
+#            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
+            res = resource_obj.read(cr, uid, resource_id[0], ['calendar_id'], context=context)[0]
+            cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:
                 calendar_id = cal_id
-       default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')])[0]
+       default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-       work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id or False, date_end, avg_hours or 0.0, resource_id or False)
+       work_times = cal_obj.interval_min_get(cr, uid, calendar_id, date_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
        dt_start = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
-       self.write(cr, uid, [phase.id], {'date_start': dt_start, 'date_end': date_end.strftime('%Y-%m-%d %H:%M:%S')})
+       self.write(cr, uid, [phase.id], {'date_start': dt_start, 'date_end': date_end.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
-    def _check_date_end(self, cr, uid, phase, date_start, context=None):
+    def _check_date_end(self, cr, uid, phase, date_start, context={}):
        """
        Check And Compute date_end of phase if change in date_end > older time.
        """
-       resource_calendar_obj = self.pool.get('resource.calendar')
        uom_obj = self.pool.get('product.uom')
        resource_obj = self.pool.get('resource.resource')
-       calendar_id = phase.project_id.resource_calendar_id.id
-       resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
+       cal_obj = self.pool.get('resource.calendar')
+       calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
+       resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)], context=context)
        if resource_id:
-            cal_id = resource_obj.browse(cr, uid, resource_id[0]).calendar_id.id
+#            cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
+            res = resource_obj.read(cr, uid, resource_id[0], ['calendar_id'], context=context)[0]
+            cal_id = res.get('calendar_id', False) and res.get('calendar_id')[0] or False
             if cal_id:
                 calendar_id = cal_id
-       default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')])[0]
+       default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')], context=context)[0]
        avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-       work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id or False, date_start, avg_hours or 0.0, resource_id or False)
+       work_times = cal_obj.interval_get(cr, uid, calendar_id, date_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
        dt_end = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-       self.write(cr, uid, [phase.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'), 'date_end': dt_end})
+       self.write(cr, uid, [phase.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'), 'date_end': dt_end}, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None):
-
-        if not context:
-            context = {}
-
-        if context.get('scheduler',False):
-            return super(project_phase, self).write(cr, uid, ids, vals, context=context)
-
-        # Consider calendar and efficiency if the phase is performed by a resource
-        # otherwise consider the project's working calendar
-        phase = self.browse(cr, uid, ids[0])
+    def write(self, cr, uid, ids, vals, context={}):
         resource_calendar_obj = self.pool.get('resource.calendar')
         resource_obj = self.pool.get('resource.resource')
         uom_obj = self.pool.get('product.uom')
-        resource_id = False
-        calendar_id = phase.project_id.resource_calendar_id.id
-        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)])
+        if not context:
+            context = {}
+        if context.get('scheduler',False):
+            return super(project_phase, self).write(cr, uid, ids, vals, context=context)
+        # Consider calendar and efficiency if the phase is performed by a resource
+        # otherwise consider the project's working calendar
+        phase = self.browse(cr, uid, ids[0], context=context)
+        calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
+        resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)],context=context)
         if resource_id:
-                cal_id = resource_obj.browse(cr, uid, resource_id[0]).calendar_id.id
+                cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
                 if cal_id:
                     calendar_id = cal_id
         default_uom_id = uom_obj.search(cr, uid, [('name', '=', 'Hour')])[0]
@@ -194,25 +190,20 @@ class project_phase(osv.osv):
 
         # Change the date_start and date_end
         # for previous and next phases respectively based on valid condition
-        if vals.get('date_start'):
-            if vals['date_start'] < phase.date_start:
+        if vals.get('date_start', False) and vals['date_start'] < phase.date_start:
                 dt_start = mx.DateTime.strptime(vals['date_start'],'%Y-%m-%d %H:%M:%S')
-                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id or False, dt_start, avg_hours or 0.0, resource_id or False)
-                vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-                super(project_phase, self).write(cr, uid, ids, vals, context=context)
-
+                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
+                if work_times:
+                    vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
                 for prv_phase in phase.previous_phase_ids:
-                   self._check_date_start(cr, uid, prv_phase, dt_start)
-        if vals.get('date_end'):
-            if vals['date_end'] > phase.date_end:
+                    self._check_date_start(cr, uid, prv_phase, dt_start, context=context)
+        if vals.get('date_end', False) and vals['date_end'] > phase.date_end:
                 dt_end = mx.DateTime.strptime(vals['date_end'],'%Y-%m-%d %H:%M:%S')
-                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id or False, dt_end, avg_hours or 0.0, resource_id or False)
-                vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
-                super(project_phase, self).write(cr, uid, ids, vals, context=context)
-
+                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
+                if work_times:
+                    vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
                 for next_phase in phase.next_phase_ids:
-                   self._check_date_end(cr, uid, next_phase, dt_end)
-
+                    self._check_date_end(cr, uid, next_phase, dt_end, context=context)
         return super(project_phase, self).write(cr, uid, ids, vals, context=context)
 
     def set_draft(self, cr, uid, ids, *args):
@@ -276,66 +267,70 @@ class task(osv.osv):
 
     def onchange_planned(self, cr, uid, ids, project, user_id=False, planned=0.0, effective=0.0, date_start=None, occupation_rate=0.0):
         result = {}
+        resource = False
+        resource_obj = self.pool.get('resource.resource')
+        project_pool = self.pool.get('project.project')
+        resource_calendar = self.pool.get('resource.calendar')
+        if not project:
+            return {'value' : result}
         if date_start:
-            resource_obj = self.pool.get('resource.resource')
-            project_pool = self.pool.get('project.project')
             hrs = float(planned / float(occupation_rate))
             calendar_id = project_pool.browse(cr, uid, project).resource_calendar_id.id
-            resource_calendar = self.pool.get('resource.calendar')
             dt_start = mx.DateTime.strptime(date_start, '%Y-%m-%d %H:%M:%S')
             resource_id = resource_obj.search(cr, uid, [('user_id','=',user_id)])
             if resource_id:
-                resource = resource_obj.browse(cr, uid, resource_id)[0]
-                hrs = planned / (float(occupation_rate) * resource.time_efficiency)
-                if resource.calendar_id.id:
-                    calendar_id = resource.calendar_id.id
-            work_times = resource_calendar.interval_get(cr, uid, calendar_id or False, dt_start, hrs or 0.0, resource_id or False)
-            result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+                resource_data = resource_obj.browse(cr, uid, resource_id)[0]
+                resource = resource_data.id
+                hrs = planned / (float(occupation_rate) * resource_data.time_efficiency)
+                if resource_data.calendar_id.id:
+                    calendar_id = resource_data.calendar_id.id
+            work_times = resource_calendar.interval_get(cr, uid, calendar_id, dt_start, hrs or 0.0, resource or False)
+            if work_times:
+                result['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
         result['remaining_hours'] = planned - effective
         return {'value' : result}
 
-    def _check_date_start(self, cr, uid, task, date_end, context=None):
+    def _check_date_start(self, cr, uid, task, date_end, context={}):
        """
        Check And Compute date_end of task if change in date_start < older time.
        """
        resource_calendar_obj = self.pool.get('resource.calendar')
        resource_obj = self.pool.get('resource.resource')
-       calendar_id = task.project_id.resource_calendar_id.id
+       calendar_id = task.project_id.resource_calendar_id and task.project_id.resource_calendar_id.id or False
        hours = task.planned_hours / task.occupation_rate
-       resource_id = resource_obj.search(cr, uid, [('user_id', '=', task.user_id.id)])
+       resource_id = resource_obj.search(cr, uid, [('user_id', '=', task.user_id.id)], context=context)
        if resource_id:
-            resource = resource_obj.browse(cr, uid, resource_id[0])
+            resource = resource_obj.browse(cr, uid, resource_id[0], context=context)
             if resource.calendar_id.id:
-                calendar_id = resource.calendar_id.id
+                calendar_id = resource.calendar_id and resource.calendar_id.id or False
             hours = task.planned_hours / (float(task.occupation_rate) * resource.time_efficiency)
-       work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id or False, date_end, hours or 0.0, resource_id or False)
+       work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, date_end, hours or 0.0, resource_id and resource_id[0] or False)
        dt_start = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
        self.write(cr, uid, [task.id], {'date_start' : dt_start,'date_end' : date_end.strftime('%Y-%m-%d %H:%M:%S')})
 
-    def _check_date_end(self, cr, uid, task, date_start, context=None):
+    def _check_date_end(self, cr, uid, task, date_start, context={}):
        """
        Check And Compute date_end of task if change in date_end > older time.
        """
-
        resource_calendar_obj = self.pool.get('resource.calendar')
        resource_obj = self.pool.get('resource.resource')
-       calendar_id = task.project_id.resource_calendar_id.id
+       calendar_id = task.project_id.resource_calendar_id and task.project_id.resource_calendar_id.id or False
        hours = task.planned_hours / task.occupation_rate
-       resource_id = resource_obj.search(cr,uid,[('user_id', '=', task.user_id.id)])
+       resource_id = resource_obj.search(cr,uid,[('user_id', '=', task.user_id.id)], context=context)
        if resource_id:
-            resource = resource_obj.browse(cr, uid, resource_id[0])
+            resource = resource_obj.browse(cr, uid, resource_id[0], context=context)
             if resource.calendar_id.id:
-                calendar_id = resource.calendar_id.id
+                calendar_id = resource.calendar_id and resource.calendar_id.id or False
             hours = task.planned_hours / (float(task.occupation_rate) * resource.time_efficiency)
-       work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id or False, date_start, hours or 0.0, resource_id or False)
+       work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, date_start, hours or 0.0, resource_id and resource_id[0] or False)
        dt_end = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-       self.write(cr, uid, [task.id], {'date_start' : date_start.strftime('%Y-%m-%d %H:%M:%S'),'date_end' : dt_end})
+       self.write(cr, uid, [task.id], {'date_start': date_start.strftime('%Y-%m-%d %H:%M:%S'),'date_end' : dt_end}, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None):
-
+    def write(self, cr, uid, ids, vals, context={}):
+        resource_calendar_obj = self.pool.get('resource.calendar')
+        resource_obj = self.pool.get('resource.resource')
         if not context:
             context = {}
-
         if context.get('scheduler',False):
             return super(task, self).write(cr, uid, ids, vals, context=context)
 
@@ -345,40 +340,33 @@ class task(osv.osv):
         if isinstance(ids, list):
             task_id = ids[0]
         task_rec = self.browse(cr, uid, task_id, context=context)
-        resource_calendar_obj = self.pool.get('resource.calendar')
-        resource_obj = self.pool.get('resource.resource')
-        calendar_id = task_rec.project_id.resource_calendar_id.id
+        calendar_id = task_rec.project_id.resource_calendar_id and task_rec.project_id.resource_calendar_id.id or False
         hrs = task_rec.planned_hours / task_rec.occupation_rate
-        resource_id = resource_obj.search(cr, uid, [('user_id', '=', task_rec.user_id.id)])
+        resource_id = resource_obj.search(cr, uid, [('user_id', '=', task_rec.user_id.id)], context=context)
         if resource_id:
-            resource = resource_obj.browse(cr, uid, resource_id[0])
+            resource = resource_obj.browse(cr, uid, resource_id[0], context=context)
             if resource.calendar_id.id:
-                calendar_id = resource.calendar_id.id
+                calendar_id = resource.calendar_id and resource.calendar_id.id or False
             hrs = task_rec.planned_hours / (float(task_rec.occupation_rate) * resource.time_efficiency)
 
         # Change the date_start and date_end
         # for previous and next tasks respectively based on valid condition
-        if vals.get('date_start'):
-            if vals['date_start'] < task_rec.date_start:
-                dt_start = mx.DateTime.strptime(vals['date_start'], '%Y-%m-%d %H:%M:%S')
-                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id or False, dt_start, hrs or 0.0, resource_id or False)
+        if vals.get('date_start', False) and vals['date_start'] < task_rec.date_start:
+            dt_start = mx.DateTime.strptime(vals['date_start'], '%Y-%m-%d %H:%M:%S')
+            work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, hrs or 0.0, resource.id or False)
+            if work_times:
                 vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-                super(task, self).write(cr, uid, ids, vals, context=context)
-
-                for prv_task in task_rec.parent_ids:
-                   self._check_date_start(cr, uid, prv_task, dt_start)
-        if vals.get('date_end'):
-            if vals['date_end'] > task_rec.date_end:
-                dt_end = mx.DateTime.strptime(vals['date_end'], '%Y-%m-%d %H:%M:%S')
-                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id or False, dt_end, hrs or 0.0, resource_id or False)
+            for prv_task in task_rec.parent_ids:
+               self._check_date_start(cr, uid, prv_task, dt_start)
+        if vals.get('date_end', False) and vals['date_end'] > task_rec.date_end:
+            dt_end = mx.DateTime.strptime(vals['date_end'], '%Y-%m-%d %H:%M:%S')
+            work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, hrs or 0.0, resource.id or False)
+            if work_times:
                 vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d %H:%M:%S')
-                super(task, self).write(cr, uid, ids, vals, context=context)
-
-                for next_task in task_rec.child_ids:
-                   self._check_date_end(cr, uid, next_task, dt_end)
+            for next_task in task_rec.child_ids:
+               self._check_date_end(cr, uid, next_task, dt_end)
 
         return super(task, self).write(cr, uid, ids, vals, context=context)
 
 task()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
