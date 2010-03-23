@@ -445,7 +445,7 @@ class survey_browse_response(report_rml):
                                         matrix_ans.append((col.id, col.title))
                                 len_matrix = len(matrix_ans)
                                 if que.type in ['matrix_of_choices_only_one_ans', 'rating_scale'] and que.comment_column:
-                                    matrix_ans.append(que.column_name)
+                                    matrix_ans.append((0,que.column_name))
                                 rml += """<blockTable colWidths=" """ + colWidths + """ " style="simple_table"><tr>"""
 
                                 for mat_col in range(0, len(matrix_ans)):
