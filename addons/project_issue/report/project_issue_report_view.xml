@@ -8,22 +8,22 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
 				<tree string="Project Issue">
-	              	<field name="name" />
-					<field name="month"/>
-					<field name="priority" />
+	              	<field name="name" invisible="1"/>
+					<field name="month" invisible="1"/>
+					<field name="project_id" />
 					<field name="stage_id" />
 					<field name="type_id" string="Type"/>
-					<field name="project_id" invisible="1"/>
-					<field name="company_id" invisible="1"/>
+					<field name="priority" />
+					<field name="company_id" />
                 	<field name="nbr" string="#Project Issue"/>
                     <field name="delay_close"/>
                     <field name="state" invisible="1"/>
                     <field name="section_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
-                    <field name="stage_id"  invisible="1"/>
-                    <field name="categ_id" invisible="1"/>
-                    <field name="date_closed" invisible="1"/>
-                </tree>
+                    <field name="stage_id" invisible="1" />
+                    <field name="categ_id" />
+                    <field name="date_closed" />
+                  </tree>
             </field>
         </record>
         <record id="view_project_issue_report_graph" model="ir.ui.view">
