@@ -72,7 +72,7 @@ def _get_moves(self, cr, uid, data, context):
     _moves_fields['date%s' % pick.id] ={'string':'Date', 
                                                 'type':'date', 'required' : '1','default': make_default(pick.date)}
     _moves_arch_lst.append('<newline/>')
-    _moves_arch_lst.append('<separator string="Product Detail" colspan="4"/>')
+    _moves_arch_lst.append('<separator string="Delivery Detail" colspan="4"/>')
     _moves_arch_lst.append('<label string="Product" align="0.0" />')
     _moves_arch_lst.append('<label string="Quantity" align="10.0" />')
     _moves_arch_lst.append('<label string="UOM" align="10.0" />')
@@ -88,7 +88,7 @@ def _get_moves(self, cr, uid, data, context):
         _moves_arch_lst.append('<field name="name%s"  nolabel="1" />' % (m.id,))
         _moves_fields['name%s' % m.id] = {
                 'string': 'Product',
-                'type' : 'char', 'required' : True, 'default' : make_default(m.name)}
+                'type' : 'many2one', 'relation': 'product.product', 'required' : True, 'default' : make_default(m.product_id.id)}
         _moves_arch_lst.append('<field name="move%s" nolabel="1" />' % (m.id,))
         _moves_fields['move%s' % m.id] = {
                 'string': 'Quantity',
@@ -97,7 +97,7 @@ def _get_moves(self, cr, uid, data, context):
         _moves_arch_lst.append('<field name="uom%s" nolabel="1"/>'% (m.id,))
         
         _moves_fields['uom%s' % m.id] = {'string': 'UOM', 'type': 'many2one',
-                    'relation': 'product.uom', 'required': True,
+                    'relation': 'product.uom', 'readonly':True,'required': True,
                     'default': make_default(m.product_uom.id)}        
         
         _moves_arch_lst.append('</group>')            
