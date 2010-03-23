@@ -249,3 +249,5 @@ class base_action_rule_line(osv.osv):
     }
 
 base_action_rule_line()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
