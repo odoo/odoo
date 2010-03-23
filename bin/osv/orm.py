@@ -249,11 +249,14 @@ class browse_record(object):
                         new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
                     elif f._type in ('reference'):
                         if data[n]:
-                            ref_obj, ref_id = data[n].split(',')
-                            ref_id = long(ref_id)
-                            obj = self._table.pool.get(ref_obj)
-                            compids = False
-                            new_data[n] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                            if isinstance(data[n], browse_record):
+                                new_data[n] = data[n]    
+                            else:
+                                ref_obj, ref_id = data[n].split(',')
+                                ref_id = long(ref_id)
+                                obj = self._table.pool.get(ref_obj)
+                                compids = False
+                                new_data[n] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
                         else:
                             new_data[n] = browse_null()
                     else:
