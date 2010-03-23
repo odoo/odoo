@@ -342,7 +342,7 @@ class account_invoice(osv.osv):
 #       return [{}]
 
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False):
+            date_invoice=False, payment_term=False, partner_bank=False):
         invoice_addr_id = False
         contact_addr_id = False
         partner_payment_term = False
@@ -379,7 +379,7 @@ class account_invoice(osv.osv):
         if type in ('in_invoice', 'in_refund'):
             result['value']['partner_bank'] = bank_id
 
-        if partner_bank_id != bank_id:
+        if partner_bank != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
             result['value'].update(to_update['value'])
         return result
@@ -409,7 +409,7 @@ class account_invoice(osv.osv):
     def onchange_invoice_line(self, cr, uid, ids, lines):
         return {}
 
-    def onchange_partner_bank(self, cursor, user, ids, partner_bank_id):
+    def onchange_partner_bank(self, cursor, user, ids, partner_bank):
         return {'value': {}}
 
     # go from canceled state to draft state

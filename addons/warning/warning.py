@@ -115,7 +115,7 @@ purchase_order()
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False):
+            date_invoice=False, payment_term=False, partner_bank=False):
         
         if not partner_id:
             return {'value': {
@@ -140,7 +140,7 @@ class account_invoice(osv.osv):
                 'message': message
                 }
         result =  super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
-            date_invoice=False, payment_term=False, partner_bank_id=False)
+            date_invoice=False, payment_term=False, partner_bank=False)
         
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
