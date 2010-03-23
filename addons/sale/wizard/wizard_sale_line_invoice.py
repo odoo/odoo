@@ -61,7 +61,7 @@ def _makeInvoices(self, cr, uid, data, context):
             'currency_id' : order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term': pay_term,
-            'fiscal_position': order.partner_id.property_account_position.id or order.fiscal_position.id
+            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id
         }
         inv_id = pool.get('account.invoice').create(cr, uid, inv)
         return inv_id

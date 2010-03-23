@@ -393,7 +393,7 @@ class sale_order(osv.osv):
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term': pay_term,
-            'fiscal_position': order.partner_id.property_account_position.id or order.fiscal_position.id
+            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id
         }
         inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))

@@ -89,7 +89,7 @@ def _createInvoices(self, cr, uid, data, context={}):
             'currency_id' :sale.pricelist_id.currency_id.id,
             'comment': '',
             'payment_term':sale.payment_term.id,
-            'fiscal_position': sale.partner_id.property_account_position.id or sale.fiscal_position.id
+            'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
             }
         inv_obj = pool_obj.get('account.invoice')
         inv_id = inv_obj.create(cr, uid, inv)
