@@ -86,7 +86,7 @@ class stock_move_consume(osv.osv_memory):
         if 'product_uom' in fields:
             res.update({'product_uom': move.product_uom.id})    
         if 'product_qty' in fields:
-            res.update({'product_qty': move.product_qty.id})    
+            res.update({'product_qty': move.product_qty})    
         if 'location_id' in fields:
             res.update({'location_id': move.location_id.id})
         return res   
