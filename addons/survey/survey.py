@@ -20,14 +20,16 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
+from osv import fields
+import tools
+import netsvc
+from tools.translate import _
+
 from time import strftime
 import datetime
 import copy
-from tools.translate import _
-import tools
 from mx.DateTime import *
-import netsvc
 import os
 
 class survey_type(osv.osv):
@@ -590,7 +592,7 @@ class survey_response_answer(osv.osv):
     _rec_name = 'response_id'
     _columns = {
         'response_id' : fields.many2one('survey.response.line', 'Response', ondelete='cascade'),
-        'answer_id' : fields.many2one('survey.answer', 'Answer', required=1),
+        'answer_id' : fields.many2one('survey.answer', 'Answer', required=1, ondelete='cascade'),
         'column_id' : fields.many2one('survey.question.column.heading','Column'),
         'answer' : fields.char('Value', size =255),
         'value_choice' : fields.char('Value Choice', size =255),

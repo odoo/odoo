@@ -82,8 +82,8 @@ class survey_question_wiz(osv.osv_memory):
             survey_id = context.get('survey_id', False)
             #TODO: change to the browse, use read if only need to read few columns values
             # this will fire select * from quary 
-            sur_rec = survey_obj.read(cr, uid, survey_id, ['page_ids', 'max_response_limit', 'state', 'tot_start_survey', 'tot_comp_survey', 'send_response'])
-            p_id = sur_rec['page_ids']
+            sur_rec = survey_obj.browse(cr, uid, survey_id)
+            p_id = map(lambda x:x.id, sur_rec.page_ids)
             total_pages = len(p_id)
             pre_button = False
             readonly = 0
@@ -103,7 +103,7 @@ class survey_question_wiz(osv.osv_memory):
                 if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
                     if total_pages > sur_name_rec.page_no + 1:
                         if ((context.has_key('active') and not context.get('active', False)) or not context.has_key('active')) and not sur_name_rec.page_no + 1:
-                            if sur_rec['state'] != "open" :
+                            if sur_rec.state != "open" :
                                 raise osv.except_osv(_('Warning !'),_("You can not give answer because of survey is not open for answer"))
                             cr.execute('select count(id) from survey_history where user_id=%s\
                                                     and survey_id=%s' % (uid,survey_id))
@@ -113,7 +113,7 @@ class survey_question_wiz(osv.osv_memory):
                             if user_limit and res >= user_limit:
                                 raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (user_limit))
 
-                        if sur_rec['max_response_limit'] and sur_rec['max_response_limit'] <= sur_rec['tot_start_survey'] and not sur_name_rec.page_no + 1:
+                        if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
 
                         p_id = p_id[sur_name_rec.page_no + 1]
@@ -371,10 +371,10 @@ class survey_question_wiz(osv.osv_memory):
                     result['fields'] = fields
                     result['context'] = context
                 else:
-                    survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec['tot_comp_survey'] + 1})
+                    survey_obj.write(cr, uid, survey_id, {'tot_comp_survey' : sur_rec.tot_comp_survey + 1})
                     sur_response_obj.write(cr, uid, [sur_name_read.response], {'state' : 'done'})
 
-                    if sur_rec['send_response']:
+                    if sur_rec.send_response:
                         survey_data = survey_obj.browse(cr, uid, int(survey_id))
                         response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
                         context.update({'response_id':response_id})
@@ -465,7 +465,7 @@ class survey_question_wiz(osv.osv_memory):
                 tot_page_id = self.pool.get('survey').browse(cr, uid, context.get('survey_id',False))
                 tot_per = (float(100) * (int(field.split('_')[2]) + 1) / len(tot_page_id.page_ids))
                 value[field] = tot_per
-        esponse_obj = self.pool.get('survey.response')
+        response_obj = self.pool.get('survey.response')
         surv_name_wiz = self.pool.get('survey.name.wiz')
         
         if context.has_key('response_id') and context.get('response_id') and int(context['response_id'][0]) > 0:

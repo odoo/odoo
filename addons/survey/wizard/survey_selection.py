@@ -20,7 +20,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
+from osv import fields
 from tools.translate import _
 
 class survey_name_wiz(osv.osv_memory):
