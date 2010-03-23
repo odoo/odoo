@@ -60,10 +60,10 @@ invoice_fields = {
 }
 
 
-def _get_type(obj, cr, uid, data, context):
+def _get_type(obj, cr, uid, data, context=None):
     picking_obj = pooler.get_pool(cr.dbname).get('stock.picking')
     usage = 'customer'
-    pick = picking_obj.browse(cr, uid, data['id'], context)
+    pick = picking_obj.browse(cr, uid, data['id'], context=context)
     if pick.invoice_state == 'invoiced':
         raise wizard.except_wizard(_('UserError'), _('Invoice is already created.'))
     if pick.invoice_state == 'none':
@@ -85,7 +85,7 @@ def _get_type(obj, cr, uid, data, context):
     return {'type': type}
 
 
-def _create_invoice(obj, cr, uid, data, context):
+def _create_invoice(obj, cr, uid, data, context=None):
     if data['form'].get('new_picking', False):
         data['id'] = data['form']['new_picking']
         data['ids'] = [data['form']['new_picking']]
@@ -97,8 +97,8 @@ def _create_invoice(obj, cr, uid, data, context):
     type = data['form']['type']
 
     res = picking_obj.action_invoice_create(cr, uid, data['ids'],
-            journal_id = data['form']['journal_id'], group=data['form']['group'],
-            type=type, context= context)
+            journal_id=data['form']['journal_id'], group=data['form']['group'],
+            type=type, context=context)
 
     invoice_ids = res.values()
     if not invoice_ids:
@@ -114,9 +114,10 @@ def _create_invoice(obj, cr, uid, data, context):
         xml_id = 'action_invoice_tree12'
 
     result = mod_obj._get_id(cr, uid, 'account', xml_id)
-    id = mod_obj.read(cr, uid, result, ['res_id'])
-    result = act_obj.read(cr, uid, id['res_id'])
+    id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
+    result = act_obj.read(cr, uid, id['res_id'], context=context)
     result['res_id'] = invoice_ids
+    result['context'] = context
     return result
 
 
@@ -146,6 +147,4 @@ class make_invoice_onshipping(wizard.interface):
 
 make_invoice_onshipping("stock.invoice_onshipping")
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
