@@ -617,11 +617,11 @@
                                         string="Split in production lots"
                                            type="action" icon="gtk-justify-fill"
                                            states="draft,waiting,confirmed,assigned" />
-                                       <button
-                                           name="%(stock.move_scrap)d"
-                                           string="D" type="action"
-                                           icon="gtk-convert"
-                                           states="draft,waiting,confirmed,assigned" />
+
+                                    <button name="%(stock.move_scrap)d"
+				                    	string="Scrap Products" type="action"
+				                    	icon="gtk-convert" context="{'scrap': True}"
+				                    	states="draft,waiting,confirmed,assigned" />                                       
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -784,11 +784,10 @@
                                            string="Split in production lots"
                                            type="action" icon="gtk-justify-fill"
                                            states="draft,waiting,confirmed,assigned" />
-                                       <button
-                                           name="%(stock.move_scrap)d"
-                                           string="D" type="action"
-                                           icon="gtk-convert"
-                                           states="draft,waiting,confirmed,assigned" />
+                                       <button name="%(stock.move_scrap)d"
+				                    	string="Scrap Products" type="action"
+				                    	icon="gtk-convert" context="{'scrap': True}"
+				                    	states="draft,waiting,confirmed,assigned" />
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -1167,11 +1166,10 @@
                                            string="Split in production lots"
                                            type="action" icon="gtk-justify-fill"
                                            states="draft,waiting,confirmed,assigned" />
-                                       <button
-                                           name="%(stock.move_scrap)d"
-                                           string="D" type="action"
-                                           icon="gtk-convert"
-                                           states="done,cancel" />
+                                       <button name="%(stock.move_scrap)d"
+				                    	string="Scrap Products" type="action"
+				                    	icon="gtk-convert" context="{'scrap': True}"
+				                    	states="draft,waiting,confirmed,assigned" />
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
