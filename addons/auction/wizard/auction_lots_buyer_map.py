@@ -108,7 +108,6 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
         lots_obj = self.pool.get('auction.lots')
         if record_ids:
             for lots in lots_obj.browse(cr, uid, record_ids):
-                print "lotslotslotslots",lots
                 if lots.ach_uid:
                     res['arch'] = """
                             <form title="Mapping Result">
