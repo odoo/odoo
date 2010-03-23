@@ -182,8 +182,7 @@ class email_parser(object):
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
                 e = '\n\nThe Specified user does not have an access to the CRM case.'
             print e
-        attachments = message['attachment']
-
+        attachments = message['attachment']        
         for attach in attachments or []:
             data_attach = {
                 'name': str(attach), 
@@ -266,7 +265,7 @@ class email_parser(object):
         data = {
 #            'description': body['body'],
         }
-        act = 'case_pending'
+        act = 'case_open'
         if 'state' in actions:
             if actions['state'] in ['draft', 'close', 'cancel', 'open', 'pending']:
                 act = 'case_' + actions['state']
@@ -291,6 +290,17 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
+        attachments = body['attachment']        
+        for attach in attachments or []:
+            data_attach = {
+                'name': str(attach), 
+                'datas': binascii.b2a_base64(str(attachments[attach])), 
+                'datas_fname': str(attach), 
+                'description': 'Mail attachment', 
+                'res_model': self.model, 
+                'res_id': id
+            }
+            self.rpc('ir.attachment', 'create', data_attach)
         self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], body['body'])
         return id
 
@@ -323,6 +333,17 @@ class email_parser(object):
         #    'description':body, 
         #}
         #self.rpc(self.model, 'write', [id], data)
+        attachments = message['attachment']        
+        for attach in attachments or []:
+            data_attach = {
+                'name': str(attach), 
+                'datas': binascii.b2a_base64(str(attachments[attach])), 
+                'datas_fname': str(attach), 
+                'description': 'Mail attachment', 
+                'res_model': self.model, 
+                'res_id': id
+            }
+            self.rpc('ir.attachment', 'create', data_attach)
         self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
         return id
 

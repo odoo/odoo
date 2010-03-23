@@ -227,8 +227,10 @@ class lead2opportunity(partner_create):
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
         lead_case_obj = pool.get('crm.lead')
-        opportunity_case_obj = pool.get('crm.opportunity')        
-        for lead in lead_case_obj.browse(cr, uid, data['ids']):
+        history_obj = pool.get('crm.case.history')
+        opportunity_case_obj = pool.get('crm.opportunity')
+        model_obj = pool.get('ir.model')        
+        for lead in lead_case_obj.browse(cr, uid, data['ids']):             
             new_opportunity_id = opportunity_case_obj.create(cr, uid, {            
                 'name': data['form']['name'],
                 'planned_revenue': data['form']['planned_revenue'],
@@ -240,11 +242,15 @@ class lead2opportunity(partner_create):
                 'partner_address_id':lead.partner_address_id.id, 
                 'priority': lead.priority,
                 'phone': lead.phone,                
-                'email_from': lead.email_from
+                'email_from': lead.email_from,                
             })       
             
             new_opportunity = opportunity_case_obj.browse(cr, uid, new_opportunity_id)
-            
+            model_ids = model_obj.search(cr, uid, [('model','=','crm.opportunity')])
+
+            for his_id in lead.history_line:
+                history_ids = history_obj.copy(cr, uid, his_id.id, {'model_id' : model_ids[0], 'res_id':new_opportunity})    
+
             vals = {
                 'partner_id': data['form']['partner_id'],                
                 }
@@ -332,6 +338,8 @@ class crm_lead2opportunity(osv.osv_memory):
             lead_obj = self.pool.get('crm.lead')
             opp_obj = self. pool.get('crm.opportunity')
             data_obj = self.pool.get('ir.model.data')
+            history_obj = pool.get('crm.case.history')
+            model_obj = pool.get('ir.model')
 
             # Get Opportunity views
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
@@ -344,6 +352,8 @@ class crm_lead2opportunity(osv.osv_memory):
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
             lead = lead_obj.browse(cr, uid, record_id, context=context)
+            model_ids = model_obj.search(cr, uid, [('model','=','crm.opportunity')])
+
 
             for this in self.browse(cr, uid, ids, context=context):
                 new_opportunity_id = opp_obj.create(cr, uid, {
@@ -370,6 +380,13 @@ class crm_lead2opportunity(osv.osv_memory):
 
                 lead_obj.write(cr, uid, [lead.id], vals)
                 lead_obj.case_close(cr, uid, [lead.id])
+                
+                # Copy lead history to opportunity
+                for his_id in lead.history_line:
+                    history_ids = history_obj.copy(cr, uid, his_id.id, \
+                                                {'model_id': model_ids[0], \
+                                                'res_id': new_opportunity_id})
+
                 opp_obj.case_open(cr, uid, [new_opportunity_id])
 
             value = {
