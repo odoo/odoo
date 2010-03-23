@@ -42,11 +42,11 @@
                     <field name="priority"/>
                     <field name="date_deadline"/>
                     <button
-                            name="%(wizard_crm_lead_opportunity_set)d"
+                            name="convert_opportunity"
                             string="Convert"
                             help="Convert into Opportunity"
-                            icon="gtk-index"
-                            type="action"
+                            icon="gtk-index"   
+                            type="object"                         
                             attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                     <newline />
                     <field name="section_id" colspan="1"
