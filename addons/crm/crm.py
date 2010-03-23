@@ -51,6 +51,7 @@ icon_lst = {
     'calendar': 'STOCK_SELECT_COLOR'
 }
 
+
 class crm_case_section(osv.osv):
     """ Cases Section"""
 
@@ -104,8 +105,7 @@ class crm_case_section(osv.osv):
     ]
 
     def name_get(self, cr, uid, ids, context={}):
-
-        """Overrides orm
+        """Overrides orm name_get method
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -125,6 +125,7 @@ class crm_case_section(osv.osv):
         return res
 crm_case_section()
 
+
 class crm_case_categ(osv.osv):
     """ Category of Case """
 
@@ -136,6 +137,7 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
+    
     def _find_object_id(self, cr, uid, context=None):
 
         """
@@ -148,11 +150,13 @@ class crm_case_categ(osv.osv):
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
         return ids and ids[0]
-    _defaults = {
+        
+    _defaults = {        
         'object_id' : _find_object_id
     }
 #
 crm_case_categ()
+
 
 class crm_case_resource_type(osv.osv):
     """ Resource Type of case """
@@ -166,8 +170,8 @@ class crm_case_resource_type(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
+    
     def _find_object_id(self, cr, uid, context=None):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -206,6 +210,7 @@ class crm_case_stage(osv.osv):
                          help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements')
     }
+    
     def _find_object_id(self, cr, uid, context=None):
 
         """
@@ -228,7 +233,6 @@ class crm_case_stage(osv.osv):
 crm_case_stage()
 
 def _links_get(self, cr, uid, context={}):
-
     """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -296,6 +300,7 @@ class crm_case(osv.osv):
         result = {}
         history_obj = False
         model_obj = self.pool.get('ir.model')
+
         if 'history_line' in field_names:
             history_obj = self.pool.get('crm.case.history')
             name = 'history_line'
@@ -315,6 +320,7 @@ class crm_case(osv.osv):
                 result[case.id] = {name: history_ids}
             else:
                 result[case.id] = {name: []}
+
         return result
 
     _columns = {
@@ -354,6 +360,7 @@ class crm_case(osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
+    
     def _get_default_partner_address(self, cr, uid, context):
 
         """
@@ -400,7 +407,6 @@ class crm_case(osv.osv):
         return user.address_id.email
 
     def _get_default_user(self, cr, uid, context):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -413,7 +419,6 @@ class crm_case(osv.osv):
         return uid
 
     def _get_section(self, cr, uid, context):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -435,6 +440,7 @@ class crm_case(osv.osv):
         'section_id': _get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
     }
+
     _order = 'date_deadline desc, create_date desc,id desc'
 
     def unlink(self, cr, uid, ids, context={}):
@@ -453,7 +459,6 @@ class crm_case(osv.osv):
         return super(crm_case, self).unlink(cr, uid, ids, context)
 
     def stage_next(self, cr, uid, ids, context={}):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -471,7 +476,6 @@ class crm_case(osv.osv):
         return True
 
     def get_stage_dict(self, cr, uid, ids, context={}):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -491,7 +495,6 @@ class crm_case(osv.osv):
         return s
 
     def stage_previous(self, cr, uid, ids, context={}):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -511,7 +514,6 @@ class crm_case(osv.osv):
         return True
 
     def onchange_case_id(self, cr, uid, ids, case_id, name, partner_id, context={}):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -538,7 +540,6 @@ class crm_case(osv.osv):
         return {'value': value}
 
     def history(self, cr, uid, ids, keyword, history=False, email=False, details=None, context={}):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -552,7 +553,6 @@ class crm_case(osv.osv):
                                context=context)
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -660,9 +660,9 @@ class crm_case(osv.osv):
         self.__history(cr, uid, cases, _('Send'), history=True, email=False)
         for case in cases:
             self.write(cr, uid, [case.id], {
-                'description': False,
-                'som': False,
-                'canal_id': False,
+                'description': False, 
+                'som': False, 
+                'canal_id': False, 
                 })
             emails = [case.email_from] + (case.email_cc or '').split(',')
             emails = filter(None, emails)
@@ -676,11 +676,11 @@ class crm_case(osv.osv):
                         _("No E-Mail ID Found for your Company address!"))
 
             tools.email_send(
-                emailfrom,
-                emails,
-                '[' + str(case.id) + '] ' + case.name,
-                self.format_body(body),
-                reply_to = case.section_id.reply_to,
+                emailfrom, 
+                emails, 
+                '[' + str(case.id) + '] ' + case.name, 
+                self.format_body(body), 
+                reply_to = case.section_id.reply_to, 
                 openobject_id = str(case.id)
             )
         return True
@@ -846,14 +846,14 @@ class crm_case_log(osv.osv):
 
     _order = "id desc"
     _columns = {
-        'name': fields.char('Status', size=64),
-        'som': fields.many2one('res.partner.som', 'State of Mind'),
-        'date': fields.datetime('Date'),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel'),
-        'section_id': fields.many2one('crm.case.section', 'Section'),
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'model_id': fields.many2one('ir.model', "Model"),
-        'res_id': fields.integer('Resource ID'),
+        'name': fields.char('Status', size=64), 
+        'som': fields.many2one('res.partner.som', 'State of Mind'), 
+        'date': fields.datetime('Date'), 
+        'canal_id': fields.many2one('res.partner.canal', 'Channel'), 
+        'section_id': fields.many2one('crm.case.section', 'Section'), 
+        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
+        'model_id': fields.many2one('ir.model', "Model"), 
+        'res_id': fields.integer('Resource ID'), 
     }
 
     _defaults = {
@@ -886,11 +886,11 @@ class crm_case_history(osv.osv):
         return res
 
     _columns = {
-        'description': fields.text('Description'),
-        'note': fields.function(_note_get, method=True, string="Description", type="text"),
-        'email': fields.char('Email', size=84),
+        'description': fields.text('Description'), 
+        'note': fields.function(_note_get, method=True, string="Description", type="text"), 
+        'email': fields.char('Email', size=84), 
         'email_from' : fields.char('From Email', size=84),
-        'log_id': fields.many2one('crm.case.log', 'Log', ondelete='cascade'),
+        'log_id': fields.many2one('crm.case.log', 'Log', ondelete='cascade'), 
     }
 
 crm_case_history()
