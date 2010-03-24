@@ -1085,7 +1085,7 @@ class orm_template(object):
             context = {}
         result = False
         fields = {}
-        childs = True
+        children = True
 
         if node.tag == 'field':
             if node.get('name'):
@@ -1100,7 +1100,7 @@ class orm_template(object):
 
                 if column:
                     relation = column._obj
-                    childs = False
+                    children = False
                     views = {}
                     for f in node:
                         if f.tag in ('form', 'tree', 'graph'):
@@ -1159,7 +1159,7 @@ class orm_template(object):
                 if trans:
                     node.set('sum', trans)
 
-        if childs:
+        if children:
             for f in node:
                 fields.update(self.__view_look_dom(cr, user, f, view_id, context))
 
@@ -1966,8 +1966,8 @@ class orm(orm_template):
                 where += ' order by '+self._parent_order
             cr.execute('SELECT id FROM '+self._table+' WHERE '+where)
             pos2 = pos + 1
-            childs = cr.fetchall()
-            for id in childs:
+            children = cr.fetchall()
+            for id in children:
                 pos2 = browse_rec(id[0], pos2)
             cr.execute('update '+self._table+' set parent_left=%s, parent_right=%s where id=%s', (pos,pos2,root))
             return pos2+1

@@ -253,7 +253,7 @@ class document(object):
                             for el_cld in node:
                                 self.parse_node(el_cld, el, v)
             else:
-                # if there is no "type" attribute in the node, copy it to the xml data and parse its childs
+                # if there is no "type" attribute in the node, copy it to the xml data and parse its children
                 if not node.tag == etree.Comment:
                     if node.tag == parent.tag:
                         el = parent
