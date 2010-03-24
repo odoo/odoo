@@ -19,32 +19,27 @@
 #
 ##############################################################################
 
-
 {
     "name" : "Basic Calendar Functionality", 
     "version" : "1.0", 
-    "depends" : [
-                    "base", 
-                ], 
-     'description': """
- Full featured calendar system that support:
-  - Alerts (create requests)
-  - Recurring events (*)
-  - Invitations to others people
-""", 
+    "depends" : ["base"], 
+    'description': """Full featured calendar system that support:
+    - Alerts (create requests)
+    - Recurring events (*)
+    - Invitations to others people""", 
     "author" : "Tiny", 
     'category': 'Generic Modules/Others', 
     'website': 'http://www.openerp.com', 
     "init_xml" : [
-                   'base_calendar_data.xml'
-                   ], 
+        'base_calendar_data.xml'
+    ], 
     "demo_xml" : [], 
     "update_xml" : [
-                    'security/ir.model.access.csv',
-                    'wizard/calendar_event_edit_all_view.xml', 
-                    'wizard/base_calendar_invite_attendee_view.xml', 
-                    'base_calendar_view.xml'
-                    ], 
+        'security/ir.model.access.csv',
+        'wizard/calendar_event_edit_all_view.xml', 
+        'wizard/base_calendar_invite_attendee_view.xml', 
+        'base_calendar_view.xml'
+    ], 
     "installable" : True, 
     "active" : False, 
 }

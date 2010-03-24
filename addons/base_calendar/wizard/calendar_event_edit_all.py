@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
+from osv import fields
 
 class calendar_event_edit_all(osv.osv_memory):
     
@@ -73,17 +74,16 @@ class calendar_event_edit_all(osv.osv_memory):
     _name = "calendar.event.edit.all"
     _description = "Calendar Edit all event"
     _columns = {
-              'name': fields.char('Title', size=64, required=True), 
-              'date': fields.datetime('Start Date', required=True), 
-              'date_deadline': fields.datetime('End Date', required=True), 
-              'location': fields.char('Location', size=124), 
-              'alarm_id': fields.many2one('res.alarm', 'Reminder'), 
-               }
+        'name': fields.char('Title', size=64, required=True), 
+        'date': fields.datetime('Start Date', required=True), 
+        'date_deadline': fields.datetime('End Date', required=True), 
+        'location': fields.char('Location', size=124), 
+        'alarm_id': fields.many2one('res.alarm', 'Reminder'), 
+    }
     _defaults = {
-                 'date': _default_values, 
-                 'date_deadline': _default_deadline
-             }
-    
+        'date': _default_values, 
+        'date_deadline': _default_deadline
+    }    
 calendar_event_edit_all()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -40,13 +40,12 @@ class base_calendar_invite_attendee(osv.osv_memory):
         'email': fields.char('Email', size=124), 
         'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel', 
                                   'invite_id', 'contact_id', 'Contacts'), 
-        'send_mail': fields.boolean('Send mail?', help='Check this if you want\
- to send an Email to Invited Person')
-              }
+        'send_mail': fields.boolean('Send mail?', help='Check this if you want to send an Email to Invited Person')
+    }
 
     _defaults = {
-                 'type': lambda *x: 'internal'
-                 }
+        'type': lambda *x: 'internal'
+    }
 
     def do_invite(self, cr, uid, ids, context=None):
         """
@@ -57,19 +56,22 @@ class base_calendar_invite_attendee(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return: Dictionary of {}.
         """
+        
         if not context:
             context = {}
+        
+        model = False
+        model_field = False
+        
+        context_id = context and context.get('active_id', False) or False
+        if not context or not context.get('model'):
+            return {}
+        else:
+            model = context.get('model')
+        model_field = context.get('attendee_field', False)
+            
         for datas in self.read(cr, uid, ids, context=context):
-            
-            model = False
-            model_field = False
-            context_id = context and context.get('active_id', False) or False
-            if not context or not context.get('model'):
-                return {}
-            else:
-                model = context.get('model')
-            model_field = context.get('attendee_field', False)
-            
+
             obj = self.pool.get(model)
             res_obj = obj.browse(cr, uid, context_id)
             type = datas.get('type')
