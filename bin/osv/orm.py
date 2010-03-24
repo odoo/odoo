@@ -1222,7 +1222,7 @@ class orm_template(object):
 
         for field in fields_def:
             if field == 'id':
-                # sometime, the view may containt the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
+                # sometime, the view may contain the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
                 fields['id'] = {'readonly': True, 'type': 'integer', 'string': 'ID'}
             elif field in fields:
                 fields[field].update(fields_def[field])
@@ -1232,7 +1232,7 @@ class orm_template(object):
                 model = res[0][1]
                 res.insert(0, ("Can't find field '%s' in the following view parts composing the view of object model '%s':" % (field, model), None))
                 msg = "\n * ".join([r[0] for r in res])
-                msg += "\n\nEither you wrongly customised this view, or some modules bringing those views are not compatible with your current data model"
+                msg += "\n\nEither you wrongly customized this view, or some modules bringing those views are not compatible with your current data model"
                 netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, msg)
                 raise except_orm('View error', msg)
         return arch, fields
