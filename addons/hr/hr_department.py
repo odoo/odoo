@@ -135,13 +135,13 @@ class res_users(osv.osv):
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)])
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'])
-                childs = map(lambda x: x['member_ids'], data_dept)
-                childs = tools.flatten(childs)
-                childs = obj_user.search(cr, uid, [('id','in',childs),('active','=',True)])
-                if manager_id in childs:
-                    childs.remove(manager_id)
+                children = map(lambda x: x['member_ids'], data_dept)
+                children = tools.flatten(children)
+                children = obj_user.search(cr, uid, [('id','in',children),('active','=',True)])
+                if manager_id in children:
+                    children.remove(manager_id)
 
-                child_ids.extend(tools.flatten(childs))
+                child_ids.extend(tools.flatten(children))
                 set = {}
                 map(set.__setitem__, child_ids, [])
                 child_ids =  set.keys()

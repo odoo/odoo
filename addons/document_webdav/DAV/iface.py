@@ -199,7 +199,7 @@ class dav_interface:
 
     To decide which approach is the best you have to decide if your application
     is able to generate errors inside a tree. E.g. a function which completely
-    fails on a tree if one of the tree's childs fail is not what we need. Then
+    fails on a tree if one of the tree's children fail is not what we need. Then
     2) would be your way of doing it.
     Actually usually 2) is the better solution and should only be replaced by
     1) if you really need it.

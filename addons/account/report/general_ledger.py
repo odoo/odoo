@@ -187,8 +187,8 @@ class general_ledger(rml_parse.rml_parse):
         ##
         #
         self.query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
-        if account and account.child_consol_ids: # add ids of consolidated childs also of selected account
-            ctx['consolidate_childs'] = True
+        if account and account.child_consol_ids: # add ids of consolidated children also of selected account
+            ctx['consolidate_children'] = True
             ctx['account_id'] = account.id
         ids_acc = self.pool.get('account.account').search(self.cr, self.uid,[('parent_id', 'child_of', [account.id])], context=ctx)
         for child_id in ids_acc:

@@ -255,8 +255,8 @@ class account_analytic_account(osv.osv):
         if not parent_id:
             return {}
         parent = self.read(cr, uid, [parent_id], ['partner_id','code'])[0]
-        childs = self.search(cr, uid, [('parent_id', '=', parent_id)])
-        numchild = len(childs)
+        children = self.search(cr, uid, [('parent_id', '=', parent_id)])
+        numchild = len(children)
         if parent['partner_id']:
             partner = parent['partner_id'][0]
         else:

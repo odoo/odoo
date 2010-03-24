@@ -131,7 +131,7 @@ class PROPFIND:
             re=self.mk_propname_response(self.__uri,pnames,doc)
             ms.appendChild(re)
 
-        for newuri in dc.get_childs(self.__uri):
+        for newuri in dc.get_children(self.__uri):
             pnames=dc.get_propnames(newuri)
             re=self.mk_propname_response(newuri,pnames,doc)
             ms.appendChild(re)
@@ -193,7 +193,7 @@ class PROPFIND:
             ms.appendChild(res)
 
 	    try:
-		for newuri in self.__dataclass.get_childs(self.__uri):
+		for newuri in self.__dataclass.get_children(self.__uri):
 			gp,bp=self.get_propvalues(newuri)
 			res=self.mk_prop_response(newuri,gp,bp,doc)
 			ms.appendChild(res)

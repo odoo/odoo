@@ -46,7 +46,7 @@ inventory_fields = {
         'relation':'stock.location',
         'required':True
     },
-    'recursive' : {'string':'Include all childs for the location', 'type':'boolean'}
+    'recursive' : {'string':'Include all children for the location', 'type':'boolean'}
 }
 
 

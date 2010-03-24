@@ -39,7 +39,7 @@ def deltree(dc,uri,exclude={}):
     
     # test here, if an element is a prefix of an uri which
     # generated an error before.
-    # note that we walk here from childs to parents, thus
+    # note that we walk here from children to parents, thus
     # we cannot delete a parent if a child made a problem.
     # (see example in 8.6.2.1)
     ok=1

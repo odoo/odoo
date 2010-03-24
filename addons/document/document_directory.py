@@ -242,7 +242,7 @@ class document_directory(osv.osv):
         oo2 = node.object2 and (node.object2._name, node.object2.id) or False
         return node
 
-    def ol_get_childs(self, cr, uid, uri, context={}):
+    def ol_get_children(self, cr, uid, uri, context={}):
         node = self.get_object(cr, uid, uri, context)
         if uri:
             children = node.children()

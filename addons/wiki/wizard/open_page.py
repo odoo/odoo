@@ -49,7 +49,7 @@ class wiz_open_page(wizard.interface):
             value['view_type'] = 'form'
             value['view_mode'] = 'tree,form'
         elif group.method == 'tree':
-            view_id = pool.get('ir.ui.view').search(cr, uid, [('name','=','wiki.wiki.tree.childs')])
+            view_id = pool.get('ir.ui.view').search(cr, uid, [('name','=','wiki.wiki.tree.children')])
             value['view_id'] = view_id
             value['domain'] = [('group_id','=',group.id),('parent_id','=',False)]
             value['view_type'] = 'tree'            

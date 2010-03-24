@@ -142,9 +142,9 @@ class tinydav_handler(dav_interface):
             cr.close()
         return self.db_name_list
 
-    def get_childs(self,uri):
+    def get_children(self,uri):
         """ return the child objects as self.baseuris for the given URI """
-        self.parent.log_message('get childs: %s' % uri)
+        self.parent.log_message('get children: %s' % uri)
         if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         
@@ -160,7 +160,7 @@ class tinydav_handler(dav_interface):
         else:
             fp = node.full_path()
             if fp and len(fp):
-                self.parent.log_message('childs: @%s' % fp)
+                self.parent.log_message('children: @%s' % fp)
                 fp = '/'.join(fp)
             else:
                 fp = None

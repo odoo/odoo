@@ -31,7 +31,7 @@ class accounting_report(report_sxw.rml_parse):
         self.ret_list = []
         self.localcontext.update({
             'time': time,
-            'childs':self.process
+            'children':self.process
         })
 
     def process(self,id,level=0):

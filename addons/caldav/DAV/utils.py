@@ -88,15 +88,15 @@ def create_treelist(dataclass,uri):
     while len(queue):
         element=queue[-1]
         if dataclass.is_collection(element):
-            childs=dataclass.get_childs(element)
+            children=dataclass.get_children(element)
         else:
-            childs=[]
-        if len(childs):
-            list=list+childs
+            children=[]
+        if len(children):
+            list=list+children
         # update queue
         del queue[-1]
-        if len(childs):
-            queue=queue+childs
+        if len(children):
+            queue=queue+children
     return list
 
 def is_prefix(uri1,uri2):

@@ -521,7 +521,7 @@ class abstracted_fs:
         """
             Renaming operation, the effect depends on the src:
             * A file: read, create and remove
-            * A directory: change the parent and reassign childs to ressource
+            * A directory: change the parent and reassign children to ressource
         """
         cr = False
         try:
@@ -544,7 +544,7 @@ class abstracted_fs:
                     'directory': [],
                     'attachment': []
                 }
-                # Compute all childs to set the new ressource ID                
+                # Compute all children to set the new ressource ID                
                 child_ids = [src]
                 while len(child_ids):
                     node = child_ids.pop(0)                    

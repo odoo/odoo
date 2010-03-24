@@ -51,7 +51,7 @@ class wizard_move_line_select(wizard.interface):
         if data['id']:
             acc_data = account_obj.browse(cr, uid, data['id']).child_consol_ids
             if acc_data:
-                result['context'].update({'consolidate_childs': True})
+                result['context'].update({'consolidate_children': True})
         result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
         return result
 

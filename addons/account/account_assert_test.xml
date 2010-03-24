@@ -6,8 +6,8 @@
         </assert>
 
 
-   <!--     <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its childs">
-        <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its childs">
+   <!--     <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its children">
+        <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its children">
             <test expr="not len(child_id) or (balance - sum([c.balance for c in child_id]) &lt;= 0.00001)"/>
         </assert>
 
