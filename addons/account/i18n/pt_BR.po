@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-04 15:48+0000\n"
-"Last-Translator: JCF <Unknown>\n"
+"PO-Revision-Date: 2010-03-24 00:57+0000\n"
+"Last-Translator: Pedro_Maschio <pedro.bicudo@tgtconsult.com.br>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-03-24 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -911,7 +911,7 @@ msgstr "Diário de Baixas"
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
 msgid "Amount Currency"
-msgstr ""
+msgstr "Moeda do valor"
 
 #. module: account
 #: field:account.chart.template,property_account_expense_categ:0
@@ -1415,7 +1415,7 @@ msgstr "Crédito do cliente"
 #. module: account
 #: field:account.invoice,tax_line:0
 msgid "Tax Lines"
-msgstr "Linhas de taxa"
+msgstr "Linhas de Impostos"
 
 #. module: account
 #: field:ir.sequence,fiscal_ids:0
@@ -1464,7 +1464,7 @@ msgstr "Exibir histórico"
 #. module: account
 #: wizard_field:account.third_party_ledger.report,init,date1:0
 msgid "        Start date"
-msgstr "        Data de inicío"
+msgstr "        Data de início"
 
 #. module: account
 #: wizard_field:account.account.balance.report,checktype,display_account:0
@@ -1475,13 +1475,13 @@ msgstr "Exibir contas "
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_reconcile_line
 msgid "Statement reconcile line"
-msgstr "Linha de procecimentos de conciliação"
+msgstr "Linha de reconciliação do Demonstrativo"
 
 #. module: account
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the income account"
-msgstr "Manter vazio para usar a conta da fatura"
+msgstr "Manter vazio para usar a conta de receita"
 
 #. module: account
 #: view:account.bank.statement.reconcile:0
@@ -1489,7 +1489,7 @@ msgstr "Manter vazio para usar a conta da fatura"
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
 msgid "Write-Off"
-msgstr "Amortização"
+msgstr "Baixa ou exclusão"
 
 #. module: account
 #: help:account.invoice,partner_bank:0
@@ -1543,7 +1543,7 @@ msgstr "Tel. :"
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
 msgid "Tax Code Amount"
-msgstr "Quantia de taxa"
+msgstr "Valor do Código do Imposto"
 
 #. module: account
 #: selection:account.account.type,sign:0
@@ -1566,7 +1566,7 @@ msgstr "Modelo de plano de contas"
 #. module: account
 #: field:account.invoice,move_id:0
 msgid "Invoice Movement"
-msgstr "Movimento da fatura"
+msgstr "Movimento de Faturas"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -1578,18 +1578,18 @@ msgstr "Gerar plano de contas de um modelo de plano"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "Legal Statements"
-msgstr "Procedimentos legais"
+msgstr "Demonstrativos Legais"
 
 #. module: account
 #: field:account.tax.code,parent_id:0
 #: field:account.tax.code.template,parent_id:0
 msgid "Parent Code"
-msgstr "Código pai"
+msgstr "Código da Conta-pai"
 
 #. module: account
 #: wizard_button:account.move.line.reconcile.select,init,open:0
 msgid "Open for reconciliation"
-msgstr "Abrir para conciliação"
+msgstr "Abrir para reconciliação"
 
 #. module: account
 #: model:account.journal,name:account.bilan_journal
@@ -1600,7 +1600,7 @@ msgstr "Diário de abertura"
 #: selection:account.tax,tax_group:0
 #: selection:account.tax.template,tax_group:0
 msgid "VAT"
-msgstr "Imposto"
+msgstr "VAT (imposto europeu)"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -1629,7 +1629,7 @@ msgstr "Código parceiro"
 #: selection:account.partner.balance.report,init,result_selection:0
 #: selection:account.third_party_ledger.report,init,result_selection:0
 msgid "Receivable and Payable Accounts"
-msgstr "Contas a receber e a pagar"
+msgstr "Contas a Pagar e Receber"
 
 #. module: account
 #: view:account.subscription:0
@@ -1643,7 +1643,7 @@ msgstr "Linhas de inscrição"
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "Purchase"
-msgstr "Compras"
+msgstr "Compra"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1674,12 +1674,12 @@ msgstr "Terceiros"
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Type Allowed (empty for no control)"
-msgstr "Tipo de contas permitidas (vazio para não controlar)"
+msgstr "Tipos de contas permitidas (vazio para não controlar)"
 
 #. module: account
 #: field:account.bank.statement,balance_start:0
 msgid "Starting Balance"
-msgstr "Iniciar balanço"
+msgstr "Saldo Inicial"
 
 #. module: account
 #: wizard_field:account.analytic.account.quantity_cost_ledger.report,init,journal:0
@@ -1697,7 +1697,7 @@ msgstr "Qtd máx:"
 #. module: account
 #: wizard_button:account.invoice.refund,init,refund:0
 msgid "Refund Invoice"
-msgstr "Reembolso da fatura"
+msgstr "Fatura de Devolução"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_period_tree
@@ -1734,7 +1734,7 @@ msgstr "Forçar período"
 #. module: account
 #: help:account.account.type,sequence:0
 msgid "Gives the sequence order when displaying a list of account types."
-msgstr "Dá a ordem da seqüência ao indicar uma lista de tipos de conta."
+msgstr "Dá a ordem sequencial ao mostrar uma lista de tipos de conta."
 
 #. module: account
 #: view:account.invoice:0
@@ -1765,7 +1765,7 @@ msgstr "Desfazer reconciliação de Lançamentos"
 #. module: account
 #: model:process.node,note:account.process_node_supplierdraftinvoices0
 msgid "Pre-generated invoice from control"
-msgstr "Fatura pré-gerada pelo controle"
+msgstr "Fatura pré-gerada do controle"
 
 #. module: account
 #: wizard_view:account.analytic.account.quantity_cost_ledger.report,init:0
@@ -1776,7 +1776,7 @@ msgstr "Custo Razão para um período"
 #: model:ir.actions.act_window,name:account.action_bank_statement_tree2
 #: model:ir.ui.menu,name:account.menu_bank_statement_tree2
 msgid "New Statement"
-msgstr "Novo procedimento"
+msgstr "Novo Demonstrativo"
 
 #. module: account
 #: wizard_field:account.analytic.account.chart,init,from_date:0
@@ -1788,7 +1788,7 @@ msgstr "De"
 #: model:process.node,note:account.process_node_reconciliation0
 #: model:process.node,note:account.process_node_supplierreconciliation0
 msgid "Reconciliation of entries from invoice(s) and payment(s)"
-msgstr "Conciliação de entradas de fatura(s) e pagamento(s)"
+msgstr "Reconciliação dos lançamentos das fatura(s) e pagamento(s)"
 
 #. module: account
 #: wizard_view:account.central.journal.report,init:0
@@ -1820,7 +1820,7 @@ msgstr "Planos"
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 msgid "Sale"
-msgstr "vender"
+msgstr "Venda"
 
 #. module: account
 #: wizard_button:account.account.balance.report,account_selection,checktype:0
@@ -1834,7 +1834,7 @@ msgid ""
 "The fiscal position will determine taxes and the accounts used for the the "
 "partner."
 msgstr ""
-"A posição fiscal poderá determinar as taxas e as contas usadas para o "
+"A posição fiscal irá determinar os impostos e as contas usadas para o "
 "parceiro."
 
 #. module: account
@@ -1845,7 +1845,7 @@ msgstr "Data ou Código"
 #. module: account
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
-msgstr "Administrar contas"
+msgstr "Gerente de Contas"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -1856,7 +1856,7 @@ msgstr "para:"
 #: wizard_field:account.move.line.reconcile,init_full,debit:0
 #: wizard_field:account.move.line.reconcile,init_partial,debit:0
 msgid "Debit amount"
-msgstr "Quantia de débito"
+msgstr "Valor do débito"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -1904,18 +1904,18 @@ msgstr "Tipo"
 #. module: account
 #: view:account.journal:0
 msgid "Accounts Allowed (empty for no control)"
-msgstr "Contas permitidas(Vazio para não controlar)"
+msgstr "Contas permitidas (Vazio para não controlar)"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Untaxed amount"
-msgstr "Quantia não taxada"
+msgstr "Valor não tributado"
 
 #. module: account
 #: field:account.tax,account_collected_id:0
 #: field:account.tax.template,account_collected_id:0
 msgid "Invoice Tax Account"
-msgstr "Conta de taxa da fatura"
+msgstr "Conta de Impostos da Fatura"
 
 #. module: account
 #: view:account.move.line:0
@@ -1937,7 +1937,7 @@ msgstr "Erro: Número Bvr Inválido (erro dígito verificador)."
 #: model:ir.actions.act_window,name:account.action_invoice_tree5
 #: model:ir.ui.menu,name:account.menu_invoice_draft
 msgid "Draft Customer Invoices"
-msgstr "Esboço de faturas de clientes"
+msgstr "Fatura de Clientes Provisória"
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -2006,7 +2006,7 @@ msgstr "Este nome será exibido nos relatórios"
 #: rml:account.analytic.account.cost_ledger:0
 #: rml:account.analytic.account.quantity_cost_ledger:0
 msgid "Printing date"
-msgstr "Imprimindo data"
+msgstr "Data de impressão"
 
 #. module: account
 #: constraint:ir.ui.view:0
@@ -2161,7 +2161,7 @@ msgstr "Conciliar pagamento"
 #: model:ir.actions.act_window,name:account.action_bank_statement_reconciliation_form
 #: model:ir.ui.menu,name:account.menu_action_account_bank_reconcile_tree
 msgid "Statements reconciliation"
-msgstr "Procedimento de conciliação"
+msgstr "Reconciliação dos Demonstrativos"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -2198,7 +2198,7 @@ msgstr "Quantia"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
 msgid "Reconciled entries"
-msgstr "Lançamentos conciliados"
+msgstr "Lançamentos reconciliados"
 
 #. module: account
 #: field:account.invoice,address_contact_id:0
@@ -2219,7 +2219,7 @@ msgstr "(Mantenha vazio para usar o período atual)"
 #: model:ir.actions.act_window,name:account.action_invoice_tree8
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree8
 msgid "Draft Supplier Invoices"
-msgstr "Esboço de faturas de fornecedores"
+msgstr "Fatura Provisória de Fornecedores"
 
 #. module: account
 #: wizard_field:account.invoice.refund,init,period:0
@@ -2276,7 +2276,7 @@ msgstr "x Conferências diárias"
 #: model:ir.actions.wizard,name:account.wizard_generate_subscription
 #: model:ir.ui.menu,name:account.menu_generate_subscription
 msgid "Create subscription entries"
-msgstr "Crie entradas da subscrição"
+msgstr "Criar lançamentos de inscrição"
 
 #. module: account
 #: wizard_field:account.fiscalyear.close,init,journal_id:0
@@ -2286,7 +2286,7 @@ msgstr "Diário de Abertura de Lançamentos"
 #. module: account
 #: view:account.config.wizard:0
 msgid "Create a Fiscal Year"
-msgstr "Criar ano fiscal"
+msgstr "Criar um ano fiscal"
 
 #. module: account
 #: field:product.template,taxes_id:0
@@ -2369,7 +2369,7 @@ msgstr "Tipo de taxa"
 #. module: account
 #: model:process.transition,name:account.process_transition_statemententries0
 msgid "Statement Entries"
-msgstr "Procedimentos para lançamentos"
+msgstr "Lançamentos do Demonstrativo"
 
 #. module: account
 #: field:account.analytic.line,user_id:0
@@ -2381,7 +2381,7 @@ msgstr "Usuário"
 #: model:ir.actions.act_window,name:account.action_account_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_template_form
 msgid "Account Templates"
-msgstr "Modelos de contas"
+msgstr "Modelos de conta"
 
 #. module: account
 #: view:account.chart.template:0
@@ -2523,7 +2523,7 @@ msgstr "Informação adicional"
 #: model:process.transition,name:account.process_transition_entriesreconcile0
 #: model:process.transition,name:account.process_transition_supplierentriesreconcile0
 msgid "Entries Reconcile"
-msgstr "Conciliar lançamentos"
+msgstr "Reconciliar lançamentos"
 
 #. module: account
 #: help:account.bank.statement.reconcile,total_second_amount:0
@@ -2879,7 +2879,7 @@ msgstr "ID do parceiro"
 #: wizard_view:account.invoice.pay,addendum:0
 #: wizard_view:account.move.line.reconcile,addendum:0
 msgid "Write-Off Move"
-msgstr "Mover amortização"
+msgstr "Movimentação de Baixa ou Exclusão"
 
 #. module: account
 #: view:account.move.line:0
@@ -2927,7 +2927,7 @@ msgstr "Abrir estado"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Created Entries"
-msgstr "Saltar o estado 'Esboço' para criar novas entradas"
+msgstr "Pular a forma 'Provisório' para lançamentos criados"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -2963,12 +2963,12 @@ msgstr "1cm 27.7cm 20cm 27.7cm"
 #: model:ir.actions.act_window,name:account.action_invoice_tree12
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree12
 msgid "Draft Supplier Refunds"
-msgstr "Esboço de reembolso a fornecedor"
+msgstr "Reembolso a Fornecedores Provisório"
 
 #. module: account
 #: model:process.node,name:account.process_node_accountingstatemententries0
 msgid "Accounting Statement"
-msgstr "Procedimento para contas"
+msgstr "Demonstrativo de Contas"
 
 #. module: account
 #: rml:account.overdue:0
@@ -2997,7 +2997,7 @@ msgstr "Transações não conciliadas"
 #: model:process.transition,note:account.process_transition_paymentorderbank0
 #: model:process.transition,note:account.process_transition_paymentorderreconcilation0
 msgid "Reconcilation of entries from payment order."
-msgstr "Conciliação de lançamentos para ordem de pagamento"
+msgstr "Reconciliação de lançamentos da ordem de pagamento"
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
@@ -3050,7 +3050,7 @@ msgstr "Taxa de moedas correntes de partida"
 #: model:ir.actions.act_window,name:account.action_invoice_tree10
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree10
 msgid "Draft Customer Refunds"
-msgstr "Esboço de reembolso a cliente"
+msgstr "Reembolso a Clientes Provisório"
 
 #. module: account
 #: field:account.journal.column,readonly:0
@@ -3127,12 +3127,12 @@ msgstr "Diário analítico"
 #. module: account
 #: rml:account.general.ledger:0
 msgid "Entry Label"
-msgstr "Etiqueta de lançamento"
+msgstr "Aba de lançamento"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
 msgid "Reconcilate the entries from payment"
-msgstr "Conciliação de lançamentos de pagamento"
+msgstr "Reconciliar os lançamentos do pagamento"
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -3144,7 +3144,7 @@ msgstr "("
 #: view:account.period:0
 #: view:account.subscription:0
 msgid "Set to Draft"
-msgstr "Definir como esboço"
+msgstr "Definir como Provisório"
 
 #. module: account
 #: help:account.invoice,origin:0
@@ -3279,7 +3279,7 @@ msgstr "Taxa média"
 #: model:process.node,note:account.process_node_bankstatement0
 #: model:process.node,note:account.process_node_supplierbankstatement0
 msgid "Statement encoding produces payment entries"
-msgstr "Codificação de procedimentos de lançamentos de pagamento"
+msgstr "Codificação de demonstrativos para lançamentos de pagamento"
 
 #. module: account
 #: field:account.account,code:0
@@ -3321,7 +3321,7 @@ msgstr "Gerar Lançamentos Iniciais de Abertura do Ano Fiscal"
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_reconcile
 msgid "Reconcile Entries"
-msgstr "Conciliar lançamentos"
+msgstr "Reconciliar lançamentos"
 
 #. module: account
 #: wizard_view:account.wizard_paid_open,init:0
@@ -3460,7 +3460,7 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:0
 msgid "Real Entries"
-msgstr "Lançamento real"
+msgstr "Lançamentos Reais"
 
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
@@ -3518,7 +3518,7 @@ msgstr ""
 #: field:account.tax,parent_id:0
 #: field:account.tax.template,parent_id:0
 msgid "Parent Tax Account"
-msgstr "Conta pai da taxa"
+msgstr "Conta-pai de Impostos"
 
 #. module: account
 #: field:account.account,user_type:0
@@ -3649,7 +3649,7 @@ msgstr "Linha do projeto"
 #. module: account
 #: wizard_field:account.automatic.reconcile,init,max_amount:0
 msgid "Maximum write-off amount"
-msgstr "Monante máximo de amortização"
+msgstr "Valor máximo da Baixa ou Exclusão"
 
 #. module: account
 #: field:account.invoice.tax,manual:0
@@ -3732,7 +3732,7 @@ msgstr "Definir ano fiscal e selecionar plano de contas"
 #. module: account
 #: wizard_field:account.move.line.reconcile,addendum,period_id:0
 msgid "Write-Off Period"
-msgstr "Amortização do período"
+msgstr "Período de Baixa ou Exclusão"
 
 #. module: account
 #: selection:account.config.wizard,period:0
@@ -3756,7 +3756,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Term Line"
-msgstr "Linha do termo de pagamento"
+msgstr "Linha da forma de pagamento"
 
 #. module: account
 #: selection:account.config.wizard,period:0
@@ -3789,7 +3789,7 @@ msgstr "Por data"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_config_wizard_form
 msgid "Account Configure Wizard "
-msgstr "Assistente de configurção de conga "
+msgstr "Assistente de configuração de conta "
 
 #. module: account
 #: field:account.config.wizard,date1:0
@@ -3813,7 +3813,7 @@ msgstr "Todos lançamentos"
 #: model:process.node,name:account.process_node_draftinvoices0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
 msgid "Draft Invoices"
-msgstr "Esboço de faturas"
+msgstr "Faturas Provisórias"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
@@ -3909,7 +3909,7 @@ msgstr "Outro"
 #: model:ir.actions.wizard,name:account.wizard_general_ledger_report
 #: model:ir.ui.menu,name:account.menu_general_ledger
 msgid "General Ledger"
-msgstr "Ficha geral"
+msgstr "Livro Razão"
 
 #. module: account
 #: field:account.journal.view,columns_id:0
@@ -3938,7 +3938,7 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_manually0
 msgid "Encode manually the statement"
-msgstr "Codifique manualmente o procedimento"
+msgstr "Codifique manualmente o demonstrativo"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -4152,7 +4152,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
-msgstr "Faturas de clients"
+msgstr "Faturas de Clientes"
 
 #. module: account
 #: field:res.partner,debit_limit:0
@@ -4502,7 +4502,7 @@ msgstr "Linha Modelo de lançamento"
 #. module: account
 #: view:account.tax.template:0
 msgid "Account Tax Template"
-msgstr "Modelo de conta de taxa"
+msgstr "Modelo de conta de impostos"
 
 #. module: account
 #: help:account.model,name:0
@@ -4517,7 +4517,7 @@ msgstr "Abrir fatura"
 #. module: account
 #: model:process.node,note:account.process_node_draftstatement0
 msgid "Set starting and ending balance for control"
-msgstr "Definir início e fim para o controle do balanço"
+msgstr "Defina o saldo inicial e final para controle"
 
 #. module: account
 #: wizard_view:account.wizard_paid_open,init:0
@@ -4556,7 +4556,7 @@ msgstr "Estado"
 #: model:process.node,name:account.process_node_accountingentries0
 #: model:process.node,name:account.process_node_supplieraccountingentries0
 msgid "Accounting Entries"
-msgstr "Lançando contas"
+msgstr "Lançamentos Contábeis"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_unreconciled
@@ -4566,7 +4566,7 @@ msgstr "Receber & Pagar"
 #. module: account
 #: rml:account.general.ledger:0
 msgid "General Ledger -"
-msgstr "Ficha geral -"
+msgstr "Livro Razão -"
 
 #. module: account
 #: field:report.hr.timesheet.invoice.journal,quantity:0
@@ -4592,20 +4592,20 @@ msgstr "Total"
 #: model:process.transition,note:account.process_transition_customerinvoice0
 #: model:process.transition,note:account.process_transition_suppliercustomerinvoice0
 msgid "Number of entries are generated"
-msgstr "Numero de lançamentos a ser gerado"
+msgstr "Numero de lançamentos são gerados"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_suppliervalidentries0
 #: model:process.transition,name:account.process_transition_validentries0
 msgid "Valid Entries"
-msgstr "Validar lançamentos"
+msgstr "Lançamentos Válidos"
 
 #. module: account
 #: model:ir.actions.wizard,name:account.wizard_account_use_model
 #: model:ir.actions.wizard,name:account.wizard_line_account_use_model
 #: model:ir.ui.menu,name:account.menu_account_use_model
 msgid "Create Entries From Models"
-msgstr "Criar lançamentos de modelos"
+msgstr "Criar lançamentos dos modelos"
 
 #. module: account
 #: field:account.account.template,reconcile:0
@@ -4624,7 +4624,7 @@ msgstr "Por data"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "reembolsos do fornecedor"
+msgstr "Reembolsos de Fornecedor"
 
 #. module: account
 #: help:account.model.line,date:0
@@ -4737,7 +4737,7 @@ msgstr ""
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
 msgid "Draft statement"
-msgstr "Procedimento de esboço"
+msgstr "Demonstrativo provisório"
 
 #. module: account
 #: field:account.analytic.journal,name:0
@@ -4843,7 +4843,7 @@ msgstr "Cancelado"
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
 #: model:ir.ui.menu,name:account.menu_bank_statement_draft_tree
 msgid "Draft statements"
-msgstr "Esboço de procedimentos"
+msgstr "Demonstrativos provisórios"
 
 #. module: account
 #: wizard_field:populate_statement_from_inv,init,date:0
@@ -4959,7 +4959,7 @@ msgstr "Selecione a conta-pai"
 #. module: account
 #: field:account.account.template,parent_id:0
 msgid "Parent Account Template"
-msgstr "Modelo de conta pai"
+msgstr "Modelo de conta-pai"
 
 #. module: account
 #: help:account.tax,domain:0
@@ -5224,7 +5224,7 @@ msgstr "Modelo de codificação da conta de impostos"
 #. module: account
 #: view:account.subscription:0
 msgid "Subscription Periods"
-msgstr "Inscrever períodos"
+msgstr "Períodos de Inscrição"
 
 #. module: account
 #: model:process.node,name:account.process_node_manually0
@@ -5286,7 +5286,7 @@ msgstr "Taxa de troca"
 #: model:process.transition,note:account.process_transition_invoicemanually0
 msgid "Encode manually statement comes into the draft statement"
 msgstr ""
-"Codifique manualmente o procedimento dentro do procedimento de esboço"
+"O demonstrativo codificado manualmente entra no demonstrativo provisório"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_43
@@ -5359,7 +5359,7 @@ msgstr "Escolha diário e data de pagamento"
 #: selection:account.period,state:0
 #: selection:account.subscription,state:0
 msgid "Draft"
-msgstr "Esboço"
+msgstr "Provisório"
 
 #. module: account
 #: rml:account.overdue:0
@@ -5774,7 +5774,7 @@ msgstr "Contas financeiras"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Templates for Account Chart"
-msgstr "Modelo de plano de contas"
+msgstr "Modelos para plano de contas"
 
 #. module: account
 #: view:account.config.wizard:0
@@ -5912,7 +5912,7 @@ msgstr "Futuro"
 #: help:account.partner.balance.report,init,fiscalyear:0
 #: help:account.third_party_ledger.report,init,fiscalyear:0
 msgid "Keep empty for all open fiscal year"
-msgstr "Mantenha vazia para abrir todos os anos fiscais"
+msgstr "Mantenha vazia para todos os anos fiscais abertos"
 
 #. module: account
 #: rml:account.invoice:0
@@ -6072,4 +6072,4 @@ msgstr ""
 #. module: account
 #: wizard_button:account.subscription.generate,init,generate:0
 msgid "Compute Entry Dates"
-msgstr "Calcular datas de entrada"
+msgstr "Processar Datas de Lançamento"

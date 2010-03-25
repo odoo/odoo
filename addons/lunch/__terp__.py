@@ -22,6 +22,12 @@
 {
     "name": "Lunch Module",
     "author": "Tiny",
+    "Description": """
+    The lunch module is for keeping record of the order placing and payment of the orders.
+    The products are defined under categories and the payment records are maintained user wise
+    Every user has a cashbox which keeps track of the amount paid for a particular order.
+
+    """,
     "version": "0.1",
     "depends": ["base"],
     "category" : "Generic Modules/Others",

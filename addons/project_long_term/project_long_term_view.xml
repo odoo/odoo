@@ -48,7 +48,7 @@
                         <field name="responsible_id"/>
                         <field name="date_start"/>
                         <field name="date_end"/>
-                        <field name="duration"/>
+                        <field name="duration" widget="float_time"/>
                         <field name="product_uom"/>
                     </group>
                     <notebook colspan="4">
@@ -68,9 +68,9 @@
                             	<field name="state" select="1"/>
                             	<button string="Draft" name="set_draft" states="open" icon="gtk-indent"/>
                             	<button string="Start Phase" name="set_open" states="pending,draft" icon="gtk-execute"/>
-                                <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                                 <button string="Done" name="set_done" states="draft,pending,open" icon="gtk-jump-to"/>
                                 <button string="Pending" name="set_pending" states="open" icon="gtk-media-pause"/>
+								<button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Other Info">
@@ -83,10 +83,10 @@
                                 <separator string="Scheduling" colspan="2"/>
                                 <field name="sequence"/>
                             </group>
-                           <separator colspan="4" string="Next Phases"/>
-                           <field colspan="4" name="next_phase_ids" nolabel="1"/>
                            <separator colspan="4" string="Previous Phases"/>
                            <field colspan="4" name="previous_phase_ids" nolabel="1"/>
+                           <separator colspan="4" string="Next Phases"/>
+                           <field colspan="4" name="next_phase_ids" nolabel="1"/>
                         </page>
                         <page string="Task Detail">
                             <separator colspan="4" string="Project's Tasks"/>
@@ -149,9 +149,10 @@
                     <field name="project_id" on_change="onchange_project(project_id)"/>
                     <field name="responsible_id"/>
                     <field name="date_start"/>
-                    <field name="date_end"/>
+                    <!--<field name="date_end"/>
                     <field name="duration"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom"/>-->
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -190,17 +191,23 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group colspan="4" col="20">
+                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Phases" icon="terp-project" default="1"/>
+                        <filter string="In Progress" domain="[('state','=','open')]" help="Open Phases" icon="terp-project"/>
+                        <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-project"/>
 	                    <field name="name"/>
-	                    <field name="project_id" widget="selection"/>
-	                    <field name="responsible_id">
+	                    <field name="project_id" widget="selection">
+		                    <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
+						</field>
+	                    <field name="responsible_id" widget="selection">
                             <filter domain="[('responsible_id','=',uid)]" help="My Phase" icon="gtk-execute" default="1"/>
                         </field>
 	                    <field name="date_start"/>
-	                    <field name="date_end"/>
+	                    <!--<field name="date_end"/>-->
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
                         <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'responsible_id'}"/>
                         <filter string="Start Date" icon="terp-project" domain="[]" context="{'group_by':'date_start'}"/>
                     </group>
@@ -209,7 +216,7 @@
         </record>
 
         <record id="act_project_phase" model="ir.actions.act_window">
-            <field name="name">Project phases</field>
+            <field name="name">Project Phases</field>
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,gantt</field>

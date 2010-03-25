@@ -4,7 +4,7 @@
 
     	<!-- Search Views -->
 
-		<record id="view_resource_resource_search" model="ir.ui.view">
+	<record id="view_resource_resource_search" model="ir.ui.view">
             <field name="name">resource.resource.search</field>
             <field name="model">resource.resource</field>
             <field name="type">search</field>
@@ -13,14 +13,22 @@
                    <group col='15' colspan='4'>
                        <field name="name" string="Resource Name"/>
                        <field name="code" string="Code"/>
-                       <field name="user_id" string="User" widget="selection"/>
+                       <field name="user_id" string="User" widget="selection">
+	                       <filter domain="[('user_id','=',uid)]" help="My Resouces" icon="gtk-execute" default="1"/>
+	                   </field>
                        <field name="calendar_id" string="Working Calendar" widget="selection"/>
                        <field name="resource_type" string="Resource Type"/>
                        <field name="company_id" string="Company" widget="selection"/>
                    </group>
+                   <newline/>
+                   <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="Resouce Type" icon="terp-project" domain="[]" context="{'group_by':'resource_type'}"/>
+                        <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
+                    </group>
                </search>
             </field>
         </record>
+
 
        <record id="view_resource_calendar_search" model="ir.ui.view">
             <field name="name">resource.calendar.search</field>
@@ -49,10 +57,14 @@
                        <field name="calendar_id" string="Working Time" widget="selection"/>
                        <field name="resource_id" string="Resource" widget="selection"/>
                    </group>
+                   <newline/>
+                   <group expand="1" string="Group By..." colspan="4" col="20">
+                        <filter string="Resouce" icon="terp-project" domain="[]" context="{'group_by':'resource_id'}"/>
+                    </group>
                </search>
             </field>
         </record>
-     
+
         <record id="resource_calendar_form" model="ir.ui.view">
             <field name="name">resource.calendar.form</field>
             <field name="model">resource.calendar</field>

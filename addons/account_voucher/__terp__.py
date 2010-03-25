@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,20 +24,25 @@
     "version" : "1.0",
     "author" : 'Tiny & Axelor',
     "description": """
-    India Accounting module includes all the basic requirenment of 
-    Basic Accounting, like
-    * Bank Payment, Receipt
-    * Cash Payent, Receipt
+    India Accounting module includes all the basic requirenment of
+    Basic Accounting, plus new things which available are
+    * Indian Account Chart
+    * New Invoice - (Local, Retail)
+    * Invoice Report
+    * Tax structure
+    * Journals
+    * VAT Declaration report
+    * Accounting Periods
     """,
-    "category" : "Generic Modules/Indian Accounting",
+    "category" : "Generic Modules/Accounting",
     "website" : "http://tinyerp.com",
     "depends" : ["base", "account"],
     "init_xml" : [
     ],
-    
+
     "demo_xml" : [
     ],
-    
+
     "update_xml" : [
         "security/ir.model.access.csv",
         "voucher_sequence.xml",

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,8 +24,14 @@
     'name': 'Audit Trail',
     'version': '1.0',
     'category': 'Generic Modules/Others',
-    'description': """Allows the administrator to track every user operations on all objects of the system.
-    Subscribe Rules for read, write, create and delete on objects and check logs""",
+    'description': """
+    This module gives the administrator the right
+    to track every user operation on all the objects
+    of the system.
+
+    Administrator can subscribe rules for read,write and
+    delete on objects and can check logs.
+    """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
