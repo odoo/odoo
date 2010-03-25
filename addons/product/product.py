@@ -262,7 +262,7 @@ class product_template(osv.osv):
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Requisition Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the requisition request."),
         'rental': fields.boolean('Can be Rent'),
-        'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
+        'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Sale Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
         'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Account'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
         'volume': fields.float('Volume', help="The volume in m3."),
