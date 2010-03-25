@@ -53,13 +53,20 @@ class _rml_styles(object,):
     def __init__(self, nodes, localcontext):
         self.localcontext = localcontext
         self.styles = {}
+        self.styles_obj = {}
         self.names = {}
         self.table_styles = {}
+        self.default_style = reportlab.lib.styles.getSampleStyleSheet()
+
         for node in nodes:
             for style in node.findall('blockTableStyle'):
                 self.table_styles[style.get('id')] = self._table_style_get(style)
             for style in node.findall('paraStyle'):
-                self.styles[style.get('name')] = self._para_style_update(style)
+                sname = style.get('name')
+                self.styles[sname] = self._para_style_update(style)
+            
+                self.styles_obj[sname] = reportlab.lib.styles.ParagraphStyle(sname, self.default_style["Normal"], **self.styles[sname])
+
             for variable in node.findall('initialize'):
                 for name in variable.findall('name'):
                     self.names[ name.get('id')] = name.get('value')
@@ -127,17 +134,19 @@ class _rml_styles(object,):
 
     def para_style_get(self, node):
         style = False
-        if node.get('style'):
-            if node.get('style') in self.styles:
-                styles = reportlab.lib.styles.getSampleStyleSheet()
-                sname = node.get('style')
-                style = reportlab.lib.styles.ParagraphStyle(sname, styles["Normal"], **self.styles[sname])
+        sname = node.get('style')
+        if sname:
+            if sname in self.styles_obj:
+                style = self.styles_obj[sname]
             else:
                 sys.stderr.write('Warning: style not found, %s - setting default!\n' % (node.get('style'),) )
         if not style:
-            styles = reportlab.lib.styles.getSampleStyleSheet()
-            style = copy.deepcopy(styles['Normal'])
-        style.__dict__.update(self._para_style_update(node))
+            style = self.default_style['Normal']
+        para_update = self._para_style_update(node)
+        if para_update:
+            # update style only is necessary
+            style = copy.deepcopy(style)
+            style.__dict__.update(para_update)
         return style
 
 class _rml_doc(object):
