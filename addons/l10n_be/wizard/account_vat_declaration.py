@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,16 +15,15 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import wizard
 import time
 import datetime
-import pooler
 import base64
 
+import wizard
+import pooler
 from tools.translate import _
 
 form_fyear = """<?xml version="1.0"?>
@@ -54,30 +53,32 @@ fields = {
 class wizard_vat_declaration(wizard.interface):
 
     def _create_xml(self, cr, uid, data, context):
-        list_of_tags=['00','01','02','03','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','91']
         pool_obj = pooler.get_pool(cr.dbname)
-        #obj_company = pool_obj.get('res.company').browse(cr,uid,1)
-        obj_company = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id
+        obj_fyear = pool_obj.get('account.fiscalyear')
+        obj_tax_code = pool_obj.get('account.tax.code')
+        obj_user = pool_obj.get('res.users')
+        list_of_tags=['00','01','02','03','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','91']
+        obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         user_cmpny = obj_company.name
         vat_no=obj_company.partner_id.vat
         if not vat_no:
             raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
-        tax_ids = pool_obj.get('account.tax.code').search(cr,uid,[])
+        tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
         ctx['period_id'] = data['form']['period'] #added context here
-        tax_info = pool_obj.get('account.tax.code').read(cr,uid,tax_ids,['code','sum_period'],context=ctx)
+        tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
-        address=post_code=city=''
+        address = post_code = city = ''
         if not obj_company.partner_id.address:
-                address=post_code=city=''
+            address = post_code = city = ''
 
-        city, post_code, address = pooler.get_pool(cr.dbname).get('res.company')._get_default_ad(obj_company.partner_id.address)
+        city, post_code, address = pool_obj.get('res.company')._get_default_ad(obj_company.partner_id.address)
 
-        obj_fyear = pool_obj.get('account.fiscalyear')
+
         year_id = obj_fyear.find(cr, uid)
-        
-        account_period=pool_obj.get('account.period').browse(cr, uid, data['form']['period'])
+
+        account_period = pool_obj.get('account.period').browse(cr, uid, data['form']['period'], context=context)
         current_year = account_period.fiscalyear_id.name
         period_code = account_period.code
 
@@ -93,7 +94,7 @@ class wizard_vat_declaration(wizard.interface):
         starting_month = account_period.date_start[5:7]
         ending_month = account_period.date_stop[5:7]
         if starting_month != ending_month:
-            #starting month and ending month of selected period are not the same 
+            #starting month and ending month of selected period are not the same
             #it means that the accounting isn't based on periods of 1 month but on quarters
             quarter = str(((int(starting_month) - 1) / 3) + 1)
             data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
@@ -111,20 +112,20 @@ class wizard_vat_declaration(wizard.interface):
 
         data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
         data['form']['msg']='Save the File with '".xml"' extension.'
-        data['form']['file_save']=base64.encodestring(data_of_file)
+        data['form']['file_save'] = base64.encodestring(data_of_file)
         return data['form']
-
 
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':form_fyear, 'fields':fields_fyear, 'state':[('end','Cancel'),('go','Create XML')]},
+            'result': {'type': 'form', 'arch': form_fyear, 'fields':fields_fyear, 'state':[('end', 'Cancel'),('go', 'Create XML')]},
         },
         'go': {
             'actions': [_create_xml],
-            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Ok')]},
+            'result': {'type':'form', 'arch': form, 'fields': fields, 'state': [('end', 'Ok')]},
         }
     }
 
 wizard_vat_declaration('wizard.account.xml.vat.declaration')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
