@@ -22,6 +22,8 @@
 from mx.DateTime import now
 from osv import osv, fields
 from tools.translate import _
+
+
 class crm_lead2opportunity(osv.osv_memory):
     _name = 'crm.lead2opportunity'
     _description = 'Lead To Opportunity'
@@ -57,7 +59,7 @@ class crm_lead2opportunity(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        return self.action_apply(cr, uid, ids, context)
+        return self.action_skip(cr, uid, ids, context)
 
     def action_apply(self, cr, uid, ids, context=None):
         """
@@ -149,41 +151,6 @@ class crm_lead2opportunity(osv.osv_memory):
         
     }
     
-    def _select_partner(self, cr, uid, context=None):
-        """
-        This function Searches for Partner from selected lead.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : Partner id if any for selected lead.
-        """
-        if not context:
-            context = {}
-        
-        lead_obj = self.pool.get('crm.lead')
-        partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
-        rec_ids = context and context.get('active_ids', [])
-        partner_id = False
-
-        for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
-            partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
-            if not partner_ids and lead.email_from:
-                address_ids = contact_obj.search(cr, uid, [('email', '=', lead.email_from)])
-                if address_ids:
-                    addresses = contact_obj.browse(cr, uid, address_ids)
-                    partner_ids = addresses and [addresses[0].partner_id.id] or False
-            partner_id = partner_ids and partner_ids[0] or False
-        return partner_id
-    
-    _defaults = {
-        'action': lambda *a:'exist',
-        'partner_id': _select_partner
-        }
-    
     def action_skip(self, cr, uid, ids, context=None):
         """
         This skips partner creation
@@ -248,12 +215,29 @@ Leads Could not convert into Opportunity"))
         @return : default values of fields.
         """
         lead_obj = self.pool.get('crm.lead')
+        partner_obj = self.pool.get('res.partner')
+        contact_obj = self.pool.get('res.partner.address')
+        rec_ids = context and context.get('active_ids', [])
+        partner_id = False
+
         data = context and context.get('active_ids', []) or []
         res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
 
-        for lead in lead_obj.browse(cr, uid, data, []):
+        for lead in lead_obj.browse(cr, uid, data, context=context):
+            partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
+            if not partner_ids and lead.email_from:
+                address_ids = contact_obj.search(cr, uid, [('email', '=', lead.email_from)])
+                if address_ids:
+                    addresses = contact_obj.browse(cr, uid, address_ids)
+                    partner_ids = addresses and [addresses[0].partner_id.id] or False
+            partner_id = partner_ids and partner_ids[0] or False
+
             if 'name' in fields:
                 res.update({'name': lead.partner_name})
+            if 'partner_id' in fields:
+                res.update({'partner_id': partner_id})
+            if 'action' in fields:
+                res.update({'action': partner_id and 'exist' or 'create'})
         return res
 
 crm_lead2opportunity()

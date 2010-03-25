@@ -155,7 +155,7 @@ class crm_lead(osv.osv):
             'views': [(view_id, 'form')], 
             'type': 'ir.actions.act_window', 
             'target': 'new', 
-            'destroy': False
+            'nodestroy': True
         }
         return value
 
