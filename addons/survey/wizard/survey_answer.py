@@ -137,7 +137,7 @@ class survey_question_wiz(osv.osv_memory):
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '40', 'colspan': '4'})
                         record = sur_response_obj.browse(cr, uid, context['response_id'][context['response_no']])
                         etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr('Answer Of :- ' + record.user_id.name + ',  Date :- ' + record.date_create.split('.')[0]  )), 'align':"0.0"})
-                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(" Response :- " + str(context.get('response_no',0) + 1) +"/" + str(len(context.get('response_id',0))) )), 'align':"0.0"})
+                        etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(" Answer :- " + str(context.get('response_no',0) + 1) +"/" + str(len(context.get('response_id',0))) )), 'align':"0.0"})
                         if context.get('response_no',0) > 0:
                             etree.SubElement(xml_group, 'button', {'colspan':"1",'icon':"gtk-go-back",'name':"action_forward_previous",'string': tools.ustr("Previous Answer"),'type':"object"})
                         if context.get('response_no',0) + 1 < len(context.get('response_id',0)):
@@ -169,7 +169,7 @@ class survey_question_wiz(osv.osv_memory):
                             xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '2'})
                             etree.SubElement(xml_group, 'separator', {'string': star+to_xml(separator_string), 'colspan': '3'})
                             xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
-                            context.update({'question_id' : tools.ustr(que),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer, 'page_id' : p_id})
+                            context.update({'question_id' : tools.ustr(que.id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer, 'page_id' : p_id})
                             etree.SubElement(xml_group1, 'button', {'string' :'','icon': "gtk-edit", 'type' :'object', 'name':"action_edit_question", 'context' : tools.ustr(context)})
                             etree.SubElement(xml_group1, 'button', {'string' :'','icon': "gtk-delete", 'type' :'object','name':"action_delete_question", 'context' : tools.ustr(context)})
                         else:
