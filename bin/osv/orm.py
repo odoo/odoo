@@ -1869,6 +1869,8 @@ class orm(orm_template):
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count', 'exists']
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
+        groupby_list = groupby
+        groupby = groupby[0]
         context = context or {}
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
         if not fields:
@@ -1922,6 +1924,7 @@ class orm(orm_template):
 
         for d in data:
             d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
+            d['__context'] = {'group_by':groupby_list[1:]}
             if fget.has_key(groupby):
                 if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
