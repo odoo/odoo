@@ -25,23 +25,25 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Evaluations">
-                <filter icon="terp-hr"
-                    string="This Year"
-                    domain="[('year','=',time.strftime('%%Y'))]"
-                    help="Evaluations of the year"/>
-                <filter icon="terp-hr"
-                    string="This Month"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    help="Evaluations of this month"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-hr"
-                    string="Deadline"
-                    domain="[('deadline','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                <filter icon="terp-hr"
-                    string="Closed"
-                    domain="[('closed','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                <separator orientation="vertical"/>
-                <field name="employee_id"/>
+            	<group>
+	                <filter icon="terp-hr"
+		                    string="This Year"
+		                    domain="[('year','=',time.strftime('%%Y'))]"
+		                    help="Evaluations of the year"/>
+	                <filter icon="terp-hr"
+		                    string="This Month"
+		                    domain="[('month','=',time.strftime('%%m'))]"
+		                    help="Evaluations of this month"/>
+	                <separator orientation="vertical"/>
+	                <filter icon="terp-hr"
+		                    string="Deadline"
+		                    domain="[('deadline','=',time.strftime('%%Y/%%m/%%d'))]"/>
+	                <filter icon="terp-hr"
+		                    string="Closed"
+		                    domain="[('closed','=',time.strftime('%%Y/%%m/%%d'))]"/>
+	                <separator orientation="vertical"/>
+	                <field name="employee_id"/>
+                </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>

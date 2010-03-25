@@ -43,31 +43,32 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Expenses">
-                <filter icon="terp-hr"
-                    string="This Year"
-                    domain="[('year','=',time.strftime('%%Y'))]"
-                    help="Expenses of the year"/>
-                <filter icon="terp-hr"
-                    string="This Month"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    help="Expenses of this month"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-hr"
-                    string="Draft"
-                    domain="[('state','=','draft')]"/>
-                <filter icon="terp-hr"
-                    string="Expenses"
-                    default="1"
-                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancelled')]"/>
-                <separator orientation="vertical"/>
-                <field name="product_id"/>
-                <field name="user_id" widget="selection">
-                    <filter icon="terp-hr"
-                        string="My Expenses"
-                        domain="[('user_id','=',uid)]"/>
-                </field>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-
+            	<group>
+	                <filter icon="terp-hr"
+	                    	string="This Year"
+	                    	domain="[('year','=',time.strftime('%%Y'))]"
+	                    	help="Expenses of the year"/>
+	                <filter icon="terp-hr"
+		                    string="This Month"
+		                    domain="[('month','=',time.strftime('%%m'))]"
+		                    help="Expenses of this month"/>
+	                <separator orientation="vertical"/>
+	                <filter icon="terp-hr"
+		                    string="Draft"
+		                    domain="[('state','=','draft')]"/>
+	                <filter icon="terp-hr"
+		                    string="Expenses"
+		                    default="1"
+		                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancelled')]"/>
+	                <separator orientation="vertical"/>
+	                <field name="product_id"/>
+	                <field name="user_id" widget="selection">
+	                    <filter icon="terp-hr"
+		                        string="My Expenses"
+		                        domain="[('user_id','=',uid)]"/>
+	                </field>
+	                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+				</group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}"/>

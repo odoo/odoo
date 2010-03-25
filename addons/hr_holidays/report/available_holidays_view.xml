@@ -54,22 +54,24 @@
 	        <field name="type">search</field>
 	        <field name="arch" type="xml">
 	            <search string="Leaves">
-	                <filter icon="terp-hr"
-	                    string="This Year"
-	                    domain="[('year','=',time.strftime('%%Y'))]"
-	                    help="Leaves of the year"/>
-	                <filter icon="terp-hr"
-	                    string="This Month"
-	                    domain="[('month','=',time.strftime('%%m'))]"
-	                    help="Leaves of this month"/>
-	                <separator orientation="vertical"/>
-	                <field name="employee_id"/>
-	                <field name="user_id" widget="selection">
-	                    <filter icon="terp-sale"
-	                        string="My Leaves"
-	                        default="1"
-	                        domain="[('user_id','=',uid)]"/>
-	                </field>
+	            	<group>
+		                <filter icon="terp-hr"
+		                    	string="This Year"
+		                    	domain="[('year','=',time.strftime('%%Y'))]"
+		                    	help="Leaves of the year"/>
+		                <filter icon="terp-hr"
+		                    	string="This Month"
+		                    	domain="[('month','=',time.strftime('%%m'))]"
+		                    	help="Leaves of this month"/>
+		                <separator orientation="vertical"/>
+		                <field name="employee_id"/>
+		                <field name="user_id" widget="selection">
+		                    <filter icon="terp-sale"
+		                        	string="My Leaves"
+		                        	default="1"
+		                        	domain="[('user_id','=',uid)]"/>
+		                </field>
+	                </group>
 	                <newline/>
 	                <group expand="1" string="Group By..." colspan="10" col="12">
 	                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>

@@ -32,26 +32,26 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Analytic Accounts">
-                <filter icon="terp-account"
-                    string="This Year"
-                    domain="[('year','=',time.strftime('%%Y'))]"
-                    />
-                <filter icon="terp-account"
-                    string="This Month"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    />
-                <separator orientation="vertical"/>
-	            <filter string="Start" icon="terp-account" domain="[('date_start','=',time.strftime('%%Y/%%m/%%d'))]"/>
-         		<filter string="End" icon="terp-account" domain="[('date_end','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                <separator orientation="vertical"/>
-                <field name="name"/>
-                <field name="user_id" widget="selection">
-                    <filter icon="terp-account"
-                        string="My Accounts"
-                        default="1"
-                        domain="[('user_id','=',uid)]"/>
-                </field>
-                <field name="partner_id"/>
+            	<group>
+	                <filter icon="terp-account"
+	                    	string="This Year"
+	                    	domain="[('year','=',time.strftime('%%Y'))]"/>
+	                <filter icon="terp-account"
+	                    	string="This Month"
+	                    	domain="[('month','=',time.strftime('%%m'))]"/>
+	                <separator orientation="vertical"/>
+		            <filter string="Start" icon="terp-account" domain="[('date_start','=',time.strftime('%%Y/%%m/%%d'))]"/>
+	         		<filter string="End" icon="terp-account" domain="[('date_end','=',time.strftime('%%Y/%%m/%%d'))]"/>
+	                <separator orientation="vertical"/>
+	                <field name="name"/>
+	                <field name="user_id" widget="selection">
+	                    <filter icon="terp-account"
+	                        	string="My Accounts"
+	                        	default="1"
+	                        	domain="[('user_id','=',uid)]"/>
+	                </field>
+	                <field name="partner_id"/>
+                </group>
                 <newline/>
                 <group expand="1" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-account"
