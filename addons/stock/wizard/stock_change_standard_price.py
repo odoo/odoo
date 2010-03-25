@@ -184,22 +184,7 @@ class change_standard_price(osv.osv_memory):
             
         prod_obj.write(cr, uid, rec_id, {'standard_price': new_price})
 
-        id2 = data_obj._get_id(cr, uid, 'account', 'view_move_tree')
-        id3 = data_obj._get_id(cr, uid, 'account', 'view_move_form')
-        
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        
-        return {
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'account.move',
-                'res_id' : move_ids,
-                'views': [(id2,'tree'),(id3,'form')],
-                'type': 'ir.actions.act_window',
-        }
+        return {  }
 
 change_standard_price()
 
