@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,40 +15,29 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
-import pooler
+from osv import fields, osv
 
-def _event_registration(self, cr, uid, data, context):
-    event_id = data['id']
-    cr.execute('SELECT section_id FROM event_event WHERE id = %s', (event_id, ))
-    res = cr.fetchone()
-    value = {
-        'domain': [('section_id', '=', res[0])],
-        'name': 'Event registration',
-        'view_type': 'form',
-        'view_mode': 'tree,form',
-        'res_model': 'event.registration',
-        'context': { },
-        'type': 'ir.actions.act_window'
-    }
-    return value
+class event_registration_list(osv.osv_memory):
+    """ List Event Registration """
+    _name = "event.registration.list"
+    _description = "List Event Registrations"
 
-class wizard_event_registration(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {
-                'type': 'action',
-                'action': _event_registration,
-                'state': 'end'
-            }
-        },
-    }
-wizard_event_registration("wizard_event_registration")
+    def open_registration(self, cr, uid, ids, context={}):
+        cr.execute('SELECT section_id FROM event_event WHERE id = %s', (context['active_id'],))
+        res = cr.fetchone()
+        return {
+            'domain': [('section_id', '=', res[0])],
+            'name': 'Event Registrations',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'event.registration',
+            'type': 'ir.actions.act_window'
+        }
+
+event_registration_list()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

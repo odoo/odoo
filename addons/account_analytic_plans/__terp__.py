@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -51,6 +51,8 @@ Plan2:
 
 So when this line of invoice will be confirmed, it will generate 3 analytic lines,
 for one account entry.
+The analytic plan validates the minimum and maximum percentage at the time of creation
+of distribution models.
         """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -37,7 +37,8 @@ mail_fields = {
 }
 
 def email_send(cr, uid, ids, to_adr, description, context={}):
-    for task in pooler.get_pool(cr.dbname).get('project.task').browse(cr, uid, ids, context):
+    pool = pooler.get_pool(cr.dbname)
+    for task in pool.get('project.task').browse(cr, uid, ids, context=context):
         project = task.project_id
         subject = "Task '%s' closed" % task.name
         if task.user_id and task.user_id.address_id and task.user_id.address_id.email:
@@ -45,7 +46,6 @@ def email_send(cr, uid, ids, to_adr, description, context={}):
             signature = task.user_id.signature
         else:
             raise wizard.except_wizard(_('Error'), _("Couldn't send mail because your email address is not configured!"))
-
         if to_adr:
             val = {
                 'name': task.name,
@@ -75,8 +75,8 @@ class wizard_close(wizard.interface):
         partner_id = task.partner_id or task.project_id.partner_id
         if partner_id and partner_id.address[0].email:
             email = partner_id.address[0].email
-        return {'description': task.description, 'email':email}
-        
+        return {'description': task.description or task.name, 'email':email}
+
     def _data_send(self, cr, uid, data, context):
         task_obj = pooler.get_pool(cr.dbname).get('project.task')
         if data['form']['email']:

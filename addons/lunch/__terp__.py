@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,21 +15,27 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 {
     "name": "Lunch Module",
     "author": "Tiny",
+    "Description": """
+    The lunch module is for keeping record of the order placing and payment of the orders.
+    The products are defined under categories and the payment records are maintained user wise
+    Every user has a cashbox which keeps track of the amount paid for a particular order.
+
+    """,
     "version": "0.1",
     "depends": ["base"],
     "category" : "Generic Modules/Others",
     "init_xml": [],
     "update_xml": [
-        'security/ir.model.access.csv', 
-        'lunch_wizard.xml', 
-        'lunch_view.xml', 
+        'security/ir.model.access.csv',
+        'lunch_wizard.xml',
+        'lunch_view.xml',
         'lunch_report.xml',
         #'process/lunch_process.xml'
     ],

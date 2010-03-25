@@ -10,15 +10,15 @@
                        <group col='8' colspan='4'>
                            <filter icon="terp-hr" domain="[('state','=','draft')]" string="To Confirm"/>
                            <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
-                           <separator orientation="vertical"/> 
+                           <separator orientation="vertical"/>
                           <field name="name" select='1'/>
                           <field name="state" select="1">
                               <filter icon="terp-hr" domain="[('state','=','refuse')]" help="Refused Holidays"/>
                               <filter icon="terp-hr" domain="[('state','=','validate')]" help="Validated Holidays"/>
-                          </field>                          
+                          </field>
                           <field name="user_id" select="1" widget="selection">
-                              <filter icon="gtk-execute" help="My Leaves" domain="[('user_id','=',uid)]" />  
-                          </field> 
+                              <filter icon="gtk-execute" help="My Leaves" domain="[('user_id','=',uid)]" />
+                          </field>
                           <field name="department_id" select="1" widget="selection">
                           		<filter icon="gtk-execute" domain="[('department_id','=',context.get('department_id',False))]"
 								help="My Departments Leaves"/>
@@ -255,10 +255,10 @@
             <field name="arch" type="xml">
                 <form string="Leave Type">
                     <field colspan="4" name="name" select="1"/>
-                    <field name="color_name" select="2"/>
-                    <field name="categ_id"  select="1" widget="selection"/>
                     <field name="limit" select="2"/>
                     <field name="active" select="2"/>
+                    <field name="categ_id"  select="1" widget="selection"/>
+                    <field name="color_name" select="2"/>
                 </form>
             </field>
         </record>

@@ -2182,6 +2182,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #create all the tax code
         children_tax_code_template = self.pool.get('account.tax.code.template').search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
+        children_tax_code_template.sort()
         for tax_code_template in self.pool.get('account.tax.code.template').browse(cr, uid, children_tax_code_template):
             vals={
                 'name': (tax_code_root_id == tax_code_template.id) and obj_multi.company_id.name or tax_code_template.name,

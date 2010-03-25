@@ -21,7 +21,7 @@
 
 import tools
 from osv import fields,osv
-from hr_recruitment import hr_hr
+from hr_recruitment import hr_recruitment
 
 class hr_recruitment_report(osv.osv):
     _name = "hr.recruitment.report"
@@ -35,7 +35,7 @@ class hr_recruitment_report(osv.osv):
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]",readonly=True),
         'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
         'department_id':fields.many2one('hr.department','Department',readonly=True),
-        'priority': fields.selection(hr_hr.AVAILABLE_PRIORITIES, 'Appreciation'),
+        'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
 
     }
     _order = 'date desc'

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,7 +25,13 @@
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """
-This module allows you to manage your process for the end-users.
+     This module shows the basic processes involved
+     in the selected modules and in the sequence these
+     occur
+
+     Note: This applies to the modules containing modulename_process_xml
+     for e.g product/process/product_process_xml
+
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
