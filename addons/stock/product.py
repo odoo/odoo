@@ -42,7 +42,6 @@ class product_product(osv.osv):
         
         """        
         location_obj = self.pool.get('stock.location')
-        lot_obj = self.pool.get('stock.report.prodlots')
         move_obj = self.pool.get('account.move')
         move_line_obj = self.pool.get('account.move.line')        
         loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
