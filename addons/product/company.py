@@ -36,16 +36,6 @@ class res_company(osv.osv):
             help="The price type field in the selected price type will be used, instead of the default one, \
                   for valuation of product in the current company"),
     }
-    
-    def _check_currency(self, cr, uid, ids):
-        for rec in self.browse(cr, uid, ids):
-            if rec.currency_id.id <> rec.property_valuation_price_type.currency_id.id:
-                return False
-        return True
-        
-    _constraints = [
-        (_check_currency, 'Error! You can not chooes a pricetype in a different currency than your company (Not supported now).', ['property_valuation_price_type'])
-    ]
 
 res_company()
 
