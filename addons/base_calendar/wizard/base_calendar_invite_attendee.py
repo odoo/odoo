@@ -21,7 +21,9 @@
 
 from base_calendar import base_calendar
 from osv import fields, osv
+from tools.translate import _
 import tools
+
 
 class base_calendar_invite_attendee(osv.osv_memory):
     """
@@ -139,8 +141,7 @@ class base_calendar_invite_attendee(osv.osv_memory):
                 if not mail_to:
                     name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
                                        self._columns['type'].selection))
-                    raise osv.except_osv(_('Error!'), ("%s must have an email \
-    Address to send mail") % (name[0]))
+                    raise osv.except_osv(_('Error!'), ("%s must have an email  Address to send mail") %(name[0]))
                 att_obj._send_mail(cr, uid, attendees, mail_to, \
                        email_from= tools.config.get('email_from', False))
 

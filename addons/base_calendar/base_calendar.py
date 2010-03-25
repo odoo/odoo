@@ -287,7 +287,7 @@ class calendar_attendee(osv.osv):
 
     def _links_get(self, cr, uid, context={}):
         """
-        Get request link and put in ref field.
+        Get request link for ref field in calendar attendee.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values
@@ -415,7 +415,7 @@ request was delegated to"),
 
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context={}):
         """
-        send mail.
+        Send mail for calendar attendee.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of calendar attendee’s IDs.
@@ -566,7 +566,7 @@ are both optional, but if one occurs, so MUST the other"""),
 
     def do_alarm_create(self, cr, uid, ids, model, date, context={}):
         """
-        Create Alarm
+        Create Alarm for meeting.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of res alarm’s IDs.
@@ -959,7 +959,7 @@ class calendar_event(osv.osv):
             if defaults.get('location'):
                 qry += ", location = '%(location)s'"
             qry += "WHERE id = %s" % (event_id)
-            cr.execute(qry % (defaults))
+            cr.execute(qry %(defaults))
             #End Loop
         return True
 
@@ -1063,6 +1063,7 @@ class calendar_event(osv.osv):
             return ''
 
         if freq == 'weekly':
+            
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
             if byday:
                 weekstring = ';BYDAY=' + ','.join(byday)

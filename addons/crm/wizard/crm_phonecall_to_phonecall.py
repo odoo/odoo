@@ -84,7 +84,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
                         'date': this.date
                           }
                 phonecall_id = phonecall_obj.create(cr, uid, values, context=context)
-            print phonecall_id
+            
             res = {
                 'name': _('Phone Call'),
                 'view_type': 'form',
