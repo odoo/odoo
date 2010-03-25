@@ -27,10 +27,9 @@ class change_standard_price(osv.osv_memory):
     _description = "Change Standard Price"
     _columns = {
             'new_price': fields.float('Price', required=True),
-            
-            'property_stock_account_input':fields.many2one('account.account', 'Stock Input Account', required=True),
-            'property_stock_account_output':fields.many2one('account.account', 'Stock Output Account', required=True),
-            'property_stock_journal':fields.many2one('account.journal', 'Stock journal', required=True),            
+            'stock_account_input':fields.many2one('account.account', 'Stock Input Account'),
+            'stock_account_output':fields.many2one('account.account', 'Stock Output Account'),
+            'stock_journal':fields.many2one('account.journal', 'Stock journal', required=True),            
             'enable_stock_in_out_acc':fields.boolean('Enable Related Account',),
     }
     
@@ -63,12 +62,12 @@ class change_standard_price(osv.osv_memory):
         
         if 'new_price' in fields:
             res.update({'new_price': price})
-        if 'property_stock_account_input' in fields:
-            res.update({'property_stock_account_input': stock_input_acc})         
-        if 'property_stock_account_output' in fields:
-            res.update({'property_stock_account_output': stock_output_acc})         
-        if 'property_stock_journal' in fields:
-            res.update({'property_stock_journal': journal_id})  
+        if 'stock_account_input' in fields:
+            res.update({'stock_account_input': stock_input_acc})         
+        if 'stock_account_output' in fields:
+            res.update({'stock_account_output': stock_output_acc})         
+        if 'stock_journal' in fields:
+            res.update({'stock_journal': journal_id})  
         if 'enable_stock_in_out_acc' in fields:
             res.update({'enable_stock_in_out_acc': True})              
                  
@@ -112,9 +111,9 @@ class change_standard_price(osv.osv_memory):
         loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
         
         new_price = res[0].new_price
-        stock_output_acc = res[0].property_stock_account_output.id
-        stock_input_acc = res[0].property_stock_account_input.id
-        journal_id = res[0].property_stock_journal.id
+        stock_output_acc = res[0].stock_account_output.id
+        stock_input_acc = res[0].stock_account_input.id
+        journal_id = res[0].stock_journal.id
 
         move_ids = []
         for location in location_obj.browse(cr, uid, loc_ids):

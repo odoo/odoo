@@ -9,12 +9,12 @@
               <form string="Change Standard Price">
              		<field name="new_price" on_change="onchange_price(new_price, context)" context="{'active_id': active_id}"/>
               		<newline/>
-                    <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('enable_acc','=',False)]}"/>
+                    <field name="stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"  attrs="{'readonly':[('enable_stock_in_out_acc','=',False)],'required': [('enable_stock_in_out_acc','=',True)]}"/>
               		<newline/>
-                    <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('enable_acc','=',True)]}"/>
+                    <field name="stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('enable_stock_in_out_acc','=',True)],'required': [('enable_stock_in_out_acc','=',False)]}"/>
               		<newline/>
-              		<field name="property_stock_journal"/>
-              		<field name="enable_acc" invisible="1"/>
+              		<field name="stock_journal"/>
+              		<field name="enable_stock_in_out_acc" invisible="1"/>
               		<group col="2" colspan="4">
 	              		<button special="cancel" string="Cancel" icon="gtk-cancel"/>
 	              		<button name="change_price" string="Change" type="object" icon="gtk-ok"/>
