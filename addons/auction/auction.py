@@ -481,10 +481,8 @@ class auction_lots(osv.osv):
     def name_search(self, cr, user, name, args=None, operator='ilike', context={}):
         if not args:
             args = []
-        try:
-            ids = self.search(cr, user, [('obj_num','=',int(name))] + args)
-        except:
-            ids = []
+
+        ids = self.search(cr, user, [('obj_num','=',int(name))] + args)
         if not ids:
             ids = self.search(cr, user, [('name',operator,name)] + args)
         return self.name_get(cr, user, ids)
