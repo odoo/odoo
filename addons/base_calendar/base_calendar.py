@@ -404,11 +404,9 @@ request was delegated to"),
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
             res_obj = att.ref
-            if res_obj and len(res_obj):
-                res_obj = res_obj[0]
             sub = '[%s Invitation][%d] %s'  % (company, att.id, res_obj.name)
             att_infos = []
-            other_invitaion_ids = self.search(cr, uid, [('ref', '=', att.ref)])
+            other_invitaion_ids = self.search(cr, uid, [('ref','=', att.ref._name + ',' + str(att.ref.id))])
             for att2 in self.browse(cr, uid, other_invitaion_ids):
                 att_infos.append(((att2.user_id and att2.user_id.name) or \
                              (att2.partner_id and att2.partner_id.name) or \
@@ -869,7 +867,7 @@ rule or repeating pattern for anexception to a recurrence set"),
             defaults.update({'table': self._table})
     
             qry = "UPDATE %(table)s set name = '%(name)s', \
-                            date = '% (date)s',  date_deadline = '% (date_deadline)s'"
+                            date = '%(date)s',  date_deadline = '%(date_deadline)s'"
             if defaults.get('alarm_id'):
                 qry += ", alarm_id = %(alarm_id)s"
             if defaults.get('location'):

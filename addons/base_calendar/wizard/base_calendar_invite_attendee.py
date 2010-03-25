@@ -21,6 +21,7 @@
 
 from base_calendar import base_calendar
 from osv import fields, osv
+import tools
 
 class base_calendar_invite_attendee(osv.osv_memory):
     """
