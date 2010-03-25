@@ -148,7 +148,7 @@ options = {
             "lxml.objectify", "decimal", "xml", "xml.dom", "xml.xpath",
             "encodings", "mx.DateTime","wizard","pychart","PIL", "pyparsing",
             "pydot", "asyncore", "asynchat", "reportlab", "vobject",
-            "HTMLParser", "select", "libxslt", "libxml2", "mako", "poplib",
+            "HTMLParser", "select", "mako", "poplib",
             "imaplib", "smtplib", "email",
         ],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
