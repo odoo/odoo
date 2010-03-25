@@ -100,74 +100,15 @@ class change_standard_price(osv.osv_memory):
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context')
         prod_obj = self.pool.get('product.product')
-        location_obj = self.pool.get('stock.location')
-        lot_obj = self.pool.get('stock.report.prodlots')
-        move_obj = self.pool.get('account.move')
-        move_line_obj = self.pool.get('account.move.line')
-        data_obj = self.pool.get('ir.model.data')
-        
-        res = self.browse(cr, uid, ids)
-        
-        loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
-        
-        new_price = res[0].new_price
-        stock_output_acc = res[0].stock_account_output.id
-        stock_input_acc = res[0].stock_account_input.id
-        journal_id = res[0].stock_journal.id
-
-        move_ids = []
-        for location in location_obj.browse(cr, uid, loc_ids):
-            c = context.copy()
-            c.update({'location': location.id})
-            c.update({'compute_child': False})
-            
-            product = prod_obj.browse(cr, uid, rec_id, context=c)
-            qty = product.qty_available
-            diff = product.standard_price - new_price                        
-            assert diff, _("Could not find any difference between standard price and new price!")
-            if qty:
-                location_account = location.account_id and location.account_id.id or False
-                company_id = location.company_id and location.company_id.id or False                
-                assert location_account, _('Inventory Account is not specified for Location: %s' % (location.name))
-                assert company_id, _('Company is not specified in Location')
-                move_id = move_obj.create(cr, uid, {
-                            'journal_id': journal_id, 
-                            'company_id': company_id
-                            }) 
-                
-                move_ids.append(move_id)
-                if diff > 0:    
-                    amount_diff = qty * diff        
-                    move_line_obj.create(cr, uid, {
-                                'name': product.name,
-                                'account_id': stock_input_acc,
-                                'debit': amount_diff,
-                                'move_id': move_id,
-                                })
-                    move_line_obj.create(cr, uid, {
-                                'name': location.name,
-                                'account_id': location_account,
-                                'credit': amount_diff,
-                                'move_id': move_id
-                                })
-                elif diff < 0: 
-                    amount_diff = qty * -diff
-                    move_line_obj.create(cr, uid, {
-                                'name': product.name,
-                                'account_id': stock_output_acc,
-                                'credit': amount_diff,
-                                'move_id': move_id
-                                })
-                    move_line_obj.create(cr, uid, {
-                                'name': location.name,
-                                'account_id': location_account,
-                                'debit': amount_diff,
-                                'move_id': move_id
-                                })                   
-            
-        prod_obj.write(cr, uid, rec_id, {'standard_price': new_price})
-
-        return {  }
+        res = self.browse(cr, uid, ids)        
+        datas = {
+            'new_price' : res[0].new_price,
+            'stock_output_account' : res[0].stock_account_output.id,
+            'stock_input_account' : res[0].stock_account_input.id,
+            'stock_journal' : res[0].stock_journal.id
+        }
+        prod_obj.do_change_standard_price(cr, uid, [rec_id], datas, context)
+        return {}        
 
 change_standard_price()
 
