@@ -363,7 +363,7 @@ if __name__ == "__main__":
     import StringIO
 
     fname = sys.argv[1]
-    f = StringIO.StringIO(file(fname).read())
+    f = fname
     xsl_file = 'normalized_oo2rml.xsl'
     z = zipfile.ZipFile(fname,"r")
     mimetype = z.read('mimetype')
