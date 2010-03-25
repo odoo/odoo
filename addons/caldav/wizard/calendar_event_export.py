@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -41,7 +41,7 @@ class calendar_event_export(osv.osv_memory):
         calendar = model_obj.export_cal(cr, uid, context['active_ids'], context)
         #TODO: check why returns wrong value
         return base64.encodestring(calendar)
-                            
+
     def _process_export_ics_name(self, cr, uid, context):
         """
         Get Default value for Name field.
@@ -50,19 +50,20 @@ class calendar_event_export(osv.osv_memory):
         model_obj = self.pool.get(model)
         calendar = model_obj.export_cal(cr, uid, context['active_ids'], context)
         return  'OpenERP %s.ics' % (model_obj._description)
-    
+
     _name = "calendar.event.export"
     _description = "Event Export"
+
     _columns = {
               'file_path':fields.binary('Save ICS file', filters='*.ics', required=True),
               'name':fields.char('File name', size=34, required=True, help='Save in .ics format')
                }
-    
-    _defaults={
-               'name':_process_export_ics_name,
-               'file_path':_process_export_ics
+
+    _defaults = {
+               'name': _process_export_ics_name,
+               'file_path': _process_export_ics
                }
-    
+
 calendar_event_export()
 
 

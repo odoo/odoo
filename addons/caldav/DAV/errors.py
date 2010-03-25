@@ -12,15 +12,15 @@ class DAV_Error(Exception):
 	2. the error result element, e.g. a <multistatus> element
     """
 
-    def __init__(self,*args):
+    def __init__(self, *args):
         if len(args)==1:
-            self.args=(args[0],"")
+            self.args = (args[0],"")
         else:
-            self.args=args
-    
+            self.args = args
+
 class DAV_Secret(DAV_Error):
     """ the user is not allowed to know anything about it
-    
+
     returning this for a property value means to exclude it
     from the response xml element.
     """
@@ -31,10 +31,10 @@ class DAV_Secret(DAV_Error):
 
 class DAV_NotFound(DAV_Error):
     """ a requested property was not found for a resource """
-    
-    def __init__(self,*args):
+
+    def __init__(self, *args):
         if len(args):
-	    if isinstance(args[0],list):
+	    if isinstance(args[0], list):
 		stre = "Path %s not found!"%('/'.join(args[0]))
 	    else:
 	        stre = args[0]
@@ -46,11 +46,12 @@ class DAV_NotFound(DAV_Error):
 
 class DAV_Forbidden(DAV_Error):
     """ a method on a resource is not allowed """
-    
-    def __init__(self,*args):
+
+    def __init__(self, *args):
         if len(args):
             DAV_Error.__init__(self,403,args[0])
         else:
             DAV_Error.__init__(self,403)
         pass
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

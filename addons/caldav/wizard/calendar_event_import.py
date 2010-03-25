@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -42,6 +42,7 @@ class calendar_event_import(osv.osv_memory):
         @param ids: List of calendar event import’s IDs
         @return: dictionary of calendar evet import  window with Import successful msg.
         """
+
         for data in self.read(cr, uid, ids):
             model = data.get('model', 'basic.calendar')
             model_obj = self.pool.get(model)
@@ -63,17 +64,19 @@ class calendar_event_import(osv.osv_memory):
                 'target': 'new'
             }
             return value
-    
+
     _name = "calendar.event.import"
     _description = "Event Import"
+
     _columns = {
                   'file_path': fields.binary('Select ICS file', filters='*.ics', required=True),
                   'msg': fields.text('', readonly=True),
                }
-    _defaults={
+
+    _defaults = {
                'msg':lambda *a:'Import Sucessful'
                }
-    
+
 calendar_event_import()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -27,21 +27,22 @@ class base_calendar_invite_attendee(osv.osv_memory):
     """
     Invite attendee.
     """
-    
+
     _name = "base_calendar.invite.attendee"
     _description = "Invite Attendees"
 
     _columns = {
         'type': fields.selection([('internal', 'Internal User'), \
               ('external', 'External Email'), \
-              ('partner', 'Partner Contacts')], 'Type', required=True), 
-        'user_ids': fields.many2many('res.users', 'invite_user_rel', 
-                                  'invite_id', 'user_id', 'Users'), 
-        'partner_id': fields.many2one('res.partner', 'Partner'), 
-        'email': fields.char('Email', size=124), 
-        'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel', 
-                                  'invite_id', 'contact_id', 'Contacts'), 
-        'send_mail': fields.boolean('Send mail?', help='Check this if you want to send an Email to Invited Person')
+              ('partner', 'Partner Contacts')], 'Type', required=True),
+        'user_ids': fields.many2many('res.users', 'invite_user_rel',
+                                  'invite_id', 'user_id', 'Users'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'email': fields.char('Email', size=124),
+        'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel',
+                                  'invite_id', 'contact_id', 'Contacts'),
+        'send_mail': fields.boolean('Send mail?', help='Check this if you want to \
+                        send an Email to Invited Person')
     }
 
     _defaults = {
@@ -57,20 +58,20 @@ class base_calendar_invite_attendee(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return: Dictionary of {}.
         """
-        
+
         if not context:
             context = {}
-        
+
         model = False
         model_field = False
-        
+
         context_id = context and context.get('active_id', False) or False
         if not context or not context.get('model'):
             return {}
         else:
             model = context.get('model')
         model_field = context.get('attendee_field', False)
-            
+
         for datas in self.read(cr, uid, ids, context=context):
 
             obj = self.pool.get(model)
@@ -85,7 +86,7 @@ class base_calendar_invite_attendee(osv.osv_memory):
             if not model == 'calendar.attendee':
                 if context_id:
                     ref = {'ref': '%s,%s' % (model, base_calendar.base_calendar_id2real_id(context_id))}
-                else: 
+                else:
                     return {}
             if type == 'internal':
                 user_obj = self.pool.get('res.users')
@@ -94,7 +95,7 @@ class base_calendar_invite_attendee(osv.osv_memory):
                 for user_id in datas.get('user_ids'):
                     user = user_obj.browse(cr, uid, user_id)
                     res = {
-                           'user_id': user_id, 
+                           'user_id': user_id,
                            'email': user.address_id.email
                            }
                     res.update(ref)
@@ -112,7 +113,7 @@ class base_calendar_invite_attendee(osv.osv_memory):
                 add_obj = self.pool.get('res.partner.address')
                 for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
                     res = {
-                           'partner_address_id': contact.id, 
+                           'partner_address_id': contact.id,
                            'email': contact.email
                            }
                     res.update(ref)
@@ -121,12 +122,12 @@ class base_calendar_invite_attendee(osv.osv_memory):
                         mail_to.append(contact.email)
 
             att = att_obj.browse(cr, uid, context_id)
-           
+
             for att_val in vals:
                 if model == 'calendar.attendee':
                     if ref:
                         att_val.update({
-                            'parent_ids': [(4, att.id)], 
+                            'parent_ids': [(4, att.id)],
                             'ref': att.ref._name + ',' +str(att.ref.id)
                             })
                 attendees.append(att_obj.create(cr, uid, att_val))
@@ -141,7 +142,7 @@ class base_calendar_invite_attendee(osv.osv_memory):
                     raise osv.except_osv(_('Error!'), ("%s must have an email \
     Address to send mail") % (name[0]))
                 att_obj._send_mail(cr, uid, attendees, mail_to, \
-                       email_from=tools.config.get('email_from', False))
+                       email_from= tools.config.get('email_from', False))
 
         return {}
 
@@ -152,9 +153,10 @@ class base_calendar_invite_attendee(osv.osv_memory):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of base calendar invite attendee’s IDs.
-        @param partner_id: id of Partner 
+        @param partner_id: id of Partner
         @return: dictionary of value.
         """
+
         if not partner_id:
             return {'value': {'contact_ids': []}}
         cr.execute('select id from res_partner_address \

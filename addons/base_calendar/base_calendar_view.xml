@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
         <record id="base_calendar_attendee_form_view" model="ir.ui.view">
             <field name="name">calendar.attendee.form</field>
             <field name="model">calendar.attendee</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invitation details">
-                    <field name="email" string="Invitation To"/> 
+					<field name="email" string="Invitation To"/>
                     <field name="sent_by_uid" string="Invitation From" />
                     <notebook colspan="4">
                         <page string="Invitation">
@@ -22,7 +22,7 @@
                                     string="Partner" readonly="1" />
                                 <field name="role" string="Role" />
                                 <field name="cutype" string="Invitation type" />
-                                <field name="rsvp" /> 
+                                <field name="rsvp" />
                             </group>
                             <separator string="Event Detail" colspan="4" />
                             <group colspan="4" col="4">
@@ -70,7 +70,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Invitation details">
-                    <field name="email" string="Invitation To"/>
+					<field name="email" string="Invitation To"/>
                     <field name="partner_id" string="Partner" />
                     <field name="partner_address_id" string="Contact" />
                     <field name="role" />
@@ -125,7 +125,7 @@
                 <field name="name">res.alarm.tree</field>
                 <field name="model">res.alarm</field>
                 <field name="type">tree</field>
-                <field name="arch" type="xml">                    
+                <field name="arch" type="xml">
                     <tree string="Reminder details">
                         <field name="name" select="1"/>
                         <field name="trigger_interval" select="1"/>
@@ -136,13 +136,13 @@
                 </field>
             </record>
          <record id="action_res_alarm_view" model="ir.actions.act_window">
-            <field name="name">Available Alarms</field>
+			<field name="name">Available Alarms</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.alarm</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
          </record>
-        
+
         <!--Available alarms-->
         <menuitem id="base.menu_calendar_configuration" name="Calendar"
             parent="base.menu_base_config" sequence="10" />
