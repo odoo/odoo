@@ -140,23 +140,35 @@ class crm_lead(osv.osv):
             context.update({'active_id': case.id})
             if not case.partner_id:
                 data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_partner')
-                view_id = False
+                view_id1 = False
                 if data_id:
-                    view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
+                    view_id1 = data_obj.browse(cr, uid, data_id, context=context).res_id
+                value = {
+                        'name': _('Create Partner'), 
+                        'view_type': 'form', 
+                        'view_mode': 'form,tree', 
+                        'res_model': 'crm.lead2opportunity.partner', 
+                        'view_id': False, 
+                        'context': context,  
+                        'views': [(view_id1, 'form')], 
+                        'type': 'ir.actions.act_window', 
+                        'target': 'new', 
+                        'nodestroy': True
+                        }
                 break
-            
-        value = {            
-            'name': _('Create Opportunity'), 
-            'view_type': 'form', 
-            'view_mode': 'form,tree', 
-            'res_model': 'crm.lead2opportunity', 
-            'view_id': False, 
-            'context': context,  
-            'views': [(view_id, 'form')], 
-            'type': 'ir.actions.act_window', 
-            'target': 'new', 
-            'nodestroy': True
-        }
+            else:
+                value = {
+                        'name': _('Create Opportunity'), 
+                        'view_type': 'form', 
+                        'view_mode': 'form,tree', 
+                        'res_model': 'crm.lead2opportunity', 
+                        'view_id': False, 
+                        'context': context,  
+                        'views': [(view_id, 'form')], 
+                        'type': 'ir.actions.act_window', 
+                        'target': 'new', 
+                        'nodestroy': True
+                        }
         return value
 
 crm_lead()

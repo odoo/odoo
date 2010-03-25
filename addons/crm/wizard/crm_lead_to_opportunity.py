@@ -27,7 +27,6 @@ from tools.translate import _
 class crm_lead2opportunity(osv.osv_memory):
     _name = 'crm.lead2opportunity'
     _description = 'Lead To Opportunity'
-    _inherit = 'crm.lead2partner'
     
     def action_cancel(self, cr, uid, ids, context=None):
         """
@@ -41,26 +40,6 @@ class crm_lead2opportunity(osv.osv_memory):
         """
         return {'type': 'ir.actions.act_window_close'}
     
-    def make_partner(self, cr, uid, ids, context=None):
-        """
-        This function Makes partner based on action.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for created Partner form.
-        """
-        if not context:
-            context = {}
-
-        partner_ids = self._create_partner(cr, uid, ids, context)
-        mod_obj = self.pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
-        return self.action_skip(cr, uid, ids, context)
-
     def action_apply(self, cr, uid, ids, context=None):
         """
         This converts lead to opportunity and opens Opportunity view
@@ -92,28 +71,28 @@ class crm_lead2opportunity(osv.osv_memory):
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
             lead = lead_obj.browse(cr, uid, record_id, context=context)
-            model_ids = model_obj.search(cr, uid, [('model','=','crm.opportunity')])
+            model_ids = model_obj.search(cr, uid, [('model', '=', 'crm.opportunity')])
 
 
             for this in self.browse(cr, uid, ids, context=context):
                 new_opportunity_id = opp_obj.create(cr, uid, {
-                        'name': this.name,
-                        'planned_revenue': this.planned_revenue,
-                        'probability': this.probability,
-                        'partner_id': lead.partner_id and lead.partner_id.id or False ,
-                        'section_id': lead.section_id and lead.section_id.id or False,
-                        'description': lead.description or False,
-                        'date_deadline': lead.date_deadline or False,
+                        'name': this.name, 
+                        'planned_revenue': this.planned_revenue, 
+                        'probability': this.probability, 
+                        'partner_id': lead.partner_id and lead.partner_id.id or False , 
+                        'section_id': lead.section_id and lead.section_id.id or False, 
+                        'description': lead.description or False, 
+                        'date_deadline': lead.date_deadline or False, 
                         'partner_address_id': lead.partner_address_id and \
-                                        lead.partner_address_id.id or False ,
-                        'priority': lead.priority,
-                        'phone': lead.phone,
+                                        lead.partner_address_id.id or False , 
+                        'priority': lead.priority, 
+                        'phone': lead.phone, 
                         'email_from': lead.email_from
                     })
 
                 new_opportunity = opp_obj.browse(cr, uid, new_opportunity_id)
                 vals = {
-                        'partner_id': this.partner_id and this.partner_id.id or False,
+                        'partner_id': this.partner_id and this.partner_id.id or False, 
                         }
                 if not lead.opportunity_id:
                         vals.update({'opportunity_id' : new_opportunity.id})
@@ -130,27 +109,156 @@ class crm_lead2opportunity(osv.osv_memory):
                 opp_obj.case_open(cr, uid, [new_opportunity_id])
 
             value = {
-                    'name': _('Opportunity'),
-                    'view_type': 'form',
-                    'view_mode': 'form,tree',
-                    'res_model': 'crm.opportunity',
-                    'res_id': int(new_opportunity_id),
-                    'view_id': False,
-                    'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
-                    'type': 'ir.actions.act_window',
+                    'name': _('Opportunity'), 
+                    'view_type': 'form', 
+                    'view_mode': 'form,tree', 
+                    'res_model': 'crm.opportunity', 
+                    'res_id': int(new_opportunity_id), 
+                    'view_id': False, 
+                    'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')], 
+                    'type': 'ir.actions.act_window', 
                     'search_view_id': res['res_id']
                     }
         return value
 
     _columns = {
-        'name' : fields.char('Opportunity Summary', size=64, required=True, select=1),
-        'probability': fields.float('Success Probability'),
-        'planned_revenue': fields.float('Expected Revenue'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'action': fields.selection([('exist','Link to an existing partner'),('create','Create a new partner')],'Action'),
-        
+        'name' : fields.char('Opportunity Summary', size=64, required=True, select=1), 
+        'probability': fields.float('Success Probability'), 
+        'planned_revenue': fields.float('Expected Revenue'), 
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
     }
     
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+
+        """
+        lead_obj = self.pool.get('crm.lead')
+
+        for lead in lead_obj.browse(cr, uid, context.get('active_ids', [])):
+            if lead.state in ['done', 'cancel']:
+                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
+Leads Could not convert into Opportunity"))
+            if lead.state != 'open':
+                raise osv.except_osv(_('Warning !'), _('Lead should be in \
+\'Open\' state before converting to Opportunity.'))
+        return False
+
+    def default_get(self, cr, uid, fields, context=None):
+        """
+        This function gets default values
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+
+        @return : default values of fields.
+        """
+        lead_obj = self.pool.get('crm.lead')
+        rec_ids = context and context.get('active_ids', [])
+        partner_id = context.get('partner_id', False)
+        data = context and context.get('active_ids', []) or []
+        res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
+        for lead in lead_obj.browse(cr, uid, data, context=context):
+            if 'name' in fields:
+                res.update({'name': lead.partner_name})
+            if 'partner_id' in fields:
+                res.update({'partner_id': partner_id and partner_id[0] or False})
+        return res
+
+crm_lead2opportunity()
+
+
+class crm_lead2opportunity_partner(osv.osv_memory):
+    _name = 'crm.lead2opportunity.partner'
+    _description = 'Lead To Opportunity Partner'
+    _inherit = 'crm.lead2partner'
+
+    _columns = {
+        'partner_id': fields.many2one('res.partner', 'Partner'), 
+        'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner')], 'Action'), 
+    }
+    
+    def default_get(self, cr, uid, fields, context=None):
+        """
+        This function gets default values
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+
+        @return : default values of fields.
+        """
+        lead_obj = self.pool.get('crm.lead')
+        partner_obj = self.pool.get('res.partner')
+        contact_obj = self.pool.get('res.partner.address')
+        rec_ids = context and context.get('active_ids', [])
+        partner_id = False
+
+        data = context and context.get('active_ids', []) or []
+        res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
+
+        for lead in lead_obj.browse(cr, uid, data, context=context):
+            partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
+            if not partner_ids and lead.email_from:
+                address_ids = contact_obj.search(cr, uid, [('email', '=', lead.email_from)])
+                if address_ids:
+                    addresses = contact_obj.browse(cr, uid, address_ids)
+                    partner_ids = addresses and [addresses[0].partner_id.id] or False
+            partner_id = partner_ids and partner_ids[0] or False
+
+            if 'partner_id' in fields:
+                res.update({'partner_id': partner_id})
+            if 'action' in fields:
+                res.update({'action': partner_id and 'exist' or 'create'})
+        return res
+    
+    def make_partner(self, cr, uid, ids, context=None):
+        """
+        This function Makes partner based on action.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Lead to Partner's IDs
+        @param context: A standard dictionary for contextual values
+
+        @return : Dictionary value for created Partner form.
+        """
+        if not context:
+            context = {}
+        
+        partner_ids = self._create_partner(cr, uid, ids, context)
+        mod_obj = self.pool.get('ir.model.data')
+        result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
+        res = mod_obj.read(cr, uid, result, ['res_id'])
+        value = {}
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
+        view_id = False
+        if data_id:
+            view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
+        
+        context.update({'partner_id': partner_ids})
+        value = {            
+            'name': _('Create Opportunity'), 
+            'view_type': 'form', 
+            'view_mode': 'form,tree', 
+            'res_model': 'crm.lead2opportunity', 
+            'view_id': False, 
+            'context': context, 
+            'views': [(view_id, 'form')], 
+            'type': 'ir.actions.act_window', 
+            'target': 'new', 
+        }
+        return value
+
     def action_skip(self, cr, uid, ids, context=None):
         """
         This skips partner creation
@@ -168,19 +276,21 @@ class crm_lead2opportunity(osv.osv_memory):
         view_id = False
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-            
+        
+        context.update({'partner_id': False})
         value = {            
             'name': _('Create Opportunity'), 
             'view_type': 'form', 
             'view_mode': 'form,tree', 
             'res_model': 'crm.lead2opportunity', 
             'view_id': False, 
-            'context': context,  
+            'context': context, 
             'views': [(view_id, 'form')], 
             'type': 'ir.actions.act_window', 
             'target': 'new', 
         }
         return value
+    
 
     def view_init(self, cr, uid, fields, context=None):
         """
@@ -201,45 +311,9 @@ Leads Could not convert into Opportunity"))
             if lead.state != 'open':
                 raise osv.except_osv(_('Warning !'), _('Lead should be in \
 \'Open\' state before converting to Opportunity.'))
-        return True
+        return False
 
-    def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
+crm_lead2opportunity_partner()
 
-        @return : default values of fields.
-        """
-        lead_obj = self.pool.get('crm.lead')
-        partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
-        rec_ids = context and context.get('active_ids', [])
-        partner_id = False
-
-        data = context and context.get('active_ids', []) or []
-        res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
-
-        for lead in lead_obj.browse(cr, uid, data, context=context):
-            partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
-            if not partner_ids and lead.email_from:
-                address_ids = contact_obj.search(cr, uid, [('email', '=', lead.email_from)])
-                if address_ids:
-                    addresses = contact_obj.browse(cr, uid, address_ids)
-                    partner_ids = addresses and [addresses[0].partner_id.id] or False
-            partner_id = partner_ids and partner_ids[0] or False
-
-            if 'name' in fields:
-                res.update({'name': lead.partner_name})
-            if 'partner_id' in fields:
-                res.update({'partner_id': partner_id})
-            if 'action' in fields:
-                res.update({'action': partner_id and 'exist' or 'create'})
-        return res
-
-crm_lead2opportunity()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

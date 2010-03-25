@@ -1,25 +1,6 @@
 <openerp>
   	<data>
 
-		<!-- Lead to Opportunity confirmation view -->
-
-        <record model="ir.ui.view" id="lead_to_opportunity_pre_view">
-            <field name="name">crm.opportunity2meeting.form</field>
-            <field name="model">crm.opportunity2meeting</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Convert To Meeting">
-                	<label string="Are you sure to schedule a meeting for this Opportunity?" colspan="4"/>
-                	<newline/>
-                	<separator colspan="4" string=""/>
-                	<button name="action_cancel" string="_Cancel"
-                		icon="gtk-cancel" special="cancel" />
-                	<button name="action_makeMeeting" type="object"
-                		string="_Schedule" icon="gtk-go-forward" />
-                </form>
-            </field>
-        </record>
-        
 		<!-- Lead to Opportunity view -->
 
   		<record id="view_crm_lead2opportunity_create" model="ir.ui.view">
@@ -54,8 +35,8 @@
 
 
         <record id="view_crm_lead2opportunity_partner" model="ir.ui.view">
-	      <field name="name">crm.lead2opportunity.partner</field>
-	      <field name="model">crm.lead2opportunity</field>
+	      <field name="name">crm.lead2opportunity.partner.form</field>
+	      <field name="model">crm.lead2opportunity.partner</field>
 	      <field name="type">form</field>
 	      <field name="arch" type="xml">
 	      	 <form string="Create a Partner">
