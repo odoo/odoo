@@ -40,7 +40,6 @@
                     "security/ir.model.access.csv",
                     "wizard/hr_evaluation_mail_view.xml",
                     "hr_evaluation_view.xml",
-                    "hr_evaluation_demo.xml",
                     "report/hr_evaluation_report_view.xml"],
     "active": False,
     "installable": True

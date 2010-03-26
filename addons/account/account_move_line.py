@@ -278,7 +278,7 @@ class account_move_line(osv.osv):
             data['amount_currency'] = v
         return data
 
-    def _on_create_write(self, cr, uid, id, context={}):
+    def on_create_write(self, cr, uid, id, context={}):
         ml = self.browse(cr, uid, id, context)
         return map(lambda x: x.id, ml.move_id.line_id)
 
@@ -733,7 +733,7 @@ class account_move_line(osv.osv):
                     state = ' colors="red:state==\'draft\'"'
 
             #xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5"%s>\n\t''' % (title, state)
-            xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="_on_create_write"%s>\n\t''' % (title, state)
+            xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write"%s>\n\t''' % (title, state)
             fields = []
 
             widths = {
