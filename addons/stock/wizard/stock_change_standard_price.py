@@ -79,9 +79,9 @@ class change_standard_price(osv.osv_memory):
         price = product_obj.standard_price
         diff = price - new_price
         if diff > 0 : 
-            return {'value' : {'enable_stock_in_out_acc':False}}
-        else :
             return {'value' : {'enable_stock_in_out_acc':True}}
+        else :
+            return {'value' : {'enable_stock_in_out_acc':False}}
         
     def change_price(self, cr, uid, ids, context):
         """ 

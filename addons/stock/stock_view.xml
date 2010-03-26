@@ -565,7 +565,7 @@
                     <field name="date"/>
                     <field name="min_date"/>
                     <field name="state"/>
-                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
+                    <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.   Do you want to continue?"/>
                 </tree>
             </field>
@@ -672,7 +672,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-apply"/>
+                                <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-apply"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -732,7 +732,7 @@
                     <field name="date" select="1"/>
                     <field name="min_date" select="1"/>
                     <field name="state" select="1"/>
-                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Delivery"/>
+                    <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Delivery"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the delivery.    Do you want to continue?"/>
                 </tree>
             </field>
@@ -833,7 +833,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Products Sent" type="action" icon="gtk-go-forward"/>
+                                <button name="%(action_partial_picking)d" states="assigned" string="Products Sent" type="action" icon="gtk-go-forward"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
@@ -926,7 +926,7 @@
                     <field name="min_date"/>
                     <field name="invoice_state"/>
                     <field name="state"/>
-                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
+                    <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-go-forward" help="Validate Picking"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the picking.    Do you want to continue?"/>
                 </tree>
             </field>
@@ -1030,9 +1030,12 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" groups="base.group_extended" icon="gtk-apply"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Picking Done" type="action" icon="gtk-execute"/>
+                                <button name="%(action_partial_picking)d" states="assigned" string="Picking Done" type="action" icon="gtk-execute"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
+                        </page>
+                        <page string="Delivery Info">
+                            <field colspan="4" name="delivery_line" nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -1101,7 +1104,7 @@
             <field name="view_mode">calendar</field>
             <field name="act_window_id" ref="action_picking_tree"/>
         </record>
-<!--        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_root" sequence="19"/>-->
+        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="5"/>
 
         <record id="view_picking_in_tree" model="ir.ui.view">
             <field name="name">stock.picking.in.tree</field>
@@ -1117,7 +1120,7 @@
                     <field name="min_date"/>
                     <field name="invoice_state"/>
                     <field name="state"/>
-                    <button name="%(partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-ok" help="Receive products"/>
+                    <button name="%(action_partial_picking)d" states="assigned" string="Validate" type="action" icon="gtk-ok" help="Receive products"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel" help="Cancel" confirm="This operation will cancel the shipment. Do you want to continue?" />
                 </tree>
             </field>
@@ -1220,9 +1223,12 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_extended" icon="gtk-jump-to"/>
-                                <button name="%(partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-ok"/>
+                                <button name="%(action_partial_picking)d" states="assigned" string="Products Received" type="action" icon="gtk-ok"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
+                        </page>
+                        <page string="Delivery Info">
+                            <field colspan="4" name="delivery_line" nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -1760,7 +1766,7 @@
 	                    <field name="address_id"/>
 	                    <field name="picking_id"/>
 	                    <separator string="Product Delivered Information" colspan="4" />
-	                    <field name="product_delivered" colspan="4" nolabel="1" widget="one2many" mode="tree,form">
+	                    <field name="move_delivered" colspan="4" nolabel="1" widget="one2many" mode="tree,form">
 	                       <tree string="Stock Moves" editable="top">
 			                    <field name="picking_id" string="Reference"/>
 			                    <field name="origin" string="Latest Requisition"/>
@@ -1783,7 +1789,7 @@
                 	<field name="name"/>
                     <field name="date"/>
                     <field name="partner_id"/>
-                    <field name="product_delivered"/>
+                    <field name="address_id"/>
                 </tree>
             </field>
         </record>
@@ -1792,8 +1798,7 @@
             <field name="name">Delivered Products</field>
             <field name="res_model">stock.delivery</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-           <!-- <field name="target">new</field>      -->      
+            <field name="view_type">form</field>            
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="view_stock_delivery_tree"/>
         </record>        

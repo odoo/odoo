@@ -486,6 +486,7 @@ class stock_picking(osv.osv):
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Entry lines', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
+        'delivery_line':fields.one2many('stock.delivery', 'picking_id', 'Delivery lines', readonly=True),
         'auto_picking': fields.boolean('Auto-Picking'),
         'address_id': fields.many2one('res.partner.address', 'Partner', help="Address of partner"),
         'invoice_state': fields.selection([
@@ -856,7 +857,7 @@ class stock_picking(osv.osv):
                 continue
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
-    def do_partial(self, cr, uid, ids, partial_datas, context):
+    def do_partial(self, cr, uid, ids, partial_datas, context={}):
         """
         @ partial_datas : dict. contain details of partial picking 
                           like partner_id, address_id, delivery_date, delivery moves with product_id, product_qty, uom
@@ -869,6 +870,7 @@ class stock_picking(osv.osv):
         users_obj = self.pool.get('res.users')
         uom_obj = self.pool.get('product.uom')
         price_type_obj = self.pool.get('product.price.type')
+        sequence_obj = self.pool.get('ir.sequence')
         wf_service = netsvc.LocalService("workflow")
         partner_id = partial_datas.get('partner_id', False)
         address_id = partial_datas.get('address_id', False)
@@ -877,11 +879,13 @@ class stock_picking(osv.osv):
             new_picking = None
             new_moves = []
 
-            complete, too_many, too_few = [], [], []        
+            complete, too_many, too_few = [], [], []
+            move_product_qty = {}
             for move in pick.move_lines:
-                partial_data = partial_datas.get('move%s'%(move.id), False)
+                partial_data = partial_datas.get('move%s'%(move.id), False)                
                 assert partial_data, _('Do not Found Partial data of Stock Move Line :%s' %(move.id))
                 product_qty = partial_data.get('product_qty',0.0)
+                move_product_qty[move.id] = product_qty
                 product_uom = partial_data.get('product_uom',False)
                 product_price = partial_data.get('product_price',0.0)
                 product_currency = partial_data.get('product_currency',False)
@@ -919,20 +923,14 @@ class stock_picking(osv.osv):
                                 {pricetype.field: new_std_price})
                         move_obj.write(cr, uid, [move.id], {'price_unit': new_price})
 
-            delivery_id = delivery_obj.create(cr, uid, {
-                'name':  pick.name,                                 
-                'partner_id': partner_id,
-                'address_id': address_id,
-                'date': delivery_date,                
-                'picking_id':pick.id
-            }, context=context)
-
+            
             for move in too_few:
+                product_qty = move_product_qty[move.id]
                 if not new_picking:
 
                     new_picking = self.copy(cr, uid, pick.id,
                             {
-                                'name': pool.get('ir.sequence').get(cr, uid, 'stock.picking.%s'%(pick.type)),
+                                'name': sequence_obj.get(cr, uid, 'stock.picking.%s'%(pick.type)),
                                 'move_lines' : [],
                                 'state':'draft',
                             })
@@ -942,8 +940,7 @@ class stock_picking(osv.osv):
                         {
                             'product_qty' : product_qty,
                             'product_uos_qty': product_qty, #TODO: put correct uos_qty
-                            'picking_id' : new_picking,
-                            'delivery_id' : delivery_id,
+                            'picking_id' : new_picking,                            
                             'state': 'assigned',
                             'move_dest_id': False,                            
                             'price_unit': move.price_unit,
@@ -959,6 +956,7 @@ class stock_picking(osv.osv):
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
                 for move in too_many:
+                    product_qty = move_product_qty[move.id]
                     move_obj.write(cr, uid, [move.id],
                             {
                                 'product_qty' : product_qty,
@@ -967,10 +965,11 @@ class stock_picking(osv.osv):
                             })
             else:
                 for move in too_many:
+                    product_qty = move_product_qty[move.id]
                     move_obj.write(cr, uid, [move.id],
                             {
                                 'product_qty': product_qty,
-                                'product_uos_qty': product_qty
+                                'product_uos_qty': product_qty #TODO: put correct uos_qty
                             })
 
             # At first we confirm the new picking (if necessary)            
@@ -982,13 +981,22 @@ class stock_picking(osv.osv):
                 self.action_move(cr, uid, [new_picking])
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_done', cr)
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+                delivered_pack_id = new_picking
             else:
                 self.action_move(cr, uid, [pick.id])
-                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
-            bo_name = ''
-            if new_picking:
-                bo_name = pick_obj.read(cr, uid, [new_picking], ['name'])[0]['name']
-            res[pick.id] = {'new_picking': new_picking or False, 'back_order':bo_name}
+                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr) 
+                delivered_pack_id = pick.id
+
+            delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context) 
+            delivery_id = delivery_obj.create(cr, uid, {
+                'name':  delivered_pack.name,                                 
+                'partner_id': partner_id,
+                'address_id': address_id,
+                'date': delivery_date,
+                'picking_id' :  pick.id,                  
+                'move_delivered' : [(6,0, map(lambda x:x.id, delivered_pack.move_lines))]             
+            }, context=context)            
+            res[pick.id] = {'delivered_picking': delivered_pack.id or False}
         return res
 
 stock_picking()
@@ -1090,7 +1098,21 @@ class stock_production_lot_revision(osv.osv):
 stock_production_lot_revision()
     
 class stock_delivery(osv.osv):
+    
+    """ Tracability of partialdeliveries """
+    
     _name = "stock.delivery"
+    _description = "Delivery"
+    _columns = {
+        'name': fields.char('Name', size=60, required=True),  
+        'date': fields.datetime('Date', required=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', required=True),
+        'address_id': fields.many2one('res.partner.address', 'Address', required=True),
+        'move_delivered':fields.one2many('stock.move', 'delivered_id', 'Move Delivered'),
+        'picking_id': fields.many2one('stock.picking', 'Picking list', required=True),
+        
+    }
+    
 stock_delivery()
 # ----------------------------------------------------
 # Move
@@ -1892,26 +1914,8 @@ class stock_warehouse(osv.osv):
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
     }
-stock_warehouse()
-    
-class stock_delivery(osv.osv):
-    
-    """ Tracability of partialdeliveries """
-    
-    _name = "stock.delivery"
-    _description = "Delivery"
-    _columns = {
-        'name': fields.char('Name', size=60, required=True),  
-        'date': fields.datetime('Date'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'address_id': fields.many2one('res.partner.address', 'Address'),
-        'product_delivered':fields.one2many('stock.move', 'delivered_id', 'Product Delivered', domain=[('picking_id.type','=','in')]),
-        'picking_id': fields.many2one('stock.picking', 'Picking list'),
-        
-    }
+stock_warehouse()   
 
-    
-stock_delivery()
 
 # Move wizard :
 #    get confirm or assign stock move lines of partner and put in current picking.
