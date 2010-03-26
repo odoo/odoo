@@ -894,7 +894,7 @@ class stock_picking(osv.osv):
                 assert partial_data, _('Do not Found Partial data of Stock Move Line :%s' %(move.id))
                 product_qty = partial_data.get('product_qty',0.0)
                 move_product_qty[move.id] = product_qty
-                product_uom = partial_data.get('product_uom',False)
+                product_uom = partial_data.get('product_uom',False)                
                 product_price = partial_data.get('product_price',0.0)
                 product_currency = partial_data.get('product_currency',False)
                 if move.product_qty == product_qty:
@@ -908,16 +908,16 @@ class stock_picking(osv.osv):
                 if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
                     product = product_obj.browse(cr, uid, move.product_id.id)
                     user = users_obj.browse(cr, uid, uid)                   
-                    context['currency_id'] = move.company_id.currency_id.id
+                    context['currency_id'] = move.company_id.currency_id.id                    
                     qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
                     pricetype = False
                     if user.company_id.property_valuation_price_type:
                         pricetype = price_type_obj.browse(cr, uid, user.company_id.property_valuation_price_type.id)
                     if pricetype and qty > 0:
-                        new_price = currency_obj.compute(cr, uid, currency,
+                        new_price = currency_obj.compute(cr, uid, product_currency,
                                 user.company_id.currency_id.id, product_price)
                         new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
-                                product.uom_id.id)
+                                product.uom_id.id)                        
                         if product.qty_available <= 0:
                             new_std_price = new_price
                         else:

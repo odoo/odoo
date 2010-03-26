@@ -103,9 +103,9 @@ class stock_partial_picking(osv.osv_memory):
                     
                     _moves_arch_lst += """
                         <group colspan="4" col="10">
-                        <field name="move%s_product_id" />
-                        <field name="move%s_product_qty" />
-                        <field name="move%s_product_uom" />
+                        <field name="move%s_product_id" nolabel="1"/>
+                        <field name="move%s_product_qty" string="Qty" />
+                        <field name="move%s_product_uom" nolabel="1" />
                     """%(m.id, m.id, m.id)
                     if (pick.type == 'in') and (m.product_id.cost_method == 'average'):                        
                         _moves_fields.update({
@@ -122,7 +122,7 @@ class stock_partial_picking(osv.osv_memory):
                         })
                         _moves_arch_lst += """
                             <field name="move%s_product_price" />
-                            <field name="move%s_product_currency" />
+                            <field name="move%s_product_currency" nolabel="1"/>
                         """%(m.id, m.id)
                     _moves_arch_lst += """
                         </group>
@@ -206,15 +206,15 @@ class stock_partial_picking(osv.osv_memory):
                 if m.state in ('done', 'cancel'):
                     continue
                 partial_datas['move%s'%(m.id)] = {
-                    'product_id' : getattr(partial, 'move%s_product_id'%(m.id)),
+                    'product_id' : getattr(partial, 'move%s_product_id'%(m.id)).id,
                     'product_qty' : getattr(partial, 'move%s_product_qty'%(m.id)),
-                    'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id))
+                    'product_uom' : getattr(partial, 'move%s_product_uom'%(m.id)).id
                 }
 
                 if (pick.type == 'in') and (m.product_id.cost_method == 'average'):   
                     partial_datas['move%s'%(m.id)].update({             
                         'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
-                        'product_currency': getattr(partial, 'move%s_product_currency'%(m.id))
+                        'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id
                     })  
         
         res = pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)

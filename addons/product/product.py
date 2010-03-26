@@ -547,7 +547,7 @@ class product_product(osv.osv):
                 pricetype_obj = self.pool.get('product.price.type')
                 # Take the price_type currency from the product field
                 # This is right cause a field cannot be in more than one currency
-                price_type_id = pricetype_obj.search(cr,ui,['field','=',ptype])[0]
+                price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
                 price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
                 res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
                     context['currency_id'], res[product.id],context=context)
