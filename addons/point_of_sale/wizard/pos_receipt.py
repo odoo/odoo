@@ -22,6 +22,7 @@
 import netsvc
 from osv import osv,fields
 from tools.translate import _
+
 from mx import DateTime
 import time
 
@@ -59,6 +60,7 @@ class pos_receipt(osv.osv_memory):
        }
 
 pos_receipt()
+
 
 
 
