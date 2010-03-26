@@ -22,7 +22,7 @@
 import stock_traceability
 import stock_move   
 import stock_partial_picking
-import wizard_partial_move
+import stock_partial_move
 import wizard_picking_make
 import wizard_replacement
 import wizard_return
