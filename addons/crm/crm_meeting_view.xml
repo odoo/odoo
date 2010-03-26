@@ -46,11 +46,9 @@
                            <button string="Edit All"
                            	help="Edit all Ourrences of recurrent Meeting"
                            	attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
-                           	name="%(base_calendar.action_calendar_event_edit_all)d"
-                           	icon="gtk-edit" type="action"
-                           	context="{'model' : 'crm.meeting', 'date': date, 'date_deadline': date_deadline}" />
+                           	name="open_meeting" icon="gtk-edit"
+                           	type="object" />
                     </group>
-
                 </group>
                 <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
                     <separator string="Select data for Custom Rule" colspan="8"/>
