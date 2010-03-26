@@ -61,6 +61,7 @@ Main features :
         'wizard/pos_receipt_view.xml',  
         'wizard/pos_payment_report_user.xml',  
         'wizard/pos_payment_report.xml',
+        'wizard/pos_payment.xml',
         'pos_report.xml',
         'pos_wizard.xml',
         'pos_view.xml',
