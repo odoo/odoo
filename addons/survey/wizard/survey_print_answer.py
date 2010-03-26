@@ -27,24 +27,28 @@ from tools.translate import _
 class survey_print_answer(osv.osv_memory):
     _name = 'survey.print.answer'
     _columns = {
-        'response_ids' : fields.many2many('survey.response','survey_print_response','response_id','print_id', "Response", required="1"),
-        'orientation' : fields.selection([('vertical','Portrait(Vertical)'),('horizontal','Landscape(Horizontal)')], 'Orientation'),
-        'paper_size' : fields.selection([('letter','Letter (8.5" x 11")'),('legal','Legal (8.5" x 14")'),('a4','A4 (210mm x 297mm)')], 'Paper Size'),
-        'page_number' : fields.boolean('Include Page Numvers'),
-        'without_pagebreak' : fields.boolean('Print Without Page Breaks')
+        'response_ids': fields.many2many('survey.response','survey_print_response',\
+                            'response_id','print_id', "Response", required="1"),
+        'orientation': fields.selection([('vertical','Portrait(Vertical)'),\
+                            ('horizontal','Landscape(Horizontal)')], 'Orientation'),
+        'paper_size': fields.selection([('letter','Letter (8.5" x 11")'),\
+                            ('legal','Legal (8.5" x 14")'),\
+                            ('a4','A4 (210mm x 297mm)')], 'Paper Size'),
+        'page_number': fields.boolean('Include Page Numvers'),
+        'without_pagebreak': fields.boolean('Print Without Page Breaks')
     }
 
     _defaults = {
             'orientation': lambda *a:'vertical',
             'paper_size': lambda *a:'letter',
-            'page_number':lambda *a: 0,
-            'without_pagebreak':lambda *a: 0
+            'page_number': lambda *a: 0,
+            'without_pagebreak': lambda *a: 0
     }
 
     def action_next(self, cr, uid, ids, context=None):
         """
         Print Survey Answer in pdf format.
-       
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -52,16 +56,18 @@ class survey_print_answer(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for created survey answer report
         """
-        datas = {'ids' : context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['response_ids', 'orientation', 'paper_size', 'page_number', 'without_pagebreak'], context)
-        res = res and res[0] or {}  
+        datas = {'ids': context.get('active_ids', [])}
+        res = self.read(cr, uid, ids, ['response_ids', 'orientation', 'paper_size',\
+                             'page_number', 'without_pagebreak'], context)
+        res = res and res[0] or {}
         datas['form'] = res
         datas['model'] = 'survey.print.answer'
-        return { 
-            'type':'ir.actions.report.xml',
-            'report_name':'survey.browse.response',
-            'datas':datas,               
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'survey.browse.response',
+            'datas': datas,
         }
+
 survey_print_answer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

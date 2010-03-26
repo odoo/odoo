@@ -30,7 +30,7 @@ class survey_name_wiz(osv.osv_memory):
     def default_get(self, cr, uid, fields, context={}):
         """
         Set the default value in survey_id field. if open this wizard in survey form then set the default value in survey_id = active survey id.
-       
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -47,14 +47,14 @@ class survey_name_wiz(osv.osv_memory):
 
     def _get_survey(self, cr, uid, context=None):
         """
-        Set the value In survey_id field. 
-       
+        Set the value In survey_id field.
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of Survey statistics IDs
         @param context: A standard dictionary for contextual values
-        @return : Dictionary value for created survey statistics report
+        @return: Dictionary value for created survey statistics report
         """
         surv_obj = self.pool.get("survey")
         result = []
@@ -75,26 +75,26 @@ class survey_name_wiz(osv.osv_memory):
 
     _columns = {
         'survey_id': fields.selection(_get_survey, "Survey", required="1"),
-        'page_no' : fields.integer('Page Number'),
-        'note' : fields.text("Description"),
-        'page' : fields.char('Page Position',size = 12),
-        'transfer' : fields.boolean('Page Transfer'),
-        'store_ans' : fields.text('Store Answer'),
-        'response' : fields.char('Response',size=16)
+        'page_no': fields.integer('Page Number'),
+        'note': fields.text("Description"),
+        'page': fields.char('Page Position',size = 12),
+        'transfer': fields.boolean('Page Transfer'),
+        'store_ans': fields.text('Store Answer'),
+        'response': fields.char('Response',size=16)
     }
     _defaults = {
-        'page_no' : lambda * a: - 1,
-        'page' : lambda * a: 'next',
-        'transfer' : lambda * a: 1,
-        'response' : lambda * a: 0,
+        'page_no': lambda * a: - 1,
+        'page': lambda * a: 'next',
+        'transfer': lambda * a: 1,
+        'response': lambda * a: 0,
     }
 
     def action_next(self, cr, uid, ids, context=None):
         """
-        Start the survey, Increment in started survey field but if set the max_response_limit of 
-        survey then check the current user how many times start this survey. if current user max_response_limit 
+        Start the survey, Increment in started survey field but if set the max_response_limit of
+        survey then check the current user how many times start this survey. if current user max_response_limit
         is reach then this user can not start this survey(Raise Exception).
-       
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -107,7 +107,7 @@ class survey_name_wiz(osv.osv_memory):
 
         sur_id = self.read(cr, uid, ids, [])[0]
         survey_id = sur_id['survey_id']
-        context.update({'survey_id' : survey_id, 'sur_name_id' : sur_id['id']})
+        context.update({'survey_id': survey_id, 'sur_name_id': sur_id['id']})
         cr.execute('select count(id) from survey_history where user_id=%s\
                     and survey_id=%s' % (uid,survey_id))
 
@@ -115,7 +115,7 @@ class survey_name_wiz(osv.osv_memory):
         user_limit = survey_obj.read(cr, uid, survey_id, ['response_user'])['response_user']
         if user_limit and res >= user_limit:
             raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (user_limit))
-        
+
         sur_rec = survey_obj.read(cr,uid,self.read(cr,uid,ids)[0]['survey_id'])
         if sur_rec['max_response_limit'] and sur_rec['max_response_limit'] <= sur_rec['tot_start_survey']:
             raise osv.except_osv(_('Warning !'),_("You can not give more response. Please contact the author of this survey for further assistance."))
@@ -128,14 +128,14 @@ class survey_name_wiz(osv.osv_memory):
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'search_view_id':search_id[0],
-            'context' : context
+            'search_view_id': search_id[0],
+            'context': context
          }
 
     def on_change_survey(self, cr, uid, ids, survey_id, context=None):
         """
             on change event of survey_id field, if note is available in selected survey then display this note in note fields.
-           
+
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
@@ -144,7 +144,7 @@ class survey_name_wiz(osv.osv_memory):
             @return : Dictionary values of notes fields.
         """
         notes = self.pool.get('survey').read(cr, uid, survey_id, ['note'])['note']
-        return {'value': {'note' : notes}}
+        return {'value': {'note': notes}}
 
 survey_name_wiz()
 

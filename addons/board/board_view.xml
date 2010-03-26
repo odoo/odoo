@@ -3,7 +3,8 @@
     <data>
         <menuitem icon="terp-graph" id="base.reporting_menu"
         	name="Reporting" sequence="8" />
-        <!--		<menuitem icon="terp-graph" id="dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>-->
+
+ <!--Board Note Tree View  -->
 
         <record id="view_board_note_tree" model="ir.ui.view">
             <field name="name">board.note.tree</field>
@@ -15,9 +16,9 @@
                 </tree>
             </field>
         </record>
-        
-        <!--Board Note form  -->
-        
+
+<!--Board Note Form View  -->
+
         <record id="view_board_note_form" model="ir.ui.view">
             <field name="name">board.note.form</field>
             <field name="model">board.note</field>
@@ -32,9 +33,9 @@
                 </form>
             </field>
         </record>
-   
-<!-- Action for Publish note Form -->        
-   
+
+<!-- Action for Publish note Form -->
+
         <record id="action_view_board_note_form" model="ir.actions.act_window">
             <field name="name">Publish a note</field>
             <field name="res_model">board.note</field>
@@ -42,7 +43,7 @@
             <field name="view_mode">form,tree</field>
         </record>
 
-        <!-- <wizard id="wizard_board_create_menu" model="board.board" multi="True" name="board.board.menu.create" string="Create Board Menu" /> -->
+<!--  Board Tree View  -->
 
         <record id="view_board_tree" model="ir.ui.view">
             <field name="name">board.board.tree</field>
@@ -54,9 +55,9 @@
                 </tree>
             </field>
         </record>
-        
-<!-- Dashboard Definition form -->        
-        
+
+<!-- Dashboard Definition Form View  -->
+
         <record id="view_board_form" model="ir.ui.view">
             <field name="name">board.board.form</field>
             <field name="model">board.board</field>
@@ -89,16 +90,16 @@
                 </form>
             </field>
         </record>
-    
+
     <!-- Action for DashBoard Definition form -->
-        
+
         <record id="action_view_board_list_form" model="ir.actions.act_window">
             <field name="name">Dashboard Definition</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+
         <menuitem
             id="base.next_id_50"
             name="Configuration"
@@ -109,9 +110,11 @@
             action="action_view_board_list_form"
             id="menu_view_board_form"
             parent="base.next_id_50" sequence="1"/>
+
         <menuitem action="action_view_board_note_form"
         	id="menu_view_board_note_form" parent="base.next_id_50"
         	sequence="3" groups="base.group_system" />
+
         <act_window context="{'view': active_id}" id="dashboard_open"
         	multi="True" name="Open Dashboard" res_model="board.board"
         	src_model="board.board" />

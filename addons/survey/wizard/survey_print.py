@@ -28,8 +28,10 @@ from tools.translate import _
 class survey_print(osv.osv_memory):
     _name = 'survey.print'
     _columns = {
-        'orientation' : fields.selection([('vertical','Portrait(Vertical)'),('horizontal','Landscape(Horizontal)')], 'Orientation'),
-        'paper_size' : fields.selection([('letter','Letter (8.5" x 11")'),('legal','Legal (8.5" x 14")'),('a4','A4 (210mm x 297mm)')], 'Paper Size'),
+        'orientation' : fields.selection([('vertical','Portrait(Vertical)'),\
+                            ('horizontal','Landscape(Horizontal)')], 'Orientation'),
+        'paper_size' : fields.selection([('letter','Letter (8.5" x 11")'),\
+                            ('legal','Legal (8.5" x 14")'),('a4','A4 (210mm x 297mm)')], 'Paper Size'),
         'survey_title' : fields.boolean('Include Survey Title'),
         'page_number' : fields.boolean('Include Page Numvers'),
         'without_pagebreak' : fields.boolean('Print Without Page Breaks'),
@@ -46,7 +48,7 @@ class survey_print(osv.osv_memory):
     def action_next(self, cr, uid, ids, context=None):
         """
         Print Survey Form(print template of the survey).
-       
+
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -54,16 +56,17 @@ class survey_print(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for print survey form.
         """
-        
+
         datas = {'ids' : context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['survey_title', 'orientation', 'paper_size', 'page_number', 'without_pagebreak'], context)
-        res = res and res[0] or {}  
+        res = self.read(cr, uid, ids, ['survey_title', 'orientation', 'paper_size',\
+                             'page_number', 'without_pagebreak'], context)
+        res = res and res[0] or {}
         datas['form'] = res
         datas['model'] = 'survey.print'
-        return { 
-            'type':'ir.actions.report.xml',
-            'report_name':'survey.form',
-            'datas':datas,               
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'survey.form',
+            'datas': datas,
         }
 survey_print()
 

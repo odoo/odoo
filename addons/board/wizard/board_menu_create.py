@@ -53,7 +53,7 @@ class board_menu_create(osv.osv_memory):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of Board Menu Create's IDs
-        @return : Dictionary {}.
+        @return: Dictionary {}.
         """
         if not context:
             context = {}
@@ -63,8 +63,8 @@ class board_menu_create(osv.osv_memory):
             board = self.pool.get('board.board').browse(cr, uid, context_id)
             action_id = self.pool.get('ir.actions.act_window').create(cr, uid, {
                 'name': board.name,
-                'view_type':'form',
-                'view_mode':'form',
+                'view_type': 'form',
+                'view_mode': 'form',
                 'res_model': 'board.board',
                 'view_id': board.view_id.id,
                 })

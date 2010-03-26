@@ -36,8 +36,8 @@ class survey_type(osv.osv):
     _name = 'survey.type'
     _description = 'Survey Type'
     _columns = {
-        'name' : fields.char("Name", size=128, required=1),
-        'code' : fields.char("Code", size=64),
+        'name': fields.char("Name", size=128, required=1),
+        'code': fields.char("Code", size=64),
     }
 survey_type()
 
@@ -51,64 +51,64 @@ class survey(osv.osv):
         return data
 
     _columns = {
-        'title' : fields.char('Survey Title', size=128, required=1),
-        'page_ids' : fields.one2many('survey.page', 'survey_id', 'Page'),
-        'date_open' : fields.datetime('Survey Open Date', readonly=1),
-        'date_close' : fields.datetime('Survey Close Date', readonly=1),
-        'max_response_limit' : fields.integer('Maximum Response Limit'),
-        'response_user' : fields.integer('Maximum Response per User',
+        'title': fields.char('Survey Title', size=128, required=1),
+        'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
+        'date_open': fields.datetime('Survey Open Date', readonly=1),
+        'date_close': fields.datetime('Survey Close Date', readonly=1),
+        'max_response_limit': fields.integer('Maximum Response Limit'),
+        'response_user': fields.integer('Maximum Response per User',
                      help="Set to one if  you require only one response per user"),
-        'state' : fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
-        'responsible_id' : fields.many2one('res.users', 'Responsible'),
-        'tot_start_survey' : fields.integer("Total Started Survey", readonly=1),
-        'tot_comp_survey' : fields.integer("Total Completed Survey", readonly=1),
-        'note' : fields.text('Description', size=128),
-        'history' : fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
+        'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
+        'responsible_id': fields.many2one('res.users', 'Responsible'),
+        'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
+        'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
+        'note': fields.text('Description', size=128),
+        'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
         'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
-        'send_response' : fields.boolean('E-mail Notification on Response'),
-        'type' : fields.many2one('survey.type', 'Type'),
+        'send_response': fields.boolean('E-mail Notification on Response'),
+        'type': fields.many2one('survey.type', 'Type'),
     }
     _defaults = {
-        'state' : lambda * a: "draft",
-        'tot_start_survey' : lambda * a: 0,
-        'tot_comp_survey' : lambda * a: 0,
-        'send_response' : lambda * a: 1,
-        'response_user' : lambda * a:1,
+        'state': lambda * a: "draft",
+        'tot_start_survey': lambda * a: 0,
+        'tot_comp_survey': lambda * a: 0,
+        'send_response': lambda * a: 1,
+        'response_user': lambda * a:1,
     }
 
     def survey_draft(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'draft'})
+        self.write(cr, uid, ids, {'state': 'draft'})
         return True
 
     def survey_open(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'open', 'date_open':strftime("%Y-%m-%d %H:%M:%S")})
+        self.write(cr, uid, ids, {'state': 'open', 'date_open': strftime("%Y-%m-%d %H:%M:%S")})
         return True
 
     def survey_close(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S") })
+        self.write(cr, uid, ids, {'state': 'close', 'date_close': strftime("%Y-%m-%d %H:%M:%S") })
         return True
 
     def survey_cancel(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, { 'state' : 'cancel' })
+        self.write(cr, uid, ids, {'state': 'cancel' })
         return True
 
     def copy(self, cr, uid, id, default=None,context={}):
         raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
 
-
 survey()
+
 
 class survey_history(osv.osv):
     _name = 'survey.history'
     _description = 'Survey History'
     _rec_name = 'date'
     _columns = {
-        'survey_id' : fields.many2one('survey', 'Survey'),
-        'user_id' : fields.many2one('res.users', 'User', readonly=True),
-        'date' : fields.datetime('Date started', readonly=1),
+        'survey_id': fields.many2one('survey', 'Survey'),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
+        'date': fields.datetime('Date started', readonly=1),
     }
     _defaults = {
-         'date' : lambda * a: datetime.datetime.now()
+         'date': lambda * a: datetime.datetime.now()
     }
 
 survey_history()
@@ -119,14 +119,14 @@ class survey_page(osv.osv):
     _rec_name = 'title'
     _order = 'sequence'
     _columns = {
-        'title' : fields.char('Page Title', size=128, required=1),
-        'survey_id' : fields.many2one('survey', 'Survey', ondelete='cascade'),
-        'question_ids' : fields.one2many('survey.question', 'page_id', 'Question'),
-        'sequence' : fields.integer('Page Nr'),
-        'note' : fields.text('Description'),
+        'title': fields.char('Page Title', size=128, required=1),
+        'survey_id': fields.many2one('survey', 'Survey', ondelete='cascade'),
+        'question_ids': fields.one2many('survey.question', 'page_id', 'Question'),
+        'sequence': fields.integer('Page Nr'),
+        'note': fields.text('Description'),
     }
     _defaults = {
-        'sequence' : lambda * a: 1
+        'sequence': lambda * a: 1
     }
 
     def default_get(self, cr, uid, fields, context={}):
@@ -149,11 +149,11 @@ class survey_page(osv.osv):
                 'res_model': 'survey.question.wiz',
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                'search_view_id':search_id[0],
+                'search_view_id': search_id[0],
                 'context': context
                 }
 
-    def copy(self, cr, uid, id, default=None,context={}):
+    def copy(self, cr, uid, id, default=None, context={}):
         raise osv.except_osv(_('Error !'),_('You cannot duplicate the resource!'))
 
 survey_page()
@@ -168,7 +168,9 @@ class survey_question(osv.osv):
         if len(ids) == 0:
             return {}
         val = {}
-        cr.execute("select question_id, count(id) as Total_response from survey_response_line where state='done' and question_id in (%s) group by question_id" % ",".join(map(str, map(int, ids))))
+        cr.execute("select question_id, count(id) as Total_response from \
+                survey_response_line where state='done' and question_id in (%s)\
+                 group by question_id" % ",".join(map(str, map(int, ids))))
         ids1 = copy.deepcopy(ids)
         for rec in  cr.fetchall():
             ids1.remove(rec[0])
@@ -178,23 +180,23 @@ class survey_question(osv.osv):
         return val
 
     _columns = {
-        'page_id' : fields.many2one('survey.page', 'Survey Page', ondelete='cascade', required=1),
-        'question' :  fields.char('Question', size=128, required=1),
-        'answer_choice_ids' : fields.one2many('survey.answer', 'question_id', 'Answer'),
-        'response_ids' : fields.one2many('survey.response.line', 'question_id', 'Response', readonly=1),
-        'is_require_answer' : fields.boolean('Require Answer to Question (optional)'),
-        'required_type' : fields.selection([('all','All'), ('at least','At Least'), ('at most','At Most'), ('exactly','Exactly'), ('a range','A Range')], 'Respondent must answer'),
-        'req_ans' : fields.integer('#Required Answer'),
-        'maximum_req_ans' : fields.integer('Maximum Required Answer'),
-        'minimum_req_ans' : fields.integer('Minimum Required Answer'),
-        'req_error_msg' : fields.text('Error Message'),
-        'allow_comment' : fields.boolean('Allow Comment Field'),
-        'sequence' : fields.integer('Sequence'),
-        'tot_resp' : fields.function(_calc_response, method=True, string="Total Response"),
-        'survey' : fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
-        'descriptive_text' : fields.text('Descriptive Text', size=255),
-        'column_heading_ids' : fields.one2many('survey.question.column.heading', 'question_id',' Column heading'),
-        'type' : fields.selection([('multiple_choice_only_one_ans','Multiple Choice (Only One Answer)'),
+        'page_id': fields.many2one('survey.page', 'Survey Page', ondelete='cascade', required=1),
+        'question':  fields.char('Question', size=128, required=1),
+        'answer_choice_ids': fields.one2many('survey.answer', 'question_id', 'Answer'),
+        'response_ids': fields.one2many('survey.response.line', 'question_id', 'Response', readonly=1),
+        'is_require_answer': fields.boolean('Require Answer to Question (optional)'),
+        'required_type': fields.selection([('all','All'), ('at least','At Least'), ('at most','At Most'), ('exactly','Exactly'), ('a range','A Range')], 'Respondent must answer'),
+        'req_ans': fields.integer('#Required Answer'),
+        'maximum_req_ans': fields.integer('Maximum Required Answer'),
+        'minimum_req_ans': fields.integer('Minimum Required Answer'),
+        'req_error_msg': fields.text('Error Message'),
+        'allow_comment': fields.boolean('Allow Comment Field'),
+        'sequence': fields.integer('Sequence'),
+        'tot_resp': fields.function(_calc_response, method=True, string="Total Response"),
+        'survey': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
+        'descriptive_text': fields.text('Descriptive Text', size=255),
+        'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id',' Column heading'),
+        'type': fields.selection([('multiple_choice_only_one_ans','Multiple Choice (Only One Answer)'),
                                      ('multiple_choice_multiple_ans','Multiple Choice (Multiple Answer)'),
                                      ('matrix_of_choices_only_one_ans','Matrix of Choices (Only One Answers Per Row)'),
                                      ('matrix_of_choices_only_multi_ans','Matrix of Choices (Multiple Answers Per Row)'),
@@ -207,65 +209,65 @@ class survey_question(osv.osv):
                                      ('date_and_time','Date and Time'),('descriptive_text','Descriptive Text'),
                                      ('table','Table'),
                                     ], 'Question Type',  required=1,),
-        'is_comment_require' : fields.boolean('Add Comment Field (optional)'),
-        'comment_label' : fields.char('Field Label', size = 255),
-        'comment_field_type' : fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
-        'comment_valid_type' : fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),
+        'is_comment_require': fields.boolean('Add Comment Field (optional)'),
+        'comment_label': fields.char('Field Label', size = 255),
+        'comment_field_type': fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
+        'comment_valid_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),
                                                  ('must_be_specific_length', 'Must Be Specific Length'),
                                                  ('must_be_whole_number', 'Must Be A Whole Number'),
                                                  ('must_be_decimal_number', 'Must Be A Decimal Number'),
                                                  ('must_be_date', 'Must Be A Date'),
                                                  ('must_be_email_address', 'Must Be An Email Address'),
                                                  ], 'Text Validation'),
-        'comment_minimum_no' : fields.integer('Minimum number'),
-        'comment_maximum_no' : fields.integer('Maximum number'),
-        'comment_minimum_float' : fields.float('Minimum decimal number'),
-        'comment_maximum_float' : fields.float('Maximum decimal number'),
-        'comment_minimum_date' : fields.date('Minimum date'),
-        'comment_maximum_date' : fields.date('Maximum date'),
-        'comment_valid_err_msg' : fields.text('Error message'),
-        'make_comment_field' : fields.boolean('Make Comment Field an Answer Choice'),
-        'make_comment_field_err_msg' : fields.text('Error message'),
-        'is_validation_require' : fields.boolean('Validate Text (optional)'),
-        'validation_type' : fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),\
+        'comment_minimum_no': fields.integer('Minimum number'),
+        'comment_maximum_no': fields.integer('Maximum number'),
+        'comment_minimum_float': fields.float('Minimum decimal number'),
+        'comment_maximum_float': fields.float('Maximum decimal number'),
+        'comment_minimum_date': fields.date('Minimum date'),
+        'comment_maximum_date': fields.date('Maximum date'),
+        'comment_valid_err_msg': fields.text('Error message'),
+        'make_comment_field': fields.boolean('Make Comment Field an Answer Choice'),
+        'make_comment_field_err_msg': fields.text('Error message'),
+        'is_validation_require': fields.boolean('Validate Text (optional)'),
+        'validation_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),\
                                                  ('must_be_specific_length', 'Must Be Specific Length'),\
                                                  ('must_be_whole_number', 'Must Be A Whole Number'),\
                                                  ('must_be_decimal_number', 'Must Be A Decimal Number'),\
                                                  ('must_be_date', 'Must Be A Date'),\
                                                  ('must_be_email_address', 'Must Be An Email Address')\
                                                  ], 'Text Validation'),
-        'validation_minimum_no' : fields.integer('Minimum number'),
-        'validation_maximum_no' : fields.integer('Maximum number'),
-        'validation_minimum_float' : fields.float('Minimum decimal number'),
-        'validation_maximum_float' : fields.float('Maximum decimal number'),
-        'validation_minimum_date' : fields.date('Minimum date'),
-        'validation_maximum_date' : fields.date('Maximum date'),
-        'validation_valid_err_msg' : fields.text('Error message'),
-        'numeric_required_sum' : fields.integer('Sum of all choices'),
-        'numeric_required_sum_err_msg' : fields.text('Error message'),
-        'rating_allow_one_column_require' : fields.boolean('Allow Only One Response per Column (Forced Ranking)'),
-        'in_visible_rating_weight':fields.boolean('Is Rating Scale Invisible?'),
-        'in_visible_menu_choice':fields.boolean('Is Menu Choice Invisible?'),
-        'in_visible_answer_type':fields.boolean('Is Answer Type Invisible?'),
-        'comment_column':fields.boolean('Add comment column in matrix'),
-        'column_name':fields.char('Column Name',size=256),
-        'no_of_rows' : fields.integer('No of Rows'),
+        'validation_minimum_no': fields.integer('Minimum number'),
+        'validation_maximum_no': fields.integer('Maximum number'),
+        'validation_minimum_float': fields.float('Minimum decimal number'),
+        'validation_maximum_float': fields.float('Maximum decimal number'),
+        'validation_minimum_date': fields.date('Minimum date'),
+        'validation_maximum_date': fields.date('Maximum date'),
+        'validation_valid_err_msg': fields.text('Error message'),
+        'numeric_required_sum': fields.integer('Sum of all choices'),
+        'numeric_required_sum_err_msg': fields.text('Error message'),
+        'rating_allow_one_column_require': fields.boolean('Allow Only One Response per Column (Forced Ranking)'),
+        'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible?'),
+        'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
+        'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
+        'comment_column': fields.boolean('Add comment column in matrix'),
+        'column_name': fields.char('Column Name',size=256),
+        'no_of_rows': fields.integer('No of Rows'),
     }
     _defaults = {
-         'sequence' : lambda * a: 1,
-         'type' : lambda * a: 'multiple_choice_multiple_ans',
-         'req_error_msg' : lambda * a: 'This question requires an answer.',
-         'required_type' : lambda * a: 'at least',
-         'req_ans' : lambda * a: 1,
-         'comment_field_type' : lambda * a: 'char',
-         'comment_label' : lambda * a: 'Other (please specify)',
-         'comment_valid_type' : lambda * a: 'do_not_validate',
-         'comment_valid_err_msg' : lambda * a : 'The comment you entered is in an invalid format.',
-         'validation_type' : lambda * a: 'do_not_validate',
-         'validation_valid_err_msg' : lambda * a : 'The comment you entered is in an invalid format.',
-         'numeric_required_sum_err_msg' : lambda * a :'The choices need to add up to [enter sum here].',
-         'make_comment_field_err_msg' : lambda * a : 'Please enter a comment.',
-         'in_visible_answer_type' : lambda * a: 1
+         'sequence': lambda * a: 1,
+         'type': lambda * a: 'multiple_choice_multiple_ans',
+         'req_error_msg': lambda * a: 'This question requires an answer.',
+         'required_type': lambda * a: 'at least',
+         'req_ans': lambda * a: 1,
+         'comment_field_type': lambda * a: 'char',
+         'comment_label': lambda * a: 'Other (please specify)',
+         'comment_valid_type': lambda * a: 'do_not_validate',
+         'comment_valid_err_msg': lambda * a : 'The comment you entered is in an invalid format.',
+         'validation_type': lambda * a: 'do_not_validate',
+         'validation_valid_err_msg': lambda * a : 'The comment you entered is in an invalid format.',
+         'numeric_required_sum_err_msg': lambda * a :'The choices need to add up to [enter sum here].',
+         'make_comment_field_err_msg': lambda * a : 'Please enter a comment.',
+         'in_visible_answer_type': lambda * a: 1
     }
 
     def on_change_type(self, cr, uid, ids, type, context=None):
@@ -280,23 +282,25 @@ class survey_question(osv.osv):
             return {'value': val}
 
         if type in ['rating_scale']:
-            val.update({'in_visible_rating_weight':False,'in_visible_menu_choice':True})
+            val.update({'in_visible_rating_weight':False, 'in_visible_menu_choice':True})
             return {'value': val}
 
         elif type in ['matrix_of_drop_down_menus']:
-            val.update({'in_visible_rating_weight':True,'in_visible_menu_choice':False})
+            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':False})
             return {'value': val}
 
         elif type in ['single_textbox']:
-            val.update({'in_visible_rating_weight':True,'in_visible_menu_choice':True})
+            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':True})
             return {'value': val}
 
         else:
-            val.update({'in_visible_rating_weight':True,'in_visible_menu_choice':True,'in_visible_answer_type':True})
+            val.update({'in_visible_rating_weight':True, 'in_visible_menu_choice':True,\
+                         'in_visible_answer_type':True})
             return {'value': val}
 
     def write(self, cr, uid, ids, vals, context=None):
-        questions = self.read(cr,uid, ids, ['answer_choice_ids', 'type', 'required_type','req_ans', 'minimum_req_ans', 'maximum_req_ans', 'column_heading_ids'])
+        questions = self.read(cr,uid, ids, ['answer_choice_ids', 'type', 'required_type',\
+                        'req_ans', 'minimum_req_ans', 'maximum_req_ans', 'column_heading_ids'])
         for question in questions:
             col_len = len(question['column_heading_ids'])
             if vals.has_key('column_heading_ids'):
@@ -311,7 +315,8 @@ class survey_question(osv.osv):
             else:
                 que_type = question['type']
 
-            if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale']:
+            if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans',\
+                             'matrix_of_drop_down_menus', 'rating_scale']:
                 if not col_len:
                     raise osv.except_osv(_('Error !'),_("You must enter one or more column heading."))
             ans_len = len(question['answer_choice_ids'])
@@ -333,14 +338,20 @@ class survey_question(osv.osv):
             else:
                 req_type = question['required_type']
 
-            if que_type in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
+            if que_type in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', \
+                        'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus',\
+                         'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
                 if req_type in ['at least', 'at most', 'exactly']:
                     if vals.has_key('req_ans'):
                         if not vals['req_ans'] or  vals['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'),_("#Required Answer you entered \
+                                    is greater than the number of answer. \
+                                    Please use a number that is smaller than %d.") % (ans_len + 1))
                     else:
                         if not question['req_ans'] or  question['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'),_("#Required Answer you entered is \
+                                    greater than the number of answer.\
+                                    Please use a number that is smaller than %d.") % (ans_len + 1))
 
                 if req_type == 'a range':
                     minimum_ans = 0
@@ -348,28 +359,40 @@ class survey_question(osv.osv):
                     if vals.has_key('minimum_req_ans'):
                         minimum_ans = vals['minimum_req_ans']
                         if not vals['minimum_req_ans'] or  vals['minimum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'),_("Minimum Required Answer\
+                                     you entered is greater than the number of answer.\
+                                    Please use a number that is smaller than %d.") % (ans_len + 1))
                     else:
                         minimum_ans = question['minimum_req_ans']
                         if not question['minimum_req_ans'] or  question['minimum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'),_("Minimum Required Answer you\
+                                     entered is greater than the number of answer. \
+                                     Please use a number that is smaller than %d.") % (ans_len + 1))
                     if vals.has_key('maximum_req_ans'):
                         maximum_ans = vals['maximum_req_ans']
                         if not vals['maximum_req_ans'] or vals['maximum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'),_("Maximum Required Answer you \
+                                    entered for your maximum is greater than the number of answer.\
+                                     Please use a number that is smaller than %d.") % (ans_len + 1))
                     else:
                         maximum_ans = question['maximum_req_ans']
                         if not question['maximum_req_ans'] or question['maximum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Error !'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (ans_len + 1))
+                            raise osv.except_osv(_('Error !'),_("Maximum Required Answer you\
+                                     entered for your maximum is greater than the number of answer.\
+                                      Please use a number that is smaller than %d.") % (ans_len + 1))
                     if maximum_ans <= minimum_ans:
-                        raise osv.except_osv(_('Error !'),_("Maximum Required Answer is greater than Minimum Required Answer"))
+                        raise osv.except_osv(_('Error !'),_("Maximum Required Answer is greater \
+                                    than Minimum Required Answer"))
 
             if question['type'] ==  'matrix_of_drop_down_menus' and vals.has_key('column_heading_ids'):
                 for col in vals['column_heading_ids']:
                     if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                        raise osv.except_osv(_('Error !'),_("You must enter one or more menu choices in column heading"))
-                    elif not col[2] or not col[2].has_key('menu_choice') or col[2]['menu_choice'].strip() == '':
-                        raise osv.except_osv(_('Error !'),_("You must enter one or more menu choices in column heading (white spaces not allowed)"))
+                        raise osv.except_osv(_('Error !'),_("You must enter one or more menu choices\
+                                 in column heading"))
+                    elif not col[2] or not col[2].has_key('menu_choice') or\
+                             col[2]['menu_choice'].strip() == '':
+                        raise osv.except_osv(_('Error !'),_("You must enter one or more menu \
+                                choices in column heading (white spaces not allowed)"))
 
         return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
@@ -420,7 +443,7 @@ class survey_question(osv.osv):
                 'res_model': 'survey.question.wiz',
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                'search_view_id':search_id[0],
+                'search_view_id': search_id[0],
                 'context': context
                 }
 
@@ -452,16 +475,16 @@ class survey_question_column_heading(osv.osv):
         return False
 
     _columns = {
-        'title' : fields.char('Column Heading', size=128, required=1),
-        'menu_choice' : fields.text('Menu Choice'),
-        'rating_weight' : fields.integer('Weight'),
-        'question_id' : fields.many2one('survey.question', 'Question', ondelete='cascade'),
-        'in_visible_rating_weight':fields.boolean('Is Rating Scale Invisible ??'),
-        'in_visible_menu_choice':fields.boolean('Is Menu Choice Invisible??')
+        'title': fields.char('Column Heading', size=128, required=1),
+        'menu_choice': fields.text('Menu Choice'),
+        'rating_weight': fields.integer('Weight'),
+        'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
+        'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible ??'),
+        'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible??')
     }
     _defaults={
-       'in_visible_rating_weight':_get_in_visible_rating_weight,
-       'in_visible_menu_choice':_get_in_visible_menu_choice,
+       'in_visible_rating_weight': _get_in_visible_rating_weight,
+       'in_visible_menu_choice': _get_in_visible_menu_choice,
     }
 
 survey_question_column_heading()
@@ -498,14 +521,16 @@ class survey_answer(osv.osv):
         return False
 
     _columns = {
-        'question_id' : fields.many2one('survey.question', 'Question', ondelete='cascade'),
-        'answer' : fields.char('Answer', size=128, required=1),
-        'sequence' : fields.integer('Sequence'),
-        'response' : fields.function(_calc_response_avg, method=True, string="#Response", multi='sums'),
-        'average' : fields.function(_calc_response_avg, method=True, string="#Avg", multi='sums'),
-        'type' : fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),('integer','Integer'),('float','Float'),('selection','Selection'),('email','Email')], "Type of Answer",required=1),
-        'menu_choice' : fields.text('Menu Choices'),
-        'in_visible_answer_type':fields.boolean('Is Answer Type Invisible??')
+        'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
+        'answer': fields.char('Answer', size=128, required=1),
+        'sequence': fields.integer('Sequence'),
+        'response': fields.function(_calc_response_avg, method=True, string="#Response", multi='sums'),
+        'average': fields.function(_calc_response_avg, method=True, string="#Avg", multi='sums'),
+        'type': fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),\
+                    ('integer','Integer'),('float','Float'),('selection','Selection'),\
+                    ('email','Email')], "Type of Answer",required=1),
+        'menu_choice': fields.text('Menu Choices'),
+        'in_visible_answer_type': fields.boolean('Is Answer Type Invisible??')
     }
     _defaults = {
          'sequence' : lambda * a: 1,
@@ -529,9 +554,11 @@ class survey_response(osv.osv):
         'survey_id' : fields.many2one('survey', 'Survey', required=1, ondelete='cascade'),
         'date_create' : fields.datetime('Create Date', required=1),
         'user_id' : fields.many2one('res.users', 'User'),
-        'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], 'Response Type', required=1, readonly=1),
+        'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], \
+                                    'Response Type', required=1, readonly=1),
         'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Response Answer'),
-        'state' : fields.selection([('done', 'Finished '),('skip', 'Not Finished')], 'Status', readonly=True),
+        'state' : fields.selection([('done', 'Finished '),('skip', 'Not Finished')], \
+                            'Status', readonly=True),
     }
     _defaults = {
         'state' : lambda * a: "skip",
@@ -558,15 +585,18 @@ class survey_response_line(osv.osv):
     _description = 'Survey Response Line'
     _rec_name = 'date_create'
     _columns = {
-        'response_id' : fields.many2one('survey.response', 'Response', ondelete='cascade'),
-        'date_create' : fields.datetime('Create Date', required=1),
-        'state' : fields.selection([('draft', 'Draft'), ('done', 'Answered'),('skip', 'Skiped')], 'Status', readonly=True),
-        'question_id' : fields.many2one('survey.question', 'Question'),
-        'page_id' : fields.related('question_id', 'page_id', type='many2one', relation='survey.page', string='Page'),
-        'response_answer_ids' : fields.one2many('survey.response.answer', 'response_id', 'Response Answer'),
-        'response_table_ids' : fields.one2many('survey.tbl.column.heading', 'response_table_id', 'Response Answer'),
-        'comment' : fields.text('Notes'),
-        'single_text' : fields.char('Text', size=255),
+        'response_id': fields.many2one('survey.response', 'Response', ondelete='cascade'),
+        'date_create': fields.datetime('Create Date', required=1),
+        'state': fields.selection([('draft', 'Draft'), ('done', 'Answered'),('skip', 'Skiped')],\
+                                   'Status', readonly=True),
+        'question_id': fields.many2one('survey.question', 'Question'),
+        'page_id': fields.related('question_id', 'page_id', type='many2one', \
+                                  relation='survey.page', string='Page'),
+        'response_answer_ids': fields.one2many('survey.response.answer', 'response_id', 'Response Answer'),
+        'response_table_ids': fields.one2many('survey.tbl.column.heading', \
+                                    'response_table_id', 'Response Answer'),
+        'comment': fields.text('Notes'),
+        'single_text': fields.char('Text', size=255),
     }
     _defaults = {
         'state' : lambda * a: "draft",
@@ -578,10 +608,10 @@ class survey_tbl_column_heading(osv.osv):
     _name = 'survey.tbl.column.heading'
     _order = 'name'
     _columns = {
-        'name' : fields.integer('Row Number'),
-        'column_id' : fields.many2one('survey.question.column.heading', 'Column'),
-        'value' : fields.char('Value', size = 255),
-        'response_table_id' : fields.many2one('survey.response.line', 'Response', ondelete='cascade'),
+        'name': fields.integer('Row Number'),
+        'column_id': fields.many2one('survey.question.column.heading', 'Column'),
+        'value': fields.char('Value', size = 255),
+        'response_table_id': fields.many2one('survey.response.line', 'Response', ondelete='cascade'),
     }
 
 survey_tbl_column_heading()
@@ -591,13 +621,13 @@ class survey_response_answer(osv.osv):
     _description = 'Survey Response Answer'
     _rec_name = 'response_id'
     _columns = {
-        'response_id' : fields.many2one('survey.response.line', 'Response', ondelete='cascade'),
-        'answer_id' : fields.many2one('survey.answer', 'Answer', required=1, ondelete='cascade'),
-        'column_id' : fields.many2one('survey.question.column.heading','Column'),
-        'answer' : fields.char('Value', size =255),
-        'value_choice' : fields.char('Value Choice', size =255),
-        'comment' : fields.text('Notes'),
-        'comment_field' : fields.char('Comment', size = 255)
+        'response_id': fields.many2one('survey.response.line', 'Response', ondelete='cascade'),
+        'answer_id': fields.many2one('survey.answer', 'Answer', required=1, ondelete='cascade'),
+        'column_id': fields.many2one('survey.question.column.heading','Column'),
+        'answer': fields.char('Value', size =255),
+        'value_choice': fields.char('Value Choice', size =255),
+        'comment': fields.text('Notes'),
+        'comment_field': fields.char('Comment', size = 255)
     }
 
 survey_response_answer()
@@ -616,16 +646,16 @@ class survey_request(osv.osv):
     _order = 'date_deadline'
     _rec_name = 'date_deadline'
     _columns = {
-        'date_deadline' : fields.date("Deadline date"),
-        'user_id' : fields.many2one("res.users", "User"),
-        'email' : fields.char("E-mail", size=64),
-        'survey_id' : fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
-        'response' : fields.many2one('survey.response', 'Answer'),
-        'state' : fields.selection([('draft','Draft'),('waiting_answer', 'Wating Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
+        'date_deadline': fields.date("Deadline date"),
+        'user_id': fields.many2one("res.users", "User"),
+        'email': fields.char("E-mail", size=64),
+        'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
+        'response': fields.many2one('survey.response', 'Answer'),
+        'state': fields.selection([('draft','Draft'),('waiting_answer', 'Wating Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
     }
     _defaults = {
-        'state' : lambda * a: 'draft',
-        'date_deadline' : lambda * a :  (now() + RelativeDateTime(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
+        'state': lambda * a: 'draft',
+        'date_deadline': lambda * a :  (now() + RelativeDateTime(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
     }
     def survey_req_waiting_answer(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, { 'state' : 'waiting_answer'})
