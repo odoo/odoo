@@ -101,7 +101,7 @@ class pos_make_payment(osv.osv_memory):
         """
         record_id = context and context.get('record_id', False) or False        
         res = super(pos_make_payment, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        print "::::::::record_idrecord_id:::::::",context
+        
         if record_id:
             order = self.pool.get('pos.order').browse(cr, uid, record_id)
             amount = order.amount_total - order.amount_paid
@@ -129,7 +129,7 @@ class pos_make_payment(osv.osv_memory):
         order = order_obj.browse(cr, uid, record_id, context)
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids)[0]
-        print "::::::::",data
+        
         # Todo need to check ...
         if amount !=0.0:
             invoice_wanted = data['invoice_wanted']
