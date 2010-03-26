@@ -45,8 +45,8 @@ class pos_make_payment(osv.osv_memory):
         res = super(pos_make_payment, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id',False)  
         j_obj = self.pool.get('account.journal')
-        c = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
-        journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', c)])
+        company_id = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
+        journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
         if journal:
             journal = journal[0]
         else:
