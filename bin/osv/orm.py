@@ -250,7 +250,7 @@ class browse_record(object):
                     elif f._type in ('reference'):
                         if data[n]:
                             if isinstance(data[n], browse_record):
-                                new_data[n] = data[n]    
+                                new_data[n] = data[n]
                             else:
                                 ref_obj, ref_id = data[n].split(',')
                                 ref_id = long(ref_id)
@@ -1917,6 +1917,8 @@ class orm(orm_template):
         alldata = {}
         groupby = group_by
         for r in cr.dictfetchall():
+            for fld,val in r.items():
+                if val == None:r[fld] = False
             alldata[r['id']] = r
             del r['id']
         data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
@@ -3131,7 +3133,7 @@ class orm(orm_template):
             if not cr.rowcount:
                 raise except_orm(_('AccessError'),
                                  _('You try to bypass an access rule to create (Document type: %s).') \
-                                  % self._name)        
+                                  % self._name)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store:
