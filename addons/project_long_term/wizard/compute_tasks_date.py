@@ -76,7 +76,8 @@ class wizard_compute_tasks(wizard.interface):
                 if resource_id:
 #                    resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
                     resource = resource_obj.read(cr, uid, resource_id, ['calendar_id','time_efficiency'], context=context)[0]
-                    leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id[0], resource.get('calendar_id')[0])
+                    if resource.get('calendar_id', False):
+                       leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id[0], resource['calendar_id'] and resource['calendar_id'][0] or False)
                     time_efficiency = resource.get('time_efficiency')
                 resources.append(classobj((user.name.encode('utf8')), (Resource,), {'__doc__': user.name,
                                                                         '__name__': user.name,
