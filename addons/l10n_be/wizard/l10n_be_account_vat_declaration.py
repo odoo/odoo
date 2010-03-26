@@ -18,45 +18,36 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 import datetime
 import base64
-
-import wizard
-import pooler
+from osv import osv, fields
 from tools.translate import _
 
-form_fyear = """<?xml version="1.0"?>
-<form string="Select Period">
-    <field name="period" />
-</form>"""
+class l10n_be_vat_declaration(osv.osv_memory):
+    """ Vat Declaration """
+    _name = "l1on_be.vat.declaration"
+    _description = "Vat Declaration"
 
-fields_fyear = {
-    'period': {'string': 'Period', 'type': 'many2one', 'relation': 'account.period', 'required': True,},
-}
+    _columns = {
+        'period_id': fields.many2one('account.period','Period', required=True),
+        'msg': fields.text('File created', size=64, readonly=True),
+        'file_save' : fields.binary('Save File'),
+    }
 
-form = """<?xml version="1.0"?>
-<form string="Notification">
-     <separator string="XML Flie has been Created."  colspan="4"/>
-     <field name="msg" colspan="4" nolabel="1"/>
-     <field name="file_save" />
-</form>"""
+    _defaults = {
+        'msg': lambda *a:'''Save the File with '".xml"' extension.''',
+    }
 
-fields = {
-    'msg': {'string':'File created', 'type':'text', 'size':'100','readonly':True},
-    'file_save':{'string': 'Save File',
-        'type': 'binary',
-        'readonly': True,},
-}
+    def create_xml(self, cr, uid, ids, context={}):
+        obj_fyear = self.pool.get('account.fiscalyear')
+        obj_tax_code = self.pool.get('account.tax.code')
+        obj_acc_period = self.pool.get('account.period')
+        obj_user = self.pool.get('res.users')
+        obj_comp = self.pool.get('res.company')
+        obj_data = self.pool.get('ir.model.data')
 
-
-class wizard_vat_declaration(wizard.interface):
-
-    def _create_xml(self, cr, uid, data, context):
-        pool_obj = pooler.get_pool(cr.dbname)
-        obj_fyear = pool_obj.get('account.fiscalyear')
-        obj_tax_code = pool_obj.get('account.tax.code')
-        obj_user = pool_obj.get('res.users')
         list_of_tags=['00','01','02','03','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','91']
         obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         user_cmpny = obj_company.name
@@ -66,19 +57,20 @@ class wizard_vat_declaration(wizard.interface):
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
-        ctx['period_id'] = data['form']['period'] #added context here
+        data  = self.read(cr, uid, ids)[0]
+        ctx['period_id'] = data['period_id'] #added context here
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         address = post_code = city = ''
         if not obj_company.partner_id.address:
             address = post_code = city = ''
 
-        city, post_code, address = pool_obj.get('res.company')._get_default_ad(obj_company.partner_id.address)
+        city, post_code, address = obj_comp._get_default_ad(obj_company.partner_id.address)
 
 
         year_id = obj_fyear.find(cr, uid)
 
-        account_period = pool_obj.get('account.period').browse(cr, uid, data['form']['period'], context=context)
+        account_period = obj_acc_period.browse(cr, uid, data['period_id'], context=context)
         current_year = account_period.fiscalyear_id.name
         period_code = account_period.code
 
@@ -111,21 +103,10 @@ class wizard_vat_declaration(wizard.interface):
                     data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(int(item['sum_period']*100)) +  '</D'+str(int(item['code'])) +'>'
 
         data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
-        data['form']['msg']='Save the File with '".xml"' extension.'
-        data['form']['file_save'] = base64.encodestring(data_of_file)
-        return data['form']
+        data['file_save'] = base64.encodestring(data_of_file)
+        self.write(cr, uid, ids, {'file_save':data['file_save']}, context=context)
 
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'form', 'arch': form_fyear, 'fields':fields_fyear, 'state':[('end', 'Cancel'),('go', 'Create XML')]},
-        },
-        'go': {
-            'actions': [_create_xml],
-            'result': {'type':'form', 'arch': form, 'fields': fields, 'state': [('end', 'Ok')]},
-        }
-    }
 
-wizard_vat_declaration('wizard.account.xml.vat.declaration')
+l10n_be_vat_declaration()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

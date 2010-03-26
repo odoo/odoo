@@ -50,6 +50,7 @@
     'update_xml': [
                 'account_pcmn_belgium.xml',
                 'l10n_be_wizard.xml',
+                'wizard/l10n_be_account_vat_declaration_view.xml',
                 'l10n_be_sequence.xml',
                 'fiscal_templates.xml',
                 'security/ir.model.access.csv'
