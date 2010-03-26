@@ -45,15 +45,15 @@ class pos_make_payment(osv.osv_memory):
         res = super(pos_make_payment, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id',False)  
         j_obj = self.pool.get('account.journal')
-        c = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
-        journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', c)])
+        company_id = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
+        journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', company_id)])
+        
         if journal:
             journal = journal[0]
         else:
             journal = None
         wf_service = netsvc.LocalService("workflow")
 
-    
         order = self.pool.get('pos.order').browse(cr, uid, record_id, context)
         #get amount to pay
         amount = order.amount_total - order.amount_paid
@@ -79,6 +79,7 @@ class pos_make_payment(osv.osv_memory):
         if 'payment_name'  in fields: 
             res.update({'payment_name':'Payment'})    
         return res
+        
     def view_init(self, cr, uid, fields_list, context=None):
         res = super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) or False        
@@ -101,20 +102,18 @@ class pos_make_payment(osv.osv_memory):
         """
         record_id = context and context.get('record_id', False) or False        
         res = super(pos_make_payment, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        print "::::::::record_idrecord_id:::::::",context
         if record_id:
             order = self.pool.get('pos.order').browse(cr, uid, record_id)
             amount = order.amount_total - order.amount_paid
             if amount==0.0:
                 res['arch'] = """ <form string="Make Payment" colspan="4">
-                                <group col="2" colspan="2">
-                                    <label string="Do you want to print the Receipt?" colspan="4"/>
-                                    <separator colspan="4"/>
-                                    <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                                    <button name="print_report" string="Print Receipt" type="object" icon="gtk-ok"/>
-                                </group>
-                            </form>                             
-                        """
+                    <group col="2" colspan="2">
+                        <label string="Do you want to print the Receipt?" colspan="4"/>
+                        <separator colspan="4"/>
+                        <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
+                        <button name="print_report" string="Print Receipt" type="object" icon="gtk-ok"/>
+                    </group>
+                </form>"""
         return res
 
     def check(self, cr, uid, ids, context=None):
@@ -129,7 +128,7 @@ class pos_make_payment(osv.osv_memory):
         order = order_obj.browse(cr, uid, record_id, context)
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids)[0]
-        print "::::::::",data
+
         # Todo need to check ...
         if amount !=0.0:
             invoice_wanted = data['invoice_wanted']
@@ -166,21 +165,21 @@ class pos_make_payment(osv.osv_memory):
         if not context:
             context={}
         """ 
-             @summary: To get the date and print the report           
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             @return : retrun report
+         @summary: To get the date and print the report           
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param context: A standard dictionary 
+         @return : retrun report
         """        
         datas = {'ids' : context.get('active_ids',[])}
         res =  {}        
         datas['form'] = res
         return { 
-                'type' : 'ir.actions.report.xml',
-                'report_name':'pos.receipt',
-                'datas' : datas,               
-       }        
+            'type' : 'ir.actions.report.xml',
+            'report_name':'pos.receipt',
+            'datas' : datas,               
+        }        
     
     def trigger_wkf(self, cr, uid, data, context):
         record_id = context and context.get('active_id',False)              
@@ -189,15 +188,15 @@ class pos_make_payment(osv.osv_memory):
         return {}
         
     _columns = {
-                'journal':fields.selection(pos_box_entries.get_journal, "Journal",required=True),
-                'product_id': fields.many2one('product.product', "Acompte"),
-                'amount':fields.float('Amount', digits=(16,2) ,required= True),
-                'payment_name': fields.char('Payment name', size=32, required=True),
-                'payment_date': fields.date('Payment date', required=True),
-                'is_acc': fields.boolean('Accompte'),
-                'invoice_wanted': fields.boolean('Invoice'),
-                'num_sale':fields.char('Num.File', size=32),
-    }  
+        'journal':fields.selection(pos_box_entries.get_journal, "Journal",required=True),
+        'product_id': fields.many2one('product.product', "Acompte"),
+        'amount':fields.float('Amount', digits=(16,2) ,required= True),
+        'payment_name': fields.char('Payment name', size=32, required=True),
+        'payment_date': fields.date('Payment date', required=True),
+        'is_acc': fields.boolean('Accompte'),
+        'invoice_wanted': fields.boolean('Invoice'),
+        'num_sale':fields.char('Num.File', size=32),
+    }
     
 pos_make_payment()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
