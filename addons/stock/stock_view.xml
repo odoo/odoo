@@ -338,31 +338,31 @@
             </field>
         </record>
 
-        <wizard
+        <!--wizard
             id="action_lot2"
             model="stock.production.lot"
             name="stock.traceability.lot.upstream"
-            string="Upstream traceability"/>
+            string="Upstream traceability"/-->
 
-        <wizard
+        <!--wizard
             id="action_lot4"
             model="stock.production.lot"
             name="stock.traceability.lot.downstream"
-            string="Downstream traceability"/>
+            string="Downstream traceability"/-->
 
-        <wizard
+        <!--wizard
             id="action4"
             model="stock.tracking"
             name="stock.traceability.upstream"
-            string="Upstream traceability"/>
+            string="Upstream traceability"/-->
 
-        <wizard
+        <!--wizard
             id="action2"
             model="stock.tracking"
             name="stock.traceability.downstream"
-            string="Downstream traceability"/>
+            string="Downstream traceability"/-->
 
-        <record id="action3" model="ir.actions.act_window">
+        <!--record id="action3" model="ir.actions.act_window">
             <field name="name">Downstream traceability</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.move</field>
@@ -391,7 +391,7 @@
             <field name="name">Upstream traceability</field>
             <field eval="'ir.actions.act_window,'+str(action5)" name="value"/>
             <field eval="True" name="object"/>
-        </record>
+        </record-->
 
         <record id="view_location_form" model="ir.ui.view">
             <field name="name">stock.location.form</field>
