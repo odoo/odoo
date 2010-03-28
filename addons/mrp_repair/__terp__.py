@@ -37,11 +37,12 @@
     'depends': ['base', 'sale', 'account'],
     'update_xml': [
         'security/ir.model.access.csv',
-        'mrp_repair_sequence.xml',
-        'mrp_repair_wizard.xml',
+        'mrp_repair_sequence.xml',        
+        'wizard/mrp_repair_cancel_view.xml',
+        'wizard/mrp_repair_make_invoice_view.xml',
         'mrp_repair_view.xml',
         'mrp_repair_workflow.xml',
-        'mrp_repair_report.xml'
+        'mrp_repair_report.xml',
     ],
     'demo_xml': [],
     'installable': True,

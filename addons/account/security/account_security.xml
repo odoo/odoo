@@ -46,7 +46,7 @@
         <field model="ir.model.fields" name="field_id" search="[('model','=','account.move'),('name','=','company_id')]"/>
         <field name="operator">child_of</field>
         <field name="operand">user.company_id.id</field>
-		<field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>        
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>        
         <field name="rule_group" ref="account_move_comp_rule_group"/>
     </record>
 
@@ -60,7 +60,7 @@
         <field model="ir.model.fields" name="field_id" search="[('model','=','account.move.line'),('name','=','company_id')]"/>
         <field name="operator">child_of</field>
         <field name="operand">user.company_id.id</field>
-		<field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         <field name="rule_group" ref="account_move_line_comp_rule_group"/>
     </record>
     <record id="journal_period_comp_rule_group" model="ir.rule.group">
@@ -72,7 +72,7 @@
         <field model="ir.model.fields" name="field_id" search="[('model','=','account.journal.period'),('name','=','company_id')]"/>
         <field name="operator">child_of</field>
         <field name="operand">user.company_id.id</field>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         <field name="rule_group" ref="journal_period_comp_rule_group"/>
     </record>
 
@@ -85,7 +85,7 @@
         <field model="ir.model.fields" name="field_id" search="[('model','=','account.journal'),('name','=','company_id')]"/>
         <field name="operator">child_of</field>
         <field name="operand">user.company_id.id</field>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         <field name="rule_group" ref="journal_comp_rule_group"/>
     </record>
     <record id="analytic_journal_comp_rule_group" model="ir.rule.group">

@@ -3,7 +3,8 @@
 <data>
 	<menuitem name="Auction Management" id="auction_menu_root" icon="terp-purchase"/>
 	<menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="7"/>
-
+	<menuitem name="Tools Bar Codes" id="auction_outils_menu" parent="auction_menu_root" sequence="5" />
+    <menuitem name="Deliveries Management" action="action_auction_taken" id="menu_wizard_emporte" parent="auction_outils_menu"/>
 	=======================================================
 	Auction Management/Configuration/artist
 	=======================================================
@@ -203,6 +204,7 @@
 				<field name="lot_est2"/>
 				<field name="product_id"/>
 				<field name="state" readonly="1"/>
+				
 			</form>
 		</field>
 	</record>
@@ -277,7 +279,7 @@
 					<separator string="Description" colspan="4"/>
 					<field name="obj_desc" colspan="4" nolabel="1" select="2"/>
 					<field name="state" colspan="1" select="2"/>
-				 	<group col="4" colspan="2">
+				 	<group col="8" colspan="2">
 				 	   <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
                        <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
                        <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
@@ -330,7 +332,6 @@
 							<field name="date"/>
 						</tree>
 					</field>
-
 				</page>
 			<page string="Bids">
 				<field name="bid_lines" colspan="4" nolabel="1" editable="top">
@@ -340,9 +341,7 @@
 							<field name="call"/>
 						</tree>
 					</field>
-
 			</page>
-
 				</notebook>
 			</form>
 		</field>
