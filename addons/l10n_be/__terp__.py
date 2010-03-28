@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -39,20 +39,21 @@
 
     """,
     'author': 'Tiny',
-    'depends': [ 
-                    'account', 
-                    'account_report', 
-                    'base_vat', 
-                    'base_iban', 
-                    'account_chart'
+    'depends': [
+                'account',
+                'account_report',
+                'base_vat',
+                'base_iban',
+                'account_chart'
                 ],
     'init_xml': [],
     'update_xml': [
-                    'account_pcmn_belgium.xml', 
-                    'l10n_be_wizard.xml',
-                    'l10n_be_sequence.xml', 
-                    'fiscal_templates.xml',
-                    'security/ir.model.access.csv'
+                'account_pcmn_belgium.xml',
+                'l10n_be_wizard.xml',
+                'wizard/l10n_be_account_vat_declaration_view.xml',
+                'l10n_be_sequence.xml',
+                'fiscal_templates.xml',
+                'security/ir.model.access.csv'
                    ],
     'demo_xml': [
                     'account.report.report.csv'

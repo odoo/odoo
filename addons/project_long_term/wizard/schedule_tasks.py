@@ -139,7 +139,7 @@ class wizard_schedule_task(wizard.interface):
     states = {
         'init': {
             'actions': [_compute_date],
-            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
+            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok', 'gtk-ok', True)]},
         }
     }
 wizard_schedule_task('phase.schedule.tasks')
