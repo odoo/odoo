@@ -25,6 +25,7 @@ from tools.translate import _
 from tools.misc import UpdateableStr
 from mx import DateTime
 from tools.translate import _
+import time
 
 def get_journal(self,cr,uid,context):
     """ 
