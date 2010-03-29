@@ -85,7 +85,7 @@ class wiz_journal(wizard.interface):
     states = {
         'init': {
             'actions': [_period_get],
-            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('open','Open Journal')]}
+            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel', 'gtk-cancel'),('open','Open Journal', 'gtk-ok')]}
         },
         'open': {
             'actions': [],

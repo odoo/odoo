@@ -308,7 +308,7 @@ class wiz_reconcile(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':_reconcile_form, 'fields':_reconcile_fields, 'state':[('end','Cancel'),('reconcile','Reconcile')]}
+            'result': {'type':'form', 'arch':_reconcile_form, 'fields':_reconcile_fields, 'state':[('end','Cancel', 'gtk-cancel'),('reconcile','Reconcile', 'gtk-ok')]}
         },
         'reconcile': {
             'actions': [_reconcile],
