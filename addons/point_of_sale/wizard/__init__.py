@@ -23,8 +23,15 @@
 #import wizard_pos_payment
 import wizard_default_journal
 import wizard_scan_product
+
 import wizard_return
+
+
+
+
+
 #import wizard_open_statement
+
 import pos_add_product
 import pos_confirm
 import pos_discount
