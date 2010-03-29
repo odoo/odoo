@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,19 +15,31 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import mrp_product_produce
-import orderpoint_procurement
-import mrp_procurement
-import schedulers_all
-import mrp_price
-import mrp_workcenter_load
-import wizard_track_prod
-import change_production_qty
-import make_procurement_product
+import threading
+from osv import osv, fields
+
+class procurement_compute(osv.osv_memory):
+    _name = 'mrp.procurement.compute'
+    _description = 'Compute Procurement'
+    
+    def _procure_calculation_procure(self, cr, uid, ids, context):
+        try:
+            proc_obj = self.pool.get('mrp.procurement')
+            proc_obj._procure_confirm(cr, uid, use_new_cursor=cr.dbname, context=context)
+        finally:
+            cr.close()
+        return {}
+    
+    def procure_calculation(self, cr, uid, ids, context):
+        threaded_calculation = threading.Thread(target=self._procure_calculation_procure, args=(cr, uid, ids, context))
+        threaded_calculation.start()
+        return {}
+    
+procurement_compute()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
