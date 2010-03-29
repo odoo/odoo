@@ -67,6 +67,7 @@
         'wizard/orderpoint_procurement_view.xml',
         'wizard/mrp_price_view.xml',
         'wizard/mrp_workcenter_load_view.xml',
+#        'wizard/mrp_track_prod_view.xml',
         'mrp_view.xml',
         'wizard/schedulers_all_view.xml',
         'mrp_wizard.xml',
