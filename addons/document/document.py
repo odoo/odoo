@@ -165,7 +165,7 @@ class document_file(osv.osv):
             vals['res_model'] = context.get('default_res_model', False)
         if vals.get('res_id', False) and vals.get('res_model', False):
             obj_model = self.pool.get(vals['res_model'])
-            result = obj_model.read(cr, uid, [vals['res_id']], context=context)
+            result = obj_model.read(cr, uid, [vals['res_id']], ['name', 'partner_id', 'address_id'], context=context)
             if len(result):
                 obj = result[0]
                 if obj.get('name', False):

@@ -35,9 +35,10 @@
             <field name="model">resource.calendar</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Resource Calendar">
+                <search string="Search Working Period">
                    <group col='15' colspan='4'>
-                       <field name="name" string="Working Calendar"/>
+                   	   <field name="name" string="Name"/>
+               <!--     <field name="name" string="Working Calendar"/> -->
                        <field name="manager" string="Workgroup Manager" widget="selection"/>
                        <field name="company_id" string="Company" widget="selection"/>
                    </group>
@@ -50,7 +51,7 @@
             <field name="model">resource.calendar.leaves</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Resource Calendar Leaves">
+                <search string="Search Working Period Leaves">
                    <group col='15' colspan='4'>
                        <field name="name" string="Name"/>
                        <field name="company_id" string="Company" widget="selection"/>
@@ -70,7 +71,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Resource Calendar">
+            	<form string="Working Period">
                     <field name="name" select="1"/>
                     <field name="manager" select="1"/>
                     <field name="company_id" select="1"/>
@@ -85,7 +86,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Resource Calendar">
+            	<tree string="Working Period">
                     <field name="name"/>
                     <field name="manager" select="1"/>
                     <field name="company_id" select="1"/>
@@ -94,7 +95,7 @@
         </record>
 
         <record id="action_resource_calendar_form" model="ir.actions.act_window">
-            <field name="name">Resource Calendar</field>
+            <field name="name">Working Period</field>
             <field name="res_model">resource.calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -181,10 +182,10 @@
                 <tree string="Resources">
                     <field name="name" />
                     <field name="company_id" />
-                    <field name="calendar_id" />
                     <field name="resource_type" />
-                    <field name="user_id" />
+                    <field name="calendar_id" />
                     <field name="time_efficiency" />
+                    <field name="user_id" />
                 </tree>
             </field>
         </record>
