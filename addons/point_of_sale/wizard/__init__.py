@@ -22,7 +22,7 @@
 
 #import wizard_pos_payment
 
-import wizard_scan_product
+
 
 import wizard_return
 
