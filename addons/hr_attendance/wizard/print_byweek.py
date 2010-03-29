@@ -23,7 +23,7 @@ import wizard
 import time
 
 _date_form = '''<?xml version="1.0"?>
-<form string="Select a time span">
+<form string="Timesheets by week">
     <separator string="Select a starting and a end date" colspan="4"/>
     <field name="init_date"/>
     <newline/>
@@ -39,7 +39,7 @@ class wiz_byweek(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print','Print Timesheet'),('end','Cancel') ]}
+            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('end','Cancel', 'gtk-cancel'), ('print','Print', 'gtk-ok')]}
         },
         'print': {
             'actions': [],
