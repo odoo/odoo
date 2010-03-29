@@ -69,6 +69,15 @@ from tools.config import config
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
+
+POSTGRES_CONFDELTYPES = {
+    'RESTRICT': 'r',
+    'NO ACTION': 'a',
+    'CASCADE': 'c',
+    'SET NULL': 'n',
+    'SET DEFAULT': 'd',
+}
+
 def last_day_of_current_month():
     today = datetime.date.today()
     last_day = str(calendar.monthrange(today.year, today.month)[1])
@@ -2277,14 +2286,7 @@ class orm(orm_template):
                                                 "AND con.contype = 'f'", (self._table, ref, k, 'id'))
                                     res = cr.dictfetchall()
                                     if res:
-                                        confdeltype = {
-                                            'RESTRICT': 'r',
-                                            'NO ACTION': 'a',
-                                            'CASCADE': 'c',
-                                            'SET NULL': 'n',
-                                            'SET DEFAULT': 'd',
-                                        }
-                                        if res[0]['confdeltype'] != confdeltype.get(f.ondelete.upper(), 'a'):
+                                        if res[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
                                             cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res[0]['conname'] + '"')
                                             cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
                                             cr.commit()
