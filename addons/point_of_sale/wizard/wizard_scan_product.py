@@ -22,7 +22,6 @@
 
 import pooler
 import wizard
-from osv import osv
 
 form_gencod = """<?xml version="1.0"?>
 <form string="Scan product">
@@ -44,22 +43,24 @@ def _scan(self, cr, uid, data, context):
     result = pool.get('pos.order.line')._scan_product(cr, uid, data['form']['gencod'], 1, data['id'])
     return {'gencod': False}
 
+
 def _pre_init(self, cr, uid, data, context):
     return {'gencod': False}
 
+
 class pos_scan_product(wizard.interface):
     states = {
-        'init' : {'actions' : [_pre_init],
-                'result' : {
-                    'type': 'form',
-                    'arch': form_gencod,
-                    'fields': fields_gencod,
-                    'state': [('end','Cancel','gtk-cancel'),
-                              ('add', 'Add', 'gtk-ok', True)],
+        'init': {'actions' : [_pre_init],
+            'result': {
+               'type': 'form',
+               'arch': form_gencod,
+               'fields': fields_gencod,
+               'state': [('end', 'Cancel','gtk-cancel'),
+                         ('add', 'Add', 'gtk-ok', True)],
             }
         },
-        'add' : {'actions' : [_scan],
-                'result' : {
+        'add': {'actions' : [_scan],
+                'result': {
                     'type': 'state',
                     'state': 'init',
                 }
