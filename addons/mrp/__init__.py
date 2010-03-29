@@ -21,8 +21,8 @@
 
 import mrp
 import stock
+import product
 import installer
-import mrp_wizard
 import wizard
 import report
 import company

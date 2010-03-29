@@ -21,25 +21,31 @@
             <field name="category_id" ref="product_uom_categ_unit"/>
             <field name="name">PCE</field>
             <field name="factor">1.0</field>
-            <field name="factor_inv">1.0</field>
+            <field name="factor_inv_data">1.0</field>
         </record>
         <record id="product_uom_kgm" model="product.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <field name="name">KGM</field>
             <field name="factor">1.0</field>
-            <field name="factor_inv">1.0</field>
+            <field name="factor_inv_data">1.0</field>
         </record>
         <record id="uom_hour" model="product.uom">
             <field name="name">Hour</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor">8.0</field>
-            <field name="factor_inv">1.0</field>
+            <field name="factor_inv_data">1.0</field>
         </record>
         <record id="uom_day" model="product.uom">
             <field name="name">Day</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor">1.0</field>
-            <field name="factor_inv">1.0</field>
+            <field name="factor_inv_data">1.0</field>
+        </record>
+        <record id="product_uom_ton" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_kgm"/>
+            <field name="name">TON</field>
+            <field name="factor">1.0</field>
+            <field name="factor_inv_data">1.0</field>
         </record>
 
         <!--

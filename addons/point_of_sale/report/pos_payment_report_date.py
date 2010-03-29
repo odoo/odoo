@@ -43,7 +43,7 @@ class pos_payment_report_date(report_sxw.rml_parse):
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
                          "and po.state in ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id in %s " \
-                         ,(dt1,dt2,tuple(form['user_id'][0][-1])))
+                         ,(dt1,dt2,tuple(form['user_id'])))
         data=self.cr.dictfetchall()
         return data
 
@@ -55,7 +55,7 @@ class pos_payment_report_date(report_sxw.rml_parse):
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id " \
                          "and po.state in ('paid','invoiced') and po.date_order  >= %s and po.date_order <= %s and po.user_id in %s " \
-                         ,(dt1,dt2,tuple(form['user_id'][0][-1])))
+                         ,(dt1,dt2,tuple(form['user_id'])))
         res=self.cr.fetchone()[0]
         return res
 

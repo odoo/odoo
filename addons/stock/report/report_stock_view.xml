@@ -12,10 +12,12 @@
                         <filter icon="terp-stock" string="Internal Locations" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations" default="1" />
                         <filter icon="terp-stock" string="Customer Locations" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
                         <filter icon="terp-stock" string="Supplier Locations" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
+                        
                         <separator orientation="vertical"/>
                         <field name="location_id" select="1" />
                         <field name="product_id" select="1" />
                     </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="10">
                         <filter string="Location" icon="terp-stock" domain="[]"  context="{'group_by':'location_id'}"/>
                         <filter string="Product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
@@ -152,7 +154,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_line_date">
-            <field name="name">Latest Inventory Date by Product</field>
+            <field name="name">Latest Inventories Dates by Product</field>
             <field name="res_model">report.stock.lines.date</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

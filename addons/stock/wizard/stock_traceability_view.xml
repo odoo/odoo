@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+<!-- =========stock.traceability.downstream================= -->
+
+            <record id="view_stock_traceability_downstream" model="ir.ui.view">
+                <field name="name">Stock traceability downstream</field>
+                <field name="model">stock.traceability.downstream</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+	                <form string="Downstream traceability">
+	                	
+	                	<label string="It will give information about the stock of a product as per the Tracking Lot" colspan="2" />
+				<separator string="" colspan="4" />
+	                	<button icon='gtk-cancel' special="cancel"
+	                		string="Cancel" />
+	                	<button name="action_traceability" string="Downstream traceability" type="object" context="{'type': 'move_history_ids2','field': ''}"/>
+	                	
+	                </form>
+	            </field>
+	        </record>	        
+     	
+	<act_window name="Downstream traceability"		    
+		res_model="stock.traceability.downstream"
+		src_model="stock.tracking"
+		view_mode="form"
+		target="new"        
+		key2="client_action_multi"    
+		id="action_view_stock_traceability_downstream"/>
+
+<!-- =========stock.traceability.upstream================= -->
+
+  <record id="view_stock_traceability_upstream" model="ir.ui.view">
+                <field name="name">Stock traceability upstream</field>
+                <field name="model">stock.traceability.upstream</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+	                <form string="Upstream traceability">
+	                	
+	                	<label string="It will give information about the stock of a product as per the Tracking Lot" colspan="2" />
+				<separator string="" colspan="4" />
+	                	<button icon='gtk-cancel' special="cancel"
+	                		string="Cancel" />
+	                	<button name="action_traceability" string="Upstream traceability" type="object" context="{'type': '','field': ''}"/>
+	                	
+	                </form>
+	            </field>
+	        </record>	        
+     	
+	<act_window name="Upstream traceability"		    
+		res_model="stock.traceability.upstream"
+		src_model="stock.tracking"
+		view_mode="form"
+		target="new"        
+		key2="client_action_multi"    
+		id="action_view_stock_traceability_upstream"/>
+
+<!-- =========stock.traceability.lot.upstream================= -->
+
+<record id="view_stock_traceability_lot_upstream" model="ir.ui.view">
+                <field name="name">Stock traceability lot upstream</field>
+                <field name="model">stock.traceability.lot.upstream</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+	                <form string="Stock traceability lot upstream">
+	                	
+	                	<label string="It will give information about the stock of a product as per the Production Lot" colspan="2" />
+				<separator string="" colspan="4" />
+	                	<button icon='gtk-cancel' special="cancel"
+	                		string="Cancel" />
+	                	<button name="action_traceability" string="Upstream traceability" type="object" context="{'type': '', 'field': 'prodlot_id'}"/>
+	                	
+	                </form>
+	            </field>
+	        </record>	        
+     	
+	<act_window name="Upstream traceability"		    
+		res_model="stock.traceability.lot.upstream"
+		src_model="stock.production.lot"
+		view_mode="form"
+		target="new"        
+		key2="client_action_multi"    
+		id="action_view_stock_traceability_lot_upstream"/>
+
+<!-- =========stock.traceability.lot.downstream================= -->
+
+<record id="view_stock_traceability_lot_downstream" model="ir.ui.view">
+                <field name="name">Stock traceability lot downstream</field>
+                <field name="model">stock.traceability.lot.downstream</field>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+	                <form string="Stock traceability lot downstream">
+	                	
+	                	<label string="It will give information about the stock of a product as per the Production Lot" colspan="2" />
+				<separator string="" colspan="4" />
+	                	<button icon='gtk-cancel' special="cancel"
+	                		string="Cancel" />
+	                	<button name="action_traceability" string="Downstream traceability" type="object" context="{'type': 'move_history_ids2', 'field': 'prodlot_id'}"/>
+	                	
+	                </form>
+	            </field>
+	        </record>	        
+     	
+	<act_window name="Downstream traceability"		    
+		res_model="stock.traceability.lot.downstream"
+		src_model="stock.production.lot"
+		view_mode="form"
+		target="new"        
+		key2="client_action_multi"    
+		id="action_view_stock_traceability_lot_downstream"/>
+
+	</data>
+</openerp>
+

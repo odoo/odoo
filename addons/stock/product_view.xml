@@ -54,6 +54,20 @@
             </field>
         </record>
 
+		<record id="view_product_standard_price_form" model="ir.ui.view">
+            <field name="name">product.product.standard.price.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+				<field name="standard_price" position="replace">
+					<group col="4" colspan="2">
+						<field name="standard_price" readonly="True"/>
+						<button name="%(action_view_change_standard_price)d" string="Change Price" type="action" icon="gtk-execute"/>
+	           		</group>
+	           	</field>
+	        </field>
+	    </record>
 
         <record id="view_normal_property_acc_form" model="ir.ui.view">
             <field name="name">product.normal.stock.acc.property.form.inherit</field>

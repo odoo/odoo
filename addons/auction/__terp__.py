@@ -38,6 +38,19 @@
     'init_xml': ['auction_sequence.xml'],
     'update_xml': [
         'security/ir.model.access.csv',
+        'wizard/auction_lots_able_view.xml',
+        'wizard/auction_lots_enable_view.xml',
+        'wizard/auction_lots_make_invoice_buyer_view.xml',
+        'wizard/auction_lots_make_invoice_view.xml',
+        'wizard/auction_taken_view.xml',
+        'wizard/auction_lots_auction_move_view.xml',
+        'wizard/auction_pay_buy_view.xml',
+        'wizard/auction_payer_sel_view.xml',
+        'wizard/auction_lots_sms_send_view.xml',
+        'wizard/auction_catalog_flagey_view.xml',
+#        'wizard/auction_aie_send_result_view.xml',
+        'wizard/auction_lots_buyer_map_view.xml',
+        
         'auction_view.xml',
         'auction_report.xml',
         'auction_wizard.xml'

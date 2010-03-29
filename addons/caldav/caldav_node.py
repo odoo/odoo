@@ -64,6 +64,9 @@ class node_calendar(object):
 
     def _get_ttag(self,cr):
         return 'calendar-%d' % self.calendar_id
+    
+    def get_dav_eprop(self,cr,ns,prop):
+        return None
 
 class Calendar(osv.osv):
     _inherit = 'basic.calendar'
