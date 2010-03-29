@@ -30,25 +30,25 @@ class auction_lots_cancel(osv.osv):
         _description = 'To cancel auction lots.'
         
         def _cancel(self, cr, uid, ids, context):
-        """ 
-        To cancel the auction lot
+            """ 
+            To cancel the auction lot
+    
+            @param self: The object pointer.
+            @param cr: A database cursor
+            @param uid: ID of the user currently logged in
+            @param ids: List of IDs selected 
+            @param context: A standard dictionary 
+            @return: 
+            """
 
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: List of IDs selected 
-        @param context: A standard dictionary 
-        @return: 
-        """
-
-                lots_obj = self.pool.get('auction.lots')
-                invoice_obj = self.pool.get('account.invoice')
-                lot = lots_obj.browse(cr,uid,context['active_id'],context)
-                if lot.ach_inv_id:
-                        p = invoice_obj.refund(['lot.ach_inv_id.id'],context)
-                if lot.vnd_inv_id:
-                        p = invoice_obj.refund(['lot.vnd_inv_id.id'],context)
-                return {}
+            lots_obj = self.pool.get('auction.lots')
+            invoice_obj = self.pool.get('account.invoice')
+            lot = lots_obj.browse(cr,uid,context['active_id'],context)
+            if lot.ach_inv_id:
+                    p = invoice_obj.refund(['lot.ach_inv_id.id'],context)
+            if lot.vnd_inv_id:
+                    p = invoice_obj.refund(['lot.vnd_inv_id.id'],context)
+            return {}
                 
         _columns = {
                 
