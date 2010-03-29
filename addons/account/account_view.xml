@@ -159,7 +159,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">List of Accounts</field>
             <field name="res_model">account.account</field>
@@ -681,7 +681,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Account Entry Line" editable="top" on_write="_on_create_write">
+                <tree string="Account Entry Line" editable="top" on_write="on_create_write">
                     <field name="date"/>
                     <field name="period_id"/>
                     <field name="move_id"/>

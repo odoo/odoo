@@ -85,6 +85,7 @@
                     <field name="invoiced_rate" widget="progressbar"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
+                    <field name="user_id"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -150,7 +151,12 @@
                                             <field name="state" select="2"/>
                                             <group col="3" colspan="2">
                                                 <field name="invoiced" select="2"/>
-                                                <button colspan="1" name="%(wizard_sale_order_line_invoice)d" states="confirmed" string="Make Invoice" type="action" icon="gtk-print"/>
+                                                <button colspan="1"
+                                                    name="%(action_view_sale_order_line_make_invoice)d"
+                                                    states="confirmed"
+                                                    string="Make Invoice"
+                                                    type="action"
+                                                    icon="gtk-print" />
                                             </group>
                                         </page>
                                         <page groups="base.group_extended" string="Extra Info">
@@ -262,6 +268,7 @@
                         <filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-sale" domain="[]" context="{'group_by':'date_order'}"/>
+                        <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
                     </group>
                </search>
             </field>
@@ -380,8 +387,14 @@
                             <separator colspan="4" string="States"/>
                             <field name="state" select="2"/>
                             <group col="2" colspan="2">
-                                <button name="button_done" states="confirmed,exception" string="Done" type="object" icon="gtk-jump-to"/>
-                                <button name="button_cancel" states="confirmed,exception" string="Cancel" type="object" icon="gtk-cancel" />
+                                <button name="button_done"
+                                	states="confirmed,exception"
+                                	string="Done" type="object"
+                                	icon="gtk-jump-to" />
+                                <button name="button_cancel"
+                                	states="confirmed,exception"
+                                	string="Cancel" type="object"
+                                	icon="gtk-cancel" />
                             </group>
                         </page>
                         <page string="Properties">

@@ -26,7 +26,7 @@ import pooler
 
 
 form='''<?xml version="1.0"?>
-<form string="Report Options">
+<form string="Employee's Holidays">
     <field name="date_from" colspan="2" />
     <field name="holiday_type" colspan="2" />
     <field name="emp" colspan="4" invisible="True"/>
@@ -67,7 +67,7 @@ class wizard_report(wizard.interface):
     states={
         'init':{
             'actions':[_check],
-            'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('checkemp', 'Print')]}
+            'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('checkemp', 'Print', 'gtk-ok')]}
         },
         'checkemp': {
             'actions': [],

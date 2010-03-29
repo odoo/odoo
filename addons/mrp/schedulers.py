@@ -195,7 +195,7 @@ class mrp_procurement(osv.osv):
                     qty = max(op.product_min_qty, op.product_max_qty)-prods
                     reste = qty % op.qty_multiple
                     if reste > 0:
-                        qty += op.qty_multiple - reste
+                        qty += op.qty_multiple - reste                    
                     newdate = DateTime.now() + DateTime.RelativeDateTime(
                             days=int(op.product_id.seller_delay))
                     if op.product_id.supply_method == 'buy':

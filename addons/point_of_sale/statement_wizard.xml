@@ -1,9 +1,9 @@
 <openerp>
 	<data>
-  		<wizard
+<!--  		<wizard
         	id="close_statement"
         	model="account.bank.statement"
-        	menu="False"
+        	menu="True"
         	name="statement.close"
         	string="Close Statements"/>
 		<menuitem
@@ -12,31 +12,25 @@
             action="close_statement"
             type="wizard"
             id="menu_close_statement" sequence="4" />
-  		<wizard
-        	id="open_statement"
-        	model="account.bank.statement"
-        	menu="False"
-        	name="statement.open"
-        	string="Open Register"/>
 
-		<menuitem
-            name="Open Register" parent="point_of_sale.menu_point_config"
-            string="Open Register"
-            action="open_statement"
-            type="wizard"
-            id="menu_open_statement" sequence="1" />
+-->
 
-       <wizard
-        	id="wizard_all_closed_cashbox_of_the_day"
+
+
+     <!--  <wizard
+        	id="action_report_all_closed_cashbox_of_the_day2"
         	model="account.bank.statement"
         	menu="False"
         	name="all.closed.cashbox.of.the.day"
-        	string="All Cashboxes Of the day"/>
+        	string="All Cashboxes Of the day"/>-->
+
 
        <menuitem icon="STOCK_PRINT"
-       			 action="wizard_all_closed_cashbox_of_the_day"
+       			 action="action_report_all_closed_cashbox_of_the_day"
 				 id="menu_all_closed_cashbox_of_the_day"
+
 				 parent="menu_point_report_register"
-				 type="wizard"/>
+				/>
+
     </data>
 </openerp>

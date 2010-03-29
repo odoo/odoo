@@ -122,8 +122,13 @@ class stock_location(osv.osv):
             for r in result:
                 c = (context or {}).copy()
                 c['location'] = id
-                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read, pricetype.field], context=c)
-                final_value += (product[field_to_read] * product[pricetype.field])
+                product = self.pool.get('product.product').read(cr, uid, r['product_id'], [field_to_read], context=c)
+                # Compute the amount_unit in right currency
+
+                context['currency_id']=self.pool.get('res.users').browse(cr,uid,uid).company_id.currency_id.id
+                amount_unit=self.pool.get('product.product').browse(cr,uid,r['product_id']).price_get(pricetype.field, context)[r['product_id']]
+
+                final_value += (product[field_to_read] * amount_unit)
         return final_value
 
     def _product_value(self, cr, uid, ids, field_names, arg, context={}):
@@ -223,6 +228,7 @@ class stock_location(osv.osv):
         # Take the user company and pricetype
         price_type_id=self.pool.get('res.users').browse(cr,uid,uid).company_id.property_valuation_price_type.id
         pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)
+        context['currency_id']=self.pool.get('res.users').browse(cr,uid,uid).company_id.currency_id.id
 
         if not product_ids:
             product_ids = product_obj.search(cr, uid, [])
@@ -486,6 +492,7 @@ class stock_picking(osv.osv):
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Entry lines', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
+        'delivery_line':fields.one2many('stock.delivery', 'picking_id', 'Delivery lines', readonly=True),
         'auto_picking': fields.boolean('Auto-Picking'),
         'address_id': fields.many2one('res.partner.address', 'Partner', help="Address of partner"),
         'invoice_state': fields.selection([
@@ -546,6 +553,8 @@ class stock_picking(osv.osv):
     def action_assign(self, cr, uid, ids, *args):
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
+            if not move_ids:
+                raise osv.except_osv(_('Warning !'),_('Not Available. Moves are not confirmed.'))
             self.pool.get('stock.move').action_assign(cr, uid, move_ids)
         return True
 
@@ -667,6 +676,8 @@ class stock_picking(osv.osv):
             # Take the user company and pricetype
             price_type_id=self.pool.get('res.users').browse(cr,users,users).company_id.property_valuation_price_type.id
             pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)
+            context['currency_id']=move_line.company_id.currency_id.id
+
             amount_unit=move_line.product_id.price_get(pricetype.field, context)[move_line.product_id.id]
             return amount_unit
         else:
@@ -854,6 +865,150 @@ class stock_picking(osv.osv):
                 continue
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
 
+    def do_partial(self, cr, uid, ids, partial_datas, context={}):
+        """
+        @ partial_datas : dict. contain details of partial picking
+                          like partner_id, address_id, delivery_date, delivery moves with product_id, product_qty, uom
+        """
+        res = {}
+        move_obj = self.pool.get('stock.move')
+        delivery_obj = self.pool.get('stock.delivery')
+        product_obj = self.pool.get('product.product')
+        currency_obj = self.pool.get('res.currency')
+        users_obj = self.pool.get('res.users')
+        uom_obj = self.pool.get('product.uom')
+        price_type_obj = self.pool.get('product.price.type')
+        sequence_obj = self.pool.get('ir.sequence')
+        wf_service = netsvc.LocalService("workflow")
+        partner_id = partial_datas.get('partner_id', False)
+        address_id = partial_datas.get('address_id', False)
+        delivery_date = partial_datas.get('delivery_date', False)
+        for pick in self.browse(cr, uid, ids, context=context):
+            new_picking = None
+            new_moves = []
+
+            complete, too_many, too_few = [], [], []
+            move_product_qty = {}
+            for move in pick.move_lines:
+                if move.state in ('done', 'cancel'):
+                    continue
+                partial_data = partial_datas.get('move%s'%(move.id), False)
+                assert partial_data, _('Do not Found Partial data of Stock Move Line :%s' %(move.id))
+                product_qty = partial_data.get('product_qty',0.0)
+                move_product_qty[move.id] = product_qty
+                product_uom = partial_data.get('product_uom',False)
+                product_price = partial_data.get('product_price',0.0)
+                product_currency = partial_data.get('product_currency',False)
+                if move.product_qty == product_qty:
+                    complete.append(move)
+                elif move.product_qty > product_qty:
+                    too_few.append(move)
+                else:
+                    too_many.append(move)
+
+                # Average price computation
+                if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
+                    product = product_obj.browse(cr, uid, move.product_id.id)
+                    user = users_obj.browse(cr, uid, uid)
+                    context['currency_id'] = move.company_id.currency_id.id
+                    qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
+                    pricetype = False
+                    if user.company_id.property_valuation_price_type:
+                        pricetype = price_type_obj.browse(cr, uid, user.company_id.property_valuation_price_type.id)
+                    if pricetype and qty > 0:
+                        new_price = currency_obj.compute(cr, uid, product_currency,
+                                user.company_id.currency_id.id, product_price)
+                        new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
+                                product.uom_id.id)
+                        if product.qty_available <= 0:
+                            new_std_price = new_price
+                        else:
+                            # Get the standard price
+                            amount_unit = product.price_get(pricetype.field, context)[product.id]
+                            new_std_price = ((amount_unit * product.qty_available)\
+                                + (new_price * qty))/(product.qty_available + qty)
+
+                        # Write the field according to price type field
+                        product_obj.write(cr, uid, [product.id],
+                                {pricetype.field: new_std_price})
+                        move_obj.write(cr, uid, [move.id], {'price_unit': new_price})
+
+
+            for move in too_few:
+                product_qty = move_product_qty[move.id]
+                if not new_picking:
+
+                    new_picking = self.copy(cr, uid, pick.id,
+                            {
+                                'name': sequence_obj.get(cr, uid, 'stock.picking.%s'%(pick.type)),
+                                'move_lines' : [],
+                                'state':'draft',
+                            })
+                if product_qty != 0:
+
+                    new_obj = move_obj.copy(cr, uid, move.id,
+                        {
+                            'product_qty' : product_qty,
+                            'product_uos_qty': product_qty, #TODO: put correct uos_qty
+                            'picking_id' : new_picking,
+                            'state': 'assigned',
+                            'move_dest_id': False,
+                            'price_unit': move.price_unit,
+                        })
+
+                move_obj.write(cr, uid, [move.id],
+                        {
+                            'product_qty' : move.product_qty - product_qty,
+                            'product_uos_qty':move.product_qty - product_qty, #TODO: put correct uos_qty
+
+                        })
+
+            if new_picking:
+                move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
+                for move in too_many:
+                    product_qty = move_product_qty[move.id]
+                    move_obj.write(cr, uid, [move.id],
+                            {
+                                'product_qty' : product_qty,
+                                'product_uos_qty': product_qty, #TODO: put correct uos_qty
+                                'picking_id': new_picking,
+                            })
+            else:
+                for move in too_many:
+                    product_qty = move_product_qty[move.id]
+                    move_obj.write(cr, uid, [move.id],
+                            {
+                                'product_qty': product_qty,
+                                'product_uos_qty': product_qty #TODO: put correct uos_qty
+                            })
+
+            # At first we confirm the new picking (if necessary)
+            if new_picking:
+                wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
+            # Then we finish the good picking
+            if new_picking:
+                self.write(cr, uid, [pick.id], {'backorder_id': new_picking})
+                self.action_move(cr, uid, [new_picking])
+                wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_done', cr)
+                wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+                delivered_pack_id = new_picking
+            else:
+                self.action_move(cr, uid, [pick.id])
+                wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
+                delivered_pack_id = pick.id
+
+            delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
+            delivery_id = delivery_obj.create(cr, uid, {
+                'name':  delivered_pack.name,
+                'partner_id': partner_id,
+                'address_id': address_id,
+                'date': delivery_date,
+                'picking_id' :  pick.id,
+                'move_delivered' : [(6,0, map(lambda x:x.id, delivered_pack.move_lines))]
+            }, context=context)
+            res[pick.id] = {'delivered_picking': delivered_pack.id or False}
+        return res
+
 stock_picking()
 
 
@@ -952,6 +1107,22 @@ class stock_production_lot_revision(osv.osv):
 
 stock_production_lot_revision()
 
+class stock_delivery(osv.osv):
+
+    """ Tracability of partialdeliveries """
+
+    _name = "stock.delivery"
+    _description = "Delivery"
+    _columns = {
+        'name': fields.char('Name', size=60, required=True),
+        'date': fields.datetime('Date', required=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', required=True),
+        'address_id': fields.many2one('res.partner.address', 'Address', required=True),
+        'move_delivered':fields.one2many('stock.move', 'delivered_id', 'Move Delivered'),
+        'picking_id': fields.many2one('stock.picking', 'Picking list'),
+
+    }
+stock_delivery()
 # ----------------------------------------------------
 # Move
 # ----------------------------------------------------
@@ -1035,6 +1206,7 @@ class stock_move(osv.osv):
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
+        'delivered_id': fields.many2one('stock.delivery', 'Product delivered'),
         'scraped': fields.boolean('Scraped'),
     }
     _constraints = [
@@ -1148,13 +1320,13 @@ class stock_move(osv.osv):
         product = self.pool.get('product.product').browse(cr, uid, [prod_id], context=ctx)[0]
         uos_id  = product.uos_id and product.uos_id.id or False
         result = {
-            'name': product.partner_ref,
             'product_uom': product.uom_id.id,
             'product_uos': uos_id,
             'product_qty': 1.00,
             'product_uos_qty' : self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty']
         }
-
+        if not ids:
+            result['name'] = product.partner_ref
         if loc_id:
             result['location_id'] = loc_id
         if loc_dest_id:
@@ -1385,7 +1557,7 @@ class stock_move(osv.osv):
                     # Base computation on valuation price type
                     else:
                         company_id=move.company_id.id
-
+                        context['currency_id']=move.company_id.currency_id.id
                         pricetype=self.pool.get('product.price.type').browse(cr,uid,move.company_id.property_valuation_price_type.id)
                         amount_unit=move.product_id.price_get(pricetype.field, context)[move.product_id.id]
                         amount=amount_unit * q or 1.0
@@ -1443,7 +1615,7 @@ class stock_move(osv.osv):
         ir_sequence_obj = self.pool.get('ir.sequence')
         sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
         if not sequence:
-            raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
+            raise osv.except_osv(_('Error!'), _('No production sequence defined'))
         prodlot_id = prodlot_obj.create(cr, uid, {'name': sequence, 'prefix': prefix}, {'product_id': product_id})
         prodlot = prodlot_obj.browse(cr, uid, prodlot_id)
         ref = ','.join(map(lambda x:str(x),ids))
@@ -1451,6 +1623,7 @@ class stock_move(osv.osv):
             ref = '%s, %s' % (prodlot.ref, ref)
         prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
         return prodlot_id
+
 
     def action_scrap(self, cr, uid, ids, quantity, location_id, context=None):
         '''
@@ -1571,10 +1744,8 @@ class stock_move(osv.osv):
             move_qty = move.product_qty
             quantity_rest = move.product_qty
 
-
             quantity_rest -= quantity
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
-
             if quantity_rest <= 0:
                 quantity_rest = 0
                 uos_qty_rest = 0
@@ -1607,7 +1778,6 @@ class stock_move(osv.osv):
 
                 if move.product_id.track_production and location_id:
                     res += self.split_lines(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
-
                 else:
                     res += [move.id]
                     update_val = {
@@ -1618,9 +1788,136 @@ class stock_move(osv.osv):
 
                     self.write(cr, uid, [move.id], update_val)
 
-        if consume:
-            self.action_done(cr, uid, res)
+        self.action_done(cr, uid, res)
         return res
+
+    def do_partial(self, cr, uid, ids, partial_datas, context={}):
+        """
+        @ partial_datas : dict. contain details of partial picking
+                          like partner_id, address_id, delivery_date, delivery moves with product_id, product_qty, uom
+        """
+        res = {}
+        picking_obj = self.pool.get('stock.picking')
+        delivery_obj = self.pool.get('stock.delivery')
+        product_obj = self.pool.get('product.product')
+        currency_obj = self.pool.get('res.currency')
+        users_obj = self.pool.get('res.users')
+        uom_obj = self.pool.get('product.uom')
+        price_type_obj = self.pool.get('product.price.type')
+        sequence_obj = self.pool.get('ir.sequence')
+        wf_service = netsvc.LocalService("workflow")
+        partner_id = partial_datas.get('partner_id', False)
+        address_id = partial_datas.get('address_id', False)
+        delivery_date = partial_datas.get('delivery_date', False)
+
+        new_moves = []
+
+        complete, too_many, too_few = [], [], []
+        move_product_qty = {}
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.state in ('done', 'cancel'):
+                continue
+            partial_data = partial_datas.get('move%s'%(move.id), False)
+            assert partial_data, _('Do not Found Partial data of Stock Move Line :%s' %(move.id))
+            product_qty = partial_data.get('product_qty',0.0)
+            move_product_qty[move.id] = product_qty
+            product_uom = partial_data.get('product_uom',False)
+            product_price = partial_data.get('product_price',0.0)
+            product_currency = partial_data.get('product_currency',False)
+            if move.product_qty == product_qty:
+                complete.append(move)
+            elif move.product_qty > product_qty:
+                too_few.append(move)
+            else:
+                too_many.append(move)
+
+            # Average price computation
+            if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
+                product = product_obj.browse(cr, uid, move.product_id.id)
+                user = users_obj.browse(cr, uid, uid)
+                context['currency_id'] = move.company_id.currency_id.id
+                qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
+                pricetype = False
+                if user.company_id.property_valuation_price_type:
+                    pricetype = price_type_obj.browse(cr, uid, user.company_id.property_valuation_price_type.id)
+                if pricetype and qty > 0:
+                    new_price = currency_obj.compute(cr, uid, product_currency,
+                            user.company_id.currency_id.id, product_price)
+                    new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
+                            product.uom_id.id)
+                    if product.qty_available <= 0:
+                        new_std_price = new_price
+                    else:
+                        # Get the standard price
+                        amount_unit = product.price_get(pricetype.field, context)[product.id]
+                        new_std_price = ((amount_unit * product.qty_available)\
+                            + (new_price * qty))/(product.qty_available + qty)
+
+                    # Write the field according to price type field
+                    product_obj.write(cr, uid, [product.id],
+                            {pricetype.field: new_std_price})
+                    self.write(cr, uid, [move.id], {'price_unit': new_price})
+
+        for move in too_few:
+            product_qty = move_product_qty[move.id]
+            if product_qty != 0:
+                new_move = self.copy(cr, uid, move.id,
+                    {
+                        'product_qty' : product_qty,
+                        'product_uos_qty': product_qty,
+                        'picking_id' : move.picking_id.id,
+                        'state': 'assigned',
+                        'move_dest_id': False,
+                        'price_unit': move.price_unit,
+                    })
+                complete.append(self.browse(cr, uid, new_move))
+            self.write(cr, uid, move.id,
+                    {
+                        'product_qty' : move.product_qty - product_qty,
+                        'product_uos_qty':move.product_qty - product_qty,
+                    })
+
+
+        for move in too_many:
+            self.write(cr, uid, move.id,
+                    {
+                        'product_qty': product_qty,
+                        'product_uos_qty': product_qty
+                    })
+            complete.append(move)
+
+        for move in complete:
+            self.action_done(cr, uid, [move.id])
+
+            # TOCHECK : Done picking if all moves are done
+            cr.execute("""
+                SELECT move.id FROM stock_picking pick
+                RIGHT JOIN stock_move move ON move.picking_id = pick.id AND move.state = %s
+                WHERE pick.id = %s""",
+                        ('done', move.picking_id.id))
+            res = cr.fetchall()
+            if len(res) == len(move.picking_id.move_lines):
+                picking_obj.action_move(cr, uid, [move.picking_id.id])
+                wf_service.trg_validate(uid, 'stock.picking', move.picking_id.id, 'button_done', cr)
+
+        ref = {}
+        done_move_ids = []
+        for move in complete:
+            done_move_ids.append(move.id)
+            if move.picking_id.id not in ref:
+                delivery_id = delivery_obj.create(cr, uid, {
+                    'partner_id': partner_id,
+                    'address_id': address_id,
+                    'date': delivery_date,
+                    'name' : move.picking_id.name,
+                    'picking_id':  move.picking_id.id
+                }, context=context)
+                ref[move.picking_id.id] = delivery_id
+            delivery_obj.write(cr, uid, ref[move.picking_id.id], {
+                'move_delivered' : [(4,move.id)]
+            })
+        return done_move_ids
+
 stock_move()
 
 
@@ -1642,9 +1939,11 @@ class stock_inventory(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c)
     }
 
-    #
-    # Update to support tracking
-    #
+
+    def _inventory_line_hook(self, cr, uid, inventory_line, move_vals):
+        '''Creates a stock move from an inventory line'''
+        return self.pool.get('stock.move').create(cr, uid, move_vals)
+
     def action_done(self, cr, uid, ids, context=None):
         for inv in self.browse(cr, uid, ids):
             move_ids = []
@@ -1684,7 +1983,7 @@ class stock_inventory(osv.osv):
                             'prodlot_id': lot_id,
                             'product_qty': line.product_qty
                         })
-                    move_ids.append(self.pool.get('stock.move').create(cr, uid, value))
+                    move_ids.append(self._inventory_line_hook(cr, uid, line, value))
             if len(move_ids):
                 self.pool.get('stock.move').action_done(cr, uid, move_ids,
                         context=context)
@@ -1716,8 +2015,10 @@ class stock_inventory_line(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_qty': fields.float('Quantity'),
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
-        'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]")
+        'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
+        'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
     }
+
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False):
         if not product:
             return {}
@@ -1816,7 +2117,7 @@ class report_products_to_received_planned(osv.osv):
         tools.drop_view_if_exists(cr, 'report_products_to_received_planned')
         cr.execute("""
             create or replace view report_products_to_received_planned as (
-               select stock.date, min(stock.id) as id, sum(stock.product_qty) as qty, 0 as planned_qty
+               select stock.date, min(stock.id), sum(stock.product_qty) as qty, 0 as planned_qty
                    from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'in'
@@ -1825,7 +2126,7 @@ class report_products_to_received_planned(osv.osv):
 
                     union
 
-               select stock.date_planned, min(stock.id) as id, 0 as actual_qty, sum(stock.product_qty) as planned_qty
+               select stock.date_planned, min(stock.id), 0 as actual_qty, sum(stock.product_qty) as planned_qty
                     from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'in'
@@ -1850,7 +2151,7 @@ class report_delivery_products_planned(osv.osv):
         tools.drop_view_if_exists(cr, 'report_delivery_products_planned')
         cr.execute("""
             create or replace view report_delivery_products_planned as (
-                select stock.date, min(stock.id) as id, sum(stock.product_qty) as qty, 0 as planned_qty
+                select stock.date, min(stock.id), sum(stock.product_qty) as qty, 0 as planned_qty
                    from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'out'
@@ -1859,7 +2160,7 @@ class report_delivery_products_planned(osv.osv):
 
                     union
 
-               select stock.date_planned, min(stock.id) as id, 0 as actual_qty, sum(stock.product_qty) as planned_qty
+               select stock.date_planned, min(stock.id), 0 as actual_qty, sum(stock.product_qty) as planned_qty
                     from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'out'
