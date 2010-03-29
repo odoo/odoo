@@ -6,7 +6,12 @@
     "depends" : ["base"],
     "category" : "Generic Modules/Olap",
     "description": """
-    Base module to manage Olap schemas. Cube designer.
+    Olap module is used to install BI module in client. Olap provides Online
+    Analytical Process with the mdx query. BI provides Cube Browsing and
+    Cube Designing. After installing Olap Module you will get Cube Browser
+    and Cube Desinger in Reporting Menu. Cube Browser is used to generate
+    the reports with table view (mdx view) of mdx query. and Cube designer
+    is used to make cubes in BI..
     """,
     "init_xml" :  ["data/olap_data.xml"],
     "update_xml" : [

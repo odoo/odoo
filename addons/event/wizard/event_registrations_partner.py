@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,57 +15,41 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import wizard
-import pooler
-
 from osv import fields, osv
+from tools.translate import _
 
-def _list_partners(self, cr, uid, data, context):
+class event_partners_list(osv.osv_memory):
+    """ Event Partners """
+    _name = "event.partners.list"
+    _description = "List Event Partners"
+
+    def list_partners(self, cr, uid, ids, context={}):
+        obj_reg = self.pool.get('event.registration')
+        mod_obj = self.pool.get('ir.model.data')
         list_partner = []
-        pool_obj=pooler.get_pool(cr.dbname)
-        obj_reg=pool_obj.get('event.registration')
-        reg_ids = obj_reg.search(cr, uid, [('event_id','in',data['ids'])])
-        data_reg = obj_reg.browse(cr, uid, reg_ids)
+        reg_ids = obj_reg.search(cr, uid, [('event_id','in',context['active_ids'])], context=context)
+        data_reg = obj_reg.browse(cr, uid, reg_ids, context=context)
         for reg in data_reg:
             if not reg.partner_id.id in list_partner:
                 list_partner.append(reg.partner_id.id)
-        data['partner_ids'] = list_partner
-        return {}
-
-class event_partners(wizard.interface):
-    def _reg_partners(self, cr, uid, data, context):
-        pool_obj = pooler.get_pool(cr.dbname)
-        mod_obj = pool_obj.get('ir.model.data') 
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
-        id = mod_obj.read(cr, uid, result, ['res_id'])        
-        model_data_ids = pool_obj.get('ir.model.data').search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_partner_form')])
-        resource_id = pool_obj.get('ir.model.data').read(cr,uid,model_data_ids,fields=['res_id'])[0]['res_id']
+        id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
+        model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_partner_form')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {
-            'domain': "[('id','in', ["+','.join(map(str,data['partner_ids']))+"])]",
-            'name': 'Partners',
+            'domain': "[('id','in', ["+','.join(map(str, list_partner))+"])]",
+            'name': _('Event Partners'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'res.partner',
             'views': [(False,'tree'),(resource_id,'form')],
             'type': 'ir.actions.act_window',
-            'search_view_id': id['res_id'] 
+            'search_view_id': id['res_id']
         }
-        return {}
 
-    states = {
-        'init' : {
-               'actions' : [_list_partners],
-               'result': {'type': 'action' , 'action':_reg_partners, 'state':'end'}
-            },
-
-    }
-
-event_partners("event.event_reg_partners")
-
+event_partners_list()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

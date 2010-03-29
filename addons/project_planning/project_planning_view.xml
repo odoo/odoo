@@ -223,7 +223,6 @@
 
 		<menuitem action="action_account_analytic_planning_form"
 			id="menu_report_account_analytic_planning" parent="planning_main" />
-		<menuitem action="resource.action_resource_resource_tree" id="base.menu_resource_resource_tree" parent="planning_main" />
 
 		<!--
 			Planning statistics
@@ -357,7 +356,7 @@
 
 <!--Added link to open the list of all tasks planned on all lines of this planning.-->
 		<act_window context="{'planning': active_id}"
-			id="act_task_of_lines" name="Planning tasks" res_model="project.task"
+			id="act_task_of_lines" name="Tasks" res_model="project.task"
 			src_model="report_account_analytic.planning"
 		/>
 

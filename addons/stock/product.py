@@ -24,7 +24,127 @@ from tools.translate import _
 
 
 class product_product(osv.osv):
-    _inherit = "product.product"
+    _inherit = "product.product"    
+
+    def do_change_standard_price(self, cr, uid, ids, datas, context={}):
+        """ 
+             Changes the Standard Price of Product. 
+             And creates an account move accordingly.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """        
+        location_obj = self.pool.get('stock.location')
+        move_obj = self.pool.get('account.move')
+        move_line_obj = self.pool.get('account.move.line')                        
+
+        new_price = datas.get('new_price', 0.0)
+        stock_output_acc = datas.get('stock_output_account', False)
+        stock_input_acc = datas.get('stock_input_account', False)
+        journal_id = datas.get('stock_journal', False)
+
+        move_ids = []        
+        for rec_id in ids:
+            loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
+            for location in location_obj.browse(cr, uid, loc_ids):
+                c = context.copy()
+                c.update({
+                    'location': location.id,
+                    'compute_child': False
+                })           
+                
+                product = self.browse(cr, uid, rec_id, context=c)
+                qty = product.qty_available
+                diff = product.standard_price - new_price 
+                assert diff, _("Could not find any difference between standard price and new price!")
+                if qty:
+                    location_account = location.account_id and location.account_id.id or False
+                    company_id = location.company_id and location.company_id.id or False                    
+                    assert location_account, _('Inventory Account is not specified for Location: %s' % (location.name))
+                    assert company_id, _('Company is not specified in Location')
+                    #
+                    # Accounting Entries
+                    #
+                    if not journal_id:
+                        journal_id = product.categ_id.property_stock_journal and product.categ_id.property_stock_journal.id or False
+                    if not journal_id:
+                        raise osv.except_osv(_('Error!'),
+                            _('There is no journal defined '\
+                                'on the product category: "%s" (id: %d)') % \
+                                (product.categ_id.name,
+                                    product.categ_id.id,))
+                    move_id = move_obj.create(cr, uid, {
+                                'journal_id': journal_id, 
+                                'company_id': company_id
+                                }) 
+                    
+                    move_ids.append(move_id)
+
+
+                    if diff > 0:
+                        if not stock_input_acc:
+                            stock_input_acc = product.product_tmpl_id.\
+                                property_stock_account_input.id
+                        if not stock_input_acc:
+                            stock_input_acc = product.categ_id.\
+                                    property_stock_account_input_categ.id
+                        if not stock_input_acc:
+                            raise osv.except_osv(_('Error!'),
+                                    _('There is no stock input account defined ' \
+                                            'for this product: "%s" (id: %d)') % \
+                                            (product.name,
+                                                product.id,))
+                        amount_diff = qty * diff        
+                        move_line_obj.create(cr, uid, {
+                                    'name': product.name,
+                                    'account_id': stock_input_acc,
+                                    'debit': amount_diff,
+                                    'move_id': move_id,
+                                    })
+                        move_line_obj.create(cr, uid, {
+                                    'name': location.name,
+                                    'account_id': location_account,
+                                    'credit': amount_diff,
+                                    'move_id': move_id
+                                    })
+                    elif diff < 0: 
+                        if not stock_output_acc:
+                            stock_output_acc = product.product_tmpl_id.\
+                                property_stock_account_output.id
+                        if not stock_output_acc:
+                            stock_output_acc = product.categ_id.\
+                                    property_stock_account_output_categ.id
+                        if not stock_output_acc:
+                            raise osv.except_osv(_('Error!'),
+                                    _('There is no stock output account defined ' \
+                                            'for this product: "%s" (id: %d)') % \
+                                            (product.name,
+                                                product.id,))
+                        amount_diff = qty * -diff
+                        move_line_obj.create(cr, uid, {
+                                    'name': product.name,
+                                    'account_id': stock_output_acc,
+                                    'credit': amount_diff,
+                                    'move_id': move_id
+                                    })
+                        move_line_obj.create(cr, uid, {
+                                    'name': location.name,
+                                    'account_id': location_account,
+                                    'debit': amount_diff,
+                                    'move_id': move_id
+                                    })                   
+                
+            self.write(cr, uid, rec_id, {'standard_price': new_price})
+
+        return move_ids
+
     def view_header_get(self, cr, user, view_id, view_type, context):
         res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
         if res: return res

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>        
+        <!--   pos.details -->
+        
+		<record id="view_pos_receipt" model="ir.ui.view">
+            <field name="name">Receipt</field>
+            <field name="model">pos.receipt</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Receipt :">
+                		<button icon='gtk-cancel' special="cancel"
+                			string="Close" />
+                		<button name="print_report" string="Print Report"
+                			colspan="1" type="object" icon="gtk-ok" />				  
+                </form>
+            </field>
+        </record>
+
+ 	<act_window name="Fill Inventory"		    
+		    res_model="pos.receipt"
+		    src_model="pos.order"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_report_pos_receipt"/>	
+       
+  		<!--record id="action_report_pos_receipt" model="ir.actions.act_window">
+            <field name="name">Receipt</field>
+            <field name="res_model">pos.receipt</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+           	<field name="target">new</field>
+        </record-->	
+		
+	</data>
+</openerp>	        

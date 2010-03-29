@@ -20,77 +20,94 @@
 ##############################################################################
 
 import time
-import wizard
 import ir
-import pooler
 from tools.translate import _
 
-from tools.misc import UpdateableStr
+from osv import osv, fields
 
-delivery_form = UpdateableStr()
+class make_delivery(osv.osv_memory):
+    _name = "delivery.sale.order"
+    _description = 'Make Delievery'
 
-delivery_fields = {
-    'carrier_id' : {'string':'Delivery Method', 'type':'many2one', 'relation': 'delivery.carrier','required':True}
-}
-
-def _delivery_default(self, cr, uid, data, context):
-    order_obj = pooler.get_pool(cr.dbname).get('sale.order')
-    order = order_obj.browse(cr, uid, data['ids'])[0]
-    delivery_form.string="""<?xml version="1.0"?>
-    <form string="Create deliveries">
-        <separator colspan="4" string="Delivery Method" />
-        <field name="carrier_id" context="{'order_id': %d}"/>
-    </form>
-    """ % (data['id'],)
-
-
-    if not order.state in ('draft'):
-        raise wizard.except_wizard(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
-
-
-    carrier_id = order.partner_id.property_delivery_carrier.id
-    return {'carrier_id': carrier_id}
-
-def _delivery_set(self, cr, uid, data, context):
-    order_obj = pooler.get_pool(cr.dbname).get('sale.order')
-    line_obj = pooler.get_pool(cr.dbname).get('sale.order.line')
-    order_objs = order_obj.browse(cr, uid, data['ids'], context)
-
-    for order in order_objs:
-        grid_id = pooler.get_pool(cr.dbname).get('delivery.carrier').grid_get(cr, uid, [data['form']['carrier_id']],order.partner_shipping_id.id)
-        if not grid_id:
-            raise wizard.except_wizard(_('No grid avaible !'), _('No grid matching for this carrier !'))
-        grid_obj=pooler.get_pool(cr.dbname).get('delivery.grid')
-        grid = grid_obj.browse(cr, uid, [grid_id])[0]
-
-        taxes = grid.carrier_id.product_id.taxes_id
-        fpos = order.fiscal_position or False
-        taxes_ids = pooler.get_pool(cr.dbname).get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
-        line_obj.create(cr, uid, {
-            'order_id': order.id,
-            'name': grid.carrier_id.name,
-            'product_uom_qty': 1,
-            'product_uom': grid.carrier_id.product_id.uom_id.id,
-            'product_id': grid.carrier_id.product_id.id,
-            'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
-            'tax_id': [(6,0,taxes_ids)],
-            'type': 'make_to_stock'
-        })
-
-    return {}
-
-class make_delivery(wizard.interface):
-    states = {
-        'init' : {
-            'actions' : [_delivery_default],
-            'result' : {'type' : 'form', 'arch' : delivery_form, 'fields' : delivery_fields, 'state' : [('end', 'Cancel', 'gtk-cancel'),('delivery', 'Add Delivery Costs', 'gtk-ok') ]}
-        },
-        'delivery' : {
-            'actions' : [_delivery_set],
-            'result' : {'type' : 'state', 'state' : 'end'}
-        },
+    _columns = {
+        'carrier_id': fields.many2one('delivery.carrier','Delivery Method', required=True),
     }
-make_delivery("delivery.sale.order")
+
+
+    def default_get(self, cr, uid, fields, context):
+        """ 
+             To get default values for the object.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
+        
+        """        
+        res = super(make_delivery, self).default_get(cr, uid, fields, context=context)
+        order_obj = self.pool.get('sale.order')
+        for order in order_obj.browse(cr, uid, context.get('active_ids', [])):
+             res.update({'carrier_id': order.partner_id.property_delivery_carrier.id})
+        return res
+    
+    def view_init(self, cr , uid , fields, context=None):
+         order_obj = self.pool.get('sale.order')
+         for order in order_obj.browse(cr, uid, context.get('active_ids', [])):     
+             if not order.state in ('draft'):
+                 raise osv.except_osv(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
+         pass     
+        
+    def delivery_set(self, cr, uid, ids, context):
+        """ 
+             Adds delivery costs to Sale Order Line.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """
+        rec_ids = context and context.get('active_ids',[])
+        order_obj = self.pool.get('sale.order')
+        line_obj = self.pool.get('sale.order.line')
+        grid_obj = self.pool.get('delivery.grid')
+        carrier_obj = self.pool.get('delivery.carrier')
+        acc_fp_obj = self.pool.get('account.fiscal.position')
+        order_objs = order_obj.browse(cr, uid, rec_ids, context)
+        for datas in self.browse(cr, uid, ids):    
+            for order in order_objs:
+                grid_id = carrier_obj.grid_get(cr, uid, [datas.carrier_id.id],order.partner_shipping_id.id)
+                if not grid_id:
+                    raise osv.except_osv(_('No grid available !'), _('No grid matching for this carrier !'))
+
+                if not order.state in ('draft'):
+                    raise osv.except_osv(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
+                
+                grid = grid_obj.browse(cr, uid, grid_id)
+        
+                taxes = grid.carrier_id.product_id.taxes_id
+                fpos = order.fiscal_position or False
+                taxes_ids = acc_fp_obj.map_tax(cr, uid, fpos, taxes)
+                line_obj.create(cr, uid, {
+                    'order_id': order.id,
+                    'name': grid.carrier_id.name,
+                    'product_uom_qty': 1,
+                    'product_uom': grid.carrier_id.product_id.uom_id.id,
+                    'product_id': grid.carrier_id.product_id.id,
+                    'price_unit': grid_obj.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context),
+                    'tax_id': [(6,0,taxes_ids)],
+                    'type': 'make_to_stock'
+                })
+    
+        return {}
+
+make_delivery()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

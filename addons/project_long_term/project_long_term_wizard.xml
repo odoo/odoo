@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <wizard id="wizard_compute_phase" menu="False" model="project.phase" name="wizard.compute.phases" string="Compute Phase Scheduling"/>
+        <wizard id="wizard_schedule_task" menu="False" model="project.phase" name="phase.schedule.tasks" string="Schedule Tasks"/>
+        <wizard id="wizard_compute_task" model="project.task" menu="False" name="wizard.compute.tasks" string="Compute Task Scheduling"/>
+
+		<menuitem icon="terp-project" id="base.menu_main" name="Project Management" sequence="1"/>
+		<menuitem id="base.menu_pm_planning" name="Planning" parent="base.menu_main" sequence="3"/>
+		<menuitem
+            action="wizard_compute_phase"
+            id="menu_wizard_compute_phase"
+            parent="base.menu_pm_planning"
+            type="wizard"
+            sequence="1"/>
+
+        <menuitem
+            action="wizard_compute_task"
+            id="menu_wizard_compute_task"
+            parent="base.menu_pm_planning"
+            type="wizard"
+            sequence="1"/>
+
+    </data>
+</openerp>

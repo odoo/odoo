@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-03-15 14:11+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
+"PO-Revision-Date: 2010-03-24 14:33+0000\n"
+"Last-Translator: Anders Eriksson (Mobila System) <ae@mobilasystem.se>\n"
 "Language-Team: <> <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-16 04:46+0000\n"
+"X-Launchpad-Export-Date: 2010-03-27 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -24,7 +24,7 @@ msgstr "Internt namn"
 #. module: account
 #: view:account.tax.code:0
 msgid "Account Tax Code"
-msgstr "Skattekontokod"
+msgstr "Konto, skattekod"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree9
@@ -45,7 +45,7 @@ msgstr "Ange meddelande till rapporten försenade betalningar."
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement from draft"
-msgstr "Bekräfta verifikat från utkast"
+msgstr "Bekräfta preliminära verifikat"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_asset
@@ -55,7 +55,7 @@ msgstr "Tillgång"
 #. module: account
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Ogiltigt modellnamn i åtgärdsdefinitionen."
+msgstr "Felaktigt namn för modell i händelsedefinitionen."
 
 #. module: account
 #: help:account.journal,currency:0
@@ -112,7 +112,7 @@ msgstr "Skriv ut momsrapport"
 #. module: account
 #: field:account.account,parent_id:0
 msgid "Parent"
-msgstr "Ovanliggande"
+msgstr "Överliggande"
 
 #. module: account
 #: selection:account.move,type:0
@@ -141,7 +141,7 @@ msgstr "Ej avstämda transaktioner"
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr "Fel ! Varaktigheten i perioden/erna är felaktig "
+msgstr "Fel! Fel periodintervall. "
 
 #. module: account
 #: view:account.bank.statement.reconcile:0
@@ -262,7 +262,7 @@ msgstr "Summa Debet"
 #. module: account
 #: rml:account.tax.code.entries:0
 msgid "Accounting Entries-"
-msgstr "Bokföringstransaktioner"
+msgstr "Bokföringstransaktioner-"
 
 #. module: account
 #: help:account.journal,view_id:0
@@ -272,6 +272,10 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
+"Ger vyn som används när du skriver eller bläddrar poster i journalen. Vyn "
+"berättar för OpenERP vilka fält som ska synas, krävs eller skrivskyddas och "
+"i vilken ordning. Du kan skapa din egen vy  för en snabbare kodning i varje "
+"journal."
 
 #. module: account
 #: help:account.invoice,date_due:0
@@ -282,6 +286,11 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
+"Om du använder betalningsvillkor, förfallodagen kommer att beräknas "
+"automatiskt vid generering av bokföringsposter. Om du lämnar "
+"betalningsvillkor och förfallodagen tomma betyder det direkt betalning. "
+"Betalningsvillkor kan beräkna flera förfallodatum, till exempel 50% nu, 50% "
+"efter en månad."
 
 #. module: account
 #: selection:account.tax,type:0
@@ -310,7 +319,7 @@ msgstr "Välj period"
 #: field:account.invoice,origin:0
 #: field:account.invoice.line,origin:0
 msgid "Origin"
-msgstr "Ursprung"
+msgstr "Orginal"
 
 #. module: account
 #: rml:account.analytic.account.journal:0
@@ -355,7 +364,7 @@ msgstr "Debettransaktion"
 #: field:account.move.line,analytic_account_id:0
 #: field:report.hr.timesheet.invoice.journal,account_id:0
 msgid "Analytic Account"
-msgstr "Objektkonto"
+msgstr "Objekt"
 
 #. module: account
 #: field:account.tax,child_depend:0
@@ -373,7 +382,7 @@ msgstr "Journalnamn"
 #. module: account
 #: view:account.payment.term:0
 msgid "Description on invoices"
-msgstr "Beskrivning på faktura"
+msgstr "Beskrivning på fakturor"
 
 #. module: account
 #: constraint:account.analytic.account:0
@@ -425,7 +434,7 @@ msgstr "Negativ"
 #. module: account
 #: rml:account.partner.balance:0
 msgid "(Account/Partner) Name"
-msgstr "(Konto/Företag) namn"
+msgstr "(Konto/Partner) namn"
 
 #. module: account
 #: selection:account.move,type:0
@@ -446,7 +455,7 @@ msgstr "Status"
 #: model:ir.actions.act_window,name:account.action_invoice_tree13
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree13
 msgid "Unpaid Supplier Refunds"
-msgstr ""
+msgstr "Obetald Leverantörskredit"
 
 #. module: account
 #: view:account.tax:0
@@ -500,7 +509,7 @@ msgstr ""
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
 msgid "Analytic Entries Stats"
-msgstr "Objektposter"
+msgstr "Objektposter statistikKredit ber"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_code_template_form
@@ -517,7 +526,7 @@ msgstr "Leverantörsfaktura"
 #: model:process.transition,name:account.process_transition_reconcilepaid0
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
 msgid "Reconcile Paid"
-msgstr ""
+msgstr "Kreditering betald"
 
 #. module: account
 #: wizard_field:account.chart,init,target_move:0
@@ -533,7 +542,7 @@ msgstr "Momsmallar"
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr ""
+msgstr "Betald/Återbetald"
 
 #. module: account
 #: field:account.account.type,close_method:0
@@ -543,7 +552,7 @@ msgstr ""
 #. module: account
 #: field:account.tax.template,include_base_amount:0
 msgid "Include in Base Amount"
-msgstr ""
+msgstr "Inkluder i basbeloppet"
 
 #. module: account
 #: field:account.tax,ref_base_code_id:0
@@ -573,6 +582,8 @@ msgid ""
 "Number of days to add before computation of the day of month.If Date=15/01, "
 "Number of Days=22, Day of Month=-1, then the due date is 28/02."
 msgstr ""
+"Antal dagar för att lägga före beräkning av dagen i månaden. Om Datum = "
+"15/01, antal dagar = 22, Dag i månaden =- 1, blir sedan förfallodagen 28/02."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -1337,7 +1348,7 @@ msgstr "Meddelande"
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaymentorder0
 msgid "Select invoices you want to pay and manages advances"
-msgstr ""
+msgstr "Välj fakturor du vill betala och hantera förväg"
 
 #. module: account
 #: selection:account.account,type:0
@@ -1674,7 +1685,7 @@ msgstr "Max antal:"
 #. module: account
 #: wizard_button:account.invoice.refund,init,refund:0
 msgid "Refund Invoice"
-msgstr ""
+msgstr "Kreditera Faktura"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_period_tree
@@ -2060,7 +2071,7 @@ msgstr "Preliminär faktura"
 #. module: account
 #: model:account.account.type,name:account.account_type_expense
 msgid "Expense"
-msgstr "Kostnad"
+msgstr "Utgift"
 
 #. module: account
 #: field:account.journal,invoice_sequence_id:0
@@ -2190,7 +2201,7 @@ msgstr "(lämna blank för aktuell period)"
 #: model:ir.actions.act_window,name:account.action_invoice_tree8
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree8
 msgid "Draft Supplier Invoices"
-msgstr ""
+msgstr "Preliminära kundfakturor"
 
 #. module: account
 #: wizard_field:account.invoice.refund,init,period:0
@@ -3057,6 +3068,8 @@ msgid ""
 "If this box is checked, the system will try to group the accounting lines "
 "when generating them from invoices."
 msgstr ""
+"Om denna ruta är markerad, kommer systemet att försöka gruppera redovisning "
+"raderna när du skapar dem från fakturor."
 
 #. module: account
 #: wizard_field:account.move.line.reconcile,init_full,trans_nbr:0
@@ -3255,7 +3268,7 @@ msgstr "Kod"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance
 msgid "Financial Management"
-msgstr "Bokföring"
+msgstr "Redovisning"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -3316,7 +3329,7 @@ msgstr ""
 #: field:account.tax.code,notprintable:0
 #: field:account.tax.code.template,notprintable:0
 msgid "Not Printable in Invoice"
-msgstr ""
+msgstr "Inte utskrivbar i faktura"
 
 #. module: account
 #: field:account.move.line,move_id:0
@@ -3637,6 +3650,8 @@ msgid ""
 "Check this box if you don't want any VAT related to this Tax Code to appear "
 "on invoices"
 msgstr ""
+"Markera rutan om du inte vill att någon moms i samband med detta skattelagen "
+"att visas på fakturor"
 
 #. module: account
 #: field:account.account.type,sequence:0
@@ -3649,7 +3664,7 @@ msgstr ""
 #: field:account.tax.template,sequence:0
 #: field:fiscalyear.seq,sequence_id:0
 msgid "Sequence"
-msgstr "Nummerserie"
+msgstr "Sekvens"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -4053,7 +4068,7 @@ msgstr "Nettobelopp"
 #. module: account
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Fakturaref"
 
 #. module: account
 #: field:account.analytic.line,general_account_id:0
@@ -4125,7 +4140,7 @@ msgstr "Valuta för boken"
 #: view:account.journal.column:0
 #: model:ir.model,name:account.model_account_journal_column
 msgid "Journal Column"
-msgstr ""
+msgstr "Journalkolumn"
 
 #. module: account
 #: selection:account.fiscalyear,state:0

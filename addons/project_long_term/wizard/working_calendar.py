@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
 
 import pooler
-import datetime
 
 def convert_timeformat(cr, uid, time_string, context={}):
         """ Convert input time string: 8.5 to output time string 8:30."""
@@ -32,7 +32,7 @@ def convert_timeformat(cr, uid, time_string, context={}):
         converted_string = hour_part + ':' + str(round_mins)[0:2]
         return converted_string
 
-def compute_leaves(cr, uid, calendar_id, resource_id=False, resource_calendar=False):
+def compute_leaves(cr, uid, calendar_id, resource_id=False, resource_calendar=False, context={}):
 
         """Compute the leaves from the working calendar of the resource.
 
@@ -49,21 +49,21 @@ def compute_leaves(cr, uid, calendar_id, resource_id=False, resource_calendar=Fa
             leave_ids = resource_calendar_leaves_obj.search(cr, uid, ['|', ('calendar_id', '=', calendar_id),
                                                                        ('calendar_id', '=', resource_calendar),
                                                                        ('resource_id', '=', resource_id)
-                                                                      ])
+                                                                      ], context=context)
         else:
             leave_ids = resource_calendar_leaves_obj.search(cr, uid, [('calendar_id', '=', calendar_id),
                                                                       ('resource_id', '=', False)
-                                                                      ])
-        leaves = resource_calendar_leaves_obj.read(cr, uid, leave_ids, ['date_from', 'date_to'])
+                                                                      ], context=context)
+        leaves = resource_calendar_leaves_obj.read(cr, uid, leave_ids, ['date_from', 'date_to'], context=context)
         for i in range(len(leaves)):
-                dt_start = datetime.datetime.strptime(leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')
-                dt_end = datetime.datetime.strptime(leaves[i]['date_to'], '%Y-%m-%d %H:%M:%S')
-                no = dt_end - dt_start
-                [leave_list.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
-                leave_list.sort()
+            dt_start = datetime.datetime.strptime(leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')
+            dt_end = datetime.datetime.strptime(leaves[i]['date_to'], '%Y-%m-%d %H:%M:%S')
+            no = dt_end - dt_start
+            [leave_list.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
+            leave_list.sort()
         return leave_list
 
-def compute_working_calendar(cr, uid, calendar_id):
+def compute_working_calendar(cr, uid, calendar_id, context={}):
 
         """Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
 
@@ -80,8 +80,8 @@ def compute_working_calendar(cr, uid, calendar_id):
         wk_time = {}
         wktime_list = []
         wktime_cal = []
-        week_ids = resource_week_obj.search(cr, uid, [('calendar_id', '=', calendar_id)])
-        weeks = resource_week_obj.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'])
+        week_ids = resource_week_obj.search(cr, uid, [('calendar_id', '=', calendar_id)], context=context)
+        weeks = resource_week_obj.read(cr, uid, week_ids, ['dayofweek', 'hour_from', 'hour_to'], context=context)
         # Convert time formats into appropriate format required
         # and create a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
         for week in weeks:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -70,7 +70,7 @@ class report_account_analytic_planning(osv.osv):
         return result
 
     def _check_planning_responsible(self, cr, uid, ids, context={}):
-        for obj_plan in self.browse(cr,uid,ids):
+        for obj_plan in self.browse(cr, uid, ids, context=context):
             cr.execute("""
                 SELECT id FROM report_account_analytic_planning plan
                 WHERE (   (%(date_from)s BETWEEN date_from AND date_to)
@@ -117,19 +117,19 @@ class report_account_analytic_planning(osv.osv):
     ]
 
     def action_open(self, cr, uid, id, context={}):
-        self.write(cr, uid, id, {'state' : 'open'})
+        self.write(cr, uid, id, {'state' : 'open'}, context=context)
         return True
 
     def action_cancel(self, cr, uid, id, context={}):
-        self.write(cr, uid, id, {'state' : 'cancel'})
+        self.write(cr, uid, id, {'state' : 'cancel'}, context=context)
         return True
 
     def action_draft(self, cr, uid, id, context={}):
-        self.write(cr, uid, id, {'state' : 'draft'})
+        self.write(cr, uid, id, {'state' : 'draft'}, context=context)
         return True
 
     def action_done(self, cr, uid, id, context={}):
-        self.write(cr, uid, id, {'state' : 'done'})
+        self.write(cr, uid, id, {'state' : 'done'}, context=context)
         return True
 
 report_account_analytic_planning()
@@ -156,8 +156,9 @@ class report_account_analytic_planning_line(osv.osv):
         return res
 
     def _amount_base_uom(self, cr, uid, ids, name, args, context):
+        users_obj = self.pool.get('res.users')
         result = {}
-        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
         if tm and tm.factor:
             div = tm.factor
         else:
@@ -220,13 +221,14 @@ class report_account_analytic_planning_user(osv.osv):
 
 
     def _get_tasks(self, cr, uid, ids, name, args, context):
+        users_obj = self.pool.get('res.users')
         result = {}
-        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+        tm = users_obj.browse(cr, uid, uid, context=context).company_id.project_time_mode_id
         if tm and tm.factor:
             div = tm.factor
         else:
             div = 1.0
-        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context=context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
@@ -252,8 +254,9 @@ class report_account_analytic_planning_user(osv.osv):
         return result
 
     def _get_timesheets(self, cr, uid, ids, name, args, context):
+        users_obj = self.pool.get('res.users')
         result = {}
-        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
@@ -313,8 +316,8 @@ Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holi
                 FROM hr_holidays holidays
                 WHERE holidays.employee_id IN
                     (
-                    SELECT emp.id 
-                    FROM hr_employee emp, resource_resource res WHERE emp.resource_id = res.id and res.user_id = users.id 
+                    SELECT emp.id
+                    FROM hr_employee emp, resource_resource res WHERE emp.resource_id = res.id and res.user_id = users.id
                     )
                 AND holidays.state IN ('validate')
                 AND holidays.type = 'remove'
@@ -360,13 +363,14 @@ class report_account_analytic_planning_account(osv.osv):
     _auto = False
 
     def _get_tasks(self, cr, uid, ids, name, args, context):
+        users_obj = self.pool.get('res.users')
         result = {}
-        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+        tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
         if tm and tm.factor:
             div = tm.factor
         else:
             div = 1.0
-        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
@@ -384,8 +388,9 @@ class report_account_analytic_planning_account(osv.osv):
         return result
 
     def _get_timesheets(self, cr, uid, ids, name, args, context):
+        users_obj = self.pool.get('res.users')
         result = {}
-        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
@@ -456,8 +461,9 @@ class report_account_analytic_planning_stat(osv.osv):
     _order = 'planning_id,user_id'
 
     def _sum_amount_real(self, cr, uid, ids, name, args, context):
+        users_obj = self.pool.get('res.users')
         result = {}
-        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
@@ -473,13 +479,14 @@ where user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
         return result
 
     def _sum_amount_tasks(self, cr, uid, ids, name, args, context):
+        users_obj = self.pool.get('res.users')
         result = {}
-        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+        tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
         if tm and tm.factor:
             div = tm.factor
         else:
             div = 1.0
-        tm2 = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.planning_time_mode_id
+        tm2 = users_obj.browse(cr, uid, uid, context).company_id.planning_time_mode_id
         if tm2 and tm2.factor:
             div2 = tm2.factor
         else:
