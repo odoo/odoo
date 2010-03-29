@@ -19,76 +19,66 @@
 #
 ##############################################################################
 
-
-import wizard
-import pooler
+from osv import fields, osv
+from service import web_services
+from tools.misc import UpdateableStr, UpdateableDict
 from tools.translate import _
+import netsvc
+import pooler
+import time
+import wizard
 
 
-_form = """<?xml version="1.0"?>
-<form string="Set Stock to Zero">
-    <separator colspan="4" string="Set Stocks to Zero" />
-    <field name="location_id"/>
-    <newline/>
-    <label colspan="4" string="Do you want to set stocks to zero ?"/>
-</form>
-"""
-_inventory_fields = {
-    'location_id' : {
-        'string':'Location',
-        'type':'many2one',
-        'relation':'stock.location',
-        'required':True
-        }
-}
+class inventory_set_stock_zero(osv.osv_memory):
+    _name = "stock.inventory.set.stock.zero"
+    _description = "Set Stock to 0"
+    _columns = {
+            'location_id': fields.many2one('stock.location', 'Location', required=True), 
+            }
+    
+    def do_merge(self, cr, uid, ids, context):
+        """ 
+             To set stock to Zero 
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """            
+        invent_obj = pooler.get_pool(cr.dbname).get('stock.inventory')
+        invent_line_obj = pooler.get_pool(cr.dbname).get('stock.inventory.line')
+        prod_obj =  pooler.get_pool(cr.dbname).get('product.product')
+    
+        if len(context['active_ids']) <> 1:
+            raise osv.except_osv(_('Warning'), 
+                                       _('Please select one and only one inventory !'))
+        for id in ids:
+            datas = self.read(cr, uid, id)
+            loc = str(datas['location_id'])
+        
+            cr.execute('select distinct location_id,product_id \
+                        from stock_inventory_line \
+                        where inventory_id=%s', (context['active_id'],))
+            inv = cr.fetchall()
+            cr.execute('select distinct product_id from stock_move where \
+                        location_dest_id=%s or location_id=%s', (loc, loc,))
+            stock = cr.fetchall()
+            for s in stock:
+                if (loc, s[0]) not in inv:
+                    p = prod_obj.browse(cr, uid, s[0])
+                    invent_line_obj.create(cr, uid, {
+                        'inventory_id': context['active_id'], 
+                        'location_id': loc, 
+                        'product_id': s[0], 
+                        'product_uom': p.uom_id.id, 
+                        'product_qty': 0.0, 
+                        })
+        return {}
 
-
-def do_merge(self, cr, uid, data, context):
-    invent_obj = pooler.get_pool(cr.dbname).get('stock.inventory')
-    invent_line_obj = pooler.get_pool(cr.dbname).get('stock.inventory.line')
-    prod_obj =  pooler.get_pool(cr.dbname).get('product.product')
-
-    if len(data['ids']) <> 1:
-        raise wizard.except_wizard(_('Warning'),
-                                   _('Please select one and only one inventory !'))
-
-    loc = str(data['form']['location_id'])
-
-    cr.execute('select distinct location_id,product_id from stock_inventory_line where inventory_id=%s', (data['ids'][0],))
-    inv = cr.fetchall()
-    cr.execute('select distinct product_id from stock_move where location_dest_id=%s or location_id=%s',(loc,loc,))
-    stock = cr.fetchall()
-    for s in stock:
-        if (loc,s[0]) not in inv:
-            p = prod_obj.browse(cr, uid, s[0])
-            invent_line_obj.create(cr, uid, {
-                'inventory_id': data['ids'][0],
-                'location_id': loc,
-                'product_id': s[0],
-                'product_uom': p.uom_id.id,
-                'product_qty': 0.0,
-                })
-    return {}
-
-
-class merge_inventory(wizard.interface):
-    states = {
-        'init' : {
-            'actions' : [],
-            'result' : {'type' : 'form',
-                    'arch' : _form,
-                    'fields' : _inventory_fields,
-                    'state' : [('end', 'Cancel', 'gtk-cancel'),
-                               ('merge', 'Set to Zero', 'gtk-apply', True) ]}
-        },
-        'merge' : {
-            'actions' : [],
-            'result' : {'type' : 'action',
-                        'action': do_merge,
-                        'state' : 'end'}
-        },
-    }
-merge_inventory("inventory.merge.stock.zero")
+inventory_set_stock_zero()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,62 +15,47 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
-import pooler
-import time
+from osv import fields, osv
 
-def _action_open_window(self, cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname) 
-    mod_obj = pool.get('ir.model.data') 
-    result = mod_obj._get_id(cr, uid, 'product', 'product_search_form_view')
-    id = mod_obj.read(cr, uid, result, ['res_id'])          
-    return {
-        'name': False,
-        'view_type': 'form',
-        "view_mode": 'tree,form',
-        'res_model': 'product.product',
-        'type': 'ir.actions.act_window',
-        'context':{'location': data['ids'][0],'from_date':data['form']['from_date'],'to_date':data['form']['to_date']},
-        'domain':[('type','<>','service')],
-        'search_view_id': id['res_id'] 
+class stock_location_product(osv.osv_memory):
+    _name = "stock.location.product"
+    _description = "Products by Location"
+    _columns = {
+                'from_date': fields.datetime('From'), 
+                'to_date': fields.datetime('To'), 
     }
 
+    def action_open_window(self, cr, uid, ids, context):
+        """ 
+             To open location wise product information specific to given duration
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: the ID or list of IDs if we want more than one 
+             @param context: A standard dictionary 
+             
+             @return: invoice type
+        
+        """                
+        mod_obj = self.pool.get('ir.model.data')
+        for location_obj in self.read(cr, uid, ids, ['from_date', 'to_date']):
+            return {
+                    'name': False, 
+                    'view_type': 'form', 
+                    'view_mode': 'tree,form', 
+                    'res_model': 'product.product', 
+                    'type': 'ir.actions.act_window', 
+                    'context': {'location': context['active_id'], 
+                           'from_date': location_obj['from_date'], 
+                           'to_date': location_obj['to_date']}, 
+                    'domain': [('type', '<>', 'service')], 
+            }
 
-class product_by_location(wizard.interface):
-    form1 = '''<?xml version="1.0"?>
-    <form string="View Stock of Products">
-        <separator string="Stock Location Analysis" colspan="4"/>
-        <field name="from_date"/>
-        <newline/>
-        <field name="to_date"/>
-        <newline/>
-        <label string=""/>
-        <label string="(Keep empty to open the current situation. Adjust HH:MM:SS to 00:00:00 to filter all resources of the day for the 'From' date and 23:59:59 for the 'To' date)" align="0.0" colspan="3"/>
-    </form>'''
-    form1_fields = {
-             'from_date': {
-                'string': 'From',
-                'type': 'datetime',
-        },
-             'to_date': {
-                'string': 'To',
-                'type': 'datetime',
-        },
-    }
+stock_location_product()
 
-    states = {
-      'init': {
-            'actions': [],
-            'result': {'type': 'form', 'arch':form1, 'fields':form1_fields, 'state': [('end', 'Cancel', 'gtk-cancel'),('open', 'Open Products', 'gtk-apply', True)]}
-        },
-    'open': {
-            'actions': [],
-            'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
-        }
-    }
-product_by_location('stock.location.products')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

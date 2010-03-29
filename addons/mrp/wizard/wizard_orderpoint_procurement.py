@@ -24,50 +24,48 @@
 #    - Order if the virtual stock of today is bellow the min of the defined order point
 #
 
-import wizard
 import threading
-import pooler
+from osv import fields,osv
 
-parameter_form = '''<?xml version="1.0"?>
-<form string="Parameters" colspan="4">
-    <field name="automatic" />
-</form>'''
-
-parameter_fields = {
-    'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'If the stock of a product is under 0, it will act like an orderpoint', 'default': lambda *a: False},
-}
-
-def _procure_calculation_orderpoint(self, db_name, uid, data, context):
-    db, pool = pooler.get_db_and_pool(db_name)
-    cr = db.cursor()
-    try:
-        proc_obj = pool.get('mrp.procurement')
-        automatic = data['form']['automatic']
-        proc_obj._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
-                use_new_cursor=cr.dbname, context=context)
-    finally:
-        cr.close()
-    return {}
-
-def _procure_calculation(self, cr, uid, data, context):
-    threaded_calculation = threading.Thread(target=_procure_calculation_orderpoint, args=(self, cr.dbname, uid, data, context))
-    threaded_calculation.start()
-    return {}
-
-class procurement_compute(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end','Cancel'),('compute','Compute Stock')]}
-        },
-        'compute': {
-            'actions': [_procure_calculation],
-            'result': {'type': 'state', 'state':'end'}
-        },
+class procurement_compute(osv.osv_memory):
+    _name = 'mrp.procurement.orderpoint.compute'
+    _description = 'Automatic Order Point'
+    
+    _columns = {
+           'automatic': fields.boolean('Automatic Orderpoint', help='If the stock of a product is under 0, it will act like an orderpoint'),     
     }
-procurement_compute('mrp.procurement.orderpoint.compute')
 
+    _defaults = {
+            'automatic' : lambda *a: False,
+    }
+    
+    def _procure_calculation_orderpoint(self, cr, uid, ids, context):
+        """ 
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+        """        
+        proc_obj = self.pool.get('mrp.procurement')
+        for proc in self.browse(cr, uid, ids):
+            proc_obj._procure_orderpoint_confirm(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname, context=context)
+        
+        return {}
+    
+    def procure_calculation(self, cr, uid, ids, context):
+        """ 
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+        
+        """
+        threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=(cr, uid, ids, context))
+        threaded_calculation.start()
+        return {}
 
+procurement_compute()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

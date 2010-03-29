@@ -133,15 +133,15 @@ class wizard_compute_tasks(wizard.interface):
         'init': {
             'actions': [],
             'result': {'type':'form', 'arch':compute_form, 'fields':compute_fields, 'state':[
-                ('end', 'Cancel'),
-                ('compute', 'Compute')
+                ('end', 'Cancel', 'gtk-cancel'),
+                ('compute', 'Compute', 'gtk-ok', True)
             ]},
         },
 
 
         'compute': {
             'actions': [_compute_date],
-            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
+            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok', 'gtk-ok', True)]},
         }
     }
 wizard_compute_tasks('wizard.compute.tasks')

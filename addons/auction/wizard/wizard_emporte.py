@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,59 +15,43 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import wizard
+from osv import fields, osv
+from tools.translate import _
 import netsvc
-
 import pooler
-from tools.misc import UpdateableStr
+import time
+import tools
+import wizard
 
+class auction_taken(osv.osv_memory):
+    """
+    Auction lots taken.
+    """
+    _name = "auction.taken"
+    _description = "Auction taken"
+    _columns = {
+              'lot_ids':fields.many2many('auction.lots', 'auction_taken_rel', 'taken_id', 'lot_id', 'Lots Emportes'), 
+              
+              }
+    
+    def _to_xml(s):
+        return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
 
-# Dossier
+    def process(self, cr, uid, ids, context):
+          """
+          Update Auction lots state to taken_away.
+          @param cr: the current row, from the database cursor.
+          @param uid: the current user’s ID for security checks.
+          @param ids: List of Auction taken’s IDs
+          @return: dictionary of lot_ids fields with empty list 
+          """
+          lot_obj = self.pool.get('auction.lots')
+          for data in self.read(cr, uid, ids): 
+              if data['lot_ids']:
+                  lot_obj.write(cr, uid, data['lot_ids'], {'state':'taken_away'})
+              return {'lot_ids': []}
 
-_lot_arch = """<?xml version="1.0"?>
-<form string="Mark Lots" height="500" width="1000">
-    <label string="Select lots which are Sold" colspan="4"/>
-    <field name="lot_ids" nolabel="1" colspan="4" domain="[('state','=','sold')]"/>
-</form>
-"""
-_lot_fields = {
-    'lot_ids': {'string':'Lots Emportes','relation':'auction.lots','type':'many2many'}
-}
-
-def _to_xml(s):
-    return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
-
-def _process(self, cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname)
-    lot_obj = pool.get('auction.lots')
-    if data['form']['lot_ids']:
-        lot_obj.write(cr, uid, data['form']['lot_ids'][0][2], {'state':'taken_away'})
-    return {'lot_ids': []}
-
-class wizard_reprint(wizard.interface):
-    states = {
-        'valid': {
-            'actions': [_process],
-            'result': {'type':'state', 'state':'init'}
-        },
-        'init': {
-            'actions': [],
-            'result': {
-                'type':'form', 
-                'arch': _lot_arch,
-                'fields': _lot_fields,
-                'state': [
-                    ('valid','       OK       ')
-                ],
-            }
-        }
-    }
-wizard_reprint('auction.taken')
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+auction_taken()

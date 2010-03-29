@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_sale_advance_payment_inv" model="ir.ui.view">
+            <field name="name">Sale Advance Payment Invoive</field>
+            <field name="model">sale.advance.payment.inv</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+             <form string="Advance Payment">
+			    <field name="product_id"/>
+			    <newline />
+			    <field name="qtty"/>
+			    <field name="amount"/>
+			    <newline />
+             	<separator string="" colspan="4"/>
+             	<label string=""  colspan="2" />
+              	<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+               	<button name="create_invoices" string="Create Advance Invoice" type="object" icon="gtk-ok"/>
+             </form>
+            </field>
+		</record>
+
+
+        <act_window name="Advance Invoice"		    
+		    res_model="sale.advance.payment.inv"
+		    src_model="sale.order"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_view_sale_advance_payment_inv"/>	
+
+
+    	<record id="view_sale_open_invoice" model="ir.ui.view">
+            <field name="name">Open Invoice</field>
+            <field name="model">sale.open.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+             <form string="Invoices">
+             	<label string="You invoice has been successfully created!" />
+             	 <newline />
+             	<separator string="" colspan="4"/>
+             	<group colspan="4">
+              	<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+               	<button name="open_invoice" string="Open Invoice" type="object" icon="gtk-open"/>
+               	</group>
+             </form>
+            </field>
+		</record>
+
+		<record id="action_view_sale_open_invoice" model="ir.actions.act_window">
+            <field name="name">Open Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.open.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+    	</record>
+    </data>
+</openerp>

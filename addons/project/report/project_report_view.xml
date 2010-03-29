@@ -32,7 +32,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
             	<search string="Tasks">
-            		<group col="10" colspan="4">
 	            		<filter icon="terp-project" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
 	            		<filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
 	            		<separator orientation="vertical"/>
@@ -41,8 +40,8 @@
                  	    <filter string="Deadline" icon="terp-project" domain="[('date_deadline','=',time.strftime('%%Y/%%m/%%d'))]"/>
                  	    <filter string="Closed" icon="terp-project" domain="[('state','=','done')]"/>
 	            		<separator orientation="vertical"/>
-	            		<field name="project_id" select="1"/>
-	                    <field name="user_id" select="1" widget="selection">
+	            		<field name="project_id"/>
+	                    <field name="user_id" widget="selection">
 	            			<filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]" default="1"/>
                 		</field>
 	                    <newline/>
@@ -55,12 +54,11 @@
                     		<filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
                     		<filter string="Year" icon="terp-project" context="{'group_by':'name'}"/>
                 		</group>
-	                </group>
             	</search>
             </field>
         </record>
 
-        <record id="action_project_task_user_tree" model="ir.actions.act_window">
+       <record id="action_project_task_user_tree" model="ir.actions.act_window">
             <field name="name">Tasks</field>
             <field name="res_model">report.project.task.user</field>
             <field name="view_type">form</field>

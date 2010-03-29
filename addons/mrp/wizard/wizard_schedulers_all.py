@@ -19,46 +19,50 @@
 #
 ##############################################################################
 
-import wizard
 import threading
-import pooler
 
-parameter_form = '''<?xml version="1.0"?>
-<form string="Scheduler Parameters" colspan="4">
-    <field name="automatic" />
-</form>'''
+from osv import osv, fields
 
-parameter_fields = {
-    'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products.', 'default': lambda *a: False},
-}
-
-def _procure_calculation_all(self, db_name, uid, data, context):
-    db, pool = pooler.get_db_and_pool(db_name)
-    cr = db.cursor()
-    proc_obj = pool.get('mrp.procurement')
-    automatic = data['form']['automatic']
-    proc_obj.run_scheduler(cr, uid, automatic=automatic, use_new_cursor=cr.dbname,\
-            context=context)
-    cr.close()
-    return {}
-
-def _procure_calculation(self, cr, uid, data, context):
-    threaded_calculation = threading.Thread(target=_procure_calculation_all, args=(self, cr.dbname, uid, data, context))
-    threaded_calculation.start()
-    return {}
-
-class procurement_compute(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end','Cancel'),('compute','Compute Stock') ]}
-        },
-        'compute': {
-            'actions': [_procure_calculation],
-            'result': {'type': 'state', 'state':'end'}
-        },
+class procurement_compute(osv.osv_memory):
+    _name = 'mrp.procurement.compute.all'
+    _description = 'Compute all schedulers'
+    
+    _columns = {
+        'automatic': fields.boolean('Automatic orderpoint',help='Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products.'),
     }
-procurement_compute('mrp.procurement.compute.all')
+    
+    _defaults ={
+         'automatic': lambda *a: False,
+    }
+    
+    def _procure_calculation_all(self, cr, uid, ids, context):
+        """ 
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+        """
+        proc_obj = self.pool.get('mrp.procurement')
+        for proc in self.browse(cr, uid, ids):
+            proc_obj.run_scheduler(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname,\
+                    context=context)
+        return {}
+    
+    def procure_calculation(self, cr, uid, ids, context):
+        """ 
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+        """
+        threaded_calculation = threading.Thread(target=self._procure_calculation_all, args=(cr, uid, ids, context))
+        threaded_calculation.start()
+        return {}
+    
+procurement_compute()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

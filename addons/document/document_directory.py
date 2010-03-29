@@ -64,7 +64,7 @@ class document_directory(osv.osv):
     def _get_root_directory(self, cr,uid, context=None):
         objid=self.pool.get('ir.model.data')
         try:
-            mid = objid._get_id(cr, uid, 'document', 'dir_root')
+            mid = objid._get_id(cr, uid, 'document', 'dir_root')            
             if not mid:
                 return False
             root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']

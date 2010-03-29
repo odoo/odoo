@@ -36,6 +36,10 @@ class project_issue_report(osv.osv):
                     c.project_id as project_id,
                     c.type_id as type_id,
                     count(*) as nbr,
+                    sum(planned_revenue) as amount_revenue,
+                    sum(planned_cost) as amount_costs,
+                    sum(planned_revenue*probability/100)::decimal(16,2) as amount_revenue_prob,
+                    avg(probability)::decimal(16,2) as probability,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     project_issue c

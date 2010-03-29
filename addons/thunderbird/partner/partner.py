@@ -83,14 +83,11 @@ class tinythunderbird_partner(osv.osv):
 
     def thunderbird_mailcreate(self,cr,user,vals):
         dictcreate = dict(vals)
-        for val in vals:
-            if val[0] == 'object':
-                object = val[1]
         import email
         header_name = email.Header.decode_header(dictcreate['name'])
         dictcreate['name'] = header_name and header_name[0] and header_name[0][0] 
         add_obj=self.pool.get('res.partner.address')
-        case_pool=self.pool.get(object)
+        case_pool=self.pool.get('crm.case')
         partner_ids=add_obj.search(cr,user,[('email','=',dictcreate['email_from'])])
         partner=add_obj.read(cr,user,partner_ids,['partner_id'])
         if partner:
@@ -98,7 +95,7 @@ class tinythunderbird_partner(osv.osv):
         search_id = self.pool.get('res.request.link').search(cr,user,[('object','=',dictcreate['ref'].split(',')[0])])
         if not search_id:
             create_link_id = self.pool.get('res.request.link').create(cr,user,{'name':dictcreate['ref'].split(',')[0],'object':dictcreate['ref'].split(',')[0]})
-        create_id = self.pool.get(object).create(cr, user, dictcreate)
+        create_id = self.pool.get('crm.case').create(cr, user, dictcreate)
         cases=case_pool.browse(cr,user,[create_id])
         case_pool._history(cr, user, cases, _('Archive'), history=True, email=False)
         return create_id

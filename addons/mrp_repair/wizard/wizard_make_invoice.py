@@ -19,63 +19,46 @@
 #
 ##############################################################################
 
-import wizard
 import netsvc
-import pooler
+from osv import osv, fields 
 
-invoice_form = """<?xml version="1.0"?>
-<form string="Create invoices">
-    <separator colspan="4" string="Do you really want to create the invoices ?" />  
-    <field name="group"/>  
-</form>
-"""
-invoice_fields = {	
-	'group': {
-		'string': 'Group by partner invoice address',
-		'type':'boolean'
-	},
-}
-
-ack_form = """<?xml version="1.0"?>
-<form string="Create invoices">
-    <separator string="Invoices created" />    
-</form>"""
-
-ack_fields = {}
-
-def _makeInvoices(self, cr, uid, data, context):
-    order_obj = pooler.get_pool(cr.dbname).get('mrp.repair')       
-    newinv = order_obj.action_invoice_create(cr, uid, data['ids'],group=data['form']['group'],context=context)    
-        
-    return {
-        'domain': [('id','in', newinv.values())],
-        'name': 'Invoices',
-        'view_type': 'form',
-        'view_mode': 'tree,form',
-        'res_model': 'account.invoice',
-        'view_id': False,
-        'context': "{'type':'out_refund'}",
-        'type': 'ir.actions.act_window'
-    }
+class make_invoice(osv.osv_memory):
+    _name = 'mrp.repair.make_invoice'
+    _description = 'Make Invoice'
     
-
-class make_invoice(wizard.interface):
-    states = {
-        'init' : {
-            'actions' : [],
-            'result' : {'type' : 'form',
-                    'arch' : invoice_form,
-                    'fields' : invoice_fields,
-                    'state' : [('end', 'Cancel'),('invoice', 'Create invoices') ]}
-        },
-        'invoice' : {
-            'actions' : [],
-            'result' : {'type' : 'action',
-                    'action' : _makeInvoices,
-                    'state' : 'end'}
-        },
+    _columns = {
+	       'group': fields.boolean('Group by partner invoice address'),
     }
-make_invoice("mrp.repair.make_invoice")
+
+    def make_invoices(self, cr, uid, ids, context):
+        """ 
+             Generates invoice(s) of selected records.
+        
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+             
+             @return: Loads the view of new invoice(s).
+        
+        """
+        inv = self.browse(cr, uid, ids[0])
+        order_obj = self.pool.get('mrp.repair')       
+        newinv = order_obj.action_invoice_create(cr, uid, context['active_ids'], group=inv.group,context=context)    
+            
+        return {
+            'domain': [('id','in', newinv.values())],
+            'name': 'Invoices',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.invoice',
+            'view_id': False,
+            'context': "{'type':'out_invoice'}",
+            'type': 'ir.actions.act_window'
+        }
+
+make_invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

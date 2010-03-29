@@ -19,90 +19,96 @@
 #
 ##############################################################################
 
-import wizard
+from osv import fields, osv
+from tools.translate import _
 import netsvc
-import netsvc
-import osv
-import time
 import pooler
-pay_form = '''<?xml version="1.0"?>
-<form string="Pay objects">
-    <field name="amount"/>
-    <field name="statement_id1" domain="[('state','=','draft')]"/>
-    <field name="amount2"/>
-    <field name="statement_id2"  domain="[('state','=','draft')]"/>
-    <field name="amount3"/>
-    <field name="statement_id3"  domain="[('state','=','draft')]"/>
-    <newline/>
-    <field name="buyer_id"/>
-    <field name="total"/>
-</form>'''
+import time
+import tools
+import wizard
 
-def _start(self,cr,uid,data,context):
-    pool = pooler.get_pool(cr.dbname)
-    rec=pool.get('auction.lots').browse(cr,uid,data['ids'],context)
-    amount1=0.0
-    for r in rec:
-        amount1+=r.buyer_price
-        buyer= r and r.ach_uid.id or False
-        if r.is_ok:
-            raise wizard.except_wizard('Error !', 'Some lots of the selection are already paid.')
-    return {'amount':amount1, 'total':amount1,'buyer_id':buyer}
-
-pay_fields = {
-    'amount': {'string': 'Amount paid', 'type':'float'},
-    'buyer_id': {'string': 'Buyer', 'type': 'many2one', 'relation':'res.partner'},
-    'statement_id1': {'string':'Statement', 'type':'many2one', 'required':True, 'relation':'account.bank.statement'},
-    'amount2': {'string': 'Amount paid', 'type':'float'},
-    'statement_id2': {'string':'Statement', 'type':'many2one', 'relation':'account.bank.statement'},
-    'amount3': {'string': 'Amount paid', 'type':'float'},
-    'statement_id3': {'string':'Statement', 'type':'many2one', 'relation':'account.bank.statement'},
-    'total': {'string': 'Amount to paid', 'type':'float','readonly':True}
-}
-
-def _pay_and_reconcile(self, cr, uid, data, context):
-    if not abs(data['form']['total'] - (data['form']['amount']+data['form']['amount2']+data['form']['amount3']))<0.01:
-        rest=data['form']['total']-(data['form']['amount']+data['form']['amount2']+data['form']['amount3'])
-        raise wizard.except_wizard('Payment aborted !', 'You should pay all the total: "%.2f" are missing to accomplish the payment.' %(round(rest,2)))
+class auction_pay_buy(osv.osv_memory):
     
-    pool = pooler.get_pool(cr.dbname)
-    lots = pool.get('auction.lots').browse(cr,uid,data['ids'],context)
-    ref_bk_s=pooler.get_pool(cr.dbname).get('account.bank.statement.line')
+    def default_get(self, cr, uid, fields, context):
+        """ 
+             To get default values for the object.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
+        
+        """        
+        res = super(auction_pay_buy, self).default_get(cr, uid, fields, context=context)       
+        for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
+            if 'amount' in fields:
+                res.update({'amount': lot.buyer_price})                
+            if 'buyer_id' in fields:
+                res.update({'buyer_id': lot.ach_uid and lot.ach_uid.id or False})                        
+            if 'total' in fields:
+                res.update({'total': lot.buyer_price})     
+        return res
     
-    for lot in lots:
-        if data['form']['buyer_id']:
-            pool.get('auction.lots').write(cr,uid,[lot.id],{'ach_uid':data['form']['buyer_id']})
-        if not lot.auction_id:
-            raise wizard.except_wizard('Error !', 'No auction date for "%s": Please set one.'%(lot.name))
-        pool.get('auction.lots').write(cr,uid,[lot.id],{'is_ok':True})
+    def pay_and_reconcile(self, cr, uid, ids, context):
+        """
+            Pay and Reconcile
+            
+            @param cr: the current row, from the database cursor.
+            @param uid: the current user’s ID for security checks.
+            @param ids: the ID or list of IDs
+            @param context: A standard dictionary 
+            @return: 
+        """        
+        lot_obj = self.pool.get('auction.lots')
+        bank_statement_line_obj = self.pool.get('account.bank.statement.line')
+        
+        for datas in self.read(cr, uid, ids):
+            if not abs(datas['total'] - (datas['amount'] + datas['amount2'] + datas['amount3'])) <0.01:
+                rest = datas['total']-(datas['amount'] + datas['amount2'] + datas['amount3'])
+                raise osv.except_osv('Payment aborted !', 'You should pay all the total: "%.2f" are missing to accomplish the payment.' %(round(rest, 2)))
     
-    for st,stamount in [('statement_id1','amount'),('statement_id2','amount2'),('statement_id3','amount3')]:
-        if data['form'][st]:
-            new_id=ref_bk_s.create(cr,uid,{
-                'name':'Buyer:'+str(lot.ach_login or '')+', auction:'+ lots[0].auction_id.name,
-                'date': time.strftime('%Y-%m-%d'),
-                'partner_id':data['form']['buyer_id'] or False,
-                'type':'customer',
-                'statement_id':data['form'][st],
-                'account_id':lot.auction_id.acc_income.id,
-                'amount':data['form'][stamount]
-            })
+            lots = lot_obj.browse(cr, uid, context['active_ids'], context)
+            ref_bk_s = bank_statement_line_obj
+    
             for lot in lots:
-                pool.get('auction.lots').write(cr,uid,[lot.id],{'statement_id':[(4,new_id)]})
-    return {}
+                if datas['buyer_id']:
+                    lot_obj.write(cr, uid, [lot.id], {'ach_uid':datas['buyer_id']})
+                if not lot.auction_id:
+                    raise osv.except_osv('Error !', 'No auction date for "%s": Please set one.'%(lot.name))
+                lot_obj.write(cr, uid, [lot.id], {'is_ok':True})
+    
+            for st, stamount in [('statement_id1', 'amount'), ('statement_id2', 'amount2'), ('statement_id3', 'amount3')]:
+                if datas[st]:
+                    new_id = ref_bk_s.create(cr, uid, {
+                        'name':'Buyer:'+ str(lot.ach_login or '')+', auction:'+ lots[0].auction_id.name, 
+                        'date': time.strftime('%Y-%m-%d'), 
+                        'partner_id': datas['buyer_id'] or False, 
+                        'type':'customer', 
+                        'statement_id': datas[st], 
+                        'account_id': lot.auction_id.acc_income.id, 
+                        'amount': datas[stamount]
+                        })
+                    for lot in lots:
+                        lot_obj.write(cr, uid, [lot.id], {'statement_id':[(4, new_id)]})
+            return {}
+   
+    _name = "auction.pay.buy"
+    _description = "Pay buy"
+    _columns= {
+               'amount': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy']))), 
+               'buyer_id':fields.many2one('res.partner', 'Buyer'), 
+               'statement_id1':fields.many2one('account.bank.statement', 'Statement', required=True), 
+               'amount2': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy']))), 
+               'statement_id2':fields.many2one('account.bank.statement', 'Statement'), 
+               'amount3': fields.float('Amount paid', digits = (16, int(tools.config['price_accuracy']))), 
+               'statement_id3':fields.many2one('account.bank.statement', 'Statement'), 
+               'total': fields.float('Amount paid', digits = (16, int(tools.config['price_accuracy'])), readonly =True), 
+               }
+auction_pay_buy()
 
-
-class wiz_auc_lots_pay(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_start],
-            'result': {'type': 'form', 'arch':pay_form, 'fields': pay_fields, 'state':[('end','Cancel'),('pay','Pay')]}
-        },
-        'pay': {
-        'actions': [_pay_and_reconcile],
-        'result': {'type': 'state', 'state':'end'}
-        }}
-wiz_auc_lots_pay('auction.pay.buy')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,82 +15,74 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
+from osv import fields, osv
+from tools.translate import _
 import netsvc
 import pooler
-import sql_db
+import time
+import tools
+import wizard
 
-auction_move = '''<?xml version="1.0"?>
-<form string="Change Auction Date">
-    <group col="1" colspan="2">
-    <label string="Warning, this will erase the object adjudication price and its buyer !" colspan="2"/>
-    </group>
-    <newline/>
-    <field name="auction_id"/>
-</form>'''
-
-auction_move_fields = {
-    'auction_id': {'string':'Auction Date', 'type':'many2one', 'required':True, 'relation':'auction.dates'},
-}
-
-#def _auction_move_set(self, uid, datas):
-#   if datas['form']['auction_id']:
-#       cr = sql_db.db.cursor()
-#       cr.execute('update auction_lots set auction_id=%s, obj_price=NULL, ach_login=NULL, ach_uid=NULL, ach_pay_id=NULL, ach_inv_id=NULL, state=%s where id in ('+','.join(map(str, datas['ids']))+')', (str(datas['form']['auction_id']), 'draft'))
-#       cr.execute('delete from auction_bid_line where lot_id in ('+','.join(map(str, datas['ids']))+')')
-#       cr.commit()
-#       cr.close()
-#   return {}
-def _top(self,cr,uid,datas,context={}):
-    refs = pooler.get_pool(cr.dbname).get('auction.lots')
-    rec_ids = refs.browse(cr,uid,datas['ids'])
-    for rec in rec_ids:
-        if not rec.auction_id:
-            raise wizard.except_wizard('Error !','You can not move a lot that has no auction date')
-    return {}
-def _auction_move_set(self,cr,uid,datas,context={}):
-    if not (datas['form']['auction_id'] and len(datas['ids'])) :
-        return {}
-    refs = pooler.get_pool(cr.dbname).get('auction.lots')
-    rec_ids = refs.browse(cr,uid,datas['ids'])
+class auction_lots_auction_move(osv.osv_memory):
     
-    line_ids= pooler.get_pool(cr.dbname).get('auction.bid_line').search(cr,uid,[('lot_id','in',datas['ids'])])
-#   pooler.get_pool(cr.dbname).get('auction.bid_line').unlink(cr, uid, line_ids)
-    for rec in rec_ids:
-        new_id=pooler.get_pool(cr.dbname).get('auction.lot.history').create(cr,uid,{
-            'auction_id':rec.auction_id.id,
-            'lot_id':rec.id,
-            'price': rec.obj_ret
-        })
-        up_auction=pooler.get_pool(cr.dbname).get('auction.lots').write(cr,uid,[rec.id],{
-            'auction_id':datas['form']['auction_id'],
-            'obj_ret':None,
-            'obj_price':None,
-            'ach_login':None,
-            'ach_uid':None,
-            'ach_inv_id':None,
-            'sel_inv_id':None,
-            'obj_num':None,
-            'state':'draft'})
-    return {}
+    _name = "auction.lots.auction.move"
+    _description = "Auction move "
+    _columns= {
+               'auction_id':fields.many2one('auction.dates', 'Auction Date', required=True), 
+               }
+    
+    def _top(self, cr, uid, ids, context={}):
+        refs = self.pool.get('auction.lots')
+        rec_ids = refs.browse(cr, uid, context['active_ids'])
+        for rec in rec_ids:
+            if not rec.auction_id:
+                raise osv.except_osv('Error !', 'You can not move a lot that has no auction date')
+        return {}
+    
+    def auction_move_set(self, cr, uid, ids, context={}):
+        """
+        This Function update auction date on auction lots to given auction date.
+        erase the auction lots's object adjudication price and its buyer and change state to draft.
+        create new entry in auction lot history.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of auction lots auction move’s IDs.
+        """
+        refs = self.pool.get('auction.lots')
+        auction_bid_line_obj = self.pool.get('auction.bid_line')
+        auction_lot_history_obj = self.pool.get('auction.lot.history')
+        auction_lots_obj = self.pool.get('auction.lots')
+        for datas in self.read(cr, uid, ids):
+            if not (datas['auction_id'] and len(context['active_ids'])) :
+                return {}
+            
+            rec_ids = refs.browse(cr, uid, context['active_ids'])
+            line_ids = auction_bid_line_obj.search(cr, uid, [('lot_id', 'in', context['active_ids'])])
+        #   pooler.get_pool(cr.dbname).get('auction.bid_line').unlink(cr, uid, line_ids)
+            for rec in rec_ids:
+                new_id = auction_lot_history_obj.create(cr, uid, {
+                    'auction_id': rec.auction_id.id, 
+                    'lot_id': rec.id, 
+                    'price': rec.obj_ret
+                    })
+                up_auction = auction_lots_obj.write(cr, uid, [rec.id], {
+                    'auction_id':datas['auction_id'], 
+                    'obj_ret': None, 
+                    'obj_price': None, 
+                    'ach_login': None, 
+                    'ach_uid': None, 
+                    'ach_inv_id': None, 
+                    'sel_inv_id': None, 
+                    'obj_num': None, 
+                    'state': 'draft'})
+            return {}
 
-class wiz_auc_lots_auction_move(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_top],
-            'result': {'type': 'form', 'arch':auction_move, 'fields': auction_move_fields, 'state':[('set_date', 'Move to Auction date'),('end','Cancel')]}
-        },
-        'set_date': {
-            'actions': [_auction_move_set],
-            'result': {'type': 'state', 'state':'end'}
-        }
-    }
+auction_lots_auction_move()
 
-wiz_auc_lots_auction_move('auction.lots.auction_move')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

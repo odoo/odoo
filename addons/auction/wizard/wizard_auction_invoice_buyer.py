@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,97 +15,86 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import wizard
+from osv import fields, osv
+from tools.translate import _
 import netsvc
 import pooler
+import time
+import tools
+import wizard
 
-invoice_form = '''<?xml version="1.0"?>
-<form title="Paid ?">
-    <field name="amount"/>
-    <field name="objects"/>
-    <field name="number"/>
-    <label string="(Keep empty for automatic number)" colspan="2"/>
-    <field name="buyer_id"/>
-</form>'''
+class auction_lots_make_invoice_buyer(osv.osv_memory):
+    
+    def default_get(self, cr, uid, fields, context):
+        """ 
+             To get default values for the object.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for which we want default values 
+             @param context: A standard dictionary 
+             
+             @return: A dictionary which of fields with values. 
+        
+        """        
+        res = super(auction_lots_make_invoice_buyer, self).default_get(cr, uid, fields, context=context)
+        for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
+            if 'amount' in fields:
+                res.update({'amount': lot.buyer_price})                
+            if 'buyer_id' in fields:
+                res.update({'buyer_id': lot.ach_uid and lot.ach_uid.id or False})                        
+            if 'objects' in fields:
+                res.update({'objects': len(context['active_ids'])})   
+        return res
 
-invoice_fields = {
-    'amount': {'string':'Invoiced Amount', 'type':'float', 'required':True, 'readonly':True},
-    'objects': {'string':'# of objects', 'type':'integer', 'required':True, 'readonly':True},
-    'number': {'string':'Invoice Number', 'type':'char'},
-    'buyer_id':{'string': 'Buyer', 'type': 'many2one', 'relation':'res.partner'}
+    def makeInvoices(self, cr, uid, ids, context):
+        """
+        Create an invoice for selected lots (IDS) to BUYER_ID .
+        @param cr: the current row, from the database cursor.
+        @param uid: the current user’s ID for security checks.
+        @param ids: List of Auction lots make invoice buyer’s IDs
+        @return: dictionary of  account invoice form.
+        """    
+        newinv = []
 
-}
+        order_obj = self.pool.get('auction.lots')
+        mod_obj = self.pool.get('ir.model.data') 
+        
+        for data in self.read(cr, uid, ids):            
+            result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
+            id = mod_obj.read(cr, uid, result, ['res_id'])
+            lots = order_obj.browse(cr, uid, context['active_ids'])
+            invoice_number = data['number']
+            for lot in lots:
+                up_auction = order_obj.write(cr, uid, [lot.id], {'ach_uid':data['buyer_id']})
+            ids = order_obj.lots_invoice(cr, uid, context['active_ids'], context, data['number'])
+            cr.commit()
+            return  {
+                'domain': "[('id','in', ["+','.join(map(str, ids))+"])]", 
+                'name': 'Buyer invoices', 
+                'view_type': 'form', 
+                'view_mode': 'tree,form', 
+                'res_model': 'account.invoice', 
+                'view_id': False, 
+                'context': "{'type':'in_refund'}", 
+                'type': 'ir.actions.act_window', 
+                'search_view_id': id['res_id']         
+            }
+            
+    _name = "auction.lots.make.invoice.buyer"
+    _description = "Make invoice buyer "
+    _columns= {
+               'amount': fields.float('Invoiced Amount', required =True, readonly=True), 
+               'objects':fields.integer('# of objects', required =True, readonly=True), 
+               'number':fields.char('Invoice Number', size=64), 
+               'buyer_id':fields.many2one('res.partner', 'Buyer', required=True), 
+               }
+    _defaults={
+               'number':lambda *a: False,
+               }
 
-
-def _values(self,cr,uid, datas,context={}):
-    pool = pooler.get_pool(cr.dbname)
-    lots= pool.get('auction.lots').browse(cr,uid,datas['ids'])
-#   price = 0.0
-    amount_total=0.0
-#   pt_tax=pooler.get_pool(cr.dbname).get('account.tax')
-    for lot in lots:
-        buyer=lot and lot.ach_uid.id or False
-        amount_total+=lot.buyer_price
-#       taxes = lot.product_id.taxes_id
-#       if lot.author_right:
-#           taxes.append(lot.author_right)
-#       if lot.auction_id:
-#           taxes += lot.auction_id.buyer_costs
-#       tax=pt_tax.compute(cr,uid,taxes,lot.obj_price,1)
-#       for t in tax:
-#           amount_total+=t['amount']
-#       amount_total+=lot.obj_price
-    #   up_auction=pooler.get_pool(cr.dbname).get('auction.lots').write(cr,uid,[lot.id],{'ach_uid':datas['form']['buyer_id']})
-    invoice_number = False
-    return {'objects':len(datas['ids']), 'amount':amount_total, 'number':invoice_number,'buyer_id':buyer}
-
-
-def _makeInvoices(self, cr, uid, data, context):
-    newinv = []
-    pool = pooler.get_pool(cr.dbname)
-    order_obj = pool.get('auction.lots')
-    mod_obj = pool.get('ir.model.data') 
-    result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-    id = mod_obj.read(cr, uid, result, ['res_id'])
-    lots= order_obj.browse(cr,uid,data['ids'])
-    invoice_number=data['form']['number']
-    for lot in lots:
-        up_auction=pooler.get_pool(cr.dbname).get('auction.lots').write(cr,uid,[lot.id],{'ach_uid':data['form']['buyer_id']})
-    ids = order_obj.lots_invoice(cr, uid, data['ids'],context,data['form']['number'])
-#   ids = order_obj.lots_invoice(cr, uid, data['ids'],context,invoice_number)
-    cr.commit()
-    return {
-        'domain': "[('id','in', ["+','.join(map(str, ids))+"])]",
-        'name': 'Buyer invoices',
-        'view_type': 'form',
-        'view_mode': 'tree,form',
-        'res_model': 'account.invoice',
-        'view_id': False,
-        'context': "{'type':'in_refund'}",
-        'type': 'ir.actions.act_window',
-        'search_view_id': id['res_id']         
-    }
-    return {}
-
-class make_invoice(wizard.interface):
-    states = {
-        'init' : {
-            'actions' : [_values],
-            'result' : {'type' : 'form',
-                    'arch' : invoice_form,
-                    'fields' : invoice_fields,
-                    'state' : [('end', 'Cancel'),('invoice', 'Create invoices')]}
-        },
-        'invoice' : {
-            'actions' : [],
-            'result' : {'type' : 'action',
-                    'action' : _makeInvoices}
-        },
-    }
-make_invoice("auction.lots.make_invoice_buyer")
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+auction_lots_make_invoice_buyer()
