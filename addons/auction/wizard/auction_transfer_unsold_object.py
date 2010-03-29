@@ -29,7 +29,7 @@ class auction_transfer_unsold_object(osv.osv):
         _name = 'auction.transfer.unsold.object'
         _description = 'To transfer unsold objects'
         
-        def _start(self, cr, uid, ids, context):
+        def _start(self, cr, uid, context):
             """ 
             To initialize auction_id_from
     
@@ -43,7 +43,7 @@ class auction_transfer_unsold_object(osv.osv):
             lots_obj = self.pool.get('auction.lots')
             rec = lots_obj.browse(cr, uid, context['active_id'], context)
             auction_from = rec and rec.auction_id.id or False
-            return {'auction_id_from': auction_from}
+            return  auction_from
 
         def transfer_unsold_object(self, cr, uid, ids, context):
             """ 
@@ -64,11 +64,10 @@ class auction_transfer_unsold_object(osv.osv):
             bid_line_obj.unlink(cr, uid, line_ids)
             
             res = self.browse(cr, uid, ids)        
-
-            unsold_ids = lots_obj.search(cr,uid,[('auction_id','=',res[0].auction_id_from),('state','=','unsold')])
+            unsold_ids = lots_obj.search(cr,uid,[('auction_id','=',res[0].auction_id_from.id),('state','=','unsold')])
             for rec in lots_obj.browse(cr, uid, unsold_ids, context):
-                new_id = lot_history_obj.create(cr,uid,{'auction_id':rec.auction_id.id,'lot_id':rec.id,'price': rec.obj_ret, 'name': 'reasons'+rec.auction_id.auction1})
-                up_auction = lots_obj.write(cr,uid,[rec.id],{'auction_id': res[0].auction_id_to,
+                new_id = lot_history_obj.create(cr,uid,{'auction_id':rec.auction_id.id,'lot_id':rec.id,'price': rec.obj_ret, 'name': rec.auction_id.auction1})
+                up_auction = lots_obj.write(cr,uid,[rec.id],{'auction_id': res[0].auction_id_to.id,
                                                                                                 'obj_ret':None,
                                                                                                 'obj_price':None,
                                                                                                 'ach_login':None,
@@ -76,7 +75,6 @@ class auction_transfer_unsold_object(osv.osv):
                                                                                                 'ach_inv_id':None,
                                                                                                 'sel_inv_id':None,
                                                                                                 'state':'draft'})
-
             return {}    
     
         _columns = {
@@ -85,6 +83,6 @@ class auction_transfer_unsold_object(osv.osv):
         }
 
         _defaults = {
-            'auction_id_from': lambda *a: _start,
+            'auction_id_from': _start,
         }
 auction_transfer_unsold_object()
