@@ -53,7 +53,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         user_cmpny = obj_company.name
         vat_no=obj_company.partner_id.vat
         if not vat_no:
-            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+            raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
@@ -105,6 +105,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
         data['file_save'] = base64.encodestring(data_of_file)
         self.write(cr, uid, ids, {'file_save':data['file_save']}, context=context)
+        return True
 
 
 l10n_be_vat_declaration()
