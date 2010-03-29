@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+                <data>
+                        <record id="name_form" model="ir.ui.view">
+                                <field name="name">auction.lots.cancel.form</field>
+                                <field name="model">auction.lots.cancel</field>
+                                <field name="type">form</field>
+                                <field name="arch" type="xml">
+                                      <form string="Cancel Payment">
+                                                            <label string="Are you sure you want to refund this invoice ?"/>
+                                                            <button icon='gtk-cancel' special="cancel"
+                                                string="Cancel" />
+                                                <button name="_cancel" string="Cancel Payment"
+                                                colspan="1" type="object" icon="gtk-ok" />
+                                         </form>
+                                  </field>
+                        </record>
+                        
+                        
+                </data>
+</openerp>                
