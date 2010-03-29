@@ -211,9 +211,9 @@ class account_account(osv.osv):
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
             wheres = [""]
-            if query:
+            if query.strip():
                 wheres.append(query.strip())
-            if aml_query:
+            if aml_query.strip():
                 wheres.append(aml_query.strip())
             query = " AND ".join(wheres)
 
