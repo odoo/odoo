@@ -175,7 +175,7 @@ class email_parser(object):
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'])
+            self.rpc(self.model, 'history', [id], 'Receive', True, False, message['body'], msg['From'])
             #self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
@@ -290,7 +290,7 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Receive', True, details=body['body'], email_from=msg['From'])
+        self.rpc(self.model, 'history', [id], 'Receive', True, False, body['body'], msg['From'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -322,7 +322,7 @@ class email_parser(object):
         #    'description':body, 
         #}
         #self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Receive', True, details=message['body'], email_from=msg['From'])
+        self.rpc(self.model, 'history', [id], 'Receive', True, False, message['body'], msg['From'])
         return id
 
     def msg_test(self, msg, case_str):

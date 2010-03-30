@@ -316,14 +316,19 @@ class crm_case(osv.osv):
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
         return True    
     
-    def history(self, cr, uid, ids, keyword, history=False, email=False, details=None, context={}):
+    def history(self, cr, uid, ids, keyword, history=False, email=False, details=None, email_from=False, context={}):
         cases = self.browse(cr, uid, ids, context=context)
-        return self.__history(cr, uid, cases, keyword=keyword,\
-                               history=history, email=email, details=details,\
+        return self._history(cr, uid, cases, keyword=keyword,\
+                               history=history, email=email, details=details, email_from=email_from, \
                                context=context)
 
     def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, context={}):
-        model_obj = self.pool.get('ir.model')          
+        model_obj = self.pool.get('ir.model')  
+        if email and type(email) == type([]):
+            email = ','.join(email) 
+        if email_from and type(email_from) == type([]):
+            email_from = ','.join(email_from) 
+       
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model','=',case._name)])            
             data = {
