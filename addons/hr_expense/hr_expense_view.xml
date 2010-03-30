@@ -68,7 +68,7 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="employee_id" select="1"/>
-                        <field name="id" select="2"/>
+                        <field name="ref" select="2"/>
                         <field name="date" select="1"/>
                         <field name="amount"/>
                         <field name="currency_id"/>
@@ -77,7 +77,6 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Expense Sheet">
-                            <field name="ref" select="2"/>
                             <newline/>
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <form string="Expense Lines">
@@ -108,8 +107,8 @@
                             <separator colspan="4" string="Accounting data"/>
                             <field name="journal_id"/>
                             <separator colspan="4" string="Validation"/>
-                            <field name="date_confirm" select="2"/>
-                            <field name="date_valid" select="2"/>
+                            <field name="date_confirm" select="2" readonly = "1"/>
+                            <field name="date_valid" select="2" readonly = "1"/>
                             <field name="user_valid" select="2"/>
                             <field name="invoice_id" select="2"/>
                             <separator colspan="4" string="Notes"/>
@@ -145,6 +144,7 @@
                         help="Expenses to Invoice"/>
                       <separator orientation="vertical"/>
                       <field name="name" select='1'/>
+                      <field name="date" select='1'/>
                       <field name="user_id" select="1" widget="selection">
                           <filter
                             icon="gtk-execute"

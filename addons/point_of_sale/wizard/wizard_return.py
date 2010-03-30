@@ -20,69 +20,19 @@
 #
 ##############################################################################
 
-#import wizard
-#import pooler
-#from tools.misc import UpdateableStr
-#
-#import netsvc
-#import time
-#
-#from tools.translate import _
-#from decimal import Decimal
-
-#arch=UpdateableStr()
-#fields={}
+import wizard
+import pooler
+from tools.misc import UpdateableStr
 
 import netsvc
-from osv import osv,fields
-from tools.translate import _
-from mx import DateTime
 import time
 
+from tools.translate import _
+from decimal import Decimal
 
-class pos_return(osv.osv_memory):
-    _name = 'pos.return'
-    _description = 'Point of sale return'
 
-    _columns = {
-                
-    }
-pos_return()
-
-class pos_add_payment(osv.osv_memory):
-    _name = 'pos.add.payment'
-    _description = 'Add Payment'
-
-    _columns = {
-        'amount': fields.float('Amount', digits=(16,2),required=True),
-        'journal': fields.function(_get_journal, 'Journal', method=True, required=True),
-        'payment_date': fields.date('Payment date',required=True),
-        'payment_name': fields.char('Payment name', size=32,required=True),
-        'invoice_wanted': fields.boolean('Invoice'),
-        'num_sale': fields.char('Num.Cof', size=32)        
-    }
-    _defaults = {
-          'payment_name': lambda *a: 'Payment'
-        }
-
-pos_add_payment()
-
-class pos_add_product(osv.osv_memory):
-    _name = 'pos.add.product'
-    _description = 'Add Product'
-
-    _columns = {
-        'product': fields.many2one('product.product','Product', required=True),
-        'quantity': fields.integer( 'Quantity',required=True),
-             
-    }
-
-    _defaults = {
-          'product': lambda *a: 'False',
-          'quantity': lambda *a: 1
-        }
-
-pos_add_product()
+arch=UpdateableStr()
+fields={}
 
 
 def _get_journal(self, cr, uid, context):

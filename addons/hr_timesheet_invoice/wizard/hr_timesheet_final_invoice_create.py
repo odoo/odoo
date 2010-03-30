@@ -187,7 +187,7 @@ class final_invoice_create(wizard.interface):
     states = {
         'init' : {
             'actions' : [_get_defaults],
-            'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end','Cancel'),('create','Create invoices')]},
+            'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end','Cancel', 'gtk-cancel'),('create','Create invoices', 'gtk-ok')]},
         },
         'create' : {
             'actions' : [],

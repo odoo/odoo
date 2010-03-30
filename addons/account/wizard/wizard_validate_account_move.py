@@ -52,7 +52,7 @@ class validate_account_move(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('validate','Validate')]}
+            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel', 'gtk-cancel'),('validate','Validate', 'gtk-ok')]}
         },
         'validate': {
             'actions': [_validate_move],
