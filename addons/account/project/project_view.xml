@@ -139,6 +139,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry">
+                <separator string="General Information" colspan="4"/>
                     <field colspan="4" name="name" select="1"/>
                     <field name="amount" select="2"/>
                     <field name="date" select="1"/>
@@ -146,6 +147,7 @@
                     <field name="journal_id" select="2"/>
                     <field name="general_account_id" select="2"/>
                     <field name="move_id" select="2"/>
+                <separator string="Optionnal Information" colspan="4"/>
                     <field name="unit_amount" select="2"/>
                     <field name="ref" select="2"/>
                     <field name="currency_id" select="2"/>

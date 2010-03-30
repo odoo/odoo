@@ -25,7 +25,7 @@ from tools.translate import _
 _journal_form = '''<?xml version="1.0"?>
 <form string="%s">
     <field name="journal_id"/>
-</form>''' % ('Bank reconciliation',)
+</form>''' % ('Open Bank reconciliation',)
 
 _journal_fields = {
     'journal_id': {'string':'Journal', 'type':'many2one', 'relation':'account.journal', 'required':True},
@@ -53,7 +53,7 @@ class wiz_journal(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('open','Open for bank reconciliation')]}
+            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel', 'gtk-cancel'),('open','Open', 'gtk-ok')]}
         },
         'open': {
             'actions': [],

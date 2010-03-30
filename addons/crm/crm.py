@@ -379,7 +379,7 @@ class crm_case(osv.osv):
     def add_reply(self, cursor, user, ids, context=None):
         for case in self.browse(cursor, user, ids, context=context):
             if case.email_last:
-                description = email_last
+                description = case.email_last
                 self.write(cursor, user, case.id, {
                     'description': '> ' + description.replace('\n','\n> '),
                     }, context=context)

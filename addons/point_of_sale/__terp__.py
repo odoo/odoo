@@ -41,7 +41,7 @@ Main features :
     'init_xml': [],
 
     'update_xml': [
-      'security/point_of_sale_security.xml',
+        'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/pos_details.xml',  
         'wizard/pos_add_product.xml',
@@ -62,6 +62,7 @@ Main features :
         'wizard/pos_payment_report_user.xml',  
         'wizard/pos_payment_report.xml',
         'wizard/pos_payment.xml',
+        'wizard/pos_scan_product_view.xml',
         'pos_report.xml',
         'pos_wizard.xml',
         'pos_view.xml',
@@ -72,7 +73,7 @@ Main features :
         'statement_view.xml',
         'statement_report.xml',
         'statement_data.xml',
-        'statement_wizard.xml',   
+        'statement_wizard.xml',    
     ],
     'demo_xml': ['pos_demo.xml','singer_statement_demo.xml','multi_company_stock_data.xml'],
     'installable': True,

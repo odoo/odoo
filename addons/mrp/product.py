@@ -32,35 +32,42 @@ class product_product(osv.osv):
         bom_obj = self.pool.get('mrp.bom')
         product_uom_obj = self.pool.get('product.uom')
 
-        def _compute_price(bom):            
+        def _compute_price(bom):       
+            print bom.product_id
             price = 0
-            if bom.bom_lines:
-                for sbom in bom.bom_lines:
-                    price += _compute_price(sbom) * sbom.product_qty                    
-            else:
+#            if bom.bom_lines:
+#                for sbom in bom.bom_lines:
+#                    print "--->>>" , sbom.name
+#                    price += _compute_price(sbom) * sbom.product_qty                    
+#            else:
+            parent_bom = bom_obj.search(cr, uid, [('bom_id', '=', False)])
+            print "========", bom.product_id.name
+            for p in parent_bom:
+                test_obj = bom_obj.browse(cr, uid, p)
+                print test_obj
+                print "XXXXXXXXXXXXX", p, test_obj.child_ids
                 
-                no_child_bom = bom_obj.search(cr, uid, [('product_id', '=', bom.product_id.id), ('bom_id', '=', False)])
-                if no_child_bom and bom.id not in no_child_bom:
-                    other_bom = bom_obj.browse(cr, uid, no_child_bom)[0]
-                    if not other_bom.product_id.calculate_price:
-                        price += _compute_price(other_bom) * other_bom.product_qty
-                    else:
-                        price += other_bom.product_id.standard_price
-                else:
-                    price += bom.product_id.standard_price
-
-            if bom.routing_id:
-                for wline in bom.routing_id.workcenter_lines:
-                    wc = wline.workcenter_id
-                    cycle = wline.cycle_nbr
-                    hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
-                    price += wc.costs_cycle * cycle + wc.costs_hour * hour
-                    price = product_uom_obj._compute_price(cr, uid, bom.product_uom.id, price, bom.product_id.uom_id.id)
-            if bom.bom_lines:
-                self.write(cr, uid, [bom.product_id.id], {'standard_price' : price/bom.product_qty})
-            if bom.product_uom.id != bom.product_id.uom_id.id:
-                price = product_uom_obj._compute_price(cr, uid, bom.product_uom.id, price, bom.product_id.uom_id.id)
-            return price
+#            if no_child_bom and bom.id not in no_child_bom:
+#                other_bom = bom_obj.browse(cr, uid, no_child_bom)[0]
+#                if not other_bom.product_id.calculate_price:
+#                    price += _compute_price(other_bom) * other_bom.product_qty
+#                else:
+#                    price += other_bom.product_id.standard_price
+#            else:
+#                price += bom.product_id.standard_price
+#
+#            if bom.routing_id:
+#                for wline in bom.routing_id.workcenter_lines:
+#                    wc = wline.workcenter_id
+#                    cycle = wline.cycle_nbr
+#                    hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
+#                    price += wc.costs_cycle * cycle + wc.costs_hour * hour
+#                    price = product_uom_obj._compute_price(cr, uid, bom.product_uom.id, price, bom.product_id.uom_id.id)
+#            if bom.bom_lines:
+#                self.write(cr, uid, [bom.product_id.id], {'standard_price' : price/bom.product_qty})
+#            if bom.product_uom.id != bom.product_id.uom_id.id:
+#                price = product_uom_obj._compute_price(cr, uid, bom.product_uom.id, price, bom.product_id.uom_id.id)
+#            return price
 
         
         bom_ids = bom_obj.search(cr, uid, [('product_id', 'in', ids)])

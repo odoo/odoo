@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-24 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-03-30 04:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -90,7 +90,7 @@ msgstr "Suoritusajon tulos"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled entries"
-msgstr "Suorittamattomat tapahtumat"
+msgstr "Suorittamattomat merkinnät"
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -370,7 +370,7 @@ msgstr "Analyyttinen tili"
 #: field:account.tax,child_depend:0
 #: field:account.tax.template,child_depend:0
 msgid "Tax on Children"
-msgstr "Verotus lapsille"
+msgstr "Vero alemmille"
 
 #. module: account
 #: rml:account.central.journal:0
@@ -409,7 +409,7 @@ msgstr "Salli merkintöjen poisto"
 #: model:process.transition,name:account.process_transition_paymentorderbank0
 #: model:process.transition,name:account.process_transition_paymentorderreconcilation0
 msgid "Payment Reconcilation"
-msgstr "Maksutapahtuman kirjaus"
+msgstr "Maksun suoritusmerkinnät"
 
 #. module: account
 #: model:account.journal,name:account.expenses_journal
@@ -466,14 +466,14 @@ msgstr "Erikoislaskenta"
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement with/without reconciliation from draft statement"
-msgstr "Vahvista ote käsin kirjaten luonnosotteesta tai automaattisesti"
+msgstr "Vahvista tiliote suorituksilla tai ilman luonnoksesta"
 
 #. module: account
 #: wizard_view:account.move.bank.reconcile,init:0
 #: model:ir.actions.wizard,name:account.action_account_bank_reconcile_tree
 #: model:ir.ui.menu,name:account.menu_action_account_bank_reconcile_check_tree
 msgid "Bank reconciliation"
-msgstr "Pankkitapahtumien kirjaus"
+msgstr "Pankkitapahtumien suoritusmerkinnät"
 
 #. module: account
 #: rml:account.invoice:0
@@ -653,7 +653,7 @@ msgstr "Tilimerkintöjen suoritus"
 #. module: account
 #: wizard_button:account.move.bank.reconcile,init,open:0
 msgid "Open for bank reconciliation"
-msgstr "Avoin pankkisovittelulle"
+msgstr "Avoin pankkisuoritukselle"
 
 #. module: account
 #: field:account.invoice.line,discount:0
@@ -767,7 +767,7 @@ msgstr "Ostojen ominaisuudet"
 #. module: account
 #: model:process.node,note:account.process_node_paymententries0
 msgid "Can be draft or validated"
-msgstr "Voidaan luonnostella tai validoida"
+msgstr "Voi olla luonnos tai voidaan hyväksyä"
 
 #. module: account
 #: wizard_button:account.invoice.pay,init,reconcile:0
@@ -854,7 +854,7 @@ msgstr "6"
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_30
 msgid "Bank Reconciliation"
-msgstr "Pankki sovinto"
+msgstr "Pankin suoritusmerkinnät"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -1398,8 +1398,8 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disable"
 msgstr ""
-"Jos poistat suorituksia siirroista, sinun tulee myös varmistaa kaikki "
-"siirtoihin liittyvät toiminnot koska niitä ei poisteta"
+"Jos poistat suorituksia tapahtumista, sinun tulee myös varmistaa kaikki "
+"tapahtumiin liittyvät toiminnot koska niitä ei poisteta"
 
 #. module: account
 #: model:process.node,name:account.process_node_electronicfile0
@@ -1453,7 +1453,7 @@ msgstr "Päiväkirja"
 #: field:account.account,child_id:0
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "Lapsitilit"
+msgstr "Alemmat tilit"
 
 #. module: account
 #: field:account.account,check_history:0
@@ -1588,7 +1588,7 @@ msgstr "Ylempi koodi"
 #. module: account
 #: wizard_button:account.move.line.reconcile.select,init,open:0
 msgid "Open for reconciliation"
-msgstr "Avaa sovitukselle"
+msgstr "Avaa suorituksille"
 
 #. module: account
 #: model:account.journal,name:account.bilan_journal
@@ -1787,7 +1787,7 @@ msgstr "Mistä"
 #: model:process.node,note:account.process_node_reconciliation0
 #: model:process.node,note:account.process_node_supplierreconciliation0
 msgid "Reconciliation of entries from invoice(s) and payment(s)"
-msgstr "Kohtien sovittelu lasku(i)lta ja maksu(i)sta"
+msgstr "Maksusuoritusmerkinnät laskuilta ja makuista"
 
 #. module: account
 #: wizard_view:account.central.journal.report,init:0
@@ -1934,7 +1934,7 @@ msgstr "Virhe: Virheellinen BVR-numero (väärä tarkistussumma)."
 #: model:ir.actions.act_window,name:account.action_invoice_tree5
 #: model:ir.ui.menu,name:account.menu_invoice_draft
 msgid "Draft Customer Invoices"
-msgstr "Luonnos asiakaslaskuista"
+msgstr "Asiakkaiden luonnoslaskut"
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -2054,9 +2054,8 @@ msgid ""
 "'draft' state and instead goes directly to the 'posted state' without any "
 "manual validation."
 msgstr ""
-"Valitse tämä jos et halua uusien tilisiirtojen menevän \"luonnostilaan\" "
-"vaan, että ne menevät suoraan \"postitettu\" -tilaan ilman manuaalista "
-"tarkistamista."
+"Valitse tämä, jos et halua uusien tilisiirtojen menevän luonnostilaan vaan "
+"käsitellä ne ilman manuaalista hyväksymistä."
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
@@ -2080,7 +2079,7 @@ msgstr "Laskunnumero, lasketaan automaattisesti kun laskua luodaan."
 #. module: account
 #: rml:account.invoice:0
 msgid "Draft Invoice"
-msgstr "Laskun luonnos"
+msgstr "Luonnoslasku"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_expense
@@ -2157,7 +2156,7 @@ msgstr "Maksun suoritusmerkinnät"
 #: model:ir.actions.act_window,name:account.action_bank_statement_reconciliation_form
 #: model:ir.ui.menu,name:account.menu_action_account_bank_reconcile_tree
 msgid "Statements reconciliation"
-msgstr "Tiliotteiden sovittelu"
+msgstr "Tiliotteiden maksusuoritukset"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -2215,7 +2214,7 @@ msgstr "(Jätä tyhjäksi käyttääksesi nykyistä jaksoa)"
 #: model:ir.actions.act_window,name:account.action_invoice_tree8
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree8
 msgid "Draft Supplier Invoices"
-msgstr "Luonnos toimittajan laskuista"
+msgstr "Luonnokset toimittajien laskuista"
 
 #. module: account
 #: wizard_field:account.invoice.refund,init,period:0
@@ -2395,7 +2394,7 @@ msgstr "Kuitti nro"
 #: model:ir.actions.wizard,name:account.wizard_automatic_reconcile
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
 msgid "Automatic reconciliation"
-msgstr "Automaattinen sovitus"
+msgstr "Automaattiset suoritusmerkinnät"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2808,7 +2807,7 @@ msgstr "Nimi"
 #: wizard_view:account.move.line.reconcile,init_full:0
 #: wizard_view:account.move.line.reconcile,init_partial:0
 msgid "Reconciliation transactions"
-msgstr "Sovitus transaktio"
+msgstr "Suoritustapahtumat"
 
 #. module: account
 #: wizard_field:account.aged.trial.balance,init,direction_selection:0
@@ -2917,7 +2916,7 @@ msgstr "Avoin tila"
 #. module: account
 #: field:account.journal,entry_posted:0
 msgid "Skip 'Draft' State for Created Entries"
-msgstr "Ohita \"luonnostila\" luoduille kohdille"
+msgstr "Ohita luonnostila luoduille merkinnöille"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -2953,7 +2952,7 @@ msgstr "1cm 27.7cm 20cm 27.7cm"
 #: model:ir.actions.act_window,name:account.action_invoice_tree12
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree12
 msgid "Draft Supplier Refunds"
-msgstr "Luonnos toimittajan hyvityksistä"
+msgstr "Luonnokset toimittajien hyvityksistä"
 
 #. module: account
 #: model:process.node,name:account.process_node_accountingstatemententries0
@@ -2981,7 +2980,7 @@ msgstr "Verokartoitus"
 #: wizard_view:account.move.line.unreconcile,init:0
 #: wizard_view:account.reconcile.unreconcile,init:0
 msgid "Unreconciliation transactions"
-msgstr "Sovittamattomat tapahtumat"
+msgstr "Suoritusten poiston tapahtumat"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderbank0
@@ -3005,7 +3004,7 @@ msgstr "Merkintärivit"
 #: model:process.node,name:account.process_node_reconciliation0
 #: model:process.node,name:account.process_node_supplierreconciliation0
 msgid "Reconciliation"
-msgstr "Sovitus"
+msgstr "Suoritusmerkinnät"
 
 #. module: account
 #: field:account.move.line,centralisation:0
@@ -3040,7 +3039,7 @@ msgstr "Ulkomaalaisten valuuttojen kurssi(t)"
 #: model:ir.actions.act_window,name:account.action_invoice_tree10
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree10
 msgid "Draft Customer Refunds"
-msgstr "Luonnos asiakashyvityksistä"
+msgstr "Luonnokset asiakkaiden hyvityksistä"
 
 #. module: account
 #: field:account.journal.column,readonly:0
@@ -3122,7 +3121,7 @@ msgstr "Merkinnän nimike"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
 msgid "Reconcilate the entries from payment"
-msgstr "Sovita kohdata maksusta"
+msgstr "Maksusuoritukset merkinnöille maksuita"
 
 #. module: account
 #: rml:account.tax.code.entries:0
@@ -3798,7 +3797,7 @@ msgstr "Kaikki merkinnät"
 #: model:process.node,name:account.process_node_draftinvoices0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
 msgid "Draft Invoices"
-msgstr "Luonnostele Laskut"
+msgstr "Luonnoslaskut"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
@@ -3871,8 +3870,8 @@ msgid ""
 "If no account is specified, the reconciliation will be made using every "
 "accounts that can be reconcilied"
 msgstr ""
-"Jos tiliä ei ole määritelty, sovittelu tehdään kaikille tileille jotka on "
-"mahdollista sovitella"
+"Jos tiliä ei ole määritetty, maksusuoritukset kirjataan kaikille tileille "
+"joissa se on mahdollista"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_company_setup_form
@@ -4589,7 +4588,7 @@ msgstr "Luo merkinnät malleista"
 #. module: account
 #: field:account.account.template,reconcile:0
 msgid "Allow Reconciliation"
-msgstr "Salli sovittelu"
+msgstr "Salli suoritusmerkinnät"
 
 #. module: account
 #: selection:account.account.balance.report,checktype,state:0
@@ -4618,7 +4617,7 @@ msgstr "Muokkaa Laskua"
 #. module: account
 #: view:res.partner:0
 msgid "Supplier Accounting Properties"
-msgstr "Toimittajan Kirjanpidon Asetukset"
+msgstr "Toimittajan kirjanpidon asetukset"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -4849,7 +4848,7 @@ msgstr "Saatavat tilit"
 #. module: account
 #: wizard_button:account.move.line.unreconcile.select,init,open:0
 msgid "Open for unreconciliation"
-msgstr "Avaa sovittelemattomaksi"
+msgstr "Avaa suoritusten poistolle"
 
 #. module: account
 #: field:account.bank.statement.reconcile,statement_line:0
@@ -4922,7 +4921,7 @@ msgstr "Myyntiverot"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
 msgid "Account Reconciliation"
-msgstr "Tili sovittelu"
+msgstr "Tilien suoritusmerkinnät"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5169,7 +5168,7 @@ msgstr "Tuo laskut"
 #: wizard_view:account.move.line.unreconcile.select,init:0
 #: wizard_view:account.reconcile.unreconcile,init:0
 msgid "Unreconciliation"
-msgstr "Sovittelematon"
+msgstr "Suoritusten poisto"
 
 #. module: account
 #: model:ir.model,name:account.model_fiscalyear_seq
@@ -5393,7 +5392,7 @@ msgstr "Normaali"
 #. module: account
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 msgid "Supplier Invoice Process"
-msgstr "Toimittajan laskutus prosessi"
+msgstr "Toimittajan laskutusprosessi"
 
 #. module: account
 #: rml:account.account.balance:0
@@ -5435,7 +5434,7 @@ msgstr ":"
 #. module: account
 #: field:account.bank.statement.line,reconcile_amount:0
 msgid "Amount reconciled"
-msgstr "Suoritettu määrä"
+msgstr "Suoritukset yhteensä"
 
 #. module: account
 #: selection:account.account,currency_mode:0
@@ -5898,7 +5897,7 @@ msgstr "Toimittajan hyvitys"
 #: model:process.transition,note:account.process_transition_entriesreconcile0
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Reconcile Entries."
-msgstr "Suorita merkinnät."
+msgstr "Suoritusmerkinnät."
 
 #. module: account
 #: field:account.subscription.line,move_id:0

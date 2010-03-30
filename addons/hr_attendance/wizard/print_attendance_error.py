@@ -25,7 +25,7 @@ import pooler
 from tools.translate import _
 
 _date_form = '''<?xml version="1.0"?>
-<form string="Select a time span">
+<form string="Attendance Report">
     <separator string="Analysis Information" colspan="4"/>
     <field name="init_date"/>
     <field name="end_date"/>
@@ -62,7 +62,7 @@ class wiz_attendance(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print','Print Attendance Report'),('end','Cancel') ]}
+            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('end','Cancel', 'gtk-cancel'),('print','Print', 'gtk-ok') ]}
         },
         'print': {
             'actions': [_check_data],
