@@ -176,8 +176,8 @@ class PopulateStatementFromInv(wizard.interface):
                 'arch': FORM,
                 'fields': FIELDS,
                 'state': [
-                    ('end', '_Cancel','', True),
-                    ('finish', 'O_k','', True)
+                    ('end', '_Cancel','', True, 'gtk-cancel'),
+                    ('finish', 'O_k','', True, 'gtk-ok')
                 ]
             },
         },
