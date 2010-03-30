@@ -19,13 +19,8 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import osv,fields
 from tools.translate import _
-from mx import DateTime
-import time
-
-
 
 class pos_scan_product(osv.osv_memory):
     _name = 'pos.scan.product'

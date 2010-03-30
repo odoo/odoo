@@ -19,46 +19,43 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import netsvc
-from osv import osv,fields
+
+from osv import osv
 from tools.translate import _
-from mx import DateTime
-import time
 
 class pos_receipt(osv.osv_memory):
     _name = 'pos.receipt'
     _description = 'Point of sale receipt'
 
     _columns = {
-                
+
     }
-    def view_init(self, cr , uid , fields_list, context=None):
-        order_lst =self. pool.get('pos.order').browse(cr,uid,context['active_id'])
+
+    def view_init(self, cr, uid, fields_list, context=None):
+        order_lst = self. pool.get('pos.order').browse(cr, uid, context['active_id'])
         for order in order_lst:
             if order.state_2 in ('to_verify'):
                 raise osv.except_osv(_('Error!', 'Can not print the receipt because of discount and/or payment '))
-        True    
+        True
+
     def print_report(self, cr, uid, ids, context=None):
 
-        """ 
-              To get the date and print the report           
+        """
+              To get the date and print the report
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
+             @param context: A standard dictionary
              @return : retrun report
-        """        
-        datas = {'ids' : context.get('active_ids',[])}
-        res =  {}        
+        """
+        datas = {'ids': context.get('active_ids', [])}
+        res = {}
         datas['form'] = res
-        
-        return { 
-                'type' : 'ir.actions.report.xml',
-                'report_name':'pos.receipt',
-                'datas' : datas,               
+
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'pos.receipt',
+            'datas': datas,
        }
 
 pos_receipt()
-
-
-
