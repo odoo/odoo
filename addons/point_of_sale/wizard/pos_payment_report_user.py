@@ -23,34 +23,37 @@
 from osv import osv
 from osv import fields
 
+
 class pos_payment_report_user(osv.osv_memory):
-        '''
-        Open ERP Model
-        '''
-        _name = 'pos.payment.report.user'
-        _description = 'Sales lines by Users'
-        def print_report(self, cr, uid, ids, context=None):
+    '''
+    Open ERP Model
+    '''
+    _name = 'pos.payment.report.user'
+    _description = 'Sales lines by Users'
+    def print_report(self, cr, uid, ids, context=None):
 
-            """ 
-                 To get the date and print the report           
-                 @param self: The object pointer.
-                 @param cr: A database cursor
-                 @param uid: ID of the user currently logged in
-                 @param context: A standard dictionary 
-                 @return : retrun report
-            """        
-            datas = {'ids' : context.get('active_ids',[])}
-            res = self.read(cr, uid, ids, ['user_id'])
-            res = res and res[0] or {}        
-            datas['form'] = res
+        """
+             To get the date and print the report
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param context: A standard dictionary
+             @return : retrun report
+        """
+        datas = {'ids': context.get('active_ids', [])}
+        res = self.read(cr, uid, ids, ['user_id'])
+        res = res and res[0] or {}
+        datas['form'] = res
 
-            return { 
-                    'type' : 'ir.actions.report.xml',
-                    'report_name':'pos.payment.report.user',
-                    'datas' : datas,               
-            }
-        
-        _columns = {
-                    'user_id':fields.many2many('res.users','res_user_sale','user_id','sale_id','Salesman')
+        return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'pos.payment.report.user',
+                'datas': datas,
         }
+
+    _columns = {
+                'user_id': fields.many2many('res.users', 'res_user_sale', 'user_id', 'sale_id', 'Salesman')
+    }
+
 pos_payment_report_user()
+

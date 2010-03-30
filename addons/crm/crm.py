@@ -611,7 +611,7 @@ class crm_case(osv.osv):
 
         for case in self.browse(cursor, user, ids, context=context):
             if case.email_last:
-                description = email_last
+                description = case.email_last
                 self.write(cursor, user, case.id, {
                     'description': '> ' + description.replace('\n', '\n> '),
                     }, context=context)

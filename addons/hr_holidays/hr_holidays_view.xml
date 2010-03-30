@@ -24,6 +24,13 @@
 								help="My Departments Leaves"/>
                           </field>
                       </group>
+                      <newline/>
+                    <group expand="1" string="Group By..." colspan="2" col="2">
+                        <filter string="Employee" icon="terp-sale" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Manager" icon="terp-sale" domain="[]" context="{'group_by':'manager_id'}"/>
+                    </group>
+
                  </search>
             </field>
         </record>
@@ -289,7 +296,7 @@
             parent="hr.menu_open_view_attendance_reason_config"/>
 
     <!--  Shortcuts -->
-        <act_window name="My Holiday Requests"
+        <act_window name="Holidays"
             domain="[('employee_id', '=', active_id), ('type','=','remove')]"
             res_model="hr.holidays"
             src_model="hr.employee"

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,15 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import netsvc
-from osv import osv,fields
+from osv import osv
 from tools.translate import _
-from mx import DateTime
-import time
+
 
 class pos_sales_user_today_current_user(osv.osv_memory):
     _name = 'pos.sales.user.today.current_user'
@@ -31,27 +29,29 @@ class pos_sales_user_today_current_user(osv.osv_memory):
 
     _columns = {
     }
-    
+
     def print_report(self, cr, uid, ids, context={}):
-        """ 
-         To get the date and print the report           
+        """
+         To get the date and print the report
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param context: A standard dictionary 
+         @param context: A standard dictionary
          @return : retrun report
         """
-        
-        datas = {'ids' : context.get('active_ids', [])}
+
+        datas = {'ids': context.get('active_ids', [])}
         res = self.read(cr, uid, ids, [], context)
-        res = res and res[0] or {}        
+        res = res and res[0] or {}
         datas['form'] = res
-        
-        return { 
-            'type':'ir.actions.report.xml',
-            'report_name':'pos.sales.user.today.current.user',
-            'datas':datas,               
+
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'pos.sales.user.today.current.user',
+            'datas': datas,
        }
+
 pos_sales_user_today_current_user()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

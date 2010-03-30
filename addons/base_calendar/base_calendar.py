@@ -1447,8 +1447,10 @@ class virtual_report_spool(web_services.report_spool):
         new_ids = []
         for id in ids:
             new_ids.append(base_calendar_id2real_id(id))
-        if datas.get('id', False):
-            datas['id'] = base_calendar_id2real_id(datas['id'])
+        if datas is None:
+            datas = {}
+        if datas.get('id',False):
+            datas['id'] = base_calendar_id2real_id(datas['id'])        
         return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
 
 virtual_report_spool()

@@ -38,7 +38,6 @@ from DAV.iface import *
 import urllib
 
 from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
-from document.nodes import node_res_dir, node_res_obj
 from caldav_cache import memoize
 from tools import misc
 CACHE_SIZE=20000
