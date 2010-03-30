@@ -2734,28 +2734,29 @@ class orm(orm_template):
                     if res and res[0]:
                         raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
 
-    def check_access_rule(self, cr, uid, ids, mode, context={}):
+    def check_access_rule(self, cr, uid, ids, mode, context=None):
         d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, mode, context=context)
         if d1:
             d1 = ' and '+' and '.join(d1)
 
         for i in range(0, len(ids), cr.IN_MAX):
             sub_ids = ids[i:i+cr.IN_MAX]
-            ids_str = string.join(map(str, sub_ids), ',')
             if d1:
                 cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                        'WHERE '+self._table+'.id IN ('+ids_str+')'+d1, d2)
+                        'WHERE '+self._table+'.id IN %s'+d1, (tuple(sub_ids),d2))
                 if not cr.rowcount == len(sub_ids):
                     raise except_orm(_('AccessError'),
                                      _('You try to bypass an access rule to '+mode+
                                     ' (Document type: %s).') % self._name)
             else:
-                cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
+                cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN %s',
+                           (tuple(sub_ids),))
                 if not cr.rowcount == len(sub_ids):
                     raise except_orm(_('AccessError'),
                                      _('You try to ' +mode+ ' a record that doesn\'t exist (Document type: %s).')
                                       % self._name)
-        return ids_str
+        #TODO: this is a SQL injection pattern again, need to refactor it
+        return ','.join(map(str,ids))
 
     def unlink(self, cr, uid, ids, context=None):
         if not ids:
