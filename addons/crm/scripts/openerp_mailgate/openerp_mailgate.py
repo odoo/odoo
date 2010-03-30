@@ -328,6 +328,10 @@ class email_parser(object):
     def msg_test(self, msg, case_str):
         if not case_str:
             return (False, False)
+        res = self.rpc(self.model, 'search', [('id', '=', int(case_str))])        
+        if not res:
+            return (False, False)
+        
         emails = self.rpc(self.model, 'emails_get', int(case_str))
         return (int(case_str), emails)
 
@@ -336,9 +340,9 @@ class email_parser(object):
         if case_str:
             case_str = case_str.group(1)
         else:
-            case_str = case_re.search(msg.get('Subject', ''))
+            case_str = case_re.search(msg.get('Subject', ''))            
             if case_str:
-                case_str = case_str.group(1)
+                case_str = case_str.group(1)            
         (case_id, emails) = self.msg_test(msg, case_str)
         if case_id:
             if emails[0] and self.email_get(emails[0])==self.email_get(self._decode_header(msg['From'])):
