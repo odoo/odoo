@@ -32,6 +32,7 @@ import zipfile
 import release
 import socket
 import re
+from itertools import islice
 
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
@@ -1266,6 +1267,18 @@ def detect_server_timezone():
         "No valid timezone could be detected, using default UTC timezone. You can specify it explicitly with option 'timezone' in the server configuration.")
     return 'UTC'
 
+
+def split_every(n, iterable, piece_maker=tuple):
+    """Splits an iterable into length-n pieces. The last piece will be shorter
+       if ``n`` does not evenly divide the iterable length.
+       @param ``piece_maker``: function to build the pieces
+       from the slices (tuple,list,...)
+    """
+    iterator = iter(iterable)
+    piece = piece_maker(islice(iterator, n))
+    while piece:
+        yield piece
+        piece = piece_maker(islice(iterator, n))
 
 if __name__ == '__main__':
     import doctest

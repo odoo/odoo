@@ -63,7 +63,7 @@ re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 sql_counter = 0
 
 class Cursor(object):
-    IN_MAX = 1000
+    IN_MAX = 1000 # decent limit on size of IN queries - guideline = Oracle limit
     __logger = logging.getLogger('db.cursor')
 
     def check(f):
@@ -141,6 +141,12 @@ class Cursor(object):
                 self.sql_into_log[res_into.group(1)][0] += 1
                 self.sql_into_log[res_into.group(1)][1] += delay
         return res
+
+
+    def split_for_in_conditions(self, ids):
+        """Split a list of identifiers into one or more smaller tuples
+           safe for IN conditions, after uniquifying them."""
+        return tools.misc.split_every(self.IN_MAX, set(ids))
 
     def print_log(self):
         global sql_counter
