@@ -134,9 +134,7 @@
                             <separator string="Action Information" colspan="4"/>
                             <field name="name" colspan="4"/>
                             <field name="date"/>
-                            <field name="user_id"/>
-                            <field name="som"/>
-                            <field name="canal_id"/>
+                            <field name="user_id"/>                            
                         </form>
                     </field>
                 </page>
@@ -148,8 +146,8 @@
                         <form string="Communication history">
                             <group col="7" colspan="4">
                                 <field name="date"/>
-                                <field name="email"/>
-                                <field name="canal_id"/>
+                                <field name="email_to"/>
+                                <field name="email_from"/>
                                <button
                                      string="Add a CC"
                                                name="%(crm.action_view_crm_email_add_cc_wizard)d"
@@ -165,7 +163,7 @@
                                </form>
                                <tree string="Communication history">
                                    <field name="description"/>
-                                   <field name="email"/>
+                                   <field name="email_to"/>
                                    <field name="date"/>
                                </tree>
                            </field>

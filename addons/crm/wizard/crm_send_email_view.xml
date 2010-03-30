@@ -10,8 +10,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Send New Mail" col="2">
-                	<field name="to" />
-                	<field name="cc" />
+                    <field name="email_from" />
+                	<field name="email_to" />
+                	<field name="email_cc" />
                 	<field name="subject" />                	
                 	<field name="doc1" />
                 	<field name="doc2" />
@@ -50,8 +51,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Reply to last Mail" col="2">
-                	<field name="to" />
-                	<field name="cc" />
+                    <field name="email_from" />
+                	<field name="email_to" />
+                	<field name="email_cc" />
                 	<field name="subject" />                	
                 	<field name="doc1" />
                 	<field name="doc2" />

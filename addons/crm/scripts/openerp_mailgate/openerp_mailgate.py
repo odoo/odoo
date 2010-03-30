@@ -167,8 +167,7 @@ class email_parser(object):
         data = {
             'name': self._decode_header(msg['Subject']), 
             'email_from': self._decode_header(msg['From']), 
-            'email_cc': self._decode_header(msg['Cc'] or ''), 
-            'canal_id': self.canal_id, 
+            'email_cc': self._decode_header(msg['Cc'] or ''),             
             'user_id': False, 
             'description': message['body'], 
         }
@@ -291,7 +290,7 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], body['body'])
+        self.rpc(self.model, 'history', [id], 'Receive', True, details=body['body'], email_from=msg['From'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -323,7 +322,7 @@ class email_parser(object):
         #    'description':body, 
         #}
         #self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+        self.rpc(self.model, 'history', [id], 'Receive', True, details=message['body'], email_from=msg['From'])
         return id
 
     def msg_test(self, msg, case_str):
