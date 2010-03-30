@@ -543,12 +543,12 @@ class stock_picking(osv.osv):
         # TODO: Check locations to see if in the same location ?
         return True
 
-    def button_confirm(self, cr, uid, ids, *args):
-        for id in ids:
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', id, 'button_confirm', cr)
-        self.force_assign(cr, uid, ids, *args)
-        return True
+#    def button_confirm(self, cr, uid, ids, *args):
+#        for id in ids:
+#            wf_service = netsvc.LocalService("workflow")
+#            wf_service.trg_validate(uid, 'stock.picking', id, 'button_confirm', cr)
+#        self.force_assign(cr, uid, ids, *args)
+#        return True
 
     def action_assign(self, cr, uid, ids, *args):
         for pick in self.browse(cr, uid, ids):
