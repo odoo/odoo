@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -88,7 +88,7 @@ class ir_rule(osv.osv):
         for rule in self.browse(cr, uid, ids, context):
             eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
                             'time':time}
-            
+
             if rule.domain_force:
                 res[rule.id] = eval(rule.domain_force, eval_user_data)
             else:
@@ -111,27 +111,41 @@ class ir_rule(osv.osv):
         'operand':fields.selection(_operand,'Operand', size=64),
         'rule_group': fields.many2one('ir.rule.group', 'Group', select=2, required=True, ondelete="cascade"),
         'domain_force': fields.char('Force Domain', size=250),
-        'domain': fields.function(_domain_force_get, method=True, string='Domain', type='char', size=250)
+        'domain': fields.function(_domain_force_get, method=True, string='Domain', type='char', size=250),
+        'perm_read': fields.boolean('Read Access'),
+        'perm_write': fields.boolean('Write Access'),
+        'perm_create': fields.boolean('Create Access'),
+        'perm_unlink': fields.boolean('Delete Access')
     }
+    _defaults = {
+        'perm_read': lambda *a: True,
+        'perm_write': lambda *a: True,
+        'perm_create': lambda *a: True,
+        'perm_unlink': lambda *a: True,
+    }
+    _sql_constraints = [
+        ('no_access_rights', 'CHECK (perm_read!=False or perm_write!=False or perm_create!=False or perm_unlink!=False)', 'Rule must have atleast one checked access right'),
+    ]
 
     def onchange_all(self, cr, uid, ids, field_id, operator, operand):
         if not (field_id or operator or operand):
             return {}
 
-    def domain_get(self, cr, uid, model_name, context={}):
+    def domain_get(self, cr, uid, model_name, mode='read', context={}):
         if uid == 1:
             return [], [], ['"'+self.pool.get(model_name)._table+'"']
 
-        cr.execute("""SELECT r.id FROM
-            ir_rule r
+        cr.execute("""SELECT r.id
+                FROM ir_rule r
                 JOIN (ir_rule_group g
                     JOIN ir_model m ON (g.model_id = m.id))
                     ON (g.id = r.rule_group)
                 WHERE m.model = %s
+                AND r.perm_""" + mode + """
                 AND (g.id IN (SELECT rule_group_id FROM group_rule_group_rel g_rel
                             JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
                             WHERE u_rel.uid = %s) OR g.global)""", (model_name, uid))
-        ids = map(lambda x:x[0], cr.fetchall())
+        ids = map(lambda x: x[0], cr.fetchall())
         dom = []
         for rule in self.browse(cr, uid, ids):
             dom += rule.domain
