@@ -19,9 +19,21 @@
 #
 ##############################################################################
 
-import wizard
-import pooler
+from osv import fields, osv
+from service import web_services
+from tools.misc import UpdateableStr, UpdateableDict
+from tools.translate import _
 import netsvc
+import pooler
+import time
+import wizard
+
+class stock_picking_make(osv.osv_memory):
+    _name = "stock.picking.make"
+    _description = "Make picking"
+    _columns = {
+            'pickings': fields.many2many('stock.picking', 'Picking', required=True),
+            }
 
 ARCH = '''<?xml version="1.0"?>
 <form string="Make picking">
@@ -53,6 +65,7 @@ def _make_packing(obj, cursor, user, data, context):
     pool = pooler.get_pool(cursor.dbname)
     picking_obj = pool.get('stock.picking')
     ids = data['form']['pickings'][0][2]
+    print"-------ids--------",ids
     picking_obj.force_assign(cursor, user, ids)
     picking_obj.action_move(cursor, user, ids)
     for picking_id in ids:

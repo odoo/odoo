@@ -62,11 +62,9 @@ class stock_partial_picking(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
         result = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)        
         pick_obj = self.pool.get('stock.picking')
-        picking_ids = context.get('active_ids', False)        
-        if not picking_ids:
-            return result
-        if view_type in ['form']:
-            _moves_arch_lst = """<form string="Deliver Products">
+        picking_ids = context.get('active_ids', False) 
+        picking_ids = pick_obj.search(cr, uid, [('id', 'in', picking_ids)])               
+        _moves_arch_lst = """<form string="Deliver Products">
                         <separator colspan="4" string="Delivery Information"/>
                     	<field name="date" colspan="4" />
                     	<field name="partner_id"/>
@@ -74,7 +72,8 @@ class stock_partial_picking(osv.osv_memory):
                     	<newline/>
                         <separator colspan="4" string="Move Detail"/>
                     	"""
-            _moves_fields = result['fields']
+        _moves_fields = result['fields']
+        if picking_ids and view_type in ['form']:
             for pick in pick_obj.browse(cr, uid, picking_ids, context):
                 for m in pick.move_lines:
                     if m.state in ('done', 'cancel'):
@@ -127,18 +126,18 @@ class stock_partial_picking(osv.osv_memory):
                     _moves_arch_lst += """
                         </group>
                         """
-                _moves_arch_lst += """
-                        <separator string="" colspan="4" />
-                        <label string="" colspan="2"/>
-                        <group col="2" colspan="2">
-                		<button icon='gtk-cancel' special="cancel"
-                			string="_Cancel" />
-                		<button name="do_partial" string="_Deliver"
-                			colspan="1" type="object" icon="gtk-apply" />
-                	</group>                	
-                </form>"""
-            result['arch'] = _moves_arch_lst
-            result['fields'] = _moves_fields           
+        _moves_arch_lst += """
+                <separator string="" colspan="4" />
+                <label string="" colspan="2"/>
+                <group col="2" colspan="2">
+        		<button icon='gtk-cancel' special="cancel"
+        			string="_Cancel" />
+        		<button name="do_partial" string="_Deliver"
+        			colspan="1" type="object" icon="gtk-apply" />
+        	</group>                	
+        </form>"""
+        result['arch'] = _moves_arch_lst
+        result['fields'] = _moves_fields           
         return result
 
     def default_get(self, cr, uid, fields, context=None):
@@ -160,13 +159,13 @@ class stock_partial_picking(osv.osv_memory):
         if not context:
             context={}
         moveids = []
+        if 'date' in fields:
+            res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         for pick in pick_obj.browse(cr, uid, context.get('active_ids', [])):
             if 'partner_id' in fields:
                 res.update({'partner_id': pick.address_id.partner_id.id})                
             if 'address_id' in fields:
-                res.update({'address_id': pick.address_id.id})                        
-            if 'date' in fields:
-                res.update({'date': pick.date})
+                res.update({'address_id': pick.address_id.id})            
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
                     continue
@@ -215,8 +214,7 @@ class stock_partial_picking(osv.osv_memory):
                     partial_datas['move%s'%(m.id)].update({             
                         'product_price' : getattr(partial, 'move%s_product_price'%(m.id)),
                         'product_currency': getattr(partial, 'move%s_product_currency'%(m.id)).id
-                    })  
-        
+                    })          
         res = pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
         return {}
  

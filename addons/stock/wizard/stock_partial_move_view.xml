@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>	
+
+        <record id="view_stock_partial_move" model="ir.ui.view">
+            <field name="name">Delivery Product</field>
+            <field name="model">stock.partial.move</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+              <form string="Delivery Product">
+             		
+             </form>
+            </field>
+		</record>
+
+        <act_window name="Delivery Product"		    
+		    res_model="stock.partial.move"
+		    src_model="stock.move"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_partial_move"/>		    	  		
+
+    </data>
+</openerp>

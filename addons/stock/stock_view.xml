@@ -1488,7 +1488,7 @@
                     <field name="date_planned"/>
                     <field name="backorder_id"/>
                     <field name="state"/>
-                    <button name="%(partial_move)d" string="Partial" type="action" states="assigned" icon="gtk-justify-fill"/>
+                    <button name="%(action_partial_move)d" string="Partial" type="action" states="assigned" icon="gtk-justify-fill"/>
                     <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
                 </tree>
             </field>
@@ -1534,7 +1534,7 @@
                                 <button name="action_confirm" states="draft" string="Confirm" type="object" icon="gtk-apply"/>
                                 <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
                                 <button name="action_cancel" states="assigned,confirmed" string="Cancel" type="object" icon="gtk-cancel"/>
-                                <button name="%(partial_move)d" states="assigned" string="Partial" type="action" icon="gtk-justify-fill"/>
+                                <button name="%(action_partial_move)d" states="assigned" string="Partial" type="action" icon="gtk-justify-fill"/>
                                 <button name="action_done" states="assigned" string="Done" type="object" icon="gtk-jump-to"/>
                             </group>
                         </page>
