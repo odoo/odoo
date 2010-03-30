@@ -384,6 +384,7 @@ form: module.record_id""" % (xml_id,)
         def ref(str_id):
             return self.id_get(cr, None, str_id)
         context=eval(context)
+        domain=eval(domain)
 
         res = {
             'name': name,
