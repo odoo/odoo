@@ -19,8 +19,29 @@
 #
 ##############################################################################
 
-import event_registration
-import make_invoice
-import event_registrations_partner
-import event_confirm_registration
+from osv import fields, osv
+
+class event_confirm_registration(osv.osv_memory):
+    """
+    Confirm Event Registration
+    """
+    _name = "event.confirm.registration"
+    _description = "Event Registraion"
+    _columns = {
+        'msg': fields.text('Message', readonly=True),
+               }
+    _defaults={
+       'msg':lambda *a:'The event limit is reached. What do you want to do?'
+               }
+
+    def confirm(self, cr, uid, ids, context):
+        registration_obj = self.pool.get('event.registration')
+        reg_id = context.get('reg_id', False) or context.get('active_id', False)
+        if reg_id:
+            registration_obj.write(cr, uid, [reg_id], {'state':'open',})
+            registration_obj._history(cr, uid, [reg_id], 'Open', history=True)
+            registration_obj.mail_user(cr,uid,[reg_id])
+        return {}
+
+event_confirm_registration()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

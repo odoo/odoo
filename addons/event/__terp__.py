@@ -42,12 +42,14 @@
     'init_xml': ['event_data.xml'],
     'update_xml': [
         'event_wizard.xml',
+        'wizard/event_confirm_registration_view.xml',
         'event_view.xml',
         'event_sequence.xml',
         'security/event_security.xml',
         'security/ir.model.access.csv',
         'wizard/event_registration_view.xml',
         'wizard/event_registrations_partner.xml',
+
     ],
     'demo_xml': ['event_demo.xml'],
     'installable': True,
