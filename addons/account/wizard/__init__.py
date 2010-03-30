@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,40 +15,36 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import wizard_automatic_reconcile
-import wizard_reconcile_select
-import wizard_unreconcile_select
+import account_move_line_reconcile_select
+import account_move_line_unreconcile_select
 import wizard_reconcile
 import wizard_unreconcile
-import wizard_refund
+import account_invoice_refund
 import wizard_pay_invoice
-
-import wizard_journal
+import account_move_journal
 import wizard_journal_select
-import wizard_bank_reconcile
+import account_move_bank_reconcile
 import wizard_subscription_generate
-
 import wizard_aged_trial_balance
 import wizard_general_ledger_report
 import wizard_third_party_ledger
 import wizard_account_balance_report
 import wizard_partner_balance_report
-
-import wizard_period_close
+import account_period_close
 import wizard_fiscalyear_close
-import wizard_fiscalyear_close_state
+import account_fiscalyear_close_state
 import wizard_open_closed_fiscalyear
 
 import wizard_vat
 import wizard_compare_account_balance_report
-
 import wizard_invoice_state
 import wizard_account_duplicate
-import wizard_account_chart
+import account_chart
 import wizard_move_line_select
 
 import wizard_validate_account_move
@@ -64,5 +60,4 @@ import wizard_change_currency
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

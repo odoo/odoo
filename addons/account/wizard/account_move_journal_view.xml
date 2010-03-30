@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+  		<record id="view_account_move_journal_form" model="ir.ui.view">
+            <field name="name">account.move.journal.form</field>
+            <field name="model">account.move.journal</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Standard entries">
+                	<group colspan="4" >
+                    	<field name="journal_id"/>
+                    	<newline/>
+                    	<field name="period_id" />
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-open" string="Open Journal" name="action_open_window" type="object"/>
+                   	</group>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_move_journal_line_form" model="ir.actions.act_window">
+            <field name="name">Entries by Line</field>
+            <field name="res_model">account.move.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_account_move_journal_form"/>
+           <field name="target">new</field>
+        </record>
+
+        <menuitem icon="STOCK_JUSTIFY_FILL"
+        	action="action_account_move_journal_line_form"
+        	id="menu_action_move_journal_line_form"
+        	parent="account.menu_finance_entries" sequence="5" />
+
+    </data>
+</openerp>
