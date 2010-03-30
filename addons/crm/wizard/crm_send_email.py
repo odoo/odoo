@@ -24,6 +24,7 @@ from osv import osv, fields
 from tools.translate import _
 import base64
 import tools
+from crm import crm
 
 class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
@@ -36,7 +37,7 @@ class crm_send_new_email(osv.osv_memory):
                 'email_cc' : fields.char('CC', size=128),
                 'subject': fields.char('Subject', size=128, required=True),
                 'text': fields.text('Message', required=True),
-                'state': fields.selection([('done', 'Done'), ('pending', 'Pending'), ('unchanged', 'Unchanged')], string='State', required=True),
+                'state': fields.selection(crm.AVAILABLE_STATES, string='State'),
                 'doc1': fields.binary("Attachment1"),
                 'doc2': fields.binary("Attachment2"),
                 'doc3': fields.binary("Attachment3"),
@@ -101,13 +102,16 @@ class crm_send_new_email(osv.osv_memory):
                 reply_to=case.section_id.reply_to,
                 openobject_id=str(case.id),                
             )           
-            if flag:
+            if flag:                
                 if data['state'] == 'unchanged':
                     pass
                 elif data['state'] == 'done':
                     case_pool.case_close(cr, uid, [case.id])
-                elif data['state'] == 'pending':
-                    case_pool.case_pending(cr, uid, [case.id])
+                elif data['state'] == 'draft':
+                    case_pool.case_reset(cr, uid, [case.id])                
+                elif data['state'] in ['cancel', 'open', 'pending']:
+                    act = 'case_' + data['state']
+                    getattr(case_pool, act)(cr, uid, [case.id])
                 cr.commit()
 
 #            Commented because form does not close due to raise
