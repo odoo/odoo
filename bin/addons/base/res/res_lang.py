@@ -62,7 +62,7 @@ class lang(osv.osv):
     ]
     
     @tools.cache(skiparg=3)
-    def _lang_data_get(self, cr, uid, lang_id):
+    def _lang_data_get(self, cr, uid, lang_id, monetary=False):
         conv = localeconv()
         lang_obj=self.browse(cr,uid,lang_id)
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
@@ -120,7 +120,7 @@ class lang(osv.osv):
         if percent[0] != '%':
             raise ValueError("format() must be given exactly one %char format specifier")
 
-        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0])        
+        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0], monetary)        
 
         formatted = percent % value
         # floats and decimal ints need special action!
