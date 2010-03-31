@@ -24,6 +24,7 @@ import wizard
 import netsvc
 import ir
 import pooler
+from tools.translate import _
 
 invoice_form = """<?xml version="1.0"?>
 <form string="Create invoices">
@@ -86,7 +87,10 @@ def _makeInvoices(self, cr, uid, data, context):
             wf_service = netsvc.LocalService('workflow')
             wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
             pool.get('sale.order').write(cr,uid,[line.order_id.id],{'state' : 'progress'})
-
+    
+    if not invoices:
+         raise wizard.except_wizard(_('Warning'),_('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
+    
     for result in invoices.values():
         order = result[0][0].order_id
         il = map(lambda x: x[1], result)
