@@ -262,7 +262,7 @@ class mail_gateway(osv.osv):
             if part.get_content_maintype()=='text':
                 buf = part.get_payload(decode=True)
                 if buf:
-                    txt = self._to_decode(buf, part.get_charsets)
+                    txt = self._to_decode(buf, part.get_charsets())
                     txt = re.sub("<(\w)>", replace, txt)
                     txt = re.sub("<\/(\w)>", replace, txt)
                 if txt and part.get_content_subtype() == 'plain':
