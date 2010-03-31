@@ -104,7 +104,7 @@ class Cursor(object):
             msg = "Cursor not closed explicitly\n"  \
                   "Cursor was created at %s:%s" % self.__caller
             log(msg, netsvc.LOG_WARNING)
-            self.close()
+            self._close(True)
 
     @check
     def execute(self, query, params=None):
@@ -169,6 +169,9 @@ class Cursor(object):
 
     @check
     def close(self):
+        return self._close(False)
+
+    def _close(self, leak=False):
         if not self._obj:
             return
 
@@ -186,8 +189,12 @@ class Cursor(object):
         # part because browse records keep a reference to the cursor.
         del self._obj
         self.__closed = True
-        keep_in_pool = self.dbname not in ('template1', 'template0', 'postgres')
-        self._pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
+
+        if leak:
+            self._cnx.leaked = True
+        else:
+            keep_in_pool = self.dbname not in ('template1', 'template0', 'postgres')
+            self._pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
 
     @check
     def autocommit(self, on):
@@ -206,6 +213,9 @@ class Cursor(object):
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
+
+class PsycoConnection(psycopg2.extensions.connection):
+    pass
 
 class ConnectionPool(object):
 
@@ -239,33 +249,36 @@ class ConnectionPool(object):
     def borrow(self, dsn):
         self._debug('Borrow connection to %s' % (dsn,))
 
-        result = None
+        # free leaked connections
+        for i, (cnx, _) in tools.reverse_enumerate(self._connections):
+            if getattr(cnx, 'leaked', False):
+                delattr(cnx, 'leaked')
+                self._connections.pop(i)
+                self._connections.append((cnx, False))
+                self._debug('Free leaked connection to %s' % (cnx.dsn,))
+
         for i, (cnx, used) in enumerate(self._connections):
             if not used and dsn_are_equals(cnx.dsn, dsn):
-                self._debug('Existing connection found at index %d' % i)
-
                 self._connections.pop(i)
                 self._connections.append((cnx, True))
+                self._debug('Existing connection found at index %d' % i)
 
-                result = cnx
-                break
-        if result:
-            return result
+                return cnx
 
         if len(self._connections) >= self._maxconn:
             # try to remove the oldest connection not used
             for i, (cnx, used) in enumerate(self._connections):
                 if not used:
-                    self._debug('Removing old connection at index %d: %s' % (i, cnx.dsn))
                     self._connections.pop(i)
+                    self._debug('Removing old connection at index %d: %s' % (i, cnx.dsn))
                     break
             else:
                 # note: this code is called only if the for loop has completed (no break)
                 raise PoolError('The Connection Pool Is Full')
 
-        self._debug('Create new connection')
-        result = psycopg2.connect(dsn=dsn)
+        result = psycopg2.connect(dsn=dsn, connection_factory=PsycoConnection)
         self._connections.append((result, True))
+        self._debug('Create new connection')
         return result
 
     @locked
