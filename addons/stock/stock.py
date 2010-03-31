@@ -543,12 +543,12 @@ class stock_picking(osv.osv):
         # TODO: Check locations to see if in the same location ?
         return True
 
-    def button_confirm(self, cr, uid, ids, *args):
-        for id in ids:
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'stock.picking', id, 'button_confirm', cr)
-        self.force_assign(cr, uid, ids, *args)
-        return True
+#    def button_confirm(self, cr, uid, ids, *args):
+#        for id in ids:
+#            wf_service = netsvc.LocalService("workflow")
+#            wf_service.trg_validate(uid, 'stock.picking', id, 'button_confirm', cr)
+#        self.force_assign(cr, uid, ids, *args)
+#        return True
 
     def action_assign(self, cr, uid, ids, *args):
         for pick in self.browse(cr, uid, ids):
@@ -649,45 +649,48 @@ class stock_picking(osv.osv):
                         context=context)
         return True
 
-    def get_currency_id(self, cursor, user, picking):
+    def get_currency_id(self, cr, uid, picking):
         return False
 
-    def _get_payment_term(self, cursor, user, picking):
+    def _get_payment_term(self, cr, uid, picking):
         '''Return {'contact': address, 'invoice': address} for invoice'''
         partner_obj = self.pool.get('res.partner')
         partner = picking.address_id.partner_id
         return partner.property_payment_term and partner.property_payment_term.id or False
 
-    def _get_address_invoice(self, cursor, user, picking):
+    def _get_address_invoice(self, cr, uid, picking):
         '''Return {'contact': address, 'invoice': address} for invoice'''
         partner_obj = self.pool.get('res.partner')
         partner = picking.address_id.partner_id
 
-        return partner_obj.address_get(cursor, user, [partner.id],
+        return partner_obj.address_get(cr, uid, [partner.id],
                 ['contact', 'invoice'])
 
-    def _get_comment_invoice(self, cursor, user, picking):
+    def _get_comment_invoice(self, cr, uid, picking):
         '''Return comment string for invoice'''
         return picking.note or ''
 
-    def _get_price_unit_invoice(self, cursor, user, move_line, type):
+    def _get_price_unit_invoice(self, cr, uid, move_line, type, context=None):
         '''Return the price unit for the move line'''
+        if context is None:
+            context = {}
+
         if type in ('in_invoice', 'in_refund'):
             # Take the user company and pricetype
-            price_type_id=self.pool.get('res.users').browse(cr,users,users).company_id.property_valuation_price_type.id
-            pricetype=self.pool.get('product.price.type').browse(cr,uid,price_type_id)
-            context['currency_id']=move_line.company_id.currency_id.id
+            price_type_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.property_valuation_price_type.id
+            pricetype = self.pool.get('product.price.type').browse(cr, uid, price_type_id)
+            context['currency_id'] = move_line.company_id.currency_id.id
 
-            amount_unit=move_line.product_id.price_get(pricetype.field, context)[move_line.product_id.id]
+            amount_unit = move_line.product_id.price_get(pricetype.field, context)[move_line.product_id.id]
             return amount_unit
         else:
             return move_line.product_id.list_price
 
-    def _get_discount_invoice(self, cursor, user, move_line):
+    def _get_discount_invoice(self, cr, uid, move_line):
         '''Return the discount for the move line'''
         return 0.0
 
-    def _get_taxes_invoice(self, cursor, user, move_line, type):
+    def _get_taxes_invoice(self, cr, uid, move_line, type):
         '''Return taxes ids for the move line'''
         if type in ('in_invoice', 'in_refund'):
             taxes = move_line.product_id.supplier_taxes_id
@@ -696,34 +699,37 @@ class stock_picking(osv.osv):
 
         if move_line.picking_id and move_line.picking_id.address_id and move_line.picking_id.address_id.partner_id:
             return self.pool.get('account.fiscal.position').map_tax(
-                cursor,
-                user,
+                cr,
+                uid,
                 move_line.picking_id.address_id.partner_id.property_account_position,
                 taxes
             )
         else:
             return map(lambda x: x.id, taxes)
 
-    def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
+    def _get_account_analytic_invoice(self, cr, uid, picking, move_line):
         return False
 
-    def _invoice_line_hook(self, cursor, user, move_line, invoice_line_id):
+    def _invoice_line_hook(self, cr, uid, move_line, invoice_line_id):
         '''Call after the creation of the invoice line'''
         return
 
-    def _invoice_hook(self, cursor, user, picking, invoice_id):
+    def _invoice_hook(self, cr, uid, picking, invoice_id):
         '''Call after the creation of the invoice'''
         return
 
-    def action_invoice_create(self, cursor, user, ids, journal_id=False,
+    def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
         '''Return ids of created invoices for the pickings'''
+        if context is None:
+            context = {}
+
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoices_group = {}
         res = {}
 
-        for picking in self.browse(cursor, user, ids, context=context):
+        for picking in self.browse(cr, uid, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
             payment_term_id = False
@@ -734,24 +740,24 @@ class stock_picking(osv.osv):
 
             if type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
-                payment_term_id = self._get_payment_term(cursor, user, picking)
+                payment_term_id = self._get_payment_term(cr, uid, picking)
             else:
                 account_id = partner.property_account_payable.id
 
             address_contact_id, address_invoice_id = \
-                    self._get_address_invoice(cursor, user, picking).values()
+                    self._get_address_invoice(cr, uid, picking).values()
 
-            comment = self._get_comment_invoice(cursor, user, picking)
+            comment = self._get_comment_invoice(cr, uid, picking)
             if group and partner.id in invoices_group:
                 invoice_id = invoices_group[partner.id]
-                invoice = invoice_obj.browse(cursor, user, invoice_id)
+                invoice = invoice_obj.browse(cr, uid, invoice_id)
                 invoice_vals = {
                     'name': (invoice.name or '') + ', ' + (picking.name or ''),
                     'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'comment': (comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
                     'date_invoice':context.get('date_inv',False)
                 }
-                invoice_obj.write(cursor, user, [invoice_id], invoice_vals, context=context)
+                invoice_obj.write(cr, uid, [invoice_id], invoice_vals, context=context)
             else:
                 invoice_vals = {
                     'name': picking.name,
@@ -767,12 +773,12 @@ class stock_picking(osv.osv):
                     'date_invoice': context.get('date_inv',False),
                     'company_id': picking.company_id.id,
                     }
-                cur_id = self.get_currency_id(cursor, user, picking)
+                cur_id = self.get_currency_id(cr, uid, picking)
                 if cur_id:
                     invoice_vals['currency_id'] = cur_id
                 if journal_id:
                     invoice_vals['journal_id'] = journal_id
-                invoice_id = invoice_obj.create(cursor, user, invoice_vals,
+                invoice_id = invoice_obj.create(cr, uid, invoice_vals,
                         context=context)
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
@@ -798,26 +804,25 @@ class stock_picking(osv.osv):
                         account_id = move_line.product_id.categ_id.\
                                 property_account_expense_categ.id
 
-                price_unit = self._get_price_unit_invoice(cursor, user,
+                price_unit = self._get_price_unit_invoice(cr, uid,
                         move_line, type)
-                discount = self._get_discount_invoice(cursor, user, move_line)
-                tax_ids = self._get_taxes_invoice(cursor, user, move_line, type)
-                account_analytic_id = self._get_account_analytic_invoice(cursor,
-                        user, picking, move_line)
+                discount = self._get_discount_invoice(cr, uid, move_line)
+                tax_ids = self._get_taxes_invoice(cr, uid, move_line, type)
+                account_analytic_id = self._get_account_analytic_invoice(cr, uid, picking, move_line)
 
                 #set UoS if it's a sale and the picking doesn't have one
                 uos_id = move_line.product_uos and move_line.product_uos.id or False
                 if not uos_id and type in ('out_invoice', 'out_refund'):
                     uos_id = move_line.product_uom.id
 
-                account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner.property_account_position, account_id)
+                account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
                 notes = False
                 if move_line.sale_line_id:
                     notes = move_line.sale_line_id.notes
                 elif move_line.purchase_line_id:
                     notes = move_line.purchase_line_id.notes
 
-                invoice_line_id = invoice_line_obj.create(cursor, user, {
+                invoice_line_id = invoice_line_obj.create(cr, uid, {
                     'name': name,
                     'origin': origin,
                     'invoice_id': invoice_id,
@@ -831,15 +836,15 @@ class stock_picking(osv.osv):
                     'account_analytic_id': account_analytic_id,
                     'note': notes,
                     }, context=context)
-                self._invoice_line_hook(cursor, user, move_line, invoice_line_id)
+                self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
 
-            invoice_obj.button_compute(cursor, user, [invoice_id], context=context,
+            invoice_obj.button_compute(cr, uid, [invoice_id], context=context,
                     set_total=(type in ('in_invoice', 'in_refund')))
-            self.write(cursor, user, [picking.id], {
+            self.write(cr, uid, [picking.id], {
                 'invoice_state': 'invoiced',
                 }, context=context)
-            self._invoice_hook(cursor, user, picking, invoice_id)
-        self.write(cursor, user, res.keys(), {
+            self._invoice_hook(cr, uid, picking, invoice_id)
+        self.write(cr, uid, res.keys(), {
             'invoice_state': 'invoiced',
             }, context=context)
         return res

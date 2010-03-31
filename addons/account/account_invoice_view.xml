@@ -144,20 +144,26 @@
                     <group col="6" colspan="4">
                         <field domain="[('type', '=', 'purchase')]" name="journal_id" select="2"/>
                         <field name="type" readonly="1" select="2"/>
-                        <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)" select="2"/>
+                        <field name="number" select="1" readonly="1"/>
                         <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" select="1" context="{'default_customer': 0}"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
-                        <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
+
+                        <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)" select="2"/>
+                        <field name="date_invoice" select="1"/>
+                        <field name="period_id" groups="base.group_user"/>
+                        <group colspan="2" col="1" groups="base.group_user">
+                            <label align="0.0" string="(keep empty to use the current period)"/>
+                        </group>                        
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
-                            <field name="date_due" select="1"/>
-                            <field domain="[('partner_id', '=', partner_id)]" name="partner_bank" on_change="onchange_partner_bank(partner_bank)" select="2"/>
+                           <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
                             <field name="reference_type" nolabel="1" select="2" size="0"/>
                             <field name="reference" nolabel="1" select="1"/>
+                            <field name="date_due" select="1"/>
                             <field name="check_total" required="2"/>
                             <field colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}" name="invoice_line" nolabel="1">
-                                <tree string="Invoice lines" editable="top">
+                                <tree string="Invoice lines">
                                     <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
                                     <field name="invoice_line_tax_id" view_mode="2" context="{'type':parent.type}" domain="[('parent_id','=',False)]"/>
@@ -200,19 +206,17 @@
                             </group>
                         </page>
                         <page string="Other Info">
+                            <field domain="[('partner_id', '=', partner_id)]" name="partner_bank" on_change="onchange_partner_bank(partner_bank)" select="2"/>
+
                             <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
                             <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             <newline/>
                             <field name="payment_term" widget="selection"/>
                             <field name="name" select="2"/>
                             <newline/>
-                            <field name="number" select="2"/>
                             <field name="origin" select="2"/>
                             <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id"/>
                             <field name="move_id"/>
-                            <field name="date_invoice"/>
-                            <field name="period_id"/>
-                            <label align="0.0" colspan="2" string="(keep empty to use the current period)"/>
                             <separator colspan="4" string="Additional Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>

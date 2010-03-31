@@ -47,7 +47,7 @@ class wiz_subscription(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_subscription_form, 'fields':_subscription_fields, 'state':[('end','Cancel'),('generate','Compute Entry Dates')]}
+            'result': {'type': 'form', 'arch':_subscription_form, 'fields':_subscription_fields, 'state':[('end','Cancel', 'gtk-cancel'),('generate','Compute', 'gtk-ok')]}
         },
         'generate': {
             'actions': [_action_generate],

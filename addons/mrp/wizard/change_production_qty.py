@@ -86,7 +86,7 @@ class change_production_qty(osv.osv_memory):
                     if not bom_id:
                         raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
                     prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
-                    bom_point = sbom_obj.browse(cr, uid, [bom_id])[0]
+                    bom_point = bom_obj.browse(cr, uid, [bom_id])[0]
         
                 if not bom_id:
                     raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))

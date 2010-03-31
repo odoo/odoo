@@ -42,7 +42,7 @@ class wiz_unreconcile(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch': _info_form, 'fields': {}, 'state':[('end', 'Cancel'), ('unrec', 'Unreconcile')]}
+            'result': {'type': 'form', 'arch': _info_form, 'fields': {}, 'state':[('end', 'Cancel', 'gtk-cancel'), ('unrec', 'Unreconcile', 'gtk-ok')]}
         },
         'unrec': {
             'actions': [_trans_unrec],
@@ -62,7 +62,7 @@ class wiz_unreconcile_reconcile(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch': _info_form, 'fields': {}, 'state':[('end', 'Cancel'), ('unrec', 'Unreconcile')]}
+            'result': {'type': 'form', 'arch': _info_form, 'fields': {}, 'state':[('end', 'Cancel', 'gtk-cancel'), ('unrec', 'Unreconcile', 'gtk-ok')]}
         },
         'unrec': {
             'actions': [_trans_unrec_reconcile],
