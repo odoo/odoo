@@ -312,7 +312,7 @@ class wiz_reconcile(wizard.interface):
         },
         'reconcile': {
             'actions': [_reconcile],
-            'result': {'type':'form', 'arch':_result_form, 'fields':_result_fields, 'state':[('end','OK')]}
+            'result': {'type':'form', 'arch':_result_form, 'fields':_result_fields, 'state':[('end','OK', 'gtk-cancel')]}
         }
     }
 wiz_reconcile('account.automatic.reconcile')
