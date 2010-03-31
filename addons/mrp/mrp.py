@@ -144,8 +144,7 @@ class mrp_bom(osv.osv):
 
              @return:  True
         
-        """ 
-             
+        """  
         result = {}
         for bom in self.browse(cr, uid, ids, context=context):
             result[bom.id] = map(lambda x: x.id, bom.bom_lines)
@@ -156,10 +155,7 @@ class mrp_bom(osv.osv):
                 sids = self.pool.get('mrp.bom').search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
                 if sids:
                     bom2 = self.pool.get('mrp.bom').browse(cr, uid, sids[0], context=context)
-                    result[bom.id] += map(lambda x: x.id, bom2.bom_lines)
-        print "name",name
-        print "arg",arg   
-        print "result",result            
+                    result[bom.id] += map(lambda x: x.id, bom2.bom_lines)                 
         return result
     def _compute_type(self, cr, uid, ids, field_name, arg, context):
         res = dict(map(lambda x: (x,''), ids))
