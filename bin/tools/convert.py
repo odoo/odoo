@@ -25,7 +25,6 @@ from lxml import etree
 import osv
 import ir
 import pooler
-import time
 
 import csv
 import os.path
