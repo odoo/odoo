@@ -376,7 +376,7 @@ form: module.record_id""" % (xml_id,)
         usage = rec.get('usage','').encode('utf-8')
         limit = rec.get('limit','').encode('utf-8')
         auto_refresh = rec.get('auto_refresh','').encode('utf-8')
-
+        uid = self.uid
         # def ref() added because , if context has ref('id') eval wil use this ref
 
         active_id=str("active_id") # for further reference in client/bin/tools/__init__.py
@@ -384,6 +384,7 @@ form: module.record_id""" % (xml_id,)
         def ref(str_id):
             return self.id_get(cr, None, str_id)
         context=eval(context)
+        domain=eval(domain)
 
         res = {
             'name': name,

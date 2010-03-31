@@ -139,7 +139,7 @@ class report_rml(report_int):
         if not context:
             context={}
         pool = pooler.get_pool(cr.dbname)
-        ir_translation_obj = pool.get('ir.translation')            
+        ir_translation_obj = pool.get('ir.translation')
 
         # In some case we might not use xsl ...
         if not self.xsl:
@@ -160,7 +160,7 @@ class report_rml(report_int):
 
         def translate(doc, lang):
             for node in doc.xpath('//*[@t]'):
-                translation = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, node.text)        
+                translation = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, node.text)
                 if translation:
                     node.text = translation
 
