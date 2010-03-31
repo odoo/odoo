@@ -36,7 +36,18 @@ class stock_inventory_merge(osv.osv_memory):
             }
 
     def do_merge(self, cr, uid, ids, context):
-
+        """ 
+             To merge selected Inventories.
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param ids: List of IDs selected 
+             @param context: A standard dictionary 
+             
+             @return: 
+        
+        """ 
         invent_obj = self.pool.get('stock.inventory')
         invent_line_obj = self.pool.get('stock.inventory.line')
 
@@ -46,10 +57,7 @@ class stock_inventory_merge(osv.osv_memory):
             raise osv.except_osv(_('Warning'),
             _('Please select at least two inventories.'))
 
-
-
         for inventory in invent_obj.browse(cr, uid, context['active_ids'], context=context):
-            print"-------active-ids----",context['active_ids']
             if inventory.state == "done":
                 raise osv.except_osv(_('Warning'),
                 _('Merging is only allowed on draft inventories.'))
