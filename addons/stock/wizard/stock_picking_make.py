@@ -32,7 +32,7 @@ class stock_picking_make(osv.osv_memory):
     _name = "stock.picking.make"
     _description = "Make picking"
     _columns = {
-            'pickings': fields.many2many('stock.picking', 'Picking', required=True),
+            'pickings': fields.many2many('stock.picking','picking_rel', 'stock_id', 'pick_id', 'Picking', required=True),
             }
 
 ARCH = '''<?xml version="1.0"?>

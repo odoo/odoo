@@ -38,9 +38,6 @@
         'account',
         'hr_timesheet_invoice',
         'board',
-#        'report_account',
-#        'report_analytic',
-#        'report_analytic_line',
         'account_report'
     ],
     'update_xml': ['board_account_view.xml'],

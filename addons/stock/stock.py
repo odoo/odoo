@@ -2122,7 +2122,7 @@ class report_products_to_received_planned(osv.osv):
         tools.drop_view_if_exists(cr, 'report_products_to_received_planned')
         cr.execute("""
             create or replace view report_products_to_received_planned as (
-               select stock.date, min(stock.id), sum(stock.product_qty) as qty, 0 as planned_qty
+               select stock.date, min(stock.id) as id, sum(stock.product_qty) as qty, 0 as planned_qty
                    from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'in'
@@ -2131,7 +2131,7 @@ class report_products_to_received_planned(osv.osv):
 
                     union
 
-               select stock.date_planned, min(stock.id), 0 as actual_qty, sum(stock.product_qty) as planned_qty
+               select stock.date_planned, min(stock.id) as id, 0 as actual_qty, sum(stock.product_qty) as planned_qty
                     from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'in'
@@ -2156,7 +2156,7 @@ class report_delivery_products_planned(osv.osv):
         tools.drop_view_if_exists(cr, 'report_delivery_products_planned')
         cr.execute("""
             create or replace view report_delivery_products_planned as (
-                select stock.date, min(stock.id), sum(stock.product_qty) as qty, 0 as planned_qty
+                select stock.date, min(stock.id) as id, sum(stock.product_qty) as qty, 0 as planned_qty
                    from stock_picking picking
                     inner join stock_move stock
                     on picking.id = stock.picking_id and picking.type = 'out'
