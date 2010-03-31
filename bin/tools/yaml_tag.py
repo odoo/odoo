@@ -23,7 +23,7 @@ class Assert(YamlTag):
         super(Assert, self).__init__(**kwargs)
     
 class Record(YamlTag):
-    def __init__(self, model, id, **kwargs):
+    def __init__(self, model, id, use='id', **kwargs):
         self.model = model
         self.id = id
         super(Record, self).__init__(**kwargs)
@@ -86,6 +86,12 @@ class Eval(YamlTag):
         self.expression = expression
         super(Eval, self).__init__()
     
+class Ref(YamlTag):
+    # 'model' parameter is optional since it defaults to the column type
+    def __init__(self, search):
+        self.search = search
+        super(Ref, self).__init__()
+    
 class IrSet(YamlTag):
     def __init__(self):
         super(IrSet, self).__init__()
@@ -138,10 +144,17 @@ def eval_constructor(loader, node):
     expression = loader.construct_scalar(node)
     return Eval(expression)
     
+def ref_constructor(loader, node):
+    kwargs = loader.construct_mapping(node)
+    return Ref(**kwargs)
+    
 def ir_set_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
     return IrSet(**kwargs)
-        
+    
+# Registers constructors for custom tags.
+# Constructors are actually defined globally: do not redefined them in another
+# class/file/package.  This means that module recorder need import this file.
 yaml.add_constructor(u"!assert", assert_constructor)
 yaml.add_constructor(u"!record", record_constructor)
 yaml.add_constructor(u"!python", python_constructor)
@@ -154,4 +167,5 @@ yaml.add_constructor(u"!context", context_constructor)
 yaml.add_constructor(u"!delete", delete_constructor)
 yaml.add_constructor(u"!url", url_constructor)
 yaml.add_constructor(u"!eval", eval_constructor)
+yaml.add_constructor(u"!ref", ref_constructor)
 yaml.add_constructor(u"!ir_set", ir_set_constructor)

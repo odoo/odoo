@@ -66,6 +66,10 @@ def is_url(node):
 def is_eval(node):
     return isinstance(node, yaml_tag.Eval)
     
+def is_ref(node):
+    return isinstance(node, yaml_tag.Ref) \
+        or _is_yaml_mapping(node, yaml_tag.Ref)
+    
 def is_ir_set(node):
     return _is_yaml_mapping(node, yaml_tag.IrSet)
 
@@ -122,7 +126,7 @@ class YamlInterpreter(object):
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         self.context = {} # opererp context
-        self.eval_context = {'ref': self._ref, '_ref': self._ref} # added '_ref' so that record['ref'] is possible
+        self.eval_context = {'ref': self._ref, '_ref': self._ref, 'time': time} # added '_ref' so that record['ref'] is possible
 
     def _ref(self):
         return lambda xml_id: self.get_id(xml_id)
@@ -155,10 +159,11 @@ class YamlInterpreter(object):
             id = self.id_map[xml_id]
         else:
             if '.' in xml_id:
-                module, xml_id = xml_id.split('.', 1)
+                module, checked_xml_id = xml_id.split('.', 1)
             else:
                 module = self.module
-            ir_id = self.pool.get('ir.model.data')._get_id(self.cr, self.uid, module, xml_id)
+                checked_xml_id = xml_id
+            ir_id = self.pool.get('ir.model.data')._get_id(self.cr, self.uid, module, checked_xml_id)
             obj = self.pool.get('ir.model.data').read(self.cr, self.uid, ir_id, ['res_id'])
             id = int(obj['res_id'])
             self.id_map[xml_id] = id
@@ -224,19 +229,39 @@ class YamlInterpreter(object):
             else: # all tests were successful for this assertion tag (no break)
                 self.assert_report.record(True, assertion.severity)
 
+    def _coerce_bool(self, value, default=False):
+        if isinstance(value, types.BooleanType):
+            b = value
+        if isinstance(value, types.StringTypes):
+            b = value.strip().lower() not in ('0', 'false', 'off', 'no')
+        elif isinstance(value, types.IntType):
+            b = bool(value)
+        else:
+            b = default
+        return b 
+    
     def process_record(self, node):
         record, fields = node.items()[0]
 
         self.validate_xml_id(record.id)
         if self.isnoupdate(record) and self.mode != 'init':
-            model = self.get_model(record.model)
-            record_dict = self._create_record(model, fields)
-            self.logger.debug("RECORD_DICT %s" % record_dict)
-            id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
-                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
-            self.id_map[record.id] = int(id)
-            if config.get('import_partial', False):
-                self.cr.commit()
+            id = self.pool.get('ir.model.data')._update_dummy(self.cr, self.uid, record.model, self.module, record.id)
+            # check if the resource already existed at the last update
+            if id:
+                self.id_map[record] = int(id)
+                return None
+            else:
+                if not self._coerce_bool(record.forcecreate):
+                    return None
+
+        model = self.get_model(record.model)
+        record_dict = self._create_record(model, fields)
+        self.logger.debug("RECORD_DICT %s" % record_dict)
+        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
+                self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
+        self.id_map[record.id] = int(id)
+        if config.get('import_partial', False):
+            self.cr.commit()
     
     def _create_record(self, model, fields):
         record_dict = {}
@@ -247,17 +272,35 @@ class YamlInterpreter(object):
     
     def _eval_field(self, model, field_name, expression):
         column = model._columns[field_name]
-        if column._type == "many2one":
+        if is_ref(expression):
+            if expression.model:
+                other_model_name = expression.model
+            else:
+                other_model_name = column._obj
+            other_model = self.get_model(other_model_name)
+            if expression.search:
+                q = eval(expression.search, self.eval_context)
+                ids = other_model.search(self.cr, self.uid, q)
+                if expression.use:
+                    instances = other_model.browse(self.cr, self.uid, ids)
+                    elements = [inst[expression.use] for inst in instances]
+                else:
+                    elements = ids
+                if column._type in ("many2many", "one2many"):
+                    value = [(6, 0, elements)]
+                else: # many2one
+                    value = elements[0]
+        elif column._type == "many2one":
             value = self.get_id(expression)
         elif column._type == "one2many":
             other_model = self.get_model(column._obj)
             value = [(0, 0, self._create_record(other_model, fields)) for fields in expression]
         elif column._type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
-            value= [(6, 0, ids)]
+            value = [(6, 0, ids)]
         else: # scalar field
-            if isinstance(expression, yaml_tag.Eval):
-                value = eval(expression.expression)
+            if is_eval(expression):
+                value = eval(expression.expression, self.eval_context)
             else:
                 value = expression
             # raise YamlImportException('Unsupported column "%s" or value %s:%s' % (field_name, type(expression), expression))
