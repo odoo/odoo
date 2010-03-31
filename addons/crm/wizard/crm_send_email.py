@@ -79,14 +79,15 @@ class crm_send_new_email(osv.osv_memory):
 
             if case.user_id.signature:
                 body += '\n\n%s' % (case.user_id.signature)
-
-            case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body)
+            body = case_pool.format_body(body)
             email_from = data.get('email_from', False)
+            case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from)
+            
             flag = tools.email_send(
                 email_from,
                 emails,
                 data['subject'],
-                case_pool.format_body(body),
+                body,
                 attach=attach,
                 reply_to=case.section_id.reply_to,
                 openobject_id=str(case.id),
@@ -107,6 +108,7 @@ class crm_send_new_email(osv.osv_memory):
 #                raise osv.except_osv(_('Email!'), ("Email Successfully Sent"))
 #            else:
 #                raise osv.except_osv(_('Warning!'), _("Email not sent !"))
+
         return {}
 
     def default_get(self, cr, uid, fields, context=None):
@@ -133,7 +135,9 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from})
             if 'email_from' in fields:
-                res.update({'email_from': (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or tools.config.get('email_from',False)})
+                res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
+                            (case.user_id and case.user_id.address_id and \
+                            case.user_id.address_id.email) or tools.config.get('email_from',False)})
             if 'subject' in fields:
                 res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')}) 
             if 'email_cc' in fields:
@@ -156,12 +160,14 @@ class crm_send_new_email(osv.osv_memory):
             model_pool = self.pool.get(model)
             case = model_pool.browse(cr, uid, hist.log_id.res_id)
             if 'email_to' in fields:
-                res['email_to']=case.email_from or hist.email_from or ''
+                res.update({'email_to': case.email_from or hist.email_from or False})
             if 'email_from' in fields:
-                res['email_from']=(case.user_id and case.user_id.address_id and case.user_id.address_id.email) or hist.email_to  or tools.config.get('email_from','')
+                res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
+                            (case.user_id and case.user_id.address_id and \
+                            case.user_id.address_id.email) or hist.email_to or tools.config.get('email_from',False)})
             if 'text' in fields:
-                header = '\n\n-------- Original Message --------'
-                sender = 'From: %s' % (hist.email_from or '')
+                header = '-------- Original Message --------'                
+                sender = 'From: %s' %(hist.email_from or '')                
                 to = 'To: %s' % (hist.email_to or '')
                 sentdate = 'Date: %s' % (hist.date)
                 desc = '\n%s'%(hist.description)
