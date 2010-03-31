@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,8 +25,13 @@
     'version': '0.1',
     'category': 'Generic Modules/Base',
     'description': """
-This module adds wizards to import/export documents to be edited in
-OpenOffice.
+This module is used along with openerp OpenOffice plugin.
+You have to first install the plugin which is available at
+http://www.openerp.com
+
+This module adds wizards to import/export .SXW report that
+you can modify in OpenOffice.Once you have modified it you can
+upload the report using the same wizard.
 """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',

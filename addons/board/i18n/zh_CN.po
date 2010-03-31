@@ -4,28 +4,28 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.6\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-12-28 07:53+0000\n"
-"Last-Translator: Jeroen Vet <Unknown>\n"
+"PO-Revision-Date: 2010-03-20 07:37+0000\n"
+"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-03-30 04:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: board
 #: constraint:ir.model:0
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开始且不能包含任何特殊字符！"
+msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
 msgid "board.board"
-msgstr "board.board"
+msgstr "控制台"
 
 #. module: board
 #: field:board.note,user_id:0
@@ -83,7 +83,7 @@ msgstr "动作视图"
 #. module: board
 #: model:ir.model,name:board.model_board_note
 msgid "board.note"
-msgstr "board.note"
+msgstr "备注"
 
 #. module: board
 #: field:board.note,date:0
@@ -108,7 +108,7 @@ msgstr "创建仪表盘菜单"
 #. module: board
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效的 XML 视图架构！"
+msgstr "无效XML视图结构!"
 
 #. module: board
 #: wizard_field:board.board.menu.create,init,menu_parent_id:0
@@ -118,12 +118,12 @@ msgstr "上级菜单"
 #. module: board
 #: view:board.note:0
 msgid "Notes"
-msgstr "注解"
+msgstr "备注"
 
 #. module: board
 #: model:ir.model,name:board.model_board_note_type
 msgid "board.note.type"
-msgstr "board.note.type"
+msgstr "备注类型"
 
 #. module: board
 #: view:board.board:0
@@ -160,22 +160,22 @@ msgstr "备注类型"
 #. module: board
 #: selection:board.board.line,position:0
 msgid "Left"
-msgstr "靠左"
+msgstr "左对齐"
 
 #. module: board
 #: field:board.board,view_id:0
 msgid "Board View"
-msgstr "看板视图"
+msgstr "控制台视图"
 
 #. module: board
 #: selection:board.board.line,position:0
 msgid "Right"
-msgstr "靠右"
+msgstr "右对齐"
 
 #. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
-msgstr "顺序"
+msgstr "序列"
 
 #. module: board
 #: view:board.board:0
@@ -196,7 +196,7 @@ msgstr "高度"
 #. module: board
 #: model:ir.actions.wizard,name:board.wizard_board_create_menu
 msgid "Create Board Menu"
-msgstr "创建版面菜单"
+msgstr "创建控制台菜单"
 
 #. module: board
 #: wizard_button:board.board.menu.create,init,end:0
@@ -206,14 +206,17 @@ msgstr "取消"
 #. module: board
 #: view:board.board:0
 msgid "Dashboard View"
-msgstr "看板视图"
+msgstr "控制台视图"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board_line
 msgid "board.board.line"
-msgstr "board.board.line"
+msgstr "控制台明细"
 
 #. module: board
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "主题"
+
+#~ msgid "Action"
+#~ msgstr "动作"

@@ -262,7 +262,7 @@ class product_template(osv.osv):
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Requisition Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the requisition request."),
         'rental': fields.boolean('Can be Rent'),
-        'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
+        'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Sale Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
         'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Account'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
         'volume': fields.float('Volume', help="The volume in m3."),
@@ -451,7 +451,7 @@ class product_product(osv.osv):
         'default_code' : fields.char('Code', size=64),
         'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=False),
         'ean13': fields.char('EAN13', size=13),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
@@ -533,7 +533,6 @@ class product_product(osv.osv):
     def price_get(self, cr, uid, ids, ptype='list_price', context={}):
         res = {}
         product_uom_obj = self.pool.get('product.uom')
-
         for product in self.browse(cr, uid, ids, context=context):
             res[product.id] = product[ptype] or 0.0
             if ptype == 'list_price':
@@ -543,6 +542,16 @@ class product_product(osv.osv):
                 uom = product.uos_id or product.uom_id
                 res[product.id] = product_uom_obj._compute_price(cr, uid,
                         uom.id, res[product.id], context['uom'])
+            # Convert from price_type currency to asked one
+            if 'currency_id' in context:
+                pricetype_obj = self.pool.get('product.price.type')
+                # Take the price_type currency from the product field
+                # This is right cause a field cannot be in more than one currency
+                price_type_id = pricetype_obj.search(cr, uid, [('field','=',ptype)])[0]
+                price_type_currency_id = pricetype_obj.browse(cr,uid,price_type_id).currency_id.id
+                res[product.id] = self.pool.get('res.currency').compute(cr, uid, price_type_currency_id,
+                    context['currency_id'], res[product.id],context=context)
+                
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):

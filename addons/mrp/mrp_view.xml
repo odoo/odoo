@@ -5,10 +5,10 @@
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
             groups="group_mrp_user,group_mrp_manager" sequence="3"/>
         <menuitem id="menu_mrp_reordering" name="Automatic Procurements" parent="stock.menu_stock_root" sequence="4"/>
-		<menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
+        <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
         <menuitem name="Control" id="menu_mrp_control" parent="base.menu_mrp_root"  sequence="3" />
-     	<menuitem name="Master Data"
+        <menuitem name="Master Data"
                   id="menu_mrp_bom"
                   parent="base.menu_mrp_root"
                   sequence="5" />
@@ -291,6 +291,7 @@
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree string="BoM Structure" colors="blue:method">
+					<field name="sequence" invisible="1"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="product_id"/>
@@ -485,25 +486,30 @@
                                     <field name="product_id" />
 				                    <field name="product_qty"  string="Qty"/>
 				                    <field name="product_uom"  string="UOM"/>
+                                    <field name="location_id"  string="Source Loc."/>
+
+                                    <field name="state" invisible="1"/>
 				                    <button name="%(stock.move_consume)d"
 				                    	string="Consume Products" type="action"
 				                    	icon="gtk-go-forward" context="{'consume': True}"
 				                    	states="draft,waiting,confirmed,assigned" />
 				                    <button name="%(stock.move_scrap)d"
 				                    	string="Scrap Products" type="action"
-				                    	icon="gtk-justify-fill" context="{'scrap': True}"
+				                    	icon="gtk-convert" context="{'scrap': True}"
 				                    	states="draft,waiting,confirmed,assigned" />				                    
                                 </tree>
                             </field>
 
                             <field colspan="2" name="move_lines2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                            			widget="one2many_list" mode="tree,form" height="275">
-                           		<tree string="Consumed Products" editable="bottom" colors="red:state=='cancel';black:state=='done';">
+                           		<tree string="Consumed Products" editable="bottom" colors="red:scraped==True">
                            			<field name="product_id" readonly="1"/>
                            			<field name="product_qty" readonly="1" string="Qty"/>
-				                    <field name="product_uom" readonly="1" string="UOM"/>
-                                    <field name="location_dest_id"  readonly="1" string="Destination"/>
+				                    <field name="product_uom" readonly="1" string="UOM"/>                                    
+                                    <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
 				                    <field name="prodlot_id" />
+                                    <field name="state" invisible="1"/>
+                                    <field name="scraped" invisible="1"/>
                            			<button
                            				name="%(stock.track_line)d"
                            				string="Split in production lots"
@@ -536,29 +542,33 @@
                                     <field name="product_id" />
 				                    <field name="product_qty"  string="Qty"/>
 				                    <field name="product_uom"  string="UOM"/>
+                                    <field name="location_id"  string="Source Loc."/>
+                                    <field name="state" invisible="1"/>
 				                    <button name="%(stock.move_consume)d"
 				                    	string="Consume Products" type="action"
 				                    	icon="gtk-go-forward" context="{'consume': True}"
 				                    	states="draft,waiting,confirmed,assigned" />
 				                    <button name="%(stock.move_scrap)d"
 				                    	string="Scrap Products" type="action"
-				                    	icon="gtk-justify-fill" context="{'scrap': True}"
+				                    	icon="gtk-convert" context="{'scrap': True}"
 				                    	states="draft,waiting,confirmed,assigned" />				                    
                                 </tree>
                             </field>
 
                             <field colspan="2" name="move_created_ids2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                            			widget="one2many_list" mode="tree,form" height="275">
-                           		<tree string="Finished Products" editable="bottom">
+                           		<tree string="Finished Products" editable="bottom" colors="red:scraped==True">
                            			<field name="product_id" readonly="1"/>
-                           			<field name="product_qty" readonly="1"/>
-                           			<field name="product_uom" readonly="1" />                           			
-                           			<field name="location_id" readonly="1"/>
+                           			<field name="product_qty" readonly="1" string="Qty"/>
+				                    <field name="product_uom" readonly="1" string="UOM"/>
+                                    <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                            			<field name="prodlot_id" />
+                                    <field name="state" invisible="1"/>
+                                    <field name="scraped" invisible="1"/>
                            			<button name="%(stock.track_line)d"
                                             string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
                            			<button name="%(stock.move_scrap)d"
-                           				string="Scrap Products" type="action" icon="gtk-go-forward"
+                           				string="Scrap Products" type="action" icon="gtk-convert"
                            				states="done,cancel" />
                            		</tree>
                            	</field>
@@ -929,6 +939,7 @@
                 <tree string="Minimum Stock Rules">
                     <field name="name"/>
                     <field name="warehouse_id"/>
+                    <field name="location_id"/>
                     <field name="product_id"/>
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>
@@ -943,11 +954,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Minimum Stock Rules Search">
-                    <field name="name" select="1" />
-                    <field name="warehouse_id" select="1" widget="selection"/>
-                    <field name="location_id" select="1" />
-                    <field name="company_id" select="1" widget="selection"/>
-                    <field name="product_id" select="1"/>
+                    <group col="10" colspan="4">
+                        <field name="name" select="1" />
+                        <field name="warehouse_id" select="1" widget="selection"/>
+                        <field name="location_id" select="1" />
+                        <field name="company_id" select="1" widget="selection"/>
+                        <field name="product_id" select="1"/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="4" col="10">
+                        <filter string="Warehouse" icon="terp-stock" domain="[]"  context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Location" icon="terp-stock" domain="[]" context="{'group_by':'location_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>

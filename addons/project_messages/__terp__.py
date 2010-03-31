@@ -25,8 +25,10 @@
     "version" : "1.0",
     "depends" : ["project"],
     "author" : "Tiny",
-    "description": """Provides the ability to send small messages to other
-    users on the project.
+    "description": """
+    This module provides the functionality to send messages within a project.'
+    A user can send messages individually to other user also he can broadcast
+    it to all the users.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

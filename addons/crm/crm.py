@@ -156,6 +156,7 @@ class crm_case_stage(osv.osv):
         'object_id': fields.many2one('ir.model','Object Name'),
         'probability': fields.float('Probability (%)', required=True),
         'on_change': fields.boolean('Change Probability Automatically',help="Change Probability on next and previous stages."),
+        'requirements': fields.text('Requirements')
     }
     def _find_object_id(self, cr, uid, context=None):
         object_id = context and context.get('object_id', False) or False
@@ -281,7 +282,7 @@ class crm_case(osv.osv):
         'section_id': _get_section,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
     }
-    _order = 'date_deadline desc, date desc,id desc'
+    _order = 'date_deadline desc, create_date desc,id desc'
 
     def unlink(self, cr, uid, ids, context={}):
         for case in self.browse(cr, uid, ids, context):
@@ -356,12 +357,14 @@ class crm_case(osv.osv):
                 'section_id': case.section_id.id
             }
             obj = self.pool.get('crm.case.log')
-            if history and case.description:
+            if history:
                 obj = self.pool.get('crm.case.history')
                 data['description'] = details or case.description
                 data['email'] = email or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or False
+                data['email_from'] = (case.user_id and case.user_id.address_id and \
+                            case.user_id.address_id.email) or tools.config.get('email_from',False)
             res = obj.create(cr, uid, data, context)            
         return True
     _history = __history
@@ -376,7 +379,7 @@ class crm_case(osv.osv):
     def add_reply(self, cursor, user, ids, context=None):
         for case in self.browse(cursor, user, ids, context=context):
             if case.email_last:
-                description = email_last
+                description = case.email_last
                 self.write(cursor, user, case.id, {
                     'description': '> ' + description.replace('\n','\n> '),
                     }, context=context)
@@ -548,6 +551,7 @@ class crm_case_history(osv.osv):
         'description': fields.text('Description'),
         'note': fields.function(_note_get, method=True, string="Description", type="text"),
         'email': fields.char('Email', size=84),
+        'email_from' : fields.char('From Email', size=84),
         'log_id': fields.many2one('crm.case.log','Log',ondelete='cascade'),
     }
 crm_case_history()

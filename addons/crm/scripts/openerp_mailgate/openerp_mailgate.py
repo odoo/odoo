@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
 #    
@@ -30,14 +31,7 @@ import binascii
 import time, socket
 
 
-email_re = re.compile(r"""
-    ([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
-    @                                # mandatory @ sign
-    [a-zA-Z0-9][\w\.-]*              # domain must start with a letter ... Ged> why do we include a 0-9 then?
-     \.
-     [a-z]{2,3}                      # TLD
-    )
-    """, re.VERBOSE)
+email_re = re.compile(r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6})")
 case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 reference_re = re.compile("<.*-tinycrm-(\\d+)@(.*)>", re.UNICODE)
@@ -124,7 +118,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             html += '\n\n'
         html += '[%s] %s\n' % (i+1, url)       
     return html
-    
+
 class rpc_proxy(object):
     def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):        
         self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path))
@@ -178,11 +172,7 @@ class email_parser(object):
             'user_id': False, 
             'description': message['body'], 
         }
-        try:
-            data.update(self.partner_get(self._decode_header(msg['From'])))
-        except Exception, e:
-            import netsvc
-            netsvc.Logger().notifyChannel('mailgate', netsvc.LOG_ERROR, "%s" % e)
+        data.update(self.partner_get(self._decode_header(msg['From'])))
 
         try:
             id = self.rpc(self.model, 'create', data)
@@ -216,7 +206,7 @@ class email_parser(object):
 #                       'file_name':'file data',
 #                   }
 #   }
-#   #
+
     def msg_body_get(self, msg):
         message = {};
         message['body'] = '';
@@ -225,7 +215,7 @@ class email_parser(object):
         counter = 1;
         def replace(match):
             return ''
-            
+
         for part in msg.walk():
             if part.get_content_maintype() == 'multipart':
                 continue
@@ -258,7 +248,6 @@ class email_parser(object):
             message['attachment'] = attachment
         #end for        
         return message
-    #end def
 
     def msg_user(self, msg, id):
         body = self.msg_body_get(msg)
@@ -275,7 +264,7 @@ class email_parser(object):
         body['body'] = body_data
 
         data = {
-            'description': body['body'], 
+#            'description': body['body'],
         }
         act = 'case_pending'
         if 'state' in actions:
@@ -302,7 +291,7 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], body['body'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -329,11 +318,11 @@ class email_parser(object):
         body = message['body']
         act = 'case_open'
         self.rpc(self.model, act, [id])
-        body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
-        data = {
-            'description':body, 
-        }
-        self.rpc(self.model, 'write', [id], data)
+        #body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
+        #data = {
+        #    'description':body, 
+        #}
+        #self.rpc(self.model, 'write', [id], data)
         self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
         return id
 
@@ -363,7 +352,7 @@ class email_parser(object):
             if msg.get('Subject', ''):
                 del msg['Subject']
             msg['Subject'] = '['+str(case_id)+'] '+subject
-            msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(case_id)+'@'+socket.gethostname()+'>'
+            msg['Message-Id'] = '<'+str(time.time())+'-openerpcrm-'+str(case_id)+'@'+socket.gethostname()+'>'
 
         emails = self.rpc(self.model, 'emails_get', case_id)
         priority = emails[3]
@@ -386,9 +375,7 @@ class email_parser(object):
 
 if __name__ == '__main__':
     import sys, optparse
-    parser = optparse.OptionParser(
-        usage='usage: %prog [options]', 
-        version='%prog v1.0')
+    parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.0')
     group = optparse.OptionGroup(parser, "Note", 
         "This program parse a mail from standard input and communicate "
         "with the Open ERP server for case management in the CRM module.")
@@ -408,10 +395,6 @@ if __name__ == '__main__':
 
     msg_txt = email.message_from_file(sys.stdin)
 
-    try :
-        parser.parse(msg_txt)
-    except Exception, e:
-        if getattr(e, 'faultCode', '') and 'Connection unexpectedly closed' in e.faultCode:
-            print e
+    parser.parse(msg_txt)
  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

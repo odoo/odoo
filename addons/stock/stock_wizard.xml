@@ -13,22 +13,15 @@
             multi="True"
             name="stock.move.split"
             string="Split move line"/>
+        
 
-        <wizard
-            id="partial_picking"
-            model="stock.picking"
-            menu="False"
-			keyword="client_action_multi"
-            name="stock.partial_picking"
-            string="Partial picking"/>
-
-		<wizard 
-			id="make_picking" 
-			model="stock.picking"
-			menu="False"
-			keyword="client_action_multi"
-			name="stock.picking.make" 
-			string="Make Picking"/>
+<!--		<wizard -->
+<!--			id="make_picking" -->
+<!--			model="stock.picking"-->
+<!--			menu="False"-->
+<!--			keyword="client_action_multi"-->
+<!--			name="stock.picking.make" -->
+<!--			string="Make Picking"/>-->
 
 	    <wizard
 	        id="return_picking"
@@ -36,14 +29,7 @@
 	        menu="False"
 			keyword="client_action_multi"
 	        name="stock.return.picking"
-	        string="Return picking"/>
-
-	<wizard
-            id="partial_move"
-            model="stock.move"
-            multi="True"
-            name="stock.partial_move"
-            string="Partial Move"/>
+	        string="Return picking"/>	
 
     <wizard
         id="split_inventory_lots"
@@ -52,13 +38,13 @@
         name="stock.inventory.line.split"
         string="Split inventory lines"/>
 
-    <wizard
+    <!--wizard
         string="Merge inventories"
         model="stock.inventory"
         name="inventory.merge"
         keyword="client_action_multi"
         multi="True"
-        id="wizard_merge_inventory"/>
+        id="wizard_merge_inventory"/-->
 
    </data>
 </openerp>

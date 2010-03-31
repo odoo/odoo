@@ -2,16 +2,6 @@
 <openerp>
     <data>
 
-        <wizard id="wizard_workcenter_load" model="mrp.workcenter" name="mrp.workcenter.load" string="Work Center load"/>
-
-        <wizard id="wizard_price" menu="False" model="product.product" name="product_price" string="Product Cost Structure"/>
-        <record id="ir_project_cost_structure" model="ir.values">
-            <field eval="'client_print_multi'" name="key2"/>
-            <field eval="'product.product'" name="model"/>
-            <field name="name">Product Cost Structure</field>
-            <field eval="'ir.actions.wizard,%d'%wizard_price" name="value"/>
-            <field eval="True" name="object"/>
-        </record>
 
     </data>
 </openerp>

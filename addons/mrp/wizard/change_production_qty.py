@@ -47,18 +47,13 @@ class change_production_qty(osv.osv_memory):
              @return: A dictionary which of fields with values. 
         
         """        
-        res = {}
-        record_id = context and context.get('active_id',False)
-        if not record_id:
-           return res
+        res = super(change_production_qty, self).default_get(cr, uid, fields, context=context)        
         prod_obj = self.pool.get('mrp.production')
-        prod = prod_obj.browse(cr, uid, record_id)
-        if prod.state in ('in_production','cancel', 'done'):
-            raise osv.except_osv(_('Warning !'), _('The production is in "%s" state. You can not change the production quantity anymore') % (prod.state).upper() )
- 
-        res['product_qty'] = prod.product_qty        
+        prod = prod_obj.browse(cr, uid, context.get('active_id'))
+        if 'product_qty' in fields:
+            res.update({'product_qty': prod.product_qty})  
         return res
-    
+        
     def change_prod_qty(self, cr, uid, ids, context):
         """ 
              Changes the Quantity of Product.
@@ -91,7 +86,7 @@ class change_production_qty(osv.osv_memory):
                     if not bom_id:
                         raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
                     prod_obj.write(cr, uid, [prod.id], {'bom_id': bom_id})
-                    bom_point = sbom_obj.browse(cr, uid, [bom_id])[0]
+                    bom_point = bom_obj.browse(cr, uid, [bom_id])[0]
         
                 if not bom_id:
                     raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))

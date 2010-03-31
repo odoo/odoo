@@ -2,295 +2,308 @@
 <openerp>
     <data>
 
-    # ------------------------------------------------------
-    # Issue Categories
-    # ------------------------------------------------------
+        <record id="project_issue_categ_action" model="ir.actions.act_window">
+            <field name="name">Issue Categories</field>
+            <field name="res_model">crm.case.categ</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+            <field name="domain">[('object_id.model', '=', 'project.issue')]</field>
+            <field name="context">{'object_id':'project.issue'}</field>
+        </record>
 
+        <record id="project_issue_stage_act" model="ir.actions.act_window">
+            <field name="name">Issue Stages</field>
+            <field name="res_model">crm.case.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_stage_tree"/>
+            <field name="domain">[('object_id.model', '=', 'project.issue')]</field>
+            <field name="context">{'object_id':'project.issue'}</field>
+        </record>
+        <menuitem action="project_issue_stage_act" id="menu_project_issue_stage_act" parent="crm.menu_crm_case_stage"/>
 
-    <record id="project_issue_categ_action" model="ir.actions.act_window">
-        <field name="name">Issue Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-        <field name="domain">[('object_id.model', '=', 'project.issue')]</field>
-        <field name="context">{'object_id':'project.issue'}</field>
-    </record>
-    # ------------------------------------------------------
-    # Stage
-    # ------------------------------------------------------
-    <record id="project_issue_stage_act" model="ir.actions.act_window">
-        <field name="name">Issue Stages</field>
-        <field name="res_model">crm.case.stage</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_stage_tree"/>
-        <field name="domain">[('object_id.model', '=', 'project.issue')]</field>
-        <field name="context">{'object_id':'project.issue'}</field>
-    </record>
-    <menuitem action="project_issue_stage_act" id="menu_project_issue_stage_act" parent="crm.menu_crm_case_stage"/>
-
-    <record model="ir.ui.view" id="project_issue_form_view">
-        <field name="name">Project Issue Tracker Form</field>
-        <field name="model">project.issue</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Issue Tracker Form">
-                <group colspan="3" col="4">
-                    <field name="name"/>
-                    <field name="user_id"/>
-                    <field name="project_id" required="True"/>
-                    <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                </group>
-                <group colspan="1" col="3">
-                    <field name="task_id"/>
-                    <button string="Convert To Task"
-                        name="%(wizard_project_issue_task_set)d"
-                        icon="gtk-index" type="action"
-                        attrs="{'invisible':[('task_id','!=',False)]}"/>
-                    <newline/>
-                    <field name="stage_id" on_change="onchange_stage_id(stage_id)"  domain="[('object_id.model', '=', 'project.issue')]"/>
-                    <group colspan="1" col="2">
-                        <button icon="gtk-go-back" string="" name="stage_previous" type="object"/>
-                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                    </group>
-                </group>
-                <notebook colspan="4">
-                <page string="General">
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Communication"/>
-                        <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
-                        <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
-                        <field name="email_from"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Status"/>
-                        <field name="type_id"/>
-                        <field name="priority"/>
-                    </group>
-                    <separator string= "Description" colspan="4"/>
-                    <field name="description" nolabel="1" colspan="4"/>
-                    <separator colspan="4"/>
-                    <group col="8" colspan="4">
-                        <field name="state" />
-                        <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-                        <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                        <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                        <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                        <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
-                    </group>
-                </page>
-                <page string="History" groups="base.group_extended">
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Dates"/>
+        <record model="ir.ui.view" id="project_issue_form_view">
+            <field name="name">Project Issue Tracker Form</field>
+            <field name="model">project.issue</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Issue Tracker Form">
+                    <group colspan="4" col="8">
+                        <field name="name"/>
+                        <field name="user_id"/>
+                        <field name="assigned_to" />
+                        <group colspan="2" col="4">
+                            <field name="stage_id" on_change="onchange_stage_id(stage_id)"  domain="[('object_id.model', '=', 'project.issue')]" widget="selection"/>
+                            <button icon="gtk-go-back" string="" name="stage_previous" type="object"/>
+                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                        </group>
+                        <field name="project_id" required="True"/>
+                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                         <field name="create_date"/>
-                        <field name="date_closed"/>
+                        <field name="write_date" />
                     </group>
-                    <group col="2" colspan="2">
-                        <separator string="References" colspan="2"/>
-                        <field name="id"/>
-                        <field name="active"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="References" colspan="2"/>
-                        <field name="ref" colspan="4"/>
-                        <field name="ref2" colspan="4"/>
-                    </group>
-                    <field name="log_ids" nolabel="1" colspan="4">
-                        <form string="Actions">
-                            <separator string="Action Information" colspan="4"/>
-                            <field name="name" colspan="4"/>
-                            <field name="date" />
-                            <field name="user_id" />
-                            <field name="canal_id"/>
-                        </form>
-                    </field>
-                </page>
-                <page string="Emails" groups="base.group_extended">
-                   <group colspan="4">
-                       <field colspan="4" name="email_cc" string="CC"/>
-                   </group>
-                    <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
-                        <form string="Communication history">
-                            <group col="7" colspan="4">
-                                <field name="date"/>
-                                <field name="email"/>
-                                <field name="canal_id"/>
-                                <button
-                                   string="Add a CC"
-                                    name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                    icon="gtk-add" type="action"/>
+                    <notebook colspan="4">
+                        <page string="General">
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Communication"/>
+                                <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
+                                <field name="partner_address_id"  string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
+                                <field name="email_from"/>
+                                <field name="analytic_account_id" />
                             </group>
-                            <newline/>
-                            <field name="description" colspan="4" nolabel="1"/>
-                           <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
-                           </form>
-                           <tree string="Communication history">
-                               <field name="description"/>
-                               <field name="email"/>
-                               <field name="date"/>
-                           </tree>
-                       </field>
-                       <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
-                 </page>
-                </notebook>
-            </form>
-        </field>
-    </record>
-    <record model="ir.ui.view" id="project_issue_tree_view">
-        <field name="name">Project Issue Tracker Tree</field>
-        <field name="model">project.issue</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Issue Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
-                <field name="id"/>
-                <field name="name"/>
-                <field name="partner_id"/>
-                <field name="priority" string="Severity"/>
-                <field name="stage_id" string="Resolution"/>
-                <button icon="gtk-go-back" string=""
-                    name="stage_previous" type="object"
-                    states="open,draft,pending,done,cancel" />
-                <button icon="gtk-go-forward" string=""
-                    name="stage_next" type="object"
-                    states="open,draft,pending,done,cancel" />
-                <field name="type_id" string="Version"/>
-                <field name="user_id"/>
-                <field name="state"/>
-                <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
-            </tree>
-        </field>
-    </record>
+                            <group col="3" colspan="2">
+                                <separator colspan="3" string="Status"/>
+                                <field name="type_id" colspan="3"/>
+                                <field name="priority" colspan="3"/>
+                                <field name="task_id" />
+                                <button string="Convert To Task"
+                                    name="%(wizard_project_issue_task_set)d"
+                                    icon="gtk-index" type="action"
+                                    attrs="{'invisible':[('task_id','!=',False)]}" />
+                            </group>
+                            <separator string= "Description" colspan="4"/>
+                            <field name="description" nolabel="1" colspan="4"/>
+                            <separator colspan="4"/>
+                            <group col="8" colspan="4">
+                                <field name="state" />
+                                <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
+                                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                                <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
+                                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                            </group>
+                        </page>
+                        <page string="History" groups="base.group_extended">
+                            <group col="2" colspan="2">
+                                <separator colspan="2" string="Date"/>
+                                <field name="date_closed"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="References" colspan="2"/>
+                                <field name="id"/>
+                                <field name="active"/>
+                            </group>
+                            <field name="log_ids" nolabel="1" colspan="4">
+                                <form string="Actions">
+                                    <separator string="Action Information" colspan="4"/>
+                                    <field name="name" colspan="4"/>
+                                    <field name="date" />
+                                    <field name="user_id" />
+                                    <field name="canal_id"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Emails" groups="base.group_extended">
+                            <group colspan="4">
+                                <field colspan="4" name="email_cc" string="CC"/>
+                            </group>
+                            <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                                <form string="Communication history">
+                                    <group col="7" colspan="4">
+                                        <field name="date"/>
+                                        <field name="email"/>
+                                        <field name="canal_id"/>
+                                        <button
+                                     string="Add a CC"
+                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
+                                               icon="gtk-add" type="action"/>
+                                   </group>
+                                   <newline/>
+                                   <field name="description" colspan="4" nolabel="1"/>
+                                   <button colspan="4"
+                                   	string="Reply to Last Email"
+                                   	name="%(crm.action_crm_reply_mail)d"
+                                   	context="{'mail':'reply', 'model': 'project.issue'}"
+                                   	icon="gtk-undo" type="action" />
+                               </form>
+                               <tree string="Communication history">
+                                   <field name="description"/>
+                                   <field name="email"/>
+                                   <field name="date"/>
+                               </tree>
+                           </field>
+                           <button colspan="4" string="Send New Email"
+                           	name="%(crm.action_crm_send_mail)d"
+                           	context="{'mail':'new', 'model': 'project.issue'}"
+                           	icon="gtk-go-forward" type="action" />
+                        </page>
+                        <page string="Worklogs">
+                            <separator string="Timesheets" colspan="4" />
+                            <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : user_id, 'default_account_id' : analytic_account_id}">
+                                <tree editable="top" string="Timesheet">
+                                    <field name="create_date" string="Date" />
+                                    <field name="user_id" readonly="1" />
+                                    <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id)"/>
+                                    <field name="name"/>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
 
-    <record id="view_project_issue_filter" model="ir.ui.view">
-        <field name="name">Project Issue Tracker Search</field>
-        <field name="model">project.issue</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Issue Tracker Search">
-               <group col="3" colspan="1">
-                   <filter icon="gtk-home" string="   Today   "
-                       separator="1"
-                       domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
-                       help="Todays's bugs"
-                   />
-                   <filter icon="gtk-media-rewind"
-                       string="    7 Days    " separator="1"
-                       domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                       help="Bugs during last 7 days"
-                   />
+                                    <field invisible="1" name="journal_id"/>
+                                    <field invisible="1" name="product_id"/>
+                                    <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                                    <field invisible="1" name="amount"/>
+                                    <field invisible="1" name="general_account_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="project_issue_tree_view">
+            <field name="name">Project Issue Tracker Tree</field>
+            <field name="model">project.issue</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Issue Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="priority" string="Severity"/>
+                    <field name="stage_id" string="Resolution"/>
+                    <button icon="gtk-go-back" string=""
+                        name="stage_previous" type="object"
+                        states="open,draft,pending,done,cancel" />
+                    <button icon="gtk-go-forward" string=""
+                        name="stage_next" type="object"
+                        states="open,draft,pending,done,cancel" />
+                    <field name="type_id" string="Version"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                    <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                    <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                </tree>
+            </field>
+        </record>
 
-               </group>
-               <separator orientation="vertical"/>
-               <group col="5" colspan="2">
-                   <field name="name" select='1' string="Subject"/>
-                    <field name="user_id" select="1" widget="selection">
-                    <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
-                    </field>
-                    <field name="state" select="1">
-                       <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" default="1"/>
-                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
-                    </field>
-                    <field name="project_id" select="1" widget="selection" string="Project" default="context.get('project_id', False)">
+        <record id="view_project_issue_filter" model="ir.ui.view">
+            <field name="name">Project Issue Tracker Search</field>
+            <field name="model">project.issue</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Issue Tracker Search">
+                    <group col="3" colspan="1">
+                        <filter icon="gtk-home" string="   Today   "
+                            separator="1"
+                            domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
+                            help="Todays's bugs"
+                            />
+                        <filter icon="gtk-media-rewind"
+                            string="    7 Days    " separator="1"
+                            domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            help="Bugs during last 7 days"
+                            />
+
+                    </group>
+                    <separator orientation="vertical"/>
+                    <group col="5" colspan="2">
+                        <field name="name" select='1' string="Subject"/>
+                        <field name="user_id" select="1" widget="selection">
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
+                        </field>
+                        <field name="state" select="1">
+                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" default="1"/>
+                            <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
+                        </field>
+                        <field name="project_id" select="1" widget="selection" string="Project" default="context.get('project_id', False)">
                             <filter icon="terp-crm"
-                               domain="[('project_id','=',context.get('project_id',False))]"
-                               help="My Project"
-                           />
-                    </field>
-               </group>
-            </search>
-         </field>
-    </record>
+                                domain="[('project_id','=',context.get('project_id',False))]"
+                                help="My Project"
+                                />
+                        </field>
+                    </group>
+                </search>
+            </field>
+        </record>
 
-     <record model="ir.ui.view" id="project_issue_calendar_view">
-        <field name="name">Project Issue Tracker Calendar</field>
-        <field name="model">project.issue</field>
-        <field name="type">calendar</field>
-        <field name="priority" eval="2"/>
-        <field name="arch" type="xml">
-            <calendar string="Issues" date_start="date" color="user_id" date_delay="duration">
-                <field name="name"/>
-                <field name="partner_id"/>
-            </calendar>
-        </field>
-    </record>
+        <record model="ir.ui.view" id="project_issue_calendar_view">
+            <field name="name">Project Issue Tracker Calendar</field>
+            <field name="model">project.issue</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Issues" date_start="date" color="user_id" date_delay="duration">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                </calendar>
+            </field>
+        </record>
 
-    # ------------------------------------------------------
-    # Feature Requests
-    # ------------------------------------------------------
+        # ------------------------------------------------------
+        # Feature Requests
+        # ------------------------------------------------------
 
-    <record model="ir.ui.view" id="project_feature_tree_view">
-        <field name="name">Project Issue- Feature Tracker Tree</field>
-        <field name="model">project.issue</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Feature Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
-                <field name="id"/>
-                <field name="name" string="Feature description"/>
-                <field name="partner_id"/>
-                <field name="priority" string="Severity"/>
-                <field name="stage_id" string="Resolution"/>
-                <button icon="gtk-go-back" string=""
-                    name="stage_previous" type="object"
-                    states="open,draft,pending,done,cancel" />
-                <button icon="gtk-go-forward" string=""
-                    name="stage_next" type="object"
-                    states="open,draft,pending,done,cancel" />
-                <field name="type_id" string="Version"/>
-                <field name="user_id"/>
-                <field name="state"/>
-                <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
-            </tree>
-        </field>
-    </record>
+        <record model="ir.ui.view" id="project_feature_tree_view">
+            <field name="name">Project Issue- Feature Tracker Tree</field>
+            <field name="model">project.issue</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Feature Tracker Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                    <field name="id"/>
+                    <field name="name" string="Feature description"/>
+                    <field name="partner_id"/>
+                    <field name="priority" string="Severity"/>
+                    <field name="stage_id" string="Resolution"/>
+                    <button icon="gtk-go-back" string=""
+                        name="stage_previous" type="object"
+                        states="open,draft,pending,done,cancel" />
+                    <button icon="gtk-go-forward" string=""
+                        name="stage_next" type="object"
+                        states="open,draft,pending,done,cancel" />
+                    <field name="type_id" string="Version"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                    <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
+                    <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                    <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                    <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
+                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                </tree>
+            </field>
+        </record>
 
-    <record id="view_project_feature_filter" model="ir.ui.view">
-        <field name="name">Project Issue- Feature Tracker Search</field>
-        <field name="model">project.issue</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Feature Tracker Search">
-               <group col="3" colspan="1">
-                   <filter icon="gtk-home" string="   Today   "
-                       separator="1"
-                       domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
-                       help="Todays's features"
-                   />
-                   <filter icon="gtk-media-rewind"
-                       string="    7 Days    " separator="1"
-                       domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                       help="Features during last 7 days"
-                   />
-               </group>
-               <separator orientation="vertical"/>
-               <group col="5" colspan="2">
-                    <field name="name" select='1' string="Feature description"/>
-                    <field name="user_id" select="1" widget="selection">
-                        <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Features" default="1"/>
-                    </field>
-                    <field name="state" select="1">
-                       <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" default="1"/>
-                       <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Features"/>
-                    </field>
-                    <field name="project_id" select="1" widget="selection" string="Project" default="context.get('project_id', False)">
+        <record id="view_project_feature_filter" model="ir.ui.view">
+            <field name="name">Project Issue- Feature Tracker Search</field>
+            <field name="model">project.issue</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Feature Tracker Search">
+                    <group col="3" colspan="1">
+                        <filter icon="gtk-home" string="   Today   "
+                            separator="1"
+                            domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
+                            help="Todays's features"
+                            />
+                        <filter icon="gtk-media-rewind"
+                            string="    7 Days    " separator="1"
+                            domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            help="Features during last 7 days"
+                            />
+                    </group>
+                    <separator orientation="vertical"/>
+                    <group col="5" colspan="2">
+                        <field name="name" select='1' string="Feature description"/>
+                        <field name="user_id" select="1" widget="selection">
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Features" default="1"/>
+                        </field>
+                        <field name="state" select="1">
+                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" default="1"/>
+                            <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Features"/>
+                        </field>
+                        <field name="project_id" select="1" widget="selection" string="Project" default="context.get('project_id', False)">
                             <filter icon="terp-crm"
-                               domain="[('project_id','=',context.get('project_id',False))]"
-                               help="My Project"
-                           />
-                    </field>
-               </group>
-            </search>
-         </field>
-    </record>
+                                domain="[('project_id','=',context.get('project_id',False))]"
+                                help="My Project"
+                                />
+                        </field>
+                    </group>
+                </search>
+            </field>
+        </record>
 
     </data>
 </openerp>

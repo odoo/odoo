@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -23,8 +23,9 @@
     "name": "Decimal Precision Configuration",
     "description": """
 This module allows to configure the price accuracy you need for different kind
-of usage: accounting, sales, purchases, ... The decimal precision is configured
-per company.
+of usage: accounting, sales, purchases, ...
+
+The decimal precision is configured per company.
 """,
     "author": "Tiny",
     "version": "0.1",
@@ -32,8 +33,8 @@ per company.
     "category" : "Generic Modules/Others",
     "init_xml": [],
     "update_xml": [
-        'decimal_precision_view.xml', 
-        'security/ir.model.access.csv', 
+        'decimal_precision_view.xml',
+        'security/ir.model.access.csv',
     ],
     "demo_xml": [],
     "installable": True,

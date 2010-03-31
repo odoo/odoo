@@ -72,7 +72,7 @@ class mrp_product_produce(osv.osv_memory):
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):
             for move_id in move_ids:
-                prod_obj.do_produce(cr, uid, move_id, 
+                prod_obj.action_produce(cr, uid, move_id, 
                                     data['product_qty'], data['mode'], context=context)
         return {}
 

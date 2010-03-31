@@ -42,7 +42,7 @@
         <field name="arch" type="xml">
             <form string="Leads Form">
                 <group colspan="4" col="7">
-                    <field name="partner_name" required="1"/>
+                    <field name="name" required="1"/>
                     <field name="priority"/>
                     <field name="date_deadline"/>
                     <button
@@ -57,7 +57,6 @@
                     <field name="user_id"/>
                     <field name="stage_id" widget="selection" readonly="1" domain="[('object_id.model', '=', 'crm.lead')]"/>
                     <group col="2" colspan="1">
-                        
                         <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
                         <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
                     </group>
@@ -66,10 +65,10 @@
                 <page string="Lead">
                     <group colspan="2" col="4">
                         <separator string="Contact" colspan="4" col="4"/>
-                        <field name="name" string="Contact Name" colspan="4"/>
+                        <field name="partner_name" string="Contact Name" colspan="4"/>
                         <newline/>
                         <field domain="[('domain', '=', 'contact')]" name="title"/>
-                        <field name="function"/>
+                        <field name="function_name" />
                         <field name="street" colspan="4"/>
                         <field name="street2" colspan="4"/>
                         <field name="zip"/>
@@ -79,13 +78,13 @@
                     </group>
                     <group colspan="2" col="3">
                         <separator string="Communication" colspan="4" col="3"/>
+                        <field name="email_from" widget="email"/>
+                        <newline/>
                         <field name="phone"/>
                         <newline/>
                         <field name="fax"/>
                         <newline/>
                         <field name="mobile"/>
-                        <newline/>
-                        <field name="email_from" widget="email"/>
                         <newline/>
                         <separator string="Links" colspan="4" col="3"/>
                         <field name="partner_id"/>
@@ -120,24 +119,28 @@
                                 <field name="email"/>
                                 <field name="canal_id"/>
                                 <button
-                                   string="Add a CC"
-                                    name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                    icon="gtk-add" type="action"/>
-                            </group>
-                            <newline/>
-                            <field name="description" colspan="4" nolabel="1"/>
-                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-go-forward" type="action"/>
-                        </form>
-                        <tree string="Communication history">
-                            <field name="description"/>
-                            <field name="email"/>
-                            <field name="date"/>
-                        </tree>
-                    </field>
-                    <button colspan="4" string="Send New Email"
-                        name="%(crm.wizard_crm_new_send_mail)d"
-                        context="{'mail':'new'}" icon="gtk-go-forward"
-                        type="action" />
+                                     string="Add a CC"
+                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
+                                               icon="gtk-add" type="action"/>
+                                   </group>
+                                   <newline/>
+                                   <field name="description" colspan="4" nolabel="1"/>
+                                   <button colspan="4"
+                                   	string="Reply to Last Email"
+                                   	name="%(action_crm_reply_mail)d"
+                                   	context="{'mail':'reply', 'model': 'crm.lead'}"
+                                   	icon="gtk-undo" type="action" />
+                               </form>
+                               <tree string="Communication history">
+                                   <field name="description"/>
+                                   <field name="email"/>
+                                   <field name="date"/>
+                               </tree>
+                           </field>
+                           <button colspan="4" string="Send New Email"
+                           	name="%(action_crm_send_mail)d"
+                           	context="{'mail':'new', 'model': 'crm.lead'}"
+                           	icon="gtk-go-forward" type="action" />
                  </page>
                  <page string="Extra Info" groups="base.group_extended">
                     <group colspan="2" col="2">

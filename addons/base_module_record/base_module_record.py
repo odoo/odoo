@@ -72,6 +72,40 @@ def doc_createXElement(xdoc, tagName):
         e.ownerDocument = xdoc
         return e
 
+import yaml
+            
+class record(yaml.YAMLObject):
+    yaml_tag = u'!record'
+    def __init__(self, model, id=None, attrs={}):
+        self.model = model
+        self.id = id
+        self.attrs=attrs
+    def __repr__(self):
+        return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
+
+class workflow(yaml.YAMLObject):
+    yaml_tag = u'!workflow'
+    def __init__(self, model, action, ref=None):
+        self.model = model
+        self.ref = ref
+        self.action=action
+    def __repr__(self):
+        return '!workflow {model: %s, action: %s, ref: %s}' % (str(self.model,), str(self.action,), str(self.ref,))
+        
+class ref(yaml.YAMLObject):
+    yaml_tag = u'!ref'
+    def __init__(self, expr="False"):
+        self.expr = expr
+    def __repr__(self):
+        return 'ref(%s)' % (str(self.expr,))
+
+class eval(yaml.YAMLObject):
+    yaml_tag = u'!eval'
+    def __init__(self, expr="False"):
+        self.expr = expr
+    def __repr__(self):
+        return 'eval(%s)' % (str(self.expr,))
+
 class base_module_record(osv.osv):
     _name = "ir.module.record"
     _columns = {
@@ -105,7 +139,7 @@ class base_module_record(osv.osv):
         dt = self.pool.get('ir.model.data')
         dtids = dt.search(cr, uid, [('model','=',model), ('res_id','=',id)])
         if not dtids:
-            return None, None
+            return False, None
         obj = dt.browse(cr, uid, dtids[0])
         self.depends[obj.module] = True
         return obj.module+'.'+obj.name, obj.noupdate
@@ -372,6 +406,17 @@ class base_module_record(osv.osv):
             self.ids[(rec[2], result)] = id
             record = self._create_yaml_record(cr, uid, rec[2], rec[4], id)
             return record
+        if self.mode=="workflow":
+            id,update = self._get_id(cr, uid, rec[2], rec[4])
+            data = {}
+            data['model'] = rec[2]
+            data['action'] = rec[3]
+            data['ref'] = id
+            return data
+        if self.mode=="write":
+            id,update = self._get_id(cr, uid, rec[2],rec[4][0])
+            record = self._create_yaml_record(cr, uid, rec[2], rec[5], id)
+            return record
         data=self.get_copy_data(cr,uid,rec[2],rec[4],rec[5])
         copy_rec=(rec[0],rec[1],rec[2],rec[3],rec[4],data,rec[5])
         rec=copy_rec
@@ -394,7 +439,7 @@ class base_module_record(osv.osv):
             doc.appendChild(terp)
             for rec in self.recording_data:
                 if rec[0]=='workflow':
-                    rec_id,noupdate = self._get_id(cr, uid, rec[1][3], rec[1][5])
+                    rec_id,noupdate = self._get_id(cr, uid, rec[1][2], rec[1][4])
                     if not rec_id:
                         continue
                     data = doc.createElement("data")
@@ -422,73 +467,45 @@ class base_module_record(osv.osv):
     def generate_yaml(self, cr, uid):
         self.ids = {}
         if len(self.recording_data):
-            strg='''import yaml
-            
-class record(yaml.YAMLObject):
-    yaml_tag = u'!record'
-    def __init__(self, model, id=None, attrs={}):
-        self.model = model
-        self.id = id
-        self.attrs=attrs
-    def __repr__(self):
-        return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
-
-class ref(yaml.YAMLObject):
-    yaml_tag = u'!ref'
-    def __init__(self, expr="False"):
-        self.expr = expr
-    def __repr__(self):
-        return 'ref(%s)' % (str(self.expr,))
-
-class eval(yaml.YAMLObject):
-    yaml_tag = u'!eval'
-    def __init__(self, expr="False"):
-        self.expr = expr
-    def __repr__(self):
-        return 'eval(%s)' % (str(self.expr,))
-\n'''
+            yaml_file='''\n'''
     
             for rec in self.recording_data:
                 if rec[1][3] == 'create':
                     self.mode="create"
+                elif rec[1][3] == 'write':
+                    self.mode="write"
                 elif rec[1][3] == 'copy':
                     self.mode="copy"
+                elif rec[0] == 'workflow':
+                    self.mode="workflow"
                 else:
                     continue
-                record= self._generate_object_yaml(cr, uid, rec[1],rec[3])
-                strg+="object=yaml.load(unicode('''\n !record %s \n''','iso-8859-1'))"%record
-                strg+='''
-print object
-attrs=yaml.dump(object.attrs, default_flow_style=False)
-print attrs \n\n'''
-
-            import os
-            py_path = os.path.join(os.getcwd(), 'records.py')
-            txt_path = os.path.join(os.getcwd(), 'records.txt')
-            f = open(py_path, 'w')
-            f.write(strg)
-            f.close()
-            os.system('python %s > %s'%(py_path,txt_path))
-            f = open(txt_path, 'r+')
-            lines=f.readlines()
-            f.seek(0)
-            for line in lines:
-                line=line.replace("''","'")
-                if line.find('!record') == 0:
-                    line = "- \n" + "  " + line
-                elif line.find('- -') != -1:
-                    line=line.replace('- -','  -')
-                    line = "    " + line
+                if self.mode == "workflow":
+                    record= self._generate_object_yaml(cr, uid, rec[1],rec[0])
+                    object=yaml.load(unicode('''\n !workflow %s \n'''%record,'iso-8859-1'))
+                    yaml_file += str(object) + '''\n'''
                 else:
-                    line = "    " + line
-                f.write(line)
-            f.close()
-            f = open(txt_path, 'r')
-            strg = ''.join(f.readlines()) 
-            f.close()
-            os.system('rm %s'%py_path)
-            os.system('rm %s'%txt_path)
-            return strg
+                    record= self._generate_object_yaml(cr, uid, rec[1],rec[3])
+                    object= yaml.load(unicode('''\n !record %s \n'''%record,'iso-8859-1'))
+                    yaml_file += str(object) + '''\n'''
+                    attrs=yaml.dump(object.attrs, default_flow_style=False)
+                    yaml_file += attrs + '''\n\n'''
+                    
+        yaml_result=''''''
+        for line in yaml_file.split('\n'):
+            line=line.replace("''","'")
+            if line.find('!record') == 0:
+                line = "- \n" + "  " + line
+            elif line.find('!workflow') == 0:
+                line = "- \n" + "  " + line                    
+            elif line.find('- -') != -1:
+                line=line.replace('- -','  -')
+                line = "    " + line
+            else:
+                line = "    " + line
+            yaml_result += line + '''\n'''
+            
+        return yaml_result
 
 base_module_record()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -25,7 +25,9 @@
     "version" : "1.0",
     "depends" : ["base"],
     "author" : "Tiny",
-    "description": """Installer for various interesting tools
+    "category" : "Tools",
+    "description": """Installs tools for lunch,survey,subscription and audittrail
+    module
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

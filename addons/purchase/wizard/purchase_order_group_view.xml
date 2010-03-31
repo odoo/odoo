@@ -9,24 +9,19 @@
                <form string="Merge orders">
         			<separator string="Are you sure you want to merge these orders ?" colspan="4"/>
        				<newline/>
-    				<label string="Please note that:" colspan="4"/>
-				<newline/>
-      				<label string="-orders will only be merged if:" colspan="4"/>
-        			<newline/>
-    				<label string="* their status is draft" colspan="4"/>
-				<newline/>
-    				<label string="* they belong to the same partner" colspan="4"/>
-				<newline/>
-    				<label string="* are going to the same location" colspan="4"/>
-				<newline/>
-    				<label string="* have the same pricelist" colspan="4"/>
-				<newline/>
-    				<label string="- lines will only be merged if:" colspan="4"/>
-				<newline/>
-    				<label string="* they are exactly the same except for the quantity and unit" colspan="4"/>
+    				<label string="
+Please note that: &#13; &#13;  
+Orders will only be merged if: &#13;  
+* Purchase Orders are in draft &#13;  
+* Purchase Orders belong to the same partner &#13;  
+* Purchase Orders are have same stock location, same pricelist &#13; &#13;   
+Lines will only be merged if: &#13;  
+* Order lines are exactly the same except for the quantity and unit &#13;
+" colspan="4"/>				
+				    <newline/>    				
         			<separator string="" colspan="4" />
-					<button special="cancel" string="Cancel" />
-            	    <button name="merge_orders" string="Merge orders" type="object" />
+					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+            	    <button name="merge_orders" string="Merge orders" type="object" icon="gtk-convert"/>
     			</form>
             </field>
 		</record>

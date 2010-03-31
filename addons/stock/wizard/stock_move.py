@@ -64,30 +64,33 @@ class stock_move_consume(osv.osv_memory):
         'product_qty': fields.float('Quantity', required=True), 
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True), 
         'location_id': fields.many2one('stock.location', 'Location', required=True)
-              }
+    }
 
-    def default_get(self, cr, uid, fields_list, context=None):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
              Get default values
             
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param fields_list: List of fields for default value 
+             @param fields: List of fields for default value 
              @param context: A standard dictionary 
              
-             @return: default values of fields_list
+             @return: default values of fields
         
         """
+        res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)        
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
-        val = {
-               'product_id':  move.product_id.id, 
-               'product_uom': move.product_uom.id, 
-               'product_qty': move.product_qty, 
-               'location_id': move.location_id.id, 
-               }
-        return val
-
+        if 'product_id' in fields:
+            res.update({'product_id': move.product_id.id})     
+        if 'product_uom' in fields:
+            res.update({'product_uom': move.product_uom.id})    
+        if 'product_qty' in fields:
+            res.update({'product_qty': move.product_qty})    
+        if 'location_id' in fields:
+            res.update({'location_id': move.location_id.id})
+        return res   
+            
     def do_move_consume(self, cr, uid, ids, context={}):
         """ 
              To move consumed products
@@ -104,7 +107,7 @@ class stock_move_consume(osv.osv_memory):
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):            
-            move_obj.consume_moves(cr, uid, move_ids, 
+            move_obj.action_consume(cr, uid, move_ids, 
                              data['product_qty'], data['location_id'], 
                              context=context)
         return {}
@@ -137,7 +140,7 @@ class stock_move_scrap(osv.osv_memory):
         move_obj = self.pool.get('stock.move')        
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):
-            move_obj.scrap_moves(cr, uid, move_ids, 
+            move_obj.action_scrap(cr, uid, move_ids, 
                              data['product_qty'], data['location_id'], 
                              context=context)
         return {}
@@ -149,19 +152,30 @@ class split_in_production_lot(osv.osv_memory):
     _name = "stock.move.split"
     _description = "Split in Production lots"
     
+    def default_get(self, cr, uid, fields, context=None):
+        """ 
+             Get default values
+            
+             @param self: The object pointer.
+             @param cr: A database cursor
+             @param uid: ID of the user currently logged in
+             @param fields: List of fields for default value 
+             @param context: A standard dictionary 
+             
+             @return: default values of fields
+        
+        """
+        
+        res = super(split_in_production_lot, self).default_get(cr, uid, fields, context=context)        
+        move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)  
+        if 'product_id' in fields:
+            res.update({'product_id': move.product_id.id})  
+        return res
+    
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Lots Number')
      }
-    
-    def _get_product_id(self, cr, uid, context):
-        move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
-        return move.product_id.id
-    
-    _defaults = {
-                 'product_id': _get_product_id, 
-                 }
-
     def split_lot(self, cr, uid, ids, context=None):
         """ 
              To split a lot
@@ -232,7 +246,7 @@ class split_in_production_lot(osv.osv_memory):
                                                  {'product_id': move.product_id.id})                    
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id})
                     prodlot = prodlot_obj.browse(cr, uid, prodlot_id) 
-                    ref = '%d' % (current_move)
+                    ref = '%d' % (move.id)
                     if prodlot.ref:
                         ref = '%s, %s' % (prodlot.ref, ref) 
                     prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
@@ -242,8 +256,6 @@ class split_in_production_lot(osv.osv_memory):
                         update_val['product_qty'] = quantity_rest
                         update_val['product_uos_qty'] = uos_qty_rest                          
                         move_obj.write(cr, uid, [move.id], update_val)
-
-                    
         return new_move
 split_in_production_lot()
 

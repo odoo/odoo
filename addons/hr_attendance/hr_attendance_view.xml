@@ -112,9 +112,11 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <field name="coach_id" position="after">
+                  <group col="7" colspan="4">
                     <field name="state"/>
                     <button name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}"/>
                     <button name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}"/>
+                  </group>
                 </field>
             </field>
         </record>

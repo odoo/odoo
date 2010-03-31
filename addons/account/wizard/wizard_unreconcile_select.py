@@ -45,7 +45,7 @@ class wiz_unrec_select(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('open','Open for unreconciliation')]}
+            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel', 'gtk-cancel'),('open','Open for unreconciliation', 'gtk-ok')]}
         },
         'open': {
             'actions': [],

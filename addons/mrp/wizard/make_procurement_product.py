@@ -124,11 +124,9 @@ class make_procurement(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
 
         res = super(make_procurement, self).default_get(cr, uid, fields, context=context)
-
-        if record_id:
-            product_id = self.pool.get('product.product').browse(cr, uid, record_id, context=context).id
-            res['product_id'] = product_id
-
+        product_id = self.pool.get('product.product').browse(cr, uid, record_id, context=context).id
+        if 'product_id' in fields:
+            res.update({'product_id':product_id})  
         return res
 
 make_procurement()

@@ -26,12 +26,21 @@
     "category" : "Generic Modules/Human Resources",
     "website" : "http://www.openerp.com",
     "depends" : ["hr",'hr_recruitment','survey'],
-    "description": "Ability to create employees evaluation.",
+    "description": """
+                      Ability to create employees evaluation.
+                      An evaluation can be created by employee for subordinates
+                      juniors as well as his manager.The evaluation is done under a plan
+                      in which various surveys can be created and it can be defined which
+                      level of employee hierarchy fills what and final review and evaluation
+                      is done by the manager.Every evaluation filled by the employees can be viewed
+                      in the form of   """,
     "init_xml" : [],
     "demo_xml" : ["hr_evaluation_demo.xml"],
     "update_xml" : [
                     "security/ir.model.access.csv",
-                    "hr_evaluation_view.xml"],
+                    "wizard/hr_evaluation_mail_view.xml",
+                    "hr_evaluation_view.xml",
+                    "report/hr_evaluation_report_view.xml"],
     "active": False,
     "installable": True
 }

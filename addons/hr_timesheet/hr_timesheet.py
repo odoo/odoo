@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import time
+
 from osv import fields
 from osv import osv
 from osv.orm import except_orm
@@ -84,7 +85,7 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
         if emp_id:
-            emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0], context=context)
+            emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if bool(emp.product_id):
                 a =  emp.product_id.product_tmpl_id.property_account_expense.id
                 if not a:
@@ -97,7 +98,7 @@ class hr_analytic_timesheet(osv.osv):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
         if emp_id:
-            emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0], context=context)
+            emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.journal_id:
                 return emp.journal_id.id
         return False
@@ -113,7 +114,7 @@ class hr_analytic_timesheet(osv.osv):
     }
     def on_change_account_id(self, cr, uid, ids, account_id):
         return {'value':{}}
-    
+
     def on_change_date(self, cr, uid, ids, date):
         if ids:
             new_date = self.read(cr,uid,ids[0],['date'])['date']
@@ -121,20 +122,18 @@ class hr_analytic_timesheet(osv.osv):
                 warning = {'title':'User Alert!','message':'Changing the date will let this entry appear in the timesheet of the new date.'}
                 return {'value':{},'warning':warning}
         return {'value':{}}
-    
+
     def create(self, cr, uid, vals, context={}):
-        try:
-            res = super(hr_analytic_timesheet, self).create(cr, uid, vals, context)
-            return res
-        except Exception,e:
-            if '"journal_id" viol' in e.args[0]:
-                raise except_orm(_('ValidateError'),
-                     _('No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal.'))
-            elif '"account_id" viol' in e.args[0]:
-                raise except_orm(_('ValidateError'),
-                     _('No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet.'))
-            else:
-                raise except_orm(_('UnknownError'), str(e))
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
+        ename = ''
+        if emp_id:
+            ename = emp_obj.browse(cr, uid, emp_id[0], context=context).name
+        if not vals.get('journal_id',False):
+           raise osv.except_osv(_('Warning !'), _('Analytic journal is not defined for employee %s \nDefine an employee for the selected user and assign an analytic journal!')%(ename,))
+        if not vals.get('account_id',False):
+           raise osv.except_osv(_('Warning !'), _('No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet.'))
+        return super(hr_analytic_timesheet, self).create(cr, uid, vals, context=context)
 
     def on_change_user_id(self, cr, uid, ids, user_id):
         if not user_id:

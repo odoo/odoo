@@ -35,7 +35,7 @@ class pos_payment_report_user(report_sxw.rml_parse):
 
     def __pos_payment_user__(self,form):
         data={}
-        ids = form['user_id'][0][-1]
+        ids = form['user_id']
         idss = map(str, ids)
         sql = "select pt.name,pol.qty,pol.discount,pol.price_unit, " \
                          "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \

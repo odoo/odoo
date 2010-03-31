@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<openerp>
+	<data noupdate="1">
+
+		<!-- Casual leave -->
+		<record model="hr.holidays.status" id="holiday_status_cl">
+			<field name="name">Casual Leave</field>
+			<field name="color_name">red</field>
+		</record>
+
+		<record model="hr.holidays.per.user" id="holiday_user_employee1_cl">
+			<field name="employee_id" ref="hr.employee1"/>
+			<field name="holiday_status" ref="holiday_status_cl"/>
+			<field name="max_leaves">12</field>
+		</record>
+
+		<record model="hr.holidays" id="hr_holidays_employee1_cl">
+			<field name="name">Going For Tour</field>
+			<field name="holiday_status_id" ref="holiday_status_cl"/>
+			<field name="date_from">2010-01-01 08:00</field>
+			<field name="date_to">2010-01-03 18:00</field>
+			<field name="number_of_days_temp">3</field>
+			<field name="employee_id" ref="hr.employee1"/>
+		</record>
+
+		<!-- Sick leave -->
+		<record model="hr.holidays.status" id="holiday_status_sl">
+			<field name="name">Sickness Leave</field>
+			<field name="color_name">black</field>
+		</record>
+
+		<record model="hr.holidays.per.user" id="holiday_user_employee1_sl">
+			<field name="employee_id" ref="hr.employee1"/>
+			<field name="holiday_status" ref="holiday_status_sl"/>
+			<field name="max_leaves">6</field>
+		</record>
+
+		<record model="hr.holidays" id="hr_holidays_employee1_sl">
+			<field name="name">Sickness</field>
+			<field name="holiday_status_id" ref="holiday_status_sl"/>
+			<field name="date_from">2010-02-01 00:00</field>
+			<field name="date_to">2010-02-03 08:00</field>
+			<field name="number_of_days_temp">3</field>
+			<field name="employee_id" ref="hr.employee1"/>
+		</record>
+
+	</data>
+</openerp>

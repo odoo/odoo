@@ -67,7 +67,7 @@ class product_margin(osv.osv_memory):
 
     def action_cancel(self, cr, uid, ids, context=None):
         """
-            @summary:
+           
 
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
