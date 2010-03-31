@@ -216,10 +216,12 @@
                 <tree string="Case logs">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="som"/>
                     <field name="user_id"/>
                     <field name="section_id"/>
+                    <!--
+                    <field name="som"/>
                     <field name="canal_id"/>
+                    -->
                 </tree>
             </field>
         </record>
@@ -233,9 +235,11 @@
                 <tree string="Case History">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="som"/>
                     <field name="user_id"/>
+                    <!--
+                    <field name="som"/>
                     <field name="canal_id"/>
+                    -->
                 </tree>
             </field>
         </record>
@@ -347,7 +351,7 @@
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
                                    	string="Reply to Last Email"
-                                   	name="%(action_crm_reply_mail)d"
+                                   	name="%(action_crm_send_mail)d"
                                    	context="{'mail':'reply', 'model': 'crm.case'}"
                                    	icon="gtk-undo" type="action" />
                                </form>
