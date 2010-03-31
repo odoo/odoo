@@ -44,23 +44,12 @@ class crm_send_new_email(osv.osv_memory):
                 }
 
     def action_cancel(self, cr, uid, ids, context=None):
-        """
-        Closes Phonecall to Opportunity form
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Opportunity's IDs
-        @param context: A standard dictionary for contextual values
+        """ Closes Phonecall to Opportunity form
         """
         return {'type':'ir.actions.act_window_close'}
 
     def action_send(self, cr, uid, ids, context=None):
         """ This sends an email to ALL the addresses of the selected partners.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Opportunity's IDs
-        @param context: A standard dictionary for contextual values
         """
         if not context:
             context = {}
@@ -100,8 +89,8 @@ class crm_send_new_email(osv.osv_memory):
                 case_pool.format_body(body),
                 attach=attach,
                 reply_to=case.section_id.reply_to,
-                openobject_id=str(case.id),                
-            )           
+                openobject_id=str(case.id),
+            )
             if flag:                
                 if data['state'] == 'unchanged':
                     pass
@@ -123,13 +112,6 @@ class crm_send_new_email(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
         """
         if not context:
             context = {}
@@ -151,8 +133,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from})
             if 'email_from' in fields:
-                res.update({'email_from': (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from',False)})
+                res.update({'email_from': (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or tools.config.get('email_from',False)})
             if 'subject' in fields:
                 res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')}) 
             if 'email_cc' in fields:
@@ -166,13 +147,6 @@ class crm_send_new_email(osv.osv_memory):
     def get_reply_defaults(self, cr, uid, fields, context=None):
         """
         This function gets default values for reply mail
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
         """
         hist_obj = self.pool.get('crm.case.history')
         res_ids = context and context.get('active_ids', []) or []
@@ -182,24 +156,22 @@ class crm_send_new_email(osv.osv_memory):
             model_pool = self.pool.get(model)
             case = model_pool.browse(cr, uid, hist.log_id.res_id)
             if 'email_to' in fields:
-                res.update({'email_to': hist.email_from or (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from',False)})
+                res['email_to']=case.email_from or hist.email_from or ''
             if 'email_from' in fields:
-                res.update({'email_from': hist.email_to or (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from',False)})
+                res['email_from']=(case.user_id and case.user_id.address_id and case.user_id.address_id.email) or hist.email_to  or tools.config.get('email_from','')
             if 'text' in fields:
-                header = '-------- Original Message --------'                
-                sender = 'From: %s' %(hist.email_from or tools.config.get('email_from',False))                
-                to = 'To: %s' % (hist.email_to)
-                sentdate = 'Sent: %s' % (hist.date)
+                header = '\n\n-------- Original Message --------'
+                sender = 'From: %s' % (hist.email_from or '')
+                to = 'To: %s' % (hist.email_to or '')
+                sentdate = 'Date: %s' % (hist.date)
                 desc = '\n%s'%(hist.description)
                 original = [header, sender, to, sentdate, desc]
                 original = '\n'.join(original)
-                res.update({'text': '\n\n%s'%(original)})
+                res['text']=original
             if 'subject' in fields:
                 res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')}) 
-            #if 'state' in fields:
-            #    res.update({'state': 'pending'})       
+            if 'state' in fields:
+                res['state']='pending'
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
