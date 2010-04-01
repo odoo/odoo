@@ -182,10 +182,16 @@ class YamlInterpreter(object):
         return node
 
     def _log_assert_failure(self, severity, msg, *args):
-        self.assert_report.record(False, severity)
-        self.logger.log(severity, msg, *args)
-        if severity >= config['assert_exit_level']:
-            raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % logging.getLevelName(severity))
+        if isinstance(severity, types.StringTypes):
+            levelname = severity.strip().upper()
+            level = logging.getLevelName(levelname)
+        else:
+            level = severity
+            levelname = logging.getLevelName(level)
+        self.assert_report.record(False, levelname)
+        self.logger.log(level, msg, *args)
+        if level >= config['assert_exit_level']:
+            raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % levelname)
         return
 
     def _get_assertion_id(self, assertion):
