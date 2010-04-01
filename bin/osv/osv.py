@@ -57,8 +57,7 @@ class osv_pool(netsvc.Service):
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
                 if inst.name == 'AccessError':
-                    tb_s = "AccessError\n" + "".join(traceback.format_exception(*sys.exc_info()))
-                    self.logger.notifyChannel('web-services', netsvc.LOG_DEBUG, tb_s)
+                    self.logger.debug("AccessError", exc_info=True)
                 self.abortResponse(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
                 self.abortResponse(1, inst.name, inst.exc_type, inst.value)
@@ -68,8 +67,7 @@ class osv_pool(netsvc.Service):
                         self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
                 self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
             except Exception, e:
-                tb_s = "".join(traceback.format_exception(*sys.exc_info()))
-                self.logger.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
+                self.logger.exception("Uncaught exception")
                 raise
 
         return wrapper
@@ -84,7 +82,7 @@ class osv_pool(netsvc.Service):
         self._store_function = {}
         self._init = True
         self._init_parent = {}
-        self.logger = netsvc.Logger()
+        self.logger = logging.getLogger("web-services")
         netsvc.Service.__init__(self, 'object_proxy', audience='')
         self.exportMethod(self.obj_list)
         self.exportMethod(self.exec_workflow)
@@ -116,11 +114,10 @@ class osv_pool(netsvc.Service):
         try:
             try:
                 if method.startswith('_'):
-                    raise except_osv('Method Error', 'Private method %s can not be calleble.' % (method,))
+                    raise except_osv('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
                 res = pool.execute_cr(cr, uid, obj, method, *args, **kw)
                 if res is None:
-                    self.logger.notifyChannel("web-services", netsvc.LOG_WARNING,
-                    'Method can not return a None value (crash in XML-RPC)')
+                    self.logger.warning('RPC methods cannot return `None` at the moment!')
                 cr.commit()
             except Exception:
                 cr.rollback()
