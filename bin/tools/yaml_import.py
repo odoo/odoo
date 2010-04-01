@@ -374,23 +374,30 @@ class YamlInterpreter(object):
         wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
         
     def process_function(self, node):
-        function, values = node.items()[0]
+        function, params = node.items()[0]
         if self.isnoupdate(function) and self.mode != 'init':
             return
+        model = self.get_model(function.model)
         context = self.get_context(function, self.eval_context)
         args = []
         if function.eval:
             args = eval(function.eval, self.eval_context)
-        for value in values:
-            if not 'model' in value and (not 'eval' in value or not 'search' in value):
-                raise YamlImportException('You must provide a "model" and an "eval" or "search" to evaluate.')
-            value_model = self.get_model(value['model'])
-            local_context = {'obj': lambda x: value_model.browse(self.cr, self.uid, x, context=context)}
-            local_context.update(self.id_map)
-            id = eval(value['eval'], self.eval_context, local_context)
-            if id != None:
-                args.append(id)
-        model = self.get_model(function.model)
+        for i, param in enumerate(params):
+            if 'model' in param:
+                param_model = self.get_model(param['model'])
+            else:
+                param_model = model
+            if 'search' in param:
+                q = eval(param['search'], self.eval_context)
+                ids = param_model.search(cr, uid, q)
+                value = self._get_first_result(ids)
+            elif 'eval' in param:
+                local_context = {'obj': lambda x: value_model.browse(self.cr, self.uid, x, context)}
+                local_context.update(self.id_map)
+                value = eval(param['eval'], self.eval_context, local_context)
+            else:
+                raise YamlImportException('You must provide at least a "eval" or a "search" to function parameter #%d.' % i)
+            args.append(value)
         method = function.name
         getattr(model, method)(self.cr, self.uid, *args)
     
