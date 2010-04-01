@@ -126,7 +126,7 @@ class YamlInterpreter(object):
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         self.context = {} # opererp context
-        self.eval_context = {'ref': self._ref, '_ref': self._ref, 'time': time} # added '_ref' so that record['ref'] is possible
+        self.eval_context = {'ref': self._ref(), '_ref': self._ref(), 'time': time} # added '_ref' so that record['ref'] is possible
 
     def _ref(self):
         return lambda xml_id: self.get_id(xml_id)
