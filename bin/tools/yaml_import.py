@@ -336,7 +336,6 @@ class YamlInterpreter(object):
         workflow, values = node.items()[0]
         if self.isnoupdate(workflow) and self.mode != 'init':
             return
-        model = self.get_model(workflow.model)
         if workflow.ref:
             id = self.get_id(workflow.ref)
         else:
@@ -357,7 +356,7 @@ class YamlInterpreter(object):
         else:
             uid = self.uid
         wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, model, id, workflow.action, self.cr)
+        wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
         
     def process_function(self, node):
         function, values = node.items()[0]
