@@ -3269,8 +3269,9 @@ class orm(orm_template):
                         upd0.append('"'+v+'"='+self._columns[v]._symbol_set[0])
                         upd1.append(self._columns[v]._symbol_set[1](value[v]))
                     upd1.append(id)
-                    cr.execute('update "' + self._table + '" set ' + \
-                        string.join(upd0, ',') + ' where id = %s', upd1)
+                    if upd0 and upd1:
+                        cr.execute('update "' + self._table + '" set ' + \
+                            string.join(upd0, ',') + ' where id = %s', upd1)
 
             else:
                 for f in val:
