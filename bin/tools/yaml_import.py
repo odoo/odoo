@@ -202,6 +202,7 @@ class YamlInterpreter(object):
         assertion, expressions = node.items()[0]
 
         if self.isnoupdate(assertion) and self.mode != 'init':
+            self.logger.warn('This assertion was not evaluated ("%s").' % assertion.string)
             return
         model = self.get_model(assertion.model)
         ids = self._get_assertion_id(assertion)
