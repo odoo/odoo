@@ -63,7 +63,7 @@ class open_closed_fiscal(wizard.interface):
                 'type': 'form',
                 'arch': form,
                 'fields': fields,
-                'state':[('end','Cancel'),('open','Open')]
+                'state':[('end','Cancel', 'gtk-cancel'),('open','Open', 'gtk-ok')]
             }
         },
         'open': {

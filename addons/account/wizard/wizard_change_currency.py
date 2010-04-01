@@ -92,7 +92,7 @@ class wizard_change_currency(wizard.interface):
         },
         'change': {
             'actions': [],
-            'result': {'type': 'form', 'arch': form, 'fields': fields, 'state': (('end', 'Cancel'), ('next', 'Change Currency'))},
+            'result': {'type': 'form', 'arch': form, 'fields': fields, 'state': (('end', 'Cancel', 'gtk-cancel'), ('next', 'Change Currency', 'gtk-go-forward'))},
         },
         'next': {
             'actions': [_change_currency],
@@ -100,7 +100,7 @@ class wizard_change_currency(wizard.interface):
         },
         'message': {
             'actions': [],
-            'result': {'type': 'form', 'arch': message, 'fields': {}, 'state': [('end', 'Ok')]},
+            'result': {'type': 'form', 'arch': message, 'fields': {}, 'state': [('end', 'Ok', 'gtk-cancel')]},
         },
     }
 wizard_change_currency('account.invoice.currency_change')

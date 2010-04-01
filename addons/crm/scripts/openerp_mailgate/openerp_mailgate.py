@@ -34,7 +34,7 @@ import time, socket
 email_re = re.compile(r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6})")
 case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-tinycrm-(\\d+)@(.*)>", re.UNICODE)
+reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
 
 priorities = {
     '1': '1 (Highest)', 
@@ -157,26 +157,41 @@ class email_parser(object):
             'partner_id': adr[0].get('partner_id', False) and adr[0]['partner_id'][0] or False
         }
 
+    def _to_decode(self, s, charsets):
+       for charset in charsets:
+           if charset:
+               try:
+                   return s.decode(charset)
+               except UnicodeError:  
+                    pass         
+       try:
+           return s.decode('ascii')
+       except UnicodeError:
+           return s 
+
     def _decode_header(self, s):
         from email.Header import decode_header
-        s = decode_header(s)
-        return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
+        s = decode_header(s)        
+        return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s))
 
     def msg_new(self, msg):
         message = self.msg_body_get(msg)
+        msg_subject = self._decode_header(msg['Subject'])
+        msg_from = self._decode_header(msg['From'])
+        msg_cc = self._decode_header(msg['Cc'] or '')
+        
         data = {
-            'name': self._decode_header(msg['Subject']), 
-            'email_from': self._decode_header(msg['From']), 
-            'email_cc': self._decode_header(msg['Cc'] or ''), 
-            'canal_id': self.canal_id, 
+            'name': msg_subject, 
+            'email_from': msg_from, 
+            'email_cc': msg_cc,             
             'user_id': False, 
             'description': message['body'], 
         }
-        data.update(self.partner_get(self._decode_header(msg['From'])))
+        data.update(self.partner_get(msg_from))
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'])
+            self.rpc(self.model, 'history', [id], 'Receive', True, False, message['body'], msg['From'])
             #self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
@@ -223,7 +238,7 @@ class email_parser(object):
             if part.get_content_maintype()=='text':
                 buf = part.get_payload(decode=True)
                 if buf:
-                    txt = buf.decode(part.get_charsets()[0] or 'ascii', 'replace')
+                    txt = self._to_decode(buf, part.get_charsets())
                     txt = re.sub("<(\w)>", replace, txt)
                     txt = re.sub("<\/(\w)>", replace, txt)
                 if txt and part.get_content_subtype() == 'plain':
@@ -291,7 +306,7 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], body['body'])
+        self.rpc(self.model, 'history', [id], 'Receive', True, False, body['body'], msg['From'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -323,12 +338,16 @@ class email_parser(object):
         #    'description':body, 
         #}
         #self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+        self.rpc(self.model, 'history', [id], 'Receive', True, False, message['body'], msg['From'])
         return id
 
     def msg_test(self, msg, case_str):
         if not case_str:
             return (False, False)
+        res = self.rpc(self.model, 'search', [('id', '=', int(case_str))])        
+        if not res:
+            return (False, False)
+        
         emails = self.rpc(self.model, 'emails_get', int(case_str))
         return (int(case_str), emails)
 
@@ -337,9 +356,9 @@ class email_parser(object):
         if case_str:
             case_str = case_str.group(1)
         else:
-            case_str = case_re.search(msg.get('Subject', ''))
+            case_str = case_re.search(msg.get('Subject', ''))            
             if case_str:
-                case_str = case_str.group(1)
+                case_str = case_str.group(1)            
         (case_id, emails) = self.msg_test(msg, case_str)
         if case_id:
             if emails[0] and self.email_get(emails[0])==self.email_get(self._decode_header(msg['From'])):
