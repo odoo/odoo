@@ -178,6 +178,15 @@ class YamlInterpreter(object):
     def isnoupdate(self, node):
         return self.noupdate or node.noupdate or False
     
+    def _get_first_result(self, results, default=False):
+        if len(results):
+            value = results[0]
+            if isinstance(value, types.TupleType):
+                value = value[0]
+        else:
+            value = default
+        return value
+    
     def process_comment(self, node):
         return node
 
@@ -296,7 +305,7 @@ class YamlInterpreter(object):
                 if column._type in ("many2many", "one2many"):
                     value = [(6, 0, elements)]
                 else: # many2one
-                    value = elements[0]
+                    value = self._get_first_result(elements)
         elif column._type == "many2one":
             value = self.get_id(expression)
         elif column._type == "one2many":
