@@ -51,6 +51,8 @@
                 'account_pcmn_belgium.xml',
                 'l10n_be_wizard.xml',
                 'wizard/l10n_be_account_vat_declaration_view.xml',
+                'wizard/l10n_be_vat_intra_view.xml',
+                'wizard/l10n_be_partner_vat_listing.xml',
                 'l10n_be_sequence.xml',
                 'fiscal_templates.xml',
                 'security/ir.model.access.csv'
