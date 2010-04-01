@@ -145,9 +145,11 @@ CREATE TABLE res_users (
     email varchar(64) default null,
     context_tz varchar(64) default null,
     signature text,
---  action_id int references ir_act_window on delete set null,
     context_lang varchar(64) default '',
+    -- No FK references below, will be added later by ORM
+    -- (when the destination rows exist)
     action_id int,
+    company_id int,
     primary key(id)
 );
 alter table res_users add constraint res_users_login_uniq unique (login);
@@ -342,7 +344,7 @@ CREATE TABLE ir_model_data (
 -- Users
 ---------------------------------
 
-insert into res_users (id,login,password,name,action_id,active) values (1,'admin',NULL,'Administrator',NULL,True);
+insert into res_users (id,login,password,name,action_id,active,company_id) values (1,'admin',NULL,'Administrator',NULL,True,1);
 insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_root','base','res.users',True,1);
 
 -- Compatibility purpose, to remove V6.0

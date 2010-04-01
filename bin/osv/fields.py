@@ -366,7 +366,7 @@ class one2many(_column):
     _prefetch = False
     _type = 'one2many'
 
-    def __init__(self, obj, fields_id, string='unknown', limit=20, **args):
+    def __init__(self, obj, fields_id, string='unknown', limit=None, **args):
         args.update({'parent_field':fields_id})
         _column.__init__(self, string=string, **args)
         self._obj = obj
@@ -756,11 +756,14 @@ class related(function):
                         if self._type != "many2one":
                             t_id = t_data.id
                             t_data = t_data[self.arg[i]][0]
+                        else:
+                            t_data = False
+                            break
                     else:
                         t_id = t_data['id']
                         t_data = t_data[self.arg[i]]
 
-                if t_id:
+                if t_id and t_data:
                     obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values}, context=context)
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
@@ -921,7 +924,7 @@ class property(function):
             res[id] = default_val
         for prop in property.browse(cr, uid, nids):
             if prop.value.find(',') >= 0:
-                res[int(prop.res_id.split(',')[1])] = (prop.value and \
+                res[int(prop.res_id.id)] = (prop.value and \
                         int(prop.value.split(',')[1])) or False
             else:
                 res[int(prop.res_id.split(',')[1])] = prop.value or ''

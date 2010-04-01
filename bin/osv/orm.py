@@ -69,6 +69,15 @@ from tools.config import config
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
+
+POSTGRES_CONFDELTYPES = {
+    'RESTRICT': 'r',
+    'NO ACTION': 'a',
+    'CASCADE': 'c',
+    'SET NULL': 'n',
+    'SET DEFAULT': 'd',
+}
+
 def last_day_of_current_month():
     today = datetime.date.today()
     last_day = str(calendar.monthrange(today.year, today.month)[1])
@@ -249,11 +258,14 @@ class browse_record(object):
                         new_data[n] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(f._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
                     elif f._type in ('reference'):
                         if data[n]:
-                            ref_obj, ref_id = data[n].split(',')
-                            ref_id = long(ref_id)
-                            obj = self._table.pool.get(ref_obj)
-                            compids = False
-                            new_data[n] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                            if isinstance(data[n], browse_record):
+                                new_data[n] = data[n]
+                            else:
+                                ref_obj, ref_id = data[n].split(',')
+                                ref_id = long(ref_id)
+                                obj = self._table.pool.get(ref_obj)
+                                compids = False
+                                new_data[n] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
                         else:
                             new_data[n] = browse_null()
                     else:
@@ -1866,13 +1878,15 @@ class orm(orm_template):
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count', 'exists']
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
+        groupby_list = groupby
+        groupby = groupby[0]
         context = context or {}
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
         if not fields:
             fields = self._columns.keys()
 
         (where_clause, where_params, tables) = self._where_calc(cr, uid, domain, context=context)
-        dom = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
+        dom = self.pool.get('ir.rule').domain_get(cr, uid, self._name, 'read', context=context)
         where_clause = where_clause + dom[0]
         where_params = where_params + dom[1]
         for t in dom[2]:
@@ -1912,6 +1926,8 @@ class orm(orm_template):
         alldata = {}
         groupby = group_by
         for r in cr.dictfetchall():
+            for fld,val in r.items():
+                if val == None:r[fld] = False
             alldata[r['id']] = r
             del r['id']
         data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
@@ -1919,6 +1935,7 @@ class orm(orm_template):
 
         for d in data:
             d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
+            d['__context'] = {'group_by':groupby_list[1:]}
             if fget.has_key(groupby):
                 if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
@@ -2274,14 +2291,7 @@ class orm(orm_template):
                                                 "AND con.contype = 'f'", (self._table, ref, k, 'id'))
                                     res = cr.dictfetchall()
                                     if res:
-                                        confdeltype = {
-                                            'RESTRICT': 'r',
-                                            'NO ACTION': 'a',
-                                            'CASCADE': 'c',
-                                            'SET NULL': 'n',
-                                            'SET DEFAULT': 'd',
-                                        }
-                                        if res[0]['confdeltype'] != confdeltype.get(f.ondelete.upper(), 'a'):
+                                        if res[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
                                             cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res[0]['conname'] + '"')
                                             cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
                                             cr.commit()
@@ -2474,6 +2484,7 @@ class orm(orm_template):
     #
     # Update objects that uses this one to update their _inherits fields
     #
+
     def _inherits_reload_src(self):
         for obj in self.pool.obj_pool.values():
             if self._name in obj._inherits:
@@ -2540,8 +2551,7 @@ class orm(orm_template):
             fields_to_read = self._columns.keys()
 
         # construct a clause for the rules :
-        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
-
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
         fields_pre = [f for f in fields_to_read if
                            f == self.CONCURRENCY_CHECK_FIELD
@@ -2562,17 +2572,16 @@ class orm(orm_template):
                 return '"%s"' % (f,)
             fields_pre2 = map(convert_field, fields_pre)
             order_by = self._parent_order or self._order
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
+            for sub_ids in cr.split_for_in_conditions(ids):
                 if d1:
-                    cr.execute('SELECT %s FROM %s WHERE %s.id = ANY (%%s) AND %s ORDER BY %s' % \
+                    cr.execute('SELECT %s FROM %s WHERE %s.id IN %%s AND %s ORDER BY %s' % \
                             (','.join(fields_pre2 + [self._table + '.id']), ','.join(tables), self._table, ' and '.join(d1),
                                 order_by),[sub_ids,]+d2)
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
+                    if cr.rowcount != len(sub_ids):
                         raise except_orm(_('AccessError'),
                                 _('You try to bypass an access rule while reading (Document type: %s).') % self._description)
                 else:
-                    cr.execute('SELECT %s FROM \"%s\" WHERE id = ANY (%%s) ORDER BY %s' %
+                    cr.execute('SELECT %s FROM \"%s\" WHERE id IN %%s ORDER BY %s' %
                                (','.join(fields_pre2 + ['id']), self._table,
                                 order_by), (sub_ids,))
                 res.extend(cr.dictfetchall())
@@ -2724,6 +2733,25 @@ class orm(orm_template):
                     if res and res[0]:
                         raise except_orm('ConcurrencyException', _('Records were modified in the meanwhile'))
 
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        """Verifies that the operation given by ``operation`` is allowed for the user
+           according to ir.rules.
+           @param ``operation``: one of ``'read'``, ``'write'``, ``'unlink'``
+           @raise ``except_orm``: if current ir.rules do not permit this operation.
+           @return: ``None`` if the operation is allowed
+        """
+        where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
+        if where_clause:
+            where_clause = ' and ' + ' and '.join(where_clause)
+            for sub_ids in cr.split_for_in_conditions(ids):
+                cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
+                           ' WHERE ' + self._table + '.id IN %s' + where_clause,
+                           [sub_ids] + where_params)
+                if cr.rowcount != len(sub_ids):
+                    raise except_orm(_('AccessError'),
+                                     _('Operation prohibited by access rules (Operation: %s, Document type: %s).')
+                                     % (operation, self._name))
+
     def unlink(self, cr, uid, ids, context=None):
         if not ids:
             return True
@@ -2753,26 +2781,13 @@ class orm(orm_template):
         #   ids2 = [x[self._inherits[key]] for x in res]
         #   self.pool.get(key).unlink(cr, uid, ids2)
 
-        d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, context=context)
-        if d1:
-            d1 = ' AND '+' and '.join(d1)
-
-        for i in range(0, len(ids), cr.IN_MAX):
-            sub_ids = ids[i:i+cr.IN_MAX]
-            str_d = string.join(('%s',)*len(sub_ids), ',')
-            if d1:
-                cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                        'WHERE '+self._table+'.id IN ('+str_d+')'+d1, sub_ids+d2)
-                if not cr.rowcount == len(sub_ids):
-                    raise except_orm(_('AccessError'),
-                            _('You try to bypass an access rule (Document type: %s).') % \
-                                    self._description)
-
-            cr.execute('delete from '+self._table+' ' \
-                    'where id in ('+str_d+')', sub_ids)
+        self.check_access_rule(cr, uid, ids, 'unlink', context=context)
+        for sub_ids in cr.split_for_in_conditions(ids):
+            cr.execute('delete from ' + self._table + ' ' \
+                       'where id in %s', sub_ids)
 
         for order, object, store_ids, fields in result_store:
-            if object<>self._name:
+            if object != self._name:
                 obj =  self.pool.get(object)
                 cr.execute('select id from '+obj._table+' where id in ('+','.join(map(str, store_ids))+')')
                 rids = map(lambda x: x[0], cr.fetchall())
@@ -2868,29 +2883,10 @@ class orm(orm_template):
             upd1.append(user)
 
         if len(upd0):
-
-            d1, d2,tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
-            if d1:
-                d1 = ' and '+' and '.join(d1)
-
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                ids_str = string.join(map(str, sub_ids), ',')
-                if d1:
-                    cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
-                            'WHERE '+self._table+'.id IN ('+ids_str+')'+d1, d2)
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
-                        raise except_orm(_('AccessError'),
-                                _('You try to bypass an access rule while writing (Document type: %s).') % \
-                                        self._description)
-                else:
-                    cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
-                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
-                        raise except_orm(_('AccessError'),
-                                _('You try to write on an record that doesn\'t exist ' \
-                                        '(Document type: %s).') % self._description)
-                cr.execute('update '+self._table+' set '+string.join(upd0, ',')+' ' \
-                    'where id in ('+ids_str+')', upd1)
+            self.check_access_rule(cr, user, ids, 'write', context=context)
+            for sub_ids in cr.split_for_in_conditions(ids):
+                cr.execute('update ' + self._table + ' set ' + ','.join(upd0) + ' ' \
+                           'where id in %s', upd1 + [sub_ids])
 
             if totranslate:
                 # TODO: optimize
@@ -2921,11 +2917,9 @@ class orm(orm_template):
         for table in self._inherits:
             col = self._inherits[table]
             nids = []
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids = ids[i:i+cr.IN_MAX]
-                ids_str = string.join(map(str, sub_ids), ',')
+            for sub_ids in cr.split_for_in_conditions(ids):
                 cr.execute('select distinct "'+col+'" from "'+self._table+'" ' \
-                        'where id in ('+ids_str+')', upd1)
+                           'where id in %s', (sub_ids,))
                 nids.extend([x[0] for x in cr.fetchall()])
 
             v = {}
@@ -3104,7 +3098,8 @@ class orm(orm_template):
                 upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
                 upd2.append(self._columns[field]._symbol_set[1](vals[field]))
             else:
-                upd_todo.append(field)
+                if not isinstance(self._columns[field], fields.related):
+                    upd_todo.append(field)
             if field in self._columns \
                     and hasattr(self._columns[field], 'selection') \
                     and vals[field]:
@@ -3128,6 +3123,15 @@ class orm(orm_template):
             upd1 += ',%s,now()'
             upd2.append(user)
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
+        d1, d2, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'create', context=context)
+        if d1:
+            d1 = ' AND '+' AND '.join(d1)
+            cr.execute('SELECT '+self._table+'.id FROM '+','.join(tables)+' ' \
+                    'WHERE '+self._table+'.id = ' +str(id_new)+d1,d2)
+            if not cr.rowcount:
+                raise except_orm(_('AccessError'),
+                                 _('You try to bypass an access rule to create (Document type: %s).') \
+                                  % self._name)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store:
@@ -3334,7 +3338,7 @@ class orm(orm_template):
             context = {}
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
-        dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, context=context)
+        dom = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
         qu1 = qu1 + dom[0]
         qu2 = qu2 + dom[1]
         for t in dom[2]:

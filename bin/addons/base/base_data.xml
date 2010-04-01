@@ -1001,6 +1001,8 @@
 
         <record id="main_partner" model="res.partner">
             <field name="name">Tiny sprl</field>
+            <!-- Company ID will be set later -->
+            <field name="company_id" eval="None"/>
         </record>
         <record id="main_address" model="res.partner.address">
             <field name="partner_id" ref="main_partner"/>
@@ -1011,14 +1013,18 @@
             <field name="phone">(+32).81.81.37.00</field>
             <field name="type">default</field>
             <field model="res.country" name="country_id" ref="be"/>
+            <!-- Company ID will be set later -->
+            <field name="company_id" eval="None"/>
         </record>
-        
+
         <!-- Currencies -->
         <record id="EUR" model="res.currency">
             <field name="name">EUR</field>
             <field name="code">EUR</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <!-- Company ID will be set later -->
+            <field name="company_id" eval="None"/>
         </record>
         <record id="rateEUR" model="res.currency.rate">
             <field name="rate">1.0</field>
@@ -1042,12 +1048,21 @@
         </assert>
         <record id="user_admin" model="res.users">
             <field name="company_id" ref="main_company"/>
-        </record>    
+        </record>
+        <record id="main_partner" model="res.partner">
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="main_address" model="res.partner.address">
+            <field name="company_id" ref="main_company"/>
+        </record>
         <record id="EUR" model="res.currency">
             <field name="company_id" ref="main_company"/>
         </record>
-        
+
         <!-- Currencies -->
+        <record id="EUR" model="res.currency">
+            <field name="company_id" ref="main_company"/>
+        </record>
         <record id="USD" model="res.currency">
             <field name="name">USD</field>
             <field name="code">USD</field>
