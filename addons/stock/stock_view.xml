@@ -585,7 +585,7 @@
                         <field name="min_date" select="1"/>
                         <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(make_picking)d" 
+                        <button name="%(act_stock_make_picking_wizard)d" 
                             states="confirmed,assigned" 
                             string="Make Picking" 
                             type="action" 
@@ -752,7 +752,7 @@
                         <field name="min_date" select="1"/>
                         <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(make_picking)d" 
+                        <button name="%(act_stock_make_picking_wizard)d" 
                                 states="assigned" 
                                 string="Make Picking" 
                                 type="action" 
@@ -946,7 +946,7 @@
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2" readonly="1"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(make_picking)d" 
+                        <button name="%(act_stock_make_picking_wizard)d" 
                                 states="assigned" 
                                 string="Make Picking" 
                                 type="action" 
@@ -1141,7 +1141,7 @@
                         <field name="invoice_state" select="2" string="Invoice Control"/>
                         <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(make_picking)d" 
+                        <button name="%(act_stock_make_picking_wizard)d" 
                                 states="confirmed,assigned" 
                                 string="Make Picking" 
                                 type="action" 

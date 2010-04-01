@@ -34,7 +34,7 @@ import time, socket
 email_re = re.compile(r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6})")
 case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-tinycrm-(\\d+)@(.*)>", re.UNICODE)
+reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
 
 priorities = {
     '1': '1 (Highest)', 
@@ -157,21 +157,37 @@ class email_parser(object):
             'partner_id': adr[0].get('partner_id', False) and adr[0]['partner_id'][0] or False
         }
 
+    def _to_decode(self, s, charsets):
+       for charset in charsets:
+           if charset:
+               try:
+                   return s.decode(charset)
+               except UnicodeError:  
+                    pass         
+       try:
+           return s.decode('ascii')
+       except UnicodeError:
+           return s 
+
     def _decode_header(self, s):
         from email.Header import decode_header
-        s = decode_header(s)
-        return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
+        s = decode_header(s)        
+        return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s))
 
     def msg_new(self, msg):
         message = self.msg_body_get(msg)
+        msg_subject = self._decode_header(msg['Subject'])
+        msg_from = self._decode_header(msg['From'])
+        msg_cc = self._decode_header(msg['Cc'] or '')
+        
         data = {
-            'name': self._decode_header(msg['Subject']), 
-            'email_from': self._decode_header(msg['From']), 
-            'email_cc': self._decode_header(msg['Cc'] or ''),             
+            'name': msg_subject, 
+            'email_from': msg_from, 
+            'email_cc': msg_cc,             
             'user_id': False, 
             'description': message['body'], 
         }
-        data.update(self.partner_get(self._decode_header(msg['From'])))
+        data.update(self.partner_get(msg_from))
 
         try:
             id = self.rpc(self.model, 'create', data)
@@ -222,7 +238,7 @@ class email_parser(object):
             if part.get_content_maintype()=='text':
                 buf = part.get_payload(decode=True)
                 if buf:
-                    txt = buf.decode(part.get_charsets()[0] or 'ascii', 'replace')
+                    txt = self._to_decode(buf, part.get_charsets())
                     txt = re.sub("<(\w)>", replace, txt)
                     txt = re.sub("<\/(\w)>", replace, txt)
                 if txt and part.get_content_subtype() == 'plain':

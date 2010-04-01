@@ -158,28 +158,8 @@ class pos_order(osv.osv):
                         if val<o.date_created:
                             val=o.date_created
             if val:
-             #   cr.execute("Update pos_order set date_payment='%s' where id = %d"%(val, order.id))
-             #   cr.commit()
                 res[order.id]=val
         return res
- #       tax_obj = self.pool.get('account.tax')
- #       pay_obj = self.pool.get('pos.payment')
- #       for order in self.browse(cr, uid, ids):
- #           val = 0.0
- #           tot =0.0
- #           for pay in order.payments:
- #               tot+= pay.amount
- #           if order.amount_total==tot:
- #               res[order.id]=time.strftime('%Y-%m-%d')
- #           for line in order.lines:
-
- #               val = reduce(lambda x, y: x+round(y['amount'], 2),
- #                       tax_obj.compute_inv(cr, uid, line.product_id.taxes_id,
- #                           line.price_unit * \
- #                           (1-(line.discount or 0.0)/100.0), line.qty),
- #                           val)
-
- #           res[order.id] = val
 
     def _amount_tax(self, cr, uid, ids, field_name, arg, context):
         res = {}
@@ -565,7 +545,6 @@ class pos_order(osv.osv):
                 val=val and val[0] or None
                 if val:
                     cr.execute("Update pos_order set date_payment='%s' where id = %d"%(val, order.id))
-                    cr.commit()
         return True
 
 
