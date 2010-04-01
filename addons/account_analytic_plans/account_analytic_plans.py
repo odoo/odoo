@@ -404,7 +404,6 @@ class sale_order_line(osv.osv):
 
                 if rec:
                     pool_inv_line.write(cr, uid, [line.id], {'analytics_id':rec.analytics_id.id}, context=context)
-                    cr.commit()
         return create_ids
 
 sale_order_line()

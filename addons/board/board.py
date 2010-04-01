@@ -81,13 +81,11 @@ class board_board(osv.osv):
         @return: True
         """
         result = super(board_board, self).write(cr, uid, ids, vals, context)
-        cr.commit()
 
         board = self.pool.get('board.board').browse(cr, uid, ids[0])
         view = self.create_view(cr, uid, ids[0], context)
         id = board.view_id.id
         cr.execute("update ir_ui_view set arch=%s where id=%s", (view, id))
-        cr.commit()
         return result
 
     def create(self, cr, user, vals, context=None):

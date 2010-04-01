@@ -76,11 +76,14 @@ class case(osv.osv):
             if case.section_id.reply_to and case.email_from:
                 src = case.email_from
                 dest = case.section_id.reply_to
-                body = case.email_last or case.description
+                body = ""
+                body = case.email_last or case.description               
                 if not destination:
                     src, dest = dest, src
-                    if case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature or '')
+                    if body and case.user_id.signature:
+                        body += '\n\n%s' % (case.user_id.signature)
+
+                body = self.format_body(body)
                 dest = [dest]
 
                 attach_to_send = None
@@ -95,16 +98,17 @@ class case(osv.osv):
                     src,
                     dest,
                     "Reminder: [%s] %s" % (str(case.id), case.name, ),
-                    self.format_body(body),
+                    body,
                     reply_to=case.section_id.reply_to,
                     openobject_id=str(case.id),
                     attach=attach_to_send
                 )
-                if flag:
-                    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
-                else:
-                    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
-        return True
+                self._history(cr, uid, [case], _('Send'), history=True, email=dest, details=body, email_from=src)
+                #if flag:
+                #    raise osv.except_osv(_('Email!'),("Email Successfully Sent"))
+                #else:
+                #    raise osv.except_osv(_('Email Fail!'),("Email is not sent successfully"))
+        return True    
 
     def _check(self, cr, uid, ids=False, context={}):
         """
@@ -149,6 +153,23 @@ class base_action_rule(osv.osv):
     _inherit = 'base.action.rule'
     _description = 'Action Rules'
 
+    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from',False), context={}):
+        body = self.format_mail(obj, body)
+        if not emailfrom:
+            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and obj.user_id.address_id.email:
+                emailfrom = obj.user_id.address_id.email
+            
+        name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
+        emailfrom = tools.ustr(emailfrom)
+        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.reply_to:
+            reply_to = obj.section_id.reply_to
+        else:
+            reply_to = emailfrom
+        if not emailfrom:
+            raise osv.except_osv(_('Error!'),
+                    _("No E-Mail ID Found for your Company address!"))
+        return tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, openobject_id=str(obj.id))
+    
     def do_check(self, cr, uid, action, obj, context={}):
 
         """ @param self: The object pointer
@@ -185,8 +206,8 @@ class base_action_rule(osv.osv):
 
         res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
-
-        if action.act_section_id:
+        
+        if hasattr(action, act_section_id) and action.act_section_id:
             obj.section_id = action.act_section_id
             write['section_id'] = action.act_section_id.id
 

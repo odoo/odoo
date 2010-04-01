@@ -210,10 +210,22 @@ class mail_gateway(osv.osv):
             }
         return res
 
-    def _decode_header(self, s):
+    def _to_decode(self, s, charsets):
+       for charset in charsets:
+           if charset:
+               try:
+                   return s.decode(charset)
+               except UnicodeError:  
+                    pass         
+       try:
+           return s.decode('ascii')
+       except UnicodeError:
+           return s 
+
+    def _decode_header(self, s):        
         from email.Header import decode_header
         s = decode_header(s)
-        return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
+        return ''.join(map(lambda x:self._to_decode(x[0], x[1]), s))
 
     def msg_new(self, cr, uid, msg, model):
         message = self.msg_body_get(msg)
@@ -250,7 +262,7 @@ class mail_gateway(osv.osv):
             if part.get_content_maintype()=='text':
                 buf = part.get_payload(decode=True)
                 if buf:
-                    txt = buf.decode(part.get_charsets()[0] or 'ascii', 'replace')
+                    txt = self._to_decode(buf, part.get_charsets())
                     txt = re.sub("<(\w)>", replace, txt)
                     txt = re.sub("<\/(\w)>", replace, txt)
                 if txt and part.get_content_subtype() == 'plain':
@@ -362,13 +374,11 @@ class mail_gateway(osv.osv):
                 del msg['Subject']
             msg['Subject'] = '[%s] %s' %(str(res_id), subject)            
 
-        em = [user_email, from_email] + (cc_email or '').split(',')
+        em = [user_email or '', from_email] + (cc_email or '').split(',')
         emails = map(self.emails_get, filter(None, em))
-
         mm = [self._decode_header(msg['From']), self._decode_header(msg['To'])]+self._decode_header(msg.get('Cc','')).split(',')
         msg_mails = map(self.emails_get, filter(None, mm))
-
-        emails = filter(lambda m: m and m not in msg_mails, emails)        
+        emails = filter(lambda m: m and m not in msg_mails, emails)
         try:
             self.msg_send(msg, mailgateway.reply_to, emails, priority, res_id)
             if hasattr(self.pool.get(res_model), 'msg_send'):

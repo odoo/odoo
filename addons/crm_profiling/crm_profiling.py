@@ -313,11 +313,9 @@ class crm_segmentation(osv.osv):
                     partners.remove(pid)
 
             for partner_id in partners:
-                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0], partner_id))
-            cr.commit()
+                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner_id))
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
-            cr.commit()
         return True
 
 crm_segmentation()

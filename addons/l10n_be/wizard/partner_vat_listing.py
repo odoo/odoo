@@ -230,15 +230,15 @@ class wizard_vat(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel'),('go_step','View Clients')]},
+            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel', 'gtk-cancel'),('go_step','View Clients', 'gtk-ok')]},
         },
         'go_step': {
             'actions': [_get_partner],
-            'result': {'type':'form', 'arch':client_form, 'fields':client_fields, 'state':[('end','Cancel'),('go','Create XML')]},
+            'result': {'type':'form', 'arch':client_form, 'fields':client_fields, 'state':[('end','Cancel', 'gtk-cancel'),('go','Create XML', 'gtk-ok')]},
         },
         'go': {
             'actions': [_create_xml],
-            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end','Ok')]},
+            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end','Ok', 'gtk-cancel')]},
         }
 
     }

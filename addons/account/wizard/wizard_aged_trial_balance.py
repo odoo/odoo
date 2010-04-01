@@ -28,7 +28,7 @@ from mx.DateTime import *
 from tools.translate import _
 
 _aged_trial_form = """<?xml version="1.0"?>
-<form string="Aged Trial Balance">
+<form string="Print Aged Trial Balance">
     <field name="company_id"/>
     <newline/>
     <field name="date1"/>
@@ -101,7 +101,7 @@ class wizard_report(wizard.interface):
     states = {
         'init': {
             'actions': [_get_defaults],
-            'result': {'type':'form', 'arch':_aged_trial_form, 'fields':_aged_trial_fields, 'state':[('end','Cancel'),('print','Print Aged Trial Balance')]},
+            'result': {'type':'form', 'arch':_aged_trial_form, 'fields':_aged_trial_fields, 'state':[('end','Cancel', 'gtk-cancel'),('print','Print', 'gtk-ok')]},
         },
         'print': {
             'actions': [_calc_dates],

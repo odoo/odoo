@@ -60,7 +60,6 @@ class report_xml(osv.osv):
             'report_sxw_content': base64.decodestring(file_sxw),
             'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read())),
         })
-        cr.commit()
         db = pooler.get_db_only(cr.dbname)
         interface.register_all(db)
         return True

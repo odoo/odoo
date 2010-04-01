@@ -609,7 +609,6 @@ are both optional, but if one occurs, so MUST the other"""),
                 cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
                                         where id=%s' % (model_obj._table, \
                                         alarm_id, basic_alarm.id, data.id))
-        cr.commit()
         return True
 
     def do_alarm_unlink(self, cr, uid, ids, model, context={}):

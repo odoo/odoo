@@ -36,7 +36,7 @@ class crm_cases(osv.osv):
     """ crm cases """
 
     _name = "crm.case"
-    _inherit = "crm.case"
+    _inherit = "crm.case"    
 
     def msg_new(self, cr, uid, msg):
 
@@ -47,19 +47,23 @@ class crm_cases(osv.osv):
 
         mailgate_obj = self.pool.get('mail.gateway')
         msg_body = mailgate_obj.msg_body_get(msg)
-        data = {
-            'name': msg['Subject'],
-            'email_from': msg['From'],
-            'email_cc': msg['Cc'],
+        msg_subject = mailgate_obj._decode_header(msg['Subject'])
+        msg_from = mailgate_obj._decode_header(msg['From'])
+        msg_cc = mailgate_obj._decode_header(msg['Cc'])
+        body = self.format_body(msg_body['body'])
+        data = {   
+            'name': msg_subject,         
+            'email_from': msg_from,
+            'email_cc': msg_cc,            
             'user_id': False,
-            'description': msg_body['body'],
+            'description': body,            
         }
-        res = mailgate_obj.partner_get(cr, uid, msg['From'])
+        res = mailgate_obj.partner_get(cr, uid, msg_from)
         if res:
             data.update(res)
-        res = self.create(cr, uid, data)
-        cases = self.browse(cr, uid, [res])
-        self._history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])
+        res = self.create(cr, uid, data)        
+        cases = self.browse(cr, uid, [res])       
+        self._history(cr, uid, cases, _('Receive'), history=True, details=body, email_from=msg_from)
         return res
 
     def msg_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
@@ -92,11 +96,11 @@ class crm_cases(osv.osv):
                 data['priority'] = msg_actions['priority']
 
         if 'partner' in msg_actions:
-            data['email_from'] = msg_actions['partner'][:128]
-
+            data['email_from'] = msg_actions['partner'][:128]        
+        msg_from = self._decode_header(msg['From'])
         res = self.write(cr, uid, select, data)
-        cases = self.browse(cr, uid, select)
-        self._history(cr, uid, cases, _('Receive'), history=True, email=msg['From'])
+        cases = self.browse(cr, uid, select)       
+        self._history(cr, uid, cases, _('Receive'), history=True, details=body_data, email_from=msg['From'])        
         getattr(self,act)(cr, uid, select)
         return res
 

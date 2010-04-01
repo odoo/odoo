@@ -45,13 +45,6 @@ AVAILABLE_PRIORITIES = [
     ('1', 'Highest')
 ]
 
-icon_lst = {
-    'form': 'STOCK_NEW',
-    'tree': 'STOCK_JUSTIFY_FILL',
-    'calendar': 'STOCK_SELECT_COLOR'
-}
-
-
 class crm_case_section(osv.osv):
     """ Cases Section"""
 
@@ -510,34 +503,8 @@ class crm_case(osv.osv):
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
-        return True
-
-    def onchange_case_id(self, cr, uid, ids, case_id, name, partner_id, context={}):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case’s IDs
-        @partner_id: Get Partner Id
-        @param context: A standard dictionary for contextual values
-        """
-
-        if not case_id:
-            return {}
-        case = self.browse(cr, uid, case_id, context=context)
-        value = {}
-        if not name:
-            value['name'] = case.name
-
-        if (not partner_id) and case.partner_id:
-            value['partner_id'] = case.partner_id.id
-
-            if case.partner_address_id:
-                value['partner_address_id'] = case.partner_address_id.id
-            if case.email_from:
-                value['email_from'] = case.email_from
-        return {'value': value}
-
+        return True    
+    
     def history(self, cr, uid, ids, keyword, history=False, email=False, details=None, context={}):
         """
         @param self: The object pointer
@@ -551,7 +518,7 @@ class crm_case(osv.osv):
                                history=history, email=email, details=details, \
                                context=context)
 
-    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, context={}):
+    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, context={}):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -577,10 +544,15 @@ class crm_case(osv.osv):
             if history:
                 obj = self.pool.get('crm.case.history')
                 data['description'] = details or case.description
-                data['email'] = email or False
-                data['email_from'] = (case.user_id and case.user_id.address_id and \
+                data['email_to'] = email or \
+                        (case.section_id and case.section_id.reply_to) or \
+                        (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or tools.config.get('email_from',False)
-            res = obj.create(cr, uid, data, context)
+                data['email_from'] = email_from or \
+                        (case.section_id and case.section_id.reply_to) or \
+                        (case.user_id and case.user_id.address_id and \
+                            case.user_id.address_id.email) or tools.config.get('email_from',False)
+            res = obj.create(cr, uid, data, context)            
         return True
     _history = __history
 
@@ -659,9 +631,7 @@ class crm_case(osv.osv):
         self.__history(cr, uid, cases, _('Send'), history=True, email=False)
         for case in cases:
             self.write(cr, uid, [case.id], {
-                'description': False, 
-                'som': False, 
-                'canal_id': False, 
+                'description': False,                
                 })
             emails = [case.email_from] + (case.email_cc or '').split(',')
             emails = filter(None, emails)
@@ -682,6 +652,7 @@ class crm_case(osv.osv):
                 reply_to = case.section_id.reply_to, 
                 openobject_id = str(case.id)
             )
+            self.__history(cr, uid, [case], _('Send'), history=True, email=emails, details=body, email_from=emailfrom)
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -845,10 +816,8 @@ class crm_case_log(osv.osv):
 
     _order = "id desc"
     _columns = {
-        'name': fields.char('Status', size=64), 
-        'som': fields.many2one('res.partner.som', 'State of Mind'), 
+        'name': fields.char('Status', size=64),
         'date': fields.datetime('Date'), 
-        'canal_id': fields.many2one('res.partner.canal', 'Channel'), 
         'section_id': fields.many2one('crm.case.section', 'Section'), 
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
         'model_id': fields.many2one('ir.model', "Model"), 
@@ -885,11 +854,11 @@ class crm_case_history(osv.osv):
         return res
 
     _columns = {
-        'description': fields.text('Description'), 
-        'note': fields.function(_note_get, method=True, string="Description", type="text"), 
-        'email': fields.char('Email', size=84), 
-        'email_from' : fields.char('From Email', size=84),
-        'log_id': fields.many2one('crm.case.log', 'Log', ondelete='cascade'), 
+        'description': fields.text('Description'),
+        'note': fields.function(_note_get, method=True, string="Description", type="text"),
+        'email_to': fields.char('Email TO', size=84),
+        'email_from' : fields.char('Email From', size=84),
+        'log_id': fields.many2one('crm.case.log','Log',ondelete='cascade'),
     }
 
 crm_case_history()
