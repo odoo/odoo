@@ -64,7 +64,7 @@ class pos_company_discount(osv.osv):
         'company_discount': fields.float('Max Discount(%)', digits=(16,2)),
         'max_diff': fields.float('Max Difference for Cashboxes', digits=(16,2)),
         'account_receivable': fields.many2one('account.account',
-            'Default Receivable', required=True, states={'draft': [('readonly', False)]}),
+            'Default Receivable', states={'draft': [('readonly', False)]}),
      }
 
 pos_company_discount()
