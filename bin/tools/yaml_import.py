@@ -217,7 +217,7 @@ class YamlInterpreter(object):
             context = self.get_context(assertion, self.eval_context)
             for id in ids:
                 record = model.browse(self.cr, self.uid, id, context)
-                for test in expressions.get('test', ''):
+                for test in expressions:
                     try:
                         success = eval(test, self.eval_context, RecordDictWrapper(record))
                     except Exception, e:
