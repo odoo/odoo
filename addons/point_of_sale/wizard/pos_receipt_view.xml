@@ -13,26 +13,19 @@
           <button icon='gtk-cancel' special="cancel"
                   string="Close" />
           <button name="print_report" string="Print Report"
-                  colspan="1" type="object" icon="gtk-ok" />
+                  colspan="1" type="object" icon="gtk-print" />
         </form>
       </field>
     </record>
 
-    <act_window name="Print Receipt"
-        res_model="pos.receipt"
-        src_model="pos.order"
-        view_mode="form"
-        target="new"
-        key2="client_action_multi"
-        id="action_report_pos_receipt"/>
 
-      <!--record id="action_report_pos_receipt" model="ir.actions.act_window">
+     <record id="action_report_pos_receipt" model="ir.actions.act_window">
             <field name="name">Receipt</field>
             <field name="res_model">pos.receipt</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
              <field name="target">new</field>
-        </record-->
+        </record>
 
 </data>
 </openerp>
