@@ -306,7 +306,10 @@ def load_information_from_description_file(module):
         if os.path.isfile(description_file):
             return eval(tools.file_open(description_file).read())
 
-    logging.warning('The module %s does not contain a description file: __openerp__.py or __terp__.py (deprecated)' % module)
+    #TODO: refactor the logger in this file to follow the logging guidelines 
+    #      for 6.0
+    logging.getLogger('addons').debug('The module %s does not contain a description file:'\
+                                      '__openerp__.py or __terp__.py (deprecated)', module)
     return {}
 
 def get_modules_with_version():
