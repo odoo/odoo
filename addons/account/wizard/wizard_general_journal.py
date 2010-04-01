@@ -57,7 +57,7 @@ class wizard_print_journal(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch': form, 'fields': fields, 'state': (('end', 'Cancel'), ('print', 'Print'))},
+            'result': {'type': 'form', 'arch': form, 'fields': fields, 'state': (('end', 'Cancel', 'gtk-cancel'), ('print', 'Print', 'gtk-ok'))},
         },
         'print': {
             'actions': [_check_data],

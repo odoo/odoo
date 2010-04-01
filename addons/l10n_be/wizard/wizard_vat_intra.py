@@ -222,11 +222,11 @@ class parter_vat_intra(wizard.interface):
     states = {
         'init': {
             'actions': [_get_europe_country],
-            'result': {'type': 'form', 'arch':form_intra, 'fields': fields_intra, 'state':[('end','Cancel'),('go','Create XML') ]}
+            'result': {'type': 'form', 'arch':form_intra, 'fields': fields_intra, 'state':[('end','Cancel', 'gtk-cancel'),('go','Create XML', 'gtk-ok') ]}
                 },
          'go': {
             'actions': [_create_xml],
-            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end','Ok')]},
+            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end','Ok', 'gtk-cancel')]},
                 }
              }
 parter_vat_intra('vat.intra.xml')

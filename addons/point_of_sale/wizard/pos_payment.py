@@ -54,16 +54,15 @@ class pos_make_payment(osv.osv_memory):
             journal = None
         wf_service = netsvc.LocalService("workflow")
 
-        order = self.pool.get('pos.order').browse(cr, uid, record_id, context)
+        order_obj=self.pool.get('pos.order')
+        order = order_obj.browse(cr, uid, record_id, context)
         #get amount to pay
         amount = order.amount_total - order.amount_paid
-        
-        if amount<=0.0:
-            context.update({'flag':True})
-            self.pool.get('pos.order').action_paid(cr,uid,[record_id],context)
+        if amount <= 0.0:
+            context.update({'flag': True})
+            order_obj.action_paid(cr, uid, [record_id], context)
         elif order.amount_paid > 0.0:
-            self.pool.get('pos.order').write(cr, uid, [record_id],{'state':'advance'})
-    
+            order_obj.write(cr, uid, [record_id], {'state': 'advance'})
         invoice_wanted_checked = False
     
         current_date = time.strftime('%Y-%m-%d')
@@ -107,13 +106,14 @@ class pos_make_payment(osv.osv_memory):
             amount = order.amount_total - order.amount_paid
             if amount==0.0:
                 res['arch'] = """ <form string="Make Payment" colspan="4">
-                    <group col="2" colspan="2">
-                        <label string="Do you want to print the Receipt?" colspan="4"/>
-                        <separator colspan="4"/>
-                        <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                        <button name="print_report" string="Print Receipt" type="object" icon="gtk-ok"/>
-                    </group>
-                </form>"""
+                                <group col="2" colspan="2">
+                                    <label string="Do you want to print the Receipt?" colspan="4"/>
+                                    <separator colspan="4"/>
+                                    <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
+                                    <button name="print_report" string="Print Receipt" type="object" icon="gtk-print"/>
+                                </group>
+                            </form>
+                        """
         return res
 
     def check(self, cr, uid, ids, context=None):
@@ -145,7 +145,11 @@ class pos_make_payment(osv.osv_memory):
             if order.partner_id and order.invoice_wanted:
                 return self.create_invoice(cr,uid,ids,context)
             else:
-                return self.print_report(cr, uid, ids, context) 
+                order_obj.write(cr, uid, [record_id],{'state':'paid'})                            
+                return self.print_report(cr, uid, ids, context)  
+        if order.amount_paid > 0.0:
+            self.pool.get('pos.order').write(cr, uid, [record_id],{'state':'advance'})
+            return self.print_report(cr, uid, ids, context)            
         return {}
 
     
@@ -175,18 +179,13 @@ class pos_make_payment(osv.osv_memory):
         datas = {'ids' : context.get('active_ids',[])}
         res =  {}        
         datas['form'] = res
-        return { 
-            'type' : 'ir.actions.report.xml',
-            'report_name':'pos.receipt',
-            'datas' : datas,               
-        }        
-    
-    def trigger_wkf(self, cr, uid, data, context):
-        record_id = context and context.get('active_id',False)              
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'pos.order', record_id, 'payment', cr)
-        return {}
-        
+
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'pos.receipt',
+            'datas': datas,
+       }
+
     _columns = {
         'journal':fields.selection(pos_box_entries.get_journal, "Journal",required=True),
         'product_id': fields.many2one('product.product', "Acompte"),

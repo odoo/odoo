@@ -2,24 +2,24 @@
 <openerp>
 <data>
 
-    <!--   pos.details -->
+    <!--   Pos Receipt -->
 
-    <record id="view_pos_receipt" model="ir.ui.view">
-      <field name="name">Receipt</field>
-      <field name="model">pos.receipt</field>
-      <field name="type">form</field>
-      <field name="arch" type="xml">
-        <form string="Receipt :">
-          <button icon='gtk-cancel' special="cancel"
-                  string="Close" />
-          <button name="print_report" string="Print Report"
-                  colspan="1" type="object" icon="gtk-print" />
-        </form>
-      </field>
-    </record>
+		<record id="view_pos_receipt" model="ir.ui.view">
+		      <field name="name">Receipt</field>
+		      <field name="model">pos.receipt</field>
+		      <field name="type">form</field>
+		      <field name="arch" type="xml">
+		        <form string="Receipt :">
+		          <button icon='gtk-cancel' special="cancel"
+		                  string="Close" />
+		          <button name="print_report" string="Print Report"
+		                  colspan="1" type="object" icon="gtk-print" />
+		        </form>
+		      </field>
+    	</record>
 
 
-     <record id="action_report_pos_receipt" model="ir.actions.act_window">
+      <record id="action_report_pos_receipt" model="ir.actions.act_window">
             <field name="name">Receipt</field>
             <field name="res_model">pos.receipt</field>
             <field name="view_type">form</field>

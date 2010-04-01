@@ -69,8 +69,8 @@ class wizard_report(wizard.interface):
 				'arch': dates_form,
 				'fields': dates_fields,
 				'state': [
-					('end', 'Cancel'),
-					('report', 'Print VAT Decl.')
+					('end', 'Cancel', 'gtk-cancel'),
+					('report', 'Print VAT Decl.', 'gtk-ok')
 				]
 			}
 		},
