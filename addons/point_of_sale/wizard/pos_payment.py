@@ -111,7 +111,7 @@ class pos_make_payment(osv.osv_memory):
                                     <label string="Do you want to print the Receipt?" colspan="4"/>
                                     <separator colspan="4"/>
                                     <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                                    <button name="print_report" string="Print Receipt" type="object" icon="gtk-ok"/>
+                                    <button name="print_report" string="Print Receipt" type="object" icon="gtk-print"/>
                                 </group>
                             </form>
                         """
@@ -143,7 +143,11 @@ class pos_make_payment(osv.osv_memory):
             if order.partner_id and order.invoice_wanted:
                 return self.create_invoice(cr, uid, ids, context)
             else:
-                return self.print_report(cr, uid, ids, context)
+                order_obj.write(cr, uid, [record_id],{'state':'paid'})                            
+                return self.print_report(cr, uid, ids, context)  
+        if order.amount_paid > 0.0:
+            self.pool.get('pos.order').write(cr, uid, [record_id],{'state':'advance'})
+            return self.print_report(cr, uid, ids, context)            
         return {}
 
     def create_invoice(self, cr, uid, ids, context):
