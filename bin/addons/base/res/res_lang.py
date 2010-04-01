@@ -62,7 +62,7 @@ class lang(osv.osv):
     ]
 
     @tools.cache(skiparg=3)
-    def _lang_data_get(self, cr, uid, lang_id):
+    def _lang_data_get(self, cr, uid, lang_id, monetary=False):
         conv = localeconv()
 
         lang_obj = self.browse(cr, uid, lang_id)
@@ -70,6 +70,11 @@ class lang(osv.osv):
         decimal_point = lang_obj.decimal_point
         grouping = lang_obj.grouping
         return (grouping, thousands_sep, decimal_point)
+        
+    def write(self, cr, uid, ids, vals, context=None):
+        for lang_id in ids :
+            self._lang_data_get.clear_cache(cr.dbname,lang_id=lang_id)
+        return super(lang, self).write(cr, uid, ids, vals, context)
 
     def _group(self,cr,uid,ids,s, monetary=False, grouping=False, thousands_sep=''):
         grouping = eval(grouping)
@@ -114,7 +119,7 @@ class lang(osv.osv):
         if percent[0] != '%':
             raise ValueError("format() must be given exactly one %char format specifier")
 
-        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0])
+        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0], monetary)
 
         formatted = percent % value
         # floats and decimal ints need special action!
