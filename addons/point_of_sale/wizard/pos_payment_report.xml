@@ -8,10 +8,8 @@
             <field name="model">pos.payment.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS Details :">
+                <form string="Payment Report">
 				    <group col="2" colspan="4">
-				    	<field name="date_start"/>
-				    	<field name="date_end"/>
                 		<button icon='gtk-cancel' special="cancel"
                 			string="Close" />
                 		<button name="print_report" string="Print Report"
@@ -24,7 +22,7 @@
         <record id="action_pos_payment_report" model="ir.actions.act_window">
             <field name="name">Payment Report</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.details</field>
+            <field name="res_model">pos.payment.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
