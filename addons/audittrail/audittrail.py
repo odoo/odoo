@@ -320,7 +320,7 @@ class audittrail_objects_proxy(objects_proxy):
             logged_uids = []
             model_name = proxy._name
 
-            fct_src = super(audittrail_models_proxy, self).execute
+            fct_src = super(audittrail_objects_proxy, self).execute
 
             field = method
             rule = False
