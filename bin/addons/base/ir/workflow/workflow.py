@@ -151,7 +151,6 @@ class wkf_transition(osv.osv):
         'condition': fields.char('Condition', required=True, size=128),
         'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade'),
         'act_to': fields.many2one('workflow.activity', 'Destination Activity', required=True, select=True, ondelete='cascade'),
-        'workflow_id': fields.related('act_from', 'wkf_id', type='many2one', relation='workflow', string='Workflow'),
     }
     _defaults = {
         'condition': lambda *a: 'True',
