@@ -43,22 +43,22 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Sale Orders">
-                <filter icon="terp-sale" 
-                    string="This Year" 
-                    domain="[('year','=',time.strftime('%%Y'))]" 
+                <filter icon="terp-sale"
+                    string="This Year"
+                    domain="[('year','=',time.strftime('%%Y'))]"
                     default="1"
                     help="Sales orders of the year"/>
                 <filter icon="terp-sale"
-                    string="This Month" 
+                    string="This Month"
                     default="1"
-                    domain="[('month','=',time.strftime('%%m'))]" 
+                    domain="[('month','=',time.strftime('%%m'))]"
                     help="Sales orders of this month"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-sale"
-                    string="Quotations" 
+                    string="Quotations"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-sale"
-                    string="Sales" 
+                    string="Sales"
                     default="1"
                     domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
                 <separator orientation="vertical"/>
@@ -99,5 +99,134 @@
     <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="8"/>
     <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="3"/>
 
+ <!-- This views used in board_sale module -->
+     <record id="view_sale_order_by_clients_tree" model="ir.ui.view">
+        <field name="name">sale.order.by.clients.tree</field>
+        <field name="model">sale.order.by.clients</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sales order by clients">
+                <field name="partner_id"/>
+                <field name="total_orders"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sale_order_by_clients_graph" model="ir.ui.view">
+         <field name="name">sale.order.by.clients.graph</field>
+         <field name="model">sale.order.by.clients</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Sales order by clients" type="bar">
+                 <field name="partner_id" />
+                 <field name="total_orders" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_sale_order_by_clients" model="ir.actions.act_window">
+        <field name="name">Sales Orders</field>
+        <field name="res_model">sale.order.by.clients</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="view_id" ref="view_sale_order_by_clients_tree"/>
+    </record>
+
+   <record id="view_uninvoiced_lines_per_month_tree" model="ir.ui.view">
+        <field name="name">uninvoiced.lines.per.month.tree</field>
+        <field name="model">uninvoiced.lines.per.month</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Uninvoiced lines per month">
+                <field name="year"/>
+                <field name="month"/>
+                <field name="number_of_lines"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_uninvoiced_lines_per_month_graph" model="ir.ui.view">
+         <field name="name">uninvoiced.lines.per.month.graph</field>
+         <field name="model">uninvoiced.lines.per.month</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Uninvoiced lines per month" type="bar">
+                 <field name="month" />
+                 <field name="number_of_lines" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_suninvoiced_lines_per_month" model="ir.actions.act_window">
+        <field name="name">Uninvoiced Lines</field>
+        <field name="res_model">uninvoiced.lines.per.month</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="view_id" ref="view_uninvoiced_lines_per_month_tree"/>
+    </record>
+
+       <record id="view_product_bought_by_sale_order_tree" model="ir.ui.view">
+        <field name="name">product.bought.by.sale.order.tree</field>
+        <field name="model">product.bought.by.sale.order</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Product bought by sale order">
+                <field name="name"/>
+                <field name="total_products"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_product_bought_by_sale_order_graph" model="ir.ui.view">
+         <field name="name">product.bought.by.sale.order.graph</field>
+         <field name="model">product.bought.by.sale.order</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Product bought by sale order" type="bar">
+                 <field name="name"/>
+                 <field name="total_products" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_product_bought_by_sale_order" model="ir.actions.act_window">
+        <field name="name">Product bought by sale order</field>
+        <field name="res_model">product.bought.by.sale.order</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="view_id" ref="view_product_bought_by_sale_order_tree"/>
+    </record>
+
+   <record id="view_sales_by_regions_tree" model="ir.ui.view">
+        <field name="name">sales.by.regions.tree</field>
+        <field name="model">sales.by.regions</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sales by regions">
+                <field name="name"/>
+                <field name="total_sales"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sales_by_regions_graph" model="ir.ui.view">
+         <field name="name">sales.by.regions.graph</field>
+         <field name="model">sales.by.regions</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Sales by regions" type="bar">
+                 <field name="name"/>
+                 <field name="total_sales" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_sales_by_regions" model="ir.actions.act_window">
+        <field name="name">Sales by regions</field>
+        <field name="res_model">sales.by.regions</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="view_id" ref="view_sales_by_regions_tree"/>
+    </record>
 </data>
 </openerp>

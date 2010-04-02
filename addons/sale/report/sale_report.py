@@ -89,3 +89,125 @@ class sale_report(osv.osv):
         """)
 sale_report()
 
+class sale_order_by_clients(osv.osv):
+    _name = "sale.order.by.clients"
+    _description = "Sales order by clients"
+    _auto = False
+    _rec_name = 'partner'
+    _columns = {
+        'total_orders': fields.integer('Total'),
+        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True)
+    }
+    _order = 'total_orders desc'
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'sale_order_by_clients')
+        cr.execute("""
+            create or replace view sale_order_by_clients as (
+                 select
+                     min(s.id) as id,
+                     count(*) as total_orders,
+                     s.partner_id as partner_id
+                 from
+                      sale_order s
+                 where
+                    s.state='manual' or s.state='progress'
+                 group by
+                        s.partner_id
+            )
+        """)
+sale_order_by_clients()
+
+class uninvoiced_lines_per_month(osv.osv):
+    _name = "uninvoiced.lines.per.month"
+    _description = "Uninvoiced lines per month"
+    _auto = False
+    _rec_name = 'month'
+    _columns = {
+        'number_of_lines': fields.integer('Total Lines', readonly=True),
+        'year': fields.char('Year', size=10, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
+            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+
+    }
+    _order = 'number_of_lines desc'
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'uninvoiced_lines_per_month')
+        cr.execute("""
+            create or replace view uninvoiced_lines_per_month as (
+                select
+                     min(s.id) as id,
+                     count(*) as number_of_lines,
+                     to_char(s.create_date, 'MM') as month,
+                     to_char(s.create_date, 'YYYY') as year
+                from
+                     sale_order_line s
+                where
+                     s.state='draft'
+                group by
+                     to_char(s.create_date, 'MM'),to_char(s.create_date, 'YYYY')
+            )
+        """)
+uninvoiced_lines_per_month()
+
+class product_bought_by_sale_order(osv.osv):
+    _name = "product.bought.by.sale.order"
+    _description = "Product bought by sale order"
+    _auto = False
+    _rec_name = 'partner'
+    _columns = {
+        'total_products': fields.integer('Total Products', readonly=True),
+        'name': fields.char('Sale order', size=64, readonly=True)
+    }
+    _order = 'total_products desc'
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'product_bought_by_sale_order')
+        cr.execute("""
+            create or replace view product_bought_by_sale_order as (
+                select
+                    min(s.id) as id,
+                    count(*) as total_products,
+                    s.name as name
+                from
+                    sale_order_line l
+                left join
+                    sale_order s on (s.id=l.order_id)
+                where
+                    s.state='manual' or s.state='progress'
+                group by
+                    s.name
+            )
+        """)
+product_bought_by_sale_order()
+
+class sales_by_regions(osv.osv):
+    _name = "sales.by.regions"
+    _description = "Sales by regions"
+    _auto = False
+    _rec_name = 'name'
+    _columns = {
+        'total_sales': fields.integer('Total Sales', readonly=True),
+        'name': fields.char('Country', size=64, readonly=True),
+    }
+    _order = 'total_sales desc'
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'sales_by_regions')
+        cr.execute("""
+            create or replace view sales_by_regions as (
+               select
+                   min(s.id) as id,
+                   rc.name as name,
+                   count(s.name) as total_sales
+               from
+                   sale_order s,res_partner_address p,res_country rc
+               where
+                   s.partner_id=p.id and
+                   p.country_id=rc.id and
+                   (s.state='manual' or s.state='progress')
+               group by
+                   rc.name
+            )
+        """)
+sales_by_regions()
+
+
