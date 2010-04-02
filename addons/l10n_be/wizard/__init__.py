@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import account_vat_declaration
+#import account_vat_declaration
 import partner_vat_listing
 import wizard_vat_intra
 import l10n_be_account_vat_declaration
