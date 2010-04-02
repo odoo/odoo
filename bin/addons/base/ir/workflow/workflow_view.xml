@@ -35,8 +35,8 @@
 				    <field name="kind"/>
 				  </node>
 				  <arrow object="workflow.transition" source="act_from" destination="act_to" signal="signal">
-				    <field name="act_from"/>
-				    <field name="act_to"/>
+				    <field name="act_from" domain="[('wkf_id','=', workflow_id)]"/>
+				    <field name="act_to" domain="[('wkf_id','=', workflow_id)]"/>
 				    <field name="signal"/>
 				  </arrow>
 				</diagram>
