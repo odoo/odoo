@@ -43,6 +43,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Invoices">
+            	<group>
                 <filter icon="terp-account"
                     string="This Year"
                     domain="[('year','=',time.strftime('%%Y'))]"
@@ -67,7 +68,7 @@
                 </field>
                 <field name="partner_id"/>
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-
+				</group>
                 <newline/>
                 <group expand="1" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-account"

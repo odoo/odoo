@@ -39,6 +39,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Recruitments">
+            	<group>
                 <filter icon="terp-hr"
                     string="This Year"
                     domain="[('year','=',time.strftime('%%Y'))]"
@@ -59,6 +60,7 @@
                         default="1"
                         domain="[('user_id','=',uid)]"/>
                 </field>
+                </group>
                 <newline/>
                 <group expand="1" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-hr"
