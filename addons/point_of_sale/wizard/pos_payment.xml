@@ -24,10 +24,10 @@
 				    	<field name="product_id" attrs="{'required':[('is_acc', '=', True)]}" domain="[('type','=','service')]"/>
 				    </group>
 				    <newline/>
-				    <separator orientation="vertical"/>
-            		<button icon='gtk-cancel' special="cancel" string="Cancel" />
-					<button name="trigger_wkf" string="Finish" colspan="1" type="object" icon="gtk-ok"/>	
-					<button name="check" string="Make Payment" colspan="1" type="object" icon="gtk-ok"/>	
+				    <group col="2" colspan="4">
+	            		<button icon='gtk-cancel' special="cancel"  string="Cancel" />
+						<button name="check" string="Make Payment" colspan="1" type="object" icon="gtk-ok"/>
+					</group>	
 				 </group>
 				</form>
             </field>
