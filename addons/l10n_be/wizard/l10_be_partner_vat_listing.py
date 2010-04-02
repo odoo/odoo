@@ -21,9 +21,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
-import datetime
 import base64
 
 from tools.translate import _
@@ -38,7 +36,7 @@ class vat_listing_clients(osv.osv_memory):
         'country': fields.char('Country', size=64),
         'amount': fields.float('Amount'),
         'turnover': fields.float('Turnover'),
-                }
+            }
 
 vat_listing_clients()
 
@@ -53,9 +51,9 @@ class partner_vat(osv.osv_memory):
         obj_model_data = self.pool.get('ir.model.data')
         data  = self.read(cursor, user, ids)[0]
         period = obj_period.search(cursor, user, [('fiscalyear_id', '=', data['fyear'])], context=context)
-        p_id_list = obj_partner.search(cursor, user, [('vat_subjected','!=',False)], context=context)
+        p_id_list = obj_partner.search(cursor, user, [('vat_subjected', '!=', False)], context=context)
         if not p_id_list:
-             raise osv.except_osv(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
+             raise osv.except_osv(_('Data Insufficient!'), _('No partner has a VAT Number asociated with him.'))
         partners = []
         records = []
         for obj_partner in obj_partner.browse(cursor, user, p_id_list, context=context):
@@ -99,7 +97,7 @@ class partner_vat(osv.osv_memory):
             record['turnover'] = 0
             record['name'] = obj_partner.name
             for item in line_info:
-                if item[0]=='produit':
+                if item[0] == 'produit':
                     record['turnover'] += item[1]
                 else:
                     record['amount'] += item[1]
@@ -140,8 +138,12 @@ class partner_vat_list(osv.osv_memory):
         'file_save' : fields.binary('Save File', readonly=True),
         }
 
-    def get_partners(self, cursor, user, context={}):
+    def _get_partners(self, cursor, user, context={}):
         return context.get('partner_ids', [])
+
+    _defaults={
+        'partner_ids': _get_partners
+            }
 
     def create_xml(self, cursor, user, ids, context={}):
         datas=[]
@@ -197,10 +199,10 @@ class partner_vat_list(osv.osv_memory):
             else:
                 client_data = obj_vat_lclient.read(cursor, user, partner, context=context)
                 datas.append(client_data)
-        seq=0
-        data_clientinfo=''
-        sum_tax=0.00
-        sum_turnover=0.00
+        seq = 0
+        data_clientinfo = ''
+        sum_tax = 0.00
+        sum_turnover = 0.00
         if len(error_message):
             msg ='Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
             return msg
@@ -218,13 +220,8 @@ class partner_vat_list(osv.osv_memory):
         data_file += tools.ustr(data_decl) + tools.ustr(data_comp) + tools.ustr(data_period) + tools.ustr(data_clientinfo) + '\n</VatList>'
         msg = 'Save the File with '".xml"' extension.'
         file_save = base64.encodestring(data_file.encode('utf8'))
-
         self.write(cursor, user, ids, {'file_save':file_save, 'msg':msg, 'name':'vat_list.xml'}, context=context)
         return True
-
-    _defaults={
-        'partner_ids': get_partners
-            }
 
 partner_vat_list()
 

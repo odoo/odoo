@@ -23,5 +23,4 @@ import l10_be_partner_vat_listing
 import l10n_be_vat_intra
 import l10n_be_account_vat_declaration
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

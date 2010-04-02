@@ -18,10 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
-{
-    'name': 'Belgium - Plan Comptable Minimum Normalise',
+{   'name': 'Belgium - Plan Comptable Minimum Normalise',
     'version': '1.1',
     'category': 'Localisation/Account Charts',
     'description': """
@@ -34,8 +31,12 @@
     * This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
 
     Wizards provided by this module:
-    * Enlist the partners with their related VAT  and invoiced amounts.Prepares an XML file format.Path to access : Financial Management/Reporting/Listing of VAT Customers.
-    * Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.Path to access : Financial Management/Reporting/Listing of VAT Customers.
+    * Partner VAT Intra: Enlist the partners with their related VAT and invoiced amounts.Prepares an XML file format.
+                           Path to access : Financial Management/Reporting//Legal Statements/Belgium Statements/Partner VAT Listing
+    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.
+                           Path to access : Financial Management/Reporting/Legal Statements/Belgium Statements/Periodical VAT Declaration
+    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.Based on Fiscal year
+                           Path to access : Financial Management/Reporting/Legal Statements/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
     'author': 'Tiny',
@@ -57,9 +58,7 @@
                 'fiscal_templates.xml',
                 'security/ir.model.access.csv'
                    ],
-    'demo_xml': [
-                    'account.report.report.csv'
-                ],
+    'demo_xml': ['account.report.report.csv'],
     'installable': True,
     'certificate': '0031977724637',
 }

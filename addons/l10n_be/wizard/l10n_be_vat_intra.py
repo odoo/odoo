@@ -19,7 +19,6 @@
 #
 ##############################################################################
 import time
-import datetime
 import base64
 
 from osv import osv, fields
@@ -42,7 +41,7 @@ class partner_vat_intra(osv.osv_memory):
                                         'Trimester Number', required=True, help="It will be the first digit of period"),
         'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
         'mand_id' : fields.char('MandataireId', size=14, required=True,  help="This identifies the representative of the sending company. This is a string of 14 characters"),
-        'fyear': fields.many2one('account.fiscalyear','Fiscal Year', required=True),
+        'fyear': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save' : fields.binary('Save File', readonly=True),
         'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
@@ -50,7 +49,7 @@ class partner_vat_intra(osv.osv_memory):
 
     _defaults = {
         'country_ids': _get_europe_country,
-    }
+                }
 
     def create_xml(self, cursor, user, ids, context={}):
         obj_user = self.pool.get('res.users')

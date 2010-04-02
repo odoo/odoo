@@ -17,26 +17,27 @@
 						    <page string="General Information">
 							    <label string="This wizard will create an XML file for Vat Intra" colspan="4"/>
 							    <newline/>
-							    <field name="fyear" />
+							    <field name="fyear" default_focus="1" />
 							    <newline/>
 							    <field name="mand_id"/>
 							    <newline/>
 							    <field name="trimester"/>
 							    <newline/>
 							    <field name="test_xml"/>
+							    <newline/>
+								<button colspan="4" name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
+				           	 	<separator colspan="4"/>
+				              	<group colspan="4" >
+									<field name="msg" nolabel="1" colspan="4"/>
+							    	<field name="file_save" readonly="True"/>
+							    </group>
+				              	<button special="cancel" colspan="4" string="Cancel" icon="gtk-cancel"/>
 						    </page>
 						    <page string="European Countries">
 						    	<field name="country_ids" colspan="4" nolabel="1" />
 						    </page>
 						</notebook>
 						<newline/>
-						<button colspan="1" name="create_xml" string="Create XML" type="object" default_focus="1" icon="gtk-execute"/>
-		           	 	<separator colspan="4"/>
-		              	<group colspan="4" >
-							<field name="msg" nolabel="1" colspan="4"/>
-					    	<field name="file_save" readonly="True"/>
-					    </group>
-		              	<button special="cancel" string="Cancel" icon="gtk-cancel"/>
 				</form>
             </field>
 		</record>
@@ -52,7 +53,7 @@
     	</record>
 
 	    <menuitem
-	        name="Partner VAT intra"
+	        name="Partner VAT Intra"
 	        parent="menu_finance_belgian_statement"
 	        action="action_vat_intra"
 	        id="l10_be_vat_intra"/>

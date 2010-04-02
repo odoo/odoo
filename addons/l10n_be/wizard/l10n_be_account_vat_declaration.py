@@ -18,15 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
-import datetime
 import base64
 
 from osv import osv, fields
 from tools.translate import _
 
 class l10n_be_vat_declaration(osv.osv_memory):
-    """ Vat Declaration """
+    """ Periodical VAT Declaration """
     _name = "l1on_be.vat.declaration"
     _description = "Vat Declaration"
 
@@ -38,7 +36,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
 
     _defaults = {
         'msg': lambda *a:'''Save the File with '".xml"' extension.''',
-    }
+                }
 
     def create_xml(self, cr, uid, ids, context={}):
         obj_fyear = self.pool.get('account.fiscalyear')
@@ -87,9 +85,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
             #starting month and ending month of selected period are not the same
             #it means that the accounting isn't based on periods of 1 month but on quarters
             quarter = str(((int(starting_month) - 1) / 3) + 1)
-            data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
+            data_of_file += '<QUARTER>' + quarter + '</QUARTER>\n\t\t\t'
         else:
-            data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
+            data_of_file += '<MONTH>' + starting_month + '</MONTH>\n\t\t\t'
         data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
@@ -98,7 +96,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
                 if item['code'] == '71-72':
                     item['code'] = '71'
                 if item['code'] in list_of_tags:
-                    data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(int(item['sum_period']*100)) +  '</D'+str(int(item['code'])) +'>'
+                    data_of_file +='\n\t\t\t\t<D' + str(int(item['code'])) +'>' + str(int(item['sum_period']*100)) +  '</D'+str(int(item['code'])) +'>'
 
         data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
         data['file_save'] = base64.encodestring(data_of_file)
