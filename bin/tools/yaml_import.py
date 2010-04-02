@@ -541,7 +541,7 @@ class YamlInterpreter(object):
             ids = [self.get_id(node.id)]
         if len(ids):
             self.pool.get(node.model).unlink(self.cr, self.uid, ids)
-            self.pool.get('ir.model.data')._unlink(self.cr, self.uid, node.model, ids, direct=True)
+            self.pool.get('ir.model.data')._unlink(self.cr, self.uid, node.model, ids)
     
     def process_url(self, node):
         self.validate_xml_id(node.id)
