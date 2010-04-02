@@ -29,7 +29,7 @@ import pooler
 import copy
 import sys
 import traceback
-
+import logging
 from psycopg2 import IntegrityError
 from tools.func import wraps
 
