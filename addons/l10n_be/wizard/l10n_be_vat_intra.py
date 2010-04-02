@@ -18,26 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import osv, fields
 import time
 import datetime
 import base64
 
+from osv import osv, fields
 
 class partner_vat_intra(osv.osv_memory):
 
     """ Partner Vat Intra"""
     _name = "partner.vat.intra"
+    _description = 'Partner VAT Intra'
 
     def _get_europe_country(self, cursor, user, context={}):
         obj_country = self.pool.get('res.country')
-        country_ids = obj_country.search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
-        return country_ids
+        return obj_country.search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
 
     _columns = {
-        'trimester': fields.selection(
-                                      [('1','Jan/Feb/Mar'),
+        'trimester': fields.selection( [('1','Jan/Feb/Mar'),
                                        ('2','Apr/May/Jun'),
                                        ('3','Jul/Aug/Sep'),
                                        ('4','Oct/Nov/Dec')],
@@ -48,13 +46,13 @@ class partner_vat_intra(osv.osv_memory):
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save' : fields.binary('Save File', readonly=True),
         'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
-    }
+        }
 
     _defaults = {
         'country_ids': _get_europe_country,
     }
 
-    def create_xml(self, cursor, user, ids, context):
+    def create_xml(self, cursor, user, ids, context={}):
         obj_user = self.pool.get('res.users')
         obj_fyear = self.pool.get('account.fiscalyear')
         obj_sequence = self.pool.get('ir.sequence')
