@@ -535,14 +535,10 @@ class YamlInterpreter(object):
         # TODO add remove ir.model.data
 
     def process_delete(self, node):
-        ids = []
         if len(node.search):
             ids = self.pool.get(node.model).search(self.cr, self.uid, eval(node.search, self.eval_context))
-        if len(node.id):
-            try:
-                ids.append(self.get_id(node.id))
-            except:
-                pass
+        else:
+            ids = [self.get_id(node.id)]
         if len(ids):
             self.pool.get(node.model).unlink(self.cr, self.uid, ids)
             self.pool.get('ir.model.data')._unlink(self.cr, self.uid, node.model, ids, direct=True)
