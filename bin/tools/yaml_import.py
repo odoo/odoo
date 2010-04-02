@@ -286,26 +286,39 @@ class YamlInterpreter(object):
             record_dict[field_name] = field_value
         return record_dict        
     
+    def process_ref(self, node, column=None):
+        if node.search:
+            if node.model:
+                model_name = node.model
+            elif column:
+                model_name = column._obj
+            else:
+                raise YamlImportException('You need to give a model for the search, or a column to infer it.')
+            model = self.get_model(model_name)
+            q = eval(node.search, self.eval_context)
+            ids = model.search(self.cr, self.uid, q)
+            if node.use:
+                instances = model.browse(self.cr, self.uid, ids)
+                value = [inst[node.use] for inst in instances]
+            else:
+                value = ids
+        elif node.id:
+            value = self.get_id(node.id)
+        else:
+            value = None
+        return value
+    
+    def process_eval(self, node):
+        return eval(node.expression, self.eval_context)
+    
     def _eval_field(self, model, field_name, expression):
         column = model._columns[field_name]
         if is_ref(expression):
-            if expression.model:
-                other_model_name = expression.model
-            else:
-                other_model_name = column._obj
-            other_model = self.get_model(other_model_name)
-            if expression.search:
-                q = eval(expression.search, self.eval_context)
-                ids = other_model.search(self.cr, self.uid, q)
-                if expression.use:
-                    instances = other_model.browse(self.cr, self.uid, ids)
-                    elements = [inst[expression.use] for inst in instances]
-                else:
-                    elements = ids
-                if column._type in ("many2many", "one2many"):
-                    value = [(6, 0, elements)]
-                else: # many2one
-                    value = self._get_first_result(elements)
+            elements = self.process_ref(expression)
+            if column._type in ("many2many", "one2many"):
+                value = [(6, 0, elements)]
+            else: # many2one
+                value = self._get_first_result(elements)
         elif column._type == "many2one":
             value = self.get_id(expression)
         elif column._type == "one2many":
@@ -316,7 +329,7 @@ class YamlInterpreter(object):
             value = [(6, 0, ids)]
         else: # scalar field
             if is_eval(expression):
-                value = eval(expression.expression, self.eval_context)
+                value = self.process_eval(expression)
             else:
                 value = expression
             # raise YamlImportException('Unsupported column "%s" or value %s:%s' % (field_name, type(expression), expression))
@@ -372,6 +385,32 @@ class YamlInterpreter(object):
             uid = self.uid
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
+    
+    def _eval_params(self, model, params):
+        args = []
+        for i, param in enumerate(params):
+            if isinstance(param, types.ListType):
+                value = self._eval_params(model, param)
+            elif is_ref(param):
+                value = self.process_ref(param)
+            elif is_eval(param):
+                value = self.process_eval(param)
+            elif isinstance(param, types.DictionaryType): # supports XML syntax
+                param_model = self.get_model(param.get('model', model))
+                if 'search' in param:
+                    q = eval(param['search'], self.eval_context)
+                    ids = param_model.search(cr, uid, q)
+                    value = self._get_first_result(ids)
+                elif 'eval' in param:
+                    local_context = {'obj': lambda x: param_model.browse(self.cr, self.uid, x, context)}
+                    local_context.update(self.id_map)
+                    value = eval(param['eval'], self.eval_context, local_context)
+                else:
+                    raise YamlImportException('You must provide either a !ref or at least a "eval" or a "search" to function parameter #%d.' % i)
+            else:
+                value = param # scalar value
+            args.append(value)
+        return args
         
     def process_function(self, node):
         function, params = node.items()[0]
@@ -379,25 +418,10 @@ class YamlInterpreter(object):
             return
         model = self.get_model(function.model)
         context = self.get_context(function, self.eval_context)
-        args = []
         if function.eval:
-            args = eval(function.eval, self.eval_context)
-        for i, param in enumerate(params):
-            if 'model' in param:
-                param_model = self.get_model(param['model'])
-            else:
-                param_model = model
-            if 'search' in param:
-                q = eval(param['search'], self.eval_context)
-                ids = param_model.search(cr, uid, q)
-                value = self._get_first_result(ids)
-            elif 'eval' in param:
-                local_context = {'obj': lambda x: value_model.browse(self.cr, self.uid, x, context)}
-                local_context.update(self.id_map)
-                value = eval(param['eval'], self.eval_context, local_context)
-            else:
-                raise YamlImportException('You must provide at least a "eval" or a "search" to function parameter #%d.' % i)
-            args.append(value)
+            args = self.process_eval(function.eval)
+        else:
+            args = self._eval_params(function.model, params)
         method = function.name
         getattr(model, method)(self.cr, self.uid, *args)
     

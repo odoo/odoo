@@ -87,10 +87,9 @@ class Eval(YamlTag):
         super(Eval, self).__init__()
     
 class Ref(YamlTag):
-    # 'model' parameter is optional since it defaults to the column type
-    def __init__(self, search):
-        self.search = search
-        super(Ref, self).__init__()
+    def __init__(self, *args, **kwargs):
+        print "kwargs %s" % kwargs
+        super(Ref, self).__init__(*args, **kwargs)
     
 class IrSet(YamlTag):
     def __init__(self):
@@ -144,8 +143,11 @@ def eval_constructor(loader, node):
     expression = loader.construct_scalar(node)
     return Eval(expression)
     
-def ref_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
+def ref_constructor(loader, tag_suffix, node):
+    if tag_suffix == "id":
+        kwargs = {"id": loader.construct_scalar(node)}
+    else:
+        kwargs = loader.construct_mapping(node)
     return Ref(**kwargs)
     
 def ir_set_constructor(loader, node):
@@ -167,5 +169,5 @@ yaml.add_constructor(u"!context", context_constructor)
 yaml.add_constructor(u"!delete", delete_constructor)
 yaml.add_constructor(u"!url", url_constructor)
 yaml.add_constructor(u"!eval", eval_constructor)
-yaml.add_constructor(u"!ref", ref_constructor)
+yaml.add_multi_constructor(u"!ref", ref_constructor)
 yaml.add_constructor(u"!ir_set", ir_set_constructor)
