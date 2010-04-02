@@ -20,84 +20,60 @@
 ##############################################################################
 
 from osv import fields, osv
-from service import web_services
-from tools.misc import UpdateableStr, UpdateableDict
-from tools.translate import _
 import netsvc
-import pooler
-import time
-import wizard
 
 class stock_picking_make(osv.osv_memory):
-    _name = "stock.picking.make"
-    _description = "Make picking"
+    _name = 'stock.picking.make'
+    _description = "Make Picking"
+
     _columns = {
-            'pickings': fields.many2many('stock.picking','picking_rel', 'stock_id', 'pick_id', 'Picking', required=True),
-            }
-
-ARCH = '''<?xml version="1.0"?>
-<form string="Make picking">
-    <field name="pickings" nolabel="1" colspan="4"
-        width="600" height="300"/>
-</form>'''
-
-FIELDS = {
-    'pickings': {
-        'string': 'Picking',
-        'type': 'many2many',
-        'relation': 'stock.picking',
-        'readonly': True,
-    },
-}
-
-def _get_value(obj, cursor, user, data, context):
-    pool = pooler.get_pool(cursor.dbname)
-    picking_obj = pool.get('stock.picking')
-
-    picking_ids = picking_obj.search(cursor, user, [
-        ('id', 'in', data['ids']),
-        ('state', '<>', 'done'),
-        ('state', '<>', 'cancel')], context=context)
-    return {'pickings': picking_ids}
-
-def _make_packing(obj, cursor, user, data, context):
-    wkf_service = netsvc.LocalService('workflow')
-    pool = pooler.get_pool(cursor.dbname)
-    picking_obj = pool.get('stock.picking')
-    ids = data['form']['pickings'][0][2]
-    print"-------ids--------",ids
-    picking_obj.force_assign(cursor, user, ids)
-    picking_obj.action_move(cursor, user, ids)
-    for picking_id in ids:
-        wkf_service.trg_validate(user, 'stock.picking', picking_id,
-                'button_done', cursor)
-    return {}
-
-class stock_picking_make(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_get_value],
-            'result': {
-                'type': 'form',
-                'arch': ARCH,
-                'fields': FIELDS,
-                'state': [
-                    ('end', 'Cancel', 'gtk-cancel'),
-                    ('make', 'Ok', 'gtk-apply', True)
-                ],
-            },
-        },
-        'make': {
-            'actions': [_make_packing],
-            'result': {
-                'type': 'state',
-                'state':'end',
-            },
-        },
+        'picking_ids': fields.many2many('stock.picking', 'stock_picking_ids', 'parent_id', 'child_id', 'Pickings'),
     }
 
-stock_picking_make('stock.picking.make')
+    def default_get(self, cursor, user, fields, context):
+        """
+         To get default values for the object.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary
+         @return: A dictionary which of fields with values.
+        """
+        res = super(stock_picking_make, self).default_get(cursor, user, fields, context=context)
+        record_ids = context and context.get('active_ids',False) or False
+        if record_ids:
+            picking_obj = self.pool.get('stock.picking')
+            picking_ids = picking_obj.search(cursor, user, [
+                ('id', 'in', record_ids),
+                ('state', '<>', 'done'),
+                ('state', '<>', 'cancel')], context=context)
+            res['picking_ids'] = picking_ids
+        return res
+
+    def make_packing(self, cursor, user, ids, context):
+        """
+         Make Picking.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary
+         @return: A dictionary which of fields with values.
+        """
+        record_ids = context and context.get('active_ids',False) or False
+        wkf_service = netsvc.LocalService('workflow')
+        picking_obj = self.pool.get('stock.picking')
+        data = self.read(cursor, user, ids[0])
+        pick_ids = data['picking_ids']
+        picking_obj.force_assign(cursor, user, pick_ids)
+        picking_obj.action_move(cursor, user, pick_ids)
+        for picking_id in ids:
+            wkf_service.trg_validate(user, 'stock.picking', picking_id,
+                    'button_done', cursor)
+        return {}
+
+stock_picking_make()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
