@@ -36,7 +36,7 @@ compute_form = """<?xml version="1.0" ?>
 </form>"""
 
 compute_fields = {
-    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project'},
+    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project', 'help': 'If you do not specify project then it will take All projects with state=draft, open, pending'},
 
 }
 
@@ -49,7 +49,6 @@ class wizard_compute_phases(wizard.interface):
                    calendar_id -- working calendar of the project
 
        """
-
        pool = pooler.get_pool(cr.dbname)
        phase_obj = pool.get('project.phase')
        resource_obj = pool.get('resource.resource')
@@ -66,7 +65,7 @@ class wizard_compute_phases(wizard.interface):
                 resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
                 time_efficiency = resource.time_efficiency
                 leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource.id, resource.calendar_id.id)
-            phase_resource_obj = classobj(str(phase.responsible_id.name), (Resource,),
+            phase_resource_obj = classobj((phase.responsible_id.name.encode('utf8')), (Resource,),
                                                {'__doc__': phase.responsible_id.name,
                                                 '__name__': phase.responsible_id.name,
                                                 'vacation': tuple(leaves),
@@ -83,7 +82,7 @@ class wizard_compute_phases(wizard.interface):
                 # If project has working calendar then that
                 # else the default one would be considered
                 if calendar_id:
-                    working_days = wkcal.compute_working_calendar(cr, uid, calendar_id)
+                    working_days = wkcal.compute_working_calendar(cr, uid, calendar_id, context=context)
                     vacation = tuple(wkcal.compute_leaves(cr, uid, calendar_id))
 
                 def phase():
@@ -166,8 +165,8 @@ class wizard_compute_phases(wizard.interface):
         'init': {
             'actions': [],
             'result': {'type': 'form', 'arch': compute_form, 'fields': compute_fields, 'state':[
-                ('end', 'Cancel'),
-                ('compute', 'Compute')
+                ('end', 'Cancel', 'gtk-cancel'),
+                ('compute', 'Compute', 'gtk-ok', True)
 
             ]},
         },

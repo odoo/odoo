@@ -12,72 +12,23 @@
             model="stock.picking"
             multi="True"
             name="stock.move.split"
-            string="Split move line"/>
+            string="Split move line"/>       
+
+		
+
+	    <wizard
+	        id="return_picking"
+	        model="stock.picking"
+	        menu="False"
+			keyword="client_action_multi"
+	        name="stock.return.picking"
+	        string="Return picking"/>	
 
         <wizard
-            id="partial_picking"
-            model="stock.picking"
+            id="split_inventory_lots"
+            model="stock.inventory.line"
             multi="True"
-            name="stock.partial_picking"
-            string="Partial picking"/>
-
-	<wizard
-            id="partial_move"
-            model="stock.move"
-            multi="True"
-            name="stock.partial_move"
-            string="Partial Move"/>
-
-    <wizard
-        id="split_inventory_lots"
-        model="stock.inventory.line"
-        multi="True"
-        name="stock.inventory.line.split"
-        string="Split inventory lines"/>
-
-    <wizard id="make_picking" model="stock.picking" multi="True" name="stock.picking.make" string="Make picking"/>
-
-    <wizard
-        id="return_picking"
-        model="stock.picking"
-        name="stock.return.picking"
-        string="Return picking"/>
-
-    <wizard
-        id="wizard_invoice_onshipping"
-        keyword="client_action_multi"
-        model="stock.picking"
-        name="stock.invoice_onshipping"
-        string="Create invoice"/>
-
-    <wizard
-        string="Set Stock to 0"
-        model="stock.inventory"
-        name="inventory.merge.stock.zero"
-        keyword="client_action_multi"
-        id="wizard_merge_inventory_zero"/>
-
-    <wizard
-        string="Merge inventories"
-        model="stock.inventory"
-        name="inventory.merge"
-        keyword="client_action_multi"
-        multi="True"
-        id="wizard_merge_inventory"/>
-
-    <wizard
-        string="Fill Inventory"
-        model="stock.inventory"
-        name="stock.fill_inventory"
-        keyword="client_action_multi"
-        id="wizard_fill_inventory"
-    />
-
-    <wizard
-        id="location_product"
-        model="stock.location"
-        name="stock.location.products"
-        string="Products by Location"/>
-            
-   </data>        
+            name="stock.inventory.line.split"
+            string="Split inventory lines"/>    
+   </data>
 </openerp>

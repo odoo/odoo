@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,24 +15,25 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import stock_traceability
-import wizard_partial_picking
-import wizard_partial_move
-import wizard_picking_make
+import stock_move   
+import stock_partial_picking
+import stock_partial_move
+import stock_picking_make
 import wizard_replacement
 import wizard_return
 import wizard_split_lot_line
 import wizard_ups
-import wizard_invoice_onshipping
-import wizard_location_product
-import wizard_inventory
-import wizard_split_inventory_lots
-import inventory_merge_zero
-import inventory_merge
-
+import stock_inventory_merge
+import stock_inventory_set_stock_zero
+import stock_fill_inventory
+import stock_inventory_line_split
+import stock_invoice_onshipping
+import stock_location_product
+import stock_change_standard_price
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

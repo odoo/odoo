@@ -134,9 +134,9 @@ class report_custom(report_int):
 
         # select workcenters
         cr.execute(
-            "SELECT id, name FROM mrp_workcenter " \
-            "WHERE id=ANY(%s)" \
-            "ORDER BY mrp_workcenter.id" ,(ids,))
+            "SELECT mw.id, rs.name FROM mrp_workcenter mw, resource_resource rs " \
+            "WHERE mw.id=ANY(%s) and mw.resource_id=rs.id " \
+            "ORDER BY mw.id" ,(ids,))
         workcenters = cr.dictfetchall()
 
         data = []
@@ -144,13 +144,13 @@ class report_custom(report_int):
             vals = []
             for workcenter in workcenters:
                 cr.execute("SELECT SUM(mrp_production_workcenter_line.hour) AS hours, SUM(mrp_production_workcenter_line.cycle) AS cycles, \
-                                mrp_workcenter.name AS name, mrp_workcenter.id AS id \
-                            FROM mrp_production_workcenter_line, mrp_production, mrp_workcenter \
+                                resource_resource.name AS name, mrp_workcenter.id AS id \
+                            FROM mrp_production_workcenter_line, mrp_production, mrp_workcenter, resource_resource \
                             WHERE (mrp_production_workcenter_line.production_id=mrp_production.id) \
                                 AND (mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id) \
                                 AND (mrp_workcenter.id=%s) \
                                 AND (mrp_production.date_planned BETWEEN %s AND %s) \
-                            GROUP BY mrp_production_workcenter_line.workcenter_id, mrp_workcenter.name, mrp_workcenter.id \
+                            GROUP BY mrp_production_workcenter_line.workcenter_id, resource_resource.name, mrp_workcenter.id \
                             ORDER BY mrp_workcenter.id", (workcenter['id'], dates[date]['start'] + ' 00:00:00', dates[date]['stop'] + ' 23:59:59'))
                 res = cr.dictfetchall()
                 if not res:

@@ -45,7 +45,7 @@
         <field name="model">crm.claim</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Claims" colors="blue:state=='open';red:(date_deadline&lt;=current_date)">
+            <tree string="Claims" colors="blue:state=='pending';black:state=='open';grey:state in ('close', 'cancel')">
                 <field name="id"/>
                 <field name="name"/>
                 <field name="partner_id"/>
@@ -134,9 +134,7 @@
                             <separator string="Action Information" colspan="4"/>
                             <field name="name" colspan="4"/>
                             <field name="date"/>
-                            <field name="user_id"/>
-                            <field name="som"/>
-                            <field name="canal_id"/>
+                            <field name="user_id"/>                            
                         </form>
                     </field>
                 </page>
@@ -148,24 +146,31 @@
                         <form string="Communication history">
                             <group col="7" colspan="4">
                                 <field name="date"/>
-                                <field name="email"/>
-                                <field name="canal_id"/>
-                                <button
-                                   string="Add a CC"
-                                    name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                    icon="gtk-add" type="action"/>
-                            </group>
-                            <newline/>
-                            <field name="description" colspan="4" nolabel="1"/>
-                            <button colspan="4" string="Reply to Last Email" name="%(crm.wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
-                        </form>
-                        <tree string="Communication history">
-                            <field name="description"/>
-                            <field name="email"/>
-                            <field name="date"/>
-                        </tree>
-                    </field>
-                    <button colspan="4" string="Send New Email" name="%(crm.wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+                                <field name="email_to"/>
+                                <field name="email_from"/>
+                               <button
+                                     string="Add a CC"
+                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
+                                               icon="gtk-add" type="action"/>
+                                   </group>
+                                   <newline/>
+                                   <field name="description" colspan="4" nolabel="1"/>
+                                   <button colspan="4"
+                                   	string="Reply to Last Email"
+                                   	name="%(action_crm_send_mail)d"
+                                   	context="{'mail':'reply', 'model': 'crm.claim'}"
+                                   	icon="gtk-undo" type="action" />
+                               </form>
+                               <tree string="Communication history">
+                                   <field name="description"/>
+                                   <field name="email_to"/>
+                                   <field name="date"/>
+                               </tree>
+                           </field>
+                           <button colspan="4" string="Send New Email"
+                           	name="%(action_crm_send_mail)d"
+                           	context="{'mail':'new', 'model': 'crm.claim'}"
+                           	icon="gtk-go-forward" type="action" />
                  </page>
                 </notebook>
                 </group>

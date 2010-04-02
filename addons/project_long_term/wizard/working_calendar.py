@@ -56,11 +56,11 @@ def compute_leaves(cr, uid, calendar_id, resource_id=False, resource_calendar=Fa
                                                                       ], context=context)
         leaves = resource_calendar_leaves_obj.read(cr, uid, leave_ids, ['date_from', 'date_to'], context=context)
         for i in range(len(leaves)):
-                dt_start = datetime.datetime.strptime(leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')
-                dt_end = datetime.datetime.strptime(leaves[i]['date_to'], '%Y-%m-%d %H:%M:%S')
-                no = dt_end - dt_start
-                [leave_list.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
-                leave_list.sort()
+            dt_start = datetime.datetime.strptime(leaves[i]['date_from'], '%Y-%m-%d %H:%M:%S')
+            dt_end = datetime.datetime.strptime(leaves[i]['date_to'], '%Y-%m-%d %H:%M:%S')
+            no = dt_end - dt_start
+            [leave_list.append((dt_start + datetime.timedelta(days=x)).strftime('%Y-%m-%d')) for x in range(int(no.days + 1))]
+            leave_list.sort()
         return leave_list
 
 def compute_working_calendar(cr, uid, calendar_id, context={}):

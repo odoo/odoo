@@ -478,13 +478,13 @@ class auction_lots(osv.osv):
         result = [ (r['id'], str(r['obj_num'])+' - '+r['name']) for r in self.read(cr, user, ids, ['name','obj_num'])]
         return result
 
-    def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
-        try:
-            ids = self.search(cr, user, [('obj_num','=',int(name))]+ args)
-        except:
-            ids = []
+    def name_search(self, cr, user, name, args=None, operator='ilike', context={}):
+        if not args:
+            args = []
+
+        ids = self.search(cr, user, [('obj_num','=',int(name))] + args)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args)
+            ids = self.search(cr, user, [('name',operator,name)] + args)
         return self.name_get(cr, user, ids)
 
     def _sum_taxes_by_type_and_id(self, taxes):

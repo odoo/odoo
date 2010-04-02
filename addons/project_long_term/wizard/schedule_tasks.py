@@ -49,7 +49,7 @@ class wizard_schedule_task(wizard.interface):
             if resource_cal:
                 cal_id  = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
                 leaves = wkcal.compute_leaves(cr, uid, cal_id, res.id, resource_cal, context=context)
-            resource_objs.append(classobj(str(res.user_id.name), (Resource,),
+            resource_objs.append(classobj(res.user_id.name.encode('utf8'), (Resource,),
                                          {'__doc__': res.user_id.name,
                                           '__name__': res.user_id.name,
                                           'vacation': tuple(leaves),
@@ -139,7 +139,7 @@ class wizard_schedule_task(wizard.interface):
     states = {
         'init': {
             'actions': [_compute_date],
-            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
+            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok', 'gtk-ok', True)]},
         }
     }
 wizard_schedule_task('phase.schedule.tasks')

@@ -40,7 +40,7 @@ success_msg = """<?xml version="1.0" ?>
 </form>"""
 
 compute_fields = {
-    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project', 'required':'True'},
+    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project', 'required':True},
 }
 
 class wizard_compute_tasks(wizard.interface):
@@ -72,13 +72,14 @@ class wizard_compute_tasks(wizard.interface):
             for user in project.members:
                 leaves = []
                 time_efficiency = 1.0
-                resource_id = resource_obj.search(cr, uid, [('user_id', '=', user.id)])
+                resource_id = resource_obj.search(cr, uid, [('user_id', '=', user.id)], context=context)
                 if resource_id:
 #                    resource = resource_obj.browse(cr, uid, resource_id, context=context)[0]
                     resource = resource_obj.read(cr, uid, resource_id, ['calendar_id','time_efficiency'], context=context)[0]
-                    leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id, resource.get('calendar_id')[0])
+                    if resource.get('calendar_id', False):
+                       leaves = wkcal.compute_leaves(cr, uid, calendar_id , resource_id[0], resource['calendar_id'] and resource['calendar_id'][0] or False)
                     time_efficiency = resource.get('time_efficiency')
-                resources.append(classobj(str(user.name), (Resource,), {'__doc__': user.name,
+                resources.append(classobj((user.name.encode('utf8')), (Resource,), {'__doc__': user.name,
                                                                         '__name__': user.name,
                                                                         'vacation': tuple(leaves),
                                                                         'efficiency': time_efficiency
@@ -118,7 +119,7 @@ class wizard_compute_tasks(wizard.interface):
                         priorty = priority_dict[each_task.priority]
                     if each_task.user_id:
                        for resource in resources:
-                            if resource.__name__ == each_task.user_id.name:
+                            if resource.__name__ == each_task.user_id.name: # check me!!
                                task = create_tasks(i, hours, priorty, resource)
                     else:
                         task = create_tasks(i, hours, priorty)
@@ -147,8 +148,8 @@ class wizard_compute_tasks(wizard.interface):
         'init': {
             'actions': [],
             'result': {'type': 'form', 'arch': compute_form, 'fields': compute_fields, 'state': [
-                ('end', 'Cancel'),
-                ('compute', 'Compute')
+                ('end', 'Cancel', 'gtk-cancel'),
+                ('compute', 'Compute', 'gtk-ok', True)
             ]},
         },
         'compute': {

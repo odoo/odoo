@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,7 +25,12 @@
     'version': '1.0',
     'category': 'Board/Associations',
     'description': """
-This module implements a dashboard for associations.
+This module implements a dashboard for associations that includes:
+    * New Members (graph)
+    * Registration by Events (graph)
+    * Next Events (list)
+    * My Tasks (list)
+    * Unpaid Invoices (list)
     """,
     'author': 'Tiny',
     'depends': ['event', 'membership', 'board', 'project'],

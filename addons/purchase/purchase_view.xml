@@ -160,6 +160,7 @@
                         <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>                        
                     </field>
                 </group>
+                <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="10">
                     <filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>    
                     <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>                
@@ -288,6 +289,15 @@
             name="Product purchases"
             res_model="purchase.order.line"
             src_model="product.product"/>
-
+<!-- 
+	<record model="ir.values" id="action_merge_purchase_order">
+                <field name="object" eval="1" />
+                <field name="name">Purchase Order</field>
+                <field name="key2">client_action_multi</field>
+                <field name="value" eval="'ir.actions.act_window,' + str(ref('action_view_purchase_order_group'))" />
+                <field name="key">action</field>
+                <field name="model">purchase.order</field>
+         </record>
+          -->
     </data>
 </openerp>

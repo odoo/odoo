@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+  		<record id="view_auction_lots_make_invoice" model="ir.ui.view">
+            <field name="name">auction.lots.make.invoice.form</field>
+            <field name="model">auction.lots.make.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Paid">
+                	<group colspan="4" >
+                		 <field name="amount"/>
+                		 <field name="objects"/>
+                		 <field name="number" colspan="3"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-ok" string="Create invoices" name="makeInvoices" type="object"/>
+                   </group>
+               </form>
+            </field>
+  		</record>
+  		
+       <act_window name="Invoice Seller objects"		    
+		    res_model="auction.lots.make.invoice"
+		    src_model="auction.lots"
+		    view_mode="form"
+		    target="new"        
+            key2="client_action_multi"    
+		    id="action_auction_lots_make_invoice"/>            
+        
+    </data>
+</openerp>

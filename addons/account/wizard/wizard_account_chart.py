@@ -24,7 +24,7 @@ import pooler
 
 class wizard_account_chart(wizard.interface):
     _account_chart_arch = '''<?xml version="1.0"?>
-    <form string="Account charts">
+    <form string="Open account charts">
         <field name="fiscalyear"/>
         <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal years)"/>
         <field name="target_move"/>
@@ -67,7 +67,7 @@ class wizard_account_chart(wizard.interface):
     states = {
         'init': {
             'actions': [_get_defaults],
-            'result': {'type': 'form', 'arch':_account_chart_arch, 'fields':_account_chart_fields, 'state': [('end', 'Cancel'), ('open', 'Open Charts')]}
+            'result': {'type': 'form', 'arch':_account_chart_arch, 'fields':_account_chart_fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('open', 'Open', 'gtk-ok')]}
         },
         'open': {
             'actions': [],

@@ -26,7 +26,7 @@ import pooler
 from tools.translate import _
 
 model_form = """<?xml version="1.0"?>
-<form string="Select Message">
+<form string="Create entries from models">
     <field name="model"/>
 </form>"""
 
@@ -113,7 +113,7 @@ class use_model(wizard.interface):
         },
         'init_form': {
             'actions': [],
-            'result': {'type':'form', 'arch':model_form, 'fields':model_fields, 'state':[('end','Cancel'),('create','Create Entries')]},
+            'result': {'type':'form', 'arch':model_form, 'fields':model_fields, 'state':[('end','Cancel', 'gtk-cancel'),('create','Create', 'gtk-ok')]},
         },
         'create': {
             'actions': [_create_entries],

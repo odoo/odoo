@@ -40,7 +40,7 @@ class wizard_account_duplicate(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch': duplicate_form, 'fields': duplicate_fields, 'state': (('end', 'Cancel'), ('duplicate', 'Duplicate'))},
+            'result': {'type': 'form', 'arch': duplicate_form, 'fields': duplicate_fields, 'state': (('end', 'Cancel', 'gtk-cancel'), ('duplicate', 'Duplicate', 'gtk-ok'))},
         },
         'duplicate': {
             'actions': [_do_duplicate],

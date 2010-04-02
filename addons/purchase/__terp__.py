@@ -24,8 +24,11 @@
     'name': 'Purchase Management',
     'version': '1.1',
     'category': 'Generic Modules/Sales & Purchases',
-    'description': """Module for purchase management
-    Request for quotation, Create Supplier Invoice, Print Order...""",
+    'description': """
+    Purchase module is for generating a purchase order for purchase of goods from a supplier.
+    A supplier invoice is created for the particular order placed
+
+    """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'account', 'stock', 'process'],
@@ -36,12 +39,13 @@
         'purchase_workflow.xml',
         'purchase_sequence.xml',
         'purchase_data.xml',
+        'wizard/purchase_order_group_view.xml',
         'purchase_view.xml',
         'purchase_report.xml',
-        'purchase_wizard.xml',
         'stock_view.xml',
         'partner_view.xml',
-        'process/purchase_process.xml'
+        'process/purchase_process.xml',
+        'report/purchase_report_view.xml',
     ],
     'demo_xml': ['purchase_demo.xml'],
     'installable': True,

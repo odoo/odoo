@@ -67,12 +67,33 @@ class hr_evaluation_plan_phase(osv.osv):
             help="Send an anonymous summary to the employee"),
         'wait': fields.boolean('Wait Previous Phases',
             help="Check this box if you want to wait that all preceeding phases " +
-              "are finished before launching this phase.")
-
+              "are finished before launching this phase."),
+        'mail_feature': fields.boolean('Send mail for this phase',help="Check this box if you want to send mail to employees"+
+                                       "coming under this phase"),
+        'mail_body': fields.text('Email'),
+        'email_subject':fields.text('char')
     }
     _defaults = {
         'sequence' : lambda *a: 1,
+        'email_subject':_('''Regarding '''),
+        'mail_body' : lambda *a:_('''
+Date : %(date)s
+
+Dear %(employee_name)s,
+
+I am doing an evaluation regarding %(eval_name)s.
+
+Kindly submit your response.
+
+
+Thanks,
+--
+%(user_signature)s
+
+        '''),
     }
+
+
 hr_evaluation_plan_phase()
 
 class hr_employee(osv.osv):
@@ -162,9 +183,11 @@ class hr_evaluation(osv.osv):
         return {'value': {'plan_id':evaluation_plan_id}}
 
     def button_plan_in_progress(self,cr, uid, ids, context={}):
+        user_obj = self.pool.get('res.users')
         employee_obj = self.pool.get('hr.employee')
         hr_eval_inter_obj = self.pool.get('hr.evaluation.interview')
         survey_request_obj = self.pool.get('survey.request')
+        hr_eval_plan_obj = self.pool.get('hr_evaluation.plan.phase')
         curr_employee=self.browse(cr,uid, ids, context=context)[0].employee_id
         child_employees=employee_obj.browse(cr,uid, employee_obj.search(cr,uid,[('parent_id','=',curr_employee.id)],context=context))
         manager_employee=curr_employee.parent_id
@@ -180,7 +203,24 @@ class hr_evaluation(osv.osv):
                             id = hr_eval_inter_obj.create(cr, uid, {'evaluation_id':evaluation.id ,'user_id' : user,'survey_id' : phase.survey_id.id, 'user_to_review_id' : child.id, 'date_deadline' :(dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d')) + dt.RelativeDateTime(months =+ 1)).strftime('%Y-%m-%d')},context=context)
                             if not phase.wait:
                                 hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [id], context=context)
+                            if phase.mail_feature:
+                                src = tools.config.options['email_from']
+                                user_obj_id = user_obj.browse(cr,uid,uid)
+                                val = {
+                                        'employee_name':child.name,
+                                        'user_signature':curr_employee.name,
+#                                        'company_name':user_obj_id.company_id.name,
+                                        'eval_name':phase.survey_id.title,
+                                        'date':time.strftime('%Y-%m-%d'),
+                                      }
+                                mailbody = hr_eval_plan_obj.read(cr,uid,phase.id,['mail_body','email_subject'],context=context)
+                                body = mailbody['mail_body']%val
+                                sub = mailbody['email_subject']+phase.survey_id.title
+                                dest=[child.work_email]
+                                if dest:
+                                   tools.email_send(src,dest,sub,body)
                             apprai_id.append(id)
+
                     elif phase.action == "top-down":
                         if manager_employee:
                             user = False
@@ -189,6 +229,13 @@ class hr_evaluation(osv.osv):
                             id = hr_eval_inter_obj.create(cr, uid, {'evaluation_id':evaluation.id,'user_id': user ,'survey_id' : phase.survey_id.id, 'user_to_review_id' :manager_employee.id, 'date_deadline' :(dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d')) + dt.RelativeDateTime(months =+ 1)).strftime('%Y-%m-%d')},context=context)
                             if not phase.wait:
                                 hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [id], context=context)
+                            if phase.mail_feature:
+                                val.update({'employee_name':manager_employee.name})
+                                mailbody = hr_eval_plan_obj.read(cr,uid,phase.id,['mail_body'],context=context)
+                                body = mailbody['mail_body']%val
+                                dest = [manager_employee.work_email]
+                                if dest:
+                                        tools.email_send(src,dest,sub,body)
                             apprai_id.append(id)
                     elif phase.action == "self":
                         if curr_employee:
@@ -235,6 +282,7 @@ class survey_request(osv.osv):
     _columns = {
         'is_evaluation':fields.boolean('Is Evaluation?'),
     }
+
 survey_request()
 
 class hr_evaluation_interview(osv.osv):
@@ -253,9 +301,10 @@ class hr_evaluation_interview(osv.osv):
     def survey_req_waiting_answer(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, { 'state' : 'waiting_answer'})
 #        for id in self.browse(cr, uid, ids):
-#            if id.user_id and id.user_id.address_id and id.user_id.address_id and id.user_id.address_id.email:
-#                msg = " Hello %s, \n\n We are inviting you for %s survey. \n\n Thanks,"  %(id.user_id.name, id.survey_id.title)
-#                tools.email_send(tools.config['email_from'], [id.user_id.address_id.email],\
+#            print"id",id
+#            if id.user_to_review_id and id.user_to_review_id.work_email:
+#                msg = " Hello %s, \n\n We are inviting you for %s survey. \n\n Thanks,"  %(id.user_to_review_id.name, id.survey_id.title)
+#                tools.email_send(tools.config['email_from'], [id.user_to_review_id.work_email],\
 #                                              'Invite to fill up Survey', msg)
         return True
 
@@ -289,3 +338,5 @@ class hr_evaluation_interview(osv.osv):
         return True
 
 hr_evaluation_interview()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1

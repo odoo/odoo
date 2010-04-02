@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,7 +24,13 @@
     'name': 'Idea Manager',
     'version': '0.1',
     'category': 'Tools',
-    'description': """This module allows your user to easily and efficiently participate in the innovation of the enterprise. It allows everybody to express ideas about different subjects. Then, others users can comment these ideas and vote for particular ideas. Each idea as a score based on the different votes. The managers can obtain an easy view on best ideas from all the users. Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
+    'description': """
+    This module allows your user to easily and efficiently participate in the innovation of the enterprise.
+    It allows everybody to express ideas about different subjects.
+    Then, others users can comment these ideas and vote for particular ideas.
+    Each idea as a score based on the different votes.
+    The managers can obtain an easy view on best ideas from all the users.
+    Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'author': 'Tiny',
     'website': 'http://openerp.com',
     'depends': ['base'],
@@ -34,7 +40,7 @@
         'idea_view.xml',
         'idea_workflow.xml',
         'security/idea_security.xml',
-        'security/ir.model.access.csv',        
+        'security/ir.model.access.csv',
     ],
     'demo_xml': [],
     'installable': True,

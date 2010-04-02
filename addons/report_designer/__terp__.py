@@ -25,6 +25,7 @@
     "version" : "1.0",
     "depends" : ["base"],
     "author" : "Tiny",
+    "category": "Tools",
     "description": """Installer for reporting tools selection
     """,
     'website': 'http://www.openerp.com',

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
 #    
@@ -30,17 +31,10 @@ import binascii
 import time, socket
 
 
-email_re = re.compile(r"""
-    ([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
-    @                                # mandatory @ sign
-    [a-zA-Z0-9][\w\.-]*              # domain must start with a letter ... Ged> why do we include a 0-9 then?
-     \.
-     [a-z]{2,3}                      # TLD
-    )
-    """, re.VERBOSE)
+email_re = re.compile(r"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6})")
 case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-tinycrm-(\\d+)@(.*)>", re.UNICODE)
+reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
 
 priorities = {
     '1': '1 (Highest)', 
@@ -124,7 +118,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             html += '\n\n'
         html += '[%s] %s\n' % (i+1, url)       
     return html
-    
+
 class rpc_proxy(object):
     def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):        
         self.rpc = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (host, port, path))
@@ -163,30 +157,41 @@ class email_parser(object):
             'partner_id': adr[0].get('partner_id', False) and adr[0]['partner_id'][0] or False
         }
 
+    def _to_decode(self, s, charsets):
+       for charset in charsets:
+           if charset:
+               try:
+                   return s.decode(charset)
+               except UnicodeError:  
+                    pass         
+       try:
+           return s.decode('ascii')
+       except UnicodeError:
+           return s 
+
     def _decode_header(self, s):
         from email.Header import decode_header
-        s = decode_header(s)
-        return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
+        s = decode_header(s)        
+        return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s))
 
     def msg_new(self, msg):
         message = self.msg_body_get(msg)
+        msg_subject = self._decode_header(msg['Subject'])
+        msg_from = self._decode_header(msg['From'])
+        msg_cc = self._decode_header(msg['Cc'] or '')
+        
         data = {
-            'name': self._decode_header(msg['Subject']), 
-            'email_from': self._decode_header(msg['From']), 
-            'email_cc': self._decode_header(msg['Cc'] or ''), 
-            'canal_id': self.canal_id, 
+            'name': msg_subject, 
+            'email_from': msg_from, 
+            'email_cc': msg_cc,             
             'user_id': False, 
             'description': message['body'], 
         }
-        try:
-            data.update(self.partner_get(self._decode_header(msg['From'])))
-        except Exception, e:
-            import netsvc
-            netsvc.Logger().notifyChannel('mailgate', netsvc.LOG_ERROR, "%s" % e)
+        data.update(self.partner_get(msg_from))
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'])
+            self.rpc(self.model, 'history', [id], 'Receive', True, False, message['body'], msg['From'])
             #self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
@@ -216,7 +221,7 @@ class email_parser(object):
 #                       'file_name':'file data',
 #                   }
 #   }
-#   #
+
     def msg_body_get(self, msg):
         message = {};
         message['body'] = '';
@@ -225,7 +230,7 @@ class email_parser(object):
         counter = 1;
         def replace(match):
             return ''
-            
+
         for part in msg.walk():
             if part.get_content_maintype() == 'multipart':
                 continue
@@ -233,7 +238,7 @@ class email_parser(object):
             if part.get_content_maintype()=='text':
                 buf = part.get_payload(decode=True)
                 if buf:
-                    txt = buf.decode(part.get_charsets()[0] or 'ascii', 'replace')
+                    txt = self._to_decode(buf, part.get_charsets())
                     txt = re.sub("<(\w)>", replace, txt)
                     txt = re.sub("<\/(\w)>", replace, txt)
                 if txt and part.get_content_subtype() == 'plain':
@@ -258,7 +263,6 @@ class email_parser(object):
             message['attachment'] = attachment
         #end for        
         return message
-    #end def
 
     def msg_user(self, msg, id):
         body = self.msg_body_get(msg)
@@ -275,7 +279,7 @@ class email_parser(object):
         body['body'] = body_data
 
         data = {
-            'description': body['body'], 
+#            'description': body['body'],
         }
         act = 'case_pending'
         if 'state' in actions:
@@ -302,7 +306,7 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+        self.rpc(self.model, 'history', [id], 'Receive', True, False, body['body'], msg['From'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -329,17 +333,21 @@ class email_parser(object):
         body = message['body']
         act = 'case_open'
         self.rpc(self.model, act, [id])
-        body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
-        data = {
-            'description':body, 
-        }
-        self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
+        #body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
+        #data = {
+        #    'description':body, 
+        #}
+        #self.rpc(self.model, 'write', [id], data)
+        self.rpc(self.model, 'history', [id], 'Receive', True, False, message['body'], msg['From'])
         return id
 
     def msg_test(self, msg, case_str):
         if not case_str:
             return (False, False)
+        res = self.rpc(self.model, 'search', [('id', '=', int(case_str))])        
+        if not res:
+            return (False, False)
+        
         emails = self.rpc(self.model, 'emails_get', int(case_str))
         return (int(case_str), emails)
 
@@ -348,9 +356,9 @@ class email_parser(object):
         if case_str:
             case_str = case_str.group(1)
         else:
-            case_str = case_re.search(msg.get('Subject', ''))
+            case_str = case_re.search(msg.get('Subject', ''))            
             if case_str:
-                case_str = case_str.group(1)
+                case_str = case_str.group(1)            
         (case_id, emails) = self.msg_test(msg, case_str)
         if case_id:
             if emails[0] and self.email_get(emails[0])==self.email_get(self._decode_header(msg['From'])):
@@ -363,7 +371,7 @@ class email_parser(object):
             if msg.get('Subject', ''):
                 del msg['Subject']
             msg['Subject'] = '['+str(case_id)+'] '+subject
-            msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(case_id)+'@'+socket.gethostname()+'>'
+            msg['Message-Id'] = '<'+str(time.time())+'-openerpcrm-'+str(case_id)+'@'+socket.gethostname()+'>'
 
         emails = self.rpc(self.model, 'emails_get', case_id)
         priority = emails[3]
@@ -386,9 +394,7 @@ class email_parser(object):
 
 if __name__ == '__main__':
     import sys, optparse
-    parser = optparse.OptionParser(
-        usage='usage: %prog [options]', 
-        version='%prog v1.0')
+    parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.0')
     group = optparse.OptionGroup(parser, "Note", 
         "This program parse a mail from standard input and communicate "
         "with the Open ERP server for case management in the CRM module.")
@@ -408,10 +414,6 @@ if __name__ == '__main__':
 
     msg_txt = email.message_from_file(sys.stdin)
 
-    try :
-        parser.parse(msg_txt)
-    except Exception, e:
-        if getattr(e, 'faultCode', '') and 'Connection unexpectedly closed' in e.faultCode:
-            print e
+    parser.parse(msg_txt)
  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

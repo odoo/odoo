@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,7 +14,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,7 +23,7 @@
     "version" : "0.1",
     "depends" : ["base"],
     "author" : "Tiny",
-    "description": """Add support for authentication by ldap server""",
+    "description": """Adds support for authentication by ldap server""",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Others",
     "init_xml" : [

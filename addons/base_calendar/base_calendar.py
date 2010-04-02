@@ -325,26 +325,17 @@ class calendar_attendee(osv.osv):
                 result[id][name] = ', '.join(fromdata)
             if name == 'event_date':
                 if attdata.ref:
-                    model, res_id = tuple(attdata.ref.split(','))
-                    model_obj = self.pool.get(model)
-                    obj = model_obj.read(cr, uid, res_id, ['date'])[0]
-                    result[id][name] = obj.get('date')
+                    result[id][name] = attdata.ref.date
                 else:
                     result[id][name] = False
             if name == 'event_end_date':
                 if attdata.ref:
-                    model, res_id = tuple(attdata.ref.split(','))
-                    model_obj = self.pool.get(model)
-                    obj = model_obj.read(cr, uid, res_id, ['date_deadline'])[0]
-                    result[id][name] = obj.get('date_deadline')
+                     result[id][name] = attdata.ref.date_deadline
                 else:
                     result[id][name] = False
             if name == 'sent_by_uid':
                 if attdata.ref:
-                    model, res_id = tuple(attdata.ref.split(','))
-                    model_obj = self.pool.get(model)
-                    obj = model_obj.read(cr, uid, res_id, ['user_id'])[0]
-                    result[id][name] = obj.get('user_id')
+                    result[id][name] = (attdata.ref.user_id.id,attdata.ref.user_id.name)
                 else:
                     result[id][name] = uid
             if name == 'language':
@@ -441,8 +432,7 @@ request was delegated to"),
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
-            model, res_id = tuple(att.ref.split(','))            
-            res_obj = self.pool.get(model).browse(cr, uid, res_id)
+            res_obj = att.ref
             if res_obj and len(res_obj):
                 res_obj = res_obj[0]
             sub = '[%s Invitation][%d] %s'  % (company, att.id, res_obj.name)
@@ -490,9 +480,7 @@ request was delegated to"),
             if user:
                 ref = vals.get('ref', None)
                 if ref:
-                    model, event = ref.split(',')
-                    model_obj = self.pool.get(model)
-                    event_ref =  model_obj.browse(cr, uid, event, context=context)[0]
+                    event_ref = ref
                     if event_ref.user_id.id != user[0]:
                         defaults = {'user_id':  user[0]}
                         new_event = model_obj.copy(cr, uid, event, default=defaults, context=context)
@@ -574,7 +562,6 @@ are both optional, but if one occurs, so MUST the other"""),
                 cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
                                         where id=%s' % (model_obj._table, \
                                         alarm_id, basic_alarm.id, data.id))
-        cr.commit()
         return True
 
     def do_alarm_unlink(self, cr, uid, ids, model, context={}):
@@ -1185,7 +1172,10 @@ class virtual_report_spool(web_services.report_spool):
         new_ids = []
         for id in ids:
             new_ids.append(base_calendar_id2real_id(id))
-        datas['id'] = base_calendar_id2real_id(datas['id'])        
+        if datas is None:
+            datas = {}
+        if datas.get('id',False):
+            datas['id'] = base_calendar_id2real_id(datas['id'])        
         return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
 
 virtual_report_spool()

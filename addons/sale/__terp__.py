@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -45,18 +45,17 @@
     'depends': ['product', 'stock', 'mrp', 'process'],
     'init_xml': [],
     'update_xml': [
+        'wizard/sale_make_invoice_advance.xml',
+        'wizard/sale_line_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
         'sale_workflow.xml',
         'sale_sequence.xml',
         'sale_data.xml',
-        'sale_wizard.xml',
         'sale_view.xml',
-        'sale_report_view.xml',
+        'report/sale_report_view.xml',
         'sale_report.xml',
-        'sale_wizard.xml',
         'stock_view.xml',
-        'report_sale_view.xml',
         'process/sale_process.xml',
     ],
     'demo_xml': ['sale_demo.xml'],

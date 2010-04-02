@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,9 +24,14 @@
     'name': 'report_account_analytic',
     'version': '1.0',
     'category': 'Generic Modules/Accounting',
-    'description': """Modify account analytic view to show
-important data for project manager of services companies.
-Add menu to show relevant information for each manager.""",
+    'description': """
+    This module is for modifying account analytic view to show
+    important data to project manager of services companies.
+    Adds menu to show relevant information to each manager..
+
+    You can also view the report of account analytic summary
+    user-wise as well as month wise.
+""",
     "version" : "1.1",
     "author" : "Camptocamp",
     "category" : "Generic Modules/Accounting",

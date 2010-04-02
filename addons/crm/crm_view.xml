@@ -2,11 +2,7 @@
 <openerp>
     <data>
 <!--        <menuitem icon="terp-crm" id="menu_crm" name="CRM &amp; SRM"/>-->
-        <menuitem id="menu_crm_configuration" name="Cases" parent="base.menu_base_config" sequence="0"/>
-
-        <wizard id="wizard_crm_send_mail" model="crm.case.history" name="crm.send.mail" string="Send Mail" menu="False"/>
-        <wizard id="wizard_crm_new_send_mail" model="crm.case" name="crm.new.send.mail" string="Send New Mail" menu="False"/>
-
+        <menuitem id="menu_crm_configuration" name="Cases" parent="base.menu_base_config" sequence="0"/>        
         <!-- Case Sections -->
         <record id="crm_case_section_view_form" model="ir.ui.view">
             <field name="name">crm.case.section.form</field>
@@ -71,13 +67,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stage">
+                    <separator string="Stage Definition" colspan="4"/>
                     <field name="name" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
                     <field name="object_id" invisible="1" />
                     <field name="sequence"/>
                     <field name="probability"/>
                     <field name="on_change"/>
-                    
+                    <separator string="Requirements" colspan="4"/>
+                    <field name="requirements" nolabel="1" colspan="4"/>
                 </form>
             </field>
         </record>
@@ -218,10 +216,12 @@
                 <tree string="Case logs">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="som"/>
                     <field name="user_id"/>
                     <field name="section_id"/>
+                    <!--
+                    <field name="som"/>
                     <field name="canal_id"/>
+                    -->
                 </tree>
             </field>
         </record>
@@ -235,9 +235,11 @@
                 <tree string="Case History">
                     <field name="date"/>
                     <field name="name"/>
-                    <field name="som"/>
                     <field name="user_id"/>
+                    <!--
+                    <field name="som"/>
                     <field name="canal_id"/>
+                    -->
                 </tree>
             </field>
         </record>
@@ -326,9 +328,7 @@
                                     <separator colspan="4" string="Action Information"/>
                                     <field colspan="4" name="name"/>
                                     <field name="date" select="2"/>
-                                    <field name="user_id" select="2"/>
-                                    <field name="som" select="2"/>
-                                    <field name="canal_id"/>
+                                    <field name="user_id" select="2"/>                                    
                                 </form>
                             </field>
                         </page>
@@ -340,8 +340,8 @@
                                <form string="Communication history">
                                    <group col="7" colspan="4">
                                        <field name="date"/>
-                                       <field name="email"/>
-                                       <field name="canal_id"/>
+                                       <field name="email_to"/>
+                                       <field name="email_from"/>                                       
                                        <button
                                      string="Add a CC"
                                                name="%(crm.action_view_crm_email_add_cc_wizard)d"
@@ -349,15 +349,22 @@
                                    </group>
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
-                                   <button colspan="4" string="Reply to Last Email" name="%(wizard_crm_send_mail)d" context="{'mail':'reply'}" icon="gtk-undo" type="action"/>
+                                   <button colspan="4"
+                                   	string="Reply to Last Email"
+                                   	name="%(action_crm_send_mail)d"
+                                   	context="{'mail':'reply', 'model': 'crm.case'}"
+                                   	icon="gtk-undo" type="action" />
                                </form>
                                <tree string="Communication history">
                                    <field name="description"/>
-                                   <field name="email"/>
+                                   <field name="email_to"/>
                                    <field name="date"/>
                                </tree>
                            </field>
-                           <button colspan="4" string="Send New Email" name="%(wizard_crm_new_send_mail)d" context="{'mail':'new'}" icon="gtk-go-forward" type="action"/>
+                           <button colspan="4" string="Send New Email"
+                           	name="%(action_crm_send_mail)d"
+                           	context="{'mail':'new', 'model': 'crm.case'}"
+                           	icon="gtk-go-forward" type="action" />
                         </page>
                     </notebook>
                 </form>
@@ -632,7 +639,7 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="category_id" position="after">
-                    <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1" widget="selection"/>
                     </field>
                 </field>
         </record>

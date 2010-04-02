@@ -24,6 +24,10 @@
                    <newline/>
                    <group col='8' colspan='15' expand='1' string='Group by...'>
                        <filter string='Category' icon="terp-stock" domain="[]" context="{'group_by' : 'categ_id'}" />
+                       <separator orientation="vertical"/>
+                       <filter string='Default UOM' icon="terp-stock" domain="[]" context="{'group_by' : 'uom_id'}" />
+                       <separator orientation="vertical"/>
+                       <filter string='Type' icon="terp-stock" domain="[]" context="{'group_by' : 'type'}" />
                    </group>
                 </search>
             </field>
@@ -41,6 +45,7 @@
                     <field name="categ_id" />
                     <field name="variants" groups="product.group_product_variant"/>
                     <field name="uom_id"/>
+                    <field name="type"/>
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
@@ -212,6 +217,7 @@
                     <field name="name" select="1"/>
                     <field name="parent_id"/>
                     <field name="sequence"/>
+                    <field name="type"/>
                     <newline/>
                 </form>
             </field>
@@ -302,9 +308,11 @@
                 <form string="Units of Measure">
                     <field name="name" select="1"/>
                     <field name="category_id" select="1"/>
-                    <field name="factor" select="1"/>
-                    <field name="factor_inv" select="1"/>
+                    <field name="factor" select="1" attrs="{'readonly':[('uom_factor','=','bigger')]}"/>
+                    <field name="factor_inv_data" select="1" string="Factor Data" attrs="{'readonly':[('uom_factor','=','smaller')]}"/>
+                    <field name="factor_inv" invisible="1"/>
                     <field name="rounding"/>
+                    <field name="uom_factor"/>
                     <field name="active"/>
                 </form>
             </field>
@@ -344,8 +352,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Packaging">
-                    <field name="name"/>
-                    <field name="type"/>
+                    <field name="name" select="1" />
+                    <field name="type" select="1" />
                 </form>
             </field>
         </record>

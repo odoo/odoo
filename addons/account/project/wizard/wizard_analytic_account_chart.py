@@ -65,7 +65,7 @@ class wizard_analytic_account_chart(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_account_chart_arch, 'fields':_account_chart_fields, 'state': [('end', 'Cancel'), ('open', 'Open Charts')]}
+            'result': {'type': 'form', 'arch':_account_chart_arch, 'fields':_account_chart_fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('open', 'Open Charts', 'gtk-ok')]}
         },
         'open': {
             'actions': [],

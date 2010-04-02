@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+
+"""        
+        <!--  Select an Open Sale Order -->
+        
+		<record id="view_pos_payment" model="ir.ui.view">
+            <field name="name">Add payment :</field>
+            <field name="model">pos.make.payment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Add payment :">
+				<group colspan="4" >
+				    <field name="amount" />
+				    <field name="journal"/>
+				    <field name="payment_date" />
+				    <field name="payment_name" />
+				    <field name="invoice_wanted" />
+				    <field name="num_sale" />
+				    <field name="is_acc" />
+				    <group attrs="{'readonly':[('is_acc','=',False)]}" colspan="4" col="2">
+				    	<field name="product_id" attrs="{'required':[('is_acc', '=', True)]}" domain="[('type','=','service')]"/>
+				    </group>
+				    <newline/>
+				    <group col="2" colspan="4">
+	            		<button icon='gtk-cancel' special="cancel"  string="Cancel" />
+						<button name="check" string="Make Payment" colspan="1" type="object" icon="gtk-ok"/>
+					</group>	
+				 </group>
+				</form>
+            </field>
+        </record>
+        <record id="action_pos_payment" model="ir.actions.act_window">
+            <field name="name">Add payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.make.payment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+	</data>
+</openerp>	
+        

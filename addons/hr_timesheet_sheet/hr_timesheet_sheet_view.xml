@@ -123,7 +123,7 @@
                                     <field name="name"/>
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
                                     <field name="to_invoice"/>
-                                    <field invisible="1" name="journal_id" required="0"/>
+                                    <field invisible="1" name="journal_id"/>
                                     <field invisible="1" name="product_id"/>
                                     <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
                                     <field name="amount"/>
@@ -304,6 +304,17 @@
             <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
             <field name="arch" type="xml">
                 <field name="action" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_attendance_tree_who" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
+            <field name="arch" type="xml">
+                <field name="action_desc" position="after">
                     <field name="sheet_id"/>
                 </field>
             </field>

@@ -95,7 +95,7 @@ class mrp_repair(osv.osv):
             \n* The \'To be Invoiced\' state is used to generate the invoice before or after repairing done. \
             \n* The \'Done\' state is set when repairing is completed.\
             \n* The \'Cancelled\' state is used when user cancel repair order.'),
-        'location_id': fields.many2one('stock.location', 'Current Location', required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'location_id': fields.many2one('stock.location', 'Current Location', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, states={'draft':[('readonly',False)]}),
         'move_id': fields.many2one('stock.move', 'Move',required=True, domain="[('product_id','=',product_id)]", readonly=True, states={'draft':[('readonly',False)]}),
         'guarantee_limit': fields.date('Guarantee limit', help="The guarantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the guarantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
@@ -261,12 +261,12 @@ class mrp_repair(osv.osv):
     def action_invoice_create(self, cr, uid, ids, group=False, context=None):
         res={}
         invoices_group = {}
-        for repair in self.browse(cr, uid, ids, context=context):
+        for repair in self.browse(cr, uid, ids, context=context):            
             res[repair.id]=False
             if repair.state in ('draft','cancel') or repair.invoice_id:
                 continue
             if not (repair.partner_id.id and repair.partner_invoice_id.id):
-                raise osv.except_osv(_('No partner !'),_('You have to select a partner in the repair form !'))
+                raise osv.except_osv(_('No partner !'),_('You have to select a Partner Invoice Address in the repair form !'))
             comment=repair.quotation_notes
             if (repair.invoice_method != 'none'):
                 if group and repair.partner_invoice_id.id in invoices_group:
@@ -398,7 +398,9 @@ class mrp_repair(osv.osv):
                 self.pool.get('mrp.repair.line').write(cr, uid, [move.id], {'move_id': move_id})
 
             if repair.deliver_bool:
+                pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
                 picking = self.pool.get('stock.picking').create(cr, uid, {
+                    'name': pick_name,
                     'origin': repair.name,
                     'state': 'draft',
                     'move_type': 'one',

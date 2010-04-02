@@ -11,10 +11,11 @@
             name="Holidays"
             parent="hr.menu_hr_reporting"
             sequence="3" />
-	<wizard string="Print Summary of Holidays"
+	<wizard string="Holidays by Departement"
 		  name="hr.holidays.summary"
 		  id="holidays_summary"/>
-	<menuitem name="Print Summary of Holidays" parent="menu_hr_reporting_holidays"
+	<menuitem name="Leaves by Departement" parent="menu_hr_reporting_holidays"
+                  icon="STOCK_PRINT"
 		 action="holidays_summary"
 		 type="wizard"
 		 id="menu_holidays_summary" sequence="20"/>
@@ -24,7 +25,7 @@
 		 <field eval="[(6,0,[ref('hr.group_hr_manager')])]" name="groups_id"/>
   	 </record>
 
-	<wizard string="Print Summary of Employee's Holidays"
+	<wizard string="Employee's Holidays"
 		model="hr.employee" name="hr.holidays.summary.employee"
 		keyword="client_print_multi" id="wizard_holidays_summary" />
  	</data>
