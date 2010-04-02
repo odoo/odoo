@@ -699,7 +699,11 @@ class function(_column):
         if self._type == "integer":
             for r in res.keys():
                 # Converting value into string so that it does not affect XML-RPC Limits
-                res[r] = str(res[r])
+                if isinstance(res[r],dict): # To treat integer values with _multi attribute
+                    for record in res[r].keys():
+                        res[r][record] = str(res[r][record])
+                else:
+                    res[r] = str(res[r])
         return res
     get_memory = get
 
