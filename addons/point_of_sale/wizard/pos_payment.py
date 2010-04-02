@@ -53,15 +53,16 @@ class pos_make_payment(osv.osv_memory):
         else:
             journal = None
 
-        order = self.pool.get('pos.order').browse(cr, uid, record_id, context)
+        order_obj=self.pool.get('pos.order')
+        order = order_obj.browse(cr, uid, record_id, context)
         #get amount to pay
         amount = order.amount_total - order.amount_paid
 
         if amount <= 0.0:
             context.update({'flag': True})
-            self.pool.get('pos.order').action_paid(cr, uid, [record_id], context)
+            order_obj.action_paid(cr, uid, [record_id], context)
         elif order.amount_paid > 0.0:
-            self.pool.get('pos.order').write(cr, uid, [record_id], {'state': 'advance'})
+            order_obj.write(cr, uid, [record_id], {'state': 'advance'})
 
         invoice_wanted_checked = False
 
@@ -111,7 +112,7 @@ class pos_make_payment(osv.osv_memory):
                                     <label string="Do you want to print the Receipt?" colspan="4"/>
                                     <separator colspan="4"/>
                                     <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                                    <button name="print_report" string="Print Receipt" type="object" icon="gtk-ok"/>
+                                    <button name="print_report" string="Print Receipt" type="object" icon="gtk-print"/>
                                 </group>
                             </form>
                         """
@@ -143,7 +144,11 @@ class pos_make_payment(osv.osv_memory):
             if order.partner_id and order.invoice_wanted:
                 return self.create_invoice(cr, uid, ids, context)
             else:
-                return self.print_report(cr, uid, ids, context)
+                order_obj.write(cr, uid, [record_id],{'state':'paid'})                            
+                return self.print_report(cr, uid, ids, context)  
+        if order.amount_paid > 0.0:
+            self.pool.get('pos.order').write(cr, uid, [record_id],{'state':'advance'})
+            return self.print_report(cr, uid, ids, context)            
         return {}
 
     def create_invoice(self, cr, uid, ids, context):
@@ -178,12 +183,6 @@ class pos_make_payment(osv.osv_memory):
             'report_name': 'pos.receipt',
             'datas': datas,
        }
-
-    def trigger_wkf(self, cr, uid, data, context):
-        record_id = context and context.get('active_id', False)
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'pos.order', record_id, 'payment', cr)
-        return {}
 
     _columns = {
         'journal': fields.selection(pos_box_entries.get_journal, "Journal", required=True),

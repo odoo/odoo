@@ -64,7 +64,7 @@ class pos_company_discount(osv.osv):
         'company_discount': fields.float('Max Discount(%)', digits=(16,2)),
         'max_diff': fields.float('Max Difference for Cashboxes', digits=(16,2)),
         'account_receivable': fields.many2one('account.account',
-            'Default Receivable', required=True, states={'draft': [('readonly', False)]}),
+            'Default Receivable', states={'draft': [('readonly', False)]}),
      }
 
 pos_company_discount()
@@ -1360,7 +1360,7 @@ class report_sales_by_margin_pos(osv.osv):
 #        'pos_name': fields.char('POS Order', size=64, readonly=True),
         'product_name':fields.char('Product Name', size=64, readonly=True),
         'date_order': fields.date('Order Date',required=True, select=True),
-        'amount': fields.float('Total', readonly=True, select=True),
+     #   'amount': fields.float('Total', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
         'qty': fields.float('Qty', readonly=True, select=True),
         'net_margin_per_qty':fields.float('Net margin per Qty', readonly=True, select=True),
@@ -1409,7 +1409,7 @@ class report_sales_by_margin_pos_month(osv.osv):
 #        'pos_name': fields.char('POS Order', size=64, readonly=True),
         'product_name':fields.char('Product Name', size=64, readonly=True),
         'date_order': fields.date('Order Date',required=True, select=True),
-        'amount': fields.float('Total', readonly=True, select=True),
+        #'amount': fields.float('Total', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
         'qty': fields.float('Qty', readonly=True, select=True),
         'net_margin_per_qty':fields.float('Net margin per Qty', readonly=True, select=True),
