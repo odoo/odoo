@@ -33,12 +33,11 @@ class account_subscription_generate(osv.osv_memory):
         'date': lambda *a: time.strftime('%Y-%m-%d'),
                 }
     def action_generate(self, cr, uid, ids, context={}):
-        for data in  self.read(cr, uid, ids,context=context):
+        for data in  self.read(cr, uid, ids, context=context):
              cr.execute('select id from account_subscription_line where date<%s and move_id is null', (data['date'],))
              ids = map(lambda x: x[0], cr.fetchall())
-             self.pool.get('account.subscription.line').move_create(cr, uid, ids)
-             return {}
+             self.pool.get('account.subscription.line').move_create(cr, uid, ids, context=context)
+        return {}
 
 account_subscription_generate()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import fields, osv
 from tools.translate import _
 
@@ -33,9 +32,9 @@ class project_account_analytic_line(osv.osv_memory):
      def action_open_window(self, cr, uid, ids, context={}):
           mod_obj =self.pool.get('ir.model.data')
           domain = []
-          for data in self.read(cr, uid, ids,context=context):
-              from_date =data['from_date']
-              to_date =data['to_date']
+          for data in self.read(cr, uid, ids, context=context):
+              from_date = data['from_date']
+              to_date = data['to_date']
               if from_date and to_date:
                     domain = [('date','>=',from_date), ('date','<=',to_date)]
               elif from_date:
@@ -51,7 +50,8 @@ class project_account_analytic_line(osv.osv_memory):
                     'res_model': 'account.analytic.line',
                     'type': 'ir.actions.act_window',
                     'domain': domain,
-                    'search_view_id': id['res_id'],}
+                    'search_view_id': id['res_id'],
+                    }
 
 project_account_analytic_line()
 
