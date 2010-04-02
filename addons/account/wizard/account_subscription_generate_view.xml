@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+  		<record id="view_account_subscription_generate" model="ir.ui.view">
+            <field name="name">account.subscription.generate.form</field>
+            <field name="model">account.subscription.generate</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Subscription Compute">
+                	<group colspan="4" >
+                		 <separator string="Generate entries before:" colspan="4"/>
+              			 <field name="date"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel" />
+                    	<button icon="gtk-execute" string="Compute Entry Dates"
+                    		name="action_generate" type="object" />
+                    </group>
+               </form>
+            </field>
+  		</record>
+
+        <record id="action_account_subscription_generate" model="ir.actions.act_window">
+            <field name="name">Create subscription entries</field>
+            <field name="res_model">account.subscription.generate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           	<field name="view_id" ref="view_account_subscription_generate"/>
+           	<field name="target">new</field>
+        </record>
+
+        <menuitem action="action_account_subscription_generate" id="menu_generate_subscription" parent="account.menu_finance_periodical_processing" />
+
+    </data>
+</openerp>

@@ -29,7 +29,7 @@ import wizard_pay_invoice
 import account_move_journal
 import wizard_journal_select
 import account_move_bank_reconcile
-import wizard_subscription_generate
+import account_subscription_generate
 import wizard_aged_trial_balance
 import wizard_general_ledger_report
 import wizard_third_party_ledger
