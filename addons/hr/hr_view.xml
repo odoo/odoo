@@ -39,20 +39,6 @@
                     <notebook colspan="4">
                         <page string="Personal Information">
                             <group col="2" colspan="2">
-                                <separator colspan="2" string="Social IDs"/>
-                                <field name="ssnid"/>
-                                <field name="sinid" groups="base.group_extended"/>
-                                <field name="otherid"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator string="Status" colspan="2"/>
-                                <field name="gender"/>
-                                <field name="marital"/>
-                                <field name="country_id"/>
-                                <field name="birthday"/>
-                            </group>
-
-                            <group col="2" colspan="2">
                                 <separator string="Contact Information" colspan="2"/>
                                 <field name="address_home_id" colspan="2"/>
                                 <field name="partner_id" invisible="1" />
@@ -63,12 +49,27 @@
                             </group>
 
                             <group col="2" colspan="2">
+                                <separator colspan="2" string="Social IDs"/>
+                                <field name="ssnid"/>
+                                <field name="sinid" groups="base.group_extended"/>
+                                <field name="otherid"/>
+                            </group>
+
+                            <group col="2" colspan="2">
                                 <separator string="Position" colspan="2"/>
                                 <field name="job_id" widget="selection"/>
                                 <field name="department_id" widget="selection"/>
                                 <separator string="Managers" colspan="2"/>
                                 <field name="parent_id" select="1"/>
                                 <field name="coach_id" select="1"/>
+                            </group>
+
+                            <group col="2" colspan="2">
+                                <separator string="Status" colspan="2"/>
+                                <field name="gender"/>
+                                <field name="marital"/>
+                                <field name="country_id"/>
+                                <field name="birthday"/>
                             </group>
                         </page>
                         <page string="Notes">
@@ -87,10 +88,11 @@
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
-                    <field name="job_id"/>
+                    <field name="ssnid"/>
                     <field name="work_phone"/>
                     <field name="work_email"/>
                     <field name="department_id"/>
+                    <field name="job_id"/>
                     <field name="parent_id"/>
                 </tree>
             </field>
@@ -101,14 +103,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
-                    <group col='6' colspan='2'>
-                        <field name="name"/>
-                        <field name="job_id" widget="selection"/>
-                        <field name="department_id" widget="selection"/>
-                        <field name="parent_id">
-                               <filter icon="terp-partner" domain="[('parent_id','child_of',uid),('id', '!=', uid)]"  help="Employees under me"/>
-                         </field>
-                    </group>
+                    <filter icon="terp-partner" domain="[('parent_id','child_of',uid),('id', '!=', uid)]" string ="My Employees"/>
+                    <separator orientation="vertical" />
+                    <field name="name"/>
+                    <field name="ssnid"/>
+                    <field name="department_id" widget="selection"/>
+                    <field name="job_id" widget="selection"/>
+                    <field name="parent_id" widget="selection" />
                     <newline />
 
                     <group expand="1" string="Group By..." colspan="11" col="11">
@@ -154,6 +155,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
+            <field name="view_id" ref="view_employee_tree"/>
             <field name="search_view_id" ref="view_employee_filter"/>
         </record>
         <!--<menuitem
@@ -208,6 +210,7 @@
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
+                    <field name="ssnid"/>
                     <field name="user_id"/>
                     <field name="address_id"/>
 

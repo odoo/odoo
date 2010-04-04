@@ -67,7 +67,11 @@ class wizard_report(wizard.interface):
     states={
         'init':{
             'actions':[_check],
+<<<<<<< TREE
             'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('checkemp', 'Print', 'gtk-ok')]}
+=======
+            'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel','gtk-cancel'), ('checkemp', 'Print', 'gtk-print')]}
+>>>>>>> MERGE-SOURCE
         },
         'checkemp': {
             'actions': [],
@@ -75,7 +79,7 @@ class wizard_report(wizard.interface):
         },
         'notify': {
             'actions': [],
-            'result': {'type':'form','arch':zero_form,'fields':zero_fields,'state':[('end','Ok')]}
+            'result': {'type':'form','arch':zero_form,'fields':zero_fields,'state':[('end','Ok', 'gtk-ok')]}
         },
         'report':{
             'actions':[],

@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <form string="Employee attendance">
                     <field name="employee_id" select="1"/>
-                    <field colspan="4" name="name" select="1"/>
+                    <field name="name" select="1"/>
                     <field name="action" select="1"/>
                     <field name="action_desc" select="1"/>
                 </form>
@@ -48,9 +48,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Hr Attendance Search">
+                    <filter icon="terp-sale" string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
+                    <filter icon="terp-sale" string="Today" domain="[('name::date','=',current_date)]" />
+                    <separator orientation="vertical"/>
                     <field name="employee_id" select="1" />
                     <field name="name" select="1"  />
                     <field name="action" select="1" />
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="11" col="11">
+                        <filter string="Employee" icon="terp-sale" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Day" icon="terp-sale" domain="[]" context="{'group_by':'day'}"/>
+                    </group>
                 </search>
             </field>
         </record>

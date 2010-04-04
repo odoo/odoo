@@ -61,8 +61,8 @@
 						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]" default="1"/>
                         <separator orientation="vertical"/>
   						<filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
-  						<filter string="Order Date" icon="terp-stock" domain="[('order_date',=,time.strftime('%%m/%%d/%%Y'))]"  />
-  						<filter string="Expected Date" icon="terp-hr" domain="[('expected_date',=,time.strftime('%%m/%%d/%%Y'))]"/>
+  						<filter string="Order Date" icon="terp-stock" domain="[('order_date',=,time.strftime('%%Y-%%m-%%d'))]"  />
+  						<filter string="Expected Date" icon="terp-hr" domain="[('expected_date',=,time.strftime('%%Y-%%m-%%d'))]"/>
 						<separator orientation="vertical"/>
 						<field name="reference" />
 						<field name="origin" />
