@@ -7,7 +7,14 @@
 			name="account.balance.account.balance.report"
 			keyword="client_print_multi"
 			id="wizard_account_balance_compare_report"/>
-        <wizard id="wizard_invoice_refund" model="account.invoice" name="account.invoice.refund" string="Credit Note" groups="base.group_user"/>
+
+     <!--     <wizard id="wizard_invoice_refund" model="account.invoice" name="account.invoice.refund" string="Credit Note" groups="base.group_user"/>   -->
+
+ <!--    <wizard id="wizard_invoice_refund" model="account.invoice" name="account.invoice.refund" string="Credit Note" groups="base.group_user"/>-->
+
+<!--  for test only -->
+
+
 
         <wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice" groups="base.group_user"/>
 
@@ -21,8 +28,9 @@
             type="wizard"
             sequence="1"/>
 
-        <wizard id="wizard_fiscalyear_close_state" menu="False" model="account.fiscalyear" name="account.fiscalyear.close.state" string="Close a Fiscal Year"/>
+  <!--     <wizard id="wizard_fiscalyear_close_state" menu="False" model="account.fiscalyear" name="account.fiscalyear.close.state" string="Close a Fiscal Year"/>
         <menuitem action="wizard_fiscalyear_close_state" id="menu_wizard_fy_close_state" parent="menu_account_end_year_treatments" type="wizard"/>
+ -->
 
         <wizard
             id="wizard_open_closed_fiscalyear"
@@ -35,12 +43,19 @@
             id="menu_wizard_open_closed_fy"
             sequence="2"
             parent="account.menu_account_end_year_treatments" type="wizard"/>
+<!--  period close
 
-        <wizard id="wizard_period_close" model="account.period" name="account.period.close" string="Close a Period"/>
 
+       <wizard id="wizard_period_close" model="account.period" name="account.period.close" string="Close a Period"/>
+
+      <wizard id="action_account_period_close" model="account.period" name="account.period.close" string="Close a Period"/>
+
+
+-->
         <!-- automatic reconcile -->
         <wizard id="wizard_automatic_reconcile" menu="False" model="account.account" name="account.automatic.reconcile" string="Automatic reconciliation"/>
-        <menuitem id="next_id_20" name="Reconciliation" parent="menu_finance_periodical_processing"/><menuitem action="wizard_automatic_reconcile" id="menu_automatic_reconcile" parent="next_id_20" type="wizard"/>
+        <menuitem id="next_id_20" name="Reconciliation" parent="menu_finance_periodical_processing"/>
+        <menuitem action="wizard_automatic_reconcile" id="menu_automatic_reconcile" parent="next_id_20" type="wizard"/>
 
         <!-- Import entry in statement -->
 
@@ -57,19 +72,24 @@
         <wizard id="wizard_reconcile_unreconcile" model="account.move.reconcile" name="account.reconcile.unreconcile" string="Unreconcile Entries"/>
 
 
-        <wizard id="wizard_reconcile_select" menu="False" model="account.move.line" name="account.move.line.reconcile.select" string="Reconcile entries"/>
+ <!--       <wizard id="wizard_reconcile_select" menu="False" model="account.move.line" name="account.move.line.reconcile.select" string="Reconcile entries"/>
         <menuitem action="wizard_reconcile_select" id="menu_reconcile_select" parent="account.next_id_20" type="wizard"/>
+ -->
 
         <!-- unreconcile -->
         <wizard id="wizard_unreconcile" model="account.move.line" name="account.move.line.unreconcile" string="Unreconcile Entries"/>
 
+<!--   unreconcile
+
         <wizard id="wizard_unreconcile_select" menu="False" model="account.move.line" name="account.move.line.unreconcile.select" string="Unreconcile entries"/>
         <menuitem action="wizard_unreconcile_select" id="menu_unreconcile_select" parent="account.next_id_20" type="wizard"/>
+ -->
 
         <!-- subscriptions -->
+        <!--
         <wizard id="wizard_generate_subscription" menu="False" model="account.subscription" name="account.subscription.generate" string="Create subscription entries"/>
         <menuitem action="wizard_generate_subscription" id="menu_generate_subscription" parent="account.menu_finance_periodical_processing" type="wizard"/>
-
+         -->
         <!-- Aged partner balance -->
         <wizard id="wizard_aged_trial_balance" menu="False" model="res.partner" name="account.aged.trial.balance" string="Aged Partner Balance"/>
         <menuitem id="next_id_22" name="Partner Accounts" parent="menu_finance_generic_reporting" sequence="1"/>

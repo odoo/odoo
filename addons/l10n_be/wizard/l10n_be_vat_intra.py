@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,92 +15,69 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import wizard
 import time
-import datetime
-import pooler
 import base64
 
-form_intra = """<?xml version="1.0"?>
-<form string="Partner VAT Intra">
-    <notebook>
-    <page string="General Information">
-    <label string="This wizard will create an XML file for Vat Intra" colspan="4"/>
-    <newline/>
-    <field name="fyear" />
-    <newline/>
-    <field name="mand_id" help="This identifies the representative of the sending company. This is a string of 14 characters"/>
-    <newline/>
-    <field name="trimester" help="It will be the first digit of period" />
-    <newline/>
-    <field name="test_xml" help="Sets the XML output as test file"/>
-    </page>
-    <page string="European Countries">
-    <field name="country_ids" colspan="4" nolabel="1" />
-    </page>
-    </notebook>
-</form>"""
-fields_intra = {
-    'trimester': {'string': 'Trimester Number', 'type': 'selection', 'selection':[
-            ('1','Jan/Feb/Mar'),
-            ('2','Apr/May/Jun'),
-            ('3','Jul/Aug/Sep'),
-            ('4','Oct/Nov/Dec')], 'required': True},
-    'test_xml': {'string':'Test XML file', 'type':'boolean'},
-    'mand_id':{'string':'MandataireId','type':'char','size':'14','required': True},
-    'fyear': {'string': 'Fiscal Year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
-    'country_ids': {
-        'string': 'European Countries',
-        'type': 'many2many',
-        'relation': 'res.country',
-        'required': False
-    },
-   }
+from osv import osv, fields
 
-msg_form = """<?xml version="1.0"?>
-<form string="Notification">
-    <separator string="XML File has been Created."  colspan="4"/>
-    <field name="msg" colspan="4" nolabel="1"/>
-    <field name="file_save" />
-</form>"""
-msg_fields = {
-  'msg': {'string':'File created', 'type':'text', 'size':'100','readonly':True},
-  'file_save':{'string': 'Save File',
-        'type': 'binary',
-        'readonly': True,},
-}
+class partner_vat_intra(osv.osv_memory):
 
-class parter_vat_intra(wizard.interface):
+    """ Partner Vat Intra"""
+    _name = "partner.vat.intra"
+    _description = 'Partner VAT Intra'
 
-    def _get_europe_country(self, cr, uid, data, context):
-        country_ids = pooler.get_pool(cr.dbname).get('res.country').search(cr, uid, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
-        return {'country_ids': country_ids}
+    def _get_europe_country(self, cursor, user, context={}):
+        obj_country = self.pool.get('res.country')
+        return obj_country.search(cursor, user, [('code', 'in', ['AT', 'BG', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB'])])
 
-    def _create_xml(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        data_cmpny = pool.get('res.users').browse(cr, uid, uid).company_id
-        data_fiscal = pool.get('account.fiscalyear').browse(cr,uid,data['form']['fyear'])
+    _columns = {
+        'trimester': fields.selection( [('1','Jan/Feb/Mar'),
+                                       ('2','Apr/May/Jun'),
+                                       ('3','Jul/Aug/Sep'),
+                                       ('4','Oct/Nov/Dec')],
+                                        'Trimester Number', required=True, help="It will be the first digit of period"),
+        'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
+        'mand_id' : fields.char('MandataireId', size=14, required=True,  help="This identifies the representative of the sending company. This is a string of 14 characters"),
+        'fyear': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True),
+        'msg': fields.text('File created', size=64, readonly=True),
+        'file_save' : fields.binary('Save File', readonly=True),
+        'country_ids': fields.many2many('res.country', 'vat_country_rel', 'vat_id', 'country_id', 'European Countries'),
+        }
+
+    _defaults = {
+        'country_ids': _get_europe_country,
+                }
+
+    def create_xml(self, cursor, user, ids, context={}):
+        obj_user = self.pool.get('res.users')
+        obj_fyear = self.pool.get('account.fiscalyear')
+        obj_sequence = self.pool.get('ir.sequence')
+        obj_partner = self.pool.get('res.partner')
+        obj_partner_add = self.pool.get('res.partner.address')
+
+        data_cmpny = obj_user.browse(cursor, user, user).company_id
+        data  = self.read(cursor, user, ids)[0]
+        data_fiscal = obj_fyear.browse(cursor, user, data['fyear'], context=context)
+
         company_vat = data_cmpny.partner_id.vat
-
         if not company_vat:
-            raise wizard.except_wizard('Data Insufficient','No VAT Number Associated with Main Company!')
+            raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
-        seq_controlref = pool.get('ir.sequence').get(cr, uid,'controlref')
-        seq_declarantnum = pool.get('ir.sequence').get(cr, uid,'declarantnum')
+        seq_controlref = obj_sequence.get(cursor, user, 'controlref')
+        seq_declarantnum = obj_sequence.get(cursor, user, 'declarantnum')
         cref = company_vat + seq_controlref
         dnum = cref + seq_declarantnum
         if len(data_fiscal.date_start.split('-')[0]) < 4:
-            raise wizard.except_wizard('Data Insufficient','Trimester year should be length of 4 digits!')
-        period_trimester = data['form']['trimester'] + data_fiscal.date_start.split('-')[0]
+            raise osv.except_osv(_('Data Insufficient'),_('Trimester year should be length of 4 digits!'))
+        period_trimester = data['trimester'] + data_fiscal.date_start.split('-')[0]
 
         street = zip_city = country = ''
-        addr = pool.get('res.partner').address_get(cr, uid, [data_cmpny.partner_id.id], ['invoice'])
+        addr = obj_partner.address_get(cursor, user, [data_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
-            ads = pool.get('res.partner.address').browse(cr,uid,[addr['invoice']])[0]
+            ads = obj_partner_add.browse(cursor, user, [addr['invoice']])[0]
             zip_city = (ads.city or '') + ' ' + (ads.zip or '')
             if zip_city== ' ':
                 zip_city = ''
@@ -114,8 +91,8 @@ class parter_vat_intra(wizard.interface):
 
         sender_date = time.strftime('%Y-%m-%d')
         data_file = '<?xml version="1.0"?>\n<VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="' + str(company_vat) + '"'
-        data_file +=' ControlRef="' + cref + '" MandataireId="' + data['form']['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
-        if data['form']['test_xml']:
+        data_file +=' ControlRef="' + cref + '" MandataireId="' + data['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
+        if data['test_xml']:
             data_file += ' Test="1"'
         data_file += ' VersionTech="1.2">'
         data_file +='\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>'
@@ -127,35 +104,35 @@ class parter_vat_intra(wizard.interface):
         error_message = []
         seq = 0
         amount_sum = 0
-        p_id_list = pool.get('res.partner').search(cr,uid,[('vat','!=',False)])
+        p_id_list = obj_partner.search(cursor, user, [('vat','!=',False)])
         if not p_id_list:
-            raise wizard.except_wizard('Data Insufficient!','No partner has a VAT Number asociated with him.')
+            raise osv.except_osv(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
 
         nb_period = len(data_fiscal.period_ids)
         fiscal_periods = data_fiscal.period_ids
 
-        if data['form']['trimester'] == '1':
+        if data['trimester'] == '1':
             if nb_period == 12:
                 start_date = fiscal_periods[0].date_start
                 end_date = fiscal_periods[2].date_stop
             elif nb_period == 4:
                 start_date = fiscal_periods[0].date_start
                 end_date = fiscal_periods[0].date_stop
-        elif data['form']['trimester'] == '2':
+        elif data['trimester'] == '2':
             if nb_period == 12:
                 start_date = fiscal_periods[3].date_start
                 end_date = fiscal_periods[5].date_stop
             elif nb_period == 4:
                 start_date = fiscal_periods[1].date_start
                 end_date = fiscal_periods[1].date_stop
-        elif data['form']['trimester'] == '3':
+        elif data['trimester'] == '3':
             if nb_period == 12:
                 start_date = fiscal_periods[6].date_start
                 end_date = fiscal_periods[8].date_stop
             elif nb_period == 4:
                 start_date = fiscal_periods[2].date_start
                 end_date = fiscal_periods[2].date_stop
-        elif data['form']['trimester'] == '4':
+        elif data['trimester'] == '4':
             if nb_period == 12:
                 start_date = fiscal_periods[9].date_start
                 end_date = fiscal_periods[11].date_stop
@@ -168,19 +145,19 @@ class parter_vat_intra(wizard.interface):
 
         for p_id in p_id_list:
             list_partner = []
-            partner = pool.get('res.partner').browse(cr, uid, p_id)
+            partner = obj_partner.browse(cursor, user, p_id, context=context)
             go_ahead = False
             country_code = ''
             for ads in partner.address:
-                if ads.type == 'default' and (ads.country_id and ads.country_id.id in data['form']['country_ids'][0][2]):
+                if ads.type == 'default' and (ads.country_id and ads.country_id.id in data['country_ids']):
                     go_ahead = True
                     country_code = ads.country_id.code
                     break
             if not go_ahead:
                 continue
 
-            cr.execute('select sum(debit)-sum(credit) as amount from account_move_line l left join account_account a on (l.account_id=a.id) where a.type in ('"'receivable'"') and l.partner_id=%%s and l.date between %s' % (period,), (p_id,))
-            res = cr.dictfetchall()
+            cursor.execute('select sum(debit)-sum(credit) as amount from account_move_line l left join account_account a on (l.account_id=a.id) where a.type in ('"'receivable'"') and l.partner_id=%%s and l.date between %s' % (period,), (p_id,))
+            res = cursor.dictfetchall()
             list_partner.append(res[0]['amount'])
             list_partner.append('T') #partner.ref ...should be check
             list_partner.append(partner.vat)
@@ -202,8 +179,8 @@ class parter_vat_intra(wizard.interface):
             record[p_id] = list_partner
 
         if len(error_message):
-            data['form']['msg'] = 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
-            return data['form']
+            data['msg'] = 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
+            return data['msg']
         data_clientinfo = ''
 
         for r in record:
@@ -215,18 +192,11 @@ class parter_vat_intra(wizard.interface):
         amount_sum = int(amount_sum)
         data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
         data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n\t</DeclarantList>\n</VatIntra>'
-        data['form']['msg'] = 'Save the File with '".xml"' extension.'
-        data['form']['file_save'] = base64.encodestring(data_file)
-        return data['form']
+        data['msg'] = 'XML Flie has been Created. Save the File with '".xml"' extension.'
+        data['file_save'] = base64.encodestring(data_file)
+        self.write(cursor, user, ids, {'file_save':data['file_save'], 'msg':data['msg']}, context=context)
+        return True
 
-    states = {
-        'init': {
-            'actions': [_get_europe_country],
-            'result': {'type': 'form', 'arch':form_intra, 'fields': fields_intra, 'state':[('end','Cancel', 'gtk-cancel'),('go','Create XML', 'gtk-ok') ]}
-                },
-         'go': {
-            'actions': [_create_xml],
-            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end','Ok', 'gtk-cancel')]},
-                }
-             }
-parter_vat_intra('vat.intra.xml')
+partner_vat_intra()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

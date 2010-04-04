@@ -19,8 +19,36 @@
 #
 ##############################################################################
 
-import l10_be_partner_vat_listing
-import l10n_be_vat_intra
-import l10n_be_account_vat_declaration
+from osv import fields, osv
+from tools.translate import _
+import tools
+
+class account_period_close(osv.osv_memory):
+    """
+        close period
+    """
+    _name = "account.period.close"
+    _description = "period close"
+    _columns = {
+        'sure': fields.boolean('Check this box', required=False),
+              }
+
+    def data_save(self, cr, uid, ids, context={}):
+        """
+        This function close period
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: account period close’s ID or list of IDs
+         """
+
+        mode = 'done'
+        for form in self.read(cr, uid, ids,context=context):
+            if form['sure']:
+                for id in context['active_ids']:
+                    cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
+                    cr.execute('update account_period set state=%s where id=%s', (mode, id))
+            return {}
+
+account_period_close()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

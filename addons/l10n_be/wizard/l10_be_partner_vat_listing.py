@@ -1,3 +1,6 @@
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -19,13 +22,8 @@
 #
 ##############################################################################
 import time
-import datetime
 import base64
-from tools.translate import _
-import tools
 
-import wizard
-import pooler
 from tools.translate import _
 import tools
 from osv import fields, osv
@@ -33,75 +31,32 @@ from osv import fields, osv
 class vat_listing_clients(osv.osv_memory):
     _name = 'vat.listing.clients'
     _columns = {
-        'name': fields.char('Cleint Name', size=64),
+        'name': fields.char('Client Name', size=64),
         'vat': fields.char('VAT', size=64),
         'country': fields.char('Country', size=64),
         'amount': fields.float('Amount'),
         'turnover': fields.float('Turnover'),
-                }
+            }
 
 vat_listing_clients()
 
-form = """<?xml version="1.0"?>
-<form string="Select Fiscal Year">
-    <label string="This wizard will create an XML file for Vat details and total invoiced amounts per partner."  colspan="4"/>
-    <newline/>
-    <field name="fyear" />
-    <newline/>
-    <field name="mand_id" help="Should be provided when subscription of INTERVAT service is done"/>
-    <newline/>
-    <field name="limit_amount" help="Limit under which the partners will not be included into the listing"/>
-    <newline/>
-    <field name="test_xml" help="Sets the XML output as test file"/>
-</form>"""
+class partner_vat(osv.osv_memory):
+    """ Vat Listing """
+    _name = "partner.vat"
 
-fields = {
-    'fyear': {'string': 'Fiscal Year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True,},
-    'mand_id':{'string':'MandataireId','type':'char','size':'30','required': True,},
-    'limit_amount':{'string':'Limit Amount','type':'integer','required': True, },
-    'test_xml': {'string':'Test XML file', 'type':'boolean', },
-   }
-
-client_form = """<?xml version="1.0"?>
-<form string="Select Fiscal Year">
-    <label string="You can remove clients/partners which you do not want in exported xml file"  colspan="4"/>
-    <separator string="Clients" colspan="4"/>
-    <field name="partners" colspan="4" width="600" height="250" widget="one2many" nolabel="1"/>
-</form>"""
-
-client_fields = {
-    'partners': {'string': 'Cleints', 'type': 'many2many', 'relation': 'vat.listing.clients', 'required': False, 'help': 'You can remove clients/partners which you do not want to show in xml file'},
-                 }
-
-msg_form = """<?xml version="1.0"?>
-<form string="Notification">
-    <separator string="XML File has been Created."  colspan="4"/>
-    <field name="msg" colspan="4" nolabel="1"/>
-    <field name="name"/>
-    <newline/>
-    <field name="file_save" />
-</form>"""
-
-msg_fields = {
-  'name': {'string': 'File name', 'type':'char', 'size':'32'},
-  'msg': {'string':'File created', 'type':'text', 'size':'100','readonly':True},
-  'file_save':{'string': 'Save File',
-        'type': 'binary',
-        'readonly': True,},
-}
-
-class wizard_vat(wizard.interface):
-
-    def _get_partner(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        period = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fyear'])])
-        p_id_list = pool.get('res.partner').search(cr,uid,[('vat_subjected','!=',False)])
+    def get_partner(self, cursor, user, ids, context={}):
+        obj_period = self.pool.get('account.period')
+        obj_partner = self.pool.get('res.partner')
+        obj_vat_lclient = self.pool.get('vat.listing.clients')
+        obj_model_data = self.pool.get('ir.model.data')
+        data  = self.read(cursor, user, ids)[0]
+        period = obj_period.search(cursor, user, [('fiscalyear_id', '=', data['fyear'])], context=context)
+        p_id_list = obj_partner.search(cursor, user, [('vat_subjected', '!=', False)], context=context)
         if not p_id_list:
-             raise wizard.except_wizard(_('Data Insufficient!'),_('No partner has a VAT Number asociated with him.'))
+             raise osv.except_osv(_('Data Insufficient!'), _('No partner has a VAT Number asociated with him.'))
         partners = []
         records = []
-        for obj_partner in pool.get('res.partner').browse(cr, uid, p_id_list):
-        
+        for obj_partner in obj_partner.browse(cursor, user, p_id_list, context=context):
             record = {} # this holds record per partner
 
             #This listing is only for customers located in belgium, that's the
@@ -114,8 +69,8 @@ class wizard_vat(wizard.interface):
                     break
             if not go_ahead:
                 continue
-            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in %s and l.partner_id=%s and l.period_id=ANY(%s) group by b.code',(('produit','tax'),obj_partner.id,period,))
-            line_info = cr.fetchall()
+            cursor.execute('select b.code, sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in %s and l.partner_id=%s and l.period_id=ANY(%s) group by b.code',(('produit','tax'),obj_partner.id,period,))
+            line_info = cursor.fetchall()
             if not line_info:
                 continue
 
@@ -127,7 +82,7 @@ class wizard_vat(wizard.interface):
             #~addr = pool.get('res.partner').address_get(cr, uid, [obj_partner.id], ['invoice'])
 
             #~ if addr.get('invoice',False):
-                #~ads=pool.get('res.partner.address').browse(cr,uid,[addr['invoice']])[0]
+                #~ads=pool.get('res.partner.address').browse(cr, uid, [addr['invoice']])[0]
 
                 #~ if ads.country_id:
                     #~ record.append(ads.country_id.code)
@@ -141,38 +96,81 @@ class wizard_vat(wizard.interface):
             record['amount'] = 0
             record['turnover'] = 0
             record['name'] = obj_partner.name
-
             for item in line_info:
-                if item[0]=='produit':
+                if item[0] == 'produit':
                     record['turnover'] += item[1]
                 else:
                     record['amount'] += item[1]
-            id_client = pool.get('vat.listing.clients').create(cr, uid, record)
+            id_client = obj_vat_lclient.create(cursor, user, record, context=context)
             partners.append(id_client)
             records.append(record)
+        context.update({'partner_ids': partners, 'fyear': data['fyear'], 'limit_amount': data['limit_amount'], 'mand_id':data['mand_id']})
+        model_data_ids = obj_model_data.search(cursor, user, [('model','=','ir.ui.view'), ('name','=','view_vat_listing')])
+        resource_id = obj_model_data.read(cursor, user, model_data_ids, fields=['res_id'])[0]['res_id']
+        return {
+#            'domain': "[('id','in', ["+','.join(map(str,data['form']['invoice_ids']))+"])]",
+            'name': 'Vat Listing',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'partner.vat.list',
+            'views': [(resource_id,'form')],
+            'context': context,
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            }
 
-        return {'partners':partners}
+    _columns = {
+        'fyear': fields.many2one('account.fiscalyear','Fiscal Year', required=True),
+        'mand_id': fields.char('MandataireId', size=14, required=True,  help="This identifies the representative of the sending company. This is a string of 14 characters"),
+        'limit_amount': fields.integer('Limit Amount', required=True),
+        'test_xml': fields.boolean('Test XML file', help="Sets the XML output as test file"),
+        }
+partner_vat()
 
-    def _create_xml(self, cr, uid, data, context):
+class partner_vat_list(osv.osv_memory):
+
+    """ Partner Vat Listing """
+    _name = "partner.vat.list"
+    _columns = {
+        'partner_ids': fields.many2many('vat.listing.clients', 'vat_partner_rel', 'vat_id', 'partner_id', 'Clients', required=False, help='You can remove clients/partners which you do not want to show in xml file'),
+        'name': fields.char('File Name', size=32),
+        'msg': fields.text('File created', size=64, readonly=True),
+        'file_save' : fields.binary('Save File', readonly=True),
+        }
+
+    def _get_partners(self, cursor, user, context={}):
+        return context.get('partner_ids', [])
+
+    _defaults={
+        'partner_ids': _get_partners
+            }
+
+    def create_xml(self, cursor, user, ids, context={}):
         datas=[]
-        pool = pooler.get_pool(cr.dbname)
-        seq_controlref = pool.get('ir.sequence').get(cr, uid,'controlref')
-        seq_declarantnum = pool.get('ir.sequence').get(cr, uid,'declarantnum')
-        obj_cmpny = pool.get('res.users').browse(cr, uid, uid).company_id
+        obj_sequence = self.pool.get('ir.sequence')
+        obj_users = self.pool.get('res.users')
+        obj_partner = self.pool.get('res.partner')
+        obj_fyear = self.pool.get('account.fiscalyear')
+        obj_addr = self.pool.get('res.partner.address')
+        obj_vat_lclient = self.pool.get('vat.listing.clients')
+        obj_model_data = self.pool.get('ir.model.data')
+
+        seq_controlref = obj_sequence.get(cursor, user, 'controlref')
+        seq_declarantnum = obj_sequence.get(cursor, user, 'declarantnum')
+        obj_cmpny = obj_users.browse(cursor, user, user, context=context).company_id
         company_vat = obj_cmpny.partner_id.vat
         if not company_vat:
-            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+            raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
         cref = company_vat + seq_controlref
         dnum = cref + seq_declarantnum
-
-        obj_year=pool.get('account.fiscalyear').browse(cr,uid,data['form']['fyear'])
+        obj_year= obj_fyear.browse(cursor, user, context['fyear'], context=context)
         street = zip_city = country = ''
-        addr = pool.get('res.partner').address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])
+        addr = obj_partner.address_get(cursor, user, [obj_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
-            ads=pool.get('res.partner.address').browse(cr,uid,[addr['invoice']])[0]
+            ads = obj_addr.browse(cursor, user, [addr['invoice']], context=context)[0]
 
-            zip_city = pool.get('res.partner.address').get_city(cr,uid,ads.id)
+            zip_city = obj_addr.get_city(cursor, user, ads.id)
             if not zip_city:
                 zip_city = ''
             if ads.street:
@@ -185,8 +183,8 @@ class wizard_vat(wizard.interface):
         sender_date = time.strftime('%Y-%m-%d')
 
         data_file = '<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="'+ str(company_vat) + '"'
-        data_file +=' ControlRef="'+ cref + '" MandataireId="'+ tools.ustr(data['form']['mand_id']) + '" SenderDate="'+ str(sender_date)+ '"'
-        if data['form']['test_xml']:
+        data_file +=' ControlRef="'+ cref + '" MandataireId="'+ tools.ustr(context['mand_id']) + '" SenderDate="'+ str(sender_date)+ '"'
+        if ['test_xml']:
             data_file += ' Test="0"'
         data_file += ' VersionTech="1.2">'
         data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+tools.ustr(obj_cmpny.name)+'</Name>\n\t\t<Street>'+ tools.ustr(street) +'</Street>\n\t\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>'
@@ -194,25 +192,24 @@ class wizard_vat(wizard.interface):
         data_comp = '\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+tools.ustr(obj_cmpny.name)+'</Name>\n\t<Street>'+ tools.ustr(street) +'</Street>\n\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>\n\t<Country>'+ tools.ustr(country) +'</Country>\n</CompanyInfo>'
         data_period = '\n<Period>'+ tools.ustr(obj_year.date_stop[:4]) +'</Period>'
         error_message = []
-
-        for partner in data['form']['partners']:
+        data = self.read(cursor, user, ids)[0]
+        for partner in data['partner_ids']:
             if isinstance(partner, list) and partner:
                 datas.append(partner[2])
             else:
-                client_data = pool.get('vat.listing.clients').read(cr, uid, partner, context=context)
+                client_data = obj_vat_lclient.read(cursor, user, partner, context=context)
                 datas.append(client_data)
-
-        seq=0
-        data_clientinfo=''
-        sum_tax=0.00
-        sum_turnover=0.00
+        seq = 0
+        data_clientinfo = ''
+        sum_tax = 0.00
+        sum_turnover = 0.00
         if len(error_message):
-            data['form']['msg']='Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
-            return data['form']
+            msg ='Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
+            return msg
         for line in datas:
             if not line:
                 continue
-            if line['turnover'] < data['form']['limit_amount']:
+            if line['turnover'] < context['limit_amount']:
                 continue
             seq +=1
             sum_tax +=line['amount']
@@ -221,28 +218,11 @@ class wizard_vat(wizard.interface):
 
         data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(sum_turnover * 100)) +'" TaxSum="'+ str(int(sum_tax * 100)) +'" />'
         data_file += tools.ustr(data_decl) + tools.ustr(data_comp) + tools.ustr(data_period) + tools.ustr(data_clientinfo) + '\n</VatList>'
+        msg = 'Save the File with '".xml"' extension.'
+        file_save = base64.encodestring(data_file.encode('utf8'))
+        self.write(cursor, user, ids, {'file_save':file_save, 'msg':msg, 'name':'vat_list.xml'}, context=context)
+        return True
 
-        data['form']['msg'] = 'Save the File with '".xml"' extension.'
-        data['form']['file_save'] = base64.encodestring(data_file.encode('utf8'))
-        data['form']['name'] = 'vat_list.xml'
-        return data['form']
-
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel', 'gtk-cancel'),('go_step','View Clients', 'gtk-ok')]},
-        },
-        'go_step': {
-            'actions': [_get_partner],
-            'result': {'type':'form', 'arch':client_form, 'fields':client_fields, 'state':[('end','Cancel', 'gtk-cancel'),('go','Create XML', 'gtk-ok')]},
-        },
-        'go': {
-            'actions': [_create_xml],
-            'result': {'type':'form', 'arch':msg_form, 'fields':msg_fields, 'state':[('end','Ok', 'gtk-cancel')]},
-        }
-
-    }
-
-wizard_vat('list.vat.detail')
+partner_vat_list()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
