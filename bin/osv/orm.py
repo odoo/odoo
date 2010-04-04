@@ -1879,7 +1879,8 @@ class orm(orm_template):
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
         groupby_list = groupby
-        groupby = groupby[0]
+        if isinstance(groupby, list):
+            groupby = groupby[0]
         context = context or {}
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
         if not fields:

@@ -636,9 +636,9 @@ class _rml_flowable(object):
             styles = reportlab.lib.styles.getSampleStyleSheet()
             style = styles['Title']
             return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
-        elif re.match('^h([1-9]+[0-9]*)$', (node.text or '')):
+        elif re.match('^h([1-9]+[0-9]*)$', (node.tag or '')):
             styles = reportlab.lib.styles.getSampleStyleSheet()
-            style = styles['Heading'+str(node.get[1:])]
+            style = styles['Heading'+str(node.tag[1:])]
             return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
         elif node.tag=='image':
             if not node.get('file'):
