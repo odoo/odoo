@@ -19,21 +19,34 @@
 #
 ##############################################################################
 
-import stock_traceability
-import stock_move   
-import stock_partial_picking
-import stock_partial_move
-import stock_picking_make
-import wizard_replacement
-import stock_return_picking
-import stock_split_move
-import wizard_ups
-import stock_inventory_merge
-import stock_inventory_set_stock_zero
-import stock_fill_inventory
-import stock_inventory_line_split
-import stock_invoice_onshipping
-import stock_location_product
-import stock_change_standard_price
+import threading
+from osv import osv, fields
+
+class procurement_compute(osv.osv_memory):
+    _name = 'mrp.procurement.compute'
+    _description = 'Compute Procurement'
+    
+    def _procure_calculation_procure(self, cr, uid, ids, context):
+        try:
+            proc_obj = self.pool.get('mrp.procurement')
+            proc_obj._procure_confirm(cr, uid, use_new_cursor=cr.dbname, context=context)
+        finally:
+            cr.close()
+        return {}
+    
+    def procure_calculation(self, cr, uid, ids, context):
+        """ 
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param ids: List of IDs selected 
+         @param context: A standard dictionary 
+        """
+        threaded_calculation = threading.Thread(target=self._procure_calculation_procure, args=(cr, uid, ids, context))
+        threaded_calculation.start()
+        return {}
+    
+procurement_compute()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

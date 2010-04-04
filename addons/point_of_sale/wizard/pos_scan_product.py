@@ -42,6 +42,6 @@ class pos_scan_product(osv.osv_memory):
         record_id = context and context.get('active_id',False)
         result =self. pool.get('pos.order.line')._scan_product(cr, uid, data['gencod'], 1, record_id)
         return {'gencod': False}
-
 pos_scan_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -68,17 +68,20 @@ class repair_cancel(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False        
         res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         if record_id:
-            repair_order = self.pool.get('mrp.repair').browse(cr, uid, record_id)
-            if not repair_order.invoiced:
-                res['arch'] = """ <form string="Cancel Repair" colspan="4">
-                                <group col="2" colspan="2">
-                                    <label string="Do you want to continue?" colspan="4"/>
-                                    <separator colspan="4"/>
-                                    <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
-                                    <button name="cancel_repair" string="Yes" type="object" icon="gtk-ok"/>
-                                </group>
-                            </form>                             
-                        """
+            try:
+                repair_order = self.pool.get('mrp.repair').browse(cr, uid, record_id)
+                if not repair_order.invoiced:
+                    res['arch'] = """ <form string="Cancel Repair" colspan="4">
+                                    <group col="2" colspan="2">
+                                        <label string="Do you want to continue?" colspan="4"/>
+                                        <separator colspan="4"/>
+                                        <button icon="gtk-cancel" special="cancel" string="No" readonly="0"/>
+                                        <button name="cancel_repair" string="Yes" type="object" icon="gtk-ok"/>
+                                    </group>
+                                </form>                             
+                            """
+            except:
+                return res
         return res
 
 repair_cancel()

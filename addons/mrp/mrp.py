@@ -139,8 +139,8 @@ class mrp_bom(osv.osv):
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
              @param ids: the ID of mrp.production object
-             @param name: 
-             @param arg: 
+             @param name: name of the field
+             @param arg: user defined argument
 
              @return:  True
         
@@ -156,6 +156,7 @@ class mrp_bom(osv.osv):
                 if sids:
                     bom2 = self.pool.get('mrp.bom').browse(cr, uid, sids[0], context=context)
                     result[bom.id] += map(lambda x: x.id, bom2.bom_lines)                 
+
         return result
     def _compute_type(self, cr, uid, ids, field_name, arg, context):
         res = dict(map(lambda x: (x,''), ids))
