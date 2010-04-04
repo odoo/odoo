@@ -501,6 +501,16 @@ class orm_template(object):
             self._table = self._name.replace('.', '_')
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
+        """
+        Fetch records as objects allowing to use dot notation to browse fields and relations
+
+        :param cr: database cursor
+        :param user: current user id
+        :param select: id or a list of ids
+        :param context: context arguments, like lang, time zone
+        :rtype: object or a list of objects requested
+
+        """
         if not context:
             context = {}
         self._list_class = list_class or browse_record_list
@@ -616,6 +626,19 @@ class orm_template(object):
         return [data] + lines
 
     def export_data(self, cr, uid, ids, fields_to_export, context=None):
+        """
+        Export fields for selected objects
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param ids: a list of ids
+        :param fields_to_export: a list of fields
+        :param context: context arguments, like lang, time zone, may contain import_comp(default: False) to make exported data compatible with import_data()
+        :rtype: a dictionary with a *datas* matrix
+
+        This method is used when exporting data via client menu
+
+        """
         if not context:
             context = {}
         imp_comp = context.get('import_comp',False)
@@ -645,6 +668,24 @@ class orm_template(object):
         return {'datas':datas}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
+        """
+        Import given data in given module
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param ids: a list of ids
+        :param fields: a list of fields
+        :param data: data to import
+        :param mode: 'init' or 'update' for record creation
+        :param current_module: module name
+        :param noupdate: flag for record creation
+        :param context: context arguments, like lang, time zone,
+        :param filename: optional file to store partial import state for recovery
+        :rtype: a tuple
+
+        This method is used when importing data via client menu
+
+        """
         if not context:
             context = {}
         fields = map(lambda x: x.split('/'), fields)
@@ -984,16 +1025,13 @@ class orm_template(object):
             self._invalids.clear()
 
     def default_get(self, cr, uid, fields_list, context=None):
-        """ Set default values for the object's fields.
+        """
+        Set default values for the object's fields.
 
-        Returns a dict of {field_name:default_value}
+        :param fields_list: fields for which the object doesn't have any value yet, and default values need to be provided.
+                                  If fields outside this list are returned, the user-provided values will be overwritten.
+        :rtype: a dict of {field_name:default_value}
 
-        Arguments:
-        `fields_list`: the fields for which the object doesn't have
-                       any value yet, and default values need to be
-                       provided. If fields outside this list are
-                       returned, the user-provided values will be
-                       overwritten.
         """
         return {}
 
@@ -1081,6 +1119,7 @@ class orm_template(object):
             for r in res.keys():
                 if r not in fields:
                     del res[r]
+        print 'Result from fields get', res
         return res
 
     #
@@ -1316,6 +1355,23 @@ class orm_template(object):
     # if view_id, view_type is not required
     #
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        """
+        Get the detailed composition of the requested view like fields, model, view architecture
+
+        :param cr: database cursor
+        :param user: current user id
+        :param view_id: id of the view or None
+        :param view_type: type of the view to return if view_id is None ('form', tree', ...)
+        :param context: context arguments, like lang, time zone
+        :param toolbar: true to include concextual actions
+        :param submenu: example (portal_project module)
+        :return: a dictionary describing the composition of the requested view (including inherited views and extensions)
+        :raise AttributeError:
+                            * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
+                            * if some tag other than 'position' is found in parent view
+        :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
+
+        """
         if not context:
             context = {}
 
@@ -1878,6 +1934,28 @@ class orm(orm_template):
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count', 'exists']
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None):
+        """
+        Get the list of records in list view sorted by the given fields
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param domain: a list specifying search criteria [['field_name', 'operator', 'value'], ...]
+        :param fields: a list of fields present in the list view specified on the object
+        :param groupby: a list of fields on which to sort the records
+        :type fields_list: a list (example ['field_name_1', ...])
+        :param offset: optional number of records to skip
+        :param limit: optional max number of records to return
+        :param context: context arguments, like lang, time zone
+        :return: a list of dictionaries(one dictionary for each record) containing:
+
+                    * the values of fields sorted out by the fields in groupby arguement
+                    * __domain: a list of tuples specifying the search criteria
+                    * __context: a dictionary with argument like 'groupby'
+        :rtype: [{'field_name_1': value, ...]
+        :raise AccessError: * if user has no read rights on the requested object
+                            * if user tries to bypass access rules for read on the requested object
+
+        """
         groupby_list = groupby
         if isinstance(groupby, list):
             groupby = groupby[0]
@@ -1954,10 +2032,13 @@ class orm(orm_template):
         return data
 
     def _inherits_join_calc(self, field, tables, where_clause):
-        """ Adds missing table select and join clause(s) for reaching
+        """
+            Adds missing table select and join clause(s) for reaching
             the field coming from an '_inherits' parent table.
-            @param tables: list of table._table names enclosed in double quotes as returned
+
+            :param tables: a list of table._table names enclosed in double quotes as returned
                            by _where_calc()
+
         """
         current_table = self
         while field in current_table._inherit_fields and not field in current_table._columns:
@@ -2412,6 +2493,17 @@ class orm(orm_template):
             self._columns[f].restart()
 
     def default_get(self, cr, uid, fields_list, context=None):
+        """
+        Get default field values of the given field list of the model
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param fields_list: a list of fields to get the default value
+        :type fields_list: a list (example ['field_name_1', ...])
+        :param context: context arguments, like lang, time zone
+        :return: a dictionary of the default values for fields (set on the object class, by the user preferences, or via the context)
+
+        """
         if not context:
             context = {}
         value = {}
@@ -2503,12 +2595,38 @@ class orm(orm_template):
         self._inherits_reload_src()
 
     def fields_get(self, cr, user, fields=None, context=None):
+        """
+        Get the description of list of fields
+
+        :param cr: database cursor
+        :param user: current user id
+        :param fields: a list of fields
+        :param context: context arguments, like lang, time zone
+        :return: a dictionary of field dictionaries, each one describing a field of the business object
+        :raise AccessError: * if user has no create/write rights on the requested object
+
+        """
         ira = self.pool.get('ir.model.access')
         read_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
                       ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
         return super(orm, self).fields_get(cr, user, fields, context, read_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        """
+        Read records with given ids with the given fields
+
+        :param cr: database cursor
+        :param user: current user id
+        :param ids: id or a list of the ids of the records to read
+        :param fields: optional list of field names to return (default: all fields would be returned)
+        :type fields: a list (example ['field_name_1', ...])
+        :param context(optional, highly recommended): context arguments, like lang, time zone
+        :return: a list of dictionaries((a dictionary per record asked)) with requested field values
+        :rtype: [{‘name_of_the_field’: value, ...}, ...]
+        :raise AccessError: * if user has no read rights on the requested object
+                            * if user tries to bypass access rules for read on the requested object
+
+        """
         if not context:
             context = {}
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
@@ -2694,6 +2812,24 @@ class orm(orm_template):
         return res
 
     def perm_read(self, cr, user, ids, context=None, details=True):
+        """
+        Read the permission for record of the given ids
+
+        :param cr: database cursor
+        :param user: current user id
+        :param ids: id or list of ids
+        :param context: context arguments, like lang, time zone
+        :param details: if True, *_uid fields are replaced with the name of the user
+        :return: a list of ownership dictionaries for each requested record
+        :rtype: a list of dictionaries with the following keys:
+
+                    * id: object id
+                    * create_uid: user who created the record
+                    * create_date: date when the record was created
+                    * write_uid: last user who changed the record
+                    * write_date: date of the last change to the record
+
+        """
         if not context:
             context = {}
         if not ids:
@@ -2754,6 +2890,20 @@ class orm(orm_template):
                                      % (operation, self._name))
 
     def unlink(self, cr, uid, ids, context=None):
+        """
+        Delete records with given ids
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param ids: id or a list of ids
+        :param context(optional, highly recommended): context arguments, like lang, time zone
+        :return: True
+        :raise AccessError: * if user has no unlink rights on the requested object
+                            * if user tries to bypass access rules for unlink on the requested object
+        :raise UserError: if the record is default property for other records
+
+        """
+                
         if not ids:
             return True
         if isinstance(ids, (int, long)):
@@ -2800,6 +2950,30 @@ class orm(orm_template):
     # TODO: Validate
     #
     def write(self, cr, user, ids, vals, context=None):
+        """
+        Update records with given ids with the given field values
+
+        :param cr: database cursor
+        :param user: current user id
+        :type user: integer (example 1)
+        :param ids: id or a list of ids
+        :param vals: a dictionary of field values to update
+        :type vals: a dictionary (example {'field_name':'value', ...})
+        :param context(optional, highly recommended): context arguments, like lang, time zone
+        :return: True
+        :raise AccessError: * if user has no write rights on the requested object
+                            * if user tries to bypass access rules for write on the requested object
+        :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
+        :raise UserError: if recurssion is found
+
+        vals format for relational field type.
+
+            + many2many field : [(6, 0, list of ids)] (example: [(6, 0, [8, 5, 6, 4])])
+            + one2many field : [(0, 0, dictionary of values)] (example: [(0, 0, {'field_name':field_value, ...})])
+            + many2one field : ID of related record
+            + reference field :  model name, id (example: 'product.product, 5')
+
+        """
         readonly = None
         for field in vals.copy():
             fobj = None
@@ -2986,10 +3160,28 @@ class orm(orm_template):
     # TODO: Should set perm to user.xxx
     #
     def create(self, cr, user, vals, context=None):
-        """ create(cr, user, vals, context) -> int
-        cr = database cursor
-        user = user id
-        vals = dictionary of the form {'field_name':field_value, ...}
+        """
+        Create new record with specified value
+
+        :param cr: database cursor
+        :param user: current user id
+        :type user: integer (example 1)
+        :param vals: a dictionary for new record {'field_name':field_value, ...}
+        :type vals: a dictionary (example {'field_name':field_value, ...})
+        :param context(optional, highly recommended): context arguements, like lang, time zone
+        :type context: a dictionary (example {'lang':'en_us', ...})
+        :return: id of new record created
+        :raise AccessError: * if user has no create rights on the requested object
+                            * if user tries to bypass access rules for create on the requested object
+        :raise ValidateError: if user tries to enter invalid value for a field that is not in selection
+
+        vals format for relational field type.
+
+            + many2many field : [(6, 0, list of ids)] (example: [(6, 0, [8, 5, 6, 4])])
+            + one2many field : [(0, 0, dictionary of values)] (example: [(0, 0, {'field_name':field_value, ...})])
+            + many2one field : ID of related record
+            + reference field :  model name, id (example: 'product.product, 5')
+
         """
         if not context:
             context = {}
@@ -3336,6 +3528,27 @@ class orm(orm_template):
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
+        """
+        Search for record/s with or without domain
+
+        :param cr: database cursor
+        :param user: current user id
+        :param args: a list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
+        :param offset: optional number of records to skip
+        :param limit: optional max number of records to return
+        :param order: optional columns to sort by (default: self._order )
+        :param context(optional, highly recommended): context arguments, like lang, time zone
+        :param count: if True, returns only the number of records matching the criteria, not their ids
+        :return: id or a list of ids of records matching the criteria
+        :rtype: integer or a list of integers
+        :raise AccessError: * if user tries to bypass access rules for read on the requested object.
+
+        Operators:
+            *  =, !=, >, >=, <, <=, like, ilike, in, not in, child_of, parent_left, parent_right
+        Prefix operators:
+            * '&' (default), '|', '!'
+
+        """
         if not context:
             context = {}
         # compute the where, order by, limit and offset clauses
@@ -3385,6 +3598,16 @@ class orm(orm_template):
             return self._columns[field].search(cr, self, args, field, value, offset, limit, uid)
 
     def name_get(self, cr, user, ids, context=None):
+        """
+
+        :param cr: database cursor
+        :param user: current user id
+        :type user: integer (example 1)
+        :param ids: a list of ids
+        :param context: context arguments, like lang, time zone
+        :return: tuples with the text representation of requested objects for to-many relationships
+
+        """
         if not context:
             context = {}
         if not ids:
@@ -3395,6 +3618,20 @@ class orm(orm_template):
             [self._rec_name], context, load='_classic_write')]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        """
+
+        :param cr: database cursor
+        :param user: current user id
+        :param name: object name to search
+        :param args: a list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
+        :param operator: operator for search criterion
+        :param context: context arguments, like lang, time zone
+        :param limit: optional max number of records to return
+        :return: a list of object names matching the search criteria, used to provide completition for to-many relationships
+
+        This method is equivalent of search() on name + name_get()
+
+        """
         if not args:
             args = []
         if not context:
@@ -3407,6 +3644,17 @@ class orm(orm_template):
         return res
 
     def copy_data(self, cr, uid, id, default=None, context=None):
+        """
+        Copy given record's data with all its fields values
+
+        :param cr: database cursor
+        :param user: current user id
+        :param ids: id of the record to copy
+        :param default: a dictionary of field values to update before saving the duplicate object
+        :param context: context arguments, like lang, time zone
+        :return: a dictionary containing all the field values
+        """
+
         if not context:
             context = {}
         if not default:
@@ -3478,6 +3726,18 @@ class orm(orm_template):
         return data, trans_data
 
     def copy(self, cr, uid, id, default=None, context=None):
+        """
+        Duplicate record with given id updating it with default values
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param id: id of the record to copy
+        :param default: a dictionary of field values to update before saving the duplicate object
+        :type default: a dictionary (example {'field_name':field_value, ...})
+        :param context: context arguments, like lang, time zone
+        :return: True
+
+        """
         trans_obj = self.pool.get('ir.translation')
         data, trans_data = self.copy_data(cr, uid, id, default, context)
         new_id = self.create(cr, uid, data, context)
@@ -3492,6 +3752,16 @@ class orm(orm_template):
         return bool(cr.fetchone()[0])
 
     def check_recursion(self, cr, uid, ids, parent=None):
+        """
+        Check recursion in records
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param ids: a list of ids of records
+        :param parent: parent field name
+        :return: True or False based on recursion detection
+        """
+
         if not parent:
             parent = self._parent_name
         ids_parent = ids[:]
@@ -3510,3 +3780,4 @@ class orm(orm_template):
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
