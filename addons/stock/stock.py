@@ -1629,7 +1629,6 @@ class stock_move(osv.osv):
         prodlot_obj.write(cr, uid, [prodlot_id], {'ref': ref})
         return prodlot_id
 
-
     def action_scrap(self, cr, uid, ids, quantity, location_id, context=None):
         '''
         Move the scrap/damaged product into scrap location

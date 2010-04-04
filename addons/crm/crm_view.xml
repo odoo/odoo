@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-<!--        <menuitem icon="terp-crm" id="menu_crm" name="CRM &amp; SRM"/>-->
-        <menuitem id="menu_crm_configuration" name="Cases" parent="base.menu_base_config" sequence="0"/>        
-        <!-- Case Sections -->
+        <menuitem id="menu_crm_configuration" name="Cases" parent="base.menu_base_config" sequence="0"/>
+
+<!-- Case Sections Form View -->
+
         <record id="crm_case_section_view_form" model="ir.ui.view">
             <field name="name">crm.case.section.form</field>
             <field name="model">crm.case.section</field>
@@ -24,6 +25,9 @@
                 </form>
             </field>
         </record>
+
+<!-- Case Sections Tree View -->
+
         <record id="crm_case_section_view_tree" model="ir.ui.view">
             <field name="name">crm.case.section.tree</field>
             <field name="model">crm.case.section</field>
@@ -37,6 +41,9 @@
                 </tree>
             </field>
         </record>
+
+<!-- Case Sections Action -->
+
         <record id="crm_case_section_act" model="ir.actions.act_window">
             <field name="name">Sections</field>
             <field name="res_model">crm.case.section</field>
@@ -44,9 +51,8 @@
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
 
-        # ------------------------------------------------------
-        # Stage
-        # ------------------------------------------------------
+<!-- CRM Stage Tree View -->
+
         <record model="ir.ui.view" id="crm_case_stage_tree">
             <field name="name">crm.case.stage.tree</field>
             <field name="model">crm.case.stage</field>
@@ -57,10 +63,13 @@
                     <field name="name"/>
                     <field name="probability"/>
                     <field name="section_id"/>
-                    
+
                 </tree>
             </field>
         </record>
+
+<!-- CRM Stage Form View -->
+
         <record model="ir.ui.view" id="crm_case_stage_form">
             <field name="name">crm.case.stage.form</field>
             <field name="model">crm.case.stage</field>
@@ -79,16 +88,21 @@
                 </form>
             </field>
         </record>
+
+<!-- CRM Stage Action -->
+
         <record id="crm_case_stage_act" model="ir.actions.act_window">
             <field name="name">Stages</field>
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_stage_tree"/>
         </record>
+
         <menuitem  id="menu_crm_case_stage" name="Stages" parent="crm.menu_crm_configuration"/>
 
-        
-        <!-- Case Categories -->
+
+<!-- Case Categories Form View -->
+
         <record id="crm_case_categ-view" model="ir.ui.view">
             <field name="name">crm.case.categ.form</field>
             <field name="model">crm.case.categ</field>
@@ -97,10 +111,13 @@
                 <form string="Case Category">
                     <field name="name" select="1"/>
                     <field name="section_id" select="1" widget="selection"/>
-                    <field name="object_id"  invisible="1" />                    
+                    <field name="object_id"  invisible="1" />
                 </form>
             </field>
         </record>
+
+<!-- Case Categories Tree View -->
+
         <record id="crm_case_categ_tree-view" model="ir.ui.view">
             <field name="name">crm.case.categ.tree</field>
             <field name="model">crm.case.categ</field>
@@ -108,10 +125,12 @@
             <field name="arch" type="xml">
                 <tree string="Case Category">
                     <field name="name"/>
-                    <field name="section_id"/>                    
+                    <field name="section_id"/>
                 </tree>
             </field>
         </record>
+
+<!-- Case Categories Action -->
 
         <record id="crm_case_categ-act" model="ir.actions.act_window">
             <field name="name">Categories</field>
@@ -121,12 +140,13 @@
         </record>
         <menuitem id="menu_crm_case_categ"   name="Categories"  parent="crm.menu_crm_configuration"/>
 
-        <menuitem action="crm_case_section_act" id="menu_crm_case_section_act" parent="crm.menu_crm_configuration"/>
-        
-        
-        # ------------------------------------------------------
-        # Resource Type of case
-        # ------------------------------------------------------
+        <menuitem action="crm_case_section_act"
+        	id="menu_crm_case_section_act"
+        	parent="crm.menu_crm_configuration" />
+
+
+<!-- Resource Type of case Tree View -->
+
         <record model="ir.ui.view" id="crm_case_resource_type_tree">
             <field name="name">crm.case.resource.type.tree</field>
             <field name="model">crm.case.resource.type</field>
@@ -139,6 +159,9 @@
                 </tree>
             </field>
         </record>
+
+<!-- Resource Type of case Form View -->
+
         <record model="ir.ui.view" id="crm_case_resource_type_form">
             <field name="name">crm.case.resource.type.form</field>
             <field name="model">crm.case.resource.type</field>
@@ -151,19 +174,18 @@
                 </form>
             </field>
         </record>
-        
+
+<!-- Resource Type of case Action -->
+
         <record id="crm_case_resource_type_act" model="ir.actions.act_window">
             <field name="name">Resource Type</field>
             <field name="res_model">crm.case.resource.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_resource_type_tree"/>
         </record>
-        <menuitem  id="menu_crm_case_resource_type" name="Resource Type" parent="crm.menu_crm_configuration"/>
-        
-        <!--<menuitem action="crm_case_resource_type_act" id="menu_crm_case_resource_act" parent="menu_crm_case_resource_type"/>-->
-        
+        <menuitem id="menu_crm_case_resource_type" name="Resource Type"
+        	parent="crm.menu_crm_configuration" />
 
-<!--        <menuitem id="next_id_52" name="All Cases" parent="crm.menu_crm" sequence="1"/>-->
         <record id="crm_case_section_act_tree" model="ir.actions.act_window">
             <field name="name">Cases by section</field>
             <field name="res_model">crm.case.section</field>
@@ -171,43 +193,9 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="crm_case_section_view_tree"/>
         </record>
-<!--        <menuitem action="crm_case_section_act_tree" id="menu_crm_case_section_act_tree" parent="next_id_52"/>-->
-        
-        
-       <record id="view_crm_email_add_cc_wizard" model="ir.ui.view">
-            <field name="name">Add CC</field>
-            <field name="model">crm.email.add.cc</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Add CC">
-                    <field name="name"/>
-                    <field name="subject"/>
-                    <separator string="" colspan="4"/>
-                    <newline/>
-                    <field name="user_id"
-                        attrs="{ 'required' : [('name','=','user')]}"
-                        on_change="change_email(user_id, partner_id)"/>
-                    <field name="partner_id"
-                        attrs="{'required' : [('name','=','partner')]}"
-                        on_change="change_email(user_id, partner_id)"/>
-                    <field name="email"/>
-                    <button name="add_cc" string="Ok" type="object" icon="gtk-go-forward"/>
-                </form>
-            </field>
-        </record>
 
-        <record id="action_view_crm_email_add_cc_wizard" model="ir.actions.act_window">
-            <field name="name">Add CC</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">crm.email.add.cc</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+<!-- Cases Tree View  -->
 
-
-
-        <!-- Cases -->
         <record id="crm_case_log_tree-view" model="ir.ui.view">
             <field name="name">crm.case.log.tree</field>
             <field name="model">crm.case.log</field>
@@ -226,6 +214,7 @@
             </field>
         </record>
 
+<!--Case History Tree View  -->
 
         <record id="crm_case_history_tree-view" model="ir.ui.view">
             <field name="name">crm.case.history.tree</field>
@@ -244,19 +233,24 @@
             </field>
         </record>
 
+<!-- Case Calendar View  -->
+
         <record id="crm_case_calendar-view" model="ir.ui.view">
             <field name="name">crm.case.calendar</field>
             <field name="model">crm.case</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
-                <calendar color="user_id" date_start="create_date" date_stop="date_deadline" day_length="12" string="Cases">
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="state"/>
+                <calendar color="user_id" date_start="create_date"
+                	date_stop="date_deadline" day_length="12"
+                	string="Cases">
+                	<field name="name" />
+                	<field name="partner_id" />
+                	<field name="state" />
                 </calendar>
             </field>
         </record>
 
+<!-- Case Tree View  -->
 
         <record id="crm_case_tree-view" model="ir.ui.view">
             <field name="name">crm.case.tree</field>
@@ -272,15 +266,28 @@
                     <field name="partner_id"/>
                     <field name="user_id"/>
                     <field name="state"/>
-                    <button name="case_close" states="open,draft,pending" string="Close" type="object" icon="gtk-close"/>
-                    <button name="case_open" states="draft,pending" string="Open" type="object" icon="gtk-go-forward"/>
-                    <button name="case_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-                    <button name="case_pending" states="draft,open" string="Pending" type="object" icon="gtk-media-pause"/>
-                    <button name="case_escalate" states="open,draft,pending" string="Escalate" type="object" icon="gtk-go-up"/>
-                    <button name="case_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert"/>
+                    <button name="case_close"
+                    	states="open,draft,pending" string="Close"
+                    	type="object" icon="gtk-close" />
+                    <button name="case_open" states="draft,pending"
+                    	string="Open" type="object" icon="gtk-go-forward" />
+                    <button name="case_cancel"
+                    	states="draft,open,pending" string="Cancel"
+                    	type="object" icon="gtk-cancel" />
+                    <button name="case_pending" states="draft,open"
+                    	string="Pending" type="object"
+                    	icon="gtk-media-pause" />
+                    <button name="case_escalate"
+                    	states="open,draft,pending" string="Escalate"
+                    	type="object" icon="gtk-go-up" />
+                    <button name="case_reset" states="done,cancel"
+                    	string="Reset to Draft" type="object"
+                    	icon="gtk-convert" />
                 </tree>
             </field>
         </record>
+
+<!-- Case Form View  -->
 
         <record id="crm_case-view" model="ir.ui.view">
             <field name="name">crm.case.form</field>
@@ -297,25 +304,53 @@
                     <notebook colspan="4">
                         <page string="General">
                             <group col="8" colspan="4">
-                                <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" select="1"/>
-                                <field colspan="3" name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" select="2"/>
-                                <newline/>
-                                <field colspan="3" name="email_from" select="2"/>
-                                <button name="remind_partner" states="open,pending" string="Send Reminder" type="object" icon="gtk-go-forward"/>
-                                <field name="user_id" select="1"/>
-                                <button name="remind_user" states="open,pending" string="Send Reminder" type="object" icon="gtk-go-forward"/>
+                                <field colspan="4" name="partner_id"
+                                	on_change="onchange_partner_id(partner_id, email_from)"
+                                	select="1" />
+                                <field colspan="3"
+                                	name="partner_address_id"
+                                	on_change="onchange_partner_address_id(partner_address_id, email_from)"
+                                	select="2" />
+                                <newline />
+                                <field colspan="3" name="email_from"
+                                	select="2" />
+                                <button name="remind_partner"
+                                	states="open,pending"
+                                	string="Send Reminder" type="object"
+                                	icon="gtk-go-forward" />
+                                <field name="user_id" select="1" />
+                                <button name="remind_user"
+                                	states="open,pending"
+                                	string="Send Reminder" type="object"
+                                	icon="gtk-go-forward" />
                             </group>
                             <separator colspan="4" string="Description"/>
                             <field name="description" colspan="4" nolabel="1"/>
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1"/>
-                                <button name="case_close" states="open,draft,pending" string="Close" type="object" icon="gtk-close"/>
-                                <button name="case_open" states="draft,pending" string="Open" type="object" icon="gtk-go-forward"/>
-                                <button name="case_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-                                <button name="case_pending" states="draft,open" string="Pending" type="object" icon="gtk-media-pause"/>
-                                <button name="case_escalate" states="open,draft,pending" string="Escalate" type="object" icon="gtk-go-up"/>
-                                <button name="case_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert"/>
+                                <button name="case_close"
+                                	states="open,draft,pending"
+                                	string="Close" type="object"
+                                	icon="gtk-close" />
+                                <button name="case_open"
+                                	states="draft,pending" string="Open"
+                                	type="object" icon="gtk-go-forward" />
+                                <button name="case_cancel"
+                                	states="draft,open,pending"
+                                	string="Cancel" type="object"
+                                	icon="gtk-cancel" />
+                                <button name="case_pending"
+                                	states="draft,open" string="Pending"
+                                	type="object" icon="gtk-media-pause" />
+                                <button name="case_escalate"
+                                	states="open,draft,pending"
+                                	string="Escalate" type="object"
+                                	icon="gtk-go-up" />
+                                <button name="case_reset"
+                                	states="done,cancel"
+                                	string="Reset to Draft" type="object"
+                                	icon="gtk-convert" />
                             </group>
                         </page>
                         <page string="History" groups="base.group_extended">
@@ -371,28 +406,37 @@
             </field>
         </record>
 
+<!-- Case Search View  -->
+
         <record id="view_crm_case_filter" model="ir.ui.view">
             <field name="name">crm.case.select</field>
             <field name="model">crm.case</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Case">
-                   <group col='6' colspan='4'>
-                       <filter icon="terp-partner" string="My Cases"
-                           domain="[('user_id','=',uid)]" separator="1"
-                           default="1" help="Cases Related to Current User"
-                       />
-                       <field name="state" select="1">
-                           <filter icon="gtk-new" domain="[('state','in',('draft', 'open'))]" help="Current Cases"/>
-                           <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Cases"/>
-                           <filter icon="gtk-media-pause" domain="[('state','=','pending')]" help="Pending Cases"/>
-                       </field>
-                       <separator orientation="vertical"/>
-                       <field name="name" select='1'/>
-                       <field name="user_id" select="1" widget="selection"/>
-                   </group>
-                     <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section"/>
-               </search>
+                	<group col='6' colspan='4'>
+                		<filter icon="terp-partner" string="My Cases"
+                			domain="[('user_id','=',uid)]" separator="1"
+                			default="1" help="Cases Related to Current User" />
+                		<field name="state" select="1">
+                			<filter icon="gtk-new"
+                				domain="[('state','in',('draft', 'open'))]"
+                				help="Current Cases" />
+                			<filter icon="gtk-yes"
+                				domain="[('state','=','open')]" help="Open Cases" />
+                			<filter icon="gtk-media-pause"
+                				domain="[('state','=','pending')]"
+                				help="Pending Cases" />
+                		</field>
+                		<separator orientation="vertical" />
+                		<field name="name" select='1' />
+                		<field name="user_id" select="1"
+                			widget="selection" />
+                	</group>
+                	<field name="section_id"
+                		default="context.get('section_id', False)" select="1"
+                		widget="selection" string="Section" />
+                </search>
             </field>
         </record>
 
@@ -403,13 +447,14 @@
             <field name="view_id" ref="crm_case_tree-view"/>
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
-<!--        <menuitem action="crm_case_categ0-act" id="menu_crm_case_categ0-act" parent="crm.next_id_52"/>-->
 
         <record id="crm_case_categ0-act_open" model="ir.actions.act_window">
             <field name="name">Open Cases</field>
             <field name="res_model">crm.case</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
+            <field name="domain">
+            	[('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]
+            </field>
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
 
@@ -427,6 +472,8 @@
             <field eval="'ir.actions.act_window,%d'%crm_case_section_open_act" name="value"/>
             <field eval="True" name="object"/>
         </record>
+
+<!--Case History Form View  -->
 
         <record id="crm_case_history-view" model="ir.ui.view">
             <field name="name">crm.case.history.form</field>
@@ -446,22 +493,31 @@
                 </form>
             </field>
         </record>
+
+<!--Case History Search View  -->
+
         <record id="crm_case_history_search" model="ir.ui.view">
         <field name="name">crm.case.history.select</field>
         <field name="model">crm.case.history</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
                 <search string="Search Histories">
-                       <filter icon="terp-crm" string="My Histories" domain="[('user_id','=',uid)]" help="My Histories"/>
+                       <filter icon="terp-crm" string="My Histories"
+                       	domain="[('user_id','=',uid)]"
+                       	help="My Histories" />
                        <separator orientation="vertical"/>
                      <group col="6" colspan="2">
                        <field name="date" select="1"/>
                     <field name="user_id" select="1" widget="selection"/>
-                     <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section"/>
-                    </group>
+                    <field name="section_id"
+                    	default="context.get('section_id', False)"
+                    	select="1" widget="selection" string="Section" />
+                     </group>
                 </search>
             </field>
         </record>
+
+<!--Case History Action -->
 
         <record id="crm_case_history-act" model="ir.actions.act_window">
             <field name="name">Histories</field>
@@ -471,7 +527,8 @@
             <field name="view_id" ref="crm_case_history_tree-view"/>
             <field name="search_view_id" ref="crm_case_history_search"/>
         </record>
-<!--        <menuitem action="crm_case_history-act" id="menu_crm_case_history-act_main" name="Cases Histories" parent="crm.next_id_52"/>-->
+
+<!-- Segmentation line Tree View  -->
 
         <record id="crm_segmentation_line_tree-view" model="ir.ui.view">
             <field name="name">crm.segmentation.line.tree</field>
@@ -487,6 +544,8 @@
                 </tree>
             </field>
         </record>
+
+<!-- Segmentation line Form View  -->
 
         <record id="crm_segmentation_line-view" model="ir.ui.view">
             <field name="name">crm.segmentation.line.form</field>
@@ -505,6 +564,8 @@
                 </form>
             </field>
         </record>
+
+<!-- CRM Segmentation  Form View  -->
 
         <record id="crm_segmentation-view" model="ir.ui.view">
             <field name="name">crm.segmentation.form</field>
@@ -534,13 +595,23 @@
                     </notebook>
                     <field name="state"/>
                     <group col="3" colspan="2">
-                        <button name="process_start" states="not running" string="Compute Segmentation" type="object" icon="gtk-execute"/>
-                        <button name="process_stop" states="running" string="Stop Process" type="object" icon="gtk-cancel"/>
-                        <button name="process_continue" states="running" string="Continue Process" type="object" icon="gtk-go-forward"/>
+                        <button name="process_start"
+                        	states="not running"
+                        	string="Compute Segmentation" type="object"
+                        	icon="gtk-execute" />
+                        <button name="process_stop" states="running"
+                        	string="Stop Process" type="object"
+                        	icon="gtk-cancel" />
+                        <button name="process_continue" states="running"
+                        	string="Continue Process" type="object"
+                        	icon="gtk-go-forward" />
                     </group>
                 </form>
             </field>
         </record>
+
+<!-- CRM Segmentation  Tree View  -->
+
         <record id="crm_segmentation_tree-view" model="ir.ui.view">
             <field name="name">crm.segmentation.tree</field>
             <field name="model">crm.segmentation</field>
@@ -567,18 +638,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="crm_segmentation_tree-act" id="menu_crm_segmentation-act" parent="crm.menu_crm_configuration"/>
-<!---->
-<!--        <act_window domain="[('section_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_crm_case_section_crm_case_opened" name="Open cases" res_model="crm.case" src_model="crm.case.section" view_mode="tree,form,calendar" view_type="form"/>-->
-<!---->
-<!--        <act_window domain="[('categ_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_crm_case_categ_crm_case_opened" name="Open cases" res_model="crm.case" src_model="crm.case.categ" view_mode="tree,form,calendar" view_type="form"/>-->
-<!---->
-<!--        <act_window domain="[('partner_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_partner_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.partner" view_mode="tree,form,calendar" view_type="form"/>-->
-<!---->
-<!--        <act_window domain="[('canal_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_partner_canal_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.partner.canal" view_mode="tree,form,calendar" view_type="form"/>-->
-<!---->
-<!--        <act_window domain="[('user_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]" id="act_res_users_2_crm_case_opened" name="Open cases" res_model="crm.case" src_model="res.users" view_mode="tree,form,calendar" view_type="form"/>-->
-
+        <menuitem action="crm_segmentation_tree-act"
+        	id="menu_crm_segmentation-act"
+        	parent="crm.menu_crm_configuration" />
 
         <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
             <field name="name">view.users.form.crm.modif.inherited1</field>
@@ -587,7 +649,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <page string="Current Activity" position="inside">
-                    <field name="context_section_id" completion="1" widget="selection" context="{'user_prefence':True}"/>
+                    <field name="context_section_id" completion="1"
+                    	widget="selection"
+                    	context="{'user_prefence':True}" />
                 </page>
             </field>
         </record>
@@ -604,7 +668,9 @@
                     </field>
                 </field>
         </record>
-		
+
+<!-- Inherit View From Partner  -->
+
 		<record id="view_partners_form_crm1" model="ir.ui.view">
                 <field name="name">view.res.partner.form.crm.inherited1</field>
                 <field name="model">res.partner</field>
@@ -617,7 +683,7 @@
                     </field>
                 </field>
         </record>
-        
+
         <record id="view_partners_form_crm2" model="ir.ui.view">
                 <field name="name">view.res.partner.form.crm.inherited2</field>
                 <field name="model">res.partner</field>
@@ -630,7 +696,7 @@
                     </field>
                 </field>
         </record>
-        
+
         <record id="view_partners_form_crm3" model="ir.ui.view">
                 <field name="name">view.res.partner.form.crm.inherited3</field>
                 <field name="model">res.partner</field>

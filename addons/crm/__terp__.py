@@ -61,20 +61,28 @@ between mails and Open ERP.""",
     ],
 
     'update_xml': [
-        'wizard/crm_send_email_view.xml', 
+        'wizard/crm_lead_to_partner_view.xml',
+        'wizard/crm_lead_to_opportunity_view.xml',
+
+        'wizard/crm_phonecall_to_phonecall_view.xml',
+        'wizard/crm_phonecall_to_partner_view.xml',
+        'wizard/crm_phonecall_to_opportunity_view.xml',
+
+        'wizard/crm_opportunity_to_phonecall_view.xml',
+        'wizard/crm_partner_to_opportunity_view.xml',
+
+        'wizard/crm_send_email_view.xml',
+        'wizard/crm_email_add_cc_view.xml',
         'crm_wizard.xml',
         'crm_view.xml',
+
         'crm_action_rule_view.xml',
-        'crm_lead_wizard.xml',
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
-        'crm_meeting_wizard.xml',
         'crm_meeting_view.xml',
         'crm_meeting_menu.xml',
-        'crm_phonecall_wizard.xml',
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
-        'crm_opportunity_wizard.xml',
         'crm_opportunity_view.xml',
         'crm_opportunity_menu.xml',
         'crm_fund_view.xml',
@@ -94,7 +102,6 @@ between mails and Open ERP.""",
         'report/crm_fundraising_report_view.xml',
         'report/crm_opportunity_report_view.xml' ,
         'report/crm_phonecall_report_view.xml',
-        'report/crm_helpdesk_report_view.xml',
 
         'process/crm_configuration_process.xml',
 

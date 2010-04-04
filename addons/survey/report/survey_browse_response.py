@@ -31,19 +31,21 @@ class survey_browse_response(report_rml):
         _divide_columns_for_matrix = 0.7
         _display_ans_in_rows = 5
         _pageSize = ('29.7cm','21.1cm')
-        if datas.has_key('form') and datas['form']['orientation']=='vertical':
-            if datas['form']['paper_size']=='letter':
+
+        if datas.has_key('form') and datas['form'].get('orientation','') == 'vertical':
+            if datas['form'].get('paper_size','') == 'letter':
                 _pageSize = ('21.6cm','27.9cm')
-            elif datas['form']['paper_size']=='legal':
+            elif datas['form'].get('paper_size','') == 'legal':
                 _pageSize = ('21.6cm','35.6cm')
-            elif datas['form']['paper_size']=='a4':
+            elif datas['form'].get('paper_size','') == 'a4':
                 _pageSize = ('21.1cm','29.7cm')
-        elif datas.has_key('form') and datas['form']['orientation']=='horizontal':
-            if datas['form']['paper_size']=='letter':
+
+        elif datas.has_key('form') and datas['form'].get('orientation',False) == 'horizontal':
+            if datas['form'].get('paper_size','') == 'letter':
                 _pageSize = ('27.9cm','21.6cm')
-            elif datas['form']['paper_size']=='legal':
+            elif datas['form'].get('paper_size','') == 'legal':
                 _pageSize = ('35.6cm','21.6cm')
-            elif datas['form']['paper_size']=='a4':
+            elif datas['form'].get('paper_size') == 'a4':
                 _pageSize = ('29.7cm','21.1cm')
 
         _frame_width = tools.ustr(_pageSize[0])
@@ -185,14 +187,16 @@ class survey_browse_response(report_rml):
                   <story>"""
         surv_resp_obj = pooler.get_pool(cr.dbname).get('survey.response')
         if datas.has_key('form') and datas['form'].has_key('response_ids'):
-            response_id = datas['form']['response_ids'][0][2]
+            response_id = datas['form']['response_ids']
         elif context.has_key('response_id') and context['response_id']:
             response_id = [int(context['response_id'][0])]
         else:
             response_id = surv_resp_obj.search(cr, uid, [('survey_id', 'in', ids)])
+
         surv_resp_line_obj = pooler.get_pool(cr.dbname).get('survey.response.line')
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
         surv_ans_obj = pooler.get_pool(cr.dbname).get('survey.answer')
+
         for response in surv_resp_obj.browse(cr, uid, response_id):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
                 tbl_width = float(_tbl_widths.replace('cm', ''))
@@ -206,6 +210,7 @@ class survey_browse_response(report_rml):
                             <td><para style="terp_tblheader_General_right_simple">""" + to_xml(response.user_id.login) + """</para></td>
                           </tr>
                         </blockTable><para style="P2"></para>"""
+
                 status = "Not Finished"
                 if response.state == "done": status = "Finished"
                 colwidth =  str(tbl_width - 7) + "cm,"
@@ -216,10 +221,12 @@ class survey_browse_response(report_rml):
                             <td><para style="descriptive_text_heading">Status :- """ + to_xml(tools.ustr(status)) + """</para><para style="P2"><font></font></para></td>
                             </tr>
                         </blockTable>"""
+
                 if survey.note:
                     rml += """<blockTable colWidths='""" + _tbl_widths + """' style="note_table">
                             <tr><td><para style="response">""" + to_xml(tools.ustr(survey.note or '')) + """</para><para style="P2"><font></font></para></td></tr>
                         </blockTable>"""
+
                 for page in survey.page_ids:
                     rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="page_tbl">
                                   <tr><td><para style="page">Page :- """ + to_xml(tools.ustr(page.title or '')) + """</para></td></tr>
@@ -229,16 +236,19 @@ class survey_browse_response(report_rml):
                                  <blockTable colWidths='""" + str(_tbl_widths) + """' style="note_table">
                                       <tr><td><para style="response">""" + to_xml(tools.ustr(page.note or '')) + """</para></td></tr>
                                  </blockTable>"""
+
                     for que in page.question_ids:
                         rml += """<para style="P2"></para>
                                 <blockTable colWidths='""" + str(_tbl_widths) + """' style="Table5">
                                   <tr><td><para style="question">""" + to_xml(to_xml(que.question)) + """</para></td></tr>
                                 </blockTable>"""
+
                         answer = surv_resp_line_obj.browse(cr ,uid, surv_resp_line_obj.search(cr, uid, [('question_id', '=', que.id),('response_id', '=', response.id)]))
                         if que.type in ['descriptive_text']:
                             rml +="""<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                          <tr><td> <para style="response">""" + to_xml(tools.ustr(que.descriptive_text)) + """</para></td> </tr>
                                     </blockTable>"""
+
                         elif que.type in ['table']:
                             if len(answer) and answer[0].state == "done":
                                 col_heading = pooler.get_pool(cr.dbname).get('survey.tbl.column.heading')
@@ -250,18 +260,20 @@ class survey_browse_response(report_rml):
                                 colWidths = colWidths + 'cm'
                                 matrix_ans = []
                                 rml +="""<para style="P2"></para><blockTable colWidths=" """ + str(colWidths) + """ " style="Table41"><tr>"""
+
                                 for col in que.column_heading_ids:
                                     if col.title not in matrix_ans:
                                         matrix_ans.append(col.title)
                                         rml += """<td> <para style="terp_tblheader_Details">""" + to_xml(tools.ustr(col.title)) +"""</para></td>"""
                                 rml += """</tr></blockTable>"""
                                 i = 0
+
                                 for row in range(0, que.no_of_rows):
-                                    if i%2!=0:
-                                        style='tbl_white'
+                                    if i%2 != 0:
+                                        style = 'tbl_white'
                                     else:
-                                        style='tbl_gainsboro'
-                                    i+=1
+                                        style = 'tbl_gainsboro'
+                                    i +=1 
                                     rml += """<blockTable colWidths=" """ + str(colWidths) + """ " style='"""+style+"""'><tr>"""
                                     table_data = col_heading.browse(cr, uid, col_heading.search(cr, uid, [('response_table_id', '=', answer[0].id), ('name', '=', row)]))
                                     for column in matrix_ans:
@@ -274,16 +286,19 @@ class survey_browse_response(report_rml):
                                         else:
                                             rml += """<td><para style="terp_default_9"><font color ="white"> </font></para></td>"""
                                     rml += """</tr></blockTable>"""
+
                             else:
                                 rml +="""<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                              <tr><td> <para style="response">No Response</para></td> </tr>
                                         </blockTable>"""
+
                         elif que.type in ['multiple_choice_only_one_ans','multiple_choice_multiple_ans']:
                             if len(answer) and answer[0].state == "done":
                                 ans_list = []
                                 for ans in answer[0].response_answer_ids:
                                     ans_list.append(to_xml(tools.ustr(ans.answer_id.answer)))
                                 answer_choice=[]
+
                                 for ans in que['answer_choice_ids']:
                                     answer_choice.append(to_xml(tools.ustr((ans.answer))))
 
@@ -297,6 +312,7 @@ class survey_browse_response(report_rml):
                                            lst.append('')
                                     if not lst:
                                        del divide_list[divide_list.index(lst):]
+
                                 for divide in divide_list:
                                     a = _divide_columns_for_matrix * len(divide)
                                     b = float(_tbl_widths.replace('cm', '')) - float(a)
@@ -307,6 +323,7 @@ class survey_browse_response(report_rml):
                                     colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                                     colWidths = colWidths +'cm'
                                     rml += """<blockTable colWidths=" """ + colWidths + """ " style="simple_table"><tr>"""
+
                                     for div in range(0, len(divide)):
                                        if divide[div] != '':
                                            if que.type == 'multiple_choice_multiple_ans':
@@ -340,6 +357,7 @@ class survey_browse_response(report_rml):
                                        else:
                                            rml += """<td></td><td></td>"""
                                     rml += """</tr></blockTable>"""
+
                                 if que.is_comment_require and answer[0].comment:
                                     rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table"><tr>
                                                 <td><para style="answer">""" + to_xml(tools.ustr(answer[0].comment)) + """</para></td></tr></blockTable>"""
@@ -347,6 +365,7 @@ class survey_browse_response(report_rml):
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                              <tr><td> <para style="response">No Response</para></td> </tr>
                                           </blockTable>"""
+
                         elif que.type in ['multiple_textboxes_diff_type','multiple_textboxes','date','date_and_time','numerical_textboxes','multiple_textboxes_diff_type']:
                             if len(answer) and answer[0].state == "done":
                                 cols_widhts = []
@@ -355,6 +374,7 @@ class survey_browse_response(report_rml):
                                 colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                                 colWidths = tools.ustr(colWidths) + 'cm'
                                 answer_list = {}
+
                                 for ans in answer[0].response_answer_ids:
                                     answer_list[ans.answer_id.answer] = ans.answer
                                 for que_ans in que['answer_choice_ids']:
@@ -372,6 +392,7 @@ class survey_browse_response(report_rml):
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                          <tr>  <td> <para style="response">No Response</para></td> </tr>
                                         </blockTable>"""
+
                         elif que.type in ['single_textbox']:
                             if len(answer) and answer[0].state == "done":
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
@@ -381,6 +402,7 @@ class survey_browse_response(report_rml):
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                          <tr>  <td> <para style="response">No Response</para></td> </tr>
                                         </blockTable>"""
+
                         elif que.type in ['comment']:
                             if len(answer) and answer[0].state == "done":
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
@@ -390,6 +412,7 @@ class survey_browse_response(report_rml):
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                          <tr>  <td> <para style="response">No Response</para></td> </tr>
                                         </blockTable>"""
+
                         elif que.type in ['matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans', 'rating_scale', 'matrix_of_drop_down_menus']:
                             if len(answer) and answer[0].state == "done":
                                 if que.type  in ['matrix_of_choices_only_one_ans', 'rating_scale'] and que.comment_column:
@@ -401,6 +424,7 @@ class survey_browse_response(report_rml):
                                         cols_widhts.append(float((float(_tbl_widths.replace('cm','')) / float(2.0)) / len(que.column_heading_ids)))
                                 else:
                                     cols_widhts.append(float(_tbl_widths.replace('cm','')))
+
                                 tmp = 0.0
                                 sum =  0.0
                                 i = 0
@@ -415,18 +439,21 @@ class survey_browse_response(report_rml):
                                 colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                                 colWidths = colWidths + 'cm'
                                 matrix_ans = [(0, ''),]
+
                                 for col in que.column_heading_ids:
                                     if col.title not in matrix_ans:
                                         matrix_ans.append((col.id, col.title))
                                 len_matrix = len(matrix_ans)
                                 if que.type in ['matrix_of_choices_only_one_ans', 'rating_scale'] and que.comment_column:
-                                    matrix_ans.append(que.column_name)
+                                    matrix_ans.append((0,que.column_name))
                                 rml += """<blockTable colWidths=" """ + colWidths + """ " style="simple_table"><tr>"""
+
                                 for mat_col in range(0, len(matrix_ans)):
-                                    rml+="""<td><para style="response">""" + to_xml(tools.ustr(matrix_ans[mat_col][1])) + """</para></td>"""
-                                rml +="""</tr>"""
-                                rml+="""</blockTable>"""
-                                i=0
+                                    rml += """<td><para style="response">""" + to_xml(tools.ustr(matrix_ans[mat_col][1])) + """</para></td>"""
+                                rml += """</tr>"""
+                                rml += """</blockTable>"""
+                                i = 0
+
                                 for ans in que.answer_choice_ids:
                                     if i%2 != 0:
                                         style = 'ans_tbl_white'
@@ -474,6 +501,7 @@ class survey_browse_response(report_rml):
                                             comment_value = ''
                                         rml += """<td><para style="response">""" + to_xml(tools.ustr(comment_value)) + """</para></td>"""
                                     rml += """</tr></blockTable>"""
+
                                 if que.is_comment_require:
                                     rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table"><tr>
                                             <td><para style="answer">""" + to_xml(tools.ustr(answer[0].comment or '')) + """</para></td></tr></blockTable>"""
@@ -481,16 +509,19 @@ class survey_browse_response(report_rml):
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
                                          <tr><td> <para style="response">No Response</para></td> </tr>
                                         </blockTable>"""
+
                 if datas.has_key('form') and not datas['form']['without_pagebreak']:
                     rml += """<pageBreak/>"""
                 elif not datas.has_key('form'):
                     rml += """<pageBreak/>"""
                 else:
                     rml += """<para style="P2"><font></font></para>"""
+
         rml += """</story></document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
+
         return (pdf, report_type)
 
 survey_browse_response('report.survey.browse.response', 'survey','','')

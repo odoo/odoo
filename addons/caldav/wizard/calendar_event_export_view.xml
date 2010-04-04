@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+  		<record id="view_calendar_event_export" model="ir.ui.view">
+            <field name="name">calendar.event.export.form</field>
+            <field name="model">calendar.event.export</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Export ICS">
+                	<group colspan="4" >
+                		 <field name="name"/>
+              			 <field name="file_path" colspan="4" width="300"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                    	<button name="process_export_ics"  icon="gtk-execute" string="Genetate ics" type="object"/>
+                    	<button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
+                   </group>
+               </form>
+            </field>
+  		</record>
+  		
+        <record id="action_calendar_event_export" model="ir.actions.act_window">
+            <field name="name">Export .ics File</field>
+            <field name="res_model">calendar.event.export</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_calendar_event_export"/> 
+           <field name="target">new</field>
+        </record>
+
+
+    	<act_window id="action_calendar_event_export_values"
+    		key2="client_action_multi" name="Export .ics File"
+    		res_model="calendar.event.export" src_model="basic.calendar"
+    		view_mode="form" target="new" view_type="form" />
+
+    </data>
+</openerp>
