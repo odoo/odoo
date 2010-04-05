@@ -46,31 +46,24 @@ class change_standard_price(osv.osv_memory):
          @return: A dictionary which of fields with values. 
         
         """ 
-        product_obj = self.pool.get('product.product').browse(cr, uid, context.get('active_id', False))
+        product_pool = self.pool.get('product.product')
+        product_obj = product_pool.browse(cr, uid, context.get('active_id', False))
         res = super(change_standard_price, self).default_get(cr, uid, fields, context=context)   
         
-        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False 
-        if not stock_input_acc:
-            stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
+        accounts = product_pool.get_product_accounts(cr, uid, context.get('active_id', False), context={})
         
-        stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
-        if not stock_output_acc:
-            stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
-
         price = product_obj.standard_price
-        journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
         
         if 'new_price' in fields:
             res.update({'new_price': price})
         if 'stock_account_input' in fields:
-            res.update({'stock_account_input': stock_input_acc})         
+            res.update({'stock_account_input': accounts['stock_account_input']})         
         if 'stock_account_output' in fields:
-            res.update({'stock_account_output': stock_output_acc})         
+            res.update({'stock_account_output': accounts['stock_account_output']})         
         if 'stock_journal' in fields:
-            res.update({'stock_journal': journal_id})  
+            res.update({'stock_journal': accounts['stock_journal']})  
         if 'enable_stock_in_out_acc' in fields:
             res.update({'enable_stock_in_out_acc': True})              
-                 
                      
         return res
     
@@ -108,8 +101,7 @@ class change_standard_price(osv.osv_memory):
             'stock_journal' : res[0].stock_journal.id
         }
         prod_obj.do_change_standard_price(cr, uid, [rec_id], datas, context)
-        return {}        
-
+        return {}      
 change_standard_price()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

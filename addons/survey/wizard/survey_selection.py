@@ -80,7 +80,7 @@ class survey_name_wiz(osv.osv_memory):
         'page': fields.char('Page Position',size = 12),
         'transfer': fields.boolean('Page Transfer'),
         'store_ans': fields.text('Store Answer'),
-        'response': fields.char('Response',size=16)
+        'response': fields.char('Answer',size=16)
     }
     _defaults = {
         'page_no': lambda * a: - 1,

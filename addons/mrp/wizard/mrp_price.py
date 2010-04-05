@@ -29,15 +29,12 @@ class mrp_price(osv.osv_memory):
     }
     
     def print_report(self, cr, uid, ids, context=None):
-        """ 
-             To print the report of Product cost structure
-                        
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             
-             @return : Report
+        """ To print the report of Product cost structure
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param context: A standard dictionary 
+        @return : Report
         """        
         datas = {'ids' : context.get('active_ids',[])}
         res = self.read(cr, uid, ids, ['number'])

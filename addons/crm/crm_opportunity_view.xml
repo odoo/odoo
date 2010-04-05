@@ -138,12 +138,14 @@
                         <field name="create_date"/>
                         <field name="write_date"/>
                         <field name="date_closed"/>
+                        <field name="date_open"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Misc" colspan="2"/>
                         <field name="active"/>
                         <field name="day_open"/>
                         <field name="day_close"/>
+
                     </group>
                     <separator colspan="4" string="References"/>
                     <field name="ref"/>
@@ -246,7 +248,7 @@
         <field name="arch" type="xml">
             <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
                 <field name="categ_id"/>
-                <field name="planned_cost" operator="+"/>
+                <field name="planned_revenue" operator="+"/>
                 <field name="state" group="True"/>
             </graph>
         </field>

@@ -37,12 +37,17 @@ months = {
 
 def get_recurrent_dates(rrulestring, exdate, startdate=None):
     """
-    Get recurrent dates
+    Get recurrent dates based on Rule string considering exdate and start date
+    @param rrulestring: Rulestring
+    @param exdate: List of exception dates for rrule
+    @param startdate: Startdate for computing recurrent dates
+    @return: List of Recurrent dates
     """
 
     def todate(date):
         val = parser.parse(''.join((re.compile('\d')).findall(date)))
         return val
+
     if not startdate:
         startdate = datetime.now()
     rset1 = rrule.rrulestr(rrulestring, dtstart=startdate, forceset=True)
@@ -55,12 +60,14 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None):
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
     """
-    Convert base calendar id into real id.
-    @return: base calendar id
+    This function converts virtual event id into real id of actual event
+    @param base_calendar_id: Id of calendar
+    @param with_date: If value passed to this param it will return dates based on value of withdate + base_calendar_id
     """
 
     if base_calendar_id and isinstance(base_calendar_id, (str, unicode)):
         res = base_calendar_id.split('-')
+
         if len(res) >= 2:
             real_id = res[0]
             if with_date:
@@ -70,11 +77,14 @@ def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
                 end = start + timedelta(hours=with_date)
                 return (int(real_id), real_date, end.strftime("%Y-%m-%d %H:%M:%S"))
             return int(real_id)
+
     return base_calendar_id and int(base_calendar_id) or base_calendar_id
 
 def real_id2base_calendar_id(real_id, recurrent_date):
     """
-    Convert  real id into base_calendar_id.
+    Convert  real id of record into virtual id using recurrent_date
+    e.g. real id is 1 and recurrent_date is 01-12-2009 10:00:00 then it will return
+        1-20091201100000
     @return: real id with recurrent date.
     """
 
@@ -609,6 +619,7 @@ are both optional, but if one occurs, so MUST the other"""),
                 cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
                                         where id=%s' % (model_obj._table, \
                                         alarm_id, basic_alarm.id, data.id))
+        cr.commit()
         return True
 
     def do_alarm_unlink(self, cr, uid, ids, model, context={}):
@@ -812,6 +823,82 @@ class calendar_event(osv.osv):
             value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
         return {'value': value}
 
+    def _set_rrulestring(self, cr, uid, id, name, value, arg, context):
+        """
+        Set rule string.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param id: List of  calendar event's ids.
+        @param context: A standard dictionary for contextual values
+        @return: dictionary of rrule value.
+        """
+        cr.execute("UPDATE %s set freq='',interval=0,count=0,end_date=Null,\
+                    mo=False,tu=False,we=False,th=False,fr=False,sa=False,su=False,\
+                    day=0,select1=False,month_list=0 ,byday=False where id=%s" % (self._table, id))
+        
+        if not value:
+            return True
+        val = {}
+        for part in value.split(';'):
+            if part.lower().__contains__('freq') and len(value.split(';')) <=2:
+                rrule_type = part.lower()[5:]
+                break
+            else:
+                rrule_type = 'custom'
+                break
+        ans = value.split(';')
+        for i in ans:
+            val[i.split('=')[0].lower()] = i.split('=')[1].lower()
+        if int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
+            rrule_type = 'custom'
+
+        qry = "UPDATE %(table)s set rrule_type=\'%(rule_type)s\' "
+
+        if rrule_type == 'custom':
+            new_val = val.copy()
+            for k, v in val.items():
+                if  val['freq'] == 'weekly' and val.get('byday'):
+                    for day in val['byday'].split(','):
+                        new_val[day] = True
+                    val.pop('byday')
+    
+                if val.get('until'):
+                    until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
+                    new_val['end_date'] = until.strftime('%Y-%m-%d')
+                    val.pop('until')
+                    new_val.pop('until')
+    
+                if val.get('bymonthday'):
+                    new_val['day'] = val.get('bymonthday')
+                    val.pop('bymonthday')
+                    new_val['select1'] = 'date'
+                    new_val.pop('bymonthday')
+    
+                if val.get('byday'):
+                    d = val.get('byday')
+                    new_val['byday'] = d[:1]
+                    new_val['week_list'] = d[1:].upper()
+                    new_val['select1'] = 'day'
+    
+                if val.get('bymonth'):
+                    new_val['month_list'] = val.get('bymonth')
+                    val.pop('bymonth')
+                    new_val.pop('bymonth')
+            
+            for k, v in new_val.items():
+                temp = ", %s='%s'" % (k, v)
+                qry += temp
+
+        whr = " where id=%(id)s"
+        qry = qry + whr
+        val.update({
+                    'table': self._table, 
+                    'rule_type': rrule_type, 
+                    'id': id, 
+                    })
+        cr.execute(qry % val)
+        return True
+
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
         """
         Get rule string.
@@ -823,7 +910,7 @@ class calendar_event(osv.osv):
         """
         result = {}
         for event in ids:
-
+            
             datas = self.read(cr, uid, event)
             if datas.get('rrule_type'):
                 if datas.get('rrule_type') == 'none':
@@ -859,7 +946,7 @@ class calendar_event(osv.osv):
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
                     rule or repeating pattern for anexception to a recurrence set"),
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True,\
-                     string='Recurrent Rule', store=True),
+                     string='Recurrent Rule', store=True, fnct_inv=_set_rrulestring),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'),
@@ -1060,9 +1147,12 @@ class calendar_event(osv.osv):
         freq = datas.get('freq')
         if freq == 'None':
             return ''
+        
+        if datas.get('interval') < 1:
+                raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
 
         if freq == 'weekly':
-            
+
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
             if byday:
                 weekstring = ';BYDAY=' + ','.join(byday)
@@ -1095,6 +1185,7 @@ class calendar_event(osv.osv):
 
 #        End logic
         return rrule_string
+
 
     def search(self, cr, uid, args, offset=0, limit=100, order=None,
             context=None, count=False):
@@ -1446,10 +1537,8 @@ class virtual_report_spool(web_services.report_spool):
         new_ids = []
         for id in ids:
             new_ids.append(base_calendar_id2real_id(id))
-        if datas is None:
-            datas = {}
-        if datas.get('id',False):
-            datas['id'] = base_calendar_id2real_id(datas['id'])        
+        if datas.get('id', False):
+            datas['id'] = base_calendar_id2real_id(datas['id'])
         return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
 
 virtual_report_spool()
@@ -1506,4 +1595,3 @@ class res_users(osv.osv):
 res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

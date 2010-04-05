@@ -23,6 +23,7 @@ from datetime import datetime
 from osv import fields,osv,orm
 from tools.translate import _
 import crm
+import time
 
 AVAILABLE_STATES = [
     ('draft','New'),
@@ -40,8 +41,26 @@ class crm_opportunity(osv.osv):
     _order = "id desc"
     _inherit = 'crm.case'
 
-    def _compute_openday(self, cr, uid, ids, name, args, context={}):
+    def case_open(self, cr, uid, ids, *args):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
 
+        cases = self.browse(cr, uid, ids)
+        for case in cases:
+            data = {'state': 'open', 'active': True}
+            if not case.user_id:
+                data['user_id'] = uid
+            data.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+            self.write(cr, uid, ids, data)
+        self._action(cr, uid, cases, 'open')
+        return True
+
+    def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -49,45 +68,37 @@ class crm_opportunity(osv.osv):
         @return: difference between current date and log date
         @param context: A standard dictionary for contextual values
         """
-        result = {}
-        for r in self.browse(cr, uid, ids , context):
-            result[r.id] = 0
-            model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.opportunity')])
-            log_obj = self.pool.get('crm.case.log')
-            hist_id = log_obj.search(cr, uid, [('model_id', '=', model_id[0]), \
-                                                     ('res_id', '=', r.id), \
-                                                     ('name', '=', 'Open')])
+        log_obj = self.pool.get('crm.case.log')
+        model_obj = self.pool.get('ir.model')
+        cal_obj = self.pool.get('resource.calendar')
 
-            if hist_id:
-                # Considering last log for opening case
-                log = log_obj.browse(cr, uid, hist_id[-1])
-                date_lead_open = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
-                date_log_open = datetime.strptime(log.date, "%Y-%m-%d %H:%M:%S")
-                ans = date_lead_open - date_log_open
-                duration =  float(ans.days) + (float(ans.seconds) / 86400)
-                result[r.id] = abs(int(duration))
-        return result
+        model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
+        model_id = False
+        if len(model_ids):
+            model_id = model_ids[0]
 
-    def _compute_closeday(self, cr, uid, ids, name, args, context={}):
+        res = {}
+        for opportunity in self.browse(cr, uid, ids , context):
+            for field in fields:
+                res[opportunity.id] = {}
+                duration = 0
+                if field == 'day_open':
+                    if opportunity.date_open:
+                        date_create = datetime.strptime(opportunity.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_open = datetime.strptime(opportunity.date_open, "%Y-%m-%d %H:%M:%S")
 
-        """
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of closeday’s IDs
-        @return: difference between current date and closed date
-        @param context: A standard dictionary for contextual values
-        """
-        result = {}
-        for r in self.browse(cr, uid, ids , context):
-            result[r.id] = 0
+                        ans = date_open - date_create
+                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
 
-            if r.date_closed:
-                date_create = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
-                date_close = datetime.strptime(r.date_closed, "%Y-%m-%d %H:%M:%S")
-                ans = date_close - date_create
-                duration =  float(ans.days) + (float(ans.seconds) / 86400)
-                result[r.id] = abs(int(duration))
-        return result
+                elif field == 'day_close':
+                    if opportunity.date_closed:
+                        date_create = datetime.strptime(opportunity.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_close = datetime.strptime(opportunity.date_closed, "%Y-%m-%d %H:%M:%S")
+
+                        ans = date_close - date_create
+                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                res[opportunity.id][field] = abs(int(duration))
+        return res
 
     _columns = {
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
@@ -113,11 +124,12 @@ class crm_opportunity(osv.osv):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
 
-        'day_open': fields.function(_compute_openday, string='Days to Open', \
-                                method=True, type="integer", store=True),
-        'day_close': fields.function(_compute_closeday, string='Days to Close', \
-                                method=True, type="integer", store=True),
-       }
+        'date_open': fields.datetime('Opened', readonly=True),
+        'day_open': fields.function(_compute_day, string='Days to Open', \
+                                method=True, multi='day_open', type="integer", store=True),
+        'day_close': fields.function(_compute_day, string='Days to Close', \
+                                method=True, multi='day_close', type="integer", store=True),
+         }
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
 

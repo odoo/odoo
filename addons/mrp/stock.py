@@ -29,6 +29,9 @@ import time
 
 
 class stock_warehouse_orderpoint(osv.osv):
+    """
+    Defines Minimum stock rules.
+    """
     _name = "stock.warehouse.orderpoint"
     _description = "Orderpoint minimum rule"
     _columns = {
@@ -59,12 +62,20 @@ class stock_warehouse_orderpoint(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
     }
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
+        """ Finds location id for changed warehouse.
+        @param warehouse_id: Changed id of warehouse.
+        @return: Dictionary of values.
+        """
         if warehouse_id:
             w=self.pool.get('stock.warehouse').browse(cr,uid,warehouse_id, context)
             v = {'location_id':w.lot_stock_id.id}
             return {'value': v}
         return {}
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
+        """ Finds UoM for changed product.
+        @param product_id: Changed id of product.
+        @return: Dictionary of values.
+        """
         if product_id:
             prod=self.pool.get('product.product').browse(cr,uid,product_id)
             v = {'product_uom':prod.uom_id.id}
@@ -91,6 +102,10 @@ class StockMove(osv.osv):
         return super(StockMove, self).copy(cr, uid, id, default, context)
 
     def _action_explode(self, cr, uid, move, context={}):
+        """ Explodes pickings.
+        @param move: Stock moves
+        @return: True
+        """
         if move.product_id.supply_method=='produce' and move.product_id.procure_method=='make_to_order':
             bis = self.pool.get('mrp.bom').search(cr, uid, [
                 ('product_id','=',move.product_id.id),
@@ -151,7 +166,12 @@ class StockMove(osv.osv):
         return True
     
     
-    def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None):        
+    def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None): 
+        """ Consumed product with specific quatity from specific source location.
+        @param product_qty: Consumed product quantity
+        @param location_id: Source location
+        @return: Consumed lines
+        """       
         res = []
         production_obj = self.pool.get('mrp.production')
         wf_service = netsvc.LocalService("workflow")
@@ -168,6 +188,11 @@ class StockMove(osv.osv):
         return res
     
     def action_scrap(self, cr, uid, ids, product_qty, location_id, context=None):
+        """ Move the scrap/damaged product into scrap location
+        @param product_qty: Scraped product quantity
+        @param location_id: Scrap location
+        @return: Scraped lines
+        """  
         res = []
         production_obj = self.pool.get('mrp.production')
         wf_service = netsvc.LocalService("workflow")
@@ -202,6 +227,11 @@ class StockPicking(osv.osv):
     # Explode picking by replacing phantom BoMs
     #
     def action_explode(self, cr, uid, picks, *args):
+        """ Explodes picking by replacing phantom BoMs
+        @param picks: Picking ids. 
+        @param *args: Arguments
+        @return: Picking ids.
+        """  
         for move in self.pool.get('stock.move').browse(cr, uid, picks):
             self.pool.get('stock.move')._action_explode(cr, uid, move)
         return picks
@@ -212,6 +242,10 @@ StockPicking()
 class spilt_in_production_lot(osv.osv_memory):
     _inherit = "stock.move.split"
     def split(self, cr, uid, ids, move_ids, context=None):
+        """ Splits move lines into given quantities.
+        @param move_ids: Stock moves.
+        @return: List of new moves.
+        """  
         production_obj = self.pool.get('mrp.production')
         move_obj = self.pool.get('stock.move')  
         res = []      

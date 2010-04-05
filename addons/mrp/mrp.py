@@ -65,6 +65,9 @@ mrp_workcenter()
 
 
 class mrp_property_group(osv.osv):
+    """
+    Group of mrp properties.
+    """
     _name = 'mrp.property.group'
     _description = 'Property Group'
     _columns = {
@@ -74,6 +77,9 @@ class mrp_property_group(osv.osv):
 mrp_property_group()
 
 class mrp_property(osv.osv):
+    """
+    Properties of mrp.
+    """
     _name = 'mrp.property'
     _description = 'Property'
     _columns = {
@@ -88,6 +94,9 @@ class mrp_property(osv.osv):
 mrp_property()
 
 class mrp_routing(osv.osv):
+    """
+    For specifying the routings of workcenters.
+    """
     _name = 'mrp.routing'
     _description = 'Routing'
     _columns = {
@@ -110,6 +119,9 @@ class mrp_routing(osv.osv):
 mrp_routing()
 
 class mrp_routing_workcenter(osv.osv):
+    """
+    Defines working cycles and hours of a workcenter using routings.
+    """
     _name = 'mrp.routing.workcenter'
     _description = 'Routing workcenter usage'
     _columns = {
@@ -131,19 +143,22 @@ class mrp_routing_workcenter(osv.osv):
 mrp_routing_workcenter()
 
 class mrp_bom(osv.osv):
+    """
+    Defines bills of material for a product.
+    """
     _name = 'mrp.bom'
     _description = 'Bills of Material'
+    
     def _child_compute(self, cr, uid, ids, name, arg, context={}):
-        """ 
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID of mrp.production object
-             @param name: 
-             @param arg: 
-
-             @return:  True
-        
+        """ Gets child bom.
+        @param self: The object pointer
+        @param cr: The current row, from the database cursor,
+        @param uid: The current user ID for security checks
+        @param ids: List of selected IDs
+        @param name: Name of the field
+        @param arg: User defined argument
+        @param context: A standard dictionary for contextual values
+        @return:  Dictionary of values
         """  
         result = {}
         for bom in self.browse(cr, uid, ids, context=context):
@@ -156,8 +171,15 @@ class mrp_bom(osv.osv):
                 if sids:
                     bom2 = self.pool.get('mrp.bom').browse(cr, uid, sids[0], context=context)
                     result[bom.id] += map(lambda x: x.id, bom2.bom_lines)                 
+
         return result
+    
     def _compute_type(self, cr, uid, ids, field_name, arg, context):
+        """ Sets particular method for the selected bom type.
+        @param field_name: Name of the field
+        @param arg: User defined argument
+        @return:  Dictionary of values
+        """  
         res = dict(map(lambda x: (x,''), ids))
         for line in self.browse(cr, uid, ids):
             if line.type=='phantom' and not line.bom_id:
@@ -171,6 +193,7 @@ class mrp_bom(osv.osv):
                 else:
                     res[line.id] = 'order'
         return res
+    
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Code', size=16),
@@ -233,6 +256,11 @@ class mrp_bom(osv.osv):
 
 
     def onchange_product_id(self, cr, uid, ids, product_id, name, context={}):
+        """ Changes UoM and name if product_id changes.
+        @param name: Name of the field
+        @param product_id: Changed product_id
+        @return:  Dictionary of changed values
+        """
         if product_id:
             prod=self.pool.get('product.product').browse(cr,uid,[product_id])[0]
             v = {'product_uom':prod.uom_id.id}
@@ -242,6 +270,12 @@ class mrp_bom(osv.osv):
         return {}
 
     def _bom_find(self, cr, uid, product_id, product_uom, properties=[]):
+        """ Finds BoM for particular product and product uom.
+        @param product_id: Selected product.
+        @param product_uom: Unit of measure of a product.
+        @param properties: List of related properties.
+        @return: False or BoM id.
+        """
         bom_result = False
         # Why searching on BoM without parent ?
         cr.execute('select id from mrp_bom where product_id=%s and bom_id is null order by sequence', (product_id,))
@@ -259,6 +293,15 @@ class mrp_bom(osv.osv):
         return result
 
     def _bom_explode(self, cr, uid, bom, factor, properties, addthis=False, level=0):
+        """ Finds Products and Workcenters for related BoM for manufacturing order.
+        @param bom: BoM of particular product.
+        @param factor: Factor of product UoM.
+        @param properties: A dictionary for contextual values.
+        @param addthis: If BoM found then True else False.
+        @param level: Depth level to find BoM lines starts from 10.
+        @return: result: List of dictionaries containing product details.
+                 result2: List of dictionaries containing workcenter details.
+        """
         factor = factor / (bom.product_efficiency or 1.0)
         factor = rounding(factor, bom.product_rounding)
         if factor<bom.product_rounding:
@@ -306,6 +349,9 @@ class mrp_bom(osv.osv):
         return result, result2
 
     def set_indices(self, cr, uid, ids, context = {}):
+        """ Sets Indices.
+        @return: True
+        """
         if not ids or (ids and not ids[0]):
             return True
         res = self.read(cr, uid, ids, ['revision_ids', 'revision_type'])
@@ -388,11 +434,19 @@ class one2many_domain(fields.one2many):
         return res
 
 class mrp_production(osv.osv):
+    """
+    Production Orders / Manufacturing Orders
+    """
     _name = 'mrp.production'
     _description = 'Production'
     _date_name  = 'date_planned'    
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
+        """ Calculates total hours and total no. of cycles for a production order.
+        @param prop: 
+        @param unknow_none: 
+        @return: Dictionary of values.
+        """
         result = {}
         for prod in self.browse(cr, uid, ids, context=context):
             result[prod.id] = {
@@ -405,18 +459,33 @@ class mrp_production(osv.osv):
         return result
 
     def _production_date_end(self, cr, uid, ids, prop, unknow_none, context={}):
+        """ Finds production end date.
+        @param prop: Name of field.
+        @param unknow_none: 
+        @return: Dictionary of values.
+        """
         result = {}
         for prod in self.browse(cr, uid, ids, context=context):
             result[prod.id] = prod.date_planned
         return result
 
     def _production_date(self, cr, uid, ids, prop, unknow_none, context={}):
+        """ Finds production planned date.
+        @param prop: Name of field.
+        @param unknow_none:  
+        @return: Dictionary of values.
+        """
         result = {}
         for prod in self.browse(cr, uid, ids, context=context):
             result[prod.id] = prod.date_planned[:10]
         return result
 
     def _ref_calc(self, cr, uid, ids, field_names=None, arg=False, context={}):
+        """ Finds reference sale order for production order.
+        @param field_names: Names of fields.
+        @param arg: User defined arguments
+        @return: Dictionary of values.
+        """
         res = {}
         for f in field_names:
             for order_id in ids:
@@ -498,6 +567,11 @@ class mrp_production(osv.osv):
         return super(mrp_production, self).copy(cr, uid, id, default, context)
 
     def location_id_change(self, cr, uid, ids, src, dest, context={}):
+        """ Changes destination location if source location is changed.
+        @param src: Source location id.
+        @param dest: Destination location id.
+        @return: Dictionary of values.
+        """
         if dest:
             return {}
         if src:
@@ -505,6 +579,10 @@ class mrp_production(osv.osv):
         return {}
 
     def product_id_change(self, cr, uid, ids, product):
+        """ Finds UoM of changed product.
+        @param product: Id of changed product.
+        @return: Dictionary of values.
+        """
         if not product:
             return {}
         res = self.pool.get('product.product').read(cr, uid, [product], ['uom_id'])[0]
@@ -513,6 +591,10 @@ class mrp_production(osv.osv):
         return {'value':result}
 
     def bom_id_change(self, cr, uid, ids, product):
+        """ Finds routing for changed BoM.
+        @param product: Id of product.
+        @return: Dictionary of values.
+        """
         if not product:
             return {}
         res = self.pool.get('mrp.bom').read(cr, uid, [product], ['routing_id'])[0]
@@ -521,10 +603,17 @@ class mrp_production(osv.osv):
         return {'value':result}
 
     def action_picking_except(self, cr, uid, ids):
+        """ Changes the state to Exception.
+        @return: True 
+        """
         self.write(cr, uid, ids, {'state':'picking_except'})
         return True
 
     def action_compute(self, cr, uid, ids, properties=[]):
+        """ Computes bills of material of a product.
+        @param properties: List containing dictionaries of properties.
+        @return: No. of products.
+        """
         results = []
         bom_obj = self.pool.get('mrp.bom')
         prod_line_obj = self.pool.get('mrp.production.product.line')
@@ -560,6 +649,9 @@ class mrp_production(osv.osv):
         return len(results)
 
     def action_cancel(self, cr, uid, ids):
+        """ Cancels the production order and related stock moves.
+        @return: True
+        """
         move_obj = self.pool.get('stock.move')
         for production in self.browse(cr, uid, ids):
             if production.move_created_ids:
@@ -571,6 +663,9 @@ class mrp_production(osv.osv):
     #XXX: may be a bug here; lot_lines are unreserved for a few seconds;
     #     between the end of the picking list and the call to this function
     def action_ready(self, cr, uid, ids):
+        """ Changes the production state to Ready and location id of stock move.
+        @return: True
+        """
         move_obj = self.pool.get('stock.move')
         self.write(cr, uid, ids, {'state':'ready'})
         for production in self.browse(cr, uid, ids):
@@ -580,11 +675,17 @@ class mrp_production(osv.osv):
         return True
 
     def action_production_end(self, cr, uid, ids):
+        """ Changes production state to Finish and writes finished date.
+        @return: True
+        """
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
         return self.write(cr,  uid, ids, {'state': 'done', 'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def test_production_done(self, cr, uid, ids):
+        """ Tests whether production is done or not.
+        @return: True or False
+        """
         res = True
         for production in self.browse(cr, uid, ids):            
             if production.move_lines:                
@@ -595,21 +696,14 @@ class mrp_production(osv.osv):
         return res
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
-        """ 
-            To produce final product base on production mode (consume/consume&produce).
-            If Production mode is consume, all stock move lines of raw materials will be done/consumed.
-            If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
-            and stock move lines of final product will be also done/produced.
-        
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param production_id: the ID of mrp.production object
-             @param production_qty: specify qty to produce
-             @param production_mode: specify production mode (consume/consume&produce).
-
-             @return:  True
-        
+        """ To produce final product base on production mode (consume/consume&produce).
+        If Production mode is consume, all stock move lines of raw materials will be done/consumed.
+        If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
+        and stock move lines of final product will be also done/produced.
+        @param production_id: the ID of mrp.production object
+        @param production_qty: specify qty to produce
+        @param production_mode: specify production mode (consume/consume&produce).
+        @return: True
         """              
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id)
@@ -678,6 +772,10 @@ class mrp_production(osv.osv):
         return True
 
     def _costs_generate(self, cr, uid, production):
+        """ Calculates total costs at the end of the production.
+        @param production: Id of production order.
+        @return: Calculated amount.
+        """
         amount = 0.0
         analytic_line_obj = self.pool.get('account.analytic.line')
         for wc_line in production.workcenter_lines:
@@ -711,11 +809,17 @@ class mrp_production(osv.osv):
         return amount
 
     def action_in_production(self, cr, uid, ids):
+        """ Changes state to In Production and writes starting date.
+        @return: True 
+        """
         move_ids = []        
         self.write(cr, uid, ids, {'state': 'in_production','date_start':time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def test_if_product(self, cr, uid, ids):
+        """
+        @return: True or False
+        """
         res = True
         for production in self.browse(cr, uid, ids):
             if not production.product_lines:
@@ -727,6 +831,9 @@ class mrp_production(osv.osv):
         return True
 
     def action_confirm(self, cr, uid, ids):
+        """ Confirms production order.
+        @return: Newly generated picking Id.
+        """
         picking_id=False
         proc_ids = []
         seq_obj = self.pool.get('ir.sequence')
@@ -834,6 +941,10 @@ class mrp_production(osv.osv):
         return picking_id
 
     def force_production(self, cr, uid, ids, *args):
+        """ Assigns products.
+        @param *args: Arguments
+        @return: True
+        """
         pick_obj = self.pool.get('stock.picking')
         pick_obj.force_assign(cr, uid, [prod.picking_id.id for prod in self.browse(cr, uid, ids)])
         return True
@@ -881,6 +992,9 @@ mrp_production_product_line()
 #     then wizard for picking lists & move
 #
 class mrp_procurement(osv.osv):
+    """
+    Procument Orders / Requisitions
+    """
     _name = "mrp.procurement"
     _description = "Procurement"
     _order = 'priority,date_planned'
@@ -947,6 +1061,10 @@ class mrp_procurement(osv.osv):
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
+        """ Finds UoM and UoS of changed product.
+        @param product_id: Changed id of product.
+        @return: Dictionary of values.
+        """
         if product_id:
             w=self.pool.get('product.product').browse(cr,uid,product_id, context)
             v = {
@@ -957,12 +1075,18 @@ class mrp_procurement(osv.osv):
         return {}
 
     def check_product(self, cr, uid, ids):
+        """ Checks product type.
+        @return: True or False 
+        """
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_id.type in ('product', 'consu'):
                 return True
         return False
 
     def check_move_cancel(self, cr, uid, ids, context={}):
+        """ Checks if move is cancelled or not.
+        @return: True or False. 
+        """
         res = True
         ok = False
         for procurement in self.browse(cr, uid, ids, context):
@@ -973,6 +1097,9 @@ class mrp_procurement(osv.osv):
         return res and ok
 
     def check_move_done(self, cr, uid, ids, context={}):
+        """ Checks if move is done or not.
+        @return: True or False. 
+        """
         res = True
         for proc in self.browse(cr, uid, ids, context):
             if proc.move_id:
@@ -985,12 +1112,20 @@ class mrp_procurement(osv.osv):
     # for computing their own purpose
     #
     def _quantity_compute_get(self, cr, uid, proc, context={}):
+        """ Finds sold quantity of product.
+        @param proc: Current procurement.
+        @return: Quantity or False.
+        """
         if proc.product_id.type=='product':
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos_qty
         return False
 
     def _uom_compute_get(self, cr, uid, proc, context={}):
+        """ Finds UoS if product is Stockable Product. 
+        @param proc: Current procurement.
+        @return: UoS or False.
+        """
         if proc.product_id.type=='product':
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos.id
@@ -1001,6 +1136,9 @@ class mrp_procurement(osv.osv):
     # different from the planned quantity
     #
     def quantity_get(self, cr, uid, id, context={}):
+        """ Finds quantity of product used in procurement.
+        @return: Quantity of product. 
+        """
         proc = self.browse(cr, uid, id, context)
         result = self._quantity_compute_get(cr, uid, proc, context)
         if not result:
@@ -1008,6 +1146,9 @@ class mrp_procurement(osv.osv):
         return result
 
     def uom_get(self, cr, uid, id, context=None):
+        """ Finds UoM of product used in procurement.
+        @return: UoM of product. 
+        """
         proc = self.browse(cr, uid, id, context)
         result = self._uom_compute_get(cr, uid, proc, context)
         if not result:
@@ -1015,6 +1156,9 @@ class mrp_procurement(osv.osv):
         return result
 
     def check_waiting(self, cr, uid, ids, context=[]):
+        """ Checks state of move.
+        @return: True or False 
+        """
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.move_id and procurement.move_id.state=='auto':
                 return True
@@ -1024,6 +1168,10 @@ class mrp_procurement(osv.osv):
         return True
 
     def check_produce_product(self, cr, uid, procurement, context=[]):
+        """ Finds BoM of a product if not found writes exception message.
+        @param procurement: Current procurement.
+        @return: True or False.
+        """
         properties = [x.id for x in procurement.property_ids]
         bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
         if not bom_id:
@@ -1032,6 +1180,9 @@ class mrp_procurement(osv.osv):
         return True
 
     def check_make_to_stock(self, cr, uid, ids, context={}):
+        """ Checks product type.
+        @return: True or False 
+        """
         ok = True
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_id.type=='service':
@@ -1041,6 +1192,9 @@ class mrp_procurement(osv.osv):
         return ok
 
     def check_produce(self, cr, uid, ids, context={}):
+        """ Checks product type.
+        @return: True or Product Id.
+        """
         res = True
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for procurement in self.browse(cr, uid, ids):
@@ -1060,6 +1214,9 @@ class mrp_procurement(osv.osv):
         return res
 
     def check_buy(self, cr, uid, ids):
+        """ Checks product type.
+        @return: True or Product Id.
+        """
         user = self.pool.get('res.users').browse(cr, uid, uid)
         partner_obj = self.pool.get('res.partner')
         for procurement in self.browse(cr, uid, ids):
@@ -1079,12 +1236,18 @@ class mrp_procurement(osv.osv):
         return True
 
     def test_cancel(self, cr, uid, ids):
+        """ Tests whether state of move is cancelled or not. 
+        @return: True or False
+        """
         for record in self.browse(cr, uid, ids):
             if record.move_id and record.move_id.state=='cancel':
                 return True
         return False
 
     def action_confirm(self, cr, uid, ids, context={}):
+        """ Confirms procurement and writes exception message if any.
+        @return: True
+        """
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_qty <= 0.00:
@@ -1114,6 +1277,9 @@ class mrp_procurement(osv.osv):
         return True
 
     def action_move_assigned(self, cr, uid, ids, context={}):
+        """ Changes procurement state to Running and writes message.
+        @return: True 
+        """
         self.write(cr, uid, ids, {'state':'running','message':_('from stock: products assigned.')})
         return True
 
@@ -1121,6 +1287,10 @@ class mrp_procurement(osv.osv):
         return True
 
     def _check_make_to_stock_product(self, cr, uid, procurement, context={}):
+        """ Checks procurement move state.
+        @param procurement: Current procurement.
+        @return: True or move id.
+        """
         ok = True
         if procurement.move_id:
             id = procurement.move_id.id
@@ -1132,24 +1302,24 @@ class mrp_procurement(osv.osv):
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context={}):
+        """ Changes procurement state to Running.
+        @return: True 
+        """
         for procurement in self.browse(cr, uid, ids):
             self.write(cr, uid, [procurement.id], {'state':'running'})
         return True
 
     def action_produce_assign_product(self, cr, uid, ids, context={}):
-        """
-        This is action which call from workflow to assign production order to procuments
-        @return  : True
+        """ This is action which call from workflow to assign production order to procurements
+        @return: True
         """
         res = self.make_mo(cr, uid, ids, context=context)
         res = res.values()
         return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
 
     def make_mo(self, cr, uid, ids, context={}):
-        """
-        Make Manufecturing(production) order from procurement
-        
-        @return : New created Production Orders procurement wise 
+        """ Make Manufecturing(production) order from procurement
+        @return: New created Production Orders procurement wise 
         """
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
@@ -1185,19 +1355,16 @@ class mrp_procurement(osv.osv):
         return res
     
     def action_po_assign(self, cr, uid, ids, context={}):
-        """
-        This is action which call from workflow to assign purchase order to procuments
-        @return  : True
+        """ This is action which call from workflow to assign purchase order to procuments
+        @return: True
         """
         res = self.make_po(cr, uid, ids, context=context)
         res = res.values()
         return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
 
     def make_po(self, cr, uid, ids, context={}):
-        """
-        Make purchase order from procurement
-        
-        @return : New created Purchase Orders procurement wise
+        """ Make purchase order from procurement
+        @return: New created Purchase Orders procurement wise
         """
         res = {}
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
@@ -1262,6 +1429,9 @@ class mrp_procurement(osv.osv):
         return res
 
     def action_cancel(self, cr, uid, ids):
+        """ Cancels procurement and writes move state to Assigned.
+        @return: True 
+        """
         todo = []
         todo2 = []
         move_obj = self.pool.get('stock.move')
@@ -1286,6 +1456,9 @@ class mrp_procurement(osv.osv):
         return self.check_move_done(cr, uid, ids)
 
     def action_check(self, cr, uid, ids):
+        """ Checks procurement move state whether assigned or done. 
+        @return: True 
+        """
         ok = False
         for procurement in self.browse(cr, uid, ids):
             if procurement.move_id.state=='assigned' or procurement.move_id.state=='done':
@@ -1294,10 +1467,16 @@ class mrp_procurement(osv.osv):
         return ok
 
     def action_ready(self, cr, uid, ids):
+        """ Changes procurement state to Ready.
+        @return: True 
+        """
         res = self.write(cr, uid, ids, {'state':'ready'})
         return res
 
     def action_done(self, cr, uid, ids):
+        """ Changes procurement state to Done and writes Closed date.
+        @return: True 
+        """
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
             if procurement.move_id:
@@ -1310,8 +1489,8 @@ class mrp_procurement(osv.osv):
         return res
 
     def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
-        '''
-        use_new_cursor: False or the dbname
+        ''' Runs through scheduler.
+        @param use_new_cursor: False or the dbname
         '''
         if not context:
             context={}

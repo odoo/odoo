@@ -37,37 +37,64 @@ class project_issue(osv.osv):
     _order = "priority, id desc"
     _inherit = 'crm.case'
 
-    def _compute_openday(self, cr, uid, ids, name, args, context={}):
-        result = {}
-        for r in self.browse(cr, uid, ids , context):
-            result[r.id] = 0
-            model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'project.issue')])
-            log_obj = self.pool.get('crm.case.log')
-            hist_id = log_obj.search(cr, uid, [('model_id', '=', model_id[0]), \
-                                                     ('res_id', '=', r.id), \
-                                                     ('name', '=', 'Open')])
+    def case_open(self, cr, uid, ids, *args):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
 
-            if hist_id:
-                # Considering last log for opening case
-                log = log_obj.browse(cr, uid, hist_id[-1])
-                date_lead_open = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
-                date_log_open = datetime.strptime(log.date, "%Y-%m-%d %H:%M:%S")
-                ans = date_lead_open - date_log_open
-                duration =  float(ans.days) + (float(ans.seconds) / 86400)
-                result[r.id] = abs(int(duration))
-        return result
+        cases = self.browse(cr, uid, ids)
+        for case in cases:
+            data = {'state': 'open', 'active': True}
+            if not case.user_id:
+                data['user_id'] = uid
+            data.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+            self.write(cr, uid, ids, data)
+        self._action(cr, uid, cases, 'open')
+        return True
 
-    def _compute_closeday(self, cr, uid, ids, name, args, context={}):
-        result = {}
-        for r in self.browse(cr, uid, ids , context):
-            result[r.id] = 0
-            if r.date_closed:
-                date_create = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
-                date_close = datetime.strptime(r.date_closed, "%Y-%m-%d %H:%M:%S")
-                ans = date_close - date_create
-                duration =  float(ans.days) + (float(ans.seconds) / 86400)
-                result[r.id] = abs(int(duration))
-        return result
+    def _compute_day(self, cr, uid, ids, fields, args, context={}):
+        """
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Openday’s IDs
+        @return: difference between current date and log date
+        @param context: A standard dictionary for contextual values
+        """
+        log_obj = self.pool.get('crm.case.log')
+        model_obj = self.pool.get('ir.model')
+        cal_obj = self.pool.get('resource.calendar')
+
+        model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
+        model_id = False
+        if len(model_ids):
+            model_id = model_ids[0]
+
+        res = {}
+        for project in self.browse(cr, uid, ids , context):
+            for field in fields:
+                res[project.id] = {}
+                duration = 0
+                if field == 'day_open':
+                    if project.date_open:
+                        date_create = datetime.strptime(project.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_open = datetime.strptime(project.date_open, "%Y-%m-%d %H:%M:%S")
+
+                        ans = date_open - date_create
+                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
+
+                elif field == 'day_close':
+                    if project.date_closed:
+                        date_create = datetime.strptime(project.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_close = datetime.strptime(project.date_closed, "%Y-%m-%d %H:%M:%S")
+
+                        ans = date_close - date_create
+                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                res[project.id][field] = abs(int(duration))
+        return res
 
     _columns = {
         'date_closed': fields.datetime('Closed', readonly=True),
@@ -84,11 +111,12 @@ class project_issue(osv.osv):
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
-        'day_open': fields.function(_compute_openday, string='Days to Open', \
-                                method=True, type="integer", store=True),
-        'day_close': fields.function(_compute_closeday, string='Days to Close', \
-                                method=True, type="integer", store=True),
-        'assigned_to' : fields.many2one('res.users', 'Assigned to'),
+        'date_open': fields.datetime('Opened', readonly=True),
+        'day_open': fields.function(_compute_day, string='Days to Open', \
+                                method=True, multi='day_open', type="integer", store=True),
+        'day_close': fields.function(_compute_day, string='Days to Close', \
+                                method=True, multi='day_close', type="integer", store=True),
+       'assigned_to' : fields.many2one('res.users', 'Assigned to'),
         'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
                                                 domain="[('partner_id', '=', partner_id)]",
