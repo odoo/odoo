@@ -51,8 +51,8 @@ class survey_browse_response(report_rml):
         _frame_width = tools.ustr(_pageSize[0])
         _frame_height = tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.90))+'cm'
         _tbl_widths = tools.ustr(float(_pageSize[0].replace('cm','')) - float(2.10))+'cm'
-        rml ="""<document filename="Survey Response Report.pdf">
-                <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Response.pdf' author="Martin Simon" allowSplitting="20" >
+        rml ="""<document filename="Survey Answer Report.pdf">
+                <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Answer.pdf' author="Martin Simon" allowSplitting="20" >
                     <pageTemplate id="first">
                         <frame id="first" x1="0.0cm" y1="1.0cm" width='"""+_frame_width+"""' height='"""+_frame_height+"""'/>
                         <pageGraphics>
@@ -203,10 +203,10 @@ class survey_browse_response(report_rml):
                 colwidth =  "4.6cm,5cm," + str(tbl_width - 16.4) +"cm,4cm,3cm"
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
-                            <td><para style="terp_tblheader_General_Centre">Response Create Date:- </para></td>
+                            <td><para style="terp_tblheader_General_Centre">Answer Create Date:- </para></td>
                             <td><para style="terp_tblheader_General_Centre_simple">""" + to_xml(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S'))) + """</para></td>
                             <td><para style="terp_tblheader_General_Centre"></para></td>
-                            <td><para style="terp_tblheader_General_right">Response By:- </para></td>
+                            <td><para style="terp_tblheader_General_right">Answer By:- </para></td>
                             <td><para style="terp_tblheader_General_right_simple">""" + to_xml(response.user_id.login) + """</para></td>
                           </tr>
                         </blockTable><para style="P2"></para>"""
@@ -289,7 +289,7 @@ class survey_browse_response(report_rml):
 
                             else:
                                 rml +="""<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
-                                             <tr><td> <para style="response">No Response</para></td> </tr>
+                                             <tr><td> <para style="response">No Answer</para></td> </tr>
                                         </blockTable>"""
 
                         elif que.type in ['multiple_choice_only_one_ans','multiple_choice_multiple_ans']:
@@ -363,7 +363,7 @@ class survey_browse_response(report_rml):
                                                 <td><para style="answer">""" + to_xml(tools.ustr(answer[0].comment)) + """</para></td></tr></blockTable>"""
                             else:
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
-                                             <tr><td> <para style="response">No Response</para></td> </tr>
+                                             <tr><td> <para style="response">No Answer</para></td> </tr>
                                           </blockTable>"""
 
                         elif que.type in ['multiple_textboxes_diff_type','multiple_textboxes','date','date_and_time','numerical_textboxes','multiple_textboxes_diff_type']:
@@ -390,7 +390,7 @@ class survey_browse_response(report_rml):
                                                 </blockTable>"""
                             else:
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
-                                         <tr>  <td> <para style="response">No Response</para></td> </tr>
+                                         <tr>  <td> <para style="response">No Answer</para></td> </tr>
                                         </blockTable>"""
 
                         elif que.type in ['single_textbox']:
@@ -400,7 +400,7 @@ class survey_browse_response(report_rml):
                                         </blockTable>"""
                             else:
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
-                                         <tr>  <td> <para style="response">No Response</para></td> </tr>
+                                         <tr>  <td> <para style="response">No Answer</para></td> </tr>
                                         </blockTable>"""
 
                         elif que.type in ['comment']:
@@ -410,7 +410,7 @@ class survey_browse_response(report_rml):
                                         </blockTable>"""
                             else:
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
-                                         <tr>  <td> <para style="response">No Response</para></td> </tr>
+                                         <tr>  <td> <para style="response">No Answer</para></td> </tr>
                                         </blockTable>"""
 
                         elif que.type in ['matrix_of_choices_only_one_ans','matrix_of_choices_only_multi_ans', 'rating_scale', 'matrix_of_drop_down_menus']:
@@ -507,7 +507,7 @@ class survey_browse_response(report_rml):
                                             <td><para style="answer">""" + to_xml(tools.ustr(answer[0].comment or '')) + """</para></td></tr></blockTable>"""
                             else:
                                 rml += """<blockTable colWidths='""" + str(_tbl_widths) + """' style="simple_table">
-                                         <tr><td> <para style="response">No Response</para></td> </tr>
+                                         <tr><td> <para style="response">No Answer</para></td> </tr>
                                         </blockTable>"""
 
                 if datas.has_key('form') and not datas['form']['without_pagebreak']:

@@ -55,9 +55,9 @@ class survey(osv.osv):
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
         'date_open': fields.datetime('Survey Open Date', readonly=1),
         'date_close': fields.datetime('Survey Close Date', readonly=1),
-        'max_response_limit': fields.integer('Maximum Response Limit'),
-        'response_user': fields.integer('Maximum Response per User',
-                     help="Set to one if  you require only one response per user"),
+        'max_response_limit': fields.integer('Maximum Answer Limit'),
+        'response_user': fields.integer('Maximum Answer per User',
+                     help="Set to one if  you require only one Answer per user"),
         'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
         'responsible_id': fields.many2one('res.users', 'Responsible'),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
@@ -65,7 +65,7 @@ class survey(osv.osv):
         'note': fields.text('Description', size=128),
         'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
         'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
-        'send_response': fields.boolean('E-mail Notification on Response'),
+        'send_response': fields.boolean('E-mail Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
     }
     _defaults = {
@@ -183,7 +183,6 @@ class survey_question(osv.osv):
         'page_id': fields.many2one('survey.page', 'Survey Page', ondelete='cascade', required=1),
         'question':  fields.char('Question', size=128, required=1),
         'answer_choice_ids': fields.one2many('survey.answer', 'question_id', 'Answer'),
-        'response_ids': fields.one2many('survey.response.line', 'question_id', 'Response', readonly=1),
         'is_require_answer': fields.boolean('Require Answer to Question (optional)'),
         'required_type': fields.selection([('all','All'), ('at least','At Least'), ('at most','At Most'), ('exactly','Exactly'), ('a range','A Range')], 'Respondent must answer'),
         'req_ans': fields.integer('#Required Answer'),
@@ -192,7 +191,7 @@ class survey_question(osv.osv):
         'req_error_msg': fields.text('Error Message'),
         'allow_comment': fields.boolean('Allow Comment Field'),
         'sequence': fields.integer('Sequence'),
-        'tot_resp': fields.function(_calc_response, method=True, string="Total Response"),
+        'tot_resp': fields.function(_calc_response, method=True, string="Total Answer"),
         'survey': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'descriptive_text': fields.text('Descriptive Text', size=255),
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id',' Column heading'),
@@ -245,7 +244,7 @@ class survey_question(osv.osv):
         'validation_valid_err_msg': fields.text('Error message'),
         'numeric_required_sum': fields.integer('Sum of all choices'),
         'numeric_required_sum_err_msg': fields.text('Error message'),
-        'rating_allow_one_column_require': fields.boolean('Allow Only One Response per Column (Forced Ranking)'),
+        'rating_allow_one_column_require': fields.boolean('Allow Only One Answer per Column (Forced Ranking)'),
         'in_visible_rating_weight': fields.boolean('Is Rating Scale Invisible?'),
         'in_visible_menu_choice': fields.boolean('Is Menu Choice Invisible?'),
         'in_visible_answer_type': fields.boolean('Is Answer Type Invisible?'),
@@ -524,7 +523,7 @@ class survey_answer(osv.osv):
         'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
         'answer': fields.char('Answer', size=128, required=1),
         'sequence': fields.integer('Sequence'),
-        'response': fields.function(_calc_response_avg, method=True, string="#Response", multi='sums'),
+        'response': fields.function(_calc_response_avg, method=True, string="#Answer", multi='sums'),
         'average': fields.function(_calc_response_avg, method=True, string="#Avg", multi='sums'),
         'type': fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),\
                     ('integer','Integer'),('float','Float'),('selection','Selection'),\
@@ -555,8 +554,8 @@ class survey_response(osv.osv):
         'date_create' : fields.datetime('Create Date', required=1),
         'user_id' : fields.many2one('res.users', 'User'),
         'response_type' : fields.selection([('manually', 'Manually'), ('link', 'Link')], \
-                                    'Response Type', required=1, readonly=1),
-        'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Response Answer'),
+                                    'Answer Type', required=1, readonly=1),
+        'question_ids' : fields.one2many('survey.response.line', 'response_id', 'Answer'),
         'state' : fields.selection([('done', 'Finished '),('skip', 'Not Finished')], \
                             'Status', readonly=True),
     }
@@ -585,16 +584,16 @@ class survey_response_line(osv.osv):
     _description = 'Survey Response Line'
     _rec_name = 'date_create'
     _columns = {
-        'response_id': fields.many2one('survey.response', 'Response', ondelete='cascade'),
+        'response_id': fields.many2one('survey.response', 'Answer', ondelete='cascade'),
         'date_create': fields.datetime('Create Date', required=1),
         'state': fields.selection([('draft', 'Draft'), ('done', 'Answered'),('skip', 'Skiped')],\
                                    'Status', readonly=True),
         'question_id': fields.many2one('survey.question', 'Question'),
         'page_id': fields.related('question_id', 'page_id', type='many2one', \
                                   relation='survey.page', string='Page'),
-        'response_answer_ids': fields.one2many('survey.response.answer', 'response_id', 'Response Answer'),
+        'response_answer_ids': fields.one2many('survey.response.answer', 'response_id', 'Answer'),
         'response_table_ids': fields.one2many('survey.tbl.column.heading', \
-                                    'response_table_id', 'Response Answer'),
+                                    'response_table_id', 'Answer'),
         'comment': fields.text('Notes'),
         'single_text': fields.char('Text', size=255),
     }
@@ -611,17 +610,17 @@ class survey_tbl_column_heading(osv.osv):
         'name': fields.integer('Row Number'),
         'column_id': fields.many2one('survey.question.column.heading', 'Column'),
         'value': fields.char('Value', size = 255),
-        'response_table_id': fields.many2one('survey.response.line', 'Response', ondelete='cascade'),
+        'response_table_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),
     }
 
 survey_tbl_column_heading()
 
 class survey_response_answer(osv.osv):
     _name = 'survey.response.answer'
-    _description = 'Survey Response Answer'
+    _description = 'Survey Answer'
     _rec_name = 'response_id'
     _columns = {
-        'response_id': fields.many2one('survey.response.line', 'Response', ondelete='cascade'),
+        'response_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),
         'answer_id': fields.many2one('survey.answer', 'Answer', required=1, ondelete='cascade'),
         'column_id': fields.many2one('survey.question.column.heading','Column'),
         'answer': fields.char('Value', size =255),

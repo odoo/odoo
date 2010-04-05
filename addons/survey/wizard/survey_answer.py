@@ -113,7 +113,7 @@ class survey_question_wiz(osv.osv_memory):
                             user_limit = survey_obj.browse(cr, uid, survey_id)
                             user_limit = user_limit.response_user
                             if user_limit and res >= user_limit:
-                                raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (user_limit))
+                                raise osv.except_osv(_('Warning !'),_("You can not give answer for this survey more than %s times") % (user_limit))
 
                         if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
                             survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
@@ -411,11 +411,11 @@ class survey_question_wiz(osv.osv_memory):
                         if user_email and resp_email:
                             user_name = user_obj.browse(cr, uid, uid).name
                             mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
-                            tools.email_send(user_email, [resp_email], "Survey Response Of " + str(user_name) , mail, attach = attachments)
+                            tools.email_send(user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attach = attachments)
 
-                    xml_form = etree.Element('form', {'string': _('Complete Survey Response')})
+                    xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
-                    etree.SubElement(xml_form, 'label', {'string': 'Thanks for your response'})
+                    etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
                     etree.SubElement(xml_form, 'newline')
                     etree.SubElement(xml_form, 'button', {'icon': "gtk-go-forward", 'special':"cancel",'string':"OK",'colspan':"2"})
                     root = xml_form.getroottree()
@@ -426,7 +426,7 @@ class survey_question_wiz(osv.osv_memory):
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False, context=None):
         """
-        If any user give answer of survey then last create report of this answer and if 'E-mail Notification on Response' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
+        If any user give answer of survey then last create report of this answer and if 'E-mail Notification on Answer' set True in survey  then send mail on responsible person of this survey and attach survey answer report in pdf format.
 
         @param self: The object pointer
         @param cr: the current row, from the database cursor,

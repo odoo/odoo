@@ -95,7 +95,7 @@ class survey_analysis(report_rml):
                   </stylesheet>
                   <images/>
                   <story>
-                    <para style="Title"><u>Response Summary</u></para>
+                    <para style="Title"><u>Answer Summary</u></para>
                     <para style="Standard"><font></font></para>
                     <para style="P2">
                       <font color="white"> </font>
@@ -158,7 +158,7 @@ class survey_analysis(report_rml):
                         rml += """<blockTable colWidths=" """ + colWidths + """ " style="Table1"><tr>"""
                         for mat_col in range(0, len(matrix_ans)):
                             rml+="""<td><para style="response">""" + to_xml(tools.ustr(matrix_ans[mat_col][1])) + """</para></td>"""
-                        rml += """<td><para style="response-bold">Response Count</para></td>
+                        rml += """<td><para style="response-bold">Answer Count</para></td>
                                 </tr>"""
                         last_col = cols_widhts[-1]
 
@@ -194,8 +194,8 @@ class survey_analysis(report_rml):
                         rml += """<blockTable colWidths="240.0,210,50.0" style="Table1">"""
                         rml += """ <tr>
                              <td> <para style="Standard"> </para></td>
-                             <td> <para style="terp_default_Center_heading">Response Percentage</para></td>
-                             <td> <para style="response-bold">Response Count</para></td>
+                             <td> <para style="terp_default_Center_heading">Answer Percentage</para></td>
+                             <td> <para style="response-bold">Answer Count</para></td>
                          </tr>"""
 
                         for ans in que.answer_choice_ids:
@@ -238,7 +238,7 @@ class survey_analysis(report_rml):
                         rml += """<blockTable colWidths="400.0,100.0" style="Table1">
                              <tr>
                                  <td> <para style="Standard"> </para></td>
-                                 <td> <para style="response-bold">Response Count</para></td>
+                                 <td> <para style="response-bold">Answer Count</para></td>
                              </tr>
                             <tr><td><para style="answer"></para></td>
                                 <td><para style="answer_right">""" + tools.ustr(cr.fetchone()[0]) + """ </para></td></tr>
@@ -249,7 +249,7 @@ class survey_analysis(report_rml):
                         rml += """<blockTable colWidths="400.0,100.0" style="Table1">
                              <tr>
                                  <td> <para style="Standard"> </para></td>
-                                 <td> <para style="response-bold">Response Count</para></td>
+                                 <td> <para style="response-bold">Answer Count</para></td>
                              </tr>
                             <tr><td><para style="answer"></para></td>
                                 <td><para style="answer_right">""" + tools.ustr(cr.fetchone()[0]) + """ </para></td></tr>
@@ -269,7 +269,7 @@ class survey_analysis(report_rml):
                         for mat_col in range(0,len(matrix_ans)):
                             rml += """<td><para style="response">""" + to_xml(tools.ustr(matrix_ans[mat_col][1])) + """</para></td>"""
                         rml += """<td><para style="response-bold">Rating Average</para></td>
-                                <td><para style="response-bold">Response Count</para></td>
+                                <td><para style="response-bold">Answer Count</para></td>
                                 </tr>"""
 
                         for ans in que.answer_choice_ids:
@@ -325,7 +325,7 @@ class survey_analysis(report_rml):
 
                             for menu in menu_choices:
                                 rml += """<td><para style="response">""" + to_xml(tools.ustr(menu)) + """</para></td>"""
-                            rml += """<td><para style="response-bold">Response Count</para></td></tr>"""
+                            rml += """<td><para style="response-bold">Answer Count</para></td></tr>"""
                             cr.execute("select count(id), sra.answer_id from survey_response_answer sra \
                                      where sra.column_id='%s' group by sra.answer_id "  % (column.id))
                             res_count = cr.dictfetchall()
@@ -363,9 +363,9 @@ class survey_analysis(report_rml):
                              <tr>
                              <td> <para style="Standard"> </para></td>
                              <td> <para style="Standard"> </para></td>
-                             <td> <para style="response">Response Average</para></td>
-                             <td> <para style="response">Response Total</para></td>
-                             <td> <para style="response-bold">Response Count</para></td>
+                             <td> <para style="response">Answer Average</para></td>
+                             <td> <para style="response">Answer Total</para></td>
+                             <td> <para style="response-bold">Answer Count</para></td>
                          </tr>"""
                         for ans in que.answer_choice_ids:
                             cr.execute("select answer from survey_response_answer where answer_id=%d group by answer" % ans.id)
