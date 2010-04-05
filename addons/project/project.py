@@ -190,10 +190,11 @@ class project(osv.osv):
 
     def duplicate_template(self, cr, uid, ids, context={}):
         project_obj = self.pool.get('project.project')
+        data_obj = self.pool.get('ir.model.data')
         task_obj = self.pool.get('project.task')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
-            parent_id = context.get('parent_id',False)
+            parent_id = context.get('parent_id',False) # check me where to pass context for parent id ??
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
@@ -208,7 +209,28 @@ class project(osv.osv):
             child_ids = self.search(cr, uid, [('parent_id','=', proj.id)], context=context)
             if child_ids:
                 self.duplicate_template(cr, uid, child_ids, context={'parent_id': new_id})
-        return result
+
+        if result and len(result):
+            res_id = result[0]
+            form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
+            form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
+            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_list')
+            tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
+            search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
+            search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
+            return {
+                'name': _('Projects'),
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'project.project',
+                'view_id': False,
+                'res_id' : res_id,
+                'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': search_view['res_id'],
+                'nodestroy': True
+                }
+#        return result
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context={}):
@@ -358,6 +380,8 @@ class task(osv.osv):
         return res
 
     def do_close(self, cr, uid, ids, *args):
+        mail_send = False
+        mod_obj = self.pool.get('ir.model.data')
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
@@ -373,6 +397,9 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
+                elif project.warn_manager:
+                    task_id = ids[0]
+                    mail_send = True
             self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
@@ -382,6 +409,21 @@ class task(osv.osv):
                             reopen = False
                     if reopen:
                         self.do_reopen(cr, uid, [parent_id.id])
+        if mail_send:
+            model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_project_close_task')])
+            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
+            args[0].update({'task_id': task_id})
+            return {
+                'name': _('Email Send to Customer'),
+                'view_type': 'form',
+                'context': args[0], # improve me
+                'view_mode': 'tree,form',
+                'res_model': 'close.task',
+                'views': [(resource_id,'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True
+                    }
         return True
 
     def do_reopen(self, cr, uid, ids, *args):

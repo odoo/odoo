@@ -19,8 +19,34 @@
 #
 ##############################################################################
 
-import l10_be_partner_vat_listing
-import l10n_be_vat_intra
-import l10n_be_account_vat_declaration
+from osv import fields, osv
+from tools.translate import _
+import tools
+
+
+class account_move_line_unreconcile_select(osv.osv_memory):
+
+    _name = "account.move.line.unreconcile.select"
+    _description = "Unreconciliation"
+    _columns ={
+       'account_id': fields.many2one('account.account','Account',required=True),
+
+               }
+
+    def action_open_window(self, cr, uid, ids, context={}):
+             for data in self.read(cr, uid, ids):
+                 return {
+                    'domain': "[('account_id','=',%d),('reconcile_id','<>',False),('state','<>','draft')]" % data['account_id'],
+                    'name': 'Unreconciliation',
+                    'view_type': 'form',
+                    'view_mode': 'tree,form',
+                    'view_id': False,
+                    'res_model': 'account.move.line',
+                    'type': 'ir.actions.act_window'
+                }
+
+account_move_line_unreconcile_select()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

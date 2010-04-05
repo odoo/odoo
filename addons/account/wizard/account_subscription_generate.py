@@ -18,8 +18,26 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
 
-import company
-import wizard
+from osv import fields, osv
 
+class account_subscription_generate(osv.osv_memory):
+
+    _name = "account.subscription.generate"
+    _description = "Subscription Compute"
+    _columns = {
+       'date': fields.date('Date', required=True),
+              }
+    _defaults = {
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
+                }
+    def action_generate(self, cr, uid, ids, context={}):
+        for data in  self.read(cr, uid, ids, context=context):
+             cr.execute('select id from account_subscription_line where date<%s and move_id is null', (data['date'],))
+             ids = map(lambda x: x[0], cr.fetchall())
+             self.pool.get('account.subscription.line').move_create(cr, uid, ids, context=context)
+        return {}
+
+account_subscription_generate()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

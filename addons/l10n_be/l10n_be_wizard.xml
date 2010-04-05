@@ -2,90 +2,9 @@
 <openerp>
     <data>
 
-    <menuitem
-        id="menu_finance_belgian_statement"
-        name="Belgium Statements"
-        parent="account.menu_finance_legal_statement"/>
-
-    <wizard
-        string="Annual Listing of VAT-Subjected Customers"
-        model="res.partner"
-        name="list.vat.detail"
-        menu="False"
-        id="partner_wizard_vat"/>
-
-    <menuitem
-        name="Annual Listing of VAT-Subjected Customers"
-        parent="menu_finance_belgian_statement"
-        action="partner_wizard_vat"
-        type="wizard"
-        id="partner_wizard_vat_menu"/>
-
-<!--    <wizard
-        string="Periodical VAT Declaration"
-        name="wizard.account.xml.vat.declaration"
-        menu="False"
-        id="wizard_xml_vat_declaration"/>
-
-    <menuitem
-        name="Periodical VAT Declaration"
-        parent="menu_finance_belgian_statement"
-        action="wizard_xml_vat_declaration"
-        type="wizard"
-        id="account_wizard_vat_declaration"/> -->
-
-   	<wizard
-        string="Partner VAT intra"
-        model="res.partner"
-        name="vat.intra.xml"
-        menu="False"
-        id="partner_vat_intra"/>
-
-    <menuitem
-        name="Partner VAT intra"
-        parent="menu_finance_belgian_statement"
-        action="partner_vat_intra"
-        type="wizard"
-        id="partner_intra_vat_menu"/>
-
     <record id="config_call_account_template" model="ir.actions.todo">
         <field name="action_id" ref="account.action_wizard_multi_chart"/>
     </record>
-
-	<!-- osv_memory for vat listing of clients -->
-	     <record id="view_vat_listing" model="ir.ui.view">
-            <field name="name">step.vat.listing</field>
-            <field name="model">vat.listing.clients</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="VAT listing">
-	                <field name="name"/>
-                    <field name="vat"/>
-                    <newline/>
-                    <field name="country"/>
-                    <newline/>
-                    <field name="amount"/>
-                    <field name="turnover"/>
-                </form>
-            </field>
-        </record>
-
-		<record id="view_vat_listing" model="ir.ui.view">
-            <field name="name">step.vat.listing</field>
-            <field name="model">vat.listing.clients</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="VAT listing">
-	                <field name="name"/>
-                    <field name="vat"/>
-                    <newline/>
-                    <field name="country"/>
-                    <newline/>
-                    <field name="amount"/>
-                    <field name="turnover"/>
-                </tree>
-            </field>
-        </record>
 
     </data>
 </openerp>
