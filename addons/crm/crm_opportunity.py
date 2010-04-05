@@ -23,6 +23,7 @@ from datetime import datetime
 from osv import fields,osv,orm
 from tools.translate import _
 import crm
+import time
 
 AVAILABLE_STATES = [
     ('draft','New'),
