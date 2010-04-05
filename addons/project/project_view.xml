@@ -49,9 +49,13 @@
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-                                <button
+                                <!--<button
                                     string="New Project Based on Template"
                                     name="%(wizard_duplicate_template)d"  type="action"
+                                    states="template" icon="gtk-new"/>-->
+								<button
+                                    string="New Project Based on Template"
+                                    name="duplicate_template"  type="object"
                                     states="template" icon="gtk-new"/>
                             </group>
                         </page>

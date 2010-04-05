@@ -190,10 +190,11 @@ class project(osv.osv):
 
     def duplicate_template(self, cr, uid, ids, context={}):
         project_obj = self.pool.get('project.project')
+        data_obj = self.pool.get('ir.model.data')
         task_obj = self.pool.get('project.task')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
-            parent_id = context.get('parent_id',False)
+            parent_id = context.get('parent_id',False) # check me where to pass context for parent id ??
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
@@ -208,7 +209,28 @@ class project(osv.osv):
             child_ids = self.search(cr, uid, [('parent_id','=', proj.id)], context=context)
             if child_ids:
                 self.duplicate_template(cr, uid, child_ids, context={'parent_id': new_id})
-        return result
+
+        if result and len(result):
+            res_id = result[0]
+            form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
+            form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
+            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_list')
+            tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
+            search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
+            search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
+            return {
+                'name': _('Projects'),
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'project.project',
+                'view_id': False,
+                'res_id' : res_id,
+                'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': search_view['res_id'],
+                'nodestroy': True
+                }
+#        return result
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context={}):
