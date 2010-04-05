@@ -63,6 +63,7 @@ class crm_case_section(osv.osv):
                         in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Section'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'),
+        'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
     }
 
     _defaults = {
@@ -130,7 +131,7 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
-    
+
     def _find_object_id(self, cr, uid, context=None):
 
         """
@@ -143,8 +144,8 @@ class crm_case_categ(osv.osv):
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
         return ids and ids[0]
-        
-    _defaults = {        
+
+    _defaults = {
         'object_id' : _find_object_id
     }
 #
@@ -163,7 +164,7 @@ class crm_case_resource_type(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
-    
+
     def _find_object_id(self, cr, uid, context=None):
         """
         @param self: The object pointer
@@ -203,7 +204,7 @@ class crm_case_stage(osv.osv):
                          help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements')
     }
-    
+
     def _find_object_id(self, cr, uid, context=None):
 
         """
@@ -352,7 +353,7 @@ class crm_case(osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
-    
+
     def _get_default_partner_address(self, cr, uid, context):
 
         """
@@ -687,7 +688,6 @@ class crm_case(osv.osv):
         return {'value': data}
 
     def case_close(self, cr, uid, ids, *args):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -707,7 +707,6 @@ class crm_case(osv.osv):
         return True
 
     def case_escalate(self, cr, uid, ids, *args):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -734,7 +733,6 @@ class crm_case(osv.osv):
 
 
     def case_open(self, cr, uid, ids, *args):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -749,13 +747,13 @@ class crm_case(osv.osv):
             data = {'state': 'open', 'active': True}
             if not case.user_id:
                 data['user_id'] = uid
+            data.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, ids, data)
         self._action(cr, uid, cases, 'open')
         return True
 
 
     def case_cancel(self, cr, uid, ids, *args):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,

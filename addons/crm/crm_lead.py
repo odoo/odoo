@@ -33,8 +33,7 @@ class crm_lead(osv.osv):
     _order = "priority desc, id desc"
     _inherit = ['res.partner.address', 'crm.case']
 
-    def _compute_openday(self, cr, uid, ids, name, args, context={}):
-
+    def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -42,77 +41,68 @@ class crm_lead(osv.osv):
         @return: difference between current date and log date
         @param context: A standard dictionary for contextual values
         """
+        log_obj = self.pool.get('crm.case.log')
+        model_obj = self.pool.get('ir.model')
+        cal_obj = self.pool.get('resource.calendar')
 
-        result = {}
-        for r in self.browse(cr, uid, ids , context):
-            result[r.id] = 0
-            model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.lead')])
-            log_obj = self.pool.get('crm.case.log')
-            hist_id = log_obj.search(cr, uid, [('model_id', '=', model_id[0]), \
-                                                     ('res_id', '=', r.id), \
-                                                     ('name', '=', 'Open')])
+        model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
+        model_id = False
+        if len(model_ids):
+            model_id = model_ids[0]
 
-            if hist_id:
-                # Considering last log for opening case
-                log = log_obj.browse(cr, uid, hist_id[-1])
-                date_lead_open = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
-                date_log_open = datetime.strptime(log.date, "%Y-%m-%d %H:%M:%S")
-                ans = date_lead_open - date_log_open
-                duration =  float(ans.days) + (float(ans.seconds) / 86400)
-                result[r.id] = abs(int(duration))
-        return result
+        res = {}
+        for lead in self.browse(cr, uid, ids , context):
+            for field in fields:
+                res[lead.id] = {}
+                duration = 0
+                if field == 'day_open':
+                    if lead.date_open:
+                        date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_open = datetime.strptime(lead.date_open, "%Y-%m-%d %H:%M:%S")
 
-    def _compute_closeday(self, cr, uid, ids, name, args, context={}):
+                        ans = date_open - date_create
+                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
 
-        """
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of closeday’s IDs
-        @param context: A standard dictionary for contextual values
-        @return: difference between current date and closed date
-        """
+                elif field == 'day_close':
+                    if lead.date_closed:
+                        date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_close = datetime.strptime(lead.date_closed, "%Y-%m-%d %H:%M:%S")
 
-        result = {}
-        for r in self.browse(cr, uid, ids , context):
-            result[r.id] = 0
-
-            if r.date_closed:
-                date_create = datetime.strptime(r.create_date, "%Y-%m-%d %H:%M:%S")
-                date_close = datetime.strptime(r.date_closed, "%Y-%m-%d %H:%M:%S")
-                ans = date_close - date_create
-                duration =  float(ans.days) + (float(ans.seconds) / 86400)
-                result[r.id] = abs(int(duration))
-        return result
+                        ans = date_close - date_create
+                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                res[lead.id][field] = abs(int(duration))
+        return res
 
     _columns = {
 
         'categ_id': fields.many2one('crm.case.categ', 'Lead Source', \
                         domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.opportunity')]"), 
+                        ('object_id.model', '=', 'crm.opportunity')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', \
                          domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.lead')]"), 
-        'partner_name': fields.char("Contact Name", size=64), 
+                        ('object_id.model', '=', 'crm.lead')]"),
+        'partner_name': fields.char("Contact Name", size=64),
 
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
-        'date_closed': fields.datetime('Closed', readonly=True), 
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', \
                             domain="[('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.lead')]"), 
-        'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'), 
+                            ('object_id.model', '=', 'crm.lead')]"),
+        'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'),
 
-        'user_id': fields.many2one('res.users', 'Salesman'), 
-        'referred': fields.char('Referred By', size=32), 
-        'day_open': fields.function(_compute_openday, string='Days to Open', \
-                                method=True, type="integer", store=True), 
-        'day_close': fields.function(_compute_closeday, string='Days to Close', \
-                                method=True, type="integer", store=True), 
-        'function_name' : fields.char('Function', size=64), 
+        'user_id': fields.many2one('res.users', 'Salesman'),
+        'referred': fields.char('Referred By', size=32),
+        'date_open': fields.datetime('Opened', readonly=True), 
+        'day_open': fields.function(_compute_day, string='Days to Open', \
+                                method=True, multi='day_open', type="integer", store=True), 
+        'day_close': fields.function(_compute_day, string='Days to Close', \
+                                method=True, multi='day_close', type="integer", store=True), 
+        'function_name': fields.char('Function', size=64),
         }
 
     _defaults = {
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c), 
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
 
@@ -144,29 +134,29 @@ class crm_lead(osv.osv):
                 if data_id:
                     view_id1 = data_obj.browse(cr, uid, data_id, context=context).res_id
                 value = {
-                        'name': _('Create Partner'), 
-                        'view_type': 'form', 
-                        'view_mode': 'form,tree', 
-                        'res_model': 'crm.lead2opportunity.partner', 
-                        'view_id': False, 
-                        'context': context,  
-                        'views': [(view_id1, 'form')], 
-                        'type': 'ir.actions.act_window', 
-                        'target': 'new', 
+                        'name': _('Create Partner'),
+                        'view_type': 'form',
+                        'view_mode': 'form,tree',
+                        'res_model': 'crm.lead2opportunity.partner',
+                        'view_id': False,
+                        'context': context,
+                        'views': [(view_id1, 'form')],
+                        'type': 'ir.actions.act_window',
+                        'target': 'new',
                         'nodestroy': True
                         }
                 break
             else:
                 value = {
-                        'name': _('Create Opportunity'), 
-                        'view_type': 'form', 
-                        'view_mode': 'form,tree', 
-                        'res_model': 'crm.lead2opportunity', 
-                        'view_id': False, 
-                        'context': context,  
-                        'views': [(view_id, 'form')], 
-                        'type': 'ir.actions.act_window', 
-                        'target': 'new', 
+                        'name': _('Create Opportunity'),
+                        'view_type': 'form',
+                        'view_mode': 'form,tree',
+                        'res_model': 'crm.lead2opportunity',
+                        'view_id': False,
+                        'context': context,
+                        'views': [(view_id, 'form')],
+                        'type': 'ir.actions.act_window',
+                        'target': 'new',
                         'nodestroy': True
                         }
         return value
