@@ -19,23 +19,83 @@
 #
 ##############################################################################
 
-import time
-import re
-import os
 import base64
-
-from tools.translate import _
-
+import os
+import re
+import time
+import time
 import tools
+from crm import crm
+from datetime import datetime, timedelta
 from osv import fields,osv,orm
 from osv.orm import except_orm
-from crm import crm
+from tools.translate import _
 
 class project_issue(osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, id desc"
     _inherit = 'crm.case'
+
+    def case_open(self, cr, uid, ids, *args):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+
+        cases = self.browse(cr, uid, ids)
+        for case in cases:
+            data = {'state': 'open', 'active': True}
+            if not case.user_id:
+                data['user_id'] = uid
+            data.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+            self.write(cr, uid, ids, data)
+        self._action(cr, uid, cases, 'open')
+        return True
+
+    def _compute_day(self, cr, uid, ids, fields, args, context={}):
+        """
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Openday’s IDs
+        @return: difference between current date and log date
+        @param context: A standard dictionary for contextual values
+        """
+        log_obj = self.pool.get('crm.case.log')
+        model_obj = self.pool.get('ir.model')
+        cal_obj = self.pool.get('resource.calendar')
+
+        model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
+        model_id = False
+        if len(model_ids):
+            model_id = model_ids[0]
+
+        res = {}
+        for project in self.browse(cr, uid, ids , context):
+            for field in fields:
+                res[project.id] = {}
+                duration = 0
+                if field == 'day_open':
+                    if project.date_open:
+                        date_create = datetime.strptime(project.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_open = datetime.strptime(project.date_open, "%Y-%m-%d %H:%M:%S")
+
+                        ans = date_open - date_create
+                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
+
+                elif field == 'day_close':
+                    if project.date_closed:
+                        date_create = datetime.strptime(project.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_close = datetime.strptime(project.date_closed, "%Y-%m-%d %H:%M:%S")
+
+                        ans = date_close - date_create
+                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                res[project.id][field] = abs(int(duration))
+        return res
+
     _columns = {
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
@@ -51,12 +111,18 @@ class project_issue(osv.osv):
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
-        'assigned_to' : fields.many2one('res.users', 'Assigned to'),
+        'date_open': fields.datetime('Opened', readonly=True),
+        'day_open': fields.function(_compute_day, string='Days to Open', \
+                                method=True, multi='day_open', type="integer", store=True),
+        'day_close': fields.function(_compute_day, string='Days to Close', \
+                                method=True, multi='day_close', type="integer", store=True),
+       'assigned_to' : fields.many2one('res.users', 'Assigned to'),
         'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
                                                 domain="[('partner_id', '=', partner_id)]",
                                                 required=True),
     }
+
     def _get_project(self, cr, uid, context):
        user = self.pool.get('res.users').browse(cr,uid,uid, context=context)
        if user.context_project_id:
@@ -65,10 +131,10 @@ class project_issue(osv.osv):
 
     def _convert(self, cr, uid, ids, xml_id, context=None):
         data_obj = self.pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)        
+        id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)
         categ_id = False
         if id2:
-            categ_id = data_obj.browse(cr, uid, id2, context=context).res_id    
+            categ_id = data_obj.browse(cr, uid, id2, context=context).res_id
         if categ_id:
             self.write(cr, uid, ids, {'categ_id': categ_id})
         return True

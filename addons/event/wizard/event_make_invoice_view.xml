@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    	<record id="view_event_make_invoice" model="ir.ui.view">
+            <field name="name">event.make.invoice</field>
+            <field name="model">event.make.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+              	<form string="Make Invoices">
+              		<field name="inv_created" />
+              		<field name="inv_rejected" />
+              		<field name="inv_rej_reason" colspan="4"/>
+              		<group colspan="4" col="6">
+            			<button  icon="gtk-cancel" special="cancel" string="_Ok"/>
+            			<button icon="gtk-ok" name="confirm" string="Open" type="object"/>
+                	</group>
+				</form>
+            </field>
+		</record>
+
+		<record id="action_event_confirm_registration" model="ir.actions.act_window">
+            <field name="name">Make Invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">event.make.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_event_make_invoice"/>
+	        <field name="context">{'record_id' : active_id}</field>
+            <field name="target">new</field>
+    	</record>
+
+        <act_window id="action_make_invoices"
+    		key2 = "client_action_multi"   name="Make Invoice"
+    		res_model="event.make.invoice"  src_model="event.registration"
+    		view_mode="form" target="new"  view_type="form" />
+
+    </data>
+</openerp>

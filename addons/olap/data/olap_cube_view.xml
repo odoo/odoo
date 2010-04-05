@@ -2,11 +2,8 @@
 <openerp>
 <data>
 
-<!--
+<!-- Wizard view for the load data -->
 
-Wizard view for the load data
-
--->
         <record id="bi_load_db_form" model="ir.ui.view">
             <field name="name">bi.load.db.form</field>
             <field name="model">bi.load.db.wizard</field>
@@ -37,9 +34,8 @@ Wizard view for the load data
         </record>
 
 
-<!--
-Wizard For Olap Warehouse
- -->
+<!-- Wizard For Olap Warehouse -->
+
         <record id="view_warehouse_bi" model="ir.ui.view">
             <field name="name">Olap Warehouse</field>
             <field name="model">olap.warehouse.wizard</field>
@@ -69,10 +65,8 @@ Wizard For Olap Warehouse
         sequence="51"
         parent="base.next_id_50"
         />
-<!--
 
-Wizard View for the parameters wizard
--->
+<!-- Wizard View for the parameters wizard -->
 
         <record id="view_config_bi" model="ir.ui.view">
             <field name="name">Parameters Configuration</field>
@@ -116,11 +110,7 @@ Wizard View for the parameters wizard
         </record>
 
 
-<!--
-
-Wizard view for the Auto Configuring the data
-
--->
+<!-- Wizard view for the Auto Configuring the data -->
 
         <record id="bi_auto_configure_form" model="ir.ui.view">
             <field name="name">bi.auto.configure.form</field>
@@ -176,20 +166,25 @@ Wizard view for the Auto Configuring the data
               <field name="loaded" colspan="3"/>
               <button name="%(act_bi_load_db_wizard)d" string="Reload Structure" type="action" states="done"/>
               <field name="configure" colspan="3"/>
-              <button name="%(bi_load_configuration_table)d" string="ReConfigure Structure" type="action" states="done"/>
-<!--              <button string="Configure Manually" name="dbconfigure" states="dbload" target="new"/>-->
+              <button name="%(bi_load_configuration_table)d"
+              	string="ReConfigure Structure" type="action"
+              	states="done" />
               <field name="ready" select="2" colspan="3"/>
               <field name="note" colspan="4"/>
               <field name="state" select="2" colspan="2" />
               <group colspan="2">
                 <button string="Connect to Database" name="dbconnect" states="none"/>
-                <button string="Load Database Structure" name="%(act_bi_load_db_wizard)d" type="action" states="dbconnect" target="new" />
+                <button string="Load Database Structure"
+                	name="%(act_bi_load_db_wizard)d" type="action"
+                	states="dbconnect" target="new" />
                 <button string="Configure Manually" name="dbconfigure"  states="dbload"/>
                 <button string="Mark as Configured" name="dbready" states="dbconfigure"/>
               </group>
               <separator string="Auto Application Configuration" colspan="4"/>
               <field name="app_detect" nolabel="1" colspan="3"/>
-              <button string="Configure Automatically " name="%(act_bi_auto_configure)d" type="action" states="dbload" target="new"/>
+              <button string="Configure Automatically "
+              	name="%(act_bi_auto_configure)d" type="action"
+              	states="dbload" target="new" />
             </form>
         </field>
     </record>
@@ -228,13 +223,16 @@ Wizard view for the Auto Configuring the data
                         <field name="field_id"/>
                     </tree>
                 </field>
-                <field name="available_table_ids" colspan="4" nolabel="1" readonly="0" domain="[('available_table_ids','in',available_table_ids)]" context="{'flag':True,'master_dim':context.get('d_id',False),'master_schema':context.get('parent_schema_id',False),'link_col':column_link_id}">
-                    <tree string="Database Tables">
-                        <field name="related_to" string="Joined Table"/>
-                        <field name="name"/>
-                        <field name="table_id" />
-                        <field name="primary_key" />
-                    </tree>
+                <field name="available_table_ids" colspan="4"
+                	nolabel="1" readonly="0"
+                	domain="[('available_table_ids','in',available_table_ids)]"
+                	context="{'flag':True,'master_dim':context.get('d_id',False),'master_schema':context.get('parent_schema_id',False),'link_col':column_link_id}">
+                	<tree string="Database Tables">
+                		<field name="related_to" string="Joined Table" />
+                		<field name="name" />
+                		<field name="table_id" />
+                		<field name="primary_key" />
+                	</tree>
                 </field>
             </form>
         </field>
@@ -276,11 +274,6 @@ Wizard view for the Auto Configuring the data
                 <field name="schema_id" select="1" attrs="{'readonly':[('schema_id','!=','')]}"/>
                 <field name="query_log" select="2"/>
                 <field name="table_id"  colspan="4" context="{'parent_schema_id':schema_id}"/>
-
-                <!--<separator colspan="4" string="Dimensions"/>
-                <field name="dimension_ids" colspan="4" nolabel="1"/>
-                <separator colspan="4" string="Measures"/>
-                <field name="measure_ids" colspan="4" nolabel="1"/>-->
             </form>
         </field>
     </record>
@@ -319,19 +312,6 @@ Wizard view for the Auto Configuring the data
             <form string="Olap dimension">
                 <field name="name" select="1"/>
                 <field name="cube_id" select="1" attrs="{'readonly':[('cube_id','!=','')]}"/>
-<!--                <field name="cube_id" on_change="onchange_cube_id(cube_id)" select="1" attrs="{'readonly':[('cube_id','!=','')]}"/>
-                <field name="foreign_key_table" select="2"/>
-                <field name="foreign_key" select="2"/>
-                <separator colspan="4" string="Select In These Tables For Foreign Keys"/>
-                <field name="available_foreign_table_ids" nolabel="1" colspan="4" readonly="0">
-                    <tree string="Database Tables">
-                        <button string="Mark as Foreign Table" name="mark_foreign" context="{'parent_id':parent.id,'parent_name':parent.name,'parent_cube':parent.cube_id,'reload':1}" type="object"/>
-                        <field name="table_id" />
-                        <field name="name" string="Link Column"/>
-                   </tree>
-                </field>
-                <separator colspan="4" string="Hierarchies"/>
-                <field name="hierarchy_ids" colspan="4" nolabel="1"/>-->
             </form>
         </field>
     </record>
@@ -418,12 +398,13 @@ Wizard view for the Auto Configuring the data
         <field name="arch" type="xml">
             <form string="Olap level">
                 <field name="name" select="1" colspan="4"/>
-                <field name="column_name" select="1" on_change="onchange_column_name(column_name)" context="{'filter_cols_hier':hierarchy_id}"/>
+                <field name="column_name" select="1"
+                	on_change="onchange_column_name(column_name)"
+                	context="{'filter_cols_hier':hierarchy_id}" />
                 <field name="column_id_name" select="1"/>
                 <field name="type" select="1"/>
                 <field name="table_name" select="1"/>
                 <field name="sequence"/>
-                <!-- <field name="hierarchy_id" select="1"/>-->
                 <field name="hierarchy_id" select="1" attrs="{'readonly':[('hierarchy_id','!=','')]}"/>
             </form>
        </field>
@@ -466,21 +447,6 @@ Wizard view for the Auto Configuring the data
                 <field name="value_column_id_name" invisible="True"/>
                 <field name="table_name" invisible="True"/>
                 <field name="measure_type"/>
-
-<!--                <notebook colspan="4">
-                        <page string="Fact Table Column" >
-                            <newline/>
-                            <field name="value_column" select="1" on_change="onchange_measure_name(value_column)" context="{'filter_cols_cube':cube_id}"/>
-                            <field name="agregator" select="2"/>
-                            <field name="formatstring" select="2"/>
-                        </page>
-                        <page string="SQL Expression" attrs="{'invisible':[('measure_type','!=','sql_expr')]}">
-                             <field name="value_sql" colspan="4" select="2"/>
-                             <field name="datatype" select="2"/>
-                        </page>
-                    </notebook>
--->
-
                 <group colspan="4" attrs="{'invisible':[('measure_type','!=','fact_column')]}">
                     <newline/>
                     <field name="value_column" select="1" attrs="{'required':[('measure_type','=','fact_column')]}" on_change="onchange_measure_name(value_column)" context="{'filter_cols_cube':cube_id}"/>
@@ -489,7 +455,8 @@ Wizard view for the Auto Configuring the data
                 </group>
                 <group colspan="4"  attrs="{'invisible':[('measure_type','!=','sql_expr')]}">
                     <newline/>
-                    <field name="value_sql" colspan="4" select="2" attrs="{'required':[('measure_type','=','sql_expr')]}"/>
+                    <field name="value_sql" colspan="4" select="2"
+                    	attrs="{'required':[('measure_type','=','sql_expr')]}" />
                     <field name="datatype" select="2"/>
                 </group>
             </form>
@@ -569,11 +536,7 @@ Wizard view for the Auto Configuring the data
         action="action_olap_saved_query_form"
         id="menu_action_olap_saved_query_form"/>
 
-<!--
-
-All Logs
-
--->
+<!-- All Logs -->
 
     <record model="ir.ui.view" id="view_olap_query_logs_tree">
         <field name="name">olap.query.logs</field>
@@ -608,22 +571,14 @@ All Logs
         <field name="res_model">olap.query.logs</field>
         <field name="view_type">form</field>
     </record>
+
     <menuitem
         name="All Logs"
         action="action_olap_query_logs_form"
         id="menu_action_olap_query_logs_form"
         parent="menu_bi_conf_tools"/>
 
-
-
-
-
-
-<!--
-All Logs / My logs
-
- -->
-
+<!-- All Logs / My logs -->
 
     <record model="ir.ui.view" id="view_olap_query_logs_my_tree">
         <field name="name">olap.query.logs</field>
@@ -649,6 +604,9 @@ All Logs / My logs
             </tree>
         </field>
     </record>
+
+<!-- Query Logs  -->
+
     <record model="ir.ui.view" id="view_olap_query_logs_my_form">
         <field name="name">olap.query.logs.form</field>
         <field name="model">olap.query.logs</field>
@@ -656,8 +614,6 @@ All Logs / My logs
         <field name="arch" type="xml">
             <form string="My Logs">
                 <field name="user_id" select="1" readonly="True"/>
-                <!--  domain="[('uid','=',uid)]"
-                /> -->
                 <field name="query" select="1" readonly="True"/>
                 <field name="time" select="2" readonly="True"/>
                 <field name="result_size" select="2" readonly="True"/>
@@ -666,8 +622,8 @@ All Logs / My logs
             </form>
         </field>
 
-
     </record>
+
     <record model="ir.actions.act_window" id="action_olap_query_logs_my_form">
         <field name="name">My Logs</field>
         <field name="res_model">olap.query.logs</field>
@@ -675,27 +631,12 @@ All Logs / My logs
         <field name="view_mode">tree,form,mdx</field>
         <field name="domain">[('user_id','=',uid)]</field>
     </record>
+
     <menuitem
         name="My Logs"
         action="action_olap_query_logs_my_form"
         id="menu_action_olap_query_logs_my_form"
         parent="menu_action_olap_query_logs_form"/>
-
-
-<!--
-
-Clear All Logs
-
- -->
-
-
-
-
-<!--
-
-Clear My logs
-
- -->
 
 </data>
 </openerp>

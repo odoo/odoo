@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- Open Page Form view  -->
+
+    	<record id="view_wiki_wiki_page_open" model="ir.ui.view">
+            <field name="name">Open Page</field>
+            <field name="model">wiki.wiki.page.open</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+              <form string="Open Page">
+             	<separator string="" colspan="6" />
+              	<label string="" colspan="2" />
+               	<button name="open_wiki_page" string="Open Wiki Page" type="object"/>
+             </form>
+            </field>
+		</record>
+
+<!-- Open Page Action  -->
+
+		<record id="action_view_wiki_wiki_page_open" model="ir.actions.act_window">
+            <field name="name">Open Page</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wiki.wiki.page.open</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+    	</record>
+
+<!-- Open Page Action window  -->
+
+    	<act_window id="action_view_wiki_wiki_page_open_vals"
+    		key2="client_action_multi" name="Open Wiki Page"
+    		res_model="wiki.wiki.page.open" src_model="wiki.groups"
+    		view_mode="form" target="new" view_type="form" />
+    </data>
+</openerp>

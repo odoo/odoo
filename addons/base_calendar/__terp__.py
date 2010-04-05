@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,36 +15,33 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-
 {
-    "name" : "Basic Calendar Functionality",
-    "version" : "1.0",
-    "depends" : [
-                    "base",
-                ],
-     'description': """
- Full featured calendar system that support:
-  - Alerts (create requests)
-  - Recurring events (*)
-  - Invitations to other people
-""",
-    "author" : "Tiny",
-    'category': 'Generic Modules/Others',
-    'website': 'http://www.openerp.com',
+    "name" : "Basic Calendar Functionality", 
+    "version" : "1.0", 
+    "depends" : ["base"], 
+    'description': """Full featured calendar system that support:
+    - Alerts (create requests)
+    - Recurring events (*)
+    - Invitations to others people""", 
+    "author" : "Tiny", 
+    'category': 'Generic Modules/Others', 
+    'website': 'http://www.openerp.com', 
     "init_xml" : [
-                   'base_calendar_data.xml'
-                   ],
-    "demo_xml" : [],
+        'base_calendar_data.xml'
+    ], 
+    "demo_xml" : [], 
     "update_xml" : [
-                    'security/ir.model.access.csv',
-                    'base_calendar_view.xml'
-                    ],
-    "installable" : True,
-    "active" : False,
+        'security/ir.model.access.csv',
+        'wizard/calendar_event_edit_all_view.xml', 
+        'wizard/base_calendar_invite_attendee_view.xml', 
+        'base_calendar_view.xml'
+    ], 
+    "installable" : True, 
+    "active" : False, 
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

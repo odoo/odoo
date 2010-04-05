@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-	<!--
-	Opportunities by user and section
-	-->
+
+<!-- Opportunities by user and section Tree View  -->
 
         <record id="view_report_crm_opportunity_tree" model="ir.ui.view">
             <field name="name">crm.opportunity.report.tree</field>
@@ -16,7 +15,7 @@
 					<field name="section_id" />
                     <field name="user_id" />
                     <field name="company_id"/>
-					<field name="partner_id"/>                    
+					<field name="partner_id"/>
                 	<field name="nbr" string="#Opportunities"/>
                     <field name="amount_revenue"  sum="Total Revenue"/>
                     <field name="probability" widget="progressbar"/>
@@ -26,8 +25,11 @@
                     <field name="stage_id"  invisible="1"/>
                     <field name="categ_id" invisible="1"/>
                </tree>
-            </field>	
+            </field>
         </record>
+
+<!-- Opportunities by user and section Form View  -->
+
         <record id="view_report_crm_opportunity_form" model="ir.ui.view">
             <field name="name">crm.opportunity.report.form</field>
             <field name="model">crm.opportunity.report</field>
@@ -43,7 +45,9 @@
                 </field>
             </field>
         </record>
-        
+
+<!-- Opportunities by user and section Graph View  -->
+
         <record id="view_report_crm_opportunity_graph" model="ir.ui.view">
             <field name="name">crm.opportunity.report.graph</field>
             <field name="model">crm.opportunity.report</field>
@@ -57,20 +61,28 @@
             </field>
         </record>
 
+<!-- Opportunities by user and section Search View  -->
+
         <record id="view_report_crm_opportunity_filter" model="ir.ui.view">
             <field name="name">crm.opportunity.report.select</field>
             <field name="model">crm.opportunity.report</field>
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]' position='after'>
-        	        <filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
-        	        <separator orientation="vertical"/>
-        	         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-	            </xpath>
+				<xpath
+					expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
+					position='after'>
+					<filter string="Stage" icon="terp-sale" domain="[]"
+						context="{'group_by':'stage_id'}" />
+					<separator orientation="vertical" />
+					<filter string="Partner" icon="terp-partner"
+						domain="[]" context="{'group_by':'partner_id'}" />
+				</xpath>
             </field>
         </record>
-        
+
+<!-- Opportunities by user and section Action  -->
+
         <record id="action_report_crm_opportunity" model="ir.actions.act_window">
             <field name="name">Opportunities</field>
             <field name="res_model">crm.opportunity.report</field>
@@ -83,14 +95,17 @@
 	        <field name="view_mode">tree</field>
 	        <field name="view_id" ref="view_report_crm_opportunity_tree"/>
 	        <field name="act_window_id" ref="action_report_crm_opportunity"/>
-	    </record> 
+	    </record>
         <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_graph">
 	        <field name="sequence" eval="2"/>
 	        <field name="view_mode">graph</field>
 	        <field name="view_id" ref="view_report_crm_opportunity_graph"/>
 	        <field name="act_window_id" ref="action_report_crm_opportunity"/>
-	    </record>  
+	    </record>
 
-        <menuitem name="Opportunities" action="action_report_crm_opportunity" id="menu_report_crm_opportunity_tree" parent="base.next_id_64"/>        
-	</data>
+        <menuitem name="Opportunities"
+        	action="action_report_crm_opportunity"
+        	id="menu_report_crm_opportunity_tree" parent="base.next_id_64" />
+
+    </data>
 </openerp>

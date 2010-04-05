@@ -154,7 +154,6 @@ class document_storage(osv.osv):
                     netsvc.Logger().notifyChannel('document', netsvc.LOG_WARNING, "ir.attachment #%d does not have a filename, but is at filestore, fix it!" % ira.id)
                 return None
             fpath = os.path.join(boo.path, ira.store_fname)
-            print "Trying to read \"%s\".." % fpath
             return file(fpath, 'rb').read()
         elif boo.type == 'db':
             # TODO: we need a better api for large files
@@ -164,8 +163,19 @@ class document_storage(osv.osv):
                 out = ''
             return out
         elif boo.type == 'realstore':
-            # fpath = os.path.join(boo.path,
-            return None
+            if not ira.store_fname:
+                # On a migrated db, some files may have the wrong storage type
+                # try to fix their directory.
+                if ira.file_size:
+                    netsvc.Logger().notifyChannel('document',netsvc.LOG_WARNING,"ir.attachment #%d does not have a filename, trying the name." %ira.id)
+                sfname = ira.name
+            fpath = os.path.join(boo.path,ira.store_fname or ira.name)
+            if os.path.exists(fpath):
+                return file(fpath,'rb').read()
+            elif not ira.store_fname:
+                return None
+            else:
+                raise IOError("File not found: %s" % fpath)
         else:
             raise TypeError("No %s storage" % boo.type)
 
@@ -219,6 +229,36 @@ class document_storage(osv.osv):
             out = base64.encodestring(data)
             cr.execute('UPDATE ir_attachment SET db_datas = %s WHERE id = %s',
                 (out, file_node.file_id))
+        elif boo.type == 'realstore':
+            try:
+                file_node.fix_ppath(cr, ira)
+                npath = file_node.full_path() or []
+                # npath may contain empty elements, for root directory etc.
+                for i, n in enumerate(npath):
+                    if n == None:
+                        del npath[i]
+                for n in npath:
+                    for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?', '..'):
+                        if ch in n:
+                            raise ValueError("Invalid char %s in path %s" %(ch, n))
+                dpath = [boo.path,]
+                dpath += npath[:-1]
+                path = os.path.join(*dpath)
+                if not os.path.isdir(path):
+                    os.makedirs(path)
+                fname = os.path.join(path, npath[-1])
+                fp = file(fname,'wb')
+                fp.write(data)
+                fp.close()
+                logger.notifyChannel('document',netsvc.LOG_DEBUG,"Saved data to %s" % fname)
+                filesize = len(data) # os.stat(fname).st_size
+                store_fname = os.path.join(*npath)
+                # TODO Here, an old file would be left hanging.
+            except Exception,e :
+                import traceback
+                traceback.print_exc()
+                netsvc.Logger().notifyChannel('document',netsvc.LOG_WARNING,"Couldn't save data: %s" % e)
+                raise except_orm(_('Error!'), str(e))
         else:
             raise TypeError("No %s storage" % boo.type)
 
@@ -226,6 +266,8 @@ class document_storage(osv.osv):
         try:
             icont = ''
             mime = ira.file_type
+            if not mime:
+                mime = ""
             try:
                 mime, icont = cntIndex.doIndex(data, ira.datas_fname,
                 ira.file_type or None, fname)
@@ -262,6 +304,12 @@ class document_storage(osv.osv):
             return (storage_bo.id, 'file', os.path.join(path, fname))
         elif storage_bo.type == 'db':
             return None
+        elif storage_bo.type == 'realstore':
+            fname = fil_bo.store_fname
+            if not fname:
+                return None
+            path = storage_bo.path
+            return ( storage_bo.id, 'file', os.path.join(path,fname))
         else:
             raise TypeError("No %s storage" % boo.type)
 

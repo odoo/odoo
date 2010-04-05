@@ -36,7 +36,7 @@
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [
-        'idea_wizard.xml',
+        'wizard/idea_post_vote_view.xml',
         'idea_view.xml',
         'idea_workflow.xml',
         'security/idea_security.xml',

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+  		<record id="view_calendar_event_import" model="ir.ui.view">
+            <field name="name">calendar.event.import.form</field>
+            <field name="model">calendar.event.import</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import ICS">
+                	<group colspan="4" >
+                		 <separator string="Select ICS file"/>
+              			 <field name="file_path" colspan="4" width="300" nolabel="1"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                    	<button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
+                    	<button  icon="gtk-ok"  name="process_imp_ics"  string="_Import" type="object"/>
+                   </group>
+               </form>
+            </field>
+  		</record>
+  		
+  		<record id="view_calendar_event_import_display" model="ir.ui.view">
+            <field name="name">calendar.event.import.form.display</field>
+            <field name="model">calendar.event.import</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import Message">
+                	<group colspan="4" >
+                		  <field name="msg" colspan="4" width="300" nolabel="1"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4">
+                    	<button  icon="gtk-ok" special="cancel" string="Ok"/>
+                   </group>
+               </form>
+            </field>
+  		</record>
+  		
+        <record id="action_calendar_event_import" model="ir.actions.act_window">
+            <field name="name">Import .ics File</field>
+            <field name="res_model">calendar.event.import</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_calendar_event_import"/> 
+           <field name="target">new</field>
+        </record>
+              
+        <act_window id="action_calendar_event_import_values"
+    		key2="client_action_multi" name="Import .ics File"
+    		res_model="calendar.event.import" src_model="basic.calendar"
+    		view_mode="form" target="new" view_type="form" />
+   		
+    </data>
+</openerp>

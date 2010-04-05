@@ -12,24 +12,13 @@
                 </form>
             </field>
         </record>
-        <act_window
-            id="act_view_diff" 
-            name="Differences" 
-            res_model="wizard.wiki.history.show_diff" 
+       <act_window
+            id="act_view_diff"
+            name="Differences"
+            res_model="wizard.wiki.history.show_diff"
             src_model="wiki.wiki.history"
             target="new"
             view_mode="form"
         />
-<!--        <wizard
-            id="wizard_make_index"
-            string="Create Index"
-            name="wiki.make.index"
-            model="wiki.wiki"/-->
-        <wizard
-            id="wizard_open_help"
-            string="Basic Wiki Editing"
-            name="wiki.wiki.help.open"
-            model="wiki.wiki"/>
-
     </data>
 </openerp>

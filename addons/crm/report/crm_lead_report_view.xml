@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-	<!--
-	Leads by user and section
-	-->
+
+<!-- Leads by user and section Tree View -->
 
         <record id="view_report_crm_lead_tree" model="ir.ui.view">
             <field name="name">crm.lead.report.tree</field>
@@ -15,8 +14,8 @@
 				<field name="month"/>
 				<field name="section_id" />
 				<field name="user_id" />
-    			<field name="company_id" />				
-				<field name="partner_id" />				
+    			<field name="company_id" />
+				<field name="partner_id" />
 				<field name="nbr" string="#Leads"/>
                 <field name="delay_close"/>
                 <field name="state"  invisible="1"/>
@@ -25,6 +24,9 @@
              </tree>
             </field>
         </record>
+
+<!-- Leads by user and section Form View -->
+
         <record id="view_report_crm_lead_form" model="ir.ui.view">
             <field name="name">crm.lead.report.form</field>
             <field name="model">crm.lead.report</field>
@@ -37,7 +39,9 @@
                 </field>
             </field>
         </record>
-        
+
+<!-- Leads by user and section Graph View -->
+
         <record id="view_report_crm_lead_graph" model="ir.ui.view">
             <field name="name">crm.lead.report.graph</field>
             <field name="model">crm.lead.report</field>
@@ -51,42 +55,50 @@
             </field>
         </record>
 
+<!-- Leads by user and section Search View -->
+
         <record id="view_report_crm_lead_filter" model="ir.ui.view">
             <field name="name">crm.lead.report.select</field>
             <field name="model">crm.lead.report</field>
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-			<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]' position='after'>
-					<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
-            	</xpath>
+			<xpath
+				expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
+				position='after'>
+				<filter string="Stage" icon="terp-sale" domain="[]"
+					context="{'group_by':'stage_id'}" />
+			</xpath>
             </field>
         </record>
-       	
-  
+
+<!-- Leads by user and section Action -->
+
         <record id="action_report_crm_lead" model="ir.actions.act_window">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_report_crm_lead_filter"/>
-           
+
         </record>
-               	
+
        	<record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
 	        <field name="sequence" eval="1"/>
 	        <field name="view_mode">tree</field>
 	        <field name="view_id" ref="view_report_crm_lead_tree"/>
 	        <field name="act_window_id" ref="action_report_crm_lead"/>
-	    </record>        
-                     	
+	    </record>
+
        	<record model="ir.actions.act_window.view" id="action_report_crm_lead_graph">
 	        <field name="sequence" eval="2"/>
 	        <field name="view_mode">graph</field>
 	        <field name="view_id" ref="view_report_crm_lead_graph"/>
 	        <field name="act_window_id" ref="action_report_crm_lead"/>
-	    </record>        
+	    </record>
 
-        <menuitem name="Leads" id="menu_report_crm_leads_tree" parent="base.next_id_64" action="action_report_crm_lead"/>       
-  </data>
+       	<menuitem name="Leads" id="menu_report_crm_leads_tree"
+       		parent="base.next_id_64" action="action_report_crm_lead" />
+
+    </data>
 </openerp>

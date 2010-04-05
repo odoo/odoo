@@ -2,9 +2,8 @@
 <openerp>
 <data>
 
-	# ------------------------------------------------------
-    # Fund Raising Categories
-    # ------------------------------------------------------
+<!-- Fund Raising Categories Form View -->
+
     <record id="crm_fund_categ_action" model="ir.actions.act_window">
         <field name="name">Fundraising Categories</field>
         <field name="res_model">crm.case.categ</field>
@@ -13,10 +12,13 @@
 		<field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
 		<field name="context">{'object_id':'crm.fundraising'}</field>
     </record>
-   <menuitem action="crm_fund_categ_action" id="menu_crm_case_fundraising-act" parent="crm.menu_crm_case_categ"/>
-    # ------------------------------------------------------
-    # Fund Stage
-    # ------------------------------------------------------
+
+    <menuitem action="crm_fund_categ_action"
+    	id="menu_crm_case_fundraising-act"
+    	parent="crm.menu_crm_case_categ" />
+
+<!-- Fund Stage Form View -->
+
 	    <record id="crm_fundraising_stage_act" model="ir.actions.act_window">
 	        <field name="name">Fundraising Stages</field>
 	        <field name="res_model">crm.case.stage</field>
@@ -25,11 +27,13 @@
    			<field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
    			<field name="context">{'object_id':'crm.fundraising'}</field>
 	    </record>
-	  <menuitem action="crm_fundraising_stage_act" id="menu_crm_fundraising_stage_act" parent="crm.menu_crm_case_stage"/>
 
-    # ------------------------------------------------------
-    #Fund  Resource Type
-    # ------------------------------------------------------
+	    <menuitem action="crm_fundraising_stage_act"
+	    	id="menu_crm_fundraising_stage_act"
+	    	parent="crm.menu_crm_case_stage" />
+
+<!-- Fund  Resource Type Form View -->
+
         <record id="crm_fundraising_resource_act" model="ir.actions.act_window">
             <field name="name">Fundraising Resource Type</field>
             <field name="res_model">crm.case.resource.type</field>
@@ -38,35 +42,51 @@
    			<field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
    			<field name="context">{'object_id':'crm.fundraising'}</field>
         </record>
-      <menuitem action="crm_fundraising_resource_act" id="menu_crm_fundraising_resource_act" parent="crm.menu_crm_case_resource_type"/>
+
+        <menuitem action="crm_fundraising_resource_act"
+        	id="menu_crm_fundraising_resource_act"
+        	parent="crm.menu_crm_case_resource_type" />
 
 
-    # ------------------------------------------------------
-    # Fund Raising
-    # ------------------------------------------------------
+<!-- Fund Raising Tree View -->
+
     <record model="ir.ui.view" id="crm_case_tree_view_fund">
         <field name="name">CRM - Funds Tree</field>
         <field name="model">crm.fundraising</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Funds Tree"  colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
-                <field name="id"/>
-                <field name="name" string="Fund Description"/>
-                <field name="categ_id"/>
-                <field name="type_id" string="Payment Mode"/>
-                <field name="planned_cost" string="Amount"/>
-                <field name="probability"/>
-                <field name="user_id"/>
-                <field name="state"/>
-                <button name="case_close" string="Done" states="open,draft,pending" type="object"  icon="gtk-close"/>
-                <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
-                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
-                <button name="case_pending" string="Pending" states="draft,open" type="object"  icon="gtk-media-pause"/>
-                <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"  icon="gtk-go-up"/>
-                <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
+            <tree string="Funds Tree"
+            	colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+            	<field name="id" />
+            	<field name="name" string="Fund Description" />
+            	<field name="categ_id" />
+            	<field name="type_id" string="Payment Mode" />
+            	<field name="planned_cost" string="Amount" />
+            	<field name="probability" />
+            	<field name="user_id" />
+            	<field name="state" />
+            	<button name="case_close" string="Done"
+            		states="open,draft,pending" type="object"
+            		icon="gtk-close" />
+            	<button name="case_open" string="Open"
+            		states="draft,pending" type="object"
+            		icon="gtk-go-forward" />
+            	<button name="case_cancel" string="Cancel"
+            		states="draft,open,pending" type="object"
+            		icon="gtk-cancel" />
+            	<button name="case_pending" string="Pending"
+            		states="draft,open" type="object" icon="gtk-media-pause" />
+            	<button name="case_escalate" string="Escalate"
+            		states="open,draft,pending" type="object"
+            		icon="gtk-go-up" />
+            	<button name="case_reset" string="Reset to Draft"
+            		states="done,cancel" type="object" icon="gtk-convert" />
             </tree>
         </field>
     </record>
+
+<!-- Fund Raising Form View -->
+
     <record model="ir.ui.view" id="crm_case_form_view_fund">
         <field name="name">CRM - Funds Form</field>
         <field name="model">crm.fundraising</field>
@@ -74,7 +94,7 @@
         <field name="arch" type="xml">
             <form string="Funds Form">
                 <group colspan="4" col="4">
-                    <field name="name" select="1" string="Name"/>                    
+                    <field name="name" select="1" string="Name"/>
                     <field name="type_id" string="Payment Mode" select="1" widget="selection"
                     		domain="[('object_id.model', '=', 'crm.fundraising')]" />
                 </group>
@@ -82,8 +102,13 @@
                 <page string="Funds">
                 	<separator colspan="4" string="Communication"/>
                 	<group colspan="4" col="4">
-	                    <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)" colspan="2"/>
-	                    <field name="partner_address_id" string="Contact" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="1"/>
+	                    <field name="partner_id" select="1"
+	                    	on_change="onchange_partner_id(partner_id, email_from)"
+	                    	colspan="2" />
+	                    <field name="partner_address_id"
+	                    	string="Contact"
+	                    	on_change="onchange_partner_address_id(partner_address_id, email_from)"
+	                    	colspan="1" />
 	                    <field name="email_from" colspan="2"/>
                     </group>
                     <separator colspan="4" string="Estimates"/>
@@ -105,12 +130,24 @@
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
                         <field name="state" select="2"/>
-                        <button name="case_close" string="Done" states="open,draft,pending" type="object"  icon="gtk-close"/>
-                        <button name="case_open" string="Open" states="draft,pending" type="object"  icon="gtk-go-forward"/>
-                        <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"  icon="gtk-cancel"/>
-                        <button name="case_pending" string="Pending" states="draft,open" type="object"  icon="gtk-media-pause"/>
-                        <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"  icon="gtk-go-up"/>
-                        <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"  icon="gtk-convert"/>
+                        <button name="case_close" string="Done"
+                        	states="open,draft,pending" type="object"
+                        	icon="gtk-close" />
+                        <button name="case_open" string="Open"
+                        	states="draft,pending" type="object"
+                        	icon="gtk-go-forward" />
+                        <button name="case_cancel" string="Cancel"
+                        	states="draft,open,pending" type="object"
+                        	icon="gtk-cancel" />
+                        <button name="case_pending" string="Pending"
+                        	states="draft,open" type="object"
+                        	icon="gtk-media-pause" />
+                        <button name="case_escalate" string="Escalate"
+                        	states="open,draft,pending" type="object"
+                        	icon="gtk-go-up" />
+                        <button name="case_reset"
+                        	string="Reset to Draft" states="done,cancel"
+                        	type="object" icon="gtk-convert" />
                     </group>
                 </page>
                 <page string="History" groups="base.group_extended">
@@ -174,6 +211,9 @@
             </form>
         </field>
     </record>
+
+<!-- Fund Raising Calendar View -->
+
     <record model="ir.ui.view" id="crm_case_calendar_view_fund">
         <field name="name">CRM - Funds Calendar</field>
         <field name="model">crm.fundraising</field>
@@ -186,6 +226,9 @@
             </calendar>
         </field>
     </record>
+
+<!-- Fund Raising Graph View -->
+
     <record model="ir.ui.view" id="crm_case_graph_view_fund">
         <field name="name">CRM - Funds Graph</field>
         <field name="model">crm.fundraising</field>
@@ -199,6 +242,8 @@
         </field>
     </record>
 
+<!-- Fund Raising Search View -->
+
     <record id="view_crm_case_fund_filter" model="ir.ui.view">
             <field name="name">CRM - Funds Search</field>
             <field name="model">crm.fundraising</field>
@@ -211,20 +256,32 @@
                            separator="1"
                            help="Funds Related to Current User"
                            />
-                       <filter icon="gtk-new" string="Current Funds" domain="[('state','in',('draft', 'open'))]" help="Current Funds" />
-                       <filter icon="gtk-yes" string="Open Funds" domain="[('state','=','open')]" help="Open Funds"/>
-                       <filter icon="gtk-media-pause" string="Pending Funds" domain="[('state','=','pending')]" help="Pending Funds"/>
-                       <separator orientation="vertical"/>
+                       <filter icon="gtk-new" string="Current Funds"
+                       	domain="[('state','in',('draft', 'open'))]"
+                       	help="Current Funds" />
+                       <filter icon="gtk-yes" string="Open Funds"
+                       	domain="[('state','=','open')]"
+                       	help="Open Funds" />
+                       <filter icon="gtk-media-pause"
+                       	string="Pending Funds"
+                       	domain="[('state','=','pending')]"
+                       	help="Pending Funds" />
+                       <separator orientation="vertical" />
                        <field name="state" select="1" />
-                       <field name="name" select='1' string="Fund Description"/>
-                       <field name="user_id" select="1" widget="selection">
-                           <filter icon="terp-partner" domain="[('user_id','=', False)]" help="Unassigned" />
+                       <field name="name" select='1'
+                       	string="Fund Description" />
+                       <field name="user_id" select="1"
+                       	widget="selection">
+                       	<filter icon="terp-partner"
+                       		domain="[('user_id','=', False)]"
+                       		help="Unassigned" />
                        </field>
-                       <field name="section_id" select="1" widget="selection" string="Section" default="context.get('section_id', False)">
-                           <filter icon="terp-crm"
-                               domain="[('section_id','=',context.get('section_id',False))]"
-                               help="My section"
-                               />
+                       <field name="section_id" select="1"
+                       	widget="selection" string="Section"
+                       	default="context.get('section_id', False)">
+                       	<filter icon="terp-crm"
+                       		domain="[('section_id','=',context.get('section_id',False))]"
+                       		help="My section" />
                        </field>
                    </group>
                </search>
