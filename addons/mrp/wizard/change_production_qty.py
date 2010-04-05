@@ -35,17 +35,13 @@ class change_production_qty(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields, context):
-        """ 
-             To get default values for the object.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
+        """ To get default values for the object.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values 
+        @param context: A standard dictionary 
+        @return: A dictionary which of fields with values. 
         """        
         res = super(change_production_qty, self).default_get(cr, uid, fields, context=context)        
         prod_obj = self.pool.get('mrp.production')
@@ -56,16 +52,13 @@ class change_production_qty(osv.osv_memory):
         
     def change_prod_qty(self, cr, uid, ids, context):
         """ 
-             Changes the Quantity of Product.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
-             @param context: A standard dictionary 
-             
-             @return:  
-        
+        Changes the Quantity of Product.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
+        @return:  
         """
         record_id = context and context.get('active_id',False)
         assert record_id, _('Active Id is not found')
