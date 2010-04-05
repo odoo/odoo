@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+	<record id="view_timesheet_report_tree" model="ir.ui.view">
+        <field name="name">timesheet.report.tree</field>
+        <field name="model">timesheet.report</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="TimeSheet">
+            	<field name="month" />
+                 <field name="no_of_timesheet" />
+            </tree>
+        </field>
+    </record>
+
+	<record id="view_timesheet_report_graph" model="ir.ui.view">
+         <field name="name">timesheet.report.graph</field>
+         <field name="model">timesheet.report</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="TimeSheet" type="bar">
+                 <field name="month" />
+                 <field name="no_of_timesheet" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+
+
+</data>
+</openerp>
