@@ -2,6 +2,8 @@
 <openerp>
     <data>
 
+<!-- CRM Case Report Tree View -->
+
         <record id="view_crm_case_tree" model="ir.ui.view">
             <field name="name">crm.case.report.tree</field>
             <field name="model">crm.case.report</field>
@@ -18,6 +20,9 @@
                 </tree>
             </field>
         </record>
+
+<!-- CRM Case Report Form View -->
+
         <record id="view_crm_case_form" model="ir.ui.view">
             <field name="name">crm.case.report.form</field>
             <field name="model">>crm.case.report</field>
@@ -34,6 +39,8 @@
             </field>
         </record>
 
+<!-- CRM Case Report Graph View -->
+
         <record id="view_crm_case_graph" model="ir.ui.view">
             <field name="name">crm.case.report</field>
             <field name="model">crm.case.report</field>
@@ -47,6 +54,8 @@
             </field>
         </record>
 
+<!-- CRM Case Report Search View -->
+
         <record id="view_crm_case_filter" model="ir.ui.view">
             <field name="name">crm.case.report.select</field>
             <field name="model">crm.case.report</field>
@@ -54,48 +63,83 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="8">
-                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" default="1" />
-						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]" default="1"/>
-                        <separator orientation="vertical"/>
-						<filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
-						<filter string="Won" icon="terp-hr" domain="[('state','=','done')]"/>
-						<filter string="Lost" icon="terp-hr" domain="[('state','=','cancel')]"/>
-						<separator orientation="vertical"/>
-						<field name="section_id" default="context.get('section_id', False)" widget="selection"
-                    				context="{'invisible_section': False}">
-                   		 <filter icon="terp-crm"
-                        context="{'invisible_section': False}"
-                        domain="[('section_id.user_id','=',uid)]"
-                        help="My section"/>
-                        </field>
-                          <field name="company_id" widget="selection">
+                   		<filter string="This Year" icon="terp-hr"
+                   			domain="[('name','=',time.localtime()[0])]"
+                   			default="1" />
+
+                   		<filter string="This Month" icon="terp-hr"
+                   			domain="[('month','=',time.strftime('%%m'))]"
+                   			default="1" />
+
+                   		<separator orientation="vertical" />
+                   		<filter string="Current" icon="terp-hr"
+                   			domain="[('state','in',('open','draft'))]" />
+
+                   		<filter string="Won" icon="terp-hr"
+                   			domain="[('state','=','done')]" />
+
+                   		<filter string="Lost" icon="terp-hr"
+                   			domain="[('state','=','cancel')]" />
+
+                   		<separator orientation="vertical" />
+                   		<field name="section_id"
+                   			default="context.get('section_id', False)"
+                   			widget="selection"
+                   			context="{'invisible_section': False}">
+
+                   			<filter icon="terp-crm"
+                   				context="{'invisible_section': False}"
+                   				domain="[('section_id.user_id','=',uid)]"
+                   				help="My section" />
+
+                   		</field>
+                   		<field name="company_id" widget="selection">
                            <filter icon="terp-crm"
                         context="{'invisible_section': False}"
                         domain="[('section_id.user_id.company_id','=',uid)]"
                         help="My company"/>
                         </field>
+
                       	<field name="user_id" select="1" widget="selection">
 	            			<filter icon="terp-crm" string="My Task" domain="[('user_id','=',uid)]" />
                			</field>
                    </group>
                    <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="User" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}" default="1" />
-                        <filter string="Company" icon="terp-sale" domain="[]" context="{'group_by':'company_id'}"/>
-                        <filter string="Section" icon="terp-sale" domain="[]" context="{'group_by':'section_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
-                    	<filter string="Category" icon="terp-sale" domain="[]" context="{'group_by':'categ_id'}"/>
-                    	 <separator orientation="vertical"/>
-                    	<filter string="Month" icon="terp-sale" domain="[]" context="{'group_by':'month'}"/>
-                    	<filter string="Year" icon="terp-sale" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="User" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'user_id'}"
+                        	default="1" />
 
-                   </group>
+                        <filter string="Company" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'company_id'}" />
+
+                        <filter string="Section" icon="terp-sale"
+                        	domain="[]"
+                        	context="{'group_by':'section_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="State" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'state'}" />
+
+                        <filter string="Category" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'categ_id'}" />
+
+                        <separator orientation="vertical" />
+                        <filter string="Month" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'month'}" />
+
+                        <filter string="Year" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'name'}" />
+
+                  </group>
                </search>
             </field>
         </record>
+
 	    <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="8"/>
 
+<!-- CRM Case Report Action -->
 
         <record id="action_report_crm_case_tree" model="ir.actions.act_window">
             <field name="name">Cases</field>
@@ -104,20 +148,22 @@
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
-        <!--<menuitem action="action_report_crm_case_user_tree" id="menu_crm_case_user_tree" parent="crm.next_id_52"/>
--->
-       <!-- <menuitem action="action_report_crm_case_categ_tree" id="menu_crm_case_categ_tree" parent="crm.next_id_52"/>-->
 
-        <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_crm_case_user" name="Monthly cases" res_model="crm.case.report" src_model="res.users"/>
+        <act_window domain="[('user_id', '=', active_id)]"
+        	id="act_res_users_2_report_crm_case_user" name="Monthly cases"
+        	res_model="crm.case.report" src_model="res.users" />
 
-        <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_user" name="Monthly cases by user" res_model="crm.case.report" src_model="crm.case.section"/>
+        <act_window domain="[('section_id', '=', active_id)]"
+        	id="act_crm_case_section_2_report_crm_case_user"
+        	name="Monthly cases by user" res_model="crm.case.report"
+        	src_model="crm.case.section" />
 
-        <act_window domain="[('section_id', '=', active_id)]" id="act_crm_case_section_2_report_crm_case_categ" name="Monthly cases by section" res_model="crm.case.report" src_model="crm.case.section"/>
+        <act_window domain="[('section_id', '=', active_id)]"
+        	id="act_crm_case_section_2_report_crm_case_categ"
+        	name="Monthly cases by section" res_model="crm.case.report"
+        	src_model="crm.case.section" />
 
-
-
-
-        <!-- Closed & Open CRM Case view for Random Activities dashboard  -->
+<!-- Closed & Open CRM Case view for Random Activities dashboard Tree View -->
 
         <record id="board_view_crm_case_open_dashboard_tree" model="ir.ui.view">
             <field name="name">report.crm.case.service.dashboard.tree</field>
@@ -146,6 +192,8 @@
                 </tree>
             </field>
         </record>
+
+<!-- Closed & Open CRM Case view for Random Activities dashboard Action -->
 
         <record id="action_view_closed_crm_case_dashboard" model="ir.actions.act_window">
 	    	<field name="name">Closed CRM Cases Within Past 15 Days</field>

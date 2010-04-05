@@ -38,6 +38,8 @@
     'init_xml': ['auction_sequence.xml'],
     'update_xml': [
         'security/ir.model.access.csv',
+#        'wizard/auction_lots_cancel_view.xml',
+#        'wizard/auction_transfer_unsold_object_view.xml',
         'wizard/auction_lots_able_view.xml',
         'wizard/auction_lots_enable_view.xml',
         'wizard/auction_lots_make_invoice_buyer_view.xml',

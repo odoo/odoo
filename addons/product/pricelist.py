@@ -136,6 +136,8 @@ class product_pricelist(osv.osv):
             'date': Date of the pricelist (%Y-%m-%d),
         }
         '''
+        price=False
+        item_id=0
         context = context or {}
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')

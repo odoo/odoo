@@ -29,7 +29,8 @@ import auction_pay_buy
 import auction_payer_sel
 import auction_lots_sms_send
 import auction_catalog_flagey_report
-
+#import auction_lots_cancel
+#import auction_transfer_unsold_object
 #import auction_aie_send_result
 import auction_lots_buyer_map
 

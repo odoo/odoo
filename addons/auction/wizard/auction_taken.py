@@ -32,10 +32,10 @@ class auction_taken(osv.osv_memory):
     """
     _name = "auction.taken"
     _description = "Auction taken"
+    
     _columns = {
-              'lot_ids':fields.many2many('auction.lots', 'auction_taken_rel', 'taken_id', 'lot_id', 'Lots Emportes'), 
-              
-              }
+        'lot_ids':fields.many2many('auction.lots', 'auction_taken_rel', 'taken_id', 'lot_id', 'Lots Emportes'), 
+    }
     
     def _to_xml(s):
         return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')

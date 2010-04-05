@@ -32,16 +32,16 @@ class auction_lots_auction_move(osv.osv_memory):
     _name = "auction.lots.auction.move"
     _description = "Auction move "
     _columns= {
-               'auction_id':fields.many2one('auction.dates', 'Auction Date', required=True), 
-               }
+        'auction_id':fields.many2one('auction.dates', 'Auction Date', required=True), 
+    }
     
-    def _top(self, cr, uid, ids, context={}):
-        refs = self.pool.get('auction.lots')
-        rec_ids = refs.browse(cr, uid, context['active_ids'])
-        for rec in rec_ids:
-            if not rec.auction_id:
-                raise osv.except_osv('Error !', 'You can not move a lot that has no auction date')
-        return {}
+#    def _top(self, cr, uid, ids, context={}):
+#        refs = self.pool.get('auction.lots')
+#        rec_ids = refs.browse(cr, uid, context['active_ids'])
+#        for rec in rec_ids:
+#            if not rec.auction_id:
+#                raise osv.except_osv('Error !', 'You can not move a lot that has no auction date')
+#        return {}
     
     def auction_move_set(self, cr, uid, ids, context={}):
         """
@@ -56,13 +56,13 @@ class auction_lots_auction_move(osv.osv_memory):
         auction_bid_line_obj = self.pool.get('auction.bid_line')
         auction_lot_history_obj = self.pool.get('auction.lot.history')
         auction_lots_obj = self.pool.get('auction.lots')
+        rec_ids = refs.browse(cr, uid, context['active_ids'])
         for datas in self.read(cr, uid, ids):
             if not (datas['auction_id'] and len(context['active_ids'])) :
                 return {}
             
-            rec_ids = refs.browse(cr, uid, context['active_ids'])
-            line_ids = auction_bid_line_obj.search(cr, uid, [('lot_id', 'in', context['active_ids'])])
-        #   pooler.get_pool(cr.dbname).get('auction.bid_line').unlink(cr, uid, line_ids)
+#           line_ids = auction_bid_line_obj.search(cr, uid, [('lot_id', 'in', context['active_ids'])])
+#           pooler.get_pool(cr.dbname).get('auction.bid_line').unlink(cr, uid, line_ids)
             for rec in rec_ids:
                 new_id = auction_lot_history_obj.create(cr, uid, {
                     'auction_id': rec.auction_id.id, 

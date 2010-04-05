@@ -95,15 +95,17 @@ class auction_dates(osv.osv):
         RETURN: True
         """
         # objects vendus mais non factures
+        #TODO: convert this query to tiny API
+        lots_obj = self.pool.get('auction.lots')
         cr.execute('select count(*) as c from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
         nbr = cr.fetchone()[0]
         ach_uids = {}
         cr.execute('select id from auction_lots where auction_id =ANY(%s) and state=%s and obj_price>0', (ids,'draft',))
-        r=self.pool.get('auction.lots').lots_invoice(cr, uid, [x[0] for x in cr.fetchall()],{},None)
+        r = lots_obj.lots_invoice(cr, uid, [x[0] for x in cr.fetchall()],{},None)
         cr.execute('select id from auction_lots where auction_id =ANY(%s) and obj_price>0',(ids,))
         ids2 = [x[0] for x in cr.fetchall()]
     #   for auction in auction_ids:
-        c=self.pool.get('auction.lots').seller_trans_create(cr, uid, ids2,{})
+        c = lots_obj.seller_trans_create(cr, uid, ids2,{})
         self.write(cr, uid, ids, {'state':'closed'}) #close the auction
         return True
 auction_dates()
@@ -508,14 +510,14 @@ class auction_lots(osv.osv):
 ##CHECKME: est-ce que ca vaudrait la peine de faire des groupes de lots qui ont les memes couts pour passer des listes de lots a compute?
         taxes = []
         amount=0.0
-    #   pt_tax=pool.get('account.tax')
+        pt_tax = self.pool.get('account.tax')
         for lot in lots:
             taxes = lot.product_id.taxes_id
             if lot.author_right:
                 taxes.append(lot.author_right)
             elif lot.auction_id:
                 taxes += lot.auction_id.buyer_costs
-            tax=self.pool.get('account.tax').compute(cr,uid,taxes,lot.obj_price,1)
+            tax=pt_tax.compute(cr,uid,taxes,lot.obj_price,1)
             for t in tax:
                 amount+=t['amount']
             #amount+=lot.obj_price*0.2
@@ -630,18 +632,20 @@ class auction_lots(osv.osv):
 
     def buyer_proforma(self,cr,uid,ids,context):
         invoices = {}
-        inv_ref=self.pool.get('account.invoice')
+        inv_ref = self.pool.get('account.invoice')
+        partner_r = self.pool.get('res.partner')
+        inv_line_obj = self.pool.get('account.invoice.line')
+        wf_service = netsvc.LocalService('workflow')
 #       acc_receiv=self.pool.get('account.account').search([cr,uid,[('code','=','4010')]])
         for lot in self.browse(cr,uid,ids,context):
             if not lot.obj_price>0:
                 continue
-            partner_r=self.pool.get('res.partner')
             if not lot.ach_uid.id:
                 raise orm.except_orm(_('Missed buyer !'), _('The object "%s" has no buyer assigned.') % (lot.name,))
             else:
                 partner_ref =lot.ach_uid.id
                 lot_name = lot.obj_num
-                res = self.pool.get('res.partner').address_get(cr, uid, [partner_ref], ['contact', 'invoice'])
+                res = partner_r.address_get(cr, uid, [partner_ref], ['contact', 'invoice'])
                 contact_addr_id = res['contact']
                 invoice_addr_id = res['invoice']
                 if not invoice_addr_id:
@@ -675,12 +679,11 @@ class auction_lots(osv.osv):
                     'account_id': lot.auction_id.acc_income.id,
                     'price_unit': lot.obj_price,
                 }
-                self.pool.get('account.invoice.line').create(cr, uid, inv_line,context)
+                inv_line_obj.create(cr, uid, inv_line,context)
             #   inv_ref.button_compute(cr, uid, [inv_id])
             #   wf_service = netsvc.LocalService('workflow')
             #   wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
             inv_ref.button_compute(cr, uid, invoice.values())
-            wf_service = netsvc.LocalService('workflow')
             wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_proforma', cr)
         return invoices.values()
 
@@ -694,6 +697,9 @@ class auction_lots(osv.osv):
         # use each list of object in turn
         invoices = {}
         inv_ref=self.pool.get('account.invoice')
+        partner_obj = self.pool.get('res.partner')
+        inv_line_obj = self.pool.get('account.invoice.line')
+        wf_service = netsvc.LocalService('workflow')
         for lot in self.browse(cr,uid,ids,context):
             partner_id = lot.bord_vnd_id.partner_id.id
             if not lot.auction_id.id:
@@ -702,7 +708,7 @@ class auction_lots(osv.osv):
             if lot.bord_vnd_id.id in invoices:
                 inv_id = invoices[lot.bord_vnd_id.id]
             else:
-                res = self.pool.get('res.partner').address_get(cr, uid, [lot.bord_vnd_id.partner_id.id], ['contact', 'invoice'])
+                res = partner_obj.address_get(cr, uid, [lot.bord_vnd_id.partner_id.id], ['contact', 'invoice'])
                 contact_addr_id = res['contact']
                 invoice_addr_id = res['invoice']
                 inv = {
@@ -734,13 +740,12 @@ class auction_lots(osv.osv):
                 'account_id': lot.auction_id.acc_expense.id,
                 'price_unit': lot.obj_price,
             }
-            self.pool.get('account.invoice.line').create(cr, uid, inv_line,context)
+            inv_line_obj.create(cr, uid, inv_line,context)
             inv_ref.button_compute(cr, uid, invoices.values())
         for inv in inv_ref.browse(cr, uid, invoices.values(), context):
             inv_ref.write(cr, uid, [inv.id], {
                 'check_total': inv.amount_total
             })
-            wf_service = netsvc.LocalService('workflow')
             wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_open', cr)
         return invoices.values()
 
@@ -756,13 +761,15 @@ class auction_lots(osv.osv):
             RETURN: id of generated invoice
         """
         dt = time.strftime('%Y-%m-%d')
-        inv_ref=self.pool.get('account.invoice')
+        inv_ref = self.pool.get('account.invoice')
+        partner_r = self.pool.get('res.partner')
+        inv_line_obj = self.pool.get('account.invoice.line')
+        wf_service = netsvc.LocalService('workflow')
         invoices={}
         for lot in self.browse(cr, uid, ids,context):
         #   partner_ref = lot.ach_uid.id
             if not lot.auction_id.id:
                 continue
-            partner_r=self.pool.get('res.partner')
             if not lot.ach_uid.id:
                 raise orm.except_orm(_('Missed buyer !'), _('The object "%s" has no buyer assigned.') % (lot.name,))
             if (lot.auction_id.id,lot.ach_uid.id) in invoices:
@@ -773,13 +780,12 @@ class auction_lots(osv.osv):
                     raise orm.except_orm(_('Missed Address !'), _('The Buyer has no Invoice Address.'))
                 price = lot.obj_price or 0.0
                 lot_name =lot.obj_num
-                inv={
+                inv = {
                     'name':lot.auction_id.name or '',
                     'reference': lot.ach_login,
                     'journal_id': lot.auction_id.journal_id.id,
                     'partner_id': lot.ach_uid.id,
                     'type': 'out_invoice',
-
                 }
                 if invoice_number:
                     inv['number'] = invoice_number
@@ -804,12 +810,11 @@ class auction_lots(osv.osv):
                 'account_id': lot.auction_id.acc_income.id,
                 'price_unit': lot.obj_price,
             }
-            self.pool.get('account.invoice.line').create(cr, uid, inv_line,context)
+            inv_line_obj.create(cr, uid, inv_line,context)
     #   inv_ref.button_compute(cr, uid, [inpq tu dis cav_id])
     #       inv_ref.button_compute(cr, uid, [inv_id])
             inv_ref.button_compute(cr, uid, [inv_id])
         for l in  inv_ref.browse(cr, uid, invoices.values(), context):
-            wf_service = netsvc.LocalService('workflow')
         #   wf_service.trg_validate(uid, 'account.invoice',l.id, 'invoice_proforma', cr)
             wf_service.trg_validate(uid, 'account.invoice',l.id, 'invoice_open', cr)
         return invoices.values()

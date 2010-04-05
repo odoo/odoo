@@ -51,6 +51,9 @@ class crm_send_new_email(osv.osv_memory):
     def action_send(self, cr, uid, ids, context=None):
         """ This sends an email to ALL the addresses of the selected partners.
         """
+        
+        hist_obj = self.pool.get('crm.case.history')
+        
         if not context:
             context = {}
 
@@ -68,7 +71,6 @@ class crm_send_new_email(osv.osv_memory):
             if context.get('mail', 'new') == 'new':
                 case = case_pool.browse(cr, uid, res_id)
             else:
-                hist_obj = self.pool.get('crm.case.history')
                 hist = hist_obj.browse(cr, uid, res_id)
                 model = hist.log_id.model_id.model
                 model_pool = self.pool.get(model)

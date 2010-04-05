@@ -28,13 +28,8 @@ class product_product(osv.osv):
 
     def do_change_standard_price(self, cr, uid, ids, datas, context={}):
         """ 
-             Changes the Standard Price of Product. 
-             And creates an account move accordingly.
+             Changes the Standard Price of Product and creates an account move accordingly.
             
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
              @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
              @param context: A standard dictionary 
              

@@ -6,29 +6,11 @@
         <wizard string="UPS xml file" model="stock.move.lot" name="stock.ups_xml" />
         -->
 
-
-        <wizard
-            id="move_split"
-            model="stock.picking"
-            multi="True"
-            name="stock.move.split"
-            string="Split move line"/>       
-
-		
-
-	    <wizard
-	        id="return_picking"
-	        model="stock.picking"
-	        menu="False"
-			keyword="client_action_multi"
-	        name="stock.return.picking"
-	        string="Return picking"/>	
-
-        <wizard
-            id="split_inventory_lots"
-            model="stock.inventory.line"
-            multi="True"
-            name="stock.inventory.line.split"
-            string="Split inventory lines"/>    
+    <wizard
+        id="split_inventory_lots"
+        model="stock.inventory.line"
+        multi="True"
+        name="stock.inventory.line.split"
+        string="Split inventory lines"/>
    </data>
 </openerp>

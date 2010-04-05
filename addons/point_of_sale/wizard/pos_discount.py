@@ -35,6 +35,14 @@ class pos_discount(osv.osv_memory):
         'discount': lambda *a: 5,
     }
 
+        
+    def view_init(self, cr, uid, fields_list, context=None):
+        res = super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
+        record_id = context and context.get('active_id', False) or False        
+        order = self.pool.get('pos.order').browse(cr, uid, record_id)
+        if not order.lines:
+                raise osv.except_osv('Error!','No Order Lines ')
+        True
     def apply_discount(self, cr, uid, ids, context):
         """
          To give the discount of  product and check the.
@@ -52,7 +60,7 @@ class pos_discount(osv.osv_memory):
 
         order_ref = self.pool.get('pos.order')
         order_line_ref = self.pool.get('pos.order.line')
-
+            
         for order in order_ref.browse(cr, uid, record_id, context=context):
 
             for line in order.lines:

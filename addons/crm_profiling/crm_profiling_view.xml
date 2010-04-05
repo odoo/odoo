@@ -1,13 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-<!--		<wizard
-			string="Select partners"
-			model="crm.segmentation"
-			name="open_partner"
-			menu="False"
-			id="wizard_open_partner"/>
--->
 
 		<wizard
 			string="Using a questionnaire"
@@ -35,15 +28,8 @@
 		<menuitem parent="crm.menu_crm_configuration" id="menu_segm_answer"
 				  action="open_questions" />
 
-<!--		<record model="ir.actions.act_window" id="open_crm_segmentations">
-		  <field name="name">Profiles</field>
-		  <field name="res_model">crm.segmentation</field>
-		  <field name="view_type">form</field>
-		  <field name="view_mode">tree,form</field>
-		</record>
-		<menuitem name="Partners/Configuration/Profiling/Profiles" id="menu_segm_crm_segmentation"
-				  action="open_crm_segmentations" />
--->
+<!-- Profiling Questionnaire Tree view  -->
+
 	<record model="ir.ui.view" id="view_questionnaire_tree">
 		<field name="name">Questionnaires</field>
 		<field name="model">crm_profiling.questionnaire</field>
@@ -56,6 +42,8 @@
 		  </tree>
 		</field>
 	</record>
+
+<!-- Profiling Questionnaire Form view  -->
 
 	<record model="ir.ui.view" id="view_questionnaire_form">
 		<field name="name">Questionnaires</field>
@@ -74,6 +62,8 @@
 		</field>
 	</record>
 
+<!-- Profiling Answer Tree view  -->
+
 	<record model="ir.ui.view" id="view_answer">
 		<field name="name">Answers</field>
 		<field name="model">crm_profiling.answer</field>
@@ -85,6 +75,8 @@
 		  </tree>
 		</field>
 	</record>
+
+<!-- Profiling Answer Form view  -->
 
 	<record model="ir.ui.view" id="view_answer_form">
 		<field name="name">Answers</field>
@@ -98,6 +90,8 @@
 		</field>
 	</record>
 
+<!-- Profiling Questions Tree view  -->
+
 	<record model="ir.ui.view" id="view_question_tree">
 		<field name="name">Questions</field>
 		<field name="model">crm_profiling.question</field>
@@ -109,6 +103,8 @@
 		  </tree>
 		</field>
 	</record>
+
+<!-- Profiling Questions Form view  -->
 
 	<record model="ir.ui.view" id="view_question_form">
 		<field name="name">Questions</field>
@@ -141,13 +137,17 @@
 		<field name="arch" type="xml">
 			<notebook position="inside">
 				<page string="Profiling">
-				  <button string="Use a questionnaire" name="%(wizard_open_questionnaire)d" type="action" colspan="1" icon="gtk-justify-fill"/>
+				  <button string="Use a questionnaire"
+				  	name="%(wizard_open_questionnaire)d" type="action" colspan="1"
+				  	icon="gtk-justify-fill" />
 				  <newline/>
 				  <field name="answers_ids" colspan="4" nolabel="1"/>
 				</page>
 			</notebook>
 		</field>
 	</record>
+
+<!-- CRM Segmentation Form view  -->
 
 	<record model="ir.ui.view" id="crm.crm_segmentation-view">
 		<field name="name">crm.segmentation.form</field>
@@ -166,9 +166,13 @@
 					<field name="description" select="2" colspan="4"/>
 					<field name="state"/>
 					<group col="3" colspan="2">
-						<button name="process_start" states="not running" string="Compute Segmentation" type="object" icon="gtk-apply"/>
-						<button name="process_stop" states="running" string="Stop Process" type="object" icon="gtk-stop"/>
-						<button name="process_continue" states="running" string="Continue Process" type="object" icon="gtk-go-forward"/>
+						<button name="process_start"
+							states="not running" string="Compute Segmentation" type="object"
+							icon="gtk-apply" />
+						<button name="process_stop" states="running"
+							string="Stop Process" type="object" icon="gtk-stop" />
+						<button name="process_continue" states="running"
+							string="Continue Process" type="object" icon="gtk-go-forward" />
 					</group>
 				</page>
 				<page string="Sales Purchase">
@@ -195,18 +199,10 @@
 		</field>
 	</record>
 
-	<record model="ir.ui.view" id="view_partner_crm_segmentation_tree">
-	<!--	<field name="name">crm.segmentation.tree</field>
-		<field name="model">crm.segmentation</field>
-		<field name="type">tree</field>
-		<field name="field_parent">child_ids</field>
-		<field name="arch" type="xml">
-			<tree string="Partner Profiles">
-				<field name="name"/>
+<!-- CRM Segmentation Tree view  -->
 
-			</tree>
-		</field>
--->		<field name="name">crm.segmentation.tree</field>
+	<record model="ir.ui.view" id="view_partner_crm_segmentation_tree">
+		<field name="name">crm.segmentation.tree</field>
 		<field name="model">crm.segmentation</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
@@ -218,28 +214,5 @@
 		</field>
 	</record>
 
-<!--	<record model="ir.actions.act_window" id="action_partner_crm_segmentation">
-		<field name="name">Partner profile</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">crm.segmentation</field>
-		<field name="view_type">tree</field>
-		<field name="view_id" ref="view_partner_crm_segmentation_tree"/>
-		<field name="domain">[('parent_id','=',False)]</field>
-	</record>
--->
-<!--	<menuitem
-		name="Partners/Partners by Profile"
-		sequence="1"
-		action="action_partner_crm_segmentation"
-		id="menu_partner_crm_segmentation_main"/>
--->
-<!--	<record model="ir.values" id="ir_action_partner_by_crm_segmentation">
-		<field name="key2" eval="'tree_but_open'"/>
-		<field name="model" eval="'crm.segmentation'"/>
-		<field name="name">Open partners</field>
-		<field name="value" eval="'ir.actions.wizard,%d'%wizard_open_partner"/>
-		<field name="object" eval="True"/>
-	</record>
--->
 	</data>
 </openerp>

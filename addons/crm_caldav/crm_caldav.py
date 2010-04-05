@@ -24,10 +24,18 @@ from crm import crm
 from caldav import caldav
 from base_calendar import base_calendar
 
-class crm_meeting(osv.osv):   
+class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'
 
     def export_cal(self, cr, uid, ids, context={}):
+        """
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of CRM Meeting’s IDs
+            @param context: A standard dictionary for contextual values
+        """
+
         ids = map(lambda x: base_calendar.base_calendar_id2real_id(x), ids)
         event_data = self.read(cr, uid, ids)
         event_obj = self.pool.get('basic.calendar.event')
@@ -35,6 +43,15 @@ class crm_meeting(osv.osv):
         return ical.serialize()
 
     def import_cal(self, cr, uid, data, data_id=None, context={}):
+        """
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param data: Get Data of CRM Meetings
+            @param data_id: calendar's Id
+            @param context: A standard dictionary for contextual values
+        """
+
         event_obj = self.pool.get('basic.calendar.event')
         vals = event_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)

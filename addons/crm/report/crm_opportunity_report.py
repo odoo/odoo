@@ -1,21 +1,57 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 from osv import fields,osv
 import tools
 
 class crm_opportunity_report(osv.osv):
+    """ CRM Opportunity Report """
+
     _name = "crm.opportunity.report"
     _auto = False
     _inherit = "crm.case.report"
+    _description = "CRM Opportunity Report"
+
     _columns = {
         'probability': fields.float('Avg. Probability', readonly=True),
-        'amount_revenue': fields.float('Est.Revenue', readonly=True),        
+        'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]", readonly=True),
-        'stage_id':fields.many2one('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]", readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),  
-        'company_id': fields.many2one('res.company', 'Company',readonly=True),  
+        'categ_id': fields.many2one('crm.case.categ', 'Category',\
+                     domain="[('section_id','=',section_id),\
+                    ('object_id.model', '=', 'crm.opportunity')]", readonly=True),
+        'stage_id':fields.many2one('crm.case.stage', 'Stage',\
+                     domain="[('section_id','=',section_id),\
+                     ('object_id.model', '=', 'crm.opportunity')]", readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'user_id':fields.many2one('res.users', 'User', readonly=True),
     }
+
     def init(self, cr):
+
+        """ Display Est.Revenue , Average Probability ,Est.Revenue Probability
+            @param cr: the current row, from the database cursor
+        """
+
         tools.drop_view_if_exists(cr, 'crm_opportunity_report')
         cr.execute("""
             create or replace view crm_opportunity_report as (
@@ -50,4 +86,7 @@ class crm_opportunity_report(osv.osv):
                     c.categ_id,
                     c.partner_id,company_id
             )""")
+
 crm_opportunity_report()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

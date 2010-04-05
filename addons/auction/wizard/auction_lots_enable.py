@@ -19,20 +19,14 @@
 #
 ##############################################################################
 from osv import fields, osv
-from tools.translate import _
-import netsvc
-import pooler
-import time
-import tools
-import wizard
 
 class auction_lots_enable(osv.osv_memory):
-   
     _name = "auction.lots.enable"
     _description = "Lots Enable"
+    
     _columns= {
-               'confirm_en':fields.integer('Catalog Number')
-               }
+        'confirm_en':fields.integer('Catalog Number')
+    }
     
     def confirm_enable(self, cr, uid, ids, context={}):
         """

@@ -21,26 +21,33 @@
 
 from osv import fields, osv
 from tools.translate import _
-import netsvc
-import pooler
 import time
 import tools
-import wizard
 
 class auction_pay_buy(osv.osv_memory):
+    _name = "auction.pay.buy"
+    _description = "Pay buy"
+    
+    _columns= {
+       'amount': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy']))), 
+       'buyer_id':fields.many2one('res.partner', 'Buyer'), 
+       'statement_id1':fields.many2one('account.bank.statement', 'Statement', required=True), 
+       'amount2': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy']))), 
+       'statement_id2':fields.many2one('account.bank.statement', 'Statement'), 
+       'amount3': fields.float('Amount paid', digits = (16, int(tools.config['price_accuracy']))), 
+       'statement_id3':fields.many2one('account.bank.statement', 'Statement'), 
+       'total': fields.float('Amount paid', digits = (16, int(tools.config['price_accuracy'])), readonly =True), 
+    }
     
     def default_get(self, cr, uid, fields, context):
         """ 
-             To get default values for the object.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
+         To get default values for the object.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param fields: List of fields for which we want default values 
+         @param context: A standard dictionary 
+         @return: A dictionary which of fields with values. 
         """        
         res = super(auction_pay_buy, self).default_get(cr, uid, fields, context=context)       
         for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
@@ -54,13 +61,12 @@ class auction_pay_buy(osv.osv_memory):
     
     def pay_and_reconcile(self, cr, uid, ids, context):
         """
-            Pay and Reconcile
-            
-            @param cr: the current row, from the database cursor.
-            @param uid: the current user’s ID for security checks.
-            @param ids: the ID or list of IDs
-            @param context: A standard dictionary 
-            @return: 
+        Pay and Reconcile
+        @param cr: the current row, from the database cursor.
+        @param uid: the current user’s ID for security checks.
+        @param ids: the ID or list of IDs
+        @param context: A standard dictionary 
+        @return: 
         """        
         lot_obj = self.pool.get('auction.lots')
         bank_statement_line_obj = self.pool.get('account.bank.statement.line')
@@ -94,22 +100,8 @@ class auction_pay_buy(osv.osv_memory):
                     for lot in lots:
                         lot_obj.write(cr, uid, [lot.id], {'statement_id':[(4, new_id)]})
             return {}
-   
-    _name = "auction.pay.buy"
-    _description = "Pay buy"
-    _columns= {
-               'amount': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy']))), 
-               'buyer_id':fields.many2one('res.partner', 'Buyer'), 
-               'statement_id1':fields.many2one('account.bank.statement', 'Statement', required=True), 
-               'amount2': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy']))), 
-               'statement_id2':fields.many2one('account.bank.statement', 'Statement'), 
-               'amount3': fields.float('Amount paid', digits = (16, int(tools.config['price_accuracy']))), 
-               'statement_id3':fields.many2one('account.bank.statement', 'Statement'), 
-               'total': fields.float('Amount paid', digits = (16, int(tools.config['price_accuracy'])), readonly =True), 
-               }
+    
 auction_pay_buy()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
