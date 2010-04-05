@@ -37,6 +37,25 @@ class project_issue(osv.osv):
     _order = "priority, id desc"
     _inherit = 'crm.case'
 
+    def case_open(self, cr, uid, ids, *args):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+
+        cases = self.browse(cr, uid, ids)
+        for case in cases:
+            data = {'state': 'open', 'active': True}
+            if not case.user_id:
+                data['user_id'] = uid
+            data.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+            self.write(cr, uid, ids, data)
+        self._action(cr, uid, cases, 'open')
+        return True
+
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
         @param cr: the current row, from the database cursor,

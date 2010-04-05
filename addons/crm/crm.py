@@ -747,7 +747,6 @@ class crm_case(osv.osv):
             data = {'state': 'open', 'active': True}
             if not case.user_id:
                 data['user_id'] = uid
-            data.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
             self.write(cr, uid, ids, data)
         self._action(cr, uid, cases, 'open')
         return True
