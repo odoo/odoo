@@ -503,8 +503,8 @@ class crm_case(osv.osv):
                 s[section] = dict([(v, k) for (k, v) in s[section].iteritems()])
                 if st in s[section]:
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
-        return True    
-    
+        return True
+
     def history(self, cr, uid, ids, keyword, history=False, email=False, details=None, context={}):
         """
         @param self: The object pointer
@@ -552,7 +552,7 @@ class crm_case(osv.osv):
                         (case.section_id and case.section_id.reply_to) or \
                         (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or tools.config.get('email_from',False)
-            res = obj.create(cr, uid, data, context)            
+            res = obj.create(cr, uid, data, context)
         return True
     _history = __history
 
@@ -631,7 +631,7 @@ class crm_case(osv.osv):
         self.__history(cr, uid, cases, _('Send'), history=True, email=False)
         for case in cases:
             self.write(cr, uid, [case.id], {
-                'description': False,                
+                'description': False,
                 })
             emails = [case.email_from] + (case.email_cc or '').split(',')
             emails = filter(None, emails)
@@ -645,11 +645,11 @@ class crm_case(osv.osv):
                         _("No E-Mail ID Found for your Company address!"))
 
             tools.email_send(
-                emailfrom, 
-                emails, 
-                '[' + str(case.id) + '] ' + case.name, 
-                self.format_body(body), 
-                reply_to = case.section_id.reply_to, 
+                emailfrom,
+                emails,
+                '[' + str(case.id) + '] ' + case.name,
+                self.format_body(body),
+                reply_to = case.section_id.reply_to,
                 openobject_id = str(case.id)
             )
             self.__history(cr, uid, [case], _('Send'), history=True, email=emails, details=body, email_from=emailfrom)
@@ -814,11 +814,11 @@ class crm_case_log(osv.osv):
     _order = "id desc"
     _columns = {
         'name': fields.char('Status', size=64),
-        'date': fields.datetime('Date'), 
-        'section_id': fields.many2one('crm.case.section', 'Section'), 
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True), 
-        'model_id': fields.many2one('ir.model', "Model"), 
-        'res_id': fields.integer('Resource ID'), 
+        'date': fields.datetime('Date'),
+        'section_id': fields.many2one('crm.case.section', 'Section'),
+        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
+        'model_id': fields.many2one('ir.model', "Model"),
+        'res_id': fields.integer('Resource ID'),
     }
 
     _defaults = {

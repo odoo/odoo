@@ -23,6 +23,7 @@ from osv import fields, osv, orm
 from datetime import datetime, timedelta
 import crm
 import math
+from mx import DateTime
 from tools.translate import _
 
 class crm_lead(osv.osv):
@@ -92,11 +93,11 @@ class crm_lead(osv.osv):
 
         'user_id': fields.many2one('res.users', 'Salesman'),
         'referred': fields.char('Referred By', size=32),
-        'date_open': fields.datetime('Opened', readonly=True), 
+        'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="integer", store=True), 
+                                method=True, multi='day_open', type="integer", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="integer", store=True), 
+                                method=True, multi='day_close', type="integer", store=True),
         'function_name': fields.char('Function', size=64),
         }
 
