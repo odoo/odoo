@@ -29,10 +29,18 @@ class auction_transfer_unsold_object(osv.osv):
         _name = 'auction.transfer.unsold.object'
         _description = 'To transfer unsold objects'
         
+        _columns = {
+                'auction_id_from':fields.many2one('auction.dates', 'From Auction Date', required=True),
+                'auction_id_to':fields.many2one('auction.dates', 'To Auction Date', required=True),
+        }
+
+        _defaults = {
+            'auction_id_from': _start,
+        }
+        
         def _start(self, cr, uid, context):
             """ 
             To initialize auction_id_from
-    
             @param self: The object pointer.
             @param cr: A database cursor
             @param uid: ID of the user currently logged in
@@ -48,14 +56,12 @@ class auction_transfer_unsold_object(osv.osv):
         def transfer_unsold_object(self, cr, uid, ids, context):
             """ 
             To Transfer the unsold object
-    
             @param self: The object pointer.
             @param cr: A database cursor
             @param uid: ID of the user currently logged in
             @param ids: List of IDs selected 
             @param context: A standard dictionary 
             @return: 
-    
             """
             bid_line_obj = self.pool.get('auction.bid_line')
             lots_obj = self.pool.get('auction.lots')
@@ -76,13 +82,5 @@ class auction_transfer_unsold_object(osv.osv):
                                                                                                 'sel_inv_id':None,
                                                                                                 'state':'draft'})
             return {}    
-    
-        _columns = {
-                'auction_id_from':fields.many2one('auction.dates', 'From Auction Date', required=True),
-                'auction_id_to':fields.many2one('auction.dates', 'To Auction Date', required=True),
-        }
-
-        _defaults = {
-            'auction_id_from': _start,
-        }
+        
 auction_transfer_unsold_object()
