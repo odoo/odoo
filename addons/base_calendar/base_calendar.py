@@ -835,6 +835,7 @@ class calendar_event(osv.osv):
         cr.execute("UPDATE %s set freq='',interval=0,count=0,end_date=Null,\
                     mo=False,tu=False,we=False,th=False,fr=False,sa=False,su=False,\
                     day=0,select1=False,month_list=0 ,byday=False where id=%s" % (self._table, id))
+        
         if not value:
             return True
         val = {}
@@ -848,48 +849,52 @@ class calendar_event(osv.osv):
         ans = value.split(';')
         for i in ans:
             val[i.split('=')[0].lower()] = i.split('=')[1].lower()
+        if int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
+            rrule_type = 'custom'
 
         qry = "UPDATE %(table)s set rrule_type=\'%(rule_type)s\' "
-        new_val = val.copy()
-        for k, v in val.items():
-            if  val['freq'] == 'weekly' and val.get('byday'):
-                for day in val['byday'].split(','):
-                    new_val[day] = True
-                val.pop('byday')
 
-            if val.get('until'):
-                until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
-                new_val['end_date'] = until.strftime('%Y-%m-%d')
-                val.pop('until')
-                new_val.pop('until')
+        if rrule_type == 'custom':
+            new_val = val.copy()
+            for k, v in val.items():
+                if  val['freq'] == 'weekly' and val.get('byday'):
+                    for day in val['byday'].split(','):
+                        new_val[day] = True
+                    val.pop('byday')
+    
+                if val.get('until'):
+                    until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
+                    new_val['end_date'] = until.strftime('%Y-%m-%d')
+                    val.pop('until')
+                    new_val.pop('until')
+    
+                if val.get('bymonthday'):
+                    new_val['day'] = val.get('bymonthday')
+                    val.pop('bymonthday')
+                    new_val['select1'] = 'date'
+                    new_val.pop('bymonthday')
+    
+                if val.get('byday'):
+                    d = val.get('byday')
+                    new_val['byday'] = d[:1]
+                    new_val['week_list'] = d[1:].upper()
+                    new_val['select1'] = 'day'
+    
+                if val.get('bymonth'):
+                    new_val['month_list'] = val.get('bymonth')
+                    val.pop('bymonth')
+                    new_val.pop('bymonth')
+            
+            for k, v in new_val.items():
+                temp = ", %s='%s'" % (k, v)
+                qry += temp
 
-            if val.get('bymonthday'):
-                new_val['day'] = val.get('bymonthday')
-                val.pop('bymonthday')
-                new_val.pop('bymonthday')
-
-            if val.get('byday'):
-                d = val.get('byday')
-                new_val['byday'] = d[:1]
-                new_val['week_list'] = d[1:].upper()
-                new_val['select1'] = 'day'
-
-            if val.get('bymonth'):
-                new_val['month_list'] = val.get('bymonth')
-                val.pop('bymonth')
-                new_val.pop('bymonth')
-
-        for k, v in new_val.items():
-            temp = ", %s='%s'" % (k, v)
-
-
-            qry += temp
         whr = " where id=%(id)s"
         qry = qry + whr
         val.update({
-                    'table': self._table,
-                    'rule_type': rrule_type,
-                    'id': id,
+                    'table': self._table, 
+                    'rule_type': rrule_type, 
+                    'id': id, 
                     })
         cr.execute(qry % val)
         return True
