@@ -19,9 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import wizard_return
-
 import pos_add_product
 import pos_confirm
 import pos_discount

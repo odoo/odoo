@@ -18,24 +18,35 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields, osv
 
-class auction_lots_enable(osv.osv_memory):
-    _name = "auction.lots.enable"
-    _description = "Lots Enable"
+import threading
+from osv import osv, fields
+
+class procurement_compute(osv.osv_memory):
+    _name = 'mrp.procurement.compute'
+    _description = 'Compute Procurement'
     
-    _columns= {
-        'confirm_en':fields.integer('Catalog Number')
-    }
-    
-    def confirm_enable(self, cr, uid, ids, context={}):
-        """
-        This function Update auction lots object and set taken away field False.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of auction lots enable’s IDs.
-        """
-        self.pool.get('auction.lots').write(cr, uid, context['active_id'], {'ach_emp':False})
+    def _procure_calculation_procure(self, cr, uid, ids, context):
+        try:
+            proc_obj = self.pool.get('mrp.procurement')
+            proc_obj._procure_confirm(cr, uid, use_new_cursor=cr.dbname, context=context)
+        finally:
+            cr.close()
         return {}
     
-auction_lots_enable()
+    def procure_calculation(self, cr, uid, ids, context):
+        """ 
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param ids: List of IDs selected 
+         @param context: A standard dictionary 
+        """
+        threaded_calculation = threading.Thread(target=self._procure_calculation_procure, args=(cr, uid, ids, context))
+        threaded_calculation.start()
+        return {}
+    
+procurement_compute()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
