@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,31 +15,39 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil import rrule
 from osv import fields, osv
 from service import web_services
 from tools.translate import _
-import base64
-import pooler
 import pytz
 import re
 import time
 import tools
 
 months = {
-        1:"January", 2:"February", 3:"March", 4:"April", \
-        5:"May", 6:"June", 7:"July", 8:"August", 9:"September", \
-        10:"October", 11:"November", 12:"December"}
+        1: "January", 2: "February", 3: "March", 4: "April", \
+        5: "May", 6: "June", 7: "July", 8: "August", 9: "September", \
+        10: "October", 11: "November", 12: "December"}
 
 def get_recurrent_dates(rrulestring, exdate, startdate=None):
+    """
+    Get recurrent dates based on Rule string considering exdate and start date
+    @param rrulestring: Rulestring
+    @param exdate: List of exception dates for rrule
+    @param startdate: Startdate for computing recurrent dates
+    @return: List of Recurrent dates
+    """
+
     def todate(date):
         val = parser.parse(''.join((re.compile('\d')).findall(date)))
         return val
+
     if not startdate:
         startdate = datetime.now()
     rset1 = rrule.rrulestr(rrulestring, dtstart=startdate, forceset=True)
@@ -51,8 +59,15 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None):
     return re_dates
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
+    """
+    This function converts virtual event id into real id of actual event
+    @param base_calendar_id: Id of calendar
+    @param with_date: If value passed to this param it will return dates based on value of withdate + base_calendar_id
+    """
+
     if base_calendar_id and isinstance(base_calendar_id, (str, unicode)):
         res = base_calendar_id.split('-')
+
         if len(res) >= 2:
             real_id = res[0]
             if with_date:
@@ -62,9 +77,17 @@ def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
                 end = start + timedelta(hours=with_date)
                 return (int(real_id), real_date, end.strftime("%Y-%m-%d %H:%M:%S"))
             return int(real_id)
+
     return base_calendar_id and int(base_calendar_id) or base_calendar_id
 
 def real_id2base_calendar_id(real_id, recurrent_date):
+    """
+    Convert  real id of record into virtual id using recurrent_date
+    e.g. real id is 1 and recurrent_date is 01-12-2009 10:00:00 then it will return
+        1-20091201100000
+    @return: real id with recurrent date.
+    """
+
     if real_id and recurrent_date:
         recurrent_date = time.strftime("%Y%m%d%H%M%S", \
                          time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
@@ -73,9 +96,17 @@ def real_id2base_calendar_id(real_id, recurrent_date):
 
 
 def _links_get(self, cr, uid, context={}):
+    """
+    Get request link.
+    @param cr: the current row, from the database cursor,
+    @param uid: the current user’s ID for security checks,
+    @param context: A standard dictionary for contextual values
+    @return: list of dictionary which contain object and name and id.
+    """
+
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['object', 'name'], context)
+    res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
     return [(r['object'], r['name']) for r in res]
 
 html_invitation = """
@@ -184,101 +215,10 @@ html_invitation = """
 </html>
 """
 
-class invite_attendee_wizard(osv.osv_memory):
-    _name = "base_calendar.invite.attendee"
-    _description = "Invite Attendees"
-
-    _columns = {
-        'type': fields.selection([('internal', 'Internal User'), \
-              ('external', 'External Email'), \
-              ('partner', 'Partner Contacts')], 'Type', required=True), 
-        'user_ids': fields.many2many('res.users', 'invite_user_rel', 
-                                  'invite_id', 'user_id', 'Users'), 
-        'partner_id': fields.many2one('res.partner', 'Partner'), 
-        'email': fields.char('Email', size=124), 
-        'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel', 
-                                  'invite_id', 'contact_id', 'Contacts'), 
-        'send_mail': fields.boolean('Send mail?', help='Check this if you want\
- to send an Email to Invited Person')
-              }
-
-    _defaults = {
-                 'type': lambda *x: 'internal'
-                 }
-
-    def do_invite(self, cr, uid, ids, context={}):
-        for att_id in ids:
-            datas = self.read(cr, uid, att_id)
-            model = False
-            model_field = False
-            if not context or not context.get('model'):
-                return {}
-            else:
-                model = context.get('model')
-            model_field = context.get('attendee_field', False)
-            obj = self.pool.get(model)
-            res_obj = obj.browse(cr, uid, context['active_id'])
-            type = datas.get('type')
-            att_obj = self.pool.get('calendar.attendee')
-            vals = {}
-            mail_to = []
-            if not model == 'calendar.attendee':
-                vals = {'ref': '%s,%s' % (model, base_calendar_id2real_id(context['active_id']))}
-    
-            if type == 'internal':
-                user_obj = self.pool.get('res.users')
-                if not datas.get('user_ids'):
-                    raise osv.except_osv(_('Error!'), ("Please select any User"))
-                for user_id in datas.get('user_ids'):
-                    user = user_obj.browse(cr, uid, user_id)
-                    vals.update({'user_id': user_id, 
-                                         'email': user.address_id.email})
-                    if user.address_id.email:
-                        mail_to.append(user.address_id.email)
-                    
-            elif  type == 'external' and datas.get('email'):
-                vals.update({'email': datas['email']})
-                mail_to.append(datas['email'])
-            elif  type == 'partner':
-                add_obj = self.pool.get('res.partner.address')
-                for contact in  add_obj.browse(cr, uid, datas['contact_ids']):
-                    vals.update({
-                                 'partner_address_id': contact.id, 
-                                 'email': contact.email})
-                    if contact.email:
-                        mail_to.append(contact.email)
-    
-            if model == 'calendar.attendee':
-                att = att_obj.browse(cr, uid, context['active_id'])
-                vals.update({
-                    'parent_ids' : [(4, att.id)],
-                    'ref': att.ref
-                })
-            if datas.get('send_mail'):
-                if not mail_to:
-                    name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
-                                       self._columns['type'].selection))
-                    raise osv.except_osv(_('Error!'), ("%s must have an email \
-    Address to send mail") % (name[0]))
-                att_obj._send_mail(cr, uid, [att_id], mail_to, \
-                       email_from=tools.config.get('email_from', False))
-            att_id = att_obj.create(cr, uid, vals)
-            if model_field:
-                obj.write(cr, uid, res_obj.id, {model_field: [(4, att_id)]})
-        return {}
-
-
-    def onchange_partner_id(self, cr, uid, ids, partner_id, *args, **argv):
-        if not partner_id:
-            return {'value': {'contact_ids': []}}
-        cr.execute('select id from res_partner_address \
-                         where partner_id=%s' % (partner_id))
-        contacts = map(lambda x: x[0], cr.fetchall())
-        return {'value': {'contact_ids': contacts}}
-
-invite_attendee_wizard()
-
 class calendar_attendee(osv.osv):
+    """
+    Calendar Attendee Information
+    """
     _name = 'calendar.attendee'
     _description = 'Attendee information'
     _rec_name = 'cutype'
@@ -286,14 +226,25 @@ class calendar_attendee(osv.osv):
     __attribute__ = {}
 
     def _get_address(self, name=None, email=None):
+        """
+        Get Email Address
+        """
         if name and email:
             name += ':'
         return (name or '') + (email and ('MAILTO:' + email) or '')
 
     def _compute_data(self, cr, uid, ids, name, arg, context):
+        """
+        Compute data on field.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar attendee’s IDs.
+        @param name: name of field.
+        @param context: A standard dictionary for contextual values
+        @return: Dictionary of form {id: {'field Name': value'}}.
+        """
         name = name[0]
         result = {}
-
         for attdata in self.browse(cr, uid, ids, context=context):
             id = attdata.id
             result[id] = {}
@@ -330,30 +281,45 @@ class calendar_attendee(osv.osv):
                     result[id][name] = False
             if name == 'event_end_date':
                 if attdata.ref:
-                     result[id][name] = attdata.ref.date_deadline
+                    result[id][name] = attdata.ref.date_deadline
                 else:
                     result[id][name] = False
             if name == 'sent_by_uid':
                 if attdata.ref:
-                    result[id][name] = (attdata.ref.user_id.id,attdata.ref.user_id.name)
+                    result[id][name] = (attdata.ref.user_id.id, attdata.ref.user_id.name)
                 else:
                     result[id][name] = uid
             if name == 'language':
                 user_obj = self.pool.get('res.users')
-                lang = user_obj.read(cr, uid, uid, ['context_lang'])['context_lang']
+                lang = user_obj.read(cr, uid, uid, ['context_lang'], context=context)['context_lang']
                 result[id][name] = lang.replace('_', '-')
         return result
 
     def _links_get(self, cr, uid, context={}):
+        """
+        Get request link for ref field in calendar attendee.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
+        @return: list of dictionary which contain object and name and id.
+        """
+
         obj = self.pool.get('res.request.link')
         ids = obj.search(cr, uid, [])
-        res = obj.read(cr, uid, ids, ['object', 'name'], context)
+        res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
         return [(r['object'], r['name']) for r in res]
 
     def _lang_get(self, cr, uid, context={}):
+        """
+        Get language for language function field.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
+        @return: list of dictionary which contain code and name and id.
+        """
         obj = self.pool.get('res.lang')
         ids = obj.search(cr, uid, [])
-        res = obj.read(cr, uid, ids, ['code', 'name'], context)
+        res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
         res = [((r['code']).replace('_', '-'), r['name']) for r in res]
         return res
 
@@ -361,63 +327,93 @@ class calendar_attendee(osv.osv):
         'cutype': fields.selection([('individual', 'Individual'), \
                     ('group', 'Group'), ('resource', 'Resource'), \
                     ('room', 'Room'), ('unknown', '') ], \
-                    'Invite Type', help="Specify the type of Invitation"), 
-        'member': fields.char('Member', size=124, 
-                    help="Indicate the groups that the attendee belongs to"), 
+                    'Invite Type', help="Specify the type of Invitation"),
+        'member': fields.char('Member', size=124,
+                    help="Indicate the groups that the attendee belongs to"),
         'role': fields.selection([('req-participant', 'Participation required'), \
                     ('chair', 'Chair Person'), \
                     ('opt-participant', 'Optional Participation'), \
                     ('non-participant', 'For information Purpose')], 'Role', \
-                    help='Participation role for the calendar user'), 
-        'state': fields.selection([('tentative', 'Tentative'), 
-                        ('needs-action', 'Needs Action'), 
-                        ('accepted', 'Accepted'), 
-                        ('declined', 'Declined'), 
-                        ('delegated', 'Delegated')], 'State', readonly=True, 
-                        help="Status of the attendee's participation"), 
-        'rsvp':  fields.boolean('Required Reply?', 
-                    help="Indicats whether the favor of a reply is requested"), 
+                    help='Participation role for the calendar user'),
+        'state': fields.selection([('tentative', 'Tentative'),
+                        ('needs-action', 'Needs Action'),
+                        ('accepted', 'Accepted'),
+                        ('declined', 'Declined'),
+                        ('delegated', 'Delegated')], 'State', readonly=True,\
+                        help="Status of the attendee's participation"),
+        'rsvp':  fields.boolean('Required Reply?',
+                    help="Indicats whether the favor of a reply is requested"),
         'delegated_to': fields.function(_compute_data, method=True, \
                 string='Delegated To', type="char", size=124, store=True, \
                 multi='delegated_to', help="The users that the original \
-request was delegated to"),         
+request was delegated to"),
         'delegated_from': fields.function(_compute_data, method=True, string=\
-            'Delegated From', type="char", store=True, size=124, multi='delegated_from'),        
-        'parent_ids': fields.many2many('calendar.attendee', 'calendar_attendee_parent_rel', 'attendee_id', 'parent_id', 'Delegrated From'),
-        'child_ids': fields.many2many('calendar.attendee', 'calendar_attendee_child_rel', 'attendee_id', 'child_id', 'Delegrated To'),  
-        'sent_by': fields.function(_compute_data, method=True, string='Sent By', type="char", multi='sent_by', store=True, size=124, help="Specify the user that is acting on behalf of the calendar user"), 
-        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User', type="many2one", relation="res.users", multi='sent_by_uid'), 
-        'cn': fields.function(_compute_data, method=True, string='Common name', type="char", size=124, multi='cn', store=True), 
-        'dir': fields.char('URI Reference', size=124, help="Reference to the URI that points to the directory information corresponding to the attendee."), 
-        'language':  fields.function(_compute_data, method=True, string='Language', type="selection", selection=_lang_get, multi='language', store=True, help="To specify the language for text values in a property or property parameter."), 
-        'user_id': fields.many2one('res.users', 'User'), 
-        'partner_address_id': fields.many2one('res.partner.address', 'Contact'), 
-        'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner', help="Partner related to contact"), 
-        'email': fields.char('Email', size=124, help="Email of Invited Person"), 
-        'event_date': fields.function(_compute_data, method=True, string='Event Date', type="datetime", multi='event_date'), 
-        'event_end_date': fields.function(_compute_data, method=True, string='Event End Date', type="datetime", multi='event_end_date'), 
-        'ref': fields.reference('Event Ref', selection=_links_get, size=128), 
-        'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"), 
+            'Delegated From', type="char", store=True, size=124, multi='delegated_from'),
+        'parent_ids': fields.many2many('calendar.attendee', 'calendar_attendee_parent_rel',\
+                                       'attendee_id', 'parent_id', 'Delegrated From'),
+        'child_ids': fields.many2many('calendar.attendee', 'calendar_attendee_child_rel',\
+                                      'attendee_id', 'child_id', 'Delegrated To'),
+        'sent_by': fields.function(_compute_data, method=True, string='Sent By',\
+                         type="char", multi='sent_by', store=True, size=124,\
+                         help="Specify the user that is acting on behalf of the calendar user"),
+        'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User',\
+                             type="many2one", relation="res.users", multi='sent_by_uid'),
+        'cn': fields.function(_compute_data, method=True, string='Common name',\
+                             type="char", size=124, multi='cn', store=True),
+        'dir': fields.char('URI Reference', size=124, help="Reference to the URI\
+                     that points to the directory information corresponding to the attendee."),
+        'language':  fields.function(_compute_data, method=True, string='Language',\
+                     type="selection", selection=_lang_get, multi='language',\
+                     store=True, help="To specify the language for text values in a\
+                      property or property parameter."),
+        'user_id': fields.many2one('res.users', 'User'),
+        'partner_address_id': fields.many2one('res.partner.address', 'Contact'),
+        'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one',\
+                        relation='res.partner', string='Partner', help="Partner related to contact"),
+        'email': fields.char('Email', size=124, help="Email of Invited Person"),
+        'event_date': fields.function(_compute_data, method=True, string='Event Date',\
+                             type="datetime", multi='event_date'),
+        'event_end_date': fields.function(_compute_data, method=True, string='Event End Date',\
+                                 type="datetime", multi='event_end_date'),
+        'ref': fields.reference('Event Ref', selection=_links_get, size=128),
+        'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
      }
     _defaults = {
-        'state':  lambda *x: 'needs-action', 
+        'state':  lambda *x: 'needs-action',
     }
-    
+
     response_re = re.compile("Are you coming\?.*\n*.*(YES|NO|MAYBE).*", re.UNICODE)
-    
-    def msg_new(self, cr, uid, msg):        
+
+    def msg_new(self, cr, uid, msg):
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks, """
         return False
-        
+
     def msg_act_get(self, msg):
+        """
+        Get Message.
+        @param self: The object pointer
+        @return: dictionary of actions which contain state field value.
+        """
+
         mailgate_obj = self.pool.get('mail.gateway')
         body = mailgate_obj.msg_body_get(msg)
         actions = {}
         res = self.response_re.findall(body['body'])
         if res:
-                actions['state'] = res[0]
+            actions['state'] = res[0]
         return actions
 
     def msg_update(self, cr, uid, ids, msg, data={}, default_act='None'):
+        """
+        Update msg state which may be accepted.declined.tentative.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar attendee’s IDs.
+        @param context: A standard dictionary for contextual values
+        @return: True
+        """
         msg_actions = self.msg_act_get(msg)
         if msg_actions.get('state'):
             if msg_actions['state'] in ['YES', 'NO', 'MAYBE']:
@@ -428,42 +424,58 @@ request was delegated to"),
         return True
 
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context={}):
+        """
+        Send mail for calendar attendee.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar attendee’s IDs.
+        @param context: A standard dictionary for contextual values
+        @return: True
+        """
+
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
             res_obj = att.ref
-            if res_obj and len(res_obj):
-                res_obj = res_obj[0]
             sub = '[%s Invitation][%d] %s'  % (company, att.id, res_obj.name)
             att_infos = []
-            other_invitaion_ids = self.search(cr, uid, [('ref','=',att.ref)])
+            other_invitaion_ids = self.search(cr, uid, [('ref','=', att.ref._name + ',' + str(att.ref.id))])
             for att2 in self.browse(cr, uid, other_invitaion_ids):
                 att_infos.append(((att2.user_id and att2.user_id.name) or \
                              (att2.partner_id and att2.partner_id.name) or \
                                 att2.email) +  ' - Status: ' + att2.state.title())
-            body_vals = {'name': res_obj.name, 
-                        'start_date': res_obj.date, 
-                        'end_date': res_obj.date_deadline or False, 
-                        'description': res_obj.description or '-', 
-                        'location': res_obj.location or '-', 
-                        'attendees': '<br>'.join(att_infos), 
-                        'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User', 
-                        'sign': sign, 
+            body_vals = {'name': res_obj.name,
+                        'start_date': res_obj.date,
+                        'end_date': res_obj.date_deadline or False,
+                        'description': res_obj.description or '-',
+                        'location': res_obj.location or '-',
+                        'attendees': '<br>'.join(att_infos),
+                        'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
+                        'sign': sign,
                         'company': company
             }
             body = html_invitation % body_vals
             if mail_to and email_from:
                 tools.email_send(
-                        email_from, 
-                        mail_to, 
-                        sub, 
-                        body, 
-                        subtype='html', 
+                        email_from,
+                        mail_to,
+                        sub,
+                        body,
+                        subtype='html',
                         reply_to=email_from
-                    ) 
+                    )
             return True
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
+        """
+        Make entry on email and availbility  on change of user_id field.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar attendee’s IDs.
+        @param user_id: User id
+        @return: dictionary of value. which put value in email and availability fields.
+        """
+
         if not user_id:
             return {'value': {'email': ''}}
         usr_obj = self.pool.get('res.users')
@@ -471,26 +483,59 @@ request was delegated to"),
         return {'value': {'email': user.address_id.email, 'availability':user.availability}}
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of calendar attendee’s IDs
+            @param *args: Get Tupple value
+            @param context: A standard dictionary for contextual values """
+
         self.write(cr, uid, ids, {'state': 'tentative'}, context)
 
     def do_accept(self, cr, uid, ids, context=None, *args):
-        for invite in ids:
-            vals = self.read(cr, uid, invite, context=context)
-            user = vals.get('user_id')
+        """
+        Update state which value is  accepted.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar attendee’s IDs.
+        @return: True
+        """
+
+        if not context:
+            context = {}
+
+        for vals in self.browse(cr, uid, ids, context=context):
+            user = vals.user_id
             if user:
-                ref = vals.get('ref', None)
-                if ref:
-                    event_ref = ref
-                    if event_ref.user_id.id != user[0]:
-                        defaults = {'user_id':  user[0]}
-                        new_event = model_obj.copy(cr, uid, event, default=defaults, context=context)
-            self.write(cr, uid, invite, {'state': 'accepted'}, context)
+
+                mod_obj = self.pool.get(vals.ref._name)
+                if vals.ref:
+                    if vals.ref.user_id.id != user.id:
+                        defaults = {'user_id':  user.id}
+                        new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
+            self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
+
         return True
 
     def do_decline(self, cr, uid, ids, context=None, *args):
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of calendar attendee’s IDs
+            @param *args: Get Tupple value
+            @param context: A standard dictionary for contextual values """
+
         self.write(cr, uid, ids, {'state': 'declined'}, context)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param vals: Get Values
+            @param context: A standard dictionary for contextual values """
+
+        if not context:
+            context = {}
         if not vals.get("email") and vals.get("cn"):
             cnval = vals.get("cn").split(':')
             email =  filter(lambda x:x.__contains__('@'), cnval)
@@ -498,43 +543,55 @@ request was delegated to"),
             vals['cn'] = vals.get("cn")
         res = super(calendar_attendee, self).create(cr, uid, vals, context)
         return res
-    
+
 calendar_attendee()
 
 class res_alarm(osv.osv):
     _name = 'res.alarm'
     _description = 'Basic Alarm Information'
     _columns = {
-        'name':fields.char('Name', size=256, required=True), 
+        'name':fields.char('Name', size=256, required=True),
         'trigger_occurs': fields.selection([('before', 'Before'), ('after', 'After')], \
-                                        'Triggers', required=True), 
+                                        'Triggers', required=True),
         'trigger_interval': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), \
-                ('days', 'Days')], 'Interval', required=True), 
-        'trigger_duration':  fields.integer('Duration', required=True), 
+                ('days', 'Days')], 'Interval', required=True),
+        'trigger_duration':  fields.integer('Duration', required=True),
         'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
-                                       'The event ends')], 'Related to', required=True), 
+                                       'The event ends')], 'Related to', required=True),
         'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
-are both optional, but if one occurs, so MUST the other"""), 
-        'repeat': fields.integer('Repeat'), 
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the event alarm information without removing it."), 
+are both optional, but if one occurs, so MUST the other"""),
+        'repeat': fields.integer('Repeat'),
+        'active': fields.boolean('Active', help="If the active field is set to \
+                    true, it will allow you to hide the event alarm information without removing it."),
 
 
     }
     _defaults = {
-        'trigger_interval':  lambda *x: 'minutes', 
-        'trigger_duration': lambda *x: 5, 
-        'trigger_occurs': lambda *x: 'before', 
-        'trigger_related': lambda *x: 'start', 
-        'active': lambda *x: 1, 
+        'trigger_interval':  lambda *x: 'minutes',
+        'trigger_duration': lambda *x: 5,
+        'trigger_occurs': lambda *x: 'before',
+        'trigger_related': lambda *x: 'start',
+        'active': lambda *x: 1,
     }
 
     def do_alarm_create(self, cr, uid, ids, model, date, context={}):
+        """
+        Create Alarm for meeting.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of res alarm’s IDs.
+        @param model: Model name.
+        @param context: A standard dictionary for contextual values
+        @return: True
+        """
+
         alarm_obj = self.pool.get('calendar.alarm')
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
-        
+
         model_obj = self.pool.get(model)
         for data in model_obj.browse(cr, uid, ids):
+
             basic_alarm = data.alarm_id
             if not context.get('alarm_id'):
                 self.do_alarm_unlink(cr, uid, [data.id], model)
@@ -542,29 +599,39 @@ are both optional, but if one occurs, so MUST the other"""),
             self.do_alarm_unlink(cr, uid, [data.id], model)
             if basic_alarm:
                 vals = {
-                    'action': 'display', 
-                    'description': data.description, 
-                    'name': data.name, 
-                    'attendee_ids': [(6, 0, map(lambda x:x.id, data.attendee_ids))], 
-                    'trigger_related': basic_alarm.trigger_related, 
-                    'trigger_duration': basic_alarm.trigger_duration, 
-                    'trigger_occurs': basic_alarm.trigger_occurs, 
-                    'trigger_interval': basic_alarm.trigger_interval, 
-                    'duration': basic_alarm.duration, 
-                    'repeat': basic_alarm.repeat, 
-                    'state': 'run', 
-                    'event_date': data[date], 
-                    'res_id': data.id, 
-                    'model_id': model_id, 
+                    'action': 'display',
+                    'description': data.description,
+                    'name': data.name,
+                    'attendee_ids': [(6, 0, map(lambda x:x.id, data.attendee_ids))],
+                    'trigger_related': basic_alarm.trigger_related,
+                    'trigger_duration': basic_alarm.trigger_duration,
+                    'trigger_occurs': basic_alarm.trigger_occurs,
+                    'trigger_interval': basic_alarm.trigger_interval,
+                    'duration': basic_alarm.duration,
+                    'repeat': basic_alarm.repeat,
+                    'state': 'run',
+                    'event_date': data[date],
+                    'res_id': data.id,
+                    'model_id': model_id,
                     'user_id': uid
                  }
                 alarm_id = alarm_obj.create(cr, uid, vals)
                 cr.execute('Update %s set base_calendar_alarm_id=%s, alarm_id=%s \
                                         where id=%s' % (model_obj._table, \
                                         alarm_id, basic_alarm.id, data.id))
+        cr.commit()
         return True
 
     def do_alarm_unlink(self, cr, uid, ids, model, context={}):
+        """
+        Delete alarm specified in ids
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of res alarm’s IDs.
+        @param model: Model name.
+        @return: True
+        """
+
         alarm_obj = self.pool.get('calendar.alarm')
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
@@ -587,38 +654,52 @@ class calendar_alarm(osv.osv):
     __attribute__ = {}
 
     _columns = {
-            'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'), 
-            'name': fields.char('Summary', size=124, help="""Contains the text to be used as the message subject for email
-or contains the text to be used for display"""), 
+            'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'),
+            'name': fields.char('Summary', size=124, help="""Contains the text to be \
+                         used as the message subject for email \
+                         or contains the text to be used for display"""),
             'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
                     ('procedure', 'Procedure'), ('email', 'Email') ], 'Action', \
-                    required=True, help="Defines the action to be invoked when an alarm is triggered"), 
-            'description': fields.text('Description', help='Provides a more complete description of the calendar component, than that provided by the "SUMMARY" property'), 
+                    required=True, help="Defines the action to be invoked when an alarm is triggered"),
+            'description': fields.text('Description', help='Provides a more complete \
+                                description of the calendar component, than that \
+                                provided by the "SUMMARY" property'),
             'attendee_ids': fields.many2many('calendar.attendee', 'alarm_attendee_rel', \
-                                          'alarm_id', 'attendee_id', 'Attendees', readonly=True), 
-            'attach': fields.binary('Attachment', help="""* Points to a sound resource, which is rendered when the alarm is triggered for audio,
-* File which is intended to be sent as message attachments for email,
-* Points to a procedure resource, which is invoked when the alarm is triggered for procedure."""), 
-            'res_id': fields.integer('Resource ID'), 
-            'model_id': fields.many2one('ir.model', 'Model'), 
-            'user_id': fields.many2one('res.users', 'Owner'), 
-            'event_date': fields.datetime('Event Date'), 
-            'event_end_date': fields.datetime('Event End Date'), 
-            'trigger_date': fields.datetime('Trigger Date', readonly="True"), 
+                                          'alarm_id', 'attendee_id', 'Attendees', readonly=True),
+            'attach': fields.binary('Attachment', help="""* Points to a sound resource,\
+                         which is rendered when the alarm is triggered for audio,
+                        * File which is intended to be sent as message attachments for email,
+                        * Points to a procedure resource, which is invoked when\
+                          the alarm is triggered for procedure."""),
+            'res_id': fields.integer('Resource ID'),
+            'model_id': fields.many2one('ir.model', 'Model'),
+            'user_id': fields.many2one('res.users', 'Owner'),
+            'event_date': fields.datetime('Event Date'),
+            'event_end_date': fields.datetime('Event End Date'),
+            'trigger_date': fields.datetime('Trigger Date', readonly="True"),
             'state':fields.selection([
-                        ('draft', 'Draft'), 
-                        ('run', 'Run'), 
-                        ('stop', 'Stop'), 
-                        ('done', 'Done'), 
-                    ], 'State', select=True, readonly=True), 
+                        ('draft', 'Draft'),
+                        ('run', 'Run'),
+                        ('stop', 'Stop'),
+                        ('done', 'Done'),
+                    ], 'State', select=True, readonly=True),
      }
 
     _defaults = {
-        'action':  lambda *x: 'email', 
-        'state': lambda *x: 'run', 
+        'action':  lambda *x: 'email',
+        'state': lambda *x: 'run',
      }
 
     def create(self, cr, uid, vals, context={}):
+        """
+        create new record.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param vals: dictionary of fields value.{‘name_of_the_field’: value, ...}
+        @param context: A standard dictionary for contextual values
+        @return: new record id for calendar_alarm.
+        """
+
         event_date = vals.get('event_date', False)
         if event_date:
             dtstart = datetime.strptime(vals['event_date'], "%Y-%m-%d %H:%M:%S")
@@ -633,8 +714,18 @@ or contains the text to be used for display"""),
         res = super(calendar_alarm, self).create(cr, uid, vals, context)
         return res
 
-    def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False,\
+    def do_run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, \
                        context=None):
+        """
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of calendar alarm’s IDs.
+            @param use_new_cursor: False or the dbname
+            @param context: A standard dictionary for contextual values
+        """
+
+
         if not context:
             context = {}
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -643,17 +734,17 @@ or contains the text to be used for display"""),
                     where alarm.state = %s and alarm.trigger_date <= %s", ('run', current_datetime))
         res = cr.dictfetchall()
         alarm_ids = map(lambda x: x['id'], res)
-        attendee_obj = self.pool.get('calendar.attendee')
+        #attendee_obj = self.pool.get('calendar.attendee')
         request_obj = self.pool.get('res.request')
         mail_to = []
         for alarm in self.browse(cr, uid, alarm_ids):
             if alarm.action == 'display':
                 value = {
-                   'name': alarm.name, 
-                   'act_from': alarm.user_id.id, 
-                   'act_to': alarm.user_id.id, 
-                   'body': alarm.description, 
-                   'trigger_date': alarm.trigger_date, 
+                   'name': alarm.name,
+                   'act_from': alarm.user_id.id,
+                   'act_to': alarm.user_id.id,
+                   'body': alarm.description,
+                   'trigger_date': alarm.trigger_date,
                    'ref_doc1':  '%s,%s'  % (alarm.model_id.model, alarm.res_id)
                 }
                 request_id = request_obj.create(cr, uid, value)
@@ -683,9 +774,9 @@ or contains the text to be used for display"""),
                     mail_to.append(att.user_id.address_id.email)
                 if mail_to:
                     tools.email_send(
-                        tools.config.get('email_from', False), 
-                        mail_to, 
-                        sub, 
+                        tools.config.get('email_from', False),
+                        mail_to,
+                        sub,
                         body
                     )
             self.write(cr, uid, [alarm.id], {'state':'done'})
@@ -698,16 +789,30 @@ class calendar_event(osv.osv):
     _name = "calendar.event"
     _description = "Calendar Event"
     __attribute__ = {}
-    
+
     def _tz_get(self, cr, uid, context={}):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
-    
+
     def onchange_dates(self, cr, uid, ids, start_date, duration=False, end_date=False, context={}):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar event’s IDs.
+        @param start_date: Get starting date
+        @param duration: Get Duration between start date and end date or False
+        @param end_date: Get Ending Date or False
+        @param context: A standard dictionary for contextual values
+
+        """
         if not start_date:
             return {}
-        start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         value = {}
+        if not end_date and not duration:
+            duration = 8.00
+            value['duration'] = 8.00
+        start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         if end_date and not duration:
             end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
             diff = end - start
@@ -718,9 +823,94 @@ class calendar_event(osv.osv):
             value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
         return {'value': value}
 
+    def _set_rrulestring(self, cr, uid, id, name, value, arg, context):
+        """
+        Set rule string.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param id: List of  calendar event's ids.
+        @param context: A standard dictionary for contextual values
+        @return: dictionary of rrule value.
+        """
+        cr.execute("UPDATE %s set freq='',interval=0,count=0,end_date=Null,\
+                    mo=False,tu=False,we=False,th=False,fr=False,sa=False,su=False,\
+                    day=0,select1=False,month_list=0 ,byday=False where id=%s" % (self._table, id))
+        
+        if not value:
+            return True
+        val = {}
+        for part in value.split(';'):
+            if part.lower().__contains__('freq') and len(value.split(';')) <=2:
+                rrule_type = part.lower()[5:]
+                break
+            else:
+                rrule_type = 'custom'
+                break
+        ans = value.split(';')
+        for i in ans:
+            val[i.split('=')[0].lower()] = i.split('=')[1].lower()
+        if int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
+            rrule_type = 'custom'
+
+        qry = "UPDATE %(table)s set rrule_type=\'%(rule_type)s\' "
+
+        if rrule_type == 'custom':
+            new_val = val.copy()
+            for k, v in val.items():
+                if  val['freq'] == 'weekly' and val.get('byday'):
+                    for day in val['byday'].split(','):
+                        new_val[day] = True
+                    val.pop('byday')
+    
+                if val.get('until'):
+                    until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
+                    new_val['end_date'] = until.strftime('%Y-%m-%d')
+                    val.pop('until')
+                    new_val.pop('until')
+    
+                if val.get('bymonthday'):
+                    new_val['day'] = val.get('bymonthday')
+                    val.pop('bymonthday')
+                    new_val['select1'] = 'date'
+                    new_val.pop('bymonthday')
+    
+                if val.get('byday'):
+                    d = val.get('byday')
+                    new_val['byday'] = d[:1]
+                    new_val['week_list'] = d[1:].upper()
+                    new_val['select1'] = 'day'
+    
+                if val.get('bymonth'):
+                    new_val['month_list'] = val.get('bymonth')
+                    val.pop('bymonth')
+                    new_val.pop('bymonth')
+            
+            for k, v in new_val.items():
+                temp = ", %s='%s'" % (k, v)
+                qry += temp
+
+        whr = " where id=%(id)s"
+        qry = qry + whr
+        val.update({
+                    'table': self._table, 
+                    'rule_type': rrule_type, 
+                    'id': id, 
+                    })
+        cr.execute(qry % val)
+        return True
+
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
+        """
+        Get rule string.
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param id: List of  calendar event's ids.
+        @param context: A standard dictionary for contextual values
+        @return: dictionary of rrule value.
+        """
         result = {}
         for event in ids:
+            
             datas = self.read(cr, uid, event)
             if datas.get('rrule_type'):
                 if datas.get('rrule_type') == 'none':
@@ -731,39 +921,42 @@ class calendar_event(osv.osv):
                 else:
                     result[event] = self.compute_rule_string(cr, uid, {'freq':\
                                         datas.get('rrule_type').upper(), \
-                                        'interval': 1}, context=context)
+                                      'interval': 1}, context=context)
+
         return result
 
     _columns = {
-        'id': fields.integer('ID'), 
-        'sequence': fields.integer('Sequence'), 
-        'name': fields.char('Description', size=64, required=True), 
-        'date': fields.datetime('Date'), 
-        'date_deadline': fields.datetime('Deadline'), 
-        'create_date': fields.datetime('Created', readonly=True), 
-        'duration': fields.float('Duration'), 
-        'description': fields.text('Your action'), 
+        'id': fields.integer('ID'),
+        'sequence': fields.integer('Sequence'),
+        'name': fields.char('Description', size=64, required=True),
+        'date': fields.datetime('Date'),
+        'date_deadline': fields.datetime('Deadline'),
+        'create_date': fields.datetime('Created', readonly=True),
+        'duration': fields.float('Duration'),
+        'description': fields.text('Your action'),
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
-                 ('confidential', 'Confidential')], 'Mark as'), 
-        'location': fields.char('Location', size=264, help="Location of Event"), 
+                 ('confidential', 'Confidential')], 'Mark as'),
+        'location': fields.char('Location', size=264, help="Location of Event"),
         'show_as': fields.selection([('free', 'Free'), \
-                                  ('busy', 'Busy')], 
-                                   'Show as'), 
-        'base_calendar_url': fields.char('Caldav URL', size=264), 
+                                  ('busy', 'Busy')],
+                                   'Show as'),
+        'base_calendar_url': fields.char('Caldav URL', size=264),
         'exdate': fields.text('Exception Date/Times', help="This property \
-defines the list of date/time exceptions for arecurring calendar component."), 
+                    defines the list of date/time exceptions for arecurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
-rule or repeating pattern for anexception to a recurrence set"), 
-        'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, string='Recurrent Rule', store=True), 
+                    rule or repeating pattern for anexception to a recurrence set"),
+        'rrule': fields.function(_get_rulestring, type='char', size=124, method=True,\
+                     string='Recurrent Rule', store=True, fnct_inv=_set_rrulestring),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
-                            ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'), 
-        'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
-        'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
-        'recurrent_uid': fields.integer('Recurrent ID'), 
-        'recurrent_id': fields.datetime('Recurrent ID date'), 
-        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, string='Timezone'), 
-        'user_id': fields.many2one('res.users', 'Responsible'), 
+                            ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'),
+        'alarm_id': fields.many2one('res.alarm', 'Alarm'),
+        'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
+        'recurrent_uid': fields.integer('Recurrent ID'),
+        'recurrent_id': fields.datetime('Recurrent ID date'),
+        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24,\
+                         string='Timezone', store=True),
+        'user_id': fields.many2one('res.users', 'Responsible'),
         'freq': fields.selection([('None', 'No Repeat'), \
                             ('secondly', 'Secondly'), \
                             ('minutely', 'Minutely'), \
@@ -771,45 +964,56 @@ rule or repeating pattern for anexception to a recurrence set"),
                             ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), \
                             ('monthly', 'Monthly'), \
-                            ('yearly', 'Yearly')], 'Frequency'), 
-        'interval': fields.integer('Interval'), 
-        'count': fields.integer('Count'), 
-        'mo': fields.boolean('Mon'), 
-        'tu': fields.boolean('Tue'), 
-        'we': fields.boolean('Wed'), 
-        'th': fields.boolean('Thu'), 
-        'fr': fields.boolean('Fri'), 
-        'sa': fields.boolean('Sat'), 
-        'su': fields.boolean('Sun'), 
+                            ('yearly', 'Yearly')], 'Frequency'),
+        'interval': fields.integer('Interval'),
+        'count': fields.integer('Count'),
+        'mo': fields.boolean('Mon'),
+        'tu': fields.boolean('Tue'),
+        'we': fields.boolean('Wed'),
+        'th': fields.boolean('Thu'),
+        'fr': fields.boolean('Fri'),
+        'sa': fields.boolean('Sat'),
+        'su': fields.boolean('Sun'),
         'select1': fields.selection([('date', 'Date of month'), \
-                            ('day', 'Day of month')], 'Option'), 
-        'day': fields.integer('Date of month'), 
+                            ('day', 'Day of month')], 'Option'),
+        'day': fields.integer('Date of month'),
         'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
                                    ('WE', 'Wednesday'), ('TH', 'Thursday'), \
                                    ('FR', 'Friday'), ('SA', 'Saturday'), \
-                                   ('SU', 'Sunday')], 'Weekday'), 
+                                   ('SU', 'Sunday')], 'Weekday'),
         'byday': fields.selection([('1', 'First'), ('2', 'Second'), \
                                    ('3', 'Third'), ('4', 'Fourth'), \
-                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day'), 
-        'month_list': fields.selection(months.items(), 'Month'), 
+                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day'),
+        'month_list': fields.selection(months.items(), 'Month'),
         'end_date': fields.date('Repeat Until')
     }
 
     _defaults = {
-         'class': lambda *a: 'public', 
-         'show_as': lambda *a: 'busy', 
-         'freq':  lambda *x: 'None', 
-         'select1':  lambda *x: 'date', 
-         'interval':  lambda *x: 1, 
+         'class': lambda *a: 'public',
+         'show_as': lambda *a: 'busy',
+         'freq':  lambda *x: 'None',
+         'select1':  lambda *x: 'date',
+         'interval':  lambda *x: 1,
     }
-    
+
     def modify_this(self, cr, uid, event_id, defaults, real_date, context=None, *args):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param event_id: Get Event_id
+        @param real_date: Get Real Date
+        @param context: A standard dictionary for contextual values
+        @param *args: Get Tuppel Value
+
+        """
+
         event_id = base_calendar_id2real_id(event_id)
         datas = self.read(cr, uid, event_id, context=context)
         defaults.update({
-               'recurrent_uid': base_calendar_id2real_id(datas['id']), 
-               'recurrent_id': defaults.get('date') or real_date, 
-               'rrule_type': 'none', 
+               'recurrent_uid': base_calendar_id2real_id(datas['id']),
+               'recurrent_id': defaults.get('date') or real_date,
+               'rrule_type': 'none',
                'rrule': ''
                     })
         exdate = datas['exdate'] and datas['exdate'].split(',') or []
@@ -819,22 +1023,41 @@ rule or repeating pattern for anexception to a recurrence set"),
         new_id = self.copy(cr, uid, event_id, default=defaults, context=context)
         return new_id
 
-    def modify_all(self, cr, uid, event_id, defaults, context=None, *args):
-        event_id = base_calendar_id2real_id(event_id)
-        defaults.pop('id')
-        defaults.update({'table': self._table})
+    def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
+        """
+        Modify name, date, date_deadline fields.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param event_ids: List of crm meeting’s IDs.
+        @return: True
+        """
+        #start Loop
+        for event_id in event_ids:
+            event_id = base_calendar_id2real_id(event_id)
 
-        qry = "UPDATE %(table)s set name='%(name)s', \
-                        date='%(date)s', date_deadline='%(date_deadline)s'"
-        if defaults.get('alarm_id'):
-            qry += ", alarm_id=%(alarm_id)s"
-        if defaults.get('location'):
-            qry += ", location='%(location)s'"
-        qry += "WHERE id=%s" % (event_id)
-        cr.execute(qry % (defaults))
+            defaults.pop('id')
+            defaults.update({'table': self._table})
+
+            qry = "UPDATE %(table)s set name = '%(name)s', \
+                            date = '%(date)s',  date_deadline = '%(date_deadline)s'"
+            if defaults.get('alarm_id'):
+                qry += ", alarm_id = %(alarm_id)s"
+            if defaults.get('location'):
+                qry += ", location = '%(location)s'"
+            qry += "WHERE id = %s" % (event_id)
+            cr.execute(qry %(defaults))
+            #End Loop
         return True
 
     def get_recurrent_ids(self, cr, uid, select, base_start_date, base_until_date, limit=100):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param base_start_date: Get Start Date
+        @param base_until_date: Get End Date
+        @param limit: The Number of Results to Return """
+
         if not limit:
             limit = 100
         if isinstance(select, (str, int, long)):
@@ -866,7 +1089,7 @@ rule or repeating pattern for anexception to a recurrence set"),
                     result.append(idval)
                     count += 1
                 else:
-                    exdate = data['exdate'] and data['exdate'].split(',') or []                    
+                    exdate = data['exdate'] and data['exdate'].split(',') or []
                     rrule_str = data['rrule']
                     new_rrule_str = []
                     rrule_until_date = False
@@ -907,6 +1130,15 @@ rule or repeating pattern for anexception to a recurrence set"),
         return ids
 
     def compute_rule_string(self, cr, uid, datas, context=None, *args):
+        """
+        Compute rule string.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param datas: dictionary of freq and interval value.
+        @return: string value which compute  FREQILY;INTERVAL
+        """
+
         weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         weekstring = ''
         monthstring = ''
@@ -915,8 +1147,12 @@ rule or repeating pattern for anexception to a recurrence set"),
         freq = datas.get('freq')
         if freq == 'None':
             return ''
+        
+        if datas.get('interval') < 1:
+                raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
 
         if freq == 'weekly':
+
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
             if byday:
                 weekstring = ';BYDAY=' + ','.join(byday)
@@ -950,8 +1186,18 @@ rule or repeating pattern for anexception to a recurrence set"),
 #        End logic
         return rrule_string
 
-    def search(self, cr, uid, args, offset=0, limit=100, order=None, 
+
+    def search(self, cr, uid, args, offset=0, limit=100, order=None,
             context=None, count=False):
+        """
+        Overrides  orm search method.
+        @param cr: the current row, from the database cursor,
+        @param user: the current user’s ID for security checks,
+        @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
+        @param offset: The Number of Results to Pass
+        @param limit: The Number of Results to Return
+        @return: List of id
+        """
         args_without_date = []
         start_date = False
         until_date = False
@@ -969,6 +1215,15 @@ rule or repeating pattern for anexception to a recurrence set"),
 
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        """
+        Writes values in one or several fields.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of crm meeting's ids
+        @param vals: Dictionary of field value.
+        @return: True
+        """
         if not context:
             context = {}
         if isinstance(ids, (str, int, long)):
@@ -985,7 +1240,7 @@ rule or repeating pattern for anexception to a recurrence set"),
                     data.update(vals)
                     new_id = self.modify_this(cr, uid, event_id, data, \
                                                 real_date, context)
-                    context.update({'active_id': new_id,'active_ids': [new_id]})
+                    context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
             event_id = base_calendar_id2real_id(event_id)
             if not event_id in new_ids:
@@ -996,9 +1251,18 @@ rule or repeating pattern for anexception to a recurrence set"),
             context.update({'alarm_id': vals.get('alarm_id')})
             alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', \
                                             context=context)
+
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
+        """
+        Overrides  orm browse method.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of crm meeting's ids
+        @return: the object list.
+        """
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
@@ -1008,9 +1272,18 @@ rule or repeating pattern for anexception to a recurrence set"),
                                                     list_class, fields_process)
         if isinstance(ids, (str, int, long)):
             return res and res[0] or False
+
         return res
 
     def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
+        """
+        Overrides  orm Read method.Read List of fields for calendar event.
+        @param cr: the current row, from the database cursor,
+        @param user: the current user’s ID for security checks,
+        @param ids: List of calendar event's id.
+        @param fields: List of fields.
+        @return: List of Dictionary of form [{‘name_of_the_field’: value, ...}, ...]
+        """
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
@@ -1034,12 +1307,27 @@ rule or repeating pattern for anexception to a recurrence set"),
         return result
 
     def copy(self, cr, uid, id, default=None, context={}):
+        """
+        Duplicate record on specified id.
+        @param self: the object pointer.
+        @param cr: the current row, from the database cursor,
+        @param id: id of record from which we duplicated.
+        @return: Duplicate record id.
+        """
         res = super(calendar_event, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date')
+
         return res
 
     def unlink(self, cr, uid, ids, context=None):
+        """
+        Deletes records specified in ids.
+        @param self: the object pointer.
+        @param cr: the current row, from the database cursor,
+        @param id: List of calendar event's id.
+        @return: True
+        """
         res = False
         for id in ids:
             ls = base_calendar_id2real_id(id)
@@ -1065,6 +1353,14 @@ rule or repeating pattern for anexception to a recurrence set"),
         return res
 
     def create(self, cr, uid, vals, context={}):
+        """
+        Create new record.
+        @param self: the object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param vals: dictionary of every field value.
+        @return: new created record id.
+        """
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date')
@@ -1073,17 +1369,38 @@ rule or repeating pattern for anexception to a recurrence set"),
 calendar_event()
 
 class calendar_todo(osv.osv):
+    """ Calendar Task """
+
     _name = "calendar.todo"
     _inherit = "calendar.event"
     _description = "Calendar Task"
 
     def _get_date(self, cr, uid, ids, name, arg, context):
+        """ Get Date
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of calendar todo's IDs.
+            @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
+            @param context: A standard dictionary for contextual values
+        """
+
         res = {}
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = event.date_start
         return res
 
     def _set_date(self, cr, uid, id, name, value, arg, context):
+        """ Set Date
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param id: calendar's ID.
+            @param value: Get Value
+            @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
+            @param context: A standard dictionary for contextual values
+        """
+
         event = self.browse(cr, uid, id, context=context)
         cr.execute("UPDATE %s set date_start='%s' where id=%s"  \
                            % (self._table, value, id))
@@ -1091,33 +1408,50 @@ class calendar_todo(osv.osv):
 
     _columns = {
         'date': fields.function(_get_date, method=True, fnct_inv=_set_date, \
-                            string='Duration', store=True, type='datetime'), 
-        'duration': fields.integer('Duration'), 
+                            string='Duration', store=True, type='datetime'),
+        'duration': fields.integer('Duration'),
     }
-    
+
     __attribute__ = {}
-    
-    
+
+
 calendar_todo()
- 
+
 class ir_attachment(osv.osv):
     _name = 'ir.attachment'
     _inherit = 'ir.attachment'
 
     def search_count(self, cr, user, args, context=None):
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param user: the current user’s ID for security checks,
+            @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
+            @param context: A standard dictionary for contextual values
+        """
+
         args1 = []
         for arg in args:
             args1.append(map(lambda x:str(x).split('-')[0], arg))
         return super(ir_attachment, self).search_count(cr, user, args1, context)
 
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
+            @param offset: The Number of Results to pass,
+            @param limit: The Number of Results to Return,
+            @param context: A standard dictionary for contextual values
+        """
+
         new_args = args
         for i, arg in enumerate(new_args):
             if arg[0] == 'res_id':
                 new_args[i] = (arg[0], arg[1], base_calendar_id2real_id(arg[2]))
-        return super(ir_attachment, self).search(cr, uid, new_args, offset=offset, 
-                            limit=limit, order=order, 
+        return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
+                            limit=limit, order=order,
                             context=context, count=False)
 ir_attachment()
 
@@ -1126,17 +1460,31 @@ class ir_values(osv.osv):
 
     def set(self, cr, uid, key, key2, name, models, value, replace=True, \
             isobject=False, meta=False, preserve_user=False, company=False):
+
+        """ set IR Values
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param model: Get The Model """
+
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
                 new_model.append((data[0], base_calendar_id2real_id(data[1])))
             else:
                 new_model.append(data)
-        return super(ir_values, self).set(cr, uid, key, key2, name, new_model,\
+        return super(ir_values, self).set(cr, uid, key, key2, name, new_model, \
                     value, replace, isobject, meta, preserve_user, company)
 
     def get(self, cr, uid, key, key2, models, meta=False, context={}, \
              res_id_req=False, without_user=True, key2_req=True):
+
+        """ Get IR Values
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param model: Get The Model """
+
         new_model = []
         for data in models:
             if type(data) in (list, tuple):
@@ -1152,8 +1500,17 @@ class ir_model(osv.osv):
 
     _inherit = 'ir.model'
 
-    def read(self, cr, uid, ids, fields=None, context={}, 
+    def read(self, cr, uid, ids, fields=None, context={},
             load='_classic_read'):
+
+        """ Read IR Model
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of IR Model’s IDs.
+            @param context: A standard dictionary for contextual values """
+
+
         data = super(ir_model, self).read(cr, uid, ids, fields=fields, \
                         context=context, load=load)
         if data:
@@ -1166,16 +1523,22 @@ ir_model()
 class virtual_report_spool(web_services.report_spool):
 
     def exp_report(self, db, uid, object, ids, datas=None, context=None):
+
+        """ Export Report
+            @param self: The object pointer
+            @param db: get the current database,
+            @param uid: the current user’s ID for security checks,
+            @param context: A standard dictionary for contextual values """
+
+
         if object == 'printscreen.list':
             return super(virtual_report_spool, self).exp_report(db, uid, \
                             object, ids, datas, context)
         new_ids = []
         for id in ids:
             new_ids.append(base_calendar_id2real_id(id))
-        if datas is None:
-            datas = {}
-        if datas.get('id',False):
-            datas['id'] = base_calendar_id2real_id(datas['id'])        
+        if datas.get('id', False):
+            datas['id'] = base_calendar_id2real_id(datas['id'])
         return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
 
 virtual_report_spool()
@@ -1184,21 +1547,29 @@ class res_users(osv.osv):
     _inherit = 'res.users'
 
     def _get_user_avail(self, cr, uid, ids, context=None):
+
+        """ Get USer Availability
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of res user’s IDs.
+            @param context: A standard dictionary for contextual values """
+
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         res = {}
         attendee_obj = self.pool.get('calendar.attendee')
         attendee_ids = attendee_obj.search(cr, uid, [
-                    ('event_date', '<=', current_datetime), ('event_end_date', '<=', current_datetime), 
+                    ('event_date', '<=', current_datetime), ('event_end_date', '<=', current_datetime),
                     ('state', '=', 'accepted'), ('user_id', 'in', ids)
                     ])
 
-        result = cr.dictfetchall()
+       # result = cr.dictfetchall()
         for attendee_data in attendee_obj.read(cr, uid, attendee_ids, ['user_id']):
             user_id = attendee_data['user_id']
             status = 'busy'
             res.update({user_id:status})
 
-        #TOCHECK: Delegated Event        
+        #TOCHECK: Delegated Event
         for user_id in ids:
             if user_id not in res:
                 res[user_id] = 'free'
@@ -1206,14 +1577,21 @@ class res_users(osv.osv):
         return res
 
     def _get_user_avail_fun(self, cr, uid, ids, name, args, context=None):
+
+        """ Get USer Availability Function
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of res user’s IDs.
+            @param context: A standard dictionary for contextual values """
+
         return self._get_user_avail(cr, uid, ids, context=context)
 
     _columns = {
             'availability': fields.function(_get_user_avail_fun, type='selection', \
                     selection=[('free', 'Free'), ('busy', 'Busy')], \
-                    string='Free/Busy', method=True), 
+                    string='Free/Busy', method=True),
     }
 res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

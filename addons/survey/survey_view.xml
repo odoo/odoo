@@ -243,8 +243,6 @@
                         string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
 					<button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                         string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
-					<button name="%(wizard_print_survey)d" states="open,draft,close,cancel"
-                                	string="Print Survey" type="action" icon="gtk-print" context="{'active':True,'survey_id': active_id}"/>
 					<button name="%(survey_browse_response)d" states="open,draft,close,cancel"
                                 	string="Print Answer" type="action" icon="gtk-print"/>
                 </tree>
@@ -497,10 +495,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Question">
-                    <field name="question" colspan="4" select="1"/>
-                    <field name="page_id" select="1"/>
+                    <field name="question" colspan="4"/>
+                    <field name="page_id"/>
                     <field name="sequence"/>
-                    <field name="tot_resp" select="2"/>
+                    <field name="tot_resp"/>
                     <field name="type" on_change="on_change_type(type)"/>
                     <field name="in_visible_rating_weight" invisible="1"/>
                     <field name="in_visible_menu_choice" invisible="1"/>
@@ -637,11 +635,25 @@
             <field name="arch" type="xml">
                 <tree string="Survey Question">
 					<field name="sequence" string="Seq"/>
-                    <field name="question" colspan="4" select="1"/>
-                    <field name="page_id" select="1"/>
-                    <field name="survey" select="1"/>
-                    <field name="type" select="2" />
+                    <field name="question"/>
+                    <field name="page_id"/>
+                    <field name="survey"/>
+                    <field name="type"/>
                 </tree>
+            </field>
+        </record>
+
+       <record id="survey_question_search" model="ir.ui.view">
+            <field name="name">survey_question_search</field>
+            <field name="model">survey.question</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Question">
+                    <field name="question"/>
+                    <field name="page_id"/>
+                    <field name="survey" widget="selection"/>
+                    <field name="type"/>
+               </search>
             </field>
         </record>
 
@@ -651,6 +663,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="survey_question_tree"></field>
+             <field name="search_view_id" ref="survey_question_search"/>
         </record>
 
         <!--menuitem name="Survey Question" id="menu_survey_question_form1"
@@ -663,9 +676,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Question">
-                    <field name="question" colspan="4" select="1"/>
+                    <field name="question" colspan="4"/>
                     <field name="sequence"/>
-                    <field name="tot_resp" select="2"/>
+                    <field name="tot_resp"/>
                     <field name="type" on_change="on_change_type(type)"/>
                     <field name="in_visible_rating_weight" invisible="1"/>
                     <field name="in_visible_menu_choice" invisible="1"/>
@@ -1154,14 +1167,5 @@
 			action="action_view_survey_name" parent="menu_answer_surveys"
 			groups="group_survey_manager,group_survey_user" icon="STOCK_INDEX"/>
 
-		<menuitem name="Browse Answers" id="menu_browse_survey_response"
-			action="action_browse_survey_response" parent="menu_reporting"
-			groups="group_survey_manager" icon="STOCK_PRINT_PREVIEW"/>
-
-		<menuitem action="wizard_browse_answer" id="menu_wizard_browse_answer"
-			parent="menu_reporting" type="wizard" icon="STOCK_PRINT" groups="group_survey_manager"/>
-
-		<menuitem action="wizard_print_survey_statistics" id="menu_wizard_print_survey_statistics"
-			parent="menu_reporting" type="wizard" icon="STOCK_PRINT" groups="group_survey_manager"/>
     </data>
 </openerp>

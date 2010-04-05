@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    
+    <!-- Phonecall to Phonecall view -->
+    
+        <record model="ir.ui.view" id="phonecall_to_phonecall_view">
+            <field name="name">crm.phonecall2phonecall.form</field>
+            <field name="model">crm.phonecall2phonecall</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Schedule Other Call">
+                		<field name="name"/>
+						<field name="user_id" />
+						<field name="date" string="Planned Date"/>
+						<field name="section_id"/>
+						<separator string=" " colspan="4"/>
+                    <group colspan="4" col="3" >
+                    	<label string=" " />
+                        <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
+                        <button name="action_apply" type="object" string="_Schedule" icon="gtk-go-forward" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+<!-- Phonecall to Phonecall action -->
+
+        <record model="ir.actions.act_window" id="phonecall_to_phonecall_act">
+            <field name="name">Schedule Other Call</field>
+            <field name="res_model">crm.phonecall2phonecall</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="phonecall_to_phonecall_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>   

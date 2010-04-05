@@ -30,39 +30,41 @@ class survey_form(report_rml):
         _divide_columns_for_matrix = 0.7
         _display_ans_in_rows = 5
         _pageSize = ('29.7cm','21.1cm')
-        if datas.has_key('form') and datas['form']['orientation']=='vertical':
-            if datas['form']['paper_size']=='letter':
+        if datas.has_key('form') and datas['form'].get('orientation','') == 'vertical':
+            if datas['form'].get('paper_size','') == 'letter':
                 _pageSize = ('21.6cm','27.9cm')
-            elif datas['form']['paper_size']=='legal':
+            elif datas['form'].get('paper_size','') == 'legal':
                 _pageSize = ('21.6cm','35.6cm')
-            elif datas['form']['paper_size']=='a4':
+            elif datas['form'].get('paper_size','') == 'a4':
                 _pageSize = ('21.1cm','29.7cm')
-        elif datas.has_key('form') and datas['form']['orientation']=='horizontal':
-            if datas['form']['paper_size']=='letter':
+        elif datas.has_key('form') and datas['form'].get('orientation','') == 'horizontal':
+            if datas['form'].get('paper_size','') == 'letter':
                 _pageSize = ('27.9cm','21.6cm')
-            elif datas['form']['paper_size']=='legal':
+            elif datas['form'].get('paper_size','') == 'legal':
                 _pageSize = ('35.6cm','21.6cm')
-            elif datas['form']['paper_size']=='a4':
+            elif datas['form'].get('paper_size','') == 'a4':
                 _pageSize = ('29.7cm','21.1cm')
 
         _frame_width = tools.ustr(_pageSize[0])
         _frame_height = tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.90))+'cm'
         _tbl_widths = tools.ustr(float(_pageSize[0].replace('cm','')) - float(2.10))+'cm'
+
         rml="""<document filename="Survey Form.pdf">
             <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Form.pdf' author="Martin Simon" allowSplitting="20" >
                 <pageTemplate id="first">
                     <frame id="first" x1="0.0cm" y1="1.0cm" width='"""+_frame_width+"""' height='"""+_frame_height+"""'/>
                     <pageGraphics>
                         <lineMode width="1.0"/>
-                        <lines>1.0cm """+tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00))+'cm'+"""</lines>
-                        <lines>1.0cm """+tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00))+'cm'+""" 1.0cm 1.00cm</lines>
-                        <lines>"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" 1.00cm</lines>
-                        <lines>1.0cm 1.00cm """+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" 1.00cm</lines>"""
+                        <lines>1.0cm """ + tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00)) + 'cm' + """ """+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00)) + 'cm' + """</lines>
+                        <lines>1.0cm """ + tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00)) +'cm'+ """ 1.0cm 1.00cm</lines>
+                        <lines>""" + tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm' + """ """ + tools.ustr(float(_pageSize[1].replace('cm','')) - float(1.00))+'cm'+""" """+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00)) + 'cm' + """ 1.00cm</lines>
+                        <lines>1.0cm 1.00cm """ + tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+""" 1.00cm</lines>"""
+
         if datas.has_key('form') and datas['form']['page_number']:
             rml +="""
                     <fill color="gray"/>
                     <setFont name="Helvetica" size="10"/>
-                    <drawRightString x='"""+tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00))+'cm'+"""' y="0.6cm">Page : <pageNumber/> </drawRightString>"""
+                    <drawRightString x='""" + tools.ustr(float(_pageSize[0].replace('cm','')) - float(1.00)) + 'cm' + """' y="0.6cm">Page : <pageNumber/> </drawRightString>"""
         rml +="""</pageGraphics>
                 </pageTemplate>
             </template>
@@ -158,9 +160,10 @@ class survey_form(report_rml):
                     <blockTable colWidths='"""+_tbl_widths+"""' style="note_table">
                         <tr><td><para style="descriptive_text">""" + to_xml(tools.ustr(survey.note)) + """</para><para style="P2"><font></font></para></td></tr>
                     </blockTable>"""
+
             seq = 0
             for page in survey.page_ids:
-                seq+=1
+                seq += 1
                 rml += """
                 <blockTable colWidths='"""+_tbl_widths+"""' style="page_tbl">
                     <tr><td><para style="page">"""+ tools.ustr(seq) + """. """ + to_xml(tools.ustr(page.title)) + """</para></td></tr>
@@ -169,9 +172,10 @@ class survey_form(report_rml):
                     rml += """<para style="P2"></para><blockTable colWidths='"""+_tbl_widths+"""' style="note_table">
                                 <tr><td><para style="descriptive_text">""" + to_xml(tools.ustr(page.note or '')) + """</para></td></tr>
                             </blockTable>"""
+
                 for que in page.question_ids:
-                    cols_widhts=[]
-                    rml +="""
+                    cols_widhts = []
+                    rml += """
                     <para style="P2"><font></font></para>
                     <blockTable colWidths='"""+_tbl_widths+"""' style="question_tbl">
                         <tr><td><para style="question">"""  + to_xml(tools.ustr(que.question)) + """</para></td></tr>
@@ -180,8 +184,8 @@ class survey_form(report_rml):
                     if que.type in ['descriptive_text']:
                         cols_widhts.append(float(_tbl_widths.replace('cm','')))
                         colWidths = "cm,".join(map(tools.ustr, cols_widhts))
-                        colWidths = colWidths+'cm'
-                        rml+="""
+                        colWidths = colWidths + 'cm'
+                        rml += """
                         <blockTable colWidths=" """ + colWidths + """ " style="ans_tbl">
                             <tr>
                                 <td>
@@ -189,8 +193,9 @@ class survey_form(report_rml):
                                 </td>
                             </tr>
                         </blockTable>"""
+
                     elif que.type in ['multiple_choice_multiple_ans','multiple_choice_only_one_ans']:
-                        answer=[]
+                        answer = []
                         for ans in que.answer_choice_ids:
                             answer.append(to_xml(tools.ustr((ans.answer))))
 
@@ -207,18 +212,19 @@ class survey_form(report_rml):
                         for divide in divide_list:
                             a = _divide_columns_for_matrix*len(divide)
                             b = float(_tbl_widths.replace('cm','')) - float(a)
-                            cols_widhts=[]
+                            cols_widhts = []
+
                             for div in range(0,len(divide)):
                                 cols_widhts.append(float(a/len(divide)))
                                 cols_widhts.append(float(b/len(divide)))
                             colWidths = "cm,".join(map(tools.ustr, cols_widhts))
-                            colWidths = colWidths+'cm'
+                            colWidths = colWidths +'cm'
                             rml+="""<blockTable colWidths=" """ + colWidths + """ " style="ans_tbl">
                                         <tr>"""
                             for div in range(0,len(divide)):
-                               if divide[div]!='':
+                               if divide[div] != '':
                                    if que.type == 'multiple_choice_multiple_ans':
-                                           rml+="""
+                                           rml += """
                                            <td>
                                                <illustration>
                                                    <rect x="0.1cm" y="-0.4cm" width="0.5 cm" height="0.5cm" fill="no" stroke="yes"/>
@@ -226,7 +232,7 @@ class survey_form(report_rml):
                                            </td>
                                            <td><para style="answer">""" + divide[div] + """</para></td>"""
                                    else:
-                                       rml+="""
+                                       rml += """
                                        <td>
                                            <illustration>
                                                <circle x="0.3cm" y="-0.18cm" radius="0.23 cm" fill="no" stroke="yes"/>
@@ -234,11 +240,12 @@ class survey_form(report_rml):
                                        </td>
                                        <td><para style="answer">""" + divide[div] + """</para></td>"""
                                else:
-                                   rml+="""
+                                   rml += """
                                    <td></td>
                                    <td></td>"""
-                            rml+="""
+                            rml += """
                             </tr></blockTable>"""
+
                     elif que.type in ['matrix_of_choices_only_one_ans','rating_scale','matrix_of_choices_only_multi_ans','matrix_of_drop_down_menus']:
                         if len(que.column_heading_ids):
                             cols_widhts.append(float(_tbl_widths.replace('cm',''))/float(2.0))
@@ -246,42 +253,45 @@ class survey_form(report_rml):
                                 cols_widhts.append(float((float(_tbl_widths.replace('cm',''))/float(2.0))/len(que.column_heading_ids)))
                         else:
                             cols_widhts.append(float(_tbl_widths.replace('cm','')))
-                        tmp=0.0
+
+                        tmp = 0.0
                         sum = 0.0
                         i = 0
                         if que.comment_column:
                             for col in cols_widhts:
-                                if i==0:
+                                if i == 0:
                                     cols_widhts[i] = cols_widhts[i]/2.0
                                     tmp = cols_widhts[i]
                                 sum += col
-                                i+=1
+                                i += 1
                             cols_widhts.append(round(tmp,2))
                         colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                         colWidths = colWidths+'cm'
                         matrix_ans = ['',]
+
                         for col in que.column_heading_ids:
                             if col.title not in matrix_ans:
                                 matrix_ans.append(col.title)
                         if que.comment_column:
                             matrix_ans.append(to_xml(tools.ustr(que.column_name)))
-                        rml+="""<blockTable colWidths=" """ + colWidths + """ " style="ans_tbl">
-                            <tr>"""
+                        rml+="""<blockTable colWidths=" """ + colWidths + """ " style="ans_tbl"><tr>"""
+
                         for mat_col in matrix_ans:
-                            rml+="""<td><para style="response">""" + to_xml(tools.ustr(mat_col)) + """</para></td>"""
-                        rml+="""</tr></blockTable>"""
-                        i=0
+                            rml += """<td><para style="response">""" + to_xml(tools.ustr(mat_col)) + """</para></td>"""
+                        rml += """</tr></blockTable>"""
+                        i = 0
                         for ans in que.answer_choice_ids:
-                            if i%2!=0:
+                            if i%2 != 0:
                                 style='ans_tbl_white'
                             else:
                                 style='ans_tbl_gainsboro'
-                            i+=1
-                            rml+="""
+                            i += 1
+                            rml += """
                             <blockTable colWidths=" """ + colWidths + """ " style='"""+style+"""'>
                             <tr><td><para style="answer">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>"""
                             rec_width = float((sum-tmp)*10+100)
                             value = ""
+
                             if que.type in ['matrix_of_drop_down_menus']:
                                 value = """ <fill color="white"/>
                                     <rect x="-0.1cm" y="-0.45cm" width='""" + tools.ustr(cols_widhts[-1] - 0.5) +"cm" + """' height="0.5cm" fill="yes" stroke="yes" round="0.1cm"/>"""
@@ -292,22 +302,23 @@ class survey_form(report_rml):
                                 value = """ <fill color="white"/>
                                     <rect x="0.1cm" y="-0.4cm" width="0.5 cm" height="0.5cm" fill="yes" stroke="yes" round="0.1cm"/>"""
                             for mat_col in range(1,len(matrix_ans)):
-                                if matrix_ans[mat_col]==que.column_name:
-                                    if mat_col==1:
-                                        rml+="""
+                                if matrix_ans[mat_col] == que.column_name:
+                                    if mat_col == 1:
+                                        rml += """
                                             <td><para style="answer_left">""" + to_xml(tools.ustr(que.column_name)) + """</para></td>"""
                                     else:
-                                      rml+="""<td></td>"""
+                                      rml += """<td></td>"""
                                 else:
-                                    rml+="""<td><illustration>""" + value + """</illustration></td>"""
-                            rml+= """</tr></blockTable>"""
-                    elif que.type in ['multiple_textboxes','numerical_textboxes', 'date_and_time','date','multiple_textboxes_diff_type']:
+                                    rml += """<td><illustration>""" + value + """</illustration></td>"""
+                            rml += """</tr></blockTable>"""
+
+                    elif que.type in ['multiple_textboxes', 'numerical_textboxes', 'date_and_time','date','multiple_textboxes_diff_type']:
                         cols_widhts.append(float(_tbl_widths.replace('cm',''))/2)
                         cols_widhts.append(float(_tbl_widths.replace('cm',''))/2)
                         colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                         colWidths = tools.ustr(colWidths) + 'cm'
                         for ans in que.answer_choice_ids:
-                            rml +="""<para style="P1"></para>
+                            rml += """<para style="P1"></para>
                             <blockTable colWidths=" """+ colWidths + """ " style="ans_tbl">
                                 <tr>
                                 <td><para style="answer">""" + to_xml(tools.ustr(ans.answer)) + """</para></td>
@@ -318,10 +329,11 @@ class survey_form(report_rml):
                                     </td>
                                 </tr>
                             </blockTable>"""
+
                     elif que.type in ['comment']:
                         cols_widhts.append(float(_tbl_widths.replace('cm','')))
                         colWidths = "cm,".join(map(tools.ustr, cols_widhts))
-                        rml+="""<blockTable colWidths=" """ + colWidths + """cm " style="ans_tbl">
+                        rml += """<blockTable colWidths=" """ + colWidths + """cm " style="ans_tbl">
                             <tr>
                                 <td><para style="comment"><font color="white"> </font></para>
                                     <illustration>
@@ -330,10 +342,11 @@ class survey_form(report_rml):
                                 </td>
                             </tr>
                         </blockTable>"""
+
                     elif que.type in ['single_textbox']:
                         cols_widhts.append(float(_tbl_widths.replace('cm','')))
                         colWidths = "cm,".join(map(tools.ustr, cols_widhts))
-                        rml+="""<para style="P2"><font color="white"> </font></para>
+                        rml += """<para style="P2"><font color="white"> </font></para>
                         <blockTable colWidths=" """ + colWidths + """cm " style="ans_tbl">
                             <tr>
                                 <td>
@@ -343,39 +356,44 @@ class survey_form(report_rml):
                                 </td>
                             </tr>
                         </blockTable>"""
+
                     elif que.type in ['table']:
                         tbl_width = float(_tbl_widths.replace('cm',''))
                         for i in range(0,len(que.column_heading_ids)):
                             cols_widhts.append(tbl_width/float(len(que.column_heading_ids)))
                         colWidths = "cm,".join(map(tools.ustr, cols_widhts))
                         colWidths = colWidths+'cm'
-                        rml+="""<blockTable colWidths=" """ + colWidths + """ " style="tbl"><tr>"""
+                        rml += """<blockTable colWidths=" """ + colWidths + """ " style="tbl"><tr>"""
                         for col in que.column_heading_ids:
                             rml+="""<td><para style="terp_tblheader_Details">""" + to_xml(tools.ustr(col.title)) + """</para></td>"""
-                        rml+="""</tr></blockTable>"""
-                        i=0
+                        rml += """</tr></blockTable>"""
+                        i = 0
                         for r in range(0,que.no_of_rows):
-                            if i%2!=0:
-                                style='tbl_white'
+                            if i%2 != 0:
+                                style = 'tbl_white'
                             else:
-                                style='tbl_gainsboro'
-                            i+=1
-                            rml+="""<blockTable colWidths=" """ + colWidths + """ " style='"""+style+"""'><tr>"""
+                                style = 'tbl_gainsboro'
+                            i += 1
+                            rml += """<blockTable colWidths=" """  + colWidths + """ " style='"""+style+"""'><tr>"""
                             for c in que.column_heading_ids:
-                               rml+="""
+                               rml += """
                                 <td><para style="terp_default_9"><font color="white"> </font></para></td>"""
-                            rml+="""</tr></blockTable>"""
+                            rml += """</tr></blockTable>"""
+
             if datas.has_key('form') and not datas['form']['without_pagebreak']:
-                rml+="""<pageBreak/>"""
+                rml += """<pageBreak/>"""
             elif not datas.has_key('form'):
-                rml+="""<pageBreak/>"""
+                rml += """<pageBreak/>"""
             else:
-                rml+="""<para style="P2"><font></font></para>"""
-        rml+="""</story></document>"""
+                rml += """<para style="P2"><font></font></para>"""
+
+        rml += """</story></document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
+
         return (pdf, report_type)
+
 survey_form('report.survey.form', 'survey','','')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
