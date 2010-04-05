@@ -41,11 +41,9 @@ class product_product(osv.osv):
 #                    price += _compute_price(sbom) * sbom.product_qty                    
 #            else:
             parent_bom = bom_obj.search(cr, uid, [('bom_id', '=', False)])
-            print "========", bom.product_id.name
             for p in parent_bom:
                 test_obj = bom_obj.browse(cr, uid, p)
                 print test_obj
-                print "XXXXXXXXXXXXX", p, test_obj.child_ids
                 
 #            if no_child_bom and bom.id not in no_child_bom:
 #                other_bom = bom_obj.browse(cr, uid, no_child_bom)[0]
