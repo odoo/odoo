@@ -55,26 +55,26 @@ class project_issue(osv.osv):
             model_id = model_ids[0]
 
         res = {}
-        for lead in self.browse(cr, uid, ids , context):
+        for project in self.browse(cr, uid, ids , context):
             for field in fields:
-                res[lead.id] = {}
+                res[project.id] = {}
                 duration = 0
                 if field == 'day_open':
-                    if lead.date_open:
-                        date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_open = datetime.strptime(lead.date_open, "%Y-%m-%d %H:%M:%S")
+                    if project.date_open:
+                        date_create = datetime.strptime(project.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_open = datetime.strptime(project.date_open, "%Y-%m-%d %H:%M:%S")
 
                         ans = date_open - date_create
                         duration =  float(ans.days) + (float(ans.seconds) / 86400)
 
                 elif field == 'day_close':
-                    if lead.date_closed:
-                        date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_close = datetime.strptime(lead.date_closed, "%Y-%m-%d %H:%M:%S")
+                    if project.date_closed:
+                        date_create = datetime.strptime(project.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_close = datetime.strptime(project.date_closed, "%Y-%m-%d %H:%M:%S")
 
                         ans = date_close - date_create
                         duration =  float(ans.days) + (float(ans.seconds) / 86400)
-                res[lead.id][field] = abs(int(duration))
+                res[project.id][field] = abs(int(duration))
         return res
 
     _columns = {
