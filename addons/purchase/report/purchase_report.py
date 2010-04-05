@@ -52,7 +52,7 @@ class report_purchase_order(osv.osv):
         'quantity': fields.float('# of Products', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'price_average': fields.float('Average Price', readonly=True),
-        'count': fields.integer('# of Lines', readonly=True),
+        'nbr': fields.integer('# of Lines', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
 
@@ -75,7 +75,7 @@ class report_purchase_order(osv.osv):
                     l.product_id,
                     t.categ_id as category_id,
                     sum(l.product_qty*u.factor) as quantity,
-                    count(*),
+                    count(*) as nbr,
                     sum(l.product_qty*l.price_unit) as price_total,
                     (sum(l.product_qty*l.price_unit)/sum(l.product_qty*u.factor))::decimal(16,2) as price_average
                 from purchase_order s
