@@ -47,6 +47,7 @@ class crm_opportunity(osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesman'),
         'phone': fields.char("Phone", size=64),
+        'date_deadline': fields.date('Expected Closing'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
