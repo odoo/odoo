@@ -358,6 +358,8 @@ class task(osv.osv):
         return res
 
     def do_close(self, cr, uid, ids, *args):
+        mail_send = False
+        mod_obj = self.pool.get('ir.model.data')
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
@@ -373,6 +375,9 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
+                elif project.warn_manager:
+                    task_id = ids[0]
+                    mail_send = True
             self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
@@ -382,6 +387,20 @@ class task(osv.osv):
                             reopen = False
                     if reopen:
                         self.do_reopen(cr, uid, [parent_id.id])
+        if mail_send:
+            model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_project_close_task')])
+            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
+            return {
+                'name': _('Email Send to Customer'),
+                'view_type': 'form',
+                'context': {'task_id': task_id,}, # improve me
+                'view_mode': 'tree,form',
+                'res_model': 'close.task',
+                'views': [(resource_id,'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True
+                    }
         return True
 
     def do_reopen(self, cr, uid, ids, *args):

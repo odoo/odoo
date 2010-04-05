@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import close_task
+import project_close_task
 import task_delegate
 import duplicate_template_wizard
 
