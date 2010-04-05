@@ -88,7 +88,6 @@ class Eval(YamlTag):
     
 class Ref(YamlTag):
     def __init__(self, *args, **kwargs):
-        print "kwargs %s" % kwargs
         super(Ref, self).__init__(*args, **kwargs)
     
 class IrSet(YamlTag):
