@@ -13,7 +13,6 @@ class crm_opportunity_report(osv.osv):
     _name = "crm.opportunity.report"
     _auto = False
     _inherit = "crm.case.report"
-
     _columns = {
         'probability': fields.float('Avg. Probability', readonly=True,group_operator='avg'),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
@@ -51,7 +50,14 @@ class crm_opportunity_report(osv.osv):
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     crm_opportunity c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.stage_id,c.categ_id,c.partner_id,company_id
+                group by
+                    to_char(c.create_date, 'YYYY'),
+                    to_char(c.create_date, 'MM'),
+                    c.state,
+                    c.user_id,
+                    c.section_id,
+                    c.stage_id,
+                    c.categ_id,
+                    c.partner_id,company_id
             )""")
 crm_opportunity_report()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
