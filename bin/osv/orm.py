@@ -1119,7 +1119,6 @@ class orm_template(object):
             for r in res.keys():
                 if r not in fields:
                     del res[r]
-        print 'Result from fields get', res
         return res
 
     #
@@ -2902,7 +2901,7 @@ class orm(orm_template):
         :raise UserError: if the record is default property for other records
 
         """
-                
+
         if not ids:
             return True
         if isinstance(ids, (int, long)):
