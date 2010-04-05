@@ -412,10 +412,11 @@ class task(osv.osv):
         if mail_send:
             model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_project_close_task')])
             resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
+            args[0].update({'task_id': task_id})
             return {
                 'name': _('Email Send to Customer'),
                 'view_type': 'form',
-                'context': {'task_id': task_id,}, # improve me
+                'context': args[0], # improve me
                 'view_mode': 'tree,form',
                 'res_model': 'close.task',
                 'views': [(resource_id,'form')],

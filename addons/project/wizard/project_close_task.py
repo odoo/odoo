@@ -37,15 +37,18 @@ class project_close_task(osv.osv_memory):
 
     def _get_email(self, cr, uid, context={}):
         email = ''
-        task = self.pool.get('project.task').browse(cr, uid, context['active_ids'][0])
-        partner_id = task.partner_id or task.project_id.partner_id
-        if partner_id and partner_id.address[0].email:
-            email = partner_id.address[0].email
+        if 'task_id' in context:
+            task = self.pool.get('project.task').browse(cr, uid, context['task_id'])
+            partner_id = task.partner_id or task.project_id.partner_id
+            if partner_id and partner_id.address[0].email:
+                email = partner_id.address[0].email
         return email
 
     def _get_desc(self, cr, uid, context={}):
-        task = self.pool.get('project.task').browse(cr, uid, context['active_ids'][0])
-        return task.description or task.name
+        if 'task_id' in context:
+            task = self.pool.get('project.task').browse(cr, uid, context['task_id'])
+            return task.description or task.name
+        return ''
 
     _defaults={
        'email': _get_email,
@@ -58,29 +61,30 @@ class project_close_task(osv.osv_memory):
         close_task = self.read(cr, uid, ids[0], [])
         to_adr = close_task['email']
         description = close_task['description']
-        for task in self.pool.get('project.task').browse(cr, uid, [context['task_id']], context=context):
-            project = task.project_id
-            subject = "Task '%s' closed" % task.name
-            if task.user_id and task.user_id.address_id and task.user_id.address_id.email:
-                from_adr = task.user_id.address_id.email
-                signature = task.user_id.signature
-            else:
-                raise osv.except_osv(_('Error'), _("Couldn't send mail because your email address is not configured!"))
-            if to_adr:
-                val = {
-                    'name': task.name,
-                    'user_id': task.user_id.name,
-                    'task_id': "%d/%d" % (project.id, task.id),
-                    'date_start': task.date_start,
-                    'date_end': task.date_end,
-                    'state': task.state
-                }
-                header = (project.warn_header or '') % val
-                footer = (project.warn_footer or '') % val
-                body = u'%s\n%s\n%s\n\n-- \n%s' % (header, description, footer, signature)
-                email(from_adr, [to_adr], subject, body.encode('utf-8'), email_bcc=[from_adr])
-            else:
-                raise osv.except_osv(_('Error'), _("Couldn't send mail because the contact for this task (%s) has no email address!") % contact.name)
+        if 'task_id' in context:
+            for task in self.pool.get('project.task').browse(cr, uid, [context['task_id']], context=context):
+                project = task.project_id
+                subject = "Task '%s' closed" % task.name
+                if task.user_id and task.user_id.address_id and task.user_id.address_id.email:
+                    from_adr = task.user_id.address_id.email
+                    signature = task.user_id.signature
+                else:
+                    raise osv.except_osv(_('Error'), _("Couldn't send mail because your email address is not configured!"))
+                if to_adr:
+                    val = {
+                        'name': task.name,
+                        'user_id': task.user_id.name,
+                        'task_id': "%d/%d" % (project.id, task.id),
+                        'date_start': task.date_start,
+                        'date_end': task.date_end,
+                        'state': task.state
+                    }
+                    header = (project.warn_header or '') % val
+                    footer = (project.warn_footer or '') % val
+                    body = u'%s\n%s\n%s\n\n-- \n%s' % (header, description, footer, signature)
+                    email(from_adr, [to_adr], subject, body.encode('utf-8'), email_bcc=[from_adr])
+                else:
+                    raise osv.except_osv(_('Error'), _("Couldn't send mail because the contact for this task (%s) has no email address!") % contact.name)
         return {}
 
 project_close_task()
