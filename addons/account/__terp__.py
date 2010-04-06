@@ -54,6 +54,7 @@ module named account_voucherss
         'wizard/account_move_line_reconcile_select_view.xml',
         'wizard/account_move_journal_view.xml',
         'account_wizard.xml',
+        'wizard/account_open_closed_fiscalyear_view.xml',
         'wizard/account_move_line_unreconcile_select_view.xml',
         'wizard/account_subscription_generate_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',

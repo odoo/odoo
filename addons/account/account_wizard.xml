@@ -32,26 +32,6 @@
         <menuitem action="wizard_fiscalyear_close_state" id="menu_wizard_fy_close_state" parent="menu_account_end_year_treatments" type="wizard"/>
  -->
 
-        <wizard
-            id="wizard_open_closed_fiscalyear"
-            menu="False"
-            model="account.fiscalyear"
-            name="account.open_closed_fiscalyear"
-            string="Cancel Opening Entries"/>
-        <menuitem
-            action="wizard_open_closed_fiscalyear"
-            id="menu_wizard_open_closed_fy"
-            sequence="2"
-            parent="account.menu_account_end_year_treatments" type="wizard"/>
-<!--  period close
-
-
-       <wizard id="wizard_period_close" model="account.period" name="account.period.close" string="Close a Period"/>
-
-      <wizard id="action_account_period_close" model="account.period" name="account.period.close" string="Close a Period"/>
-
-
--->
         <!-- automatic reconcile -->
         <wizard id="wizard_automatic_reconcile" menu="False" model="account.account" name="account.automatic.reconcile" string="Automatic reconciliation"/>
         <menuitem id="next_id_20" name="Reconciliation" parent="menu_finance_periodical_processing"/>
