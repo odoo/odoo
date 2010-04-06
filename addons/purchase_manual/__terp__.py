@@ -31,7 +31,8 @@
     'init_xml': [],
     'update_xml': [
         'purchase_manual_view.xml',
-        'purchase_manual_wizard.xml',
+        'wizard/purchase_line_invoice_view.xml',
+        
     ],
     'demo_xml': [],
     'installable': True,

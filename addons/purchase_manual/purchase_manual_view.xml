@@ -77,7 +77,7 @@
             <field name="view_id" ref="purchase_order_line_form"/>
             <field name="act_window_id" ref="purchase_line_form_action"/>
         </record>
-<!--        <menuitem action="purchase_line_form_action" id="menu_purchase_line_form_action" parent="base.menu_purchase_root"/>-->
+        <menuitem action="purchase_line_form_action" id="menu_purchase_line_form_action" parent="base.menu_purchase_root"/>
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
             <field name="name">Uninvoiced Purchase Order Lines</field>
@@ -99,7 +99,7 @@
             <field name="view_id" ref="purchase_order_line_form"/>
             <field name="act_window_id" ref="purchase_line_form_action2"/>
         </record>
-<!--         <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_purchase_line_form_action"/>-->
+         <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_purchase_line_form_action"/>
 
     </data>
 </openerp>
