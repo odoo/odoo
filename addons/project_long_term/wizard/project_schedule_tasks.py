@@ -23,24 +23,36 @@ from resource.faces import *
 from new import classobj
 import operator
 
+from tools.translate import _
+from osv import osv, fields
+
 import working_calendar as wkcal
 
-import wizard
-import pooler
-from tools.translate import _
+class project_schedule_task(osv.osv_memory):
 
-success_msg = """<?xml version="1.0" ?>
-<form string="Compute Scheduling of Tasks">
-    <label string="Task Scheduling completed successfully."/>
-</form>"""
+    _name = "project.schedule.tasks"
+    _description = 'project.schedule.tasks'
+    _columns = {
+        'msg': fields.char('Message', size=64)
+                }
+    _defaults = {
+         'msg': 'Task Scheduling Completed Successfully'
+                }
 
-class wizard_schedule_task(wizard.interface):
+    def default_get(self, cr, uid, fields_list, context=None):
+        res = super(project_schedule_task, self).default_get(cr, uid, fields_list, context)
+        self.compute_date(cr, uid, context=context)
+        return res
 
-    def _create_resources(self, cr, uid, phase, context={}):
+    def create_resources(self, cr, uid, phase, context=None):
         """
         Return a list of  Resource Class objects for the resources allocated to the phase.
         """
         resource_objs = []
+
+        if context is None:
+            context = {}
+
         for resource in phase.resource_ids:
             res = resource.resource_id
             leaves = []
@@ -57,15 +69,21 @@ class wizard_schedule_task(wizard.interface):
                                           }))
         return resource_objs
 
-    def _compute_date(self, cr, uid, data, context={}):
+    def compute_date(self, cr, uid, context=None):
         """
         Schedule the tasks according to resource available and priority.
         """
-        pool = pooler.get_pool(cr.dbname)
-        phase_obj = pool.get('project.phase')
-        task_obj = pool.get('project.task')
-        user_obj = pool.get('res.users')
-        phase = phase_obj.browse(cr, uid, data['id'], context=context)
+
+        phase_obj = self.pool.get('project.phase')
+        task_obj = self.pool.get('project.task')
+        user_obj = self.pool.get('res.users')
+
+        if context is None:
+            context = {}
+
+        if not 'active_id' in context:
+            return {}
+        phase = phase_obj.browse(cr, uid, context['active_id'], context=context)
         task_ids = map(lambda x : x.id, (filter(lambda x : x.state in ['open', 'draft', 'pending'] , phase.task_ids)))
         if task_ids:
             task_ids.sort()
@@ -78,7 +96,7 @@ class wizard_schedule_task(wizard.interface):
                     start_date = phase.project_id.date_start
             date_start = datetime.datetime.strftime(datetime.datetime.strptime(start_date, "%Y-%m-%d"), "%Y-%m-%d %H:%M")
             calendar_id = phase.project_id.resource_calendar_id.id
-            resources = self._create_resources(cr, uid, phase)
+            resources = self.create_resources(cr, uid, phase)
             priority_dict = {'0': 1000, '1': 800, '2': 500, '3': 300, '4': 100}
             # Create dynamic no of tasks with the resource specified
             def create_tasks(j, eff, priorty=500, obj=False):
@@ -101,7 +119,7 @@ class wizard_schedule_task(wizard.interface):
                 try:
                     resource = reduce(operator.or_, resources)
                 except:
-                    raise wizard.except_wizard(_('Error'), _('Phase must have resources assigned !'))
+                    raise osv.except_osv(_('Error'), _('Phase must have resources assigned !'))
                 minimum_time_unit = 1
                 if calendar_id:            # If project has working calendar
                     working_days = wkcal.compute_working_calendar(cr, uid, calendar_id)
@@ -136,11 +154,6 @@ class wizard_schedule_task(wizard.interface):
                                                                     context=ctx)
                 loop_no +=1
         return {}
-    states = {
-        'init': {
-            'actions': [_compute_date],
-            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok', 'gtk-ok', True)]},
-        }
-    }
-wizard_schedule_task('phase.schedule.tasks')
+
+project_schedule_task()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
