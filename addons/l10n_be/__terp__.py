@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,13 +15,10 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
-{
-    'name': 'Belgium - Plan Comptable Minimum Normalise',
+{   'name': 'Belgium - Plan Comptable Minimum Normalise',
     'version': '1.1',
     'category': 'Localisation/Account Charts',
     'description': """
@@ -34,29 +31,34 @@
     * This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
 
     Wizards provided by this module:
-    * Enlist the partners with their related VAT  and invoiced amounts.Prepares an XML file format.Path to access : Financial Management/Reporting/Listing of VAT Customers.
-    * Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.Path to access : Financial Management/Reporting/Listing of VAT Customers.
+    * Partner VAT Intra: Enlist the partners with their related VAT and invoiced amounts.Prepares an XML file format.
+                           Path to access : Financial Management/Reporting//Legal Statements/Belgium Statements/Partner VAT Listing
+    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.
+                           Path to access : Financial Management/Reporting/Legal Statements/Belgium Statements/Periodical VAT Declaration
+    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.Based on Fiscal year
+                           Path to access : Financial Management/Reporting/Legal Statements/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
     'author': 'Tiny',
-    'depends': [ 
-                    'account', 
-                    'account_report', 
-                    'base_vat', 
-                    'base_iban', 
-                    'account_chart'
+    'depends': [
+                'account',
+                'account_report',
+                'base_vat',
+                'base_iban',
+                'account_chart'
                 ],
     'init_xml': [],
     'update_xml': [
-                    'account_pcmn_belgium.xml', 
-                    'l10n_be_wizard.xml',
-                    'l10n_be_sequence.xml', 
-                    'fiscal_templates.xml',
-                    'security/ir.model.access.csv'
+                'account_pcmn_belgium.xml',
+                'l10n_be_wizard.xml',
+                'wizard/l10n_be_account_vat_declaration_view.xml',
+                'wizard/l10n_be_vat_intra_view.xml',
+                'wizard/l10n_be_partner_vat_listing.xml',
+                'l10n_be_sequence.xml',
+                'fiscal_templates.xml',
+                'security/ir.model.access.csv'
                    ],
-    'demo_xml': [
-                    'account.report.report.csv'
-                ],
+    'demo_xml': ['account.report.report.csv'],
     'installable': True,
     'certificate': '0031977724637',
 }

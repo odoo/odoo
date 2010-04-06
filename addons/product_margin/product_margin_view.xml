@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-
-    <wizard id="action_open_margin" menu="False" model="product.product" name="product.margins" string="Product Margins"/>
-
-<!--    <menuitem id="menu_product_reporting"-->
-<!--        name="Reporting" parent ="product.menu_main_product"-->
-<!--        groups="product.group_product_manager"/>-->
-<!---->
-<!--    <menuitem icon="STOCK_JUSTIFY_FILL" action="action_open_margin" id="menu_action_product_margin" type="wizard" sequence="5" parent="menu_product_reporting" />-->
-
+            
     <record model="ir.ui.view" id="view_product_margin_graph">
             <field name="name">product.margin.graph</field>
             <field name="model">product.product</field>

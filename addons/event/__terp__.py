@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -41,11 +41,14 @@
     'depends': ['crm', 'base_contact', 'account'],
     'init_xml': ['event_data.xml'],
     'update_xml': [
-        'event_wizard.xml',
+        'wizard/event_confirm_registration_view.xml',
         'event_view.xml',
         'event_sequence.xml',
         'security/event_security.xml',
-        'security/ir.model.access.csv'
+        'security/ir.model.access.csv',
+        'wizard/event_registration_view.xml',
+        'wizard/event_registrations_partner.xml',
+        'wizard/event_make_invoice_view.xml',
     ],
     'demo_xml': ['event_demo.xml'],
     'installable': True,

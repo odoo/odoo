@@ -19,28 +19,38 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
+from osv import fields
 
 class calendar_event_edit_all(osv.osv_memory):
-    
+
     def _default_values(self, cr, uid, context={}):
-        """
+        """ Get Default value for Start Date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
         @Return: Get Default value for Start Date
         """
         context_id = context and context.get('active_id', False) or False
         if context_id:
             if context.get('date'):
-                 return context.get('date')
+                return context.get('date')
             else:
                 model = context.get('model', False)
                 model_obj = self.pool.get(model)
                 event = model_obj.read(cr, uid, context_id, ['name', 'location', 'alarm_id'])
-                return event['date']    
-        
+                return event['date']
+
     def _default_deadline(self, cr, uid, context={}):
-        """
+        """ Get Default value for End Date
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param context: A standard dictionary for contextual values
         @return: Get Default value for End Date
         """
+
         context_id = context and context.get('active_id', False) or False
         if context_id:
             if context.get('date_deadline'):
@@ -61,7 +71,7 @@ class calendar_event_edit_all(osv.osv_memory):
         """
         if not context:
             context = {}
-            
+
         context_id = context and context.get('active_id', False) or False
         if context_id:
             for datas in self.read(cr, uid, ids):
@@ -73,17 +83,16 @@ class calendar_event_edit_all(osv.osv_memory):
     _name = "calendar.event.edit.all"
     _description = "Calendar Edit all event"
     _columns = {
-              'name': fields.char('Title', size=64, required=True), 
-              'date': fields.datetime('Start Date', required=True), 
-              'date_deadline': fields.datetime('End Date', required=True), 
-              'location': fields.char('Location', size=124), 
-              'alarm_id': fields.many2one('res.alarm', 'Reminder'), 
-               }
+        'name': fields.char('Title', size=64, required=True),
+        'date': fields.datetime('Start Date', required=True),
+        'date_deadline': fields.datetime('End Date', required=True),
+        'location': fields.char('Location', size=124),
+        'alarm_id': fields.many2one('res.alarm', 'Reminder'),
+    }
     _defaults = {
-                 'date': _default_values, 
-                 'date_deadline': _default_deadline
-             }
-    
+        'date': _default_values,
+        'date_deadline': _default_deadline
+    }
 calendar_event_edit_all()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

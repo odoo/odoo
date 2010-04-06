@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>        
+        <!--   pos.details -->
+        
+		<record id="view_pos_details" model="ir.ui.view">
+            <field name="name">POS Details</field>
+            <field name="model">pos.details</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="POS Details :">
+				    <group col="2" colspan="4">
+				    	<field name="date_start"/>
+				    	<field name="date_end"/>
+                		<button icon='gtk-cancel' special="cancel"
+                			string="Close" />
+                		<button name="print_report" string="Print Report"
+                			colspan="1" type="object" icon="gtk-print" />
+                	</group>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_report_pos_details" model="ir.actions.act_window">
+            <field name="name">Sale Details</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.details</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'record_id' : active_id}</field>
+        </record>
+
+        
+	</data>
+</openerp>	        

@@ -24,7 +24,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <field name="analytic_account_id" position="replace">
-                <field name="analytics_id" />
+                <field name="analytics_id" context="{'journal_id':journal_id}"/>
             </field>
         </field>
     </record>
@@ -45,7 +45,7 @@
         <field name="inherit_id" ref="account.view_move_line_form"/>
         <field name="arch" type="xml">
             <field name="move_id" position="after">
-                <field name="analytics_id" />
+                <field name="analytics_id" context="{'journal_id':journal_id}" />
             </field>
         </field>
     </record>

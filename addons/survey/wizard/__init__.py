@@ -20,10 +20,12 @@
 #
 ##############################################################################
 
-import wizard_survey
-import wizard_print_survey
+import survey_send_invitation
 import survey_print_statistics
 import survey_print_answer
 import survey_browse_answer
+import survey_selection
+import survey_answer
+import survey_print
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

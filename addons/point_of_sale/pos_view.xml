@@ -43,7 +43,7 @@
                             <group colspan="4" col="7">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
-                                <button name="%(pos_discount)d" string="D_iscount" type="action" states="draft"/>
+                                <button name="%(action_pos_discount)d" string="D_iscount" type="action" states="draft"/>
                                 <button name="dummy_button" string="Compute" type="object" />
                             </group>
 
@@ -68,8 +68,8 @@
                                 <button name="%(pos_add_product)d" string="_Add product" type="action" states="draft"/>
                                 -->
 
-                                <button name="%(pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance"/>
-                                <button name="%(o_rec)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
+                                <button name="%(action_pos_payment)d" string="Ma_ke Payment" icon="gtk-ok" type="action" states="draft,advance" context="{'record_id':'active_id'}" />
+                                <button name="%(action_report_pos_receipt)d" string="_Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
 
 
                                 <!--
@@ -663,7 +663,7 @@ invoiced
                     <page string="Other">
                       <field  name="company_discount" colspan="4"/>
                       <field  name="max_diff" colspan="4"/>
-                      <field  name="account_receivable" colspan="4"/>
+                      <field  name="account_receivable" required="1" colspan="4"/>
                     </page>
                 </notebook>
         	</field>
@@ -830,31 +830,31 @@ invoiced
 					action="action_product_output"
 					id="products_for_output_operations"/>
 
-        <wizard
+<!--        <wizard
             string="Refloat Box entries"
             model="account.bank.statement"
             name="pos.entry"
             menu="False"
-            id="pos_entries"/>
+            id="pos_entries"/>-->
+            
         <menuitem name="Register Management" parent="menu_point_root"
             id="menu_point_config" sequence="3"/>
         <menuitem
             name="Input Operations" parent="menu_point_config"
             string="Refloat"
-            action="pos_entries"
-            type="wizard"
-            id="menu_wizard_enter_jrnl" sequence="2" />
-        <wizard
+            action="action_box_entries"
+            id="menu_wizard_enter_jrnl" sequence="3" />
+            
+    <!--    <wizard
             string="Enter negative operations"
             model="account.bank.statement"
             name="pos.out"
             menu="False"
-            id="pos_entries2"/>
+            id="pos_entries2"/>-->
         <menuitem
             name="Output Operations" parent="menu_point_config"
             string="Refloat"
-            action="pos_entries2"
-            type="wizard"
+            action="action_box_out"
             id="menu_wizard_enter_jrnl2" sequence="3" />
 
 <!--        <menuitem name="Sales Waiting Validation" parent="menu_point_config" id="menu_point_ofsale_date_payment"-->
@@ -981,22 +981,29 @@ invoiced
 <!--		<menuitem icon="STOCK_PRINT" action="wizard_pos_payment_report"
 				id="menu_pos_payment_report" parent="menu_cashboxes_by_day" type="wizard" sequence="4"/-->
 
-		<menuitem icon="STOCK_PRINT" action="wizard_pos_sales_user"
-				id="menu_pos_sales_user" parent="menu_trans_pos_tree" type="wizard" sequence="3" groups="base.group_extended" />
+		<menuitem icon="STOCK_PRINT" action="action_report_pos_sale_user"
+				id="menu_pos_sales_user" parent="menu_trans_pos_tree" sequence="3" groups="base.group_extended" />
 
 
-		<menuitem icon="STOCK_PRINT" action="wizard_pos_sales_user_today"
-				id="menu_pos_sales_user_today" parent="menu_trans_pos_tree_today" type="wizard" sequence="2" groups="base.group_extended"/>
+		<menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
+				id="menu_pos_payment_report_date" parent="menu_trans_pos_tree" sequence="5" groups="base.group_extended"/>
+ 
+		<menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
+				id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
+		<menuitem icon="STOCK_PRINT" action="action_pos_sales_user_today"
+				id="menu_pos_sales_user_today" parent="menu_trans_pos_tree_today" sequence="2" groups="base.group_extended"/>
 
-		<menuitem icon="STOCK_PRINT" action="wizard_pos_payment_report_date"
-				id="menu_pos_payment_report_date" parent="menu_trans_pos_tree" type="wizard" sequence="5" groups="base.group_extended"/>
+		<menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
+				id="menu_pos_payment_report_date" parent="menu_trans_pos_tree"  sequence="5" groups="base.group_extended"/>
 
-		<menuitem icon="STOCK_PRINT" action="wizard_pos_payment_report_user"
-				id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" type="wizard" sequence="6" groups="base.group_extended"/>
-		<menuitem icon="STOCK_PRINT" action="wizard_pos_sales_user_today_current_user"
-				id="menu_pos_sales_user_today_current_user" parent="menu_cashboxes_by_day" type="wizard" sequence="7"/>
-    	<menuitem icon="STOCK_PRINT" action="wizard_pos_details"
-				id="menu_pos_details" parent="menu_cashboxes_by_day" type="wizard" />
+		<menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
+				id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
+		<menuitem icon="STOCK_PRINT" action="action_report_pos_sales_user_today_current_user"
+				id="menu_pos_sales_user_today_current_user" parent="menu_cashboxes_by_day"  sequence="7"/>
+
+    	
+    	<menuitem icon="STOCK_PRINT" action="action_report_pos_details"
+				id="menu_pos_details" parent="menu_cashboxes_by_day"  />
 
 
     </data>

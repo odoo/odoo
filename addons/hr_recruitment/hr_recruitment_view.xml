@@ -1,0 +1,268 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    # ------------------------------------------------------
+    # Job Categories
+    # ------------------------------------------------------
+
+    <record id="hr_job_categ_action" model="ir.actions.act_window">
+        <field name="name">Applicant Categories</field>
+        <field name="res_model">crm.case.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+           <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
+        <field name="context">{'object_id':'hr.applicant'}</field>
+    </record>
+    # ------------------------------------------------------
+    # Stage
+    # ------------------------------------------------------
+    <record id="hr_job_stage_act" model="ir.actions.act_window">
+        <field name="name">Applicant Stages</field>
+        <field name="res_model">crm.case.stage</field>
+        <field name="view_type">form</field>
+        <field name="view_id"  ref="crm.crm_case_stage_tree"/>
+        <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
+        <field name="context">{'object_id':'hr.applicant'}</field>
+    </record>
+    <menuitem action="hr_job_stage_act" id="menu_hr_job_stage_act" parent="crm.menu_crm_case_stage"/>
+
+    # ------------------------------------------------------
+    # Jobs
+    # ------------------------------------------------------
+
+    <record model="ir.ui.view" id="crm_case_tree_view_job">
+        <field name="name">Applicants</field>
+        <field name="model">hr.applicant</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Applicants" colors="grey:state in ('cancel','done');blue:state=='pending'">
+                <field name="create_date"/>
+                <field name="partner_name"/>
+                <field name="email_from"/>
+                <field name="partner_phone"/>
+                <field name="job_id"/>
+                <field name="stage_id"/>
+                <field name="survey" invisible="1"/>
+                <field name="response" invisible="1"/>
+                <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
+                <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
+                <field name="priority"/>
+                <field name="type_id" invisible="1"/>
+                <field name="availability" invisible="1"/>
+                <field name="department_id" invisible="context.get('invisible_department', True)"/>
+                <field name="user_id"/>
+                <field name="state"/>
+                <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                <button name="case_close" string="Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
+                <button name="case_cancel" string="Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="crm_case_form_view_job">
+        <field name="name">Jobs - Recruitment Form</field>
+        <field name="model">hr.applicant</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Jobs - Recruitment Form">
+                <group colspan="4" col="8">
+                    <field name="name" string="Subject"/>
+                    <label string="Stage: " align="1.0"/>
+                    <group colspan="1" col="2">
+                        <field name="stage_id" nolabel="1"/>
+                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                    </group>
+                    <field name="user_id"/>
+                    <button string="Schedule a Phone Call"
+                        name="%(wizard_hr_job_reschedule_phone_call)d" icon="gtk-redo" type="action"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
+						icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
+                    <newline/>
+                    <field name="partner_name"/>
+                    <field name="job_id"/>
+                    <field name="department_id" widget="selection"/>
+                    <button name="%(wizard_hr_job_meeting_set)d" string="Schedule Meeting" icon="terp-hr" type="action"/>
+					<button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
+						icon="gtk-print" context="{'survey_id': survey, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
+				</group>
+                <notebook colspan="4">
+                    <page string="Job Info">
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Contact"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
+                            <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
+                            <field name="email_from"/>
+                            <field name="partner_phone"/>
+                            <field name="partner_mobile"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Contract Data"/>
+                            <field name="availability"/>
+                            <field name="salary_expected"/>
+                            <field name="salary_proposed"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Qualification"/>
+                            <field name="type_id"/>
+                            <field name="priority" string="Appreciation"/>
+                        </group>
+                        <group col="2" colspan="2">
+                           <separator colspan="2" string="Dates"/>
+                           <field name="create_date"/>
+                           <field name="write_date"/>
+                           <field name="date_closed"/>
+                        </group>
+                        <separator colspan="4" string="Status"/>
+                        <group col="8" colspan="4">
+                            <field name="state"/>
+                            <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                            <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                            <button name="case_close" string="Hired" states="open,draft,pending" type="object" icon="terp-partner"/>
+                            <button name="case_cancel" string="Refused" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+                            <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
+                        </group>
+                   </page>
+                   <page string="Internal Notes">
+                       <field name="description" nolabel="1" colspan="4"/>
+                   </page>
+                   <page string="History" groups="base.group_extended">
+                       <field name="id"/>
+                       <field name="active"/>
+                       <field name="log_ids" nolabel="1" colspan="4">
+                           <form string="Actions">
+                               <separator string="Action Information" colspan="4"/>
+                               <field name="name" colspan="4"/>
+                               <field name="date"/>
+                               <field name="user_id"/>
+                           </form>
+                       </field>
+                   </page>
+                   <page string="Emails" groups="base.group_extended">
+                       <group colspan="4">
+                           <field colspan="4" name="email_cc" string="CC"/>
+                       </group>
+                       <field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+                        <form string="Communication history">
+                            <group col="7" colspan="4">
+                                <field name="date"/>
+                                <field name="email_to"/>
+                                <field name="email_from"/>
+                                <button
+                                     string="Add a CC"
+                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
+                                               icon="gtk-add" type="action"/>
+                                   </group>
+                                   <newline/>
+                                   <field name="description" colspan="4" nolabel="1"/>
+                                   <button colspan="4"
+                                   	string="Reply to Last Email"
+                                   	name="%(crm.action_crm_send_mail)d"
+                                   	context="{'mail':'reply', 'model': 'hr.applicant'}"
+                                   	icon="gtk-undo" type="action" />
+                               </form>
+                               <tree string="Communication history">
+                                   <field name="description"/>
+                                   <field name="email_to"/>
+                                   <field name="date"/>
+                               </tree>
+                           </field>
+                           <button colspan="4" string="Send New Email"
+                           	name="%(crm.action_crm_send_mail)d"
+                           	context="{'mail':'new', 'model': 'hr.applicant'}"
+                           	icon="gtk-go-forward" type="action" />
+                 </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="crm_case_graph_view_job">
+        <field name="name">Jobs - Recruitment Graph</field>
+        <field name="model">hr.applicant</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+              <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
+                <field name="job_id"/>
+                <field name="salary_expected" operator="+"/>
+                <field name="state" group="True"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_crm_case_jobs_filter" model="ir.ui.view">
+        <field name="name">Jobs - Recruitment Search</field>
+        <field name="model">hr.applicant</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Jobs">
+               <filter icon="gtk-new" string="Current"
+                   domain="[('state','in',('draft','open'))]"
+                   help="All new and in progress jobs"
+                   default="1"
+               />
+               <filter icon="gtk-new" string="New"
+                   domain="[('state','=','draft')]"
+                   help="All Initial Jobs"
+               />
+               <filter icon="gtk-yes" string="In Progress"
+                   domain="[('state','=','open')]"
+                   help="Open Jobs"
+               />
+               <filter icon="gtk-media-pause" string="Pending"
+                   domain="[('state','=','pending')]"
+                   help="Pending Jobs"
+               />
+               <separator orientation="vertical"/>
+               <field name="partner_name"/>
+               <field name="email_from"/>
+               <field name="job_id" widget="selection"/>
+               <field name="user_id" widget="selection">
+                    <filter domain="[('user_id','=',uid)]" help="My Recruitements" icon="gtk-execute" default="1"/>
+                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitements" icon="gtk-execute" separator="1"/>
+               </field>
+               <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
+                   <filter icon="terp-hr" context="{'invisible_department': False}"
+                       domain="[('department_id','=',context.get('department_id',False))]"
+                       help="My Department"/>
+               </field>
+               <newline/>
+                <group expand="1" string="Group By..." colspan="11" col="20">
+                    <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
+                    <filter string="Responsible" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Job" icon="terp-project" domain="[]" context="{'group_by':'job_id'}"/>
+                    <filter string="Stage" icon="terp-project" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="Degree" icon="terp-project" domain="[]" context="{'group_by':'type_id'}"/>
+                    <filter string="Availability" icon="terp-project" domain="[]" context="{'group_by':'availability'}"/>
+                    <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Appreciation" icon="terp-project" domain="[]" context="{'group_by':'priority'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Date" icon="terp-project" domain="[]" context="{'group_by':'create_date'}"/>
+                </group>
+           </search>
+        </field>
+    </record>
+
+    # ------------------------------------------------------
+    # HR Job
+    # ------------------------------------------------------
+
+    <record id="hr_job_survey" model="ir.ui.view">
+        <field name="name">hr.job.form1</field>
+        <field name="model">hr.job</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <field name="no_of_employee" position="after">
+                <field name="survey_id"/>
+            </field>
+        </field>
+    </record>
+
+    </data>
+</openerp>

@@ -71,8 +71,10 @@
                         	type="object" icon="gtk-go-forward" string="" />
                     </group>
                     <field name="user_id"/>
-                    <button string="Schedule Meeting"
-                        name="%(wizard_crm_opportunity_meeting_set)d" icon="gtk-redo" type="action" />
+
+                       <button name="action_makeMeeting" type="object"
+                		string="Schedule Meeting" icon="gtk-redo" />
+
                     <field name="planned_revenue"/>
                     <field name="probability"/>
                     <field name="date_deadline" string="Expected Closing"/>
@@ -136,12 +138,14 @@
                         <field name="create_date"/>
                         <field name="write_date"/>
                         <field name="date_closed"/>
+                        <field name="date_open"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Misc" colspan="2"/>
                         <field name="active"/>
                         <field name="day_open"/>
                         <field name="day_close"/>
+
                     </group>
                     <separator colspan="4" string="References"/>
                     <field name="ref"/>
@@ -152,8 +156,6 @@
                             <field name="name" colspan="4"/>
                             <field name="date"/>
                             <field name="user_id"/>
-                            <field name="som"/>
-                            <field name="canal_id"/>
                         </form>
                     </field>
                 </page>
@@ -165,32 +167,31 @@
                         <form string="Communication history">
                             <group col="7" colspan="4">
                                 <field name="date"/>
-                                <field name="email"/>
-                                <field name="canal_id"/>
+                                <field name="email_to"/>
+                                <field name="email_from"/>
                                 <button
-                                   string="Add a CC"
-                                    name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                    icon="gtk-add" type="action"/>
-                            </group>
-                            <newline/>
-                            <field name="description" colspan="4"
-                            	nolabel="1" widget="text_tag" readonly="1" />
-                            <button colspan="4"
-                            	string="Reply to Last Email"
-                            	name="%(crm.action_crm_reply_mail)d"
-                            	context="{'mail':'reply', 'model': 'crm.opportunity'}" icon="gtk-undo"
-                            	type="action" />
-                        </form>
-                        <tree string="Communication history">
-                            <field name="description"/>
-                            <field name="email"/>
-                            <field name="date"/>
-                        </tree>
-                    </field>
-                    <button colspan="4" string="Send New Email"
-                    	name="%(crm.action_crm_send_mail)d"
-                    	context="{'mail':'new', 'model': 'crm.opportunity'}" icon="gtk-go-forward"
-                    	type="action" />
+                                     string="Add a CC"
+                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
+                                               icon="gtk-add" type="action"/>
+                                   </group>
+                                   <newline/>
+                                   <field name="description" colspan="4" nolabel="1"/>
+                                   <button colspan="4"
+                                   	string="Reply to Last Email"
+                                   	name="%(action_crm_send_mail)d"
+                                   	context="{'mail':'reply', 'model': 'crm.opportunity'}"
+                                   	icon="gtk-undo" type="action" />
+                               </form>
+                               <tree string="Communication history">
+                                   <field name="description"/>
+                                   <field name="email_to"/>
+                                   <field name="date"/>
+                               </tree>
+                           </field>
+                           <button colspan="4" string="Send New Email"
+                           	name="%(action_crm_send_mail)d"
+                           	context="{'mail':'new', 'model': 'crm.opportunity'}"
+                           	icon="gtk-go-forward" type="action" />
                  </page>
                 </notebook>
             </form>
@@ -247,7 +248,7 @@
         <field name="arch" type="xml">
             <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
                 <field name="categ_id"/>
-                <field name="planned_cost" operator="+"/>
+                <field name="planned_revenue" operator="+"/>
                 <field name="state" group="True"/>
             </graph>
         </field>

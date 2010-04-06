@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -24,9 +24,15 @@
     'name': 'Dashboard for Document Management',
     'version': '1.0',
     'category': 'Board/Document',
-    'description': """ This module implements a dashboard for Document """,
+    'description': """
+    This module implements a dashboard for Document that includes:
+        * New Files (list)
+        * Files by Resource Type (graph)
+        * Files by Partner (graph)
+        * Files by Month (graph)
+    """,
     'author': 'Tiny',
-    'depends': ['board', 'document', 'report_document'],
+    'depends': ['board', 'document'],
     'update_xml': ['board_document_view.xml'],
     'demo_xml': ['board_document_demo.xml'],
     'installable': True,

@@ -18,17 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import wizard
-import pooler
-from tools.translate import _
 import datetime
-
 from resource.faces import *
 from new import classobj
 import operator
 
 import working_calendar as wkcal
+
+import wizard
+import pooler
+from tools.translate import _
 
 success_msg = """<?xml version="1.0" ?>
 <form string="Compute Scheduling of Tasks">
@@ -48,8 +47,9 @@ class wizard_schedule_task(wizard.interface):
             resource_eff = res.time_efficiency
             resource_cal = res.calendar_id.id
             if resource_cal:
-                leaves = wkcal.compute_leaves(cr, uid, phase.project_id.resource_calendar_id.id or False, res.id, resource_cal)
-            resource_objs.append(classobj(str(res.user_id.name), (Resource,),
+                cal_id  = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
+                leaves = wkcal.compute_leaves(cr, uid, cal_id, res.id, resource_cal, context=context)
+            resource_objs.append(classobj(res.user_id.name.encode('utf8'), (Resource,),
                                          {'__doc__': res.user_id.name,
                                           '__name__': res.user_id.name,
                                           'vacation': tuple(leaves),
@@ -57,7 +57,7 @@ class wizard_schedule_task(wizard.interface):
                                           }))
         return resource_objs
 
-    def _compute_date(self, cr, uid, data, context):
+    def _compute_date(self, cr, uid, data, context={}):
         """
         Schedule the tasks according to resource available and priority.
         """
@@ -101,7 +101,7 @@ class wizard_schedule_task(wizard.interface):
                 try:
                     resource = reduce(operator.or_, resources)
                 except:
-                    raise wizard.except_wizard(_('ResourceError'), _('Phase must have resources assigned !'))
+                    raise wizard.except_wizard(_('Error'), _('Phase must have resources assigned !'))
                 minimum_time_unit = 1
                 if calendar_id:            # If project has working calendar
                     working_days = wkcal.compute_working_calendar(cr, uid, calendar_id)
@@ -127,18 +127,19 @@ class wizard_schedule_task(wizard.interface):
                 s_date = t.start.to_datetime()
                 e_date = t.end.to_datetime()
                 if loop_no > 0:
+                    ctx = context.copy()
+                    ctx.update({'scheduler': True})
                     user_id = user_obj.search(cr, uid, [('name', '=', t.booked_resource[0].__name__)])
                     task_obj.write(cr, uid, [tasks[loop_no-1].id], {'date_start': s_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                     'date_deadline': e_date.strftime('%Y-%m-%d %H:%M:%S'),
                                                                     'user_id': user_id[0]},
-                                                                    context={'scheduler': True
-                                                                    })
+                                                                    context=ctx)
                 loop_no +=1
         return {}
     states = {
         'init': {
             'actions': [_compute_date],
-            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok')]},
+            'result': {'type':'form','arch':success_msg,'fields':{}, 'state':[('end', 'Ok', 'gtk-ok', True)]},
         }
     }
 wizard_schedule_task('phase.schedule.tasks')

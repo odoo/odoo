@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -63,7 +63,7 @@ class calendar_event_subscribe(osv.osv_memory):
             id2 = data_obj._get_id(cr, uid, 'caldav', 'view_calendar_event_subscribe_display')
             if id2:
                  id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-          
+
             value = {
                 'view_type': 'form',
                 'view_mode': 'form',
@@ -73,17 +73,19 @@ class calendar_event_subscribe(osv.osv_memory):
                 'target': 'new'
             }
             return value
-    
+
     _name = "calendar.event.subscribe"
     _description = "Event subscribe"
+
     _columns = {
                 'url_path': fields.char('Provide path for remote calendar', size=124, required=True),
                 'msg': fields.text('', readonly=True),
+
                }
-    _defaults={
+    _defaults = {
                'msg':lambda *a:'Import Sucessful.'
                }
-    
+
 calendar_event_subscribe()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

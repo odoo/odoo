@@ -23,7 +23,7 @@
 {
     'name': 'Board for Human Reasources Management',
     'version': '1.0',
-    'category': '',
+    'category': 'Board/Human Resources',
     'description': """
 This module implements a dashboard for human resource management that includes:
     * My Current Timesheet

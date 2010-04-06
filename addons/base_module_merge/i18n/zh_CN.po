@@ -4,16 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 5.0.6\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-01-07 11:24+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2010-03-20 07:35+0000\n"
+"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-11 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-03-30 04:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_merge
@@ -29,7 +29,7 @@ msgstr "信息"
 #. module: base_module_merge
 #: wizard_view:base_module_merge.module_merge,init:0
 msgid "Module Merging"
-msgstr "模块合并"
+msgstr "模块合并中"
 
 #. module: base_module_merge
 #: wizard_field:base_module_merge.module_merge,info,author:0
@@ -44,7 +44,7 @@ msgstr "目录名"
 #. module: base_module_merge
 #: selection:base_module_merge.module_merge,info,data_kind:0
 msgid "Demo Data"
-msgstr "演示数据"
+msgstr "日期"
 
 #. module: base_module_merge
 #: wizard_field:base_module_merge.module_merge,save,module_filename:0
@@ -65,17 +65,17 @@ msgstr "模块记录"
 #. module: base_module_merge
 #: wizard_view:base_module_merge.module_merge,save:0
 msgid "Thanks in advance for your contribution."
-msgstr "感谢您的贡献。"
+msgstr "谢谢你的贡献"
 
 #. module: base_module_merge
 #: wizard_field:base_module_merge.module_merge,info,description:0
 msgid "Full Description"
-msgstr "完整描述"
+msgstr "完整的说明"
 
 #. module: base_module_merge
 #: wizard_field:base_module_merge.module_merge,info,name:0
 msgid "Module Name"
-msgstr "模块名称"
+msgstr "模块名"
 
 #. module: base_module_merge
 #: model:ir.actions.wizard,name:base_module_merge.wizard_base_module_merger
@@ -86,7 +86,7 @@ msgstr "合并模块"
 #. module: base_module_merge
 #: wizard_field:base_module_merge.module_merge,save,module_file:0
 msgid "Module .zip File"
-msgstr "模块 .zip 文件"
+msgstr "zip文件"
 
 #. module: base_module_merge
 #: model:ir.module.module,shortdesc:base_module_merge.module_meta_information
@@ -96,12 +96,12 @@ msgstr "模块合并"
 #. module: base_module_merge
 #: wizard_view:base_module_merge.module_merge,save:0
 msgid "Module successfully created !"
-msgstr "模块已成功创建！"
+msgstr "模块创建完成！"
 
 #. module: base_module_merge
 #: wizard_field:base_module_merge.module_merge,info,website:0
 msgid "Documentation URL"
-msgstr "文档地址-URL"
+msgstr "文档URL"
 
 #. module: base_module_merge
 #: wizard_field:base_module_merge.module_merge,init,modules_list:0
@@ -117,7 +117,7 @@ msgstr "继续"
 #. module: base_module_merge
 #: selection:base_module_merge.module_merge,info,data_kind:0
 msgid "Normal Data"
-msgstr "普通数据"
+msgstr "一般数据"
 
 #. module: base_module_merge
 #: wizard_view:base_module_merge.module_merge,save:0
@@ -125,14 +125,12 @@ msgid ""
 "If you think your module could interrest others people, we'd like you to "
 "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
 "the website or using features of the 'base_module_publish' module."
-msgstr ""
-"如果您认为您的模块其他人也会感兴趣，我们希望您能够把它发布到 OpenERP.com "
-"的“Modules”部分中。您可以直接通过网站进行发布或者使用“base_module_publish”模块。"
+msgstr "如果你认为你的模块可以发布给其他人.你可以上网站或使用'base_module_publish'模块"
 
 #. module: base_module_merge
 #: help:base_module_merge.module_merge,init,modules_list:0
 msgid "Select Modules which you want to merge in single module"
-msgstr "选择您希望合并成为单个模块的模块列表"
+msgstr "选择将要合并的模块"
 
 #. module: base_module_merge
 #: wizard_field:base_module_merge.module_merge,info,data_kind:0
@@ -153,4 +151,25 @@ msgstr "取消"
 #. module: base_module_merge
 #: wizard_button:base_module_merge.module_merge,save,end:0
 msgid "Close"
-msgstr "关闭"
+msgstr "结束"
+
+#~ msgid ""
+#~ "\n"
+#~ "    * The wizard asks a many2many of modules\n"
+#~ "    * And then generate a module which is the merge of all selected modules\n"
+#~ "    * The new module is provided as a .zip file\n"
+#~ "\n"
+#~ "    The merge will works in all situations:\n"
+#~ "    * Merging all .py files with the same name in the new module\n"
+#~ "    * merging all .xml files and take care of id's.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    * 这向导会询问many2many模块\n"
+#~ " * 然后生成一个合并选择的模块\n"
+#~ "* 新的模块是一个.zip文件\n"
+#~ "    \n"
+#~ "    合并工作将在所有的情况下:\n"
+#~ "       * 合并所有的py具有相同名称文件\n"
+#~ "       * 合并所有xml文件\n"
+#~ "    "

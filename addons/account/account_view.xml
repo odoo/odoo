@@ -159,7 +159,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">List of Accounts</field>
             <field name="res_model">account.account</field>
@@ -668,9 +668,9 @@
             <field eval="True" name="object"/>
         </record>
 
-        <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries by Line"/>
+ <!--       <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries by Line"/>
         <menuitem icon="STOCK_JUSTIFY_FILL" action="action_move_journal_line_form" id="menu_action_move_journal_line_form" parent="account.menu_finance_entries" type="wizard" sequence="5"/>
-
+-->
         <!--
     Entries lines
     -->
@@ -681,7 +681,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Account Entry Line" editable="top" on_write="_on_create_write">
+                <tree string="Account Entry Line" editable="top" on_write="on_create_write">
                     <field name="date"/>
                     <field name="period_id"/>
                     <field name="move_id"/>
@@ -1007,9 +1007,9 @@
         <menuitem action="action_move_line_search" id="menu_action_move_line_search" parent="account.next_id_29"/>
 
         <menuitem id="menu_finance_charts" name="Charts" parent="account.menu_finance" sequence="4"/>
-        <wizard id="wizard_account_chart" menu="False" model="account.account" name="account.chart" string="Chart of Accounts"/>
+    <!--    <wizard id="wizard_account_chart" menu="False" model="account.account" name="account.chart" string="Chart of Accounts"/>
         <menuitem icon="STOCK_INDENT" action="wizard_account_chart" id="menu_action_account_tree2" parent="account.menu_finance_charts" type="wizard"/>
-
+ -->
 
 
         <record id="view_bank_statement_reconcile_form" model="ir.ui.view">
@@ -1079,8 +1079,14 @@
             groups="group_account_user"/>
 
         <menuitem action="action_bank_statement_reconciliation_form" id="menu_action_account_bank_reconcile_tree" parent="next_id_30"/>
-        <wizard id="action_account_bank_reconcile_tree" menu="False" model="account.move.line" name="account.move.bank.reconcile" string="Bank reconciliation"/>
-        <menuitem action="action_account_bank_reconcile_tree" id="menu_action_account_bank_reconcile_check_tree" parent="account.next_id_30" type="wizard"/>
+  <!--        <wizard id="action_account_bank_reconcile_tree" menu="False" model="account.move.line" name="account.move.bank.reconcile" string="Bank reconciliation"/> -->
+    <!--     <menuitem action="action_account_bank_reconcile_tree" id="menu_action_account_bank_reconcile_check_tree" parent="account.next_id_30" type="wizard"/>   -->
+
+<!--  bank reconsilation  -->
+        <menuitem action="action_account_bank_reconcile_tree"
+        	id="menu_action_account_bank_reconcile_check_tree"
+        	parent="account.next_id_30" />
+
 
         <act_window
             domain="[('account_id', '=', active_id)]"
@@ -1334,7 +1340,7 @@
                         <button name="remove_line" states="running" string="Remove Lines" type="object" icon="gtk-remove"/>
                     </group>
                     <separator colspan="4" string="Subscription Lines"/>
-                    <field colspan="4" name="lines_id" widget="one2many_list"/>
+                    <field colspan="4" name="lines_id" widget="one2many_list" nolabel="1"/>
 
                     <separator colspan="4" string="State"/>
                     <field name="state" select="2"/>

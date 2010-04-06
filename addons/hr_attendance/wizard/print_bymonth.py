@@ -23,7 +23,7 @@ import wizard
 import time
 
 _date_form = '''<?xml version="1.0"?>
-<form string="Select a month">
+<form string="Timesheets by month">
     <separator string="Select a month" colspan="4"/>
     <field name="month"/>
     <field name="year"/>
@@ -49,11 +49,11 @@ class wiz_bymonth(wizard.interface):
     states = {
         'init': {
             'actions': [],
-            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[('print', 'Print Timesheet'), ('end', 'Cancel')]}
+            'result': {'type': 'form', 'arch':_date_form, 'fields':_date_fields, 'state':[ ('end', 'Cancel', 'gtk-cancel'),('print', 'Print', 'gtk-ok')] }
         },
         'print': {
             'actions': [],
-            'result': {'type': 'print', 'report': 'hr.attendance.bymonth', 'state': 'end'}
+            'result': {'type': 'print', 'report': 'hr.attendance.bymonth', 'state': 'end' }
         }
     }
 wiz_bymonth('hr.attendance.print_month')

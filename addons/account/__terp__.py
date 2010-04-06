@@ -25,15 +25,19 @@
     "version" : "1.1",
     "depends" : ["product", "analytic", "process"],
     "author" : "Tiny",
+    "category": 'Generic Modules/Accounting',
     "description": """Financial and accounting module that covers:
-    General accounting
+    General accountings
     Cost / Analytic accounting
     Third party accounting
     Taxes management
     Budgets
     Customer and Supplier Invoices
     Bank statements
-    Account Balance Report
+
+The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
+grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
+module named account_voucherss
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
@@ -42,7 +46,17 @@
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
+        'wizard/account_invoice_refund_view.xml',
+        'wizard/account_period_close_view.xml',
+        'wizard/account_fiscalyear_close_state.xml',
+        'wizard/account_chart_view.xml',
+        'wizard/account_move_bank_reconcile_view.xml',
+        'wizard/account_move_line_reconcile_select_view.xml',
+        'wizard/account_move_journal_view.xml',
         'account_wizard.xml',
+        'wizard/account_move_line_unreconcile_select_view.xml',
+        'wizard/account_subscription_generate_view.xml',
+        'project/wizard/project_account_analytic_line_view.xml',
         'account_view.xml',
         'account_end_fy.xml',
         'account_invoice_view.xml',

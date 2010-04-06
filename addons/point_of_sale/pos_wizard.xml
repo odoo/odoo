@@ -9,17 +9,12 @@
         string="Return Goods"/>
 
 
-		<wizard string="Receipt" model="pos.order"
-				name="ord.receipt" id="o_rec"
-         keyword="client_print_multi"
-         menu="False"
-         />
 
 <!--		<wizard string="Box Entries" model="account.bank.statement"
 				name="pos.entry" id="pos_entry" menu="False"/>-->
 
-		<wizard string="Payment" model="pos.order"
-				name="pos.payment" id="pos_payment" menu="False"/>
+<!--		<wizard string="Payment" model="pos.order"
+				name="pos.payment" id="pos_payment" menu="False"/>-->
 
 			<!--<wizard string="Create Invoices" model="pos.order"
 				name="pos.create_invoice" id="pos_invoice" multi="True"/>-->
@@ -30,56 +25,41 @@
 			<!--<wizard string="Cancel" model="pos.order"
 				name="pos.cancel" id="pos_cancel" multi="True"/>-->
 
-		<wizard
-        string="Confirm"
-        model="pos.order"
-				name="pos.confirm"
-        id="pos_confirm"
-			  multi="True"
-			  menu="True"
-        />
-
+<!--
 		<wizard string="Discount" model="pos.order"
-				name="pos.discount" id="pos_discount" menu="False"/>
+				name="pos.discount" id="pos_discount" menu="False"/>-->
 
 <!--		<wizard id="wizard_pos_payment_report" menu="False"
 				model="pos.order" name="pos.payment.report" string="All paid lines for the current User"/-->
-
+<!--
 		<wizard id="wizard_pos_sales_user" menu="False"
-				model="pos.order" name="pos.sales.user" string="Sales Report"/>
+				model="pos.order" name="pos.sales.user" string="Sales Report"/>-->
 
-		<wizard id="wizard_pos_sales_user_today" menu="False"
-				model="pos.order" name="pos.sales.user.today" string="Sales by Users"/>
-
+<!--
 		<wizard id="wizard_pos_payment_report_date" menu="False"
 				model="pos.order" name="pos.payment.report.date" string="Sales lines Report"/>
 
 		<wizard id="wizard_pos_payment_report_user" menu="False"
 				model="pos.order" name="pos.payment.report.user" string="Sales lines by Users"/>
-
+-->
+  
 		<wizard id="wizard_pos_sales_user_today_current_user" menu="False"
 				model="pos.order" name="pos.sales.user.today.current.user" string="Sales for Current User"/>
 
-		<wizard id="wizard_pos_details" menu="False"
-				model="pos.order" name="pos.details" string="Sales Details"/>
+<!--		<wizard id="wizard_pos_details" menu="False"
+				model="pos.order" name="pos.details" string="Sales Details"/>-->
 
 <!--		<wizard string="Get From Order" model="pos.order"
 				name="pos.sale.get" id="pos_sale_get"/>
 
 		<wizard string="Scan Product" model="pos.order"
 				name="pos.scan_product" id="pos_scan_product"/-->
-  		<wizard
+<!--  		<wizard
         	id="close_statement"
         	model="account.bank.statement"
-        	menu="False"
+        	menu="True"
         	name="statement.close"
-        	string="Close Statements"/>
-  		<wizard
-        	id="open_statement"
-        	model="account.bank.statement"
-        	menu="False"
-        	name="statement.open"
-        	string="Open Statements"/>
+        	string="Close Statements"/>-->
 
 
        <wizard

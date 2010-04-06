@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -32,37 +32,38 @@ class calendar_event_export(osv.osv_memory):
     """
     Export Calendar Event.
     """
-    def _process_export_ics(self, cr, uid, context):
+    def process_export_ics(self, cr, uid, ids, context):
         """
         Get Default value for file_path field.
         """
         model = context.get('model', 'basic.calendar')
         model_obj = self.pool.get(model)
+
         calendar = model_obj.export_cal(cr, uid, context['active_ids'], context)
-        #TODO: check why returns wrong value
-        return base64.encodestring(calendar)
-                            
-    def _process_export_ics_name(self, cr, uid, context):
+        self.write(cr, uid, ids, {'file_path': base64.encodestring(calendar)})
+        return False
+
+    def default_get(self, cr, uid, fields, context):
         """
         Get Default value for Name field.
         """
         model = context.get('model', 'basic.calendar')
         model_obj = self.pool.get(model)
         calendar = model_obj.export_cal(cr, uid, context['active_ids'], context)
-        return  'OpenERP %s.ics' % (model_obj._description)
-    
+        res = super(calendar_event_export, self).default_get( cr, uid, fields, context=context)
+        name = 'OpenERP %s.ics' % (model_obj._description)
+        if 'name' in fields:
+            res.update({'name': name})
+        return  res
+
     _name = "calendar.event.export"
     _description = "Event Export"
+
     _columns = {
-              'file_path':fields.binary('Save ICS file', filters='*.ics', required=True),
+              'file_path':fields.binary('Save ICS file', filters='*.ics', readonly=True),
               'name':fields.char('File name', size=34, required=True, help='Save in .ics format')
                }
-    
-    _defaults={
-               'name':_process_export_ics_name,
-               'file_path':_process_export_ics
-               }
-    
+
 calendar_event_export()
 
 

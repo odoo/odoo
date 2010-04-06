@@ -24,11 +24,14 @@
     "name" : "Resource",
     "version" : "1.1",
     "author" : "Tiny",
-    "category" : "Generic Modules/Projects",
+    "category" : "Generic Modules/Projects & Services",
     "website" : "http://www.openerp.com",
     "description": """
-    Module for resource management. You can manage:
-    * Leave/Holidays or Days off of the company
+    Module for resource management
+     A resource represent something that can be scheduled
+     (a developer on a task or a workcenter on manufacturing orders).
+     This module manages a resource calendar associated to every resource.
+     It also manages the leaves of every resource.
 
     """,
     'author': 'Tiny',

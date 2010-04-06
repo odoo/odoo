@@ -95,6 +95,18 @@ class account_analytic_plan_instance(osv.osv):
         'account6_ids':one2many_mod2('account.analytic.plan.instance.line','plan_id','Account6 Id'),
         'plan_id':fields.many2one('account.analytic.plan', "Model's Plan"),
     }
+
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context.get('journal_id', False):
+            journal = self.pool.get('account.journal').browse(cr, user, [context['journal_id']], context=context)[0]
+            analytic_journal = journal.analytic_journal_id and journal.analytic_journal_id.id or False
+            args.append('|')
+            args.append(('journal_id', '=', analytic_journal))
+            args.append(('journal_id', '=', False))
+        res = super(account_analytic_plan_instance, self).search(cr, user, args, offset=offset, limit=limit, order=order,
+                                                                 context=context, count=count)
+        return res
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -392,7 +404,6 @@ class sale_order_line(osv.osv):
 
                 if rec:
                     pool_inv_line.write(cr, uid, [line.id], {'analytics_id':rec.analytics_id.id}, context=context)
-                    cr.commit()
         return create_ids
 
 sale_order_line()

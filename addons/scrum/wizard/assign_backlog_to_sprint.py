@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -48,21 +48,20 @@ bts_fields = {
 def _assign_sprint(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     backlog_obj = pool.get('scrum.product.backlog')
-    task = pool.get('project.task') 
-    
-    state_open=data['form']['state_open']
+    task = pool.get('project.task')
+    state_open = data['form']['state_open']
     convert_to_task = data['form']['convert_to_task']
-    
-    for backlog in backlog_obj.browse(cr, uid, data['ids']):
-        backlog_obj.write(cr, uid, backlog.id, {'sprint_id':data['form']['sprint_id']})
+    for backlog in backlog_obj.browse(cr, uid, data['ids'], context=context):
+        backlog_obj.write(cr, uid, backlog.id, {'sprint_id':data['form']['sprint_id']}, context=context)
         if convert_to_task:
             task.create(cr, uid, {
                 'product_backlog_id': backlog.id,
                 'name': backlog.name,
                 'description': backlog.note,
                 'project_id': backlog.project_id.id,
-                'user_id': (backlog.user_id and backlog.user_id.id) or uid,
-                'planned_hours': backlog.planned_hours
+                'user_id': False,
+                'planned_hours':backlog.planned_hours,
+                'remaining_hours':backlog.expected_hours,
             })
         if state_open:
             if backlog.state == "draft":

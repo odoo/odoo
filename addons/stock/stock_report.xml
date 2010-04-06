@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <report auto="False" id="report_product_history" model="product.product" name="stock.product.history" string="Future Stock Forecast"/>
-
-
-<!--        <report id="report_picking_list" model="stock.picking" name="stock.picking.list" string="Picking list" xml="stock/report/picking.xml" xsl="stock/report/picking.xsl"/>-->
         <report id="report_picking_list" model="stock.picking" name="stock.picking.list" string="Picking list" rml="stock/report/picking.rml"/>
         <report id="report_move_labels" model="stock.move" name="stock.move.label" string="Print Item Labels" xml="stock/report/lot_move_label.xml" xsl="stock/report/lot_move_label.xsl"/>
-
         <report auto="False"  id="report_location_overview" model="stock.location" name="lot.stock.overview" string="Location Overview" rml="stock/report/lot_overview.rml"/>
-
         <report auto="False" id="report_lot_location" model="stock.location" name="lot.location" rml="stock/report/lot_location.rml" string="Lots by location"/>
-
         <report id="report_location_overview_all" model="stock.location" name="lot.stock.overview_all" string="Location Content (With children)" rml="stock/report/lot_overview_all.rml"/>
-
     </data>
 </openerp>

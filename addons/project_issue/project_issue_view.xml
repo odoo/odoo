@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
         <record id="project_issue_categ_action" model="ir.actions.act_window">
             <field name="name">Issue Categories</field>
             <field name="res_model">crm.case.categ</field>
@@ -76,7 +77,13 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Date"/>
                                 <field name="date_closed"/>
+                                <field name="date_open"/>
                             </group>
+                            <group colspan="2" col="2">
+                        		<separator string="Statistics" colspan="2" col="2"/>
+                        		<field name="day_open"/>
+                        		<field name="day_close"/>
+                    		</group>
                             <group col="2" colspan="2">
                                 <separator string="References" colspan="2"/>
                                 <field name="id"/>
@@ -88,7 +95,6 @@
                                     <field name="name" colspan="4"/>
                                     <field name="date" />
                                     <field name="user_id" />
-                                    <field name="canal_id"/>
                                 </form>
                             </field>
                         </page>
@@ -100,32 +106,31 @@
                                 <form string="Communication history">
                                     <group col="7" colspan="4">
                                         <field name="date"/>
-                                        <field name="email"/>
-                                        <field name="canal_id"/>
+                                        <field name="email_to"/>
+                                        <field name="email_from"/>
                                         <button
-                                            string="Add a CC"
-                                            name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                            icon="gtk-add" type="action"/>
-                                    </group>
-                                    <newline/>
-                                    <field name="description" colspan="4" 
-                                    		nolabel="1" widget="text_tag" readonly="1" />
-                                    <button colspan="4"
-                                    	string="Reply to Last Email"
-                                    	name="%(crm.action_crm_reply_mail)d"
-                                    	context="{'mail':'reply', 'model': 'project.issue'}"
-                                    	icon="gtk-undo" type="action" />
-                                </form>
-                                <tree string="Communication history">
-                                    <field name="description"/>
-                                    <field name="email"/>
-                                    <field name="date"/>
-                                </tree>
-                            </field>
-                            <button colspan="4" string="Send New Email"
-                            	name="%(crm.action_crm_send_mail)d"
-                            	context="{'mail':'new', 'model': 'project.issue'}"
-                            	icon="gtk-go-forward" type="action" />
+                                     string="Add a CC"
+                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
+                                               icon="gtk-add" type="action"/>
+                                   </group>
+                                   <newline/>
+                                   <field name="description" colspan="4" nolabel="1"/>
+                                   <button colspan="4"
+                                   	string="Reply to Last Email"
+                                   	name="%(crm.action_crm_send_mail)d"
+                                   	context="{'mail':'reply', 'model': 'project.issue'}"
+                                   	icon="gtk-undo" type="action" />
+                               </form>
+                               <tree string="Communication history">
+                                   <field name="description"/>
+                                   <field name="email_to"/>
+                                   <field name="date"/>
+                               </tree>
+                           </field>
+                           <button colspan="4" string="Send New Email"
+                           	name="%(crm.action_crm_send_mail)d"
+                           	context="{'mail':'new', 'model': 'project.issue'}"
+                           	icon="gtk-go-forward" type="action" />
                         </page>
                         <page string="Worklogs">
                             <separator string="Timesheets" colspan="4" />

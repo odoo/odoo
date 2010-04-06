@@ -113,10 +113,8 @@ class crm_segmentation(osv.osv):
             for partner_id in partners:
                 cr.execute('insert into res_partner_category_rel (category_id,partner_id) \
                         values (%s,%s)', (categ['categ_id'][0], partner_id))
-            cr.commit()
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
-            cr.commit()
         return True
 
     def process_stop(self, cr, uid, ids, *args):

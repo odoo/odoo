@@ -15,24 +15,24 @@
                         <child1>
                             <action
                                 string="New Files"
-                                name="%(report_document.action_view_all_document_tree1)d"
+                                name="%(document.action_view_all_document_tree1)d"
                                 view_mode="tree"
-                                domain="[('name','=',time.strftime('%%Y-%%m-01'))]"/>
+                                domain="[('name','=',time.strftime('%%Y')),('month','=',time.strftime('%%m'))]"/>
 
                             <action
                                 string="File Size by Month"
-                                name="%(report_document.action_view_size_month)d"
+                                name="%(document.action_view_size_month)d"
                                 view_mode="graph,tree"/>
                         </child1>
                         <child2>
                             <action
                                 string="Files by Resource Type"
-                                name="%(report_document.action_view_document_by_resourcetype_graph)d"
+                                name="%(document.action_view_document_by_resourcetype_graph)d"
                                 view_mode="graph,tree"/>
 
                             <action
                                 string="Files by Partner"
-                                name="%(report_document.action_view_files_by_partner)d"
+                                name="%(document.action_view_files_by_partner)d"
                                 view_mode="graph,tree"/>
                         </child2>
                      </hpaned>
@@ -75,19 +75,19 @@
                         <child1>
                             <action
                                 string="Wall of Shame"
-                                name="%(report_document.action_view_wall)d"
+                                name="%(document.action_view_wall)d"
                                 view_mode="tree"/>
 
                         </child1>
                         <child2>
                             <action
                                 string="Files by Users"
-                                name="%(report_document.action_view_user_graph)d"
+                                name="%(document.action_view_user_graph)d"
                                 view_mode="graph,tree"/>
 
                             <action
                                 string="Files by Month"
-                                name="%(report_document.action_view_files_by_month_graph)d"
+                                name="%(document.action_view_files_by_month_graph)d"
                                 view_mode="graph,tree"/>
                         </child2>
                      </hpaned>

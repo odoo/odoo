@@ -124,15 +124,15 @@ class wiz_reconcile(wizard.interface):
         },
         'init_full': {
             'actions': [_trans_rec_get],
-            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('reconcile','Reconcile')]}
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel', 'gtk-cancel'),('reconcile','Reconcile', 'gtk-ok')]}
         },
         'init_partial': {
             'actions': [_trans_rec_get],
-            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('addendum','Reconcile With Write-Off'),('partial','Partial Reconcile')]}
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel', 'gtk-cancel'),('addendum','Reconcile With Write-Off', 'gtk-ok'),('partial','Partial Reconcile', 'gtk-ok')]}
         },
         'addendum': {
             'actions': [_trans_rec_addendum],
-            'result': {'type': 'form', 'arch':_transaction_add_form, 'fields':_transaction_add_fields, 'state':[('end','Cancel'),('reconcile','Reconcile')]}
+            'result': {'type': 'form', 'arch':_transaction_add_form, 'fields':_transaction_add_fields, 'state':[('end','Cancel', 'gtk-cancel'),('reconcile','Reconcile', 'gtk-ok')]}
         },
         'reconcile': {
             'actions': [_trans_rec_reconcile],

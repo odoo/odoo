@@ -71,7 +71,8 @@ class crm_lead2partner(osv.osv_memory):
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
         rec_ids = context and context.get('active_ids', [])
-        value={}
+        partner_id = False
+
         for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
             partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
             if not partner_ids and lead.email_from:

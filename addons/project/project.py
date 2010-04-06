@@ -18,14 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from lxml import etree
 import mx.DateTime
 import datetime
 import time
+
 from tools.translate import _
 from osv import fields, osv
-from tools.translate import _
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -47,11 +46,9 @@ class project(osv.osv):
     _description = "Project"
     _inherits = {'account.analytic.account':"category_id"}
 
-    def search(self, cr, user, args, offset=0, limit=None, order=None,
-            context=None, count=False):
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
-                return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
-                                                       context=context, count=count)
+                return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
         if context and context.has_key('user_prefence') and context['user_prefence']:
                 cr.execute("""SELECT project.id FROM project_project project
                            LEFT JOIN account_analytic_account account ON account.id = project.category_id
@@ -62,7 +59,7 @@ class project(osv.osv):
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
-    def _complete_name(self, cr, uid, ids, name, args, context):
+    def _complete_name(self, cr, uid, ids, name, args, context={}):
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
             res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
@@ -72,20 +69,21 @@ class project(osv.osv):
         return super(project, self).check_recursion(cursor, user, ids,
                 parent=parent)
 
-    def onchange_partner_id(self, cr, uid, ids, part):
+    def onchange_partner_id(self, cr, uid, ids, part, context={}):
+        partner_obj = self.pool.get('res.partner')
         if not part:
             return {'value':{'contact_id': False, 'pricelist_id': False}}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
+        addr = partner_obj.address_get(cr, uid, [part], ['contact'])
+        pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
+        pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
+        return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
 
-        pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
-        return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist}}
-
-    def _progress_rate(self, cr, uid, ids, names, arg, context=None):
+    def _progress_rate(self, cr, uid, ids, names, arg, context={}):
         res = {}.fromkeys(ids, 0.0)
         progress = {}
         if not ids:
             return res
-        ids2 = self.search(cr, uid, [('parent_id','child_of',ids)])
+        ids2 = self.search(cr, uid, [('parent_id','child_of',ids)], context=context)
         if ids2:
             cr.execute('''SELECT
                     project_id, sum(planned_hours), sum(total_hours), sum(effective_hours)
@@ -96,15 +94,15 @@ class project(osv.osv):
                     state<>'cancelled'
                 GROUP BY
                     project_id''',(ids2,))
-            progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3])), cr.fetchall()))
+            progress = dict(map(lambda x: (x[0], (x[1], x[2], x[3])), cr.fetchall()))
         for project in self.browse(cr, uid, ids, context=context):
-            s = [0.0,0.0,0.0]
+            s = [0.0, 0.0, 0.0]
             tocompute = [project]
             while tocompute:
                 p = tocompute.pop()
                 tocompute += p.child_ids
                 for i in range(3):
-                    s[i] += progress.get(p.id, (0.0,0.0,0.0))[i]
+                    s[i] += progress.get(p.id, (0.0, 0.0, 0.0))[i]
             res[project.id] = {
                 'planned_hours': s[0],
                 'effective_hours': s[2],
@@ -177,7 +175,7 @@ class project(osv.osv):
         res = self.setActive(cr, uid, ids,value=True, context=context)
         return res
 
-    def copy(self, cr, uid, id, default={},context={}):
+    def copy(self, cr, uid, id, default={}, context={}):
         proj = self.browse(cr, uid, id, context=context)
         default = default or {}
         context['active_test'] = False
@@ -190,34 +188,59 @@ class project(osv.osv):
             cr.execute('update project_task set active=True where project_id =ANY(%s)',(ids,))
         return res
 
-    def duplicate_template(self, cr, uid, ids,context={}):
+    def duplicate_template(self, cr, uid, ids, context={}):
+        project_obj = self.pool.get('project.project')
+        data_obj = self.pool.get('ir.model.data')
+        task_obj = self.pool.get('project.task')
         result = []
-        for proj in self.browse(cr, uid, ids):
-            parent_id = context.get('parent_id',False)
-            new_id = self.pool.get('project.project').copy(cr, uid, proj.id, default = {
+        for proj in self.browse(cr, uid, ids, context=context):
+            parent_id = context.get('parent_id',False) # check me where to pass context for parent id ??
+            new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
-                                    'parent_id':parent_id})
+                                    'parent_id':parent_id}, context=context)
             result.append(new_id)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             res = cr.fetchall()
             for (tasks_id,) in res:
-                self.pool.get('project.task').copy(cr, uid, tasks_id, default = {
+                task_obj.copy(cr, uid, tasks_id, default = {
                                     'project_id': new_id,
                                     'active':True}, context=context)
-            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])
+            child_ids = self.search(cr, uid, [('parent_id','=', proj.id)], context=context)
             if child_ids:
-                self.duplicate_template(cr, uid, child_ids, context={'parent_id':new_id})
-        return result
+                self.duplicate_template(cr, uid, child_ids, context={'parent_id': new_id})
+
+        if result and len(result):
+            res_id = result[0]
+            form_view_id = data_obj._get_id(cr, uid, 'project', 'edit_project')
+            form_view = data_obj.read(cr, uid, form_view_id, ['res_id'])
+            tree_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_list')
+            tree_view = data_obj.read(cr, uid, tree_view_id, ['res_id'])
+            search_view_id = data_obj._get_id(cr, uid, 'project', 'view_project_project_filter')
+            search_view = data_obj.read(cr, uid, search_view_id, ['res_id'])
+            return {
+                'name': _('Projects'),
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'project.project',
+                'view_id': False,
+                'res_id' : res_id,
+                'views': [(form_view['res_id'],'form'),(tree_view['res_id'],'tree')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': search_view['res_id'],
+                'nodestroy': True
+                }
+#        return result
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, ids, value=True, context={}):
+        task_obj = self.pool.get('project.task')
         for proj in self.browse(cr, uid, ids, context):
             self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
             cr.execute('select id from project_task where project_id=%s', (proj.id,))
             tasks_id = [x[0] for x in cr.fetchall()]
             if tasks_id:
-                self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
+                task_obj.write(cr, uid, tasks_id, {'active': value}, context=context)
             child_ids = self.search(cr, uid, [('parent_id','=', proj.id)])
             if child_ids:
                 self.setActive(cr, uid, child_ids, value, context)
@@ -253,7 +276,7 @@ class task(osv.osv):
         return res
 
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
-       return {'value':{'remaining_hours' : planned - effective}}
+        return {'value':{'remaining_hours' : planned - effective}}
 
     def _default_project(self, cr, uid, context={}):
         if 'project_id' in context and context['project_id']:
@@ -269,8 +292,8 @@ class task(osv.osv):
         default['work_ids'] = []
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-    def _check_dates(self, cr, uid, ids):
-         task = self.read(cr, uid, ids[0],['date_start','date_end'])
+    def _check_dates(self, cr, uid, ids, context={}):
+         task = self.read(cr, uid, ids[0],['date_start', 'date_end'])
          if task['date_start'] and task['date_end']:
              if task['date_start'] > task['date_end']:
                  return False
@@ -309,7 +332,7 @@ class task(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
-        'user_id': lambda obj,cr,uid,context: uid,
+        'user_id': lambda obj, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'priority': lambda *a: '2',
         'progress': lambda *a: 0,
@@ -317,7 +340,7 @@ class task(osv.osv):
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'project_id': _default_project,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
     _order = "sequence, priority, date_start, id"
 
@@ -328,7 +351,8 @@ class task(osv.osv):
     # Override view according to the company definition
     #
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+        users_obj = self.pool.get('res.users')
+        obj_tm = users_obj.browse(cr, uid, uid, context).company_id.project_time_mode_id
         tm = obj_tm and obj_tm.name or 'Hours'
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
@@ -356,6 +380,8 @@ class task(osv.osv):
         return res
 
     def do_close(self, cr, uid, ids, *args):
+        mail_send = False
+        mod_obj = self.pool.get('ir.model.data')
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
@@ -371,6 +397,9 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
+                elif project.warn_manager:
+                    task_id = ids[0]
+                    mail_send = True
             self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
@@ -380,6 +409,21 @@ class task(osv.osv):
                             reopen = False
                     if reopen:
                         self.do_reopen(cr, uid, [parent_id.id])
+        if mail_send:
+            model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_project_close_task')])
+            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
+            args[0].update({'task_id': task_id})
+            return {
+                'name': _('Email Send to Customer'),
+                'view_type': 'form',
+                'context': args[0], # improve me
+                'view_mode': 'tree,form',
+                'res_model': 'close.task',
+                'views': [(resource_id,'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True
+                    }
         return True
 
     def do_reopen(self, cr, uid, ids, *args):
@@ -470,7 +514,7 @@ class project_work(osv.osv):
         'company_id': fields.related('task_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
     }
     _defaults = {
-        'user_id': lambda obj,cr,uid,context: uid,
+        'user_id': lambda obj, cr, uid, context: uid,
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')
     }
     _order = "date desc"
@@ -498,8 +542,9 @@ project_work()
 class config_compute_remaining(osv.osv_memory):
     _name='config.compute.remaining'
     def _get_remaining(self,cr, uid, ctx):
+        task_obj = self.pool.get('project.task')
         if 'active_id' in ctx:
-            return self.pool.get('project.task').browse(cr,uid,ctx['active_id']).remaining_hours
+            return task_obj.browse(cr,uid,ctx['active_id'],context=ctx).remaining_hours
         return False
 
     _columns = {
@@ -511,12 +556,30 @@ class config_compute_remaining(osv.osv_memory):
         }
 
     def compute_hours(self, cr, uid, ids, context=None):
+        task_obj = self.pool.get('project.task')
+        request = self.pool.get('res.request')
         if 'active_id' in context:
             remaining_hrs=self.browse(cr,uid,ids)[0].remaining_hours
-            self.pool.get('project.task').write(cr,uid,context['active_id'],{'remaining_hours':remaining_hrs})
+            task_obj.write(cr,uid,context['active_id'],{'remaining_hours':remaining_hrs})
+        if context.get('button_reactivate', False):
+            tasks = task_obj.browse(cr, uid, [context['active_id']], context=context)
+            for task in tasks:
+                project = task.project_id
+                if project and project.warn_manager and project.user_id.id and (project.user_id.id != uid):
+                    request.create(cr, uid, {
+                        'name': _("Task '%s' set in progress") % task.name,
+                        'state': 'waiting',
+                        'act_from': uid,
+                        'act_to': project.user_id.id,
+                        'ref_partner_id': task.partner_id.id,
+                        'ref_doc1': 'project.task,%d' % task.id,
+                        'ref_doc2': 'project.project,%d' % project.id,
+                    })
+                task_obj.write(cr, uid, [task.id], {'state': 'open'})
         return {
                 'type': 'ir.actions.act_window_close',
          }
+
 config_compute_remaining()
 
 class message(osv.osv):

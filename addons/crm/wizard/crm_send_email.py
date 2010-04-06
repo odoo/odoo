@@ -24,6 +24,7 @@ from osv import osv, fields
 from tools.translate import _
 import base64
 import tools
+from crm import crm
 
 class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
@@ -31,35 +32,28 @@ class crm_send_new_email(osv.osv_memory):
     _description = "Case Send new email"
 
     _columns = {
-                'to' : fields.char('To', size=64, required=True),
-                'cc' : fields.char('CC', size=128),
+                'email_to' : fields.char('To', size=64, required=True),
+                'email_from' : fields.char('From', size=64, required=True),
+                'email_cc' : fields.char('CC', size=128),
                 'subject': fields.char('Subject', size=128, required=True),
                 'text': fields.text('Message', required=True),
-                'state': fields.selection([('done', 'Done'), ('pending', 'Pending'), ('unchanged', 'Unchanged')], string='State', required=True),
+                'state': fields.selection(crm.AVAILABLE_STATES, string='State'),
                 'doc1': fields.binary("Attachment1"),
                 'doc2': fields.binary("Attachment2"),
                 'doc3': fields.binary("Attachment3"),
                 }
 
     def action_cancel(self, cr, uid, ids, context=None):
-        """
-        Closes Phonecall to Opportunity form
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Opportunity's IDs
-        @param context: A standard dictionary for contextual values
+        """ Closes Phonecall to Opportunity form
         """
         return {'type':'ir.actions.act_window_close'}
 
     def action_send(self, cr, uid, ids, context=None):
         """ This sends an email to ALL the addresses of the selected partners.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Opportunity's IDs
-        @param context: A standard dictionary for contextual values
         """
+        
+        hist_obj = self.pool.get('crm.case.history')
+        
         if not context:
             context = {}
 
@@ -77,55 +71,51 @@ class crm_send_new_email(osv.osv_memory):
             if context.get('mail', 'new') == 'new':
                 case = case_pool.browse(cr, uid, res_id)
             else:
-                hist_obj = self.pool.get('crm.case.history')
                 hist = hist_obj.browse(cr, uid, res_id)
                 model = hist.log_id.model_id.model
                 model_pool = self.pool.get(model)
                 case = model_pool.browse(cr, uid, hist.log_id.res_id)
-            emails = [data['to']] + (data['cc'] or '').split(',')
+            emails = [data['email_to']] + (data['email_cc'] or '').split(',')
             emails = filter(None, emails)
             body = data['text']
 
             if case.user_id.signature:
                 body += '\n\n%s' % (case.user_id.signature)
-
-            case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['to'], details=body)
-            email_from = (case.user_id and case.user_id.address_id and \
-                            case.user_id.address_id.email) or tools.config.get('email_from',False)
+            body = case_pool.format_body(body)
+            email_from = data.get('email_from', False)
+            case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from)
+            
             flag = tools.email_send(
                 email_from,
                 emails,
                 data['subject'],
-                case_pool.format_body(body),
+                body,
                 attach=attach,
                 reply_to=case.section_id.reply_to,
-                openobject_id=str(case.id),                
-            )           
-            if flag:
+                openobject_id=str(case.id),
+            )
+            if flag:                
                 if data['state'] == 'unchanged':
                     pass
                 elif data['state'] == 'done':
                     case_pool.case_close(cr, uid, [case.id])
-                elif data['state'] == 'pending':
-                    case_pool.case_pending(cr, uid, [case.id])
+                elif data['state'] == 'draft':
+                    case_pool.case_reset(cr, uid, [case.id])                
+                elif data['state'] in ['cancel', 'open', 'pending']:
+                    act = 'case_' + data['state']
+                    getattr(case_pool, act)(cr, uid, [case.id])
                 cr.commit()
 
 #            Commented because form does not close due to raise
 #                raise osv.except_osv(_('Email!'), ("Email Successfully Sent"))
 #            else:
 #                raise osv.except_osv(_('Warning!'), _("Email not sent !"))
+
         return {}
 
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
         """
         if not context:
             context = {}
@@ -144,12 +134,16 @@ class crm_send_new_email(osv.osv_memory):
         res_id = context and context.get('active_ids', []) or []
 
         for case in mod_obj.browse(cr, uid, res_id):
-            if 'to' in fields:
-                res.update({'to': case.email_from})
+            if 'email_to' in fields:
+                res.update({'email_to': case.email_from})
+            if 'email_from' in fields:
+                res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
+                            (case.user_id and case.user_id.address_id and \
+                            case.user_id.address_id.email) or tools.config.get('email_from',False)})
             if 'subject' in fields:
-                res.update({'subject': case.name})
-            if 'cc' in fields:
-                res.update({'cc': case.email_cc or ''})
+                res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')}) 
+            if 'email_cc' in fields:
+                res.update({'email_cc': case.email_cc or ''})
             if 'text' in fields:
                 res.update({'text': case.description or ''})
             if 'state' in fields:
@@ -159,13 +153,6 @@ class crm_send_new_email(osv.osv_memory):
     def get_reply_defaults(self, cr, uid, fields, context=None):
         """
         This function gets default values for reply mail
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
         """
         hist_obj = self.pool.get('crm.case.history')
         res_ids = context and context.get('active_ids', []) or []
@@ -174,21 +161,25 @@ class crm_send_new_email(osv.osv_memory):
             model = hist.log_id.model_id.model
             model_pool = self.pool.get(model)
             case = model_pool.browse(cr, uid, hist.log_id.res_id)
-            if 'to' in fields and hist.email:
-                res.update({'to': hist.email})
+            if 'email_to' in fields:
+                res.update({'email_to': case.email_from or hist.email_from or False})
+            if 'email_from' in fields:
+                res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
+                            (case.user_id and case.user_id.address_id and \
+                            case.user_id.address_id.email) or hist.email_to or tools.config.get('email_from',False)})
             if 'text' in fields:
                 header = '-------- Original Message --------'                
-                sender = 'From: %s' %(hist.email_from or tools.config.get('email_from',False))                
-                to = 'To: %s' % (hist.email)
-                sentdate = 'Sent: %s' % (hist.date)
+                sender = 'From: %s' %(hist.email_from or '')                
+                to = 'To: %s' % (hist.email_to or '')
+                sentdate = 'Date: %s' % (hist.date)
                 desc = '\n%s'%(hist.description)
                 original = [header, sender, to, sentdate, desc]
                 original = '\n'.join(original)
-                res.update({'text': '\n\n%s'%(original)})
+                res['text']=original
             if 'subject' in fields:
                 res.update({'subject': '[%s] %s' %(str(case.id), case.name or '')}) 
-            #if 'state' in fields:
-            #    res.update({'state': 'pending'})       
+            if 'state' in fields:
+                res['state']='pending'
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -210,6 +201,9 @@ class crm_send_new_email(osv.osv_memory):
         mod_obj = self.pool.get(model)
         if context.get('mail') == 'reply':
             return True
+        if tools.config.get('email_from'):
+            return True
+
         for case in mod_obj.browse(cr, uid, context.get('active_ids', [])):
             if not case.user_id:
                 raise osv.except_osv(_('Error'), _('You must define a responsible user for this case in order to use this action!'))

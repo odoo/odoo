@@ -139,6 +139,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry">
+                <separator string="General Information" colspan="4"/>
                     <field colspan="4" name="name" select="1"/>
                     <field name="amount" select="2"/>
                     <field name="date" select="1"/>
@@ -146,6 +147,7 @@
                     <field name="journal_id" select="2"/>
                     <field name="general_account_id" select="2"/>
                     <field name="move_id" select="2"/>
+                <separator string="Optionnal Information" colspan="4"/>
                     <field name="unit_amount" select="2"/>
                     <field name="ref" select="2"/>
                     <field name="currency_id" select="2"/>
@@ -202,10 +204,14 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_analytic_line_tree"/>
         </record>
-        <wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Entries by Line"/>
+       <wizard id="action_account_analytic_line" menu="False" model="account.analytic.line" name="account.analytic.line" string="Entries by Line"/>
         <menuitem id="next_id_41" name="Analytic Entries" parent="account.menu_finance_entries"/>
-        <menuitem type="wizard" icon="STOCK_JUSTIFY_FILL" action="action_account_analytic_line" id="account_entries_analytic_entries" parent="next_id_41"/>
+          <!-- Entries by Line -->
 
+         <menuitem  icon="STOCK_JUSTIFY_FILL"
+          action="action_project_account_analytic_line_form"
+          id="account_entries_analytic_entries"
+          parent="next_id_41"/>
 
         <record id="action_account_tree1" model="ir.actions.act_window">
             <field name="name">Analytic Entries</field>

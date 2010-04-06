@@ -42,11 +42,11 @@
                     <field name="priority"/>
                     <field name="date_deadline"/>
                     <button
-                            name="%(wizard_crm_lead_opportunity_set)d"
+                            name="convert_opportunity"
                             string="Convert"
                             help="Convert into Opportunity"
                             icon="gtk-index"
-                            type="action"
+                            type="object"
                             attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                     <newline />
                     <field name="section_id" colspan="1"
@@ -131,32 +131,31 @@
                         <form string="Communication history">
                             <group col="7" colspan="4">
                                 <field name="date"/>
-                                <field name="email"/>
-                                <field name="canal_id"/>
+                                <field name="email_to"/>
+                                <field name="email_from"/>
                                 <button
-                                   string="Add a CC"
-                                    name="%(crm.action_view_crm_email_add_cc_wizard)d"
-                                    icon="gtk-add" type="action"/>
-                            </group>
-                            <newline/>
-                            <field name="description" colspan="4"
-                            	nolabel="1" widget="text_tag" readonly="1" />
-                            <button colspan="4"
-                            	string="Reply to Last Email"
-                            	name="%(crm.action_crm_reply_mail)d"
-                            	context="{'mail':'reply', 'model': 'crm.lead'}"
-                            	icon="gtk-go-forward" type="action" />
-                        </form>
-                        <tree string="Communication history">
-                            <field name="description"/>
-                            <field name="email"/>
-                            <field name="date"/>
-                        </tree>
-                    </field>
-                    <button colspan="4" string="Send New Email"
-                        name="%(crm.action_crm_send_mail)d"
-                        context="{'mail':'new', 'model': 'crm.lead'}" icon="gtk-go-forward"
-                        type="action" />
+                                     string="Add a CC"
+                                               name="%(crm.action_view_crm_email_add_cc_wizard)d"
+                                               icon="gtk-add" type="action"/>
+                                   </group>
+                                   <newline/>
+                                   <field name="description" colspan="4" nolabel="1"/>
+                                   <button colspan="4"
+                                   	string="Reply to Last Email"
+                                   	name="%(action_crm_send_mail)d"
+                                   	context="{'mail':'reply', 'model': 'crm.lead'}"
+                                   	icon="gtk-undo" type="action" />
+                               </form>
+                               <tree string="Communication history">
+                                   <field name="description"/>
+                                   <field name="email_to"/>
+                                   <field name="date"/>
+                               </tree>
+                           </field>
+                           <button colspan="4" string="Send New Email"
+                           	name="%(action_crm_send_mail)d"
+                           	context="{'mail':'new', 'model': 'crm.lead'}"
+                           	icon="gtk-go-forward" type="action" />
                  </page>
                  <page string="Extra Info" groups="base.group_extended">
                     <group colspan="2" col="2">
@@ -175,6 +174,7 @@
                         <field name="create_date"/>
                         <field name="write_date"/>
                         <field name="date_closed"/>
+                        <field name="date_open"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Statistics" colspan="2" col="2"/>

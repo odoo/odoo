@@ -193,7 +193,11 @@ class node_dir(node_class):
                     pass
 
     def children(self,cr):
-        return self._child_get(cr) + self._file_get(cr)
+        res = self._child_get(cr) + self._file_get(cr)        
+        return res
+
+    def get_data(self,cr):
+        return ''
 
     def child(self,cr, name):        
         res = self._child_get(cr,name)
