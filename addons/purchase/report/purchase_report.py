@@ -59,9 +59,9 @@ class report_purchase_order(osv.osv):
     }
     _order = 'name desc,price_total desc'
     def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'report_purchase_order')
+        tools.sql.drop_view_if_exists(cr, 'purchase_report')
         cr.execute("""
-            create or replace view report_purchase_order as (
+            create or replace view purchase_report as (
                 select
                     min(l.id) as id,
                     s.date_order as date,
@@ -92,5 +92,67 @@ class report_purchase_order(osv.osv):
         """)
 report_purchase_order()
 
+class purchase_order_qty_amount(osv.osv):
+    _name = "purchase.order.qty.amount"
+    _description = "Quantity and amount per month"
+    _auto = False
+    _columns = {
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'total_qty' : fields.float('Total Qty'),
+        'total_amount' : fields.float('Total Amount'),
+
+        }
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'purchase_order_qty_amount')
+        cr.execute("""
+            create or replace view purchase_order_qty_amount as (
+                select
+                    min(id) as id,
+                    to_char(create_date, 'MM') as month,
+                    sum(product_qty) as total_qty,
+                    sum(price_unit) as total_amount
+                from
+                    purchase_order_line
+                where
+                    to_char(create_date,'YYYY') =  to_char(current_date,'YYYY')
+                group by
+                    to_char(create_date, 'MM')
+
+            )
+        """)
+purchase_order_qty_amount()
+
+class purchase_order_by_user(osv.osv):
+    _name = "purchase.order.by.user"
+    _description = "Purchase Order by user per month"
+    _auto = False
+    _columns = {
+        'name' : fields.char('User',size=64,required=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+        'nbr' : fields.integer('Total Orders'),
+
+        }
+    _order = 'name desc'
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'purchase_order_by_user')
+        cr.execute("""
+            create or replace view purchase_order_by_user as (
+                select
+                    min(po.id) as id,
+                    rs.name as name,
+                    count(po.id) as nbr,
+                    to_char(po.date_order, 'MM') as month
+                from
+                    purchase_order as po,res_users as rs
+                where
+                    po.create_uid = rs.id
+                group by
+                    rs.name,po.date_order
+
+            )
+        """)
+purchase_order_by_user()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

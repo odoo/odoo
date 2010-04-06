@@ -157,13 +157,13 @@
                     <field name="partner_id" select="1"/>
                     <field name="product_id" select="1"/>
                     <field name="create_uid" select="1" widget="selection">
-                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>                        
+                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Purchase Orders"/>
                     </field>
                 </group>
                 <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="10">
-                    <filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>    
-                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>                
+                    <filter string="Supplier" icon="terp-purchase" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Order Date" icon="terp-purchase" domain="[]" context="{'group_by':'date_order'}"/>
                 </group>
               </search>
@@ -176,10 +176,10 @@
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
             <field name="domain">[('state','=','draft')]</field>
-            <field name="view_mode">tree,form</field>  
-            <field name="search_view_id" ref="view_purchase_order_filter"/>          
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_purchase_order_filter"/>
         </record>
-        <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management" 
+        <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management"
                 name="Request for Quotations" sequence="6"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
@@ -216,7 +216,7 @@
                     <field name="minimum_planned_date"/>
                     <field name="invoiced_rate" widget="progressbar"/>
                     <field name="shipped_rate" widget="progressbar"/>
-                    <field name="amount_untaxed" sum="Total Untaxed amount"/>                               
+                    <field name="amount_untaxed" sum="Total Untaxed amount"/>
                     <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>
                 </tree>
@@ -289,7 +289,7 @@
             name="Product purchases"
             res_model="purchase.order.line"
             src_model="product.product"/>
-<!-- 
+<!--
 	<record model="ir.values" id="action_merge_purchase_order">
                 <field name="object" eval="1" />
                 <field name="name">Purchase Order</field>
