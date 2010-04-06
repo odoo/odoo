@@ -724,6 +724,8 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 # the same source
                 obj = pool.get(model)
                 if obj:
+                    if field not in obj.fields_get_keys(cr, uid):
+                        continue
                     ids = obj.search(cr, uid, [(field, '=', dic['src'])])
 
                     # if the resource id (res_id) is in that list, use it,
