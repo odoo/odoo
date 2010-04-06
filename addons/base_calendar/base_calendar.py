@@ -828,15 +828,16 @@ class calendar_event(osv.osv):
         Set rule string.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param id: List of  calendar event's ids.
+        @param id: List of calendar event's ids.
         @param context: A standard dictionary for contextual values
         @return: dictionary of rrule value.
         """
-        cr.execute("UPDATE %s set freq='',interval=0,count=0,end_date=Null,\
+        cr.execute("UPDATE %s set freq='None',interval=0,count=0,end_date=Null,\
                     mo=False,tu=False,we=False,th=False,fr=False,sa=False,su=False,\
-                    day=0,select1=False,month_list=0 ,byday=False where id=%s" % (self._table, id))
+                    day=0,select1='date',month_list=Null ,byday=Null where id=%s" % (self._table, id))
         
         if not value:
+            cr.execute("UPDATE %s set rrule_type='none' where id=%s" % (self._table, id))
             return True
         val = {}
         for part in value.split(';'):
@@ -849,7 +850,9 @@ class calendar_event(osv.osv):
         ans = value.split(';')
         for i in ans:
             val[i.split('=')[0].lower()] = i.split('=')[1].lower()
-        if int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
+        if not val.get('interval'):
+            rrule_type = 'custom'
+        elif int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
             rrule_type = 'custom'
 
         qry = "UPDATE %(table)s set rrule_type=\'%(rule_type)s\' "
@@ -876,8 +879,12 @@ class calendar_event(osv.osv):
     
                 if val.get('byday'):
                     d = val.get('byday')
-                    new_val['byday'] = d[:1]
-                    new_val['week_list'] = d[1:].upper()
+                    if '-' in d:
+                         new_val['byday'] = d[:2]
+                         new_val['week_list'] = d[2:4].upper()
+                    else:
+                        new_val['byday'] = d[:1]
+                        new_val['week_list'] = d[1:3].upper()
                     new_val['select1'] = 'day'
     
                 if val.get('bymonth'):
@@ -1136,7 +1143,7 @@ class calendar_event(osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param datas: dictionary of freq and interval value.
-        @return: string value which compute  FREQILY;INTERVAL
+        @return: string value which compute FREQILY;INTERVAL
         """
 
         weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
@@ -1148,9 +1155,8 @@ class calendar_event(osv.osv):
         if freq == 'None':
             return ''
         
-        if datas.get('interval') < 1:
-                raise osv.except_osv(_('Error!'), ("Please select proper Interval"))
-
+        interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
+        
         if freq == 'weekly':
 
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
@@ -1166,7 +1172,7 @@ class calendar_event(osv.osv):
                 monthstring = ';BYMONTHDAY=' + str(datas.get('day'))
 
         elif freq == 'yearly':
-            if datas.get('select1')=='date'  and (datas.get('day') < 1 or datas.get('day') > 31):
+            if datas.get('select1')=='date' and (datas.get('day') < 1 or datas.get('day') > 31):
                 raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
             bymonth = ';BYMONTH=' + str(datas.get('month_list'))
             if datas.get('select1')=='day':
@@ -1177,11 +1183,11 @@ class calendar_event(osv.osv):
 
         if datas.get('end_date'):
             datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + '235959Z'
-        enddate = (datas.get('count') and (';COUNT=' +  str(datas.get('count'))) or '') +\
+        enddate = (datas.get('count') and (';COUNT=' + str(datas.get('count'))) or '') +\
                              ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
 
-        rrule_string = 'FREQ=' + freq.upper() +  weekstring + ';INTERVAL=' + \
-                str(datas.get('interval')) + enddate + monthstring + yearstring
+        rrule_string = 'FREQ=' + freq.upper() + weekstring + interval_srting \
+                            + enddate + monthstring + yearstring
 
 #        End logic
         return rrule_string
