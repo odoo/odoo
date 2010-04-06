@@ -33,6 +33,7 @@ works done on tasks, eso. It is able to render planning, order tasks, eso.
     "init_xml" : [],
     "update_xml": [
         "security/project_security.xml",
+        "wizard/project_task_delegate_view.xml",
         "security/ir.model.access.csv",
         "project_data.xml",
         "project_wizard.xml",
