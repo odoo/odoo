@@ -32,7 +32,7 @@
         * Files by Month (graph)
     """,
     'author': 'Tiny',
-    'depends': ['board', 'document', 'report_document'],
+    'depends': ['board', 'document'],
     'update_xml': ['board_document_view.xml'],
     'demo_xml': ['board_document_demo.xml'],
     'installable': True,
