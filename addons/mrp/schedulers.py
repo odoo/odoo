@@ -60,7 +60,7 @@ class mrp_procurement(osv.osv):
             cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by priority,date_planned limit 500 offset %s', ('confirmed', 'make_to_order', offset))
             ids = map(lambda x: x[0], cr.fetchall())
             for proc in procurement_obj.browse(cr, uid, ids):
-                if (maxdate.strftime('%Y-%m-%d')>=proc.date_planned):
+                if (maxdate.strftime('%Y-%m-%d') >= proc.date_planned):
                     wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
                 else:
                     offset += 1
@@ -81,7 +81,7 @@ class mrp_procurement(osv.osv):
         ids = []
         while True:
             report_ids = []
-            ids = self.pool.get('mrp.procurement').search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
+            ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_stock')], offset=offset)
             for proc in procurement_obj.browse(cr, uid, ids):
                 if ((maxdate).strftime('%Y-%m-%d') >= proc.date_planned) :
                     wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
@@ -140,7 +140,7 @@ class mrp_procurement(osv.osv):
 
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
             context['warehouse'] = warehouse
-            for product in self.pool.get('product.product').browse(cr, uid, products_id, context=context):
+            for product in product_obj.browse(cr, uid, products_id, context=context):
                 if product.virtual_available >= 0.0:
                     continue
 
