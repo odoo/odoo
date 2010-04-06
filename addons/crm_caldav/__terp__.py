@@ -21,25 +21,25 @@
 
 
 {
-    'name': 'Extened Module to Add CalDav future on Meeting',
-    'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'name': 'Extened Module to Add CalDAV feature on Meeting', 
+    'version': '1.0', 
+    'category': 'Generic Modules/CRM & SRM', 
     'description': """
-    New Futures in Meeting:        
-        *  Share meeting with other calendar clients like sunbird         
+    New Features in Meeting:
+        * Meeting synchronization using Caldav
+        * Share Meeting with other Calendar clients like Sunbird
 """, 
     'author': 'Tiny', 
     'website': 'http://www.openerp.com', 
-    'depends': ['caldav', 'crm'
-                    ], 
+    'depends': ['caldav', 'crm'], 
     'init_xml': [ 
-                'crm_caldav_data.xml',                 
+                'crm_caldav_data.xml', 
     ], 
 
-    'update_xml': [],
+    'update_xml': [], 
     'demo_xml': [], 
     'installable': True, 
-    'active': False,     
+    'active': False, 
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
