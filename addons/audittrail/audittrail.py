@@ -320,7 +320,7 @@ class audittrail_objects_proxy(objects_proxy):
             logged_uids = []
             model_name = proxy._name
 
-            fct_src = super(audittrail_models_proxy, self).execute
+            fct_src = super(audittrail_objects_proxy, self).execute
 
             field = method
             rule = False
@@ -332,7 +332,7 @@ class audittrail_objects_proxy(objects_proxy):
                 return fct_src(db, uid, passwd, model, method, *args)
             if not len(obj_ids):
                 return fct_src(db, uid, passwd, model, method, *args)
-            rule_ids=pool.get('audittrail.rule').search(cr, uid, [('model_id','=',obj_ids[0]),('state','=','subscribed')])
+            rule_ids = pool.get('audittrail.rule').search(cr, uid, [('object_id','=',obj_ids[0]),('state','=','subscribed')])
             if not len(rule_ids):
                 return fct_src(db, uid, passwd, model, method, *args)
 
