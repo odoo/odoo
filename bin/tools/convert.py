@@ -251,7 +251,7 @@ form: module.record_id""" % (xml_id,)
                 pass
         if ids:
             self.pool.get(d_model).unlink(cr, self.uid, ids)
-            self.pool.get('ir.model.data')._unlink(cr, self.uid, d_model, ids, direct=True)
+            self.pool.get('ir.model.data')._unlink(cr, self.uid, d_model, ids)
 
     def _tag_report(self, cr, rec, data_node=None):
         res = {}

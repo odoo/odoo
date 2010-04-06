@@ -148,8 +148,10 @@
     <rng:define name="delete">
         <rng:element name="delete">
             <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="id" /> </rng:optional>
-            <rng:optional><rng:attribute name="search" /></rng:optional>
+                <rng:choice>
+                    <rng:attribute name="id" />
+                    <rng:attribute name="search" />
+                </rng:choice>
             </rng:element>
     </rng:define>
 

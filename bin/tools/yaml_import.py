@@ -7,6 +7,7 @@ import pooler
 import netsvc
 import misc
 from config import config
+import yaml_tag
 
 import yaml
 
@@ -18,161 +19,6 @@ class YamlImportException(Exception):
 class YamlImportAbortion(Exception):
     pass
 
-class YamlTag(object):
-    """
-    Superclass for constructors of custom tags defined in yaml file.
-    """
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-    def __getitem__(self, key):
-        return getattr(self, key)
-    def __getattr__(self, attr):
-        return None
-    def __repr__(self):
-        return "<%s %s>" % (self.__class__.__name__, sorted(self.__dict__.items()))
-
-class Assert(YamlTag):
-    def __init__(self, model, id, severity=logging.ERROR, string="NONAME", **kwargs):
-        self.model = model
-        self.id = id
-        self.severity = severity
-        self.string = string
-        super(Assert, self).__init__(**kwargs)
-    
-class Record(YamlTag):
-    def __init__(self, model, id, **kwargs):
-        self.model = model
-        self.id = id
-        super(Record, self).__init__(**kwargs)
-    
-class Python(YamlTag):
-    def __init__(self, model, severity=logging.ERROR, name="", **kwargs):
-        self.model= model
-        self.severity = severity
-        self.name = name
-        super(Python, self).__init__(**kwargs)
-
-class Menuitem(YamlTag):
-    def __init__(self, id, name, **kwargs):
-        self.id = id
-        self.name = name
-        super(Menuitem, self).__init__(**kwargs)
-
-class Workflow(YamlTag):
-    def __init__(self, model, action, **kwargs):
-        self.model = model
-        self.action = action
-        super(Workflow, self).__init__(**kwargs)
-
-class ActWindow(YamlTag):
-    def __init__(self, model, action, **kwargs):
-        self.model = model
-        self.action = action
-        super(ActWindow, self).__init__(**kwargs)
-
-class Function(YamlTag):
-    def __init__(self, model, name, **kwargs):
-        self.model = model
-        self.name = name
-        super(Function, self).__init__(**kwargs)
-
-class Report(YamlTag):
-    def __init__(self, model, name, string, **kwargs):
-        self.model = model
-        self.name = name
-        self.string = string
-        super(Report, self).__init__(**kwargs)
-
-class Delete(YamlTag):
-    def __init__(self, model, id, search, **kwargs):
-        self.model = model
-        self.id = id
-        self.search = search
-        super(Delete, self).__init__(**kwargs)
-
-class Context(YamlTag):
-    def __init__(self, **kwargs):
-        super(Context, self).__init__(**kwargs)
-
-class Url(YamlTag):
-    def __init__(self, **kwargs):
-        super(Url, self).__init__(**kwargs)
-
-class Eval(YamlTag):
-    def __init__(self, expression):
-        self.expression = expression
-        super(Eval, self).__init__()
-    
-class IrSet(YamlTag):
-    def __init__(self):
-        super(IrSet, self).__init__()
-
-def assert_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Assert(**kwargs)
-
-def record_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Record(**kwargs)
-
-def python_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Python(**kwargs)
-
-def menuitem_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Menuitem(**kwargs)
-
-def workflow_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Workflow(**kwargs)
-
-def act_window_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return ActWindow(**kwargs)
-
-def function_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Function(**kwargs)
-
-def report_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Report(**kwargs)
-
-def delete_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Delete(**kwargs)
-
-def context_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Context(**kwargs)
-
-def url_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return Url(**kwargs)
-
-def eval_constructor(loader, node):
-    expression = loader.construct_scalar(node)
-    return Eval(expression)
-    
-def ir_set_constructor(loader, node):
-    kwargs = loader.construct_mapping(node)
-    return IrSet(**kwargs)
-        
-yaml.add_constructor(u"!assert", assert_constructor)
-yaml.add_constructor(u"!record", record_constructor)
-yaml.add_constructor(u"!python", python_constructor)
-yaml.add_constructor(u"!menuitem", menuitem_constructor)
-yaml.add_constructor(u"!workflow", workflow_constructor)
-yaml.add_constructor(u"!act_window", act_window_constructor)
-yaml.add_constructor(u"!function", function_constructor)
-yaml.add_constructor(u"!report", report_constructor)
-yaml.add_constructor(u"!context", context_constructor)
-yaml.add_constructor(u"!delete", delete_constructor)
-yaml.add_constructor(u"!url", url_constructor)
-yaml.add_constructor(u"!eval", eval_constructor)
-yaml.add_constructor(u"!ir_set", ir_set_constructor)
-
 def _is_yaml_mapping(node, tag_constructor):
     value = isinstance(node, types.DictionaryType) \
         and len(node.keys()) == 1 \
@@ -183,45 +29,49 @@ def is_comment(node):
     return isinstance(node, types.StringTypes)
 
 def is_assert(node):
-    return _is_yaml_mapping(node, Assert)
+    return _is_yaml_mapping(node, yaml_tag.Assert)
 
 def is_record(node):
-    return _is_yaml_mapping(node, Record)
+    return _is_yaml_mapping(node, yaml_tag.Record)
 
 def is_python(node):
-    return _is_yaml_mapping(node, Python)
+    return _is_yaml_mapping(node, yaml_tag.Python)
 
 def is_menuitem(node):
-    return isinstance(node, Menuitem) \
-        or _is_yaml_mapping(node, Menuitem)
+    return isinstance(node, yaml_tag.Menuitem) \
+        or _is_yaml_mapping(node, yaml_tag.Menuitem)
 
 def is_function(node):
-    return isinstance(node, Function) \
-        or _is_yaml_mapping(node, Function)
+    return isinstance(node, yaml_tag.Function) \
+        or _is_yaml_mapping(node, yaml_tag.Function)
 
 def is_report(node):
-    return isinstance(node, Report)
+    return isinstance(node, yaml_tag.Report)
 
 def is_workflow(node):
-    return isinstance(node, Workflow)
+    return isinstance(node, yaml_tag.Workflow)
 
 def is_act_window(node):
-    return isinstance(node, ActWindow)
+    return isinstance(node, yaml_tag.ActWindow)
 
 def is_delete(node):
-    return isinstance(node, Delete)
+    return isinstance(node, yaml_tag.Delete)
 
 def is_context(node):
-    return isinstance(node, Context)
+    return isinstance(node, yaml_tag.Context)
 
 def is_url(node):
-    return isinstance(node, Url)
+    return isinstance(node, yaml_tag.Url)
 
 def is_eval(node):
-    return isinstance(node, Eval)
+    return isinstance(node, yaml_tag.Eval)
+    
+def is_ref(node):
+    return isinstance(node, yaml_tag.Ref) \
+        or _is_yaml_mapping(node, yaml_tag.Ref)
     
 def is_ir_set(node):
-    return _is_yaml_mapping(node, IrSet)
+    return _is_yaml_mapping(node, yaml_tag.IrSet)
 
 
 class TestReport(object):
@@ -276,7 +126,7 @@ class YamlInterpreter(object):
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         self.context = {} # opererp context
-        self.eval_context = {'ref': self._ref, '_ref': self._ref} # added '_ref' so that record['ref'] is possible
+        self.eval_context = {'ref': self._ref(), '_ref': self._ref(), 'time': time} # added '_ref' so that record['ref'] is possible
 
     def _ref(self):
         return lambda xml_id: self.get_id(xml_id)
@@ -309,10 +159,11 @@ class YamlInterpreter(object):
             id = self.id_map[xml_id]
         else:
             if '.' in xml_id:
-                module, xml_id = xml_id.split('.', 1)
+                module, checked_xml_id = xml_id.split('.', 1)
             else:
                 module = self.module
-            ir_id = self.pool.get('ir.model.data')._get_id(self.cr, self.uid, module, xml_id)
+                checked_xml_id = xml_id
+            ir_id = self.pool.get('ir.model.data')._get_id(self.cr, self.uid, module, checked_xml_id)
             obj = self.pool.get('ir.model.data').read(self.cr, self.uid, ir_id, ['res_id'])
             id = int(obj['res_id'])
             self.id_map[xml_id] = id
@@ -327,14 +178,29 @@ class YamlInterpreter(object):
     def isnoupdate(self, node):
         return self.noupdate or node.noupdate or False
     
+    def _get_first_result(self, results, default=False):
+        if len(results):
+            value = results[0]
+            if isinstance(value, types.TupleType):
+                value = value[0]
+        else:
+            value = default
+        return value
+    
     def process_comment(self, node):
         return node
 
     def _log_assert_failure(self, severity, msg, *args):
-        self.assert_report.record(False, severity)
-        self.logger.log(severity, msg, *args)
-        if severity >= config['assert_exit_level']:
-            raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % logging.getLevelName(severity))
+        if isinstance(severity, types.StringTypes):
+            levelname = severity.strip().upper()
+            level = logging.getLevelName(levelname)
+        else:
+            level = severity
+            levelname = logging.getLevelName(level)
+        self.assert_report.record(False, levelname)
+        self.logger.log(level, msg, *args)
+        if level >= config['assert_exit_level']:
+            raise YamlImportAbortion('Severe assertion failure (%s), aborting.' % levelname)
         return
 
     def _get_assertion_id(self, assertion):
@@ -351,6 +217,7 @@ class YamlInterpreter(object):
         assertion, expressions = node.items()[0]
 
         if self.isnoupdate(assertion) and self.mode != 'init':
+            self.logger.warn('This assertion was not evaluated ("%s").' % assertion.string)
             return
         model = self.get_model(assertion.model)
         ids = self._get_assertion_id(assertion)
@@ -365,7 +232,7 @@ class YamlInterpreter(object):
             context = self.get_context(assertion, self.eval_context)
             for id in ids:
                 record = model.browse(self.cr, self.uid, id, context)
-                for test in expressions.get('test', ''):
+                for test in expressions:
                     try:
                         success = eval(test, self.eval_context, RecordDictWrapper(record))
                     except Exception, e:
@@ -378,19 +245,39 @@ class YamlInterpreter(object):
             else: # all tests were successful for this assertion tag (no break)
                 self.assert_report.record(True, assertion.severity)
 
+    def _coerce_bool(self, value, default=False):
+        if isinstance(value, types.BooleanType):
+            b = value
+        if isinstance(value, types.StringTypes):
+            b = value.strip().lower() not in ('0', 'false', 'off', 'no')
+        elif isinstance(value, types.IntType):
+            b = bool(value)
+        else:
+            b = default
+        return b 
+    
     def process_record(self, node):
         record, fields = node.items()[0]
 
         self.validate_xml_id(record.id)
         if self.isnoupdate(record) and self.mode != 'init':
-            model = self.get_model(record.model)
-            record_dict = self._create_record(model, fields)
-            self.logger.debug("RECORD_DICT %s" % record_dict)
-            id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
-                    self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
-            self.id_map[record.id] = int(id)
-            if config.get('import_partial', False):
-                self.cr.commit()
+            id = self.pool.get('ir.model.data')._update_dummy(self.cr, self.uid, record.model, self.module, record.id)
+            # check if the resource already existed at the last update
+            if id:
+                self.id_map[record] = int(id)
+                return None
+            else:
+                if not self._coerce_bool(record.forcecreate):
+                    return None
+
+        model = self.get_model(record.model)
+        record_dict = self._create_record(model, fields)
+        self.logger.debug("RECORD_DICT %s" % record_dict)
+        id = self.pool.get('ir.model.data')._update(self.cr, self.uid, record.model, \
+                self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode)
+        self.id_map[record.id] = int(id)
+        if config.get('import_partial', False):
+            self.cr.commit()
     
     def _create_record(self, model, fields):
         record_dict = {}
@@ -399,19 +286,50 @@ class YamlInterpreter(object):
             record_dict[field_name] = field_value
         return record_dict        
     
+    def process_ref(self, node, column=None):
+        if node.search:
+            if node.model:
+                model_name = node.model
+            elif column:
+                model_name = column._obj
+            else:
+                raise YamlImportException('You need to give a model for the search, or a column to infer it.')
+            model = self.get_model(model_name)
+            q = eval(node.search, self.eval_context)
+            ids = model.search(self.cr, self.uid, q)
+            if node.use:
+                instances = model.browse(self.cr, self.uid, ids)
+                value = [inst[node.use] for inst in instances]
+            else:
+                value = ids
+        elif node.id:
+            value = self.get_id(node.id)
+        else:
+            value = None
+        return value
+    
+    def process_eval(self, node):
+        return eval(node.expression, self.eval_context)
+    
     def _eval_field(self, model, field_name, expression):
         column = model._columns[field_name]
-        if column._type == "many2one":
+        if is_ref(expression):
+            elements = self.process_ref(expression)
+            if column._type in ("many2many", "one2many"):
+                value = [(6, 0, elements)]
+            else: # many2one
+                value = self._get_first_result(elements)
+        elif column._type == "many2one":
             value = self.get_id(expression)
         elif column._type == "one2many":
             other_model = self.get_model(column._obj)
             value = [(0, 0, self._create_record(other_model, fields)) for fields in expression]
         elif column._type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
-            value= [(6, 0, ids)]
+            value = [(6, 0, ids)]
         else: # scalar field
-            if isinstance(expression, Eval):
-                value = eval(expression.expression)
+            if is_eval(expression):
+                value = self.process_eval(expression)
             else:
                 value = expression
             # raise YamlImportException('Unsupported column "%s" or value %s:%s' % (field_name, type(expression), expression))
@@ -446,7 +364,6 @@ class YamlInterpreter(object):
         workflow, values = node.items()[0]
         if self.isnoupdate(workflow) and self.mode != 'init':
             return
-        model = self.get_model(workflow.model)
         if workflow.ref:
             id = self.get_id(workflow.ref)
         else:
@@ -467,26 +384,44 @@ class YamlInterpreter(object):
         else:
             uid = self.uid
         wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, model, id, workflow.action, self.cr)
+        wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
+    
+    def _eval_params(self, model, params):
+        args = []
+        for i, param in enumerate(params):
+            if isinstance(param, types.ListType):
+                value = self._eval_params(model, param)
+            elif is_ref(param):
+                value = self.process_ref(param)
+            elif is_eval(param):
+                value = self.process_eval(param)
+            elif isinstance(param, types.DictionaryType): # supports XML syntax
+                param_model = self.get_model(param.get('model', model))
+                if 'search' in param:
+                    q = eval(param['search'], self.eval_context)
+                    ids = param_model.search(cr, uid, q)
+                    value = self._get_first_result(ids)
+                elif 'eval' in param:
+                    local_context = {'obj': lambda x: param_model.browse(self.cr, self.uid, x, context)}
+                    local_context.update(self.id_map)
+                    value = eval(param['eval'], self.eval_context, local_context)
+                else:
+                    raise YamlImportException('You must provide either a !ref or at least a "eval" or a "search" to function parameter #%d.' % i)
+            else:
+                value = param # scalar value
+            args.append(value)
+        return args
         
     def process_function(self, node):
-        function, values = node.items()[0]
+        function, params = node.items()[0]
         if self.isnoupdate(function) and self.mode != 'init':
             return
-        context = self.get_context(function, self.eval_context)
-        args = []
-        if function.eval:
-            args = eval(function.eval, self.eval_context)
-        for value in values:
-            if not 'model' in value and (not 'eval' in value or not 'search' in value):
-                raise YamlImportException('You must provide a "model" and an "eval" or "search" to evaluate.')
-            value_model = self.get_model(value['model'])
-            local_context = {'obj': lambda x: value_model.browse(self.cr, self.uid, x, context=context)}
-            local_context.update(self.id_map)
-            id = eval(value['eval'], self.eval_context, local_context)
-            if id != None:
-                args.append(id)
         model = self.get_model(function.model)
+        context = self.get_context(function, self.eval_context)
+        if function.eval:
+            args = self.process_eval(function.eval)
+        else:
+            args = self._eval_params(function.model, params)
         method = function.name
         getattr(model, method)(self.cr, self.uid, *args)
     
@@ -624,17 +559,13 @@ class YamlInterpreter(object):
         # TODO add remove ir.model.data
 
     def process_delete(self, node):
-        ids = []
         if len(node.search):
             ids = self.pool.get(node.model).search(self.cr, self.uid, eval(node.search, self.eval_context))
-        if len(node.id):
-            try:
-                ids.append(self.get_id(node.id))
-            except:
-                pass
+        else:
+            ids = [self.get_id(node.id)]
         if len(ids):
             self.pool.get(node.model).unlink(self.cr, self.uid, ids)
-            self.pool.get('ir.model.data')._unlink(self.cr, self.uid, node.model, ids, direct=True)
+            self.pool.get('ir.model.data')._unlink(self.cr, self.uid, node.model, ids)
     
     def process_url(self, node):
         self.validate_xml_id(node.id)
@@ -717,9 +648,9 @@ class YamlInterpreter(object):
             try:
                 self._process_node(node)
             except YamlImportException, e:
-                self.logger.log(logging.ERROR, e)
+                self.logger.exception(e)
             except Exception, e:
-                self.logger.log(logging.ERROR, e)
+                self.logger.exception(e)
                 raise e
     
     def _process_node(self, node):
