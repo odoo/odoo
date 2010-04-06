@@ -1936,7 +1936,8 @@ class orm(orm_template):
 
         for d in data:
             d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
-            d['__context'] = {'group_by':groupby_list[1:]}
+            if not isinstance(groupby_list,(str, unicode)):
+                d['__context'] = {'group_by':groupby_list[1:]}
             if fget.has_key(groupby):
                 if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
@@ -2785,7 +2786,7 @@ class orm(orm_template):
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         for sub_ids in cr.split_for_in_conditions(ids):
             cr.execute('delete from ' + self._table + ' ' \
-                       'where id in %s', sub_ids)
+                       'where id in %s', (sub_ids,))
 
         for order, object, store_ids, fields in result_store:
             if object != self._name:

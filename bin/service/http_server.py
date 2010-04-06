@@ -251,12 +251,11 @@ class OerpAuthProxy(AuthProxy):
         self.auth_tries = 0
         self.last_auth = None
 
-    def checkRequest(self,handler,path = '/'):
-        if self.auth_creds:
-            return True
+    def checkRequest(self,handler,path, db=False):        
         auth_str = handler.headers.get('Authorization',False)
         try:
-            db = handler.get_db_from_path(path)
+            if not db:
+                db = handler.get_db_from_path(path)
             print "Got db:",db
         except:
             if path.startswith('/'):
@@ -267,8 +266,9 @@ class OerpAuthProxy(AuthProxy):
             else:
                 #FIXME!
                 self.provider.log("Wrong path: %s, failing auth" %path)
-                raise AuthRejectedExc("Authorization failed. Wrong sub-path.")
-
+                raise AuthRejectedExc("Authorization failed. Wrong sub-path.") 
+        if self.auth_creds.get(db):
+            return True 
         if auth_str and auth_str.startswith('Basic '):
             auth_str=auth_str[len('Basic '):]
             (user,passwd) = base64.decodestring(auth_str).split(':')
@@ -276,7 +276,7 @@ class OerpAuthProxy(AuthProxy):
             acd = self.provider.authenticate(db,user,passwd,handler.client_address)
             if acd != False:
                 self.auth_creds[db] = acd
-                self.last_auth=db
+                self.last_auth = db
                 return True
         if self.auth_tries > 5:
             self.provider.log("Failing authorization after 5 requests w/o password")
