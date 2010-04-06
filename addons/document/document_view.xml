@@ -13,12 +13,16 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Storage Media">
-                <field name="name" select="1" colspan="4"/>
-                <field name="user_id"/>
-                <field name="type" />
-                <field name="online" />
-                <field name="readonly" />
-                <field name="path" />
+            	<group colspan="4" col="4">
+	                <field name="name" select="1" colspan="4"/>
+	                <field name="user_id"/>
+	                <field name="type"/>
+	                <field name="online"/>
+	                <field name="readonly"/>
+                </group>
+                <group colspan="2" attrs="{'invisible':[('type','!=','realstore')]}">
+                	<field name="path"/>
+                </group>
             </form>
         </field>
     </record>
