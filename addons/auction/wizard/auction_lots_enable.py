@@ -18,9 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
-#remaining make_invoice
-import sale_line_invoice
-import sale_make_invoice_advance
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class auction_lots_enable(osv.osv_memory):
+    _name = "auction.lots.enable"
+    _description = "Lots Enable"
+    
+    _columns= {
+        'confirm_en':fields.integer('Catalog Number')
+    }
+    
+    def confirm_enable(self, cr, uid, ids, context={}):
+        """
+        This function Update auction lots object and set taken away field False.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of auction lots enable’s IDs.
+        """
+        self.pool.get('auction.lots').write(cr, uid, context['active_id'], {'ach_emp':False})
+        return {}
+    
+auction_lots_enable()

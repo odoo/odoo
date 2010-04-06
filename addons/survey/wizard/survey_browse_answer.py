@@ -46,7 +46,7 @@ class survey_browse_answer(osv.osv_memory):
 
     _columns = {
         'survey_id': fields.selection(_get_survey, "Survey", required="1"),
-        'response_id': fields.many2one("survey.response", "Survey Response"),
+        'response_id': fields.many2one("survey.response", "Survey Answer"),
     }
 
     def action_next(self, cr, uid, ids, context=None):

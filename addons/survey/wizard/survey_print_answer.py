@@ -28,7 +28,7 @@ class survey_print_answer(osv.osv_memory):
     _name = 'survey.print.answer'
     _columns = {
         'response_ids': fields.many2many('survey.response','survey_print_response',\
-                            'response_id','print_id', "Response", required="1"),
+                            'response_id','print_id', "Answer", required="1"),
         'orientation': fields.selection([('vertical','Portrait(Vertical)'),\
                             ('horizontal','Landscape(Horizontal)')], 'Orientation'),
         'paper_size': fields.selection([('letter','Letter (8.5" x 11")'),\

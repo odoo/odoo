@@ -47,7 +47,6 @@
             id="menu_crm_opportunity_resource_act"
             parent="crm.menu_crm_case_resource_type" />
 
-
 <!-- Opportunities Form View -->
 
     <record model="ir.ui.view" id="crm_case_form_view_oppor">
@@ -138,6 +137,7 @@
                         <field name="create_date"/>
                         <field name="write_date"/>
                         <field name="date_closed"/>
+                        <field name="date_open"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Misc" colspan="2"/>
@@ -246,7 +246,7 @@
         <field name="arch" type="xml">
             <graph string="Opportunity by Categories" type="bar" orientation="horizontal">
                 <field name="categ_id"/>
-                <field name="planned_cost" operator="+"/>
+                <field name="planned_revenue" operator="+"/>
                 <field name="state" group="True"/>
             </graph>
         </field>
@@ -308,18 +308,14 @@
 
                     <filter string="Campaign" icon="terp-crm"
                         domain="[]" context="{'group_by':'type_id'}" />
-
                     <separator orientation="vertical" />
                     <filter string="Partner" icon="terp-crm" domain="[]"
                         context="{'group_by':'partner_id'}" />
-
                     <filter string="Salesman" icon="terp-crm"
                         domain="[]" context="{'group_by':'user_id'}" />
-
                     <separator orientation="vertical" />
                     <filter string="Creation" icon="terp-project"
                         domain="[]" context="{'group_by':'create_date'}" />
-
                     <filter string="Exp.Closing" icon="terp-project"
                         domain="[]" context="{'group_by':'date_deadline'}" />
                 </group>

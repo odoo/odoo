@@ -77,7 +77,13 @@
                                 <field name="create_date"/>
                                 <field name="write_date" />
                                 <field name="date_closed"/>
+                                <field name="date_open"/>
                             </group>
+                            <group colspan="2" col="2">
+                        		<separator string="Statistics" colspan="2" col="2"/>
+                        		<field name="day_open"/>
+                        		<field name="day_close"/>
+                    		</group>
                             <group col="2" colspan="2">
                                 <separator string="References" colspan="2"/>
                                 <field name="id"/>
@@ -88,7 +94,7 @@
                                     <separator string="Action Information" colspan="4"/>
                                     <field name="name" colspan="4"/>
                                     <field name="date" />
-                                    <field name="user_id" />                                    
+                                    <field name="user_id" />
                                 </form>
                             </field>
                         </page>

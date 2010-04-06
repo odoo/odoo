@@ -26,8 +26,7 @@ class mrp_track_move(osv.osv_memory):
     _description = 'Production Track'
             
     def view_init(self, cr, uid, fields_list, context=None):
-        """ 
-         Creates view dynamically and adding fields at runtime.
+        """ Creates view dynamically and adding fields at runtime.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
@@ -48,8 +47,7 @@ class mrp_track_move(osv.osv_memory):
         return res
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        """ 
-         Changes the view dynamically
+        """ Changes the view dynamically
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
@@ -88,8 +86,7 @@ class mrp_track_move(osv.osv_memory):
         return res
     
     def track_lines(self, cr, uid, ids, context):
-        """
-         Tracks Finished products and splits products to finish lines.
+        """ Tracks Finished products and splits products to finish lines.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in

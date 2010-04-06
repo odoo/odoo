@@ -55,10 +55,8 @@
                     <group col="8" colspan="4">
                         <field name="freq" />
                         <field name="interval" />
-                        <field name="count"
-                            attrs="{'required' : [('end_date','=',False)]}" />
-                        <field name="end_date"
-                            attrs="{'required' : [('count','&lt;=',0), ('freq', '!=', 'None')]}" />
+                        <field name="count" />
+                        <field name="end_date" />
                     </group>
                     <group col="14" colspan="4" name="Select weekdays"
                         attrs="{'invisible' : [('freq','!=','weekly')]}">

@@ -19,53 +19,50 @@
 #
 ##############################################################################
 
-#
-# Order Point Method:
-#    - Order if the virtual stock of today is bellow the min of the defined order point
-#
-
 import threading
-from osv import fields,osv
+
+from osv import osv, fields
 
 class procurement_compute(osv.osv_memory):
-    _name = 'mrp.procurement.orderpoint.compute'
-    _description = 'Automatic Order Point'
+    _name = 'mrp.procurement.compute.all'
+    _description = 'Compute all schedulers'
     
     _columns = {
-           'automatic': fields.boolean('Automatic Orderpoint', help='If the stock of a product is under 0, it will act like an orderpoint'),     
-    }
-
-    _defaults = {
-            'automatic' : lambda *a: False,
+        'automatic': fields.boolean('Automatic orderpoint',help='Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products.'),
     }
     
-    def _procure_calculation_orderpoint(self, cr, uid, ids, context):
+    _defaults ={
+         'automatic': lambda *a: False,
+    }
+    
+    def _procure_calculation_all(self, cr, uid, ids, context):
         """ 
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
-             @param context: A standard dictionary 
-        """        
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
+        """
         proc_obj = self.pool.get('mrp.procurement')
         for proc in self.browse(cr, uid, ids):
-            proc_obj._procure_orderpoint_confirm(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname, context=context)
-        
+            proc_obj.run_scheduler(cr, uid, automatic=proc.automatic, use_new_cursor=cr.dbname,\
+                    context=context)
         return {}
     
     def procure_calculation(self, cr, uid, ids, context):
         """ 
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
-             @param context: A standard dictionary 
-        
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
         """
-        threaded_calculation = threading.Thread(target=self._procure_calculation_orderpoint, args=(cr, uid, ids, context))
+        threaded_calculation = threading.Thread(target=self._procure_calculation_all, args=(cr, uid, ids, context))
         threaded_calculation.start()
         return {}
-
+    
 procurement_compute()
 
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -19,43 +19,35 @@
 #
 ##############################################################################
 
-import wizard
-import netsvc
-import pooler
-#field name="confirm_en"/>
+from osv import fields, osv
 
-take_form = """<?xml version="1.0"?>
-<form title="Confirm">
-    <separator string="Confirmation enable taken away" colspan="4"/>
-    <newline/>
-</form>
-"""
+class auction_payer(osv.osv_memory):
+    _name = "auction.payer"
+    _description = "Auction payer"
+    
+    def payer(self, cr, uid, ids, context):
+        self.pool.get('auction.lots').write(cr, uid, context['active_ids'], {'is_ok':True, 'state':'paid'})
+        return {}
+    
+auction_payer()
 
-take_fields = {
-    'confirm_en': {'string':'Catalog Number', 'type':'integer'},
-}
-
-def _confirm_enable(self,cr,uid,data,context={}):
-    pool = pooler.get_pool(cr.dbname)
-    pool.get('auction.lots').write(cr,uid,data['ids'],{'ach_emp':False})
-    return {}
-
-class enable_take_away(wizard.interface):
-    states = {
-        'init' : {
-            'actions' : [],
-            'result' : {
-                    'type' : 'form',
-                    'arch' : take_form,
-                    'fields' : take_fields,
-                    'state' : [ ('end', 'Cancel'),('go', 'Enable Taken away')]}
-        },
-            'go' : {
-            'actions' : [_confirm_enable],
-            'result' : {'type' : 'state', 'state' : 'end'}
-        },
-}
-enable_take_away('auction.lots.enable')
-
+class auction_payer_sel(osv.osv_memory):
+    """
+    For Mark as payment for seller
+    """
+    _name = "auction.payer.sel"
+    _description = "Auction payment for seller"
+    
+    def payer_sel(self, cr, uid, ids, context):
+        """
+        This function Update auction lots object and seller paid  true.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of auction payer sel’s IDs.
+        """
+        self.pool.get('auction.lots').write(cr, uid, context['active_ids'], {'paid_vnd':True})
+        return {}
+    
+auction_payer_sel()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
