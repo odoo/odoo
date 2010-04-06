@@ -50,15 +50,9 @@ class crm_opportunity(osv.osv):
         @param *args: Give Tuple Value
         """
 
-        cases = self.browse(cr, uid, ids)
-        for case in cases:
-            data = {'state': 'open', 'active': True}
-            if not case.user_id:
-                data['user_id'] = uid
-            data.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
-            self.write(cr, uid, ids, data)
-        self._action(cr, uid, cases, 'open')
-        return True
+        res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
 
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """

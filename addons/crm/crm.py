@@ -747,7 +747,7 @@ class crm_case(osv.osv):
             data = {'state': 'open', 'active': True}
             if not case.user_id:
                 data['user_id'] = uid
-            self.write(cr, uid, ids, data)
+            self.write(cr, uid, ids, {'state': 'open', 'active': True})
         self._action(cr, uid, cases, 'open')
         return True
 
