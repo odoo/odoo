@@ -27,7 +27,7 @@ from osv import fields,osv
 import tools
 
 class report_purchase_order(osv.osv):
-    _name = "report.purchase.order"
+    _name = "purchase.report"
     _description = "Purchases Orders"
     _auto = False
     _columns = {
