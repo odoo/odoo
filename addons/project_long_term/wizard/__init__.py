@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-s
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import compute_phases_date
+import project_compute_phases
 import compute_tasks_date
 import schedule_tasks
 import working_calendar

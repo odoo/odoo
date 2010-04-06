@@ -22,25 +22,19 @@ import datetime
 from resource.faces import *
 from new import classobj
 
-import wizard
-import pooler
 from tools.translate import _
+from osv import fields, osv
 
 import working_calendar as wkcal
 
-compute_form = """<?xml version="1.0" ?>
-<form string="Compute Scheduling of Phases">
+class project_compute_phases(osv.osv_memory):
 
-    <field name="project_id" colspan="4"/>
+    _name = 'project.compute.phases'
+    _description = 'Project Compute Phases'
+    _columns = {
+        'project_id': fields.many2one('project.project', 'Project', help='If you do not specify project then it will take All projects with state=draft, open, pending')
+                }
 
-</form>"""
-
-compute_fields = {
-    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project', 'help': 'If you do not specify project then it will take All projects with state=draft, open, pending'},
-
-}
-
-class wizard_compute_phases(wizard.interface):
     def _phase_schedule(self, cr, uid, phase, start_date, calendar_id=False, context={}):
 
        """Schedule phase with the start date till all the next phases are completed.
@@ -49,10 +43,9 @@ class wizard_compute_phases(wizard.interface):
                    calendar_id -- working calendar of the project
 
        """
-       pool = pooler.get_pool(cr.dbname)
-       phase_obj = pool.get('project.phase')
-       resource_obj = pool.get('resource.resource')
-       uom_obj = pool.get('product.uom')
+       phase_obj = self.pool.get('project.phase')
+       resource_obj = self.pool.get('resource.resource')
+       uom_obj = self.pool.get('product.uom')
        phase_resource_obj = False
        if phase:
             leaves = []
@@ -117,15 +110,18 @@ class wizard_compute_phases(wizard.interface):
                else:
                    continue
 
-    def _compute_date(self, cr, uid, data, context={}):
+    def compute_date(self, cr, uid, ids, context=None):
         """
         Compute the phases for scheduling.
         """
-        pool = pooler.get_pool(cr.dbname)
-        project_obj = pool.get('project.project')
-        phase_obj = pool.get('project.phase')
-        if data['form']['project_id']:        # If project mentioned find its phases
-            project_id = project_obj.browse(cr, uid, data['form']['project_id'], context=context)
+
+        if context is None:
+            context = {}
+        project_obj = self.pool.get('project.project')
+        phase_obj = self.pool.get('project.phase')
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        if data['project_id']:        # If project mentioned find its phases
+            project_id = project_obj.browse(cr, uid, data['project_id'], context=context)
             phase_ids = phase_obj.search(cr, uid, [('project_id', '=', project_id.id),
                                                   ('state', 'in', ['draft', 'open', 'pending']),
                                                   ('previous_phase_ids', '=', False)
@@ -143,37 +139,24 @@ class wizard_compute_phases(wizard.interface):
             start_dt = datetime.datetime.strftime((datetime.datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d %H:%M")
             calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
             self._phase_schedule(cr, uid, phase, start_dt, calendar_id, context=context)
-        return {}
+        return self._open_phases_list(cr, uid, data, context=context)
 
-    def _open_phases_list(self, cr, uid, data, context):
+    def _open_phases_list(self, cr, uid, data, context=None):
         """
         Return the scheduled phases list.
         """
-        pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data')
-        act_obj = pool.get('ir.actions.act_window')
+        if context is None:
+            context = {}
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
         result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_project_phase')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['domain'] = [('state', 'not in', ['cancelled','done'])]
-        if data['form']['project_id']:
-            result['domain'] = [('project_id', '=', data['form']['project_id']),
+        if data['project_id']:
+            result['domain'] = [('project_id', '=', data['project_id']),
                                 ('state', 'not in', ['cancelled','done'])]
         return result
 
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'form', 'arch': compute_form, 'fields': compute_fields, 'state':[
-                ('end', 'Cancel', 'gtk-cancel'),
-                ('compute', 'Compute', 'gtk-ok', True)
-
-            ]},
-        },
-        'compute': {
-            'actions': [_compute_date],
-            'result': {'type': 'action', 'action': _open_phases_list, 'state': 'end'},
-        },
-    }
-wizard_compute_phases('wizard.compute.phases')
+project_compute_phases()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
