@@ -67,5 +67,103 @@
         </record>
         <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
 
+   <!-- Views and action for project dashboard -->
+   <record id="view_project_vs_remaining_hours_tree" model="ir.ui.view">
+        <field name="name">project.vs.remaining.hour.tree</field>
+        <field name="model">project.vs.remaining.hours</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Project and remaining hours" colors="pink:state=='draft';blue:state=='pending';black:state=='open';red:state=='cancelled';grey:state=='close';yellow:state=='template'">
+                <field name="project"/>
+                <field name="remaining_hours"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_project_vs_remaining_hours_graph" model="ir.ui.view">
+         <field name="name">project.vs.remaining.hour.graph</field>
+         <field name="model">project.vs.remaining.hours</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Project vs remaining hours" type="bar">
+                 <field name="project"/>
+                 <field name="remaining_hours" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_project_vs_remaining_hours_graph" model="ir.actions.act_window">
+        <field name="name">Project and remaining hours</field>
+        <field name="res_model">project.vs.remaining.hours</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
+    </record>
+    <!-- Views and action for project issue dashboard -->
+       <record id="view_task_by_days_tree" model="ir.ui.view">
+        <field name="name">task.by.days.tree</field>
+        <field name="model">task.by.days</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Task By Days" >
+                <field name="day"/>
+                <field name="total_task"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_task_by_days_graph" model="ir.ui.view">
+         <field name="name">task.by.days.graph</field>
+         <field name="model">task.by.days</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Task By Days" type="bar">
+                 <field name="day"/>
+                 <field name="total_task" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="action_task_by_days_graph" model="ir.actions.act_window">
+        <field name="name">Task By Days</field>
+        <field name="res_model">task.by.days</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_id" ref="view_task_by_days_graph"/>
+    </record>
+
+    <!-- Views and action for project  dashboard -->
+       <record id="view_task_by_days_vs_planned_hours_tree" model="ir.ui.view">
+        <field name="name">task.by.days.vs.planned.hours.tree</field>
+        <field name="model">task.by.days.vs.planned.hours</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Task By Days vs Planned Hours" >
+                <field name="day"/>
+                <field name="planned_hour"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_task_by_days_vs_planned_hours_graph" model="ir.ui.view">
+         <field name="name">task.by.days.vs.planned.hours.graph</field>
+         <field name="model">task.by.days.vs.planned.hours</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Task By Days vs Planned Hours" type="bar">
+                 <field name="day"/>
+                 <field name="planned_hour" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="action_task_by_days_vs_planned_hours_graph" model="ir.actions.act_window">
+        <field name="name">Task By Days vs Planned Hours</field>
+        <field name="res_model">task.by.days.vs.planned.hours</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_id" ref="view_task_by_days_vs_planned_hours_graph"/>
+    </record>
     </data>
 </openerp>

@@ -35,7 +35,7 @@ class project_issue_report(osv.osv):
                     c.priority as priority,
                     c.project_id as project_id,
                     c.type_id as type_id,
-                    count(*) as nbr,                    
+                    count(*) as nbr,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     project_issue c
@@ -47,6 +47,7 @@ class project_issue_report(osv.osv):
 
 
 project_issue_report()
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
