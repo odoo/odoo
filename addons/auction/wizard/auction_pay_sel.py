@@ -20,33 +20,27 @@
 ##############################################################################
 from osv import fields, osv
 from tools.translate import _
-import netsvc
-import pooler
-import time
 import tools
-import wizard
 
 class auction_pay_sel(osv.osv_memory):
-   
     _name = "auction.pay.sel"
     _description = "Pay Invoice"
+    
     _columns= {
-               'amount': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy'])), required=True), 
-               'dest_account_id':fields.many2one('account.account', 'Payment to Account', required=True, domain= [('type', '=', 'cash')]), 
-               'journal_id':fields.many2one('account.journal', 'Journal', required=True), 
-               'period_id':fields.many2one('account.period', 'Period', required=True), 
-               }
+       'amount': fields.float('Amount paid', digits= (16, int(tools.config['price_accuracy'])), required=True), 
+       'dest_account_id':fields.many2one('account.account', 'Payment to Account', required=True, domain= [('type', '=', 'cash')]), 
+       'journal_id':fields.many2one('account.journal', 'Journal', required=True), 
+       'period_id':fields.many2one('account.period', 'Period', required=True), 
+    }
     
     def pay_and_reconcile(self, cr, uid, ids, context):
-        
         """
-            Pay and Reconcile
-            
-            @param cr: the current row, from the database cursor.
-            @param uid: the current user’s ID for security checks.
-            @param ids: the ID or list of IDs
-            @param context: A standard dictionary 
-            @return: 
+        Pay and Reconcile
+        @param cr: the current row, from the database cursor.
+        @param uid: the current user’s ID for security checks.
+        @param ids: the ID or list of IDs
+        @param context: A standard dictionary 
+        @return: 
         """          
         lot = self.pool.get('auction.lots').browse(cr, uid, context['active_id'], context)
         invoice_obj = self.pool.get('account.invoice')

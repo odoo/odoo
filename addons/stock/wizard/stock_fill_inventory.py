@@ -68,35 +68,35 @@ class stock_fill_inventory(osv.osv_memory):
                 res = location_obj._product_get(cr, uid,
                             fill_inventory.location_id.id, context=context)
                 res_location[fill_inventory.location_id.id] = res
+        
+        product_ids = []
+        for location in res_location.keys():
+            res = res_location[location]
+            for product_id in res.keys():
+                prod = product_obj.browse(cr, uid, [product_id])[0]
+                uom = prod.uom_id.id
+                context.update({'uom': uom})
+                amount = stock_location_obj._product_get(cr, uid,
+                         location, [product_id], context=context)[product_id]
 
-                product_ids = []
-                for location in res_location.keys():
-                    res = res_location[location]
-                    for product_id in res.keys():
-                        prod = product_obj.browse(cr, uid, [product_id])[0]
-                        uom = prod.uom_id.id
-                        context.update({'uom': uom})
-                        amount = stock_location_obj._product_get(cr, uid,
-                                 location, [product_id], context=context)[product_id]
+                if(amount):
+                    line_ids=inventory_line_obj.search(cr, uid,
+                        [('inventory_id', '=', context['active_ids']),
+                         ('location_id', '=', location),
+                         ('product_id', '=', product_id),
+                         ('product_uom', '=', uom),
+                        ('product_qty', '=', amount)])
+                    if not len(line_ids):
+                        inventory_line = {'inventory_id': context['active_ids'][0],
+                                        'location_id': location,
+                                        'product_id': product_id,
+                                        'product_uom': uom,
+                                        'product_qty': amount}
+                        inventory_line_obj.create(cr, uid, inventory_line)
+                    product_ids.append(product_id)
 
-                        if(amount):
-                            line_ids=inventory_line_obj.search(cr, uid,
-                                [('inventory_id', '=', context['active_ids']),
-                                 ('location_id', '=', location),
-                                 ('product_id', '=', product_id),
-                                 ('product_uom', '=', uom),
-                                ('product_qty', '=', amount)])
-                            if not len(line_ids):
-                                inventory_line = {'inventory_id': context['active_ids'][0],
-                                                'location_id': location,
-                                                'product_id': product_id,
-                                                'product_uom': uom,
-                                                'product_qty': amount}
-                                inventory_line_obj.create(cr, uid, inventory_line)
-                            product_ids.append(product_id)
-
-                if(len(product_ids) == 0):
-                    raise osv.except_osv(_('Message !'), _('No product in this location.'))
+        if(len(product_ids) == 0):
+            raise osv.except_osv(_('Message !'), _('No product in this location.'))
         return {}
 
 stock_fill_inventory()

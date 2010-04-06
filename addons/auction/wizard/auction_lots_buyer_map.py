@@ -107,18 +107,21 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
         res = super(wiz_auc_lots_buyer_map, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         lots_obj = self.pool.get('auction.lots')
         if record_ids:
-            for lots in lots_obj.browse(cr, uid, record_ids):
-                if lots.ach_uid:
-                    res['arch'] = """
-                            <form title="Mapping Result">
-                                <group col="2" colspan="2">
-                                    <label string="All objects are assigned to buyers !"/>
-                                    <newline/>
-                                    <button icon='gtk-cancel' special="cancel"
-                                        string="Done" />
-                                </group>
-                            </form>
-                    """
+            try:
+                for lots in lots_obj.browse(cr, uid, record_ids):
+                    if lots.ach_uid:
+                        res['arch'] = """
+                                <form title="Mapping Result">
+                                    <group col="2" colspan="2">
+                                        <label string="All objects are assigned to buyers !"/>
+                                        <newline/>
+                                        <button icon='gtk-cancel' special="cancel"
+                                            string="Done" />
+                                    </group>
+                                </form>
+                        """
+            except:
+                return res
         return res
     
 wiz_auc_lots_buyer_map()

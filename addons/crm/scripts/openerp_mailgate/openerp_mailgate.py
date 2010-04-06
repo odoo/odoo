@@ -191,14 +191,13 @@ class email_parser(object):
 
         try:
             id = self.rpc(self.model, 'create', data)
-            self.rpc(self.model, 'history', [id], 'Receive', True, False, message['body'], msg['From'])
+            self.rpc(self.model, 'history', [id], 'Receive', True, msg['From'], message['body'])
             #self.rpc(self.model, 'case_open', [id])
         except Exception, e:
             if getattr(e, 'faultCode', '') and 'AccessError' in e.faultCode:
                 e = '\n\nThe Specified user does not have an access to the CRM case.'
             print e
-        attachments = message['attachment']
-
+        attachments = message['attachment']        
         for attach in attachments or []:
             data_attach = {
                 'name': str(attach), 
@@ -281,7 +280,7 @@ class email_parser(object):
         data = {
 #            'description': body['body'],
         }
-        act = 'case_pending'
+        act = 'case_open'
         if 'state' in actions:
             if actions['state'] in ['draft', 'close', 'cancel', 'open', 'pending']:
                 act = 'case_' + actions['state']
@@ -306,7 +305,18 @@ class email_parser(object):
 
         self.rpc(self.model, act, [id])
         self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Receive', True, False, body['body'], msg['From'])
+        attachments = body['attachment']        
+        for attach in attachments or []:
+            data_attach = {
+                'name': str(attach), 
+                'datas': binascii.b2a_base64(str(attachments[attach])), 
+                'datas_fname': str(attach), 
+                'description': 'Mail attachment', 
+                'res_model': self.model, 
+                'res_id': id
+            }
+            self.rpc('ir.attachment', 'create', data_attach)
+        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], body['body'])
         return id
 
     def msg_send(self, msg, emails, priority=None):
@@ -338,16 +348,23 @@ class email_parser(object):
         #    'description':body, 
         #}
         #self.rpc(self.model, 'write', [id], data)
-        self.rpc(self.model, 'history', [id], 'Receive', True, False, message['body'], msg['From'])
+        attachments = message['attachment']        
+        for attach in attachments or []:
+            data_attach = {
+                'name': str(attach), 
+                'datas': binascii.b2a_base64(str(attachments[attach])), 
+                'datas_fname': str(attach), 
+                'description': 'Mail attachment', 
+                'res_model': self.model, 
+                'res_id': id
+            }
+            self.rpc('ir.attachment', 'create', data_attach)
+        self.rpc(self.model, 'history', [id], 'Send', True, msg['From'], message['body'])
         return id
 
     def msg_test(self, msg, case_str):
         if not case_str:
             return (False, False)
-        res = self.rpc(self.model, 'search', [('id', '=', int(case_str))])        
-        if not res:
-            return (False, False)
-        
         emails = self.rpc(self.model, 'emails_get', int(case_str))
         return (int(case_str), emails)
 
@@ -356,9 +373,9 @@ class email_parser(object):
         if case_str:
             case_str = case_str.group(1)
         else:
-            case_str = case_re.search(msg.get('Subject', ''))            
+            case_str = case_re.search(msg.get('Subject', ''))
             if case_str:
-                case_str = case_str.group(1)            
+                case_str = case_str.group(1)
         (case_id, emails) = self.msg_test(msg, case_str)
         if case_id:
             if emails[0] and self.email_get(emails[0])==self.email_get(self._decode_header(msg['From'])):

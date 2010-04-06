@@ -151,6 +151,31 @@ event()
 
 class event_registration(osv.osv):
 
+    def check_confirm(self, cr, uid, ids, context):
+        mod_obj = self.pool.get('ir.model.data')
+        current_registration = self.browse(cr, uid, [ids[0]])[0]
+        total_confirmed = current_registration.event_id.register_current + current_registration.nb_register
+        if total_confirmed <= current_registration.event_id.register_max or current_registration.event_id.register_max == 0:
+            self.write(cr, uid, [ids[0]], {'state':'open'}, context=context)
+            self._history(cr, uid, [ids[0]], 'Open', history=True)
+            self.mail_user(cr, uid, [ids[0]])
+            return True
+        else:
+            model_data_ids = mod_obj.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_event_confirm_registration')], context=context)
+            resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+            context.update({'reg_id': ids[0]})
+            return {
+                'name': _('Confirm Registration'),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'event.confirm.registration',
+                'views': [(resource_id,'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True
+            }
+
     def _history(self, cr, uid,ids,keyword, history=False, email=False, context={}):
         for case in self.browse(cr, uid, ids):
             if not case.case_id:
@@ -244,14 +269,14 @@ class event_registration(osv.osv):
         "invoice_id":fields.many2one("account.invoice","Invoice"),
         'date_closed': fields.datetime('Closed', readonly=True),
         'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
-        'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),  
+        'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
         'categ_id': fields.many2one('crm.case.categ','Category', domain="[('section_id','=',section_id)]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',help="The channels represent the different communication modes available with the customer." \
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'som': fields.many2one('res.partner.som', 'State of Mind', help="The minds states allow to define a value scale which represents" \
                                                                        "the partner mentality in relation to our services.The scale has" \
                                                                        "to be created with a factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."),
-                      
+
     }
     _defaults = {
         'nb_register': lambda *a: 1,

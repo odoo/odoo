@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -36,18 +36,18 @@ from document.nodes import node_content
 from tools.safe_eval import safe_eval
 
 ICS_TAGS = {
-    'summary':'normal',
-    'uid':'normal' ,
-    'dtstart':'date' ,
-    'dtend':'date' ,
-    'created':'date' ,
-    'dtstamp':'date' ,
-    'last-modified':'normal' ,
-    'url':'normal' ,
-    'attendee':'multiple',
-    'location':'normal',
+    'summary': 'normal',
+    'uid': 'normal' ,
+    'dtstart': 'date' ,
+    'dtend': 'date' ,
+    'created': 'date' ,
+    'dtstamp': 'date' ,
+    'last-modified': 'normal' ,
+    'url': 'normal',
+    'attendee': 'multiple',
+    'location': 'normal',
     'categories': 'normal',
-    'description':'normal',
+    'description': 'normal',
 
     # TODO: handle the 'duration' property
 }
@@ -59,34 +59,52 @@ ICS_FUNCTIONS = [
     ]
 
 class document_directory_ics_fields(osv.osv):
+    """ Document Directory ICS Fields """
     _name = 'document.directory.ics.fields'
+    _description = 'Document Directory ICS Fields'
     _columns = {
         'field_id': fields.many2one('ir.model.fields', 'Open ERP Field'),
         'name': fields.selection(map(lambda x: (x, x), ICS_TAGS.keys()), 'ICS Value', required=True),
-        'content_id': fields.many2one('document.directory.content', 'Content', required=True, ondelete='cascade'),
+        'content_id': fields.many2one('document.directory.content', 'Content',\
+                             required=True, ondelete='cascade'),
         'expr': fields.char("Expression", size=64),
-        'fn': fields.selection(ICS_FUNCTIONS,'Function',help="Alternate method of calculating the value", required=True)
+        'fn': fields.selection(ICS_FUNCTIONS, 'Function', help="Alternate method \
+                of calculating the value", required=True)
     }
     _defaults = {
         'fn': lambda *a: 'field',
     }
-   
+
 document_directory_ics_fields()
 
 class document_directory_content(osv.osv):
+    """ Document Directory Content """
     _inherit = 'document.directory.content'
+    _description = 'Document Directory Content'
     __rege = re.compile(r'OpenERP-([\w|\.]+)_([0-9]+)@(\w+)$')
+
     _columns = {
         'object_id': fields.many2one('ir.model', 'Object', oldname= 'ics_object_id'),
-        'obj_iterate': fields.boolean('Iterate object',help="If set, a separate instance will be created for each record of Object"),
-        'fname_field': fields.char("Filename field",size=16,help="The field of the object used in the filename. Has to be a unique identifier."),
+        'obj_iterate': fields.boolean('Iterate object',help="If set, a separate \
+                        instance will be created for each record of Object"),
+        'fname_field': fields.char("Filename field",size=16,help="The field of the \
+                        object used in the filename. Has to be a unique identifier."),
         'ics_domain': fields.char('Domain', size=64),
         'ics_field_ids': fields.one2many('document.directory.ics.fields', 'content_id', 'Fields Mapping')
     }
     _defaults = {
         'ics_domain': lambda *args: '[]'
     }
+
     def _file_get(self, cr, node, nodename, content, context=None):
+        """  Get the file
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param node: pass the node
+            @param nodename: pass the nodename
+            @param context: A standard dictionary for contextual values
+        """
+
         if not content.obj_iterate:
             return super(document_directory_content, self)._file_get(cr, node, nodename, content)
         else:
@@ -95,7 +113,7 @@ class document_directory_content(osv.osv):
             mod = self.pool.get(content.object_id.model)
             uid = node.context.uid
             fname_fld = content.fname_field or 'id'
-            where = []            
+            where = []
             if node.domain:
                 where += eval(node.domain)
             if nodename:
@@ -112,7 +130,7 @@ class document_directory_content(osv.osv):
             resids = mod.search(cr, uid, where, context=context)
             if not resids:
                 return False
-        
+
             res2 = []
             for ro in mod.read(cr,uid,resids,['id', fname_fld]):
                 tname = (content.prefix or '') + str(ro[fname_fld])
@@ -126,10 +144,19 @@ class document_directory_content(osv.osv):
             return res2
 
     def process_write(self, cr, uid, node, data, context=None):
+        """
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param node: pass the node
+            @param data: pass the data
+            @param context: A standard dictionary for contextual values
+        """
+
         if node.extension != '.ics':
                 return super(document_directory_content, self).process_write(cr, uid, node, data, context)
         import vobject
-        parsedCal = vobject.readOne(data)        
+        parsedCal = vobject.readOne(data)
         fields = {}
         funcs = {}
         fexprs = {}
@@ -156,7 +183,7 @@ class document_directory_content(osv.osv):
         for child in parsedCal.getChildren():
             result = {}
             uuid = None
-            
+
             for event in child.getChildren():
                 enl = event.name.lower()
                 if enl =='uid':
@@ -169,7 +196,7 @@ class document_directory_content(osv.osv):
                         result[fields[enl]] = event.value.encode('utf8')
                     elif ICS_TAGS[enl]=='date':
                         result[fields[enl]] = event.value.strftime('%Y-%m-%d %H:%M:%S')
-        
+
                     # print "Field ",enl,  result[fields[enl]]
                 elif fields[enl] and funcs[enl] == 'hours':
                     ntag = fexprs[enl] or 'dtstart'
@@ -186,7 +213,7 @@ class document_directory_content(osv.osv):
                 else:
                     # print "Unhandled tag in ICS:", enl
                     pass
-            # end for 
+            # end for
 
             if not uuid:
                 print "Skipping cal", child
@@ -213,7 +240,7 @@ class document_directory_content(osv.osv):
                     pass
 
                 wexpr = [ ( 'id', '=', wematch.group(2) ) ]
-                
+
             # print "Looking at ", cmodel, " for ", wexpr
             # print "domain=", idomain
 
@@ -223,20 +250,28 @@ class document_directory_content(osv.osv):
                 id = False
             else:
                 id = fobj.search(cr, uid, wexpr, context=context)
-        
+
             if isinstance(id, list):
                 if len(id) > 1:
                     raise Exception("Multiple matches found for ICS")
-            if id:                
+            if id:
                 fobj.write(cr, uid, id, result, context=context)
             else:
                 r = idomain.copy()
-                r.update(result)                
+                r.update(result)
                 fobj.create(cr, uid, r, context=context)
 
         return True
 
     def process_read(self, cr, uid, node, context=None):
+        """
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param node: pass the node
+            @param context: A standard dictionary for contextual values
+        """
+
         def ics_datetime(idate, short=False):
             if short:
                 return datetime.date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
@@ -263,7 +298,7 @@ class document_directory_content(osv.osv):
             domain.append(('id','=',node.act_id))
         # print "process read clause:",domain
         ids = obj_class.search(cr, uid, domain, context=ctx)
-        cal = vobject.iCalendar()        
+        cal = vobject.iCalendar()
         for obj in obj_class.browse(cr, uid, ids):
             event = cal.add('vevent')
             # Fix dtstamp et last-modified with create and write date on the object line
@@ -293,7 +328,7 @@ class document_directory_content(osv.osv):
                     else:
                         value = ics_datetime(value)
                     event.add(field.name).value = value
-        s = cal.serialize()        
+        s = cal.serialize()
         return s
 document_directory_content()
 
@@ -301,7 +336,8 @@ class crm_case(osv.osv):
     _inherit = 'crm.case'
     _columns = {
         'code': fields.char('Calendar Code', size=64),
-        'date_deadline': fields.datetime('Deadline', help="Deadline Date is automatically computed from Start Date + Duration"),
+        'date_deadline': fields.datetime('Deadline', help="Deadline Date is automatically\
+                         computed from Start Date + Duration"),
     }
 
     _defaults = {
@@ -310,14 +346,29 @@ class crm_case(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         """
-        code field must be unique in ICS file
+            code field must be unique in ICS file
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param id: crm case's ID
+            @param context: A standard dictionary for contextual values
         """
+
         if not default: default = {}
         if not context: context = {}
         default.update({'code': self.pool.get('ir.sequence').get(cr, uid, 'crm.case'), 'id': False})
         return super(crm_case, self).copy(cr, uid, id, default, context)
 
     def on_change_duration(self, cr, uid, id, date, duration):
+        """ Change Duration
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param id: crm case's ID,
+            @param date: Pass the Date,
+            @param duration: Pass the duration,
+        """
+
         if not date:
             return {}
         start_date = datetime.datetime.fromtimestamp(time.mktime(time.strptime(date, "%Y-%m-%d %H:%M:%S")))
@@ -327,7 +378,7 @@ class crm_case(osv.osv):
             raise osv.except_osv(_('Warning !'),
                     _('You can not set negative Duration.'))
 
-        res = {'value' : {'date_deadline' : end.strftime('%Y-%m-%d %H:%M:%S')}}
+        res = {'value': {'date_deadline' : end.strftime('%Y-%m-%d %H:%M:%S')}}
         return res
 
 crm_case()

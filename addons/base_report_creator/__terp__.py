@@ -37,6 +37,8 @@ the "Dashboard" menu.
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
+        'wizard/report_menu_create_view.xml',
+        'wizard/report_open_view.xml',
         'base_report_creator_wizard.xml',
         'base_report_creator_view.xml'
     ],

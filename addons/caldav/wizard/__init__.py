@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-import wizard_cal_export
-import wizard_cal_import
-import wizard_cal_subscribe
+import calendar_event_export
+import calendar_event_import
+import calendar_event_subscribe
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

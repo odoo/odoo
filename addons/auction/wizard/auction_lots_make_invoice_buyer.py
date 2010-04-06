@@ -19,27 +19,31 @@
 #
 ##############################################################################
 from osv import fields, osv
-from tools.translate import _
-import netsvc
-import pooler
-import time
-import tools
-import wizard
 
 class auction_lots_make_invoice_buyer(osv.osv_memory):
+    _name = "auction.lots.make.invoice.buyer"
+    _description = "Make invoice buyer "
+    
+    _columns= {
+       'amount': fields.float('Invoiced Amount', required =True, readonly=True), 
+       'objects':fields.integer('# of objects', required =True, readonly=True), 
+       'number':fields.char('Invoice Number', size=64), 
+       'buyer_id':fields.many2one('res.partner', 'Buyer', required=True), 
+    }
+
+    _defaults={
+       'number': lambda *a: False,
+    }
     
     def default_get(self, cr, uid, fields, context):
         """ 
-             To get default values for the object.
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param fields: List of fields for which we want default values 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
+         To get default values for the object.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param fields: List of fields for which we want default values 
+         @param context: A standard dictionary 
+         @return: A dictionary which of fields with values. 
         """        
         res = super(auction_lots_make_invoice_buyer, self).default_get(cr, uid, fields, context=context)
         for lot in self.pool.get('auction.lots').browse(cr, uid, context.get('active_ids', [])):
@@ -59,22 +63,19 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
         @param ids: List of Auction lots make invoice buyer’s IDs
         @return: dictionary of  account invoice form.
         """    
-        newinv = []
-
         order_obj = self.pool.get('auction.lots')
         mod_obj = self.pool.get('ir.model.data') 
-        
+        result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
+        id = mod_obj.read(cr, uid, result, ['res_id'])
+        lots = order_obj.browse(cr, uid, context['active_ids'])
         for data in self.read(cr, uid, ids):            
-            result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-            id = mod_obj.read(cr, uid, result, ['res_id'])
-            lots = order_obj.browse(cr, uid, context['active_ids'])
             invoice_number = data['number']
             for lot in lots:
-                up_auction = order_obj.write(cr, uid, [lot.id], {'ach_uid':data['buyer_id']})
-            ids = order_obj.lots_invoice(cr, uid, context['active_ids'], context, data['number'])
+                up_auction = order_obj.write(cr, uid, [lot.id], {'ach_uid': data['buyer_id']})
+            lots_ids = order_obj.lots_invoice(cr, uid, context['active_ids'], context, data['number'])
             cr.commit()
             return  {
-                'domain': "[('id','in', ["+','.join(map(str, ids))+"])]", 
+                'domain': "[('id','in', ["+','.join(map(str, lots_ids))+"])]", 
                 'name': 'Buyer invoices', 
                 'view_type': 'form', 
                 'view_mode': 'tree,form', 
@@ -84,17 +85,5 @@ class auction_lots_make_invoice_buyer(osv.osv_memory):
                 'type': 'ir.actions.act_window', 
                 'search_view_id': id['res_id']         
             }
-            
-    _name = "auction.lots.make.invoice.buyer"
-    _description = "Make invoice buyer "
-    _columns= {
-               'amount': fields.float('Invoiced Amount', required =True, readonly=True), 
-               'objects':fields.integer('# of objects', required =True, readonly=True), 
-               'number':fields.char('Invoice Number', size=64), 
-               'buyer_id':fields.many2one('res.partner', 'Buyer', required=True), 
-               }
-    _defaults={
-               'number':lambda *a: False,
-               }
 
 auction_lots_make_invoice_buyer()
