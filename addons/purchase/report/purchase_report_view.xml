@@ -3,7 +3,7 @@
     <data>
         <record model="ir.ui.view" id="view_purchase_order_graph">
             <field name="name">product.month.graph</field>
-            <field name="model">report.purchase.order</field>
+            <field name="model">purchase.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Purchase Orders Statistics" type="bar">
@@ -16,14 +16,14 @@
 
         <record id="view_purchase_order_tree" model="ir.ui.view">
             <field name="name">report.purchase.order.tree</field>
-            <field name="model">report.purchase.order</field>
+            <field name="model">purchase.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Orders Statistics">
-                	<field name="date"/>
-                	<field name="user_id"/>
-                	<field name="partner_id"/>
-                    <field name="product_id"/>
+                	<field name="date" invisible = "1"/>
+                	<field name="user_id" invisible = "1"/>
+                	<field name="partner_id" invisible = "1"/>
+                    <field name="product_id" invisible = "1"/>
                     <field name="quantity"/>
                     <field name="nbr" sum="# of Lines"/>
                     <field name="price_average" avg="Average Price"/>
@@ -39,7 +39,7 @@
 
         <record id="view_purchase_order_search" model="ir.ui.view">
         <field name="name">report.purchase.order.search</field>
-        <field name="model">report.purchase.order</field>
+        <field name="model">purchase.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Purchase Orders">
@@ -73,6 +73,7 @@
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 				</group>
                 <newline/>
+                <separator string="Group by" />
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}"/>
                     <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
@@ -91,7 +92,7 @@
 
     <record id="action_purchase_order_report_all" model="ir.actions.act_window">
         <field name="name">Purchase Orders</field>
-        <field name="res_model">report.purchase.order</field>
+        <field name="res_model">purchase.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_purchase_order_search"/>

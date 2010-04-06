@@ -96,7 +96,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Leaves by Type">
-                <field name="name"/>
+                <field name="user_id"/>
                 <field name="no_of_leaves"/>
             </tree>
         </field>
@@ -107,9 +107,10 @@
         <field name="model">hr.holidays.by.type</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
-            <graph string="Leaves by Type" type="bar">
-                <field name="name"/>
+            <graph string="Leaves by Type" orientation = "horizontal" type="bar">
+                <field name="user_id"/>
                 <field name="no_of_leaves" operator="+"/>
+                <field  group = "True" name="name"/>
             </graph>
         </field>
     </record>

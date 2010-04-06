@@ -26,7 +26,7 @@
 from osv import fields,osv
 import tools
 
-class report_purchase_order(osv.osv):
+class purchase_report(osv.osv):
     _name = "purchase.report"
     _description = "Purchases Orders"
     _auto = False
@@ -59,9 +59,9 @@ class report_purchase_order(osv.osv):
     }
     _order = 'name desc,price_total desc'
     def init(self, cr):
-        tools.sql.drop_view_if_exists(cr, 'report_purchase_order')
+        tools.sql.drop_view_if_exists(cr, 'purchase_report')
         cr.execute("""
-            create or replace view report_purchase_order as (
+            create or replace view purchase_report as (
                 select
                     min(l.id) as id,
                     s.date_order as date,
@@ -90,7 +90,7 @@ class report_purchase_order(osv.osv):
                          s.warehouse_id
             )
         """)
-report_purchase_order()
+purchase_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
