@@ -23,38 +23,32 @@ from resource.faces import *
 from new import classobj
 import operator
 
+from tools.translate import _
+from osv import osv, fields
+
 import working_calendar as wkcal
 
-import wizard
-import pooler
-from tools.translate import _
+class project_compute_tasks(osv.osv_memory):
+    _name = 'project.compute.tasks'
+    _description = 'Project Compute Tasks'
+    _columns = {
+        'project_id': fields.many2one('project.project', 'Project', required=True)
+                }
 
-compute_form = """<?xml version="1.0" ?>
-<form string="Compute Scheduling of Tasks">
-    <field name="project_id" colspan="4"/>
-</form>"""
-
-success_msg = """<?xml version="1.0" ?>
-<form string="Compute Scheduling of Tasks">
-    <label string="Task Scheduling completed successfully."/>
-</form>"""
-
-compute_fields = {
-    'project_id': {'string':'Project', 'type':'many2one', 'relation':'project.project', 'required':True},
-}
-
-class wizard_compute_tasks(wizard.interface):
-
-    def _compute_date(self, cr, uid, data, context):
+    def compute_date(self, cr, uid, ids, context=None):
         """
         Schedule the tasks according to resource available and priority.
         """
-        pool = pooler.get_pool(cr.dbname)
-        project_obj = pool.get('project.project')
-        task_pool = pool.get('project.task')
-        resource_obj = pool.get('resource.resource')
-        user_obj = pool.get('res.users')
-        project_id = data['form']['project_id']
+        project_obj = self.pool.get('project.project')
+        task_pool = self.pool.get('project.task')
+        resource_obj = self.pool.get('resource.resource')
+        user_obj = self.pool.get('res.users')
+
+        if context is None:
+            context = {}
+
+        data = self.read(cr, uid, ids, [])[0]
+        project_id = data['project_id']
         project = project_obj.browse(cr, uid, project_id, context=context)
         task_ids = task_pool.search(cr, uid, [('project_id', '=', project_id),
                                               ('state', 'in', ['draft', 'open', 'pending'])
@@ -106,7 +100,7 @@ class wizard_compute_tasks(wizard.interface):
                 try:
                     resource = reduce(operator.or_, resources)
                 except:
-                    raise wizard.except_wizard(_('Error'), _('Project must have members assigned !'))
+                    raise osv.except_osv(_('Error'), _('Project must have members assigned !'))
                 minimum_time_unit = 1
                 if calendar_id:        # If project has calendar
                     working_days = wkcal.compute_working_calendar(cr, uid, calendar_id)
@@ -142,20 +136,7 @@ class wizard_compute_tasks(wizard.interface):
                                                                          'user_id': user_id[0]},
                                                                          context=ctx)
                 loop_no +=1
-        return {}
+        return {} #improve me => Task Scheduling completed successfully => give this msg at end of wizard
 
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'form', 'arch': compute_form, 'fields': compute_fields, 'state': [
-                ('end', 'Cancel', 'gtk-cancel'),
-                ('compute', 'Compute', 'gtk-ok', True)
-            ]},
-        },
-        'compute': {
-            'actions': [_compute_date],
-            'result': {'type': 'form','arch': success_msg,'fields': {}, 'state': [('end', 'Ok')]},
-        }
-    }
-wizard_compute_tasks('wizard.compute.tasks')
+project_compute_tasks()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

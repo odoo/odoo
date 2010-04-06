@@ -20,7 +20,7 @@
 ##############################################################################
 
 import project_compute_phases
-import compute_tasks_date
+import project_compute_tasks
 import schedule_tasks
 import working_calendar
 

@@ -43,7 +43,8 @@
         "project_long_term_wizard.xml" ,
         "project_long_term_view.xml",
         "project_long_term_workflow.xml",
-        "wizard/project_compute_phases_view.xml"
+        "wizard/project_compute_phases_view.xml",
+        "wizard/project_compute_tasks_view.xml"
     ],
     'installable': True,
     'active': False,
