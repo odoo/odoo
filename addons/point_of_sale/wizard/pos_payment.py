@@ -84,7 +84,7 @@ class pos_make_payment(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False        
         order = self.pool.get('pos.order').browse(cr, uid, record_id)
         if not order.lines:
-                raise osv.except_osv('Error!','No Order Lines ')
+                raise osv.except_osv('Error!','No order lines defined for this sale ')
         True
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

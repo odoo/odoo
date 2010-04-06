@@ -81,7 +81,7 @@
                 <field name="active"/>
                 <field name="hide"/>
 <!--                <button name="show_col_view" string="Columns" type="object"/>-->
-                <!--<button string="Columns_wiz" name="%(bi_load_column)d" type="action"/>-->
+
                 <button name="hide_col" string="Hide" type="object"/>
                 <button name="show_col" string="Show" type="object"/>
             </tree>
@@ -108,7 +108,7 @@
                         <button name="hide_col" string="Hide" type="object"/>
                         <button name="show_col" string="Show" type="object"/>
                     </tree>
-                </field>            
+                </field>
                 <field name="fact_database_id" select="1" colspan="2"/>
                 <field name="active"/>
                 <field name="hide"/>
@@ -150,7 +150,7 @@
             </tree>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="view_olap_database_columns_tree_m20">
         <field name="name">olap.database.columns.tree.m20</field>
         <field name="model">olap.database.columns</field>
@@ -165,7 +165,7 @@
             </tree>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="view_olap_database_columns_form">
         <field name="name">olap.database.columns.form</field>
         <field name="model">olap.database.columns</field>
@@ -318,7 +318,7 @@
             <form string="Olap Application Field">
                 <newline/>
                 <field name="name" select="1" colspan="2"/>
-                <field name="field_name" select="1" />              
+                <field name="field_name" select="1" />
                 <field name="table_name" select="1" />
                 <newline/>
                 <field name="is_hidden" select="1" colspan="2"/>

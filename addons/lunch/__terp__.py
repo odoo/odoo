@@ -31,10 +31,18 @@
     "version": "0.1",
     "depends": ["base"],
     "category" : "Generic Modules/Others",
+    'description': """
+    The base module to manage lunch
+
+    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.
+    Apply Different Category for the product.
+    """,
     "init_xml": [],
     "update_xml": [
         'security/ir.model.access.csv',
-        'lunch_wizard.xml',
+        'wizard/lunch_order_cancel_view.xml',
+        'wizard/lunch_order_confirm_view.xml',
+        'wizard/lunch_cashbox_clean_view.xml',
         'lunch_view.xml',
         'lunch_report.xml',
         #'process/lunch_process.xml'
@@ -42,5 +50,6 @@
     "demo_xml": ['lunch_demo.xml'],
     "installable": True,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

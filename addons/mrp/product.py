@@ -26,50 +26,70 @@ from tools.translate import _
 class product_product(osv.osv):
     _inherit = "product.product"    
 
+    def get_product_accounts(self, cr, uid, product_id, context={}):
+        
+        """ 
+             To get the stock input account, stock output account and stock journal related to product.
+            
+             @param product_id : product id            
+             @return:  dictionary which contains information regarding stock input account, stock output account and stock journal
+        
+        """           
+        product_obj = self.pool.get('product.product').browse(cr, uid, product_id, False)
+        
+        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False 
+        if not stock_input_acc:
+            stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
+        
+        stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
+        if not stock_output_acc:
+            stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
+
+        journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
+        
+        res = {}
+        res.update({'stock_account_input': stock_input_acc})
+        res.update({'stock_account_output': stock_output_acc})
+        res.update({'stock_journal': journal_id})  
+        
+        return res
+    
     def do_change_standard_price(self, cr, uid, ids, datas, context={}):
+        """ 
+             Changes the Standard Price of Product and parent products and creates an account move accordingly.
+            
+             @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
+             @param context: A standard dictionary 
+             
+             @return:  
+        
+        """           
         #TODO : TO Check 
         res = super(product_product, self).do_change_standard_price(cr, uid, ids, datas, context=context)
         bom_obj = self.pool.get('mrp.bom')
-        product_uom_obj = self.pool.get('product.uom')
+        def _compute_price(bom):
+            price = 0.0
+            if bom.bom_id :
+                if bom.bom_id.bom_lines :
+                    for bom_line in bom.bom_id.bom_lines :
+                        prod_price = self.read(cr, uid, bom_line.product_id.id, ['standard_price'])['standard_price']
+                        price += bom_line.product_qty *  prod_price
 
-        def _compute_price(bom):       
-            print bom.product_id
-            price = 0
-#            if bom.bom_lines:
-#                for sbom in bom.bom_lines:
-#                    print "--->>>" , sbom.name
-#                    price += _compute_price(sbom) * sbom.product_qty                    
-#            else:
-            parent_bom = bom_obj.search(cr, uid, [('bom_id', '=', False)])
-            for p in parent_bom:
-                test_obj = bom_obj.browse(cr, uid, p)
-                print test_obj
-                
-#            if no_child_bom and bom.id not in no_child_bom:
-#                other_bom = bom_obj.browse(cr, uid, no_child_bom)[0]
-#                if not other_bom.product_id.calculate_price:
-#                    price += _compute_price(other_bom) * other_bom.product_qty
-#                else:
-#                    price += other_bom.product_id.standard_price
-#            else:
-#                price += bom.product_id.standard_price
-#
-#            if bom.routing_id:
-#                for wline in bom.routing_id.workcenter_lines:
-#                    wc = wline.workcenter_id
-#                    cycle = wline.cycle_nbr
-#                    hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
-#                    price += wc.costs_cycle * cycle + wc.costs_hour * hour
-#                    price = product_uom_obj._compute_price(cr, uid, bom.product_uom.id, price, bom.product_id.uom_id.id)
-#            if bom.bom_lines:
-#                self.write(cr, uid, [bom.product_id.id], {'standard_price' : price/bom.product_qty})
-#            if bom.product_uom.id != bom.product_id.uom_id.id:
-#                price = product_uom_obj._compute_price(cr, uid, bom.product_uom.id, price, bom.product_id.uom_id.id)
-#            return price
-
-        
+                    accounts = self.get_product_accounts(cr, uid, bom.bom_id.product_id.id , context)
+                    
+                    datas = {
+                        'new_price' : price,
+                        'stock_output_account' : accounts['stock_account_output'],
+                        'stock_input_account' : accounts['stock_account_input'],
+                        'stock_journal' : accounts['stock_journal']
+                    }
+                    super(product_product, self).do_change_standard_price(cr, uid, [bom.bom_id.product_id.id], datas, context)
+                _compute_price(bom.bom_id)
+            return price
+       
         bom_ids = bom_obj.search(cr, uid, [('product_id', 'in', ids)])
+        
         for bom in bom_obj.browse(cr, uid, bom_ids):
             _compute_price(bom)
-        return res    
+
 product_product()
