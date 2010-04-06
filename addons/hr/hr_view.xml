@@ -88,7 +88,6 @@
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
-                    <field name="ssnid"/>
                     <field name="work_phone"/>
                     <field name="work_email"/>
                     <field name="department_id"/>
@@ -106,7 +105,6 @@
                     <filter icon="terp-partner" domain="[('parent_id','child_of',uid),('id', '!=', uid)]" string ="My Employees"/>
                     <separator orientation="vertical" />
                     <field name="name"/>
-                    <field name="ssnid"/>
                     <field name="department_id" widget="selection"/>
                     <field name="job_id" widget="selection"/>
                     <field name="parent_id" widget="selection" />

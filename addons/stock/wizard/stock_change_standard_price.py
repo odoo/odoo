@@ -159,27 +159,8 @@ class change_standard_price(osv.osv_memory):
             else:
                 raise osv.except_osv(_('Warning!'),_('No Change in Price.'))
         else:
-            raise osv.except_osv(_('Warning!'),_('No Accounts are defined for ' 
-                        'this product on its location.\nCan\'t create Move.'))
-        
-        id2 = data_obj._get_id(cr, uid, 'account', 'view_move_tree')
-        id3 = data_obj._get_id(cr, uid, 'account', 'view_move_form')
-        
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        
-        return {
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'account.move',
-                'res_id' : move_id,
-                'views': [(id3,'form'),(id2,'tree')],
-                'type': 'ir.actions.act_window',
-        }
-        prod_obj.do_change_standard_price(cr, uid, [rec_id], datas, context)
-        return {}        
+            pass
+        return {}
 
 change_standard_price()
 

@@ -156,32 +156,16 @@
                         <filter icon="terp-hr"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
-                        <separator orientation="vertical" />
-                        <filter
-                            icon="terp-hr"
-                            domain="[('state','=','draft')]"
-                            string="Draft"
-                            help="Draft Expense"/>
-                        <filter
-                            icon="terp-hr"
-                            domain="[('state','=','confirm')]"
-                            string="To Validate"
-                            help="Confirmed Expense"/>
-                        <filter
-                            icon="terp-hr"
-                            domain="[('state','=','accepted')]"
-                            string="To Pay"
-                            help="Expenses to Invoice"/>
-                        <separator orientation="vertical"/>
-                        <field name="user_id" select="1" widget="selection" />
-                        <field name="name" select='1'/>
-                        <field name="department_id" widget="selection" />
-                        <field name="state" select="1"/>
-                    </group>
-                    <newline />
-                    <group expand="1" string="Group By..." colspan="11" col="11">
-                        <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
-                    </group>
+                      </field>
+                      <field name="department_id" widget="selection" />
+                </group>
+                <newline />
+                <group expand="1" string="Group By..." colspan="11" col="11">
+                    <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
+                    <filter string="Employee" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Date" icon="terp-sale" domain="[]" context="{'group_by':'date'}"/>
+                </group>
                 </search>
             </field>
         </record>

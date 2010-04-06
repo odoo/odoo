@@ -91,8 +91,7 @@ class project_issue(osv.osv):
         'assigned_to' : fields.many2one('res.users', 'Assigned to'),
         'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
-                                                domain="[('partner_id', '=', partner_id)]",
-                                                required=True),
+                                                domain="[('partner_id', '=', partner_id)]"),
     }
 
     def _get_project(self, cr, uid, context):

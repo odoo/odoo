@@ -7,7 +7,7 @@
             <field name="model">hr.analytic.timesheet</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Timesheet Line">
+                <tree editable="bottom" string="Timesheet Lines">
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
                     <field name="date" on_change="on_change_date(date)"/>
                     <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id"/>
@@ -50,12 +50,12 @@
             <field name="arch" type="xml">
                 <search string="Timesheet">
                     <group col='8' colspan='4'>
-	                    <filter icon="terp-hr" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
-	                    <filter icon="terp-hr" domain="[('user_id','=',uid)]" string="My Work" help="My Work"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="user_id" select="1" widget="selection"/>
-	                    <field name="account_id" select="1" widget="selection"/>
-	                    <field name="date" select="1"/>
+                        <filter icon="terp-hr" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
+                        <filter icon="terp-hr" domain="[('user_id','=',uid)]" string="My Work" help="My Work"/>
+                        <separator orientation="vertical"/>
+                        <field name="user_id" select="1" widget="selection"/>
+                        <field name="account_id" select="1" widget="selection"/>
+                        <field name="date" select="1"/>
                     </group>
                 </search>
             </field>
@@ -83,11 +83,6 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
         </record>
-      <!--  <menuitem
-            action="act_hr_timesheet_line_evry1_all_form"
-            id="menu_act_hr_timesheet_line_evry1_all_form"
-            parent="hr_timesheet.menu_act_hr_timesheet_line_today_form"
-            groups="hr.group_hr_manager"/>-->
 
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>
