@@ -234,6 +234,9 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
         if fore.close_connection:
             # print "Closing connection because of handler"
             self.close_connection = fore.close_connection
+        if hasattr(fore, '_flush'):
+            fore._flush()
+
 
     def parse_rawline(self):
         """Parse a request (internal).
