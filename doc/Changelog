@@ -1,4 +1,197 @@
-2010-01-03: 5.0.7
+2010-04-02: 5.0.8
+=================
+
+Bugfixes (server)
+-----------------
+
+ * Not linked to a bug report:
+   * res_lang : if value of thousands_sep is not present in language,method will give error- 'moentary' name is not defined [IMP] clear cache of language on write,to be sure to get right value if value of language is changed before cache timeout
+   * bin/tools/convert.py: no need to import time since the eval(domain) is probably going to be removed or wrapped in an exception handler
+   * sql_db: avoid deadlock when releasing leaked cursors
+   * bin/tools/convert.py: reverted revision 2017.1.1: could not eval some strings. Need a dict with uid, active_id, active_ids, ...
+   * bin/tools/convert.py: missing time module
+   * i18n: fr_FR: missing information
+   * In the case we want to generate the RPM package, we change the version
+   * DONT pformat() each RPC request !
+   * reporting: change the way that para style are computed
+   * add cache to res.lang format() function
+   * fixed a bug in copy_data: it now copies the original (not translated) field value as the source value
+   * disabled "code" server action due to the security threat it poses, added --enable-code-actions command-line flag to enable it
+   * only admin can delete ir.property
+   * when deleting ir.property, do not delete the linked field
+   * correct import rng file
+   * 'Partner Manager' group should see the Partner menu
+   * removed python-xml from list of debian packages in doc/INSTALL
+   * remove ubuntu-related pyxml/python-xml hacks from openerp-server.py as pyxml shouldn't be used anywhere anymore
+   * Remove python-xml reference in setup.py
+ * https://launchpad.net/bugs/495948
+   * Corrected language code for Slovenian and Danish locales. Renamed corresponding PO files.
+ * https://launchpad.net/bugs/531430
+   * Remove the default values on the --no-netrpc and --no-xmlrpc
+ * https://launchpad.net/bugs/538399
+   * netrpc: Close the socket if there is a raised exception
+ * https://launchpad.net/bugs/532365
+   * Document : It should be allowed to browse through FTP,disregard to --no-databse-list option
+ * https://launchpad.net/bugs/531026
+   * Exploit Broken : Search  should have checked access rights of read
+ * https://launchpad.net/bugs/513290
+   * Export should honor the current locale(language) settings of the user.
+ * https://launchpad.net/bugs/535551
+   * Uninstalling a board_* module removes dashboard action, but user shuold be allowed to login with default action
+ * https://launchpad.net/bugs/514273
+   * Remove the libxml2 and libxslt dependencies for the packaging
+ * https://launchpad.net/bugs/314973
+   * do not keep connections to template1, template0 and postgres in the connection pool
+ * https://launchpad.net/bugs/544087
+   * Behaviour of fields.related corrected for copy() and write() calls
+ * https://launchpad.net/bugs/551664
+   * Evaluate domain in act_window element is now possible
+ * https://launchpad.net/bugs/528624
+   * Import : Any exception should be raised in well-manner
+ * https://launchpad.net/bugs/543521
+   * Export : Correction made when selection field value if False.
+ * https://launchpad.net/bugs/516568
+   * retro-compatibility: 'obj' is available in ir.action.server code
+ * https://launchpad.net/bugs/380955
+   * setup.py: add the missing librairies for the windows packaging
+ * https://launchpad.net/bugs/497364
+   * base: respect the limit and offset arguments of the search method
+
+
+Improvements (server)
+---------------------
+
+ * sql_db: improve logging
+ * The act_window does not show groups.This adds groups and rearranges the view with a notebook to ensure that the addition of this m2m field doesnt introduce a scroll
+
+
+Bugfixes (addons)
+-----------------
+
+ * Not linked to a bug report:
+   * base_contact: res.partner.job: when partner is set, the address is required. Add onchange on partner and on address.
+   * membership: bugfix + improved inheritance of membership_state field.function
+   * Base_contact : search() of job improved
+   * account_payment: added journal_id field in account.move.line.tree view
+   * Sale : Fiscal position from SO for invoice should be priorly taken from SO rather than Partner's properties
+   * Delivery : Better functional computation of weight based on move
+   * sale: move the product_uos_qty and product_uos fields to the
+   * event: made wizard of invoice creating more flexible (use onchange) + code refactoring
+   * audittrail: Check if the object exists or Not and raise an exception if it's not the case'
+   * hr_timesheet_sheet: Add a default value for the context keyword
+   * Improved mrp_jit smoke test in case the sale config wizard was run before installing mrp_jit. There is a side-effect but it's only on demo databases, and we'll fix this test in trunk when we can write better tests.
+   * account: product_id onchange on invoice lines were returning {} when no product_id was given. This was causing problems in other modules (account_analytic_default, account_analytic_plans) that inherited because of a key error 'value'. It now returns {'value':{}}.
+   * l10n_be: adaptation du module de localisation belge conformément à la nouvelle législation TVA pour les services intracom
+   * event: invoice creation from registrations
+   * purchase: security file update: added rights for manager. Fixed rights for user
+ * https://launchpad.net/bugs/524521
+   * Account : USer will be notified for unreconciling partial reconcilatins if he tries to cancel the invoice
+ * https://launchpad.net/bugs/540128
+ * https://launchpad.net/bugs/535098
+   * Account : Only those accounts are eligible to be Parents which have type=View
+ * https://launchpad.net/bugs/552455
+   * Sale : Make Invoice wizard should only create invoice for uninvoiced lines
+ * https://launchpad.net/bugs/528889
+   * Account : name_search() of account.tax.code overridden for better search
+ * https://launchpad.net/bugs/519220
+   * Delivery : Proper Weight calculation of stock picking
+ * https://launchpad.net/bugs/535058
+   * Purchase : Seperate packign should not be created if chained locations are used
+ * https://launchpad.net/bugs/545032
+   * Stock : Invoice from Stock should respect context for translations.
+   * stock: context lost in invoice wizard
+ * https://launchpad.net/bugs/530081
+   * Sale : Sale order's Invoice should have invoice reference of customer Invoice
+ * https://launchpad.net/bugs/545868
+   * Sale_crm : proper options set on wizard makesale
+ * https://launchpad.net/bugs/467880
+   * MRP : stock.warehouse.orderpoint for qty_multiple check of 0
+ * https://launchpad.net/bugs/544287
+   * Invoice object's Partner onchange had wrong parameter
+ * https://launchpad.net/bugs/535655
+   * Base_setup : Better display of Currency selection(Name + Code)
+ * https://launchpad.net/bugs/532728
+   * sale: Remove the product.group_uos group on the product_uos and product_uos_qty fields.
+ * https://launchpad.net/bugs/540443
+   * Sale : Fiscal position value has to be passed when Invoice is created from SO
+ * https://launchpad.net/bugs/532673
+   * delivery: replace 'id' with active_id in passing context of order(takes built in function id in webclient).
+ * https://launchpad.net/bugs/528871
+   * Account : Dupliacting tax code should not copy move lines
+ * https://launchpad.net/bugs/539707
+ * https://launchpad.net/bugs/514273
+   * Base_report_designer : Replaced libxslt/libxsml2 code by lxml
+ * https://launchpad.net/bugs/540946
+   * Hr_holidays : Constraint corrected for Holidays request(start date cannot be greater than end date)
+ * https://launchpad.net/bugs/548494
+   * Account : Account should not be removed/deactivated if it is linked to any property/partner
+ * https://launchpad.net/bugs/418080
+   * Document : Browse__files_using_ftp wizard corrected
+ * https://launchpad.net/bugs/541006
+   * MRP/Purchase : Seller delay has to be converted into integer for date calculations.
+ * https://launchpad.net/bugs/528978
+ * https://launchpad.net/bugs/528929
+   * Account : Tax code tree view should have company.
+ * https://launchpad.net/bugs/552461
+   * Scrum : Burndown chart was crashing when a taskwork entry is without date
+ * https://launchpad.net/bugs/553168
+   * Account : Journal's name_search() did not use context well
+ * https://launchpad.net/bugs/494352
+   * Sale : account_invoice_end() corrected/optimized so that it does not create any regression of duplicated pickings for SO
+ * https://launchpad.net/bugs/531238
+   * improved regression tests in sale and mrp_jit modules to test separately auto-chained locations. (bug 531238)
+   * mrp: use correct location chaining by calling action_confirm() on stock move instead of directly writing the status (bug 531238).
+ * https://launchpad.net/bugs/540151
+   * Event : Notify user before sending an email on confirming event
+ * https://launchpad.net/bugs/542379
+   * Account : Terp file had duplicated author,depends keys
+ * https://launchpad.net/bugs/539073
+   * account_date_check: If the date of the move line, is not in the
+ * https://launchpad.net/bugs/532073
+ * https://launchpad.net/bugs/526081
+   * MRP : Ondelete=cascade applied to important fields of stock.warehouse.orderpoint
+ * https://launchpad.net/bugs/535642
+   * Stock : Unlink() of Move corrected
+   * Stock :Picking removal should remove moves too
+ * https://launchpad.net/bugs/506431
+   * Use the file name instead of the content
+ * https://launchpad.net/bugs/531638
+   * Sale_crm : Code improved for partner onchange to take effect on SO
+ * https://launchpad.net/bugs/530926
+   * Account : Invoice group was missing access rights for tax and tax code
+ * https://launchpad.net/bugs/531416
+ * https://launchpad.net/bugs/535601
+   * Account : Proper query generation for computing debit.credit,balance
+ * https://launchpad.net/bugs/532365
+   * Document : It should be allowed to browse through FTP,disregard to --no-databse-list option
+ * https://launchpad.net/bugs/399817
+   * Sale : Cancelled partial packing should affect Sale order's Shipped field
+ * https://launchpad.net/bugs/538064
+   * Sale : Translations for RML texts entered into po/pot
+ * https://launchpad.net/bugs/531479
+   * Stock : drop view check added for stock_report_prodlots
+ * https://launchpad.net/bugs/504353
+   * Product : Conversion from unmatched categorized UoM now raises exception
+ * https://launchpad.net/bugs/532716
+   * MRP : Split production wizard corrected
+ * https://launchpad.net/bugs/538419
+
+
+Improvements (addons)
+---------------------
+
+ * base_contact: res.partner.address: use domain instead of value in context
+ * Stock :Layout for  Moves under Picking Improved
+ * Account : Fiscalyear and Period now have name_search
+ * Product : Duplicated demo data corrected
+ * purchase: moved smoke test into separate test dir and renamed demo data for consistency with sale/mrp smoke tests
+ * l10n_be: attribution de nouveaux codes plus explicites pour les taxes
+ * Account_voucher : Accounting entries should only be available for non-view accounts
+ * Account : Better view of Reconciled and Partially Reconciled entried with Entry Lines
+ * Account : Setting tax code name translateable (to be consistent with tax name)
+
+
+2010-03-01: 5.0.7
 =================
 
 Bugfixes (server)
