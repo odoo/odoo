@@ -699,7 +699,11 @@ class function(_column):
         if self._type == "integer":
             for r in res.keys():
                 # Converting value into string so that it does not affect XML-RPC Limits
-                res[r] = str(res[r])
+                if isinstance(res[r],dict): # To treat integer values with _multi attribute
+                    for record in res[r].keys():
+                        res[r][record] = str(res[r][record])
+                else:
+                    res[r] = str(res[r])
         return res
     get_memory = get
 
@@ -756,11 +760,14 @@ class related(function):
                         if self._type != "many2one":
                             t_id = t_data.id
                             t_data = t_data[self.arg[i]][0]
+                        else:
+                            t_data = False
+                            break
                     else:
                         t_id = t_data['id']
                         t_data = t_data[self.arg[i]]
 
-                if t_id:
+                if t_id and t_data:
                     obj.pool.get(field_detail['object']).write(cr,uid,[t_id],{args[-1]:values}, context=context)
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
