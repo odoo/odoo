@@ -71,3 +71,29 @@ class hr_holidays_report(osv.osv):
         """)
 hr_holidays_report()
 
+class hr_holidays_by_type(osv.osv):
+    _name = "hr.holidays.by.type"
+    _description = "Total holidays by type"
+    _auto = False
+    _columns = {
+        'name': fields.char('Leave Type',size=64),
+        'no_of_leaves' : fields.integer('Total leaves'),
+
+    }
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'hr_holidays_by_type')
+        cr.execute("""
+            create or replace view hr_holidays_by_type as (
+                 select
+                     min(hhl.id) as id,
+                     hhs.name as name,
+                     sum(hhl.number_of_days) * -1 as no_of_leaves
+                from
+                    hr_holidays as hhl,hr_holidays_status as hhs
+                where
+                    hhs.id = hhl.holiday_status_id and number_of_days < 0
+                group by
+                    hhs.name,hhl.holiday_status_id
+            )
+        """)
+hr_holidays_by_type()

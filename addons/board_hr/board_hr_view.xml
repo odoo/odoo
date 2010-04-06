@@ -33,15 +33,24 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="hr_holidays.open_allocation_holidays"/>
         </record>
-	<record id="action_timesheet_report_all" model="ir.actions.act_window">
-	        <field name="name">Timesheets by Month</field>
-	        <field name="type">ir.actions.act_window</field>
-	        <field name="res_model">timesheet.report</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">graph,tree</field>
-	        <field name="domain">[('user_id','=',uid)]</field>
-	        <field name="view_id" ref="hr_timesheet_sheet.view_timesheet_report_graph"/>
-	</record>
+		<record id="action_timesheet_report_all" model="ir.actions.act_window">
+		        <field name="name">Timesheets by Month</field>
+		        <field name="type">ir.actions.act_window</field>
+		        <field name="res_model">timesheet.report</field>
+		        <field name="view_type">form</field>
+		        <field name="view_mode">graph,tree</field>
+		        <field name="domain">[('user_id','=',uid)]</field>
+		        <field name="view_id" ref="hr_timesheet_sheet.view_timesheet_report_graph"/>
+		</record>
+
+		<record id="action_hr_holidays_by_type_all" model="ir.actions.act_window">
+		        <field name="name">Leaves by Type</field>
+		        <field name="type">ir.actions.act_window</field>
+		        <field name="res_model">hr.holidays.by.type</field>
+		        <field name="view_type">form</field>
+		        <field name="view_mode">graph,tree</field>
+		        <field name="view_id" ref="hr_holidays.view_hr_holidays_by_type_graph"/>
+		</record>
         <record id="board_hr_form" model="ir.ui.view">
             <field name="name">board.hr.form</field>
             <field name="model">board.board</field>
@@ -50,8 +59,9 @@
                 <form string="My Board">
                     <hpaned>
                         <child1>
-                              <action colspan="4" height="220" name="%(act_hr_current_timesheet_sheet_form)d" string="My current timesheet"  width="510"/>
-				<action colspan="4" height="220" name="%(action_timesheet_report_all)d" string="Timesheets by Month" />
+                            <action colspan="4" height="220" name="%(act_hr_current_timesheet_sheet_form)d" string="My current timesheet"  width="510"/>
+							<action colspan="4" height="220" name="%(action_timesheet_report_all)d" string="Timesheets by Month" />
+           					<action colspan="4" height="220" name="%(action_hr_holidays_by_type_all)d" string="Leaves by Type" />
                         </child1>
                         <child2>
                             <action colspan="4" height="220" name="%(action_view_holiday_status_board)d" string="My Leaves"/>
