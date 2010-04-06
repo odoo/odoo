@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:33:02+0000\n"
-"PO-Revision-Date: 2010-02-22 14:33:02+0000\n"
+"POT-Creation-Date: 2010-04-06 10:34:44+0000\n"
+"PO-Revision-Date: 2010-04-06 10:34:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,9 +66,9 @@ msgid "Net weight"
 msgstr "Nettopaino"
 
 #. module: product
-#: help:product.product,incoming_qty:0
-msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
-msgstr "Saapuviksi suunnitellut tuotteiden määrät valittuihin paikkoihin, tai kokonaisuudessaan paikkoja ei ole valittu."
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "Tuotteen mittayksikön kategoria"
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -212,7 +212,7 @@ msgstr "Saapuvat"
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr "Valmistetaan varastoon"
+msgstr "Valmista varastoon"
 
 #. module: product
 #: view:product.product:0
@@ -614,12 +614,12 @@ msgstr "Määrittää onko tuote näkyvissä tuotelistassa myyntitilausta tehtä
 #. module: product
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Myynnit & Ostot"
+msgstr "Myynti ja hankinta"
 
 #. module: product
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö"
+msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö."
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -838,6 +838,12 @@ msgid "DDR 256MB PC400"
 msgstr "DDR 256MB PC400"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!"
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Todellinen varasto"
@@ -858,6 +864,11 @@ msgid "Product Unit of Measure"
 msgstr "Tuotteen mittayksikkö"
 
 #. module: product
+#: help:product.product,incoming_qty:0
+msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
+msgstr "Saapuviksi suunnitellut tuotteiden määrät valittuihin paikkoihin, tai kokonaisuudessaan paikkoja ei ole valittu."
+
+#. module: product
 #: field:product.template,sale_ok:0
 msgid "Can be sold"
 msgstr "Voidaan myydä"
@@ -870,7 +881,7 @@ msgstr "Kokonainen PC lisälaitteineen"
 #. module: product
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Virhe: Oletusmittayksikkö ja ostojen mittayksikkö on oltava samassa kategoriassa."
+msgstr "Virhe: Oletus mittayksikkö ja ostojen mittayksikkö täytyy olla samassa kategoriassa."
 
 #. module: product
 #: model:product.template,name:product.product_product_mb2_product_template
@@ -1269,7 +1280,7 @@ msgstr "Määrä 2"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Information"
-msgstr ""
+msgstr "Tietoa"
 
 #. module: product
 #: view:product.product:0
@@ -1401,9 +1412,10 @@ msgid "This is the average time between the confirmation of the customer order a
 msgstr "Keskimääräinen aika asiakkaan tilausvahvistuksen ja valmiiden tuotteiden toimituksen välillä. Tämä on aika jonka lupaat asiakkaille."
 
 #. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
-msgstr "Tuotteen mittayksikön kategoria"
+#: help:product.template,uos_coeff:0
+msgid "Coefficient to convert UOM to UOS\n"
+" uos = uom * coeff"
+msgstr ""
 
 #. module: product
 #: wizard_field:product.price_list,init,qty3:0
@@ -1433,7 +1445,7 @@ msgstr "Hintalisä"
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "Hinnastoista ei voi olla päällekkäisiä versioita!"
 
 #. module: product
 #: rml:product.pricelist:0
@@ -1494,13 +1506,6 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: product
-#: help:product.template,uos_coeff:0
-msgid "Coefficient to convert UOM to UOS\n"
-" uom = uos * coeff"
-msgstr "Kerroin jolla mittayksikkö muunnetaan myyntiyksiköksi\n"
-" mittayksikkö = myyntiyksikkö * kerroin"
-
-#. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "Voidaan ostaa"
@@ -1540,6 +1545,7 @@ msgstr "Lavoitus"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
+#: code:addons/product/product.py:0
 #, python-format
 msgid "Warning !"
 msgstr "Varoitus!"

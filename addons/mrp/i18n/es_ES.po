@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:44:07+0000\n"
-"PO-Revision-Date: 2010-02-22 14:44:07+0000\n"
+"POT-Creation-Date: 2010-04-06 10:49:28+0000\n"
+"PO-Revision-Date: 2010-04-06 10:49:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -336,6 +336,12 @@ msgid "Production Orders"
 msgstr "Órdenes de producción"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Qty Multiple must be greater than zero."
+msgstr ""
+
+#. module: mrp
 #: rml:bom.structure:0
 #: field:mrp.procurement,product_qty:0
 #: rml:mrp.production.order:0
@@ -530,6 +536,12 @@ msgstr "Proceso producto de servicios"
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "Procurement convert into the draft purchase order."
 msgstr "Abastecimiento se convierte en la orden de compra borrador."
+
+#. module: mrp
+#: code:addons/mrp/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Before splitting the production lots,make sure this move or its Production Order has a Picking attached !\nYou must save the move before performing this operation."
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,message:0
@@ -985,6 +997,11 @@ msgstr "Número de ciclos"
 #: wizard_field:mrp.workcenter.load,init,measure_unit:0
 msgid "Amount measuring unit"
 msgstr "Importe unidad de medida"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_productminimumstockrule0
+msgid "Create minimum stock rules"
+msgstr "Crear reglas de stock mínimo"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1973,11 +1990,6 @@ msgid "Product supplier"
 msgstr "Proveedor producto"
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_productminimumstockrule0
-msgid "Create minimum stock rules"
-msgstr "Crear reglas de stock mínimo"
-
-#. module: mrp
 #: wizard_field:product.product.procurement,init,warehouse_id:0
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
@@ -1999,12 +2011,6 @@ msgstr "Producto servicio"
 #: field:mrp.procurement,close_move:0
 msgid "Close Move at end"
 msgstr "Movimiento de cierre al final"
-
-#. module: mrp
-#: code:addons/mrp/wizard/wizard_track_line.py:0
-#, python-format
-msgid "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
-msgstr ""
 
 #. module: mrp
 #: wizard_view:change_production_qty,confirm:0

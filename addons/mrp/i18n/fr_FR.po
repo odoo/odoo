@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:33:48+0000\n"
-"PO-Revision-Date: 2010-02-22 14:33:48+0000\n"
+"POT-Creation-Date: 2010-04-06 10:35:34+0000\n"
+"PO-Revision-Date: 2010-04-06 10:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,12 +28,12 @@ msgstr "Nombre de Cycles"
 #. module: mrp
 #: help:mrp.procurement.compute.all,init,automatic:0
 msgid "Triggers an automatic procurement for all products that have a virtual stock under 0. You should probably not use this option, we suggest using a MTO configuration on products."
-msgstr "Déclenche un approvisionnement automatique pour tous les produits qui ont un stock virtuel inférieur à 0. Vous ne devriez normalement pas utiliser cette option, nous vous suggérons d'utiliser une configuration de type \"Production à la demande\" sur les produits."
+msgstr "Déclenche un approvisionnement automatique pour tous les produits qui ont un stock virtuel inférieur à 0. Vous ne devriez normalement pas utiliser cette option, nous vous suggérons d'utiliser une configuration de type \"Production sur commande\" sur les produits."
 
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
 msgid "Manufacturing Resource Planning"
-msgstr "Gestion des Ressources de Production"
+msgstr "Planification des ressources de productions"
 
 #. module: mrp
 #: constraint:ir.actions.act_window:0
@@ -55,7 +55,7 @@ msgstr "Calculer seulement les règles du stock minimum"
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action5
 msgid "Exceptions Procurements"
-msgstr "Approvisionnements en Exception"
+msgstr "Approvisionnements en exceptions"
 
 #. module: mrp
 #: field:mrp.procurement,product_uos_qty:0
@@ -86,7 +86,7 @@ msgstr "Liste des Colisages"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
 msgid "Stockable Stock"
-msgstr "Stock Stockable"
+msgstr "Stock de produit stockable"
 
 #. module: mrp
 #: code:addons/mrp/wizard/wizard_change_production_qty.py:0
@@ -147,7 +147,7 @@ msgstr "XML non valide pour l'architecture de la vue"
 #. module: mrp
 #: help:res.company,security_lead:0
 msgid "This is the days added to what you promise to customers for security purpose"
-msgstr "Ce sont les jours ajoutés à ce que vous avez promis au clients pour des raisons de sécurité"
+msgstr "C'est un délai de sécurité qui vient s'ajouter à ce que vous avez promis au clients."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
@@ -177,7 +177,7 @@ msgstr "Nombre d'opérations que ce poste de charge peut faire en parallèle. si
 #. module: mrp
 #: wizard_button:product.product.procurement,init,create:0
 msgid "Ask New Products"
-msgstr "Demander de Nouveaux Produits"
+msgstr "Demande de nouveaux produits"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reordering
@@ -210,7 +210,7 @@ msgstr "Information sur la Capacité"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Packing Exception"
-msgstr "Exception de Colisage"
+msgstr "Exception de colisage"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_orderrfq0
@@ -220,7 +220,7 @@ msgstr "Un ordre d'achat est créé pour une demande sous-traitée."
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Destination Location"
-msgstr "Emplacement de Destination"
+msgstr "Emplacement de destination"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -241,17 +241,17 @@ msgstr "produits"
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Partner Ref"
-msgstr "Réf. Partenaire"
+msgstr "Réf partenaire"
 
 #. module: mrp
 #: help:mrp.procurement.orderpoint.compute,init,automatic:0
 msgid "If the stock of a product is under 0, it will act like an orderpoint"
-msgstr "Si le stock du produit est inférieur à 0, il sera traité comme un point de commande."
+msgstr "Si le stock d'un produit est négatif, il est considéré comme un point de commande"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,init,measure_unit:0
 msgid "Amount in hours"
-msgstr "Montant en Heures"
+msgstr "Montant en heures"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
@@ -261,7 +261,7 @@ msgstr "Biens Prévus"
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_producttostockrules0
 msgid "you can see the minimum stock rules from product"
-msgstr "Vous pouvez voir les règles de stock minimum pour ce produit"
+msgstr "Vous pouvez visualiser les règles de stock minimum pour le produit"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -304,7 +304,7 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "Stockable Request"
-msgstr "Requête Stockable"
+msgstr "Demande stockable"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -321,7 +321,7 @@ msgstr "Service à la commande"
 #: help:stock.warehouse.orderpoint,product_max_qty:0
 #: help:stock.warehouse.orderpoint,product_min_qty:0
 msgid "When the virtual stock goes belong the Min Quantity, Open ERP generates a procurement to bring the virtual stock to the Max Quantity."
-msgstr "Lorsque le stock virtuel descend en dessous de la Quantité Minimale, Open ERP génère un approvisionnement pour amener le stock virtuel au niveau de la Quantité Maximale."
+msgstr "Quand le stock virtuel descendra en dessous de la quantité minimale, OpenERP générera un approvisionnement pour porter le stock virtuel à la quantité Max."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockmts0
@@ -334,6 +334,12 @@ msgstr "Sur stock stockable"
 #: view:mrp.production:0
 msgid "Production Orders"
 msgstr "Ordres de Production"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Qty Multiple must be greater than zero."
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -363,7 +369,7 @@ msgstr "Confirmer la Production"
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Product Quantity"
-msgstr ""
+msgstr "Quantité de produit"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
@@ -406,7 +412,7 @@ msgstr "Urgent"
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Product Standard Price"
-msgstr ""
+msgstr "Prix standard du produit"
 
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
@@ -530,6 +536,12 @@ msgstr "Processus produit service"
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "Procurement convert into the draft purchase order."
 msgstr "Approvisionnement converti en commande d'achat au brouillon."
+
+#. module: mrp
+#: code:addons/mrp/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Before splitting the production lots,make sure this move or its Production Order has a Picking attached !\nYou must save the move before performing this operation."
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,message:0
@@ -884,7 +896,7 @@ msgstr "Machine"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_servicemts0
 msgid "Make to stock"
-msgstr "Production sur stock"
+msgstr "Sur stock"
 
 #. module: mrp
 #: field:mrp.workcenter,name:0
@@ -985,6 +997,11 @@ msgstr "Nombre de cycles"
 #: wizard_field:mrp.workcenter.load,init,measure_unit:0
 msgid "Amount measuring unit"
 msgstr "Unité de Mesure du Montant"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_productminimumstockrule0
+msgid "Create minimum stock rules"
+msgstr "Créer les règles de Stock Minimum"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1134,7 +1151,7 @@ msgstr "Rendement produit"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse_orderpoint
 msgid "Orderpoint minimum rule"
-msgstr "Règle de point de commande minimum"
+msgstr "Règle de stock minimum"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicemts0
@@ -1973,11 +1990,6 @@ msgid "Product supplier"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_productminimumstockrule0
-msgid "Create minimum stock rules"
-msgstr "Créer les règles de Stock Minimum"
-
-#. module: mrp
 #: wizard_field:product.product.procurement,init,warehouse_id:0
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
@@ -1999,12 +2011,6 @@ msgstr "Produit de type Service"
 #: field:mrp.procurement,close_move:0
 msgid "Close Move at end"
 msgstr "Terminer le mouvement"
-
-#. module: mrp
-#: code:addons/mrp/wizard/wizard_track_line.py:0
-#, python-format
-msgid "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
-msgstr ""
 
 #. module: mrp
 #: wizard_view:change_production_qty,confirm:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:41:42+0000\n"
-"PO-Revision-Date: 2010-02-22 14:41:42+0000\n"
+"POT-Creation-Date: 2010-04-06 10:45:55+0000\n"
+"PO-Revision-Date: 2010-04-06 10:45:55+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,12 +18,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
 msgid "Moves Created"
-msgstr ""
+msgstr "Перемещение создано"
 
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "No. Of Cycles"
-msgstr ""
+msgstr "№ цикла"
 
 #. module: mrp
 #: help:mrp.procurement.compute.all,init,automatic:0
@@ -33,7 +33,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
 msgid "Manufacturing Resource Planning"
-msgstr ""
+msgstr "Планирование материальных ресурсов"
 
 #. module: mrp
 #: constraint:ir.actions.act_window:0
@@ -43,19 +43,19 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
 msgid "Revision"
-msgstr ""
+msgstr "Ревизия"
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
 #: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
 msgid "Compute Stock Minimum Rules Only"
-msgstr ""
+msgstr "Правила вычисления минимального запаса"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
 #: model:ir.ui.menu,name:mrp.menu_mrp_procurement_action5
 msgid "Exceptions Procurements"
-msgstr ""
+msgstr "Исключения поставок"
 
 #. module: mrp
 #: field:mrp.procurement,product_uos_qty:0
@@ -65,7 +65,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Workcenters"
-msgstr ""
+msgstr "Используемые мощности маршрута"
 
 #. module: mrp
 #: help:mrp.property,composition:0
@@ -76,7 +76,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr ""
+msgstr "Маршруты"
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
@@ -86,7 +86,7 @@ msgstr "Упаковочный лист"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
 msgid "Stockable Stock"
-msgstr ""
+msgstr "Склад для складирования"
 
 #. module: mrp
 #: code:addons/mrp/wizard/wizard_change_production_qty.py:0
@@ -114,7 +114,7 @@ msgstr "Ссылка"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr ""
+msgstr "Конечный продукт"
 
 #. module: mrp
 #: wizard_field:mrp.procurement.compute.all,init,automatic:0
@@ -137,7 +137,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "Set / Pack"
-msgstr ""
+msgstr "Установить / Упаковать"
 
 #. module: mrp
 #: constraint:ir.ui.view:0
@@ -167,7 +167,7 @@ msgstr "Продукция и местоположения"
 #. module: mrp
 #: view:res.company:0
 msgid "MRP & Logistic Scheduler"
-msgstr ""
+msgstr "ПМР и Логистическое планирование"
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
@@ -334,6 +334,12 @@ msgstr ""
 #: view:mrp.production:0
 msgid "Production Orders"
 msgstr "Заказы на производство"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Qty Multiple must be greater than zero."
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -529,6 +535,12 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "Procurement convert into the draft purchase order."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Before splitting the production lots,make sure this move or its Production Order has a Picking attached !\nYou must save the move before performing this operation."
 msgstr ""
 
 #. module: mrp
@@ -985,6 +997,11 @@ msgstr ""
 #: wizard_field:mrp.workcenter.load,init,measure_unit:0
 msgid "Amount measuring unit"
 msgstr "Ед. изм. количества"
+
+#. module: mrp
+#: model:process.node,note:mrp.process_node_productminimumstockrule0
+msgid "Create minimum stock rules"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1972,11 +1989,6 @@ msgid "Product supplier"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_productminimumstockrule0
-msgid "Create minimum stock rules"
-msgstr ""
-
-#. module: mrp
 #: wizard_field:product.product.procurement,init,warehouse_id:0
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
@@ -1997,12 +2009,6 @@ msgstr ""
 #. module: mrp
 #: field:mrp.procurement,close_move:0
 msgid "Close Move at end"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/wizard/wizard_track_line.py:0
-#, python-format
-msgid "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
 msgstr ""
 
 #. module: mrp

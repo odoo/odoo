@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:44:56+0000\n"
-"PO-Revision-Date: 2010-02-22 14:44:56+0000\n"
+"POT-Creation-Date: 2010-04-06 10:50:22+0000\n"
+"PO-Revision-Date: 2010-04-06 10:50:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,16 +28,21 @@ msgstr ""
 #. module: sale_crm
 #: help:crm.case.make_order,init,partner_id:0
 msgid "Use this partner if there is no partner on the case"
+msgstr "Använd denna partner om det inte finns någon partner på ärendet"
+
+#. module: sale_crm
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Partial Delivery"
 msgstr ""
 
 #. module: sale_crm
 #: wizard_button:sale_crm.make_case,init,create:0
 msgid "Create"
-msgstr ""
+msgstr "Skapa"
 
 #. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "All at once"
+#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
+msgid "Opporunity convert to the Pricelist"
 msgstr ""
 
 #. module: sale_crm
@@ -48,17 +53,17 @@ msgstr ""
 #. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_crmopportunityquotation
 msgid "Opportunity goes into the quotation"
-msgstr ""
+msgstr "Möjlighet blir offert"
 
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_contractanalytic0
 msgid "Analytic account"
-msgstr ""
+msgstr "Objekt"
 
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_crmquotation0
 msgid "Convert opportunity to quotation"
-msgstr ""
+msgstr "Konvertera en möjlighet till en offert"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/makesale.py:0
@@ -80,12 +85,12 @@ msgstr ""
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,picking_policy:0
 msgid "Packing Policy"
-msgstr ""
+msgstr "Packvillkor"
 
 #. module: sale_crm
 #: wizard_button:crm.case.make_order,init,order:0
 msgid "Create Quote"
-msgstr ""
+msgstr "Skapa offert"
 
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_contractpricelist0
@@ -95,7 +100,7 @@ msgstr ""
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_crmopportunity0
 msgid "CRM Opportunity"
-msgstr ""
+msgstr "CFM möjlighet"
 
 #. module: sale_crm
 #: model:ir.module.module,shortdesc:sale_crm.module_meta_information
@@ -105,28 +110,23 @@ msgstr ""
 #. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_opportunityquotation0
 msgid "Opportunity convert into quotation"
-msgstr ""
-
-#. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "Direct Delivery"
-msgstr ""
+msgstr "Möjlighet konverterad till offert"
 
 #. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_opportunityquotation0
 msgid "Opportunity Quotation"
-msgstr ""
+msgstr "Möjlighetsoffert"
 
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_crmquotation0
 msgid "Quotation"
-msgstr ""
+msgstr "Offert"
 
 #. module: sale_crm
 #: view:crm.case:0
 #: wizard_view:crm.case.make_order,init:0
 msgid "Convert to Quote"
-msgstr ""
+msgstr "Konvertera till offert"
 
 #. module: sale_crm
 #: help:crm.case.make_order,init,close:0
@@ -134,8 +134,8 @@ msgid "Check this to close the case after having created the sale order."
 msgstr ""
 
 #. module: sale_crm
-#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
-msgid "Opporunity convert to the Pricelist"
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Complete Delivery"
 msgstr ""
 
 #. module: sale_crm
@@ -156,18 +156,18 @@ msgstr ""
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,products:0
 msgid "Products"
-msgstr ""
+msgstr "Produkter"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,close:0
 msgid "Close Case"
-msgstr ""
+msgstr "Avsluta ärendet"
 
 #. module: sale_crm
 #: model:ir.actions.wizard,name:sale_crm.sale_crm_make_case_wizard
 #: wizard_view:sale_crm.make_case,init:0
 msgid "Make Case"
-msgstr ""
+msgstr "Skapa ärende"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,shop_id:0
@@ -192,27 +192,27 @@ msgstr ""
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,name:0
 msgid "Case Description"
-msgstr ""
+msgstr "Ärende beskrivning"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,analytic_account:0
 #: model:process.transition,note:sale_crm.process_transition_opportunityanalytic0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Objekt"
 
 #. module: sale_crm
 #: model:ir.actions.wizard,name:sale_crm.sale_crm_wizard
 msgid "Make Quotation"
-msgstr ""
+msgstr "Skapa offert"
 
 #. module: sale_crm
 #: wizard_button:crm.case.make_order,init,end:0
 #: wizard_button:sale_crm.make_case,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,section:0
 msgid "Case Section"
-msgstr ""
+msgstr "Ärende sektion"
 

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:33:48+0000\n"
-"PO-Revision-Date: 2010-02-22 14:33:48+0000\n"
+"POT-Creation-Date: 2010-04-06 10:35:34+0000\n"
+"PO-Revision-Date: 2010-04-06 10:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -83,6 +83,12 @@ msgstr "Sélectionnez le Message"
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used to value incoming stock for the current product category"
 msgstr "Ce compte sera utilisé pour valoriser le stock entrant pour cette catégorie de produit."
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You cannot remove/deactivate an account which is set as a property to any Partner!"
+msgstr ""
 
 #. module: account
 #: help:account.invoice,period_id:0
@@ -316,6 +322,7 @@ msgid "Fixed"
 msgstr "Fixe"
 
 #. module: account
+#: code:addons/account/account.py:0
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Warning !"
@@ -2118,14 +2125,15 @@ msgid "x Expenses Credit Notes Journal"
 msgstr "Journal des Dépenses de Notes de Crédits"
 
 #. module: account
-#: field:account.analytic.journal,type:0
-#: field:account.bank.statement.line,type:0
-#: field:account.invoice,type:0
-#: field:account.journal,type:0
-#: field:account.move,type:0
-#: field:account.move.reconcile,type:0
-msgid "Type"
-msgstr "Type"
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            if abs(amount) < 10 ** -int(config['price_accuracy']):\n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                self.pool.get('account.move.line"
+msgstr ""
 
 #. module: account
 #: view:account.journal:0
@@ -2574,7 +2582,7 @@ msgstr "2"
 #. module: account
 #: wizard_view:account.chart,init:0
 msgid "(If you do not select Fiscal year it will take all open fiscal years)"
-msgstr "(Si vous ne sélectionnez pas d'année Fiscale, il prendra toutes les années fiscales ouvertes)"
+msgstr "(Si vous ne sélectionnez pas d'année fiscale, toutes les années fiscales ouvertes seront prises en compte)"
 
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
@@ -3200,6 +3208,12 @@ msgid "Reconcile"
 msgstr "Rapprocher"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "You cannot cancel the Invoice which is Partially Paid! You need to unreconcile concerned payment entries!"
+msgstr ""
+
+#. module: account
 #: rml:account.overdue:0
 msgid "Best regards."
 msgstr "Nous vous prions d'agréer, Madame, Monsieur, l'expression de nos sentiments distingués."
@@ -3663,6 +3677,7 @@ msgid "Generate Fiscal Year Opening Entries"
 msgstr "Générer les écritures d'ouvertures d'exercice fiscal"
 
 #. module: account
+#: view:account.move.reconcile:0
 #: model:ir.actions.wizard,name:account.wizard_reconcile
 msgid "Reconcile Entries"
 msgstr "Écritures lettrées"
@@ -3840,6 +3855,11 @@ msgid "Create"
 msgstr "Créer"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_account_move
+msgid "All Account Entries"
+msgstr ""
+
+#. module: account
 #: model:process.transition.action,name:account.process_transition_action_createentries0
 msgid "Create entry"
 msgstr "Créer une écriture"
@@ -3920,6 +3940,7 @@ msgstr "Journal centralisé"
 #: code:addons/account/account_analytic_line.py:0
 #: code:addons/account/account_bank_statement.py:0
 #: code:addons/account/account_move_line.py:0
+#: code:addons/account/invoice.py:0
 #: code:addons/account/wizard/wizard_pay_invoice.py:0
 #: code:addons/account/wizard/wizard_refund.py:0
 #, python-format
@@ -4007,6 +4028,11 @@ msgstr "Créer les écritures"
 #: view:account.analytic.line:0
 msgid "Project line"
 msgstr "Ligne de projet"
+
+#. module: account
+#: view:account.move.reconcile:0
+msgid "Partial Reconcile Entries"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -4139,6 +4165,16 @@ msgid "Maturity date"
 msgstr "Echéance"
 
 #. module: account
+#: field:account.analytic.journal,type:0
+#: field:account.bank.statement.line,type:0
+#: field:account.invoice,type:0
+#: field:account.journal,type:0
+#: field:account.move,type:0
+#: field:account.move.reconcile,type:0
+msgid "Type"
+msgstr "Type"
+
+#. module: account
 #: view:account.subscription:0
 msgid "Entry Subscription"
 msgstr "Écriture d'abonnement"
@@ -4180,7 +4216,7 @@ msgstr "Factures en brouillon"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Fiscal Position Template Tax Mapping"
-msgstr "Correspondances des Modèles de Taxe des Positions Fiscales"
+msgstr "Affectation des taxes dans le modèle de régime fiscal"
 
 #. module: account
 #: rml:account.invoice:0
@@ -4346,17 +4382,6 @@ msgstr "Quantité Maximale"
 #: field:account.period,name:0
 msgid "Period Name"
 msgstr "Période"
-
-#. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            if abs(amount) < 0.0001:\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -4858,7 +4883,7 @@ msgstr "Fichier de relevé"
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequences"
-msgstr "Séquences des exercices"
+msgstr "Séquences des exercices fiscaux"
 
 #. module: account
 #: view:account.model.line:0
@@ -4927,7 +4952,7 @@ msgstr "Écritures comptables"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_unreconciled
 msgid "Receivables & Payables"
-msgstr "Créditeurs & Débiteurs"
+msgstr ""
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -5226,7 +5251,7 @@ msgstr ""
 #. module: account
 #: help:account.journal,centralisation:0
 msgid "Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."
-msgstr "Cochez cette case pour spécifier que chaque entrée de ce journal ne créera pas une nouvelle contrepartie mais partagera la même contrepartie. Cela est utilisé dans la clôture des années fiscales."
+msgstr "Cochez cette case pour spécifier que chaque écriture de ce journal ne créera pas une nouvelle contrepartie mais partagera la même contrepartie. Cela est utilisé dans la clôture des exercices fiscaux."
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -5356,7 +5381,7 @@ msgstr "Journal analytique"
 #: field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
-msgstr "Mapping de Compte"
+msgstr "Affectation des comptes"
 
 #. module: account
 #: view:product.product:0
@@ -5604,6 +5629,11 @@ msgid "Check this box if you want to use a different sequence for each created j
 msgstr "Cocher cette case si vous voulez utiliser des séquences différentes pour la numérotation de chaque journal créé. Sans cela, tous utiliseront la même numérotation."
 
 #. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
+msgid "All Receivables & Payables"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.wizard,name:account.wizard_populate_statement_from_inv
 msgid "Import invoices"
 msgstr "Importer des factures"
@@ -5761,11 +5791,6 @@ msgstr "Sélectionner les lignes de mouvements qui ne peuvent être à l'état b
 #: wizard_button:account.wizard_paid_open,init,end:0
 msgid "No"
 msgstr "Non"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.act_account_partner_account_move
-msgid "All account entries"
-msgstr "Toutes les entrées de compte"
 
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
@@ -6068,7 +6093,7 @@ msgstr "Comptes bancaires"
 #. module: account
 #: constraint:account.period:0
 msgid "Invalid period ! Some periods overlap or the date period is not in the scope of the fiscal year. "
-msgstr "Période non valide ! Certaines périodes se chevauchent ou la date de la période n'est pas incluse dans l'année fiscale. "
+msgstr "Période incorrecte ! Certaines périodes se chevauchent ou la période n'est pas incluse dans l'exercice fiscal. "
 
 #. module: account
 #: help:account.journal,invoice_sequence_id:0
@@ -6092,7 +6117,7 @@ msgstr "Ce champ permet de choisir les journaux comptables que vous désirez pou
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error ! The duration of the Fiscal Year is invalid. "
-msgstr "Erreur ! La durée de l'Année Fiscale n'est pas valide. "
+msgstr "Erreur ! La durée de l'exercice fiscal est incorrecte. "
 
 #. module: account
 #: selection:account.analytic.account,state:0

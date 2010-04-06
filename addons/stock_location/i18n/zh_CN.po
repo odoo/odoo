@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:27:47+0000\n"
-"PO-Revision-Date: 2010-02-22 14:27:47+0000\n"
+"POT-Creation-Date: 2010-04-06 10:28:12+0000\n"
+"PO-Revision-Date: 2010-04-06 10:28:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: stock_location
 #: help:stock.location.path,delay:0
 msgid "Number of days to do this transition"
-msgstr "可过渡天数"
+msgstr "转换要的天数"
 
 #. module: stock_location
 #: constraint:ir.ui.view:0
@@ -28,7 +28,7 @@ msgstr "无效XML视图结构!"
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
 msgid "Stock Location Paths"
-msgstr "库存位置路径"
+msgstr "库存库位路径"
 
 #. module: stock_location
 #: constraint:ir.model:0
@@ -38,22 +38,22 @@ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 #. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Automatic No Step Added"
-msgstr "自动无步骤增加"
+msgstr "自动没步骤增加"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
 msgid "These rules set the right path of the product in the whole location tree."
-msgstr "这些规则确定整个区域中正确的货品路径"
+msgstr "这些规则确定了库位树正确的产品路径"
 
 #. module: stock_location
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
-msgstr "源货位"
+msgstr "源库位"
 
 #. module: stock_location
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
-msgstr "目标货位"
+msgstr "目标库位"
 
 #. module: stock_location
 #: field:stock.location.path,auto:0
@@ -64,7 +64,7 @@ msgstr "自动调拨"
 #. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
-msgstr "货品"
+msgstr "产品"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -74,14 +74,13 @@ msgstr "手动操作"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "stock.location.path"
-msgstr "stock.location.path"
+msgstr "库存.库位.路径"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
 msgid "This is used to define paths the product has to follow within the location tree.\n"
 "The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
-msgstr "这些规则确定了货位树的货品路径。\n"
-"‘自动调拨’值将在现有库存调拨后创建一个新自动验证的库存调拨。‘手动操作’这库存调拨要工人验证。采用‘自动无步骤增加’则原调拨的货位被取代。"
+msgstr "这些规则确定了库位树正确的产品路径.‘自动调拨’将创建库存调拨后当前将自动验证.‘手动操作’这库存调拨要工人验证.‘自动没增加步骤’库位是取代原来的"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -93,15 +92,15 @@ msgstr "操作"
 #: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr "货位路径"
+msgstr "库位路径"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
 msgid "Delay (days)"
-msgstr "延期（天）"
+msgstr "延期(天)"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Procurement & Locations"
-msgstr "需求与货位"
+msgstr "产品需求&库位"
 

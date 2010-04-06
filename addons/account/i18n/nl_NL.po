@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:31:31+0000\n"
-"PO-Revision-Date: 2010-02-22 14:31:31+0000\n"
+"POT-Creation-Date: 2010-04-06 10:33:05+0000\n"
+"PO-Revision-Date: 2010-04-06 10:33:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -83,6 +83,12 @@ msgstr "Selecteer bericht"
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used to value incoming stock for the current product category"
 msgstr "Deze rekening wordt gebruikt voor ontvangen voorraadwaarde van de huidige productcategorie"
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You cannot remove/deactivate an account which is set as a property to any Partner!"
+msgstr ""
 
 #. module: account
 #: help:account.invoice,period_id:0
@@ -316,6 +322,7 @@ msgid "Fixed"
 msgstr "Vastgezet"
 
 #. module: account
+#: code:addons/account/account.py:0
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Warning !"
@@ -2118,14 +2125,15 @@ msgid "x Expenses Credit Notes Journal"
 msgstr "Uitgaven credit nota's dagboek"
 
 #. module: account
-#: field:account.analytic.journal,type:0
-#: field:account.bank.statement.line,type:0
-#: field:account.invoice,type:0
-#: field:account.journal,type:0
-#: field:account.move,type:0
-#: field:account.move.reconcile,type:0
-msgid "Type"
-msgstr "Type"
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            if abs(amount) < 10 ** -int(config['price_accuracy']):\n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                self.pool.get('account.move.line"
+msgstr ""
 
 #. module: account
 #: view:account.journal:0
@@ -3200,6 +3208,12 @@ msgid "Reconcile"
 msgstr "Letter af"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "You cannot cancel the Invoice which is Partially Paid! You need to unreconcile concerned payment entries!"
+msgstr ""
+
+#. module: account
 #: rml:account.overdue:0
 msgid "Best regards."
 msgstr "Met vriendelijke groeten,"
@@ -3663,6 +3677,7 @@ msgid "Generate Fiscal Year Opening Entries"
 msgstr "Genereer boekjaar openingsbalans"
 
 #. module: account
+#: view:account.move.reconcile:0
 #: model:ir.actions.wizard,name:account.wizard_reconcile
 msgid "Reconcile Entries"
 msgstr "Letter boekingen af"
@@ -3840,6 +3855,11 @@ msgid "Create"
 msgstr "Aanmaken"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_account_move
+msgid "All Account Entries"
+msgstr ""
+
+#. module: account
 #: model:process.transition.action,name:account.process_transition_action_createentries0
 msgid "Create entry"
 msgstr "Maak boeking"
@@ -3920,6 +3940,7 @@ msgstr "Centraal dagboek"
 #: code:addons/account/account_analytic_line.py:0
 #: code:addons/account/account_bank_statement.py:0
 #: code:addons/account/account_move_line.py:0
+#: code:addons/account/invoice.py:0
 #: code:addons/account/wizard/wizard_pay_invoice.py:0
 #: code:addons/account/wizard/wizard_refund.py:0
 #, python-format
@@ -4007,6 +4028,11 @@ msgstr "Creëer boekingen"
 #: view:account.analytic.line:0
 msgid "Project line"
 msgstr "Project regel"
+
+#. module: account
+#: view:account.move.reconcile:0
+msgid "Partial Reconcile Entries"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -4137,6 +4163,16 @@ msgstr "Grootboekkaart verdeling"
 #: rml:account.overdue:0
 msgid "Maturity date"
 msgstr "Vervaldatum"
+
+#. module: account
+#: field:account.analytic.journal,type:0
+#: field:account.bank.statement.line,type:0
+#: field:account.invoice,type:0
+#: field:account.journal,type:0
+#: field:account.move,type:0
+#: field:account.move.reconcile,type:0
+msgid "Type"
+msgstr "Type"
 
 #. module: account
 #: view:account.subscription:0
@@ -4346,17 +4382,6 @@ msgstr "Maximale hoeveelheid"
 #: field:account.period,name:0
 msgid "Period Name"
 msgstr "Periodenaam"
-
-#. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            if abs(amount) < 0.0001:\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -4927,7 +4952,7 @@ msgstr "Boekingen"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_unreconciled
 msgid "Receivables & Payables"
-msgstr "Debiteuren & crediteuren"
+msgstr ""
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -5604,6 +5629,11 @@ msgid "Check this box if you want to use a different sequence for each created j
 msgstr "Vink dit vakje aan indien u een andere reeks voor elk aangemaakt dagboek wenst, anders zullen ze alle dezelfde reeks gebruiken."
 
 #. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
+msgid "All Receivables & Payables"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.wizard,name:account.wizard_populate_statement_from_inv
 msgid "Import invoices"
 msgstr "Importeer facturen"
@@ -5761,11 +5791,6 @@ msgstr "Geselecteerde mutaties hebben geen boekingen in de concept status"
 #: wizard_button:account.wizard_paid_open,init,end:0
 msgid "No"
 msgstr "Nee"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.act_account_partner_account_move
-msgid "All account entries"
-msgstr "Alle boekingsregels"
 
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:39:18+0000\n"
-"PO-Revision-Date: 2010-02-22 14:39:18+0000\n"
+"POT-Creation-Date: 2010-04-06 10:43:15+0000\n"
+"PO-Revision-Date: 2010-04-06 10:43:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,22 +23,22 @@ msgstr ""
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours summary by user"
-msgstr ""
+msgstr "Resumo de horas por usuário"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr ""
+msgstr "Data da Última fatura"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
+msgstr "Calculado utilizando a fórmula: preço máximo fatura - valor faturado"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-msgstr ""
+msgstr "Calculado utilizando a fórmula: quantidade máxima - total de horas"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all
@@ -50,7 +50,7 @@ msgstr "Todas as contas analíticas"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_open
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_open
 msgid "My Current Accounts"
-msgstr ""
+msgstr "Minhas contas atuais"
 
 #. module: account_analytic_analysis
 #: constraint:ir.ui.view:0
@@ -65,7 +65,7 @@ msgstr "Data da última fatura criada para esta conta analítica."
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theorical Revenue"
-msgstr ""
+msgstr "Receita Projetada"
 
 #. module: account_analytic_analysis
 #: constraint:ir.actions.act_window:0
@@ -75,7 +75,7 @@ msgstr "Nome de modelo inválido na definição da ação"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
-msgstr ""
+msgstr "Calculado usando a fórmula: Receita Projetada - Custos Totais"
 
 #. module: account_analytic_analysis
 #: constraint:ir.model:0
@@ -91,12 +91,12 @@ msgstr "Nova conta analítica"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theorical Margin"
-msgstr ""
+msgstr "Marem Projetada"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr "Taxa de margem real (%)"
+msgstr "Taxa Real de Margem"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_open
@@ -107,17 +107,17 @@ msgstr "Contas analíticas atuais"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr ""
+msgstr "Data do último trabalho realizado nesta conta."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
 msgid "If invoice from the costs, this is the date of the latest work or cost that have been invoiced."
-msgstr ""
+msgstr "Se for uma fatura a partir dos custos, esta é a data do último trabalho ou custo que foi faturado."
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
 msgid "Invoicing"
-msgstr ""
+msgstr "Faturamento"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -132,17 +132,17 @@ msgstr "Custo Total"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
 msgid "Number of hours you spent on the analytic account (from timesheet). It computes on all journal of type 'general'."
-msgstr ""
+msgstr "Quantidade de horas empenhadas na conta analítica (a partir do apontamento de horas). Serão incluídas em todos os diários do tipo 'Geral'."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Horas Restantes"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
 msgid "Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist."
-msgstr ""
+msgstr "Com base nos custos que você teve no projeto, qual seria a receita se todos os custos tivessem sido faturados a um preço de vendas padrão, como indicado na lista de preços (sem descontos)."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -154,31 +154,33 @@ msgstr "Usuário"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_pending
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_pending
 msgid "My Pending Accounts"
-msgstr ""
+msgstr "Minhas contas pendentes"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_my
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_my
 msgid "My Uninvoiced Entries"
-msgstr ""
+msgstr "Minhas Entradas não Faturadas"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr ""
+msgstr "Calculado através da fórmula: Valor faturado - Custos Totais."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_managed
 msgid "My Accounts"
-msgstr ""
+msgstr "Minhas contas"
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,description:account_analytic_analysis.module_meta_information
 msgid "Modify account analytic view to show\n"
 "important data for project manager of services companies.\n"
 "Add menu to show relevant information for each manager."
-msgstr ""
+msgstr "Alterar a visão de conta analitica para mostrar\n"
+"dados importantes ao gerente de projetos de empresas de serviços\n"
+"Adicionar menu para exibir informações relevantes para cada gerente"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
@@ -208,48 +210,48 @@ msgstr "Valor Faturado"
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.next_id_71
 msgid "Financial Project Management"
-msgstr ""
+msgstr "Gestão financeira do projeto"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr ""
+msgstr "Data do último custo faturado"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr ""
+msgstr "Valor não faturado"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_pending
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_pending
 msgid "Pending Analytic Accounts"
-msgstr ""
+msgstr "Contas Analíticas Pendentes"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Hours"
-msgstr ""
+msgstr "Horas faturadas"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr ""
+msgstr "Margem real"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr ""
+msgstr "Valor total faturado ao cliente para esta conta"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr ""
+msgstr "Resumo de horas por mês"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
+msgstr "Calcula usando a fórmula: (Margem Real / Custo Total) * 100."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -274,7 +276,7 @@ msgstr "Valor remanescente, baseado no custo total, que poderá ser cobrado do c
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-msgstr ""
+msgstr "Calculado utilizando a Fórmula: Valor Faturado / Total de Horas ."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
@@ -303,22 +305,22 @@ msgstr "Mês"
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Conta Analítica"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_managed_overpassed
 msgid "Overpassed Accounts"
-msgstr ""
+msgstr "Contas excedentes"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "All Uninvoiced Entries"
-msgstr ""
+msgstr "Todos os Lançamentos Não Faturados"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid "Total of costs for this account. It includes real costs (from invoices) and indirect costs, like time spent on timesheets."
-msgstr ""
+msgstr "Total dos custos para esta conta. Inclui custos reais (de faturas) e custos indiretos, tais como o tempo gasto no apontamento de horas."
 

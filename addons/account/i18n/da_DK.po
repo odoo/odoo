@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:48:14+0000\n"
-"PO-Revision-Date: 2010-02-22 14:48:14+0000\n"
+"POT-Creation-Date: 2010-04-06 10:31:27+0000\n"
+"PO-Revision-Date: 2010-04-06 10:31:27+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -82,6 +82,12 @@ msgstr "Vælg meddelelse."
 #. module: account
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used to value incoming stock for the current product category"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You cannot remove/deactivate an account which is set as a property to any Partner!"
 msgstr ""
 
 #. module: account
@@ -316,6 +322,7 @@ msgid "Fixed"
 msgstr "Fast"
 
 #. module: account
+#: code:addons/account/account.py:0
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Warning !"
@@ -2118,13 +2125,14 @@ msgid "x Expenses Credit Notes Journal"
 msgstr ""
 
 #. module: account
-#: field:account.analytic.journal,type:0
-#: field:account.bank.statement.line,type:0
-#: field:account.invoice,type:0
-#: field:account.journal,type:0
-#: field:account.move,type:0
-#: field:account.move.reconcile,type:0
-msgid "Type"
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            if abs(amount) < 10 ** -int(config['price_accuracy']):\n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                self.pool.get('account.move.line"
 msgstr ""
 
 #. module: account
@@ -3200,6 +3208,12 @@ msgid "Reconcile"
 msgstr "Afstem"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "You cannot cancel the Invoice which is Partially Paid! You need to unreconcile concerned payment entries!"
+msgstr ""
+
+#. module: account
 #: rml:account.overdue:0
 msgid "Best regards."
 msgstr ""
@@ -3663,6 +3677,7 @@ msgid "Generate Fiscal Year Opening Entries"
 msgstr ""
 
 #. module: account
+#: view:account.move.reconcile:0
 #: model:ir.actions.wizard,name:account.wizard_reconcile
 msgid "Reconcile Entries"
 msgstr ""
@@ -3840,6 +3855,11 @@ msgid "Create"
 msgstr ""
 
 #. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_account_move
+msgid "All Account Entries"
+msgstr ""
+
+#. module: account
 #: model:process.transition.action,name:account.process_transition_action_createentries0
 msgid "Create entry"
 msgstr ""
@@ -3920,6 +3940,7 @@ msgstr ""
 #: code:addons/account/account_analytic_line.py:0
 #: code:addons/account/account_bank_statement.py:0
 #: code:addons/account/account_move_line.py:0
+#: code:addons/account/invoice.py:0
 #: code:addons/account/wizard/wizard_pay_invoice.py:0
 #: code:addons/account/wizard/wizard_refund.py:0
 #, python-format
@@ -4006,6 +4027,11 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "Project line"
+msgstr ""
+
+#. module: account
+#: view:account.move.reconcile:0
+msgid "Partial Reconcile Entries"
 msgstr ""
 
 #. module: account
@@ -4136,6 +4162,16 @@ msgstr ""
 #: field:account.move.line,date_maturity:0
 #: rml:account.overdue:0
 msgid "Maturity date"
+msgstr ""
+
+#. module: account
+#: field:account.analytic.journal,type:0
+#: field:account.bank.statement.line,type:0
+#: field:account.invoice,type:0
+#: field:account.journal,type:0
+#: field:account.move,type:0
+#: field:account.move.reconcile,type:0
+msgid "Type"
 msgstr ""
 
 #. module: account
@@ -4337,17 +4373,6 @@ msgstr ""
 #. module: account
 #: field:account.period,name:0
 msgid "Period Name"
-msgstr ""
-
-#. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            if abs(amount) < 0.0001:\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
 msgstr ""
 
 #. module: account
@@ -5596,6 +5621,11 @@ msgid "Check this box if you want to use a different sequence for each created j
 msgstr ""
 
 #. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
+msgid "All Receivables & Payables"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.wizard,name:account.wizard_populate_statement_from_inv
 msgid "Import invoices"
 msgstr ""
@@ -5752,11 +5782,6 @@ msgstr ""
 #. module: account
 #: wizard_button:account.wizard_paid_open,init,end:0
 msgid "No"
-msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,name:account.act_account_partner_account_move
-msgid "All account entries"
 msgstr ""
 
 #. module: account

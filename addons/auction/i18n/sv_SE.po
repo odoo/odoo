@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:44:56+0000\n"
-"PO-Revision-Date: 2010-02-22 14:44:56+0000\n"
+"POT-Creation-Date: 2010-04-06 10:50:22+0000\n"
+"PO-Revision-Date: 2010-04-06 10:50:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -95,13 +95,13 @@ msgstr ""
 #: field:report.buyer.auction,buyer:0
 #: field:report.buyer.auction2,buyer:0
 msgid "Buyer"
-msgstr ""
+msgstr "Köpare"
 
 #. module: auction
 #: field:report.auction.view,nobjects:0
 #: field:report.buyer.auction,object:0
 msgid "No of objects"
-msgstr ""
+msgstr "Antal objekt"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_report_auction_adjudication_tree
@@ -226,7 +226,7 @@ msgstr ""
 #. module: auction
 #: field:report.auction.view,nseller:0
 msgid "No of sellers"
-msgstr ""
+msgstr "Antal säljare"
 
 #. module: auction
 #: selection:auction.lots.send.aie,date_ask,lang:0
@@ -521,19 +521,24 @@ msgstr ""
 #: rml:auction.total.rml:0
 #: model:ir.ui.menu,name:auction.auction_buyers_menu
 msgid "Buyers"
-msgstr ""
+msgstr "Köpare"
 
 #. module: auction
 #: wizard_field:auction.pay.buy,init,amount:0
 #: wizard_field:auction.pay.buy,init,amount2:0
 #: wizard_field:auction.pay.buy,init,amount3:0
 msgid "Amount paid"
+msgstr "Betald summa"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id4
+msgid "VAT 12%"
 msgstr ""
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_report_latest_doposit_tree
 msgid "My Latest Deposits"
-msgstr ""
+msgstr "Mina senaste insättningar"
 
 #. module: auction
 #: field:auction.lots,lot_est1:0
@@ -687,7 +692,7 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,buyer_price:0
 msgid "Buyer price"
-msgstr ""
+msgstr "Köparens pris"
 
 #. module: auction
 #: model:ir.actions.wizard,name:auction.auction_wizard_payer_sel
@@ -862,7 +867,7 @@ msgstr ""
 #. module: auction
 #: wizard_field:auction.lots.send.aie,date_ask,img_send:0
 msgid "Send Image also ?"
-msgstr ""
+msgstr "Skicka även bild?"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1012,7 +1017,7 @@ msgstr ""
 #. module: auction
 #: view:auction.lots:0
 msgid "History"
-msgstr ""
+msgstr "Historik"
 
 #. module: auction
 #: field:auction.lot.category,priority:0
@@ -1091,7 +1096,7 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.wizard,name:auction.wizard_results
 msgid "Send results to Auction-in-europe.com"
-msgstr ""
+msgstr "Skicka resultat till Auction-in-europe.com"
 
 #. module: auction
 #: rml:bids.lots:0
@@ -1208,7 +1213,7 @@ msgstr "Logga in"
 #. module: auction
 #: rml:buyer.list:0
 msgid "To pay"
-msgstr ""
+msgstr "Att betala"
 
 #. module: auction
 #: wizard_button:auction.lots.enable,init,go:0
@@ -1313,7 +1318,7 @@ msgstr ""
 #. module: auction
 #: wizard_button:auction.lots.buyer_map,check,set_buyer:0
 msgid "Update"
-msgstr ""
+msgstr "Uppdatera"
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -1325,7 +1330,7 @@ msgstr "Säljare"
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Metal Ware"
-msgstr ""
+msgstr "Antikviteter/Metallvaror"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.res_w_buyer
@@ -1419,7 +1424,7 @@ msgstr "Nästa auktion"
 #. module: auction
 #: rml:buyer.list:0
 msgid "#"
-msgstr ""
+msgstr "#"
 
 #. module: auction
 #: field:auction.lots,ach_emp:0
@@ -1502,11 +1507,16 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Art from the Ivory Coast"
-msgstr ""
+msgstr "Antikviteter/Konst från Elfenbenskusten"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Religiosa"
+msgstr ""
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id3
+msgid "VAT 10%"
 msgstr ""
 
 #. module: auction
@@ -1521,10 +1531,15 @@ msgid "Error: The default UOM and the purchase UOM must be in the same category.
 msgstr ""
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id5
+msgid "VAT 5%"
+msgstr ""
+
+#. module: auction
 #: selection:auction.dates,state:0
 #: selection:report.auction.adjudication,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Stängd"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_all_objects_unplanned1
@@ -1793,7 +1808,7 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Art from the Ivory Coast/African Arts"
-msgstr ""
+msgstr "Antikviteter/Konst från Elfenbenskusten/Afrikansk konst"
 
 #. module: auction
 #: field:auction.dates,auction1:0
@@ -1823,7 +1838,7 @@ msgstr "Namn"
 #. module: auction
 #: view:auction.artists:0
 msgid "Artists"
-msgstr ""
+msgstr "Konstnärer"
 
 #. module: auction
 #: field:report.attendance,total_attendance:0
@@ -1885,12 +1900,17 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Engravings"
-msgstr ""
+msgstr "Antikviteter/Gravyrer"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax20
 #: model:account.tax,name:auction.auction_tax6
 msgid "Frais de vente"
+msgstr ""
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id1
+msgid "VAT 1%"
 msgstr ""
 
 #. module: auction
@@ -1955,7 +1975,7 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Musical Instruments"
-msgstr ""
+msgstr "Antikviteter/Musikinstrument"
 
 #. module: auction
 #: field:report.object.encoded,estimation:0
@@ -1986,7 +2006,7 @@ msgstr ""
 #. module: auction
 #: field:auction.bid,partner_id:0
 msgid "Buyer Name"
-msgstr ""
+msgstr "Köparens namn"
 
 #. module: auction
 #: field:report.auction.view2,sum_adj:0
@@ -2017,12 +2037,12 @@ msgstr ""
 #. module: auction
 #: constraint:res.partner:0
 msgid "The VAT doesn't seem to be correct."
-msgstr ""
+msgstr "Momsen verkar vara fel"
 
 #. module: auction
 #: field:report.attendance,employee_id:0
 msgid "Employee"
-msgstr ""
+msgstr "Anställd"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -2032,7 +2052,7 @@ msgstr ""
 #. module: auction
 #: view:auction.lots:0
 msgid "Catalog"
-msgstr ""
+msgstr "Katalog"
 
 #. module: auction
 #: field:auction.deposit.cost,account:0
@@ -2084,6 +2104,11 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,image:0
 msgid "Image"
+msgstr "Bild"
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id2
+msgid "VAT 20%"
 msgstr ""
 
 #. module: auction
@@ -2100,7 +2125,7 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Collectible & art objects"
-msgstr ""
+msgstr "Antikviteter/Samlar- & Konstobjekt"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting
@@ -2153,7 +2178,7 @@ msgstr "Auktionsdatum"
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Furnitures"
-msgstr ""
+msgstr "Antikviteter/Möbler"
 
 #. module: auction
 #: field:report.auction.adjudication,user_id:0
@@ -2236,7 +2261,7 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,artist_id:0
 msgid "Artist/Author"
-msgstr ""
+msgstr "Artist/Författare"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax1
@@ -2267,7 +2292,7 @@ msgstr ""
 #. module: auction
 #: field:report.auction.view,nbuyer:0
 msgid "No of buyers"
-msgstr ""
+msgstr "Antal köpare"
 
 #. module: auction
 #: field:report.seller.auction,avg_price:0
@@ -2282,7 +2307,7 @@ msgstr ""
 #. module: auction
 #: field:auction.dates,auction2:0
 msgid "Last Auction Day"
-msgstr ""
+msgstr "Sista auktionsdag"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_auction_dates_next1
@@ -2344,12 +2369,12 @@ msgstr "Anställda"
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Clocks and watches"
-msgstr ""
+msgstr "Antikviteter/Klockor och armbandsur"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Scientific Instruments"
-msgstr ""
+msgstr "Antikviteter/vetenskapliga instrument"
 
 #. module: auction
 #: wizard_view:auction.lots.enable,init:0
@@ -2396,7 +2421,7 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/Wine"
-msgstr ""
+msgstr "Antikviteter/Vin"
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -2406,7 +2431,7 @@ msgstr ""
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
 msgid "Antique/African Arts"
-msgstr ""
+msgstr "Antikviteter/Afrikansk konst"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.art2

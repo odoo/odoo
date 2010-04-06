@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:33:48+0000\n"
-"PO-Revision-Date: 2010-02-22 14:33:48+0000\n"
+"POT-Creation-Date: 2010-04-06 10:35:34+0000\n"
+"PO-Revision-Date: 2010-04-06 10:35:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -308,8 +308,8 @@ msgstr "Confirmer"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "You must first cancel all packing attached to this sale order."
-msgstr "Vous devez, avant tout, annuler tous les colisages attachés à cette commande de vente."
+msgid "Invoice cannot be created for this Sale Order due to one of the following reasons:\n1.The state is not in %s!\n2.The Sale Order Lines are Invoiced!"
+msgstr ""
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
@@ -320,6 +320,11 @@ msgstr "Adresse d'expédition"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
+msgstr ""
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Quotation Date"
 msgstr ""
 
 #. module: sale
@@ -884,9 +889,10 @@ msgid "Shop"
 msgstr "Magasin"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "VAT"
-msgstr "TVA"
+#: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
+#, python-format
+msgid "Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either \"draft\" or \"cancel\"!\n2.The Sale Order Line is Invoiced!"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -1017,6 +1023,13 @@ msgstr "Annuler"
 #: help:sale.order,state:0
 msgid "Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'."
 msgstr "Donne l'état du devis ou de la commande de vente. L'état 'en Exception' est automatiquement placé lorsqu'une opération d'annulation apparaît dans la validation de la facture (Exception de Facturation) ou dans le processus de colisage (Exception de Livraison). L'état 'en Attente d'exécution' est placé lorsque la facture est confirmée mais attend que le Planificateur soit lancé à la Date de la Commande."
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -1197,6 +1210,11 @@ msgid "The name and address of the contact that requested the order or quotation
 msgstr "Le nom et l'adresse du contacte ayant demandé le devis."
 
 #. module: sale
+#: rml:sale.order:0
+msgid "VAT"
+msgstr "TVA"
+
+#. module: sale
 #: field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
@@ -1223,6 +1241,12 @@ msgid "Invoice on"
 msgstr "Facture sur"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this sale order."
+msgstr "Vous devez, avant tout, annuler tous les colisages attachés à cette commande de vente."
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
 #: model:ir.ui.menu,name:sale.menu_action_order_tree_new
 msgid "New Quotation"
@@ -1234,15 +1258,10 @@ msgid "Total amount"
 msgstr "Montant total"
 
 #. module: sale
-#: field:sale.order,date_order:0
 #: rml:sale.order:0
+#: field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "Date de commande"
-
-#. module: sale
-#: rml:sale.order:0
-msgid "Quotation Date"
-msgstr "Date du devis"
 
 #. module: sale
 #: field:sale.order.line,product_uos:0

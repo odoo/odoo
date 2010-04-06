@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:34:34+0000\n"
-"PO-Revision-Date: 2010-02-22 14:34:34+0000\n"
+"POT-Creation-Date: 2010-04-06 10:37:16+0000\n"
+"PO-Revision-Date: 2010-04-06 10:37:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,9 +66,9 @@ msgid "Net weight"
 msgstr "Nettogewicht"
 
 #. module: product
-#: help:product.product,incoming_qty:0
-msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
-msgstr "Mengen der Produkte für den gewählten Lagerort oder für alle Lagerorte (keine Auswahl) die demnächst angeliefert werden sollen."
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "Mengeneinheit (UoM) Kategorie"
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -838,6 +838,12 @@ msgid "DDR 256MB PC400"
 msgstr "DDR 256MB PC400"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!"
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Bestand"
@@ -856,6 +862,11 @@ msgstr "innerhalbe der selben Kategorie kann die Masseinheit gewechselt werden."
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
 msgstr "Mengeneinheit (UoM)"
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
+msgstr "Mengen der Produkte für den gewählten Lagerort oder für alle Lagerorte (keine Auswahl) die demnächst angeliefert werden sollen."
 
 #. module: product
 #: field:product.template,sale_ok:0
@@ -1403,9 +1414,10 @@ msgid "This is the average time between the confirmation of the customer order a
 msgstr "Die durchschnittliche Zeit zwischen Kundenauftrag und Lieferung. Diese wird dem Kunden zugesichert"
 
 #. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
-msgstr "Mengeneinheit (UoM) Kategorie"
+#: help:product.template,uos_coeff:0
+msgid "Coefficient to convert UOM to UOS\n"
+" uos = uom * coeff"
+msgstr ""
 
 #. module: product
 #: wizard_field:product.price_list,init,qty3:0
@@ -1496,13 +1508,6 @@ msgid "Name"
 msgstr "Bezeichnung"
 
 #. module: product
-#: help:product.template,uos_coeff:0
-msgid "Coefficient to convert UOM to UOS\n"
-" uom = uos * coeff"
-msgstr "Koeffizient für Konvertierung UoM zu UoS\n"
-"UoM = UoS * Koeff"
-
-#. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "kann gekauft werden"
@@ -1542,6 +1547,7 @@ msgstr "Pallettierung"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
+#: code:addons/product/product.py:0
 #, python-format
 msgid "Warning !"
 msgstr "Warnung"

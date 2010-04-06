@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:27:47+0000\n"
-"PO-Revision-Date: 2010-02-22 14:27:47+0000\n"
+"POT-Creation-Date: 2010-04-06 10:28:12+0000\n"
+"PO-Revision-Date: 2010-04-06 10:28:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,9 @@ msgstr "目录名包含特殊字符！"
 #. module: document
 #: help:document.directory,ressource_type_id:0
 msgid "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
-msgstr "在此选择一个对象使OpenERP系统使用已给定义域为每个对象创建一个链接，以便通过FTP浏览。"
+msgstr "选择一对象,系统将创建一个每个对象的列表,使用给定的域,通过FTP浏览\"\n"
+"document,view,document.directory,0,Seq.,序列\n"
+"document,field,document.directory.content"
 
 #. module: document
 #: constraint:ir.actions.act_window:0
@@ -34,12 +36,12 @@ msgstr "在行动定义中的模式名称无效"
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
-msgstr "目录内容类型"
+msgstr "目录内容分类"
 
 #. module: document
 #: view:document.configuration.wizard:0
 msgid "This wizard will automatically configure the document management system according to modules installed on your system."
-msgstr "该向导将根据您系统安装的模块自动设置文档管理系统"
+msgstr "该向导将根据你系统安装的模块自动设置文档管理系统"
 
 #. module: document
 #: field:document.directory,file_ids:0
@@ -60,7 +62,7 @@ msgstr "文档管理"
 #. module: document
 #: help:document.configuration.wizard,host:0
 msgid "Put here the server address or IP. Keep localhost if you don't know what to write."
-msgstr "在此输入服务器地址或IP编号。如果你不知道怎样写请用localhost。"
+msgstr "输入服务器地址或IP.如果你不知道怎样写请保持本地"
 
 #. module: document
 #: view:ir.attachment:0
@@ -71,7 +73,7 @@ msgstr "文件信息"
 #: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
-msgstr "索引内容"
+msgstr "内容索引"
 
 #. module: document
 #: view:ir.attachment:0
@@ -81,7 +83,7 @@ msgstr "备注"
 #. module: document
 #: field:ir.attachment,title:0
 msgid "Resource Title"
-msgstr "资源标题"
+msgstr "标题"
 
 #. module: document
 #: code:addons/document/document.py:0
@@ -92,7 +94,7 @@ msgstr ""
 #. module: document
 #: model:ir.model,name:document.model_document_configuration_wizard
 msgid "document.configuration.wizard"
-msgstr "document.configuration.wizard"
+msgstr "文档结构向导"
 
 #. module: document
 #: selection:ir.attachment,store_method:0
@@ -134,7 +136,7 @@ msgstr "含记录名称"
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr "错误！您不能创建递归目录。"
+msgstr "错误:你无法建立递归的目录"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -156,7 +158,7 @@ msgstr "文档管理系统"
 #. module: document
 #: field:ir.attachment,store_method:0
 msgid "Storing Method"
-msgstr "存储方法"
+msgstr "保存方式"
 
 #. module: document
 #: field:document.directory,type:0
@@ -172,12 +174,12 @@ msgstr "目录名必须唯一！"
 #. module: document
 #: help:document.directory,ressource_tree:0
 msgid "Check this if you want to use the same tree structure as the object selected in the system."
-msgstr "如果您想要选定的对象使用与系统内部相同树结构的话请选定这个复选框。"
+msgstr "如果你想在系统中使用相同的对象树状结构请选择这"
 
 #. module: document
 #: help:document.directory,domain:0
 msgid "Use a domain if you want to apply an automatic filter on visible resources."
-msgstr "如果您想要自动筛选可见资源的话请使用定义域。"
+msgstr "如果你想使用可见资源的自动过滤这是使用的范围"
 
 #. module: document
 #: field:document.configuration.wizard,host:0
@@ -187,7 +189,7 @@ msgstr "服务器地址"
 #. module: document
 #: field:ir.attachment,store_fname:0
 msgid "Stored Filename"
-msgstr "已保存文件名"
+msgstr "保存文件名"
 
 #. module: document
 #: selection:ir.attachment,store_method:0
@@ -224,7 +226,7 @@ msgstr "无效XML视图结构!"
 #. module: document
 #: field:document.directory.content.type,code:0
 msgid "Extension"
-msgstr "扩展名"
+msgstr "延伸"
 
 #. module: document
 #: field:document.directory,content_ids:0
@@ -234,13 +236,13 @@ msgstr "虚拟文件"
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Search a File"
-msgstr "搜索文件"
+msgstr "搜索一个文件"
 
 #. module: document
 #: field:document.directory.content,directory_id:0
 #: field:ir.attachment,parent_id:0
 msgid "Directory"
-msgstr "目录"
+msgstr "说明"
 
 #. module: document
 #: view:document.directory:0
@@ -262,13 +264,13 @@ msgstr "目录映射到对象"
 #. module: document
 #: field:document.directory,domain:0
 msgid "Domain"
-msgstr "域"
+msgstr "隶属"
 
 #. module: document
 #: field:document.directory,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
-msgstr "修改时间"
+msgstr "修改日期"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -279,12 +281,12 @@ msgstr "静态目录"
 #: field:document.directory,user_id:0
 #: field:ir.attachment,user_id:0
 msgid "Owner"
-msgstr "所有者"
+msgstr "拥有者"
 
 #. module: document
 #: view:document.directory:0
 msgid "PDF Report"
-msgstr "PDF 报表"
+msgstr "PDF报表"
 
 #. module: document
 #: view:document.directory:0
@@ -294,7 +296,7 @@ msgstr "内容"
 #. module: document
 #: field:document.directory,create_date:0
 msgid "Date Created"
-msgstr "创建时间"
+msgstr "建立日期"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_configuration
@@ -309,7 +311,7 @@ msgstr "自动设置目录"
 #. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
 msgid "This wizard will configure the URL of the server of the document management system."
-msgstr "该向导将配置文档管理系统的统一资源定位码（URL）"
+msgstr "这向导将配置文档管理系统的URL"
 
 #. module: document
 #: view:ir.attachment:0
@@ -350,13 +352,13 @@ msgstr "目录结构"
 #. module: document
 #: view:document.configuration.wizard:0
 msgid "Configure"
-msgstr "配置"
+msgstr "设置"
 
 #. module: document
 #: field:document.directory,group_ids:0
 #: field:ir.attachment,group_ids:0
 msgid "Groups"
-msgstr "用户组"
+msgstr "组"
 
 #. module: document
 #: view:ir.attachment:0
@@ -381,22 +383,22 @@ msgstr "数据库"
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
 msgid "Integrated Document Management System"
-msgstr "综合的文档管理系统"
+msgstr "完整的文档管理系统"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Others Info"
-msgstr "其他信息"
+msgstr "其它信息"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Attached To"
-msgstr "附加到"
+msgstr "附属于"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "History"
-msgstr "历史记录"
+msgstr "日志"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -406,12 +408,12 @@ msgstr "创建者"
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
 msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
-msgstr "如果您在这填上对象则目录模板将作为这些对象的下级出现。如果您选择了一个上级模型的话不要填写上级目录。"
+msgstr "如果你在这填上对象,这目录的模板将涵盖所有的对象.如果您选择母公司模式不要填入父目录"
 
 #. module: document
 #: view:document.directory:0
 msgid "Auto-Generated Files"
-msgstr "自动生成的文件"
+msgstr "自动产生文件"
 
 #. module: document
 #: view:document.configuration.wizard:0
@@ -421,7 +423,7 @@ msgstr "取消"
 #. module: document
 #: field:document.directory,child_ids:0
 msgid "Children"
-msgstr "下级目录"
+msgstr "子目录"
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -436,7 +438,7 @@ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 #. module: document
 #: help:document.directory.content,include_name:0
 msgid "Check this field if you want that the name of the file start by the record name."
-msgstr "如果你想文件名以记录名称开始请选择它."
+msgstr "如果你想文件名开始是记录名称请选择它."
 
 #. module: document
 #: selection:document.directory,type:0
@@ -446,18 +448,18 @@ msgstr "其它资源"
 #. module: document
 #: field:document.directory,ressource_parent_type_id:0
 msgid "Parent Model"
-msgstr "上级模式"
+msgstr "上级式样"
 
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Item"
-msgstr "上级条目"
+msgstr "上级"
 
 #. module: document
 #: view:document.directory:0
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
-msgstr "目录列表"
+msgstr "目录"
 
 #. module: document
 #: field:document.directory,name:0
@@ -465,14 +467,15 @@ msgid "Name"
 msgstr "名称"
 
 #. module: document
+#: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr "使用FTP浏览文件"
+msgstr "浏览文件使用FTP"
 
 #. module: document
 #: field:document.directory.content,sequence:0
 msgid "Sequence"
-msgstr "序号"
+msgstr "序列"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -493,7 +496,7 @@ msgstr "树结构"
 #. module: document
 #: view:document.configuration.wizard:0
 msgid "Auto Configure"
-msgstr "自动配置"
+msgstr "自动设置"
 
 #. module: document
 #: field:document.directory.content,extension:0

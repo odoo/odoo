@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:31:31+0000\n"
-"PO-Revision-Date: 2010-02-22 14:31:31+0000\n"
+"POT-Creation-Date: 2010-04-06 10:33:05+0000\n"
+"PO-Revision-Date: 2010-04-06 10:33:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,9 +66,9 @@ msgid "Net weight"
 msgstr "Nettogewicht"
 
 #. module: product
-#: help:product.product,incoming_qty:0
-msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
-msgstr "Aantallen producten die gepland zijn om te worden ontvangen op de gekozen locaties, of alle interne als geen locaties zijn gekozen"
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "Cat. producteenh."
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -837,6 +837,12 @@ msgid "DDR 256MB PC400"
 msgstr "DDR 256MB PC400"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!"
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Aanwezige voorraad"
@@ -855,6 +861,11 @@ msgstr "De meeteenheid van een categorie kan geconverteerd worden naar andere me
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
 msgstr "Meeteenheid product"
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
+msgstr "Aantallen producten die gepland zijn om te worden ontvangen op de gekozen locaties, of alle interne als geen locaties zijn gekozen"
 
 #. module: product
 #: field:product.template,sale_ok:0
@@ -1400,9 +1411,10 @@ msgid "This is the average time between the confirmation of the customer order a
 msgstr "Dit is de gemiddelde tijd tussen de bevestiging van de klantorder en de levering van het eindproduct. Het is de tijd die u uw klant belooft."
 
 #. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
-msgstr "Cat. producteenh."
+#: help:product.template,uos_coeff:0
+msgid "Coefficient to convert UOM to UOS\n"
+" uos = uom * coeff"
+msgstr ""
 
 #. module: product
 #: wizard_field:product.price_list,init,qty3:0
@@ -1493,13 +1505,6 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: product
-#: help:product.template,uos_coeff:0
-msgid "Coefficient to convert UOM to UOS\n"
-" uom = uos * coeff"
-msgstr "Coëfficiënt om Meeteenheid naar Verkoopeenheid te converteren\n"
-"ME = VE * coëfficiënt"
-
-#. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "In te kopen"
@@ -1539,6 +1544,7 @@ msgstr "Palletstapeling"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
+#: code:addons/product/product.py:0
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing!"

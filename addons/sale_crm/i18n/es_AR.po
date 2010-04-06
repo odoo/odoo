@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:43:19+0000\n"
-"PO-Revision-Date: 2010-02-22 14:43:19+0000\n"
+"POT-Creation-Date: 2010-04-06 10:48:34+0000\n"
+"PO-Revision-Date: 2010-04-06 10:48:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,14 +31,19 @@ msgid "Use this partner if there is no partner on the case"
 msgstr "Utilizar este partner si no hay partner asociada al caso"
 
 #. module: sale_crm
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Partial Delivery"
+msgstr ""
+
+#. module: sale_crm
 #: wizard_button:sale_crm.make_case,init,create:0
 msgid "Create"
 msgstr "Crear"
 
 #. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "All at once"
-msgstr "Todos a la vez"
+#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
+msgid "Opporunity convert to the Pricelist"
+msgstr "Convertir oportunidad a la tarifa"
 
 #. module: sale_crm
 #: constraint:ir.ui.view:0
@@ -108,11 +113,6 @@ msgid "Opportunity convert into quotation"
 msgstr "Convertir oportunidad en presupuesto"
 
 #. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Entrega Directa"
-
-#. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_opportunityquotation0
 msgid "Opportunity Quotation"
 msgstr "Presupuesto de oportunidad"
@@ -134,9 +134,9 @@ msgid "Check this to close the case after having created the sale order."
 msgstr "Marque esta opción para cerrar el caso después de haber creado el pedido de venta."
 
 #. module: sale_crm
-#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
-msgid "Opporunity convert to the Pricelist"
-msgstr "Convertir oportunidad a la tarifa"
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Complete Delivery"
+msgstr ""
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,user:0

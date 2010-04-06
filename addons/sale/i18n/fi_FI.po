@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:33:02+0000\n"
-"PO-Revision-Date: 2010-02-22 14:33:02+0000\n"
+"POT-Creation-Date: 2010-04-06 10:34:44+0000\n"
+"PO-Revision-Date: 2010-04-06 10:34:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -271,7 +271,7 @@ msgstr "Omat myyntitilaukset käsittelyssä"
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
 msgid "Quantity (UoS)"
-msgstr ""
+msgstr "Määrä (myyntiyksikkö)"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -308,7 +308,7 @@ msgstr "Vahvista"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "You must first cancel all packing attached to this sale order."
+msgid "Invoice cannot be created for this Sale Order due to one of the following reasons:\n1.The state is not in %s!\n2.The Sale Order Lines are Invoiced!"
 msgstr ""
 
 #. module: sale
@@ -320,6 +320,11 @@ msgstr "Toimitusosoite"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
+msgstr ""
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Quotation Date"
 msgstr ""
 
 #. module: sale
@@ -497,12 +502,12 @@ msgstr "Liittyvä pakkaus"
 #. module: sale
 #: field:sale.shop,payment_account_id:0
 msgid "Payment Accounts"
-msgstr ""
+msgstr "Maksujen tilit"
 
 #. module: sale
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö"
+msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö."
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -685,7 +690,7 @@ msgstr "Laskuttamattomat rivit"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "No Customer Defined !"
-msgstr ""
+msgstr "Asiakasta ei ole määritetty!"
 
 #. module: sale
 #: model:ir.actions.todo,note:sale.config_wizard_step_sale_picking_policy
@@ -708,7 +713,7 @@ msgstr "Luo laskut"
 #. module: sale
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Virhe: Oletusmittayksikkö ja ostojen mittayksikkö on oltava samassa kategoriassa."
+msgstr "Virhe: Oletus mittayksikkö ja ostojen mittayksikkö täytyy olla samassa kategoriassa."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree7
@@ -884,9 +889,10 @@ msgid "Shop"
 msgstr "Myymälä"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "VAT"
-msgstr "ALV"
+#: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
+#, python-format
+msgid "Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either \"draft\" or \"cancel\"!\n2.The Sale Order Line is Invoiced!"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -970,7 +976,7 @@ msgstr "Pakkaus ULOS luodaan varastoitaville tuotteille."
 #. module: sale
 #: view:sale.order:0
 msgid "Other data"
-msgstr "Muu data"
+msgstr "Muut tiedot"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1016,6 +1022,13 @@ msgstr "Peruuta"
 #. module: sale
 #: help:sale.order,state:0
 msgid "Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'."
+msgstr "Ilmoittaa tarjouksen tai myyntitilauksen tilan. Poikkeustila asetetaan automaattisesti jos peruutustoimintoja tehdään laskua hyväksyttäessä (Poikkeus laskutuksessa) tai pakkausprosessin aikana (Poikkeus toimituksessa). Tila \"Odottaa aikataulua\" asetetaan kun lasku on hyväksytty mutta tilaus odottaa \"Tilauspäivämäärän\" mukaista ajankohtaa."
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: sale
@@ -1027,7 +1040,7 @@ msgstr "Mittayksikkö"
 #. module: sale
 #: field:sale.order.line,number_packages:0
 msgid "Number Packages"
-msgstr ""
+msgstr "Pakkauksien määrä"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
@@ -1038,7 +1051,7 @@ msgstr "Pakkauslistojen vahvistus siirtää ne toimitusmääräyksiin. Tämä vo
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You cannot cancel a sale order line that has already been invoiced !"
-msgstr ""
+msgstr "Et vo perua myyntitilauksen riviä joka on jo laskutettu!"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1183,7 +1196,7 @@ msgstr "Peruuta luovutus"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice from the Packing"
-msgstr ""
+msgstr "Lasku pakkauksesta"
 
 #. module: sale
 #: model:ir.actions.wizard,name:sale.wizard_sale_order_line_invoice
@@ -1195,6 +1208,11 @@ msgstr ""
 #: help:sale.order,partner_order_id:0
 msgid "The name and address of the contact that requested the order or quotation."
 msgstr "Tilauksen tai tarjouksen pyytäneen kontaktin nimi ja osoite."
+
+#. module: sale
+#: rml:sale.order:0
+msgid "VAT"
+msgstr "ALV"
 
 #. module: sale
 #: field:sale.order,partner_id:0
@@ -1223,6 +1241,12 @@ msgid "Invoice on"
 msgstr "Laskutetaan kun"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this sale order."
+msgstr "Sinun täytyy ensin perua kaikki tähän myyntitilaukseen liitetyt pakkaukset."
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
 #: model:ir.ui.menu,name:sale.menu_action_order_tree_new
 msgid "New Quotation"
@@ -1234,6 +1258,7 @@ msgid "Total amount"
 msgstr "Yhteensä"
 
 #. module: sale
+#: rml:sale.order:0
 #: field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "Tilauspäivämäärä"
@@ -1241,12 +1266,12 @@ msgstr "Tilauspäivämäärä"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "Tuotteen myyntiyksikkö"
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Manual In Progress"
-msgstr ""
+msgstr "Manuaalisessa käsittelyssä"
 
 #. module: sale
 #: field:sale.order.line,product_uom:0
@@ -1291,7 +1316,7 @@ msgstr "Liittyvät laskut"
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "Myymälän nimi"
 
 #. module: sale
 #: code:addons/sale/sale.py:0

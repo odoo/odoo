@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:26:20+0000\n"
-"PO-Revision-Date: 2010-02-22 14:26:20+0000\n"
+"POT-Creation-Date: 2010-04-06 10:26:36+0000\n"
+"PO-Revision-Date: 2010-04-06 10:26:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -266,7 +266,7 @@ msgstr "Нетна цена"
 #: model:ir.actions.act_window,name:sale.action_order_tree9
 #: model:ir.ui.menu,name:sale.menu_action_order_tree9
 msgid "My sales order in progress"
-msgstr "Мойте активни поръчки за продажба"
+msgstr "Мои активни поръчки за продажба"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
@@ -308,7 +308,7 @@ msgstr "Потвърждение"
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
-msgid "You must first cancel all packing attached to this sale order."
+msgid "Invoice cannot be created for this Sale Order due to one of the following reasons:\n1.The state is not in %s!\n2.The Sale Order Lines are Invoiced!"
 msgstr ""
 
 #. module: sale
@@ -320,6 +320,11 @@ msgstr "Адрес за доставка"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You have to select a customer in the sale form !\nPlease set one customer before choosing a product."
+msgstr ""
+
+#. module: sale
+#: rml:sale.order:0
+msgid "Quotation Date"
 msgstr ""
 
 #. module: sale
@@ -385,7 +390,7 @@ msgstr "Списъка за пакетиране е създаден когат�
 #: model:ir.actions.act_window,name:sale.action_order_tree8
 #: model:ir.ui.menu,name:sale.menu_action_order_tree8
 msgid "My sales order waiting Invoice"
-msgstr "Мойте поръчки за продажба очакващи фактура"
+msgstr "Мои поръчки за продажба, очакващи фактура"
 
 #. module: sale
 #: rml:sale.order:0
@@ -512,7 +517,7 @@ msgstr "Отпратка към клиент"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales orders"
-msgstr ""
+msgstr "Поръчки за продажба"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -551,7 +556,7 @@ msgstr "Групиране на фактури"
 #: model:ir.actions.act_window,name:sale.action_order_tree5
 #: model:ir.ui.menu,name:sale.menu_action_order_tree5
 msgid "All Quotations"
-msgstr "Всички запитвания"
+msgstr "Всички оферти"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -578,7 +583,7 @@ msgstr "Снабдяване за всеки ред"
 #: model:ir.actions.act_window,name:sale.action_order_tree10
 #: model:ir.ui.menu,name:sale.menu_action_order_tree10
 msgid "My Quotations"
-msgstr "Моите запитвания"
+msgstr "Мои оферти"
 
 #. module: sale
 #: wizard_view:sale.advance_payment_inv,create:0
@@ -626,7 +631,7 @@ msgstr "Опаковане"
 #: model:ir.module.module,shortdesc:sale.module_meta_information
 #: model:ir.ui.menu,name:sale.menu_sale_root
 msgid "Sales Management"
-msgstr "Управление на продажби"
+msgstr "Продажби"
 
 #. module: sale
 #: field:sale.order.line,order_id:0
@@ -805,7 +810,7 @@ msgstr ""
 #. module: sale
 #: rml:sale.order:0
 msgid "Our Salesman"
-msgstr "Нашия търговец"
+msgstr "Лице за контакт"
 
 #. module: sale
 #: wizard_button:sale.advance_payment_inv,init,create:0
@@ -859,7 +864,7 @@ msgstr "Свойства"
 #: model:process.node,name:sale.process_node_quotation0
 #: selection:sale.order,state:0
 msgid "Quotation"
-msgstr "Запитване"
+msgstr "Оферта"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -884,9 +889,10 @@ msgid "Shop"
 msgstr "Магазин"
 
 #. module: sale
-#: rml:sale.order:0
-msgid "VAT"
-msgstr "ДДС"
+#: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
+#, python-format
+msgid "Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either \"draft\" or \"cancel\"!\n2.The Sale Order Line is Invoiced!"
+msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -933,7 +939,7 @@ msgstr "Създаване на фактура"
 #. module: sale
 #: rml:sale.order:0
 msgid "Your Reference"
-msgstr "Вашата отпратка"
+msgstr "Ваш референтен номер"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -1017,6 +1023,13 @@ msgstr "Отказ"
 #: help:sale.order,state:0
 msgid "Gives the state of the quotation or sale order. The exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the packing list process (Shipping Exception). The 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Date Ordered'."
 msgstr "Показва състоянието на запиъване или поръчка за продажба. Състоянието за грешка се задава автоматично ако настъпи действие на отказ по време на проверката на фактурате (Грешка в фактура) или при обработвабето на списъка за пакатиране (Грешка при пакетиране). Състоянието 'Очакване на график' се задава когато фактурата е потвърдена но се изчавка планировчика да се стартира на датата 'Дата на поръчката'"
+
+#. module: sale
+#: code:addons/sale/sale.py:0
+#: code:addons/sale/wizard/wizard_sale_line_invoice.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
@@ -1105,7 +1118,7 @@ msgstr "Поръчка за продажба"
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Quotation (A sale order in draft state)"
-msgstr "Запитване (проект на поръчка за продажба)"
+msgstr "Оферта (поръчка за продажба в етап на проект)"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
@@ -1162,7 +1175,7 @@ msgstr "Тел. :"
 #. module: sale
 #: rml:sale.order:0
 msgid "Quotation N°"
-msgstr "Запитване N°"
+msgstr "Оферта №"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1197,6 +1210,11 @@ msgid "The name and address of the contact that requested the order or quotation
 msgstr "Името и адреса на контакта който е поискал запитване или поръчка"
 
 #. module: sale
+#: rml:sale.order:0
+msgid "VAT"
+msgstr "ДДС"
+
+#. module: sale
 #: field:sale.order,partner_id:0
 #: field:sale.order.line,order_partner_id:0
 msgid "Customer"
@@ -1223,10 +1241,16 @@ msgid "Invoice on"
 msgstr "Фактура за"
 
 #. module: sale
+#: code:addons/sale/sale.py:0
+#, python-format
+msgid "You must first cancel all packing attached to this sale order."
+msgstr ""
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree_new
 #: model:ir.ui.menu,name:sale.menu_action_order_tree_new
 msgid "New Quotation"
-msgstr "Ново запитване"
+msgstr "Нова оферта"
 
 #. module: sale
 #: view:sale.order:0
@@ -1234,6 +1258,7 @@ msgid "Total amount"
 msgstr "Обща сума"
 
 #. module: sale
+#: rml:sale.order:0
 #: field:sale.order,date_order:0
 msgid "Date Ordered"
 msgstr "Дата на поръчка"

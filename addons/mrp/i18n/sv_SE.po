@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:44:57+0000\n"
-"PO-Revision-Date: 2010-02-22 14:44:57+0000\n"
+"POT-Creation-Date: 2010-04-06 10:50:22+0000\n"
+"PO-Revision-Date: 2010-04-06 10:50:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -114,7 +114,7 @@ msgstr "Referens"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr ""
+msgstr "Färdigställda produkter"
 
 #. module: mrp
 #: wizard_field:mrp.procurement.compute.all,init,automatic:0
@@ -152,7 +152,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
-msgstr ""
+msgstr "Timkostnad"
 
 #. module: mrp
 #: selection:stock.warehouse.orderpoint,logic:0
@@ -177,7 +177,7 @@ msgstr ""
 #. module: mrp
 #: wizard_button:product.product.procurement,init,create:0
 msgid "Ask New Products"
-msgstr ""
+msgstr "Be om nya produkter"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reordering
@@ -336,6 +336,12 @@ msgid "Production Orders"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Qty Multiple must be greater than zero."
+msgstr ""
+
+#. module: mrp
 #: rml:bom.structure:0
 #: field:mrp.procurement,product_qty:0
 #: rml:mrp.production.order:0
@@ -379,7 +385,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,timesheet_id:0
 msgid "Working Time"
-msgstr ""
+msgstr "Arbetstid"
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -493,7 +499,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Change Qty"
-msgstr ""
+msgstr "Ändra kvantitet"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -529,6 +535,12 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "Procurement convert into the draft purchase order."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Before splitting the production lots,make sure this move or its Production Order has a Picking attached !\nYou must save the move before performing this operation."
 msgstr ""
 
 #. module: mrp
@@ -653,7 +665,7 @@ msgstr ""
 #. module: mrp
 #: wizard_button:mrp.workcenter.load,init,report:0
 msgid "Print"
-msgstr ""
+msgstr "Utskrift"
 
 #. module: mrp
 #: field:mrp.workcenter,type:0
@@ -669,7 +681,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,init,time_unit:0
 msgid "Per month"
-msgstr ""
+msgstr "Per månad"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:0
@@ -692,7 +704,7 @@ msgstr ""
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "Printing date"
-msgstr ""
+msgstr "Utskriftsdatum"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_orderrfq0
@@ -832,7 +844,7 @@ msgstr "Kod"
 #. module: mrp
 #: rml:mrp.production.order:0
 msgid "No. Of Hours"
-msgstr ""
+msgstr "Antal timmar"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property_group
@@ -894,7 +906,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Start Production"
-msgstr ""
+msgstr "Starta produktion"
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -987,6 +999,11 @@ msgid "Amount measuring unit"
 msgstr ""
 
 #. module: mrp
+#: model:process.node,note:mrp.process_node_productminimumstockrule0
+msgid "Create minimum stock rules"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.procurement:0
 msgid "Run procurement"
 msgstr ""
@@ -1035,7 +1052,7 @@ msgstr ""
 #. module: mrp
 #: wizard_field:product.product.procurement,init,uom_id:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Måttenhet"
 
 #. module: mrp
 #: field:mrp.procurement,procure_method:0
@@ -1050,7 +1067,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,init,time_unit:0
 msgid "Per week"
-msgstr ""
+msgstr "Per vecka"
 
 #. module: mrp
 #: wizard_button:mrp.procurement.compute,init,compute:0
@@ -1094,12 +1111,12 @@ msgstr ""
 #. module: mrp
 #: wizard_view:mrp.workcenter.load,init:0
 msgid "Select time unit"
-msgstr ""
+msgstr "Välj tidsenhet"
 
 #. module: mrp
 #: wizard_field:product_price,init,number:0
 msgid "Number of products to produce"
-msgstr ""
+msgstr "Antal produkter att tillverka"
 
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
@@ -1114,7 +1131,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,init,time_unit:0
 msgid "Day by day"
-msgstr ""
+msgstr "Dag för dag"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_productminimumstockrule0
@@ -1184,7 +1201,7 @@ msgstr ""
 #: rml:mrp.production.order:0
 #: wizard_field:product.product.procurement,init,date_planned:0
 msgid "Planned Date"
-msgstr ""
+msgstr "Planerat datum"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -1290,7 +1307,7 @@ msgstr "Metod"
 #. module: mrp
 #: wizard_view:product_price,init:0
 msgid "Paid ?"
-msgstr ""
+msgstr "Betald?"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
@@ -1379,7 +1396,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_change_production_qty
 msgid "Change Product Qty."
-msgstr ""
+msgstr "Ändra produktkvantitet"
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -1441,7 +1458,7 @@ msgstr "Produkt"
 #: view:mrp.production:0
 #: field:mrp.production,hour_total:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Summa timmar"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -1575,7 +1592,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
 msgid "Cost per cycle"
-msgstr ""
+msgstr "Kostnad per cykel"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
@@ -1632,7 +1649,7 @@ msgstr ""
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
-msgstr ""
+msgstr "Tillverkningsorder"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1775,12 +1792,12 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Total Qty"
-msgstr ""
+msgstr "Total kvantitet"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
 msgid "Number of Hours"
-msgstr ""
+msgstr "Antal timmar"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
@@ -1833,7 +1850,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
-msgstr ""
+msgstr "Väntande varor"
 
 #. module: mrp
 #: model:process.process,name:mrp.process_process_stockableproductprocess0
@@ -1953,7 +1970,7 @@ msgstr "Allmän information"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Productions"
-msgstr ""
+msgstr "Tillverkning"
 
 #. module: mrp
 #: wizard_button:product.product.procurement,done,end:0
@@ -1969,11 +1986,6 @@ msgstr ""
 #: code:addons/mrp/report/price.py:0
 #, python-format
 msgid "Product supplier"
-msgstr ""
-
-#. module: mrp
-#: model:process.node,note:mrp.process_node_productminimumstockrule0
-msgid "Create minimum stock rules"
 msgstr ""
 
 #. module: mrp
@@ -2000,15 +2012,9 @@ msgid "Close Move at end"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/wizard/wizard_track_line.py:0
-#, python-format
-msgid "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
-msgstr ""
-
-#. module: mrp
 #: wizard_view:change_production_qty,confirm:0
 msgid "Change Product Qty"
-msgstr ""
+msgstr "Ändra produktkvantitet"
 
 #. module: mrp
 #: field:mrp.bom.revision,description:0

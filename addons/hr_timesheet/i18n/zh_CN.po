@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:27:47+0000\n"
-"PO-Revision-Date: 2010-02-22 14:27:47+0000\n"
+"POT-Creation-Date: 2010-04-06 10:28:12+0000\n"
+"PO-Revision-Date: 2010-04-06 10:28:12+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgstr "在行动定义中的模式名称无效"
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr "分析日记账"
+msgstr "辅助核算分类帐"
 
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_in,so_result_end:0
@@ -52,12 +52,12 @@ msgstr "停止工作"
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet
 msgid "Employee Timesheet"
-msgstr "员工工作时间表"
+msgstr "员工时间表"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Work done stats"
-msgstr ""
+msgstr "统计完成的工作"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.next_id_48
@@ -85,17 +85,17 @@ msgstr ""
 #. module: hr_timesheet
 #: model:product.uom,name:hr_timesheet.uom_day
 msgid "Day"
-msgstr ""
+msgstr "天"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,analytic_amount:0
 msgid "Minimum Analytic Amount"
-msgstr ""
+msgstr "最低辅助核算额"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Total time"
-msgstr "总计时间"
+msgstr "总时间"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
@@ -105,7 +105,7 @@ msgstr "签入/签出"
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "Work done in the last period"
-msgstr ""
+msgstr "在最近会计期间完成的工作"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,state:0
@@ -117,7 +117,7 @@ msgstr "当前状态"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_me_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_me_all_form
 msgid "My Working Hours"
-msgstr "我的工时"
+msgstr "我的工作小时"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/sign_in_out.py:0
@@ -135,12 +135,12 @@ msgstr ""
 #: wizard_field:hr_timesheet.si_so,sign_in,date_start:0
 #: wizard_field:hr_timesheet.si_so,sign_out,date:0
 msgid "Starting Date"
-msgstr "起始日"
+msgstr "开始日期"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,account_id:0
 msgid "Analytic Account"
-msgstr "分析科目"
+msgstr "辅助核算科目"
 
 #. module: hr_timesheet
 #: model:process.process,name:hr_timesheet.process_process_timesheetprocess0
@@ -150,7 +150,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.module.module,shortdesc:hr_timesheet.module_meta_information
 msgid "Human Resources (Timesheet encoding)"
-msgstr ""
+msgstr "人力资源(时间表编码)"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
@@ -182,7 +182,7 @@ msgstr "打印"
 #. module: hr_timesheet
 #: model:product.template,name:hr_timesheet.product_consultant_product_template
 msgid "Consultancy - Senior Developer"
-msgstr ""
+msgstr "顾问 - 高级开发"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
@@ -193,7 +193,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:product.uom,name:hr_timesheet.uom_hour
 msgid "Hour"
-msgstr ""
+msgstr "小时"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -225,7 +225,7 @@ msgstr "无效XML视图结构!"
 #. module: hr_timesheet
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "错误：销售单位必须和计量单位在不同的分类。"
+msgstr "错误:销售单位必须和计量单位在不同的分类."
 
 #. module: hr_timesheet
 #: wizard_view:hr.analytical.timesheet_users,init:0
@@ -256,7 +256,7 @@ msgstr "总成本"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form_my
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form_my
 msgid "My Working Hours of The Day"
-msgstr "该日我的工时"
+msgstr "这天我的工作小时"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -271,12 +271,12 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Timesheet Line"
-msgstr "工作时间表明细"
+msgstr "时间表明细"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Stats by month"
-msgstr ""
+msgstr "按月份统计"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -294,7 +294,7 @@ msgstr "工作说明"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "To be invoiced"
-msgstr ""
+msgstr "要开发票"
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
@@ -305,7 +305,7 @@ msgstr "员工时间表"
 #: model:ir.actions.wizard,name:hr_timesheet.si_so
 #: model:ir.ui.menu,name:hr_timesheet.menu_si_so
 msgid "Sign in / Sign out by project"
-msgstr ""
+msgstr "项目的签入/签出"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -317,22 +317,22 @@ msgstr ""
 #. module: hr_timesheet
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "错误：默认计量单位和采购计量单位必须在同一分类中。"
+msgstr "错误:默认的计量单位和这货物的计量单位必须是同一类型."
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "(Keep empty for current time)"
-msgstr ""
+msgstr "(留空表示当前时间)"
 
 #. module: hr_timesheet
 #: view:hr.employee:0
 msgid "Timesheets"
-msgstr "工作时间表列表"
+msgstr "时间表"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "Sign in status"
-msgstr "签如状态"
+msgstr "签入状态"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -379,7 +379,7 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,date:0
 msgid "Closing Date"
-msgstr "终止日期"
+msgstr "结束日期"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -410,12 +410,12 @@ msgstr ""
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Key dates"
-msgstr ""
+msgstr "关键日期"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Analysis stats"
-msgstr ""
+msgstr "辅助核算统计"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,name:0
@@ -431,7 +431,7 @@ msgstr "一般信息"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Analysis summary"
-msgstr "分析汇总"
+msgstr "辅助核算摘要"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -457,7 +457,7 @@ msgstr "取消"
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
 #: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet_users
 msgid "Employees Timesheet"
-msgstr "员工工作时间表"
+msgstr "员工时间表"
 
 #. module: hr_timesheet
 #: wizard_view:hr.analytical.timesheet,init:0
@@ -473,7 +473,7 @@ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 #. module: hr_timesheet
 #: model:product.uom.categ,name:hr_timesheet.uom_categ_wtime
 msgid "Working Time"
-msgstr "工作时间"
+msgstr "工作的时间"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_out,server_date:0
@@ -483,12 +483,12 @@ msgstr "当前日期"
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,server_date:0
 msgid "Current Server Date"
-msgstr "当前状态"
+msgstr "当前服务器时间"
 
 #. module: hr_timesheet
 #: field:hr.employee,product_id:0
 msgid "Product"
-msgstr "货品"
+msgstr "产品"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -500,7 +500,7 @@ msgstr "用户"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form
 msgid "Working Hours of The Day"
-msgstr "该日工时"
+msgstr "这天的工作小时"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -522,7 +522,7 @@ msgstr "（服务器上的时间）"
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_today_form
 msgid "Working Hours"
-msgstr "工时"
+msgstr "工作小时"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -537,7 +537,7 @@ msgstr ""
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic line"
-msgstr ""
+msgstr "辅助核算明细"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -564,12 +564,12 @@ msgstr "开始工作"
 #. module: hr_timesheet
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "错误：无效的条码"
+msgstr "错误:无效EAN编码"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Stats by user"
-msgstr ""
+msgstr "按用户统计"
 
 #. module: hr_timesheet
 #: wizard_field:hr.analytical.timesheet,init,year:0
@@ -581,5 +581,5 @@ msgstr "年"
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_in,so_result:0
 msgid "Change Work"
-msgstr "改变工作"
+msgstr "修改工作"
 

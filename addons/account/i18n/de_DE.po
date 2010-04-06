@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:34:34+0000\n"
-"PO-Revision-Date: 2010-02-22 14:34:34+0000\n"
+"POT-Creation-Date: 2010-04-06 10:37:15+0000\n"
+"PO-Revision-Date: 2010-04-06 10:37:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -83,6 +83,12 @@ msgstr "Wähle Nachricht"
 #: help:product.category,property_account_income_categ:0
 msgid "This account will be used to value incoming stock for the current product category"
 msgstr "Dieses Konto wird verwendet, um den Wert von Wareneingängen für die aktuelle Produktkategorie zu erfassen."
+
+#. module: account
+#: code:addons/account/account.py:0
+#, python-format
+msgid "You cannot remove/deactivate an account which is set as a property to any Partner!"
+msgstr ""
 
 #. module: account
 #: help:account.invoice,period_id:0
@@ -316,6 +322,7 @@ msgid "Fixed"
 msgstr "Fest"
 
 #. module: account
+#: code:addons/account/account.py:0
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Warning !"
@@ -860,7 +867,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Purchase Properties"
-msgstr "EInkaufs Eingenschaften"
+msgstr "Einkauf Eigenschaften"
 
 #. module: account
 #: model:process.node,note:account.process_node_paymententries0
@@ -2122,14 +2129,15 @@ msgid "x Expenses Credit Notes Journal"
 msgstr "x Journal Lieferantengutschriften"
 
 #. module: account
-#: field:account.analytic.journal,type:0
-#: field:account.bank.statement.line,type:0
-#: field:account.invoice,type:0
-#: field:account.journal,type:0
-#: field:account.move,type:0
-#: field:account.move.reconcile,type:0
-msgid "Type"
-msgstr "Typ"
+#: code:addons/account/account.py:0
+#, python-format
+msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
+"\n"
+"            if abs(amount) < 10 ** -int(config['price_accuracy']):\n"
+"                if not len(line_draft_ids):\n"
+"                    continue\n"
+"                self.pool.get('account.move.line"
+msgstr ""
 
 #. module: account
 #: view:account.journal:0
@@ -3205,6 +3213,12 @@ msgid "Reconcile"
 msgstr "Zahlungsausgleich"
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "You cannot cancel the Invoice which is Partially Paid! You need to unreconcile concerned payment entries!"
+msgstr ""
+
+#. module: account
 #: rml:account.overdue:0
 msgid "Best regards."
 msgstr "Viele Grüsse."
@@ -3668,6 +3682,7 @@ msgid "Generate Fiscal Year Opening Entries"
 msgstr "Erzeuge Jahreseröffnungsbuchungen"
 
 #. module: account
+#: view:account.move.reconcile:0
 #: model:ir.actions.wizard,name:account.wizard_reconcile
 msgid "Reconcile Entries"
 msgstr "Buchen OP Ausgleich"
@@ -3845,6 +3860,11 @@ msgid "Create"
 msgstr "Erstellen"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_account_move
+msgid "All Account Entries"
+msgstr ""
+
+#. module: account
 #: model:process.transition.action,name:account.process_transition_action_createentries0
 msgid "Create entry"
 msgstr "Erzeuge Buchung"
@@ -3925,6 +3945,7 @@ msgstr "Zentrales Journal"
 #: code:addons/account/account_analytic_line.py:0
 #: code:addons/account/account_bank_statement.py:0
 #: code:addons/account/account_move_line.py:0
+#: code:addons/account/invoice.py:0
 #: code:addons/account/wizard/wizard_pay_invoice.py:0
 #: code:addons/account/wizard/wizard_refund.py:0
 #, python-format
@@ -4014,6 +4035,11 @@ msgid "Project line"
 msgstr "Budget Projekt"
 
 #. module: account
+#: view:account.move.reconcile:0
+msgid "Partial Reconcile Entries"
+msgstr ""
+
+#. module: account
 #: code:addons/account/account.py:0
 #, python-format
 msgid "SAJ"
@@ -4076,7 +4102,7 @@ msgstr "Sequenzer"
 #. module: account
 #: field:account.invoice,move_id:0
 msgid "Invoice Movement"
-msgstr "Workflow der Rechnung"
+msgstr "Rechnungsbuchung"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -4144,6 +4170,16 @@ msgid "Maturity date"
 msgstr "Fälligkeitstermin"
 
 #. module: account
+#: field:account.analytic.journal,type:0
+#: field:account.bank.statement.line,type:0
+#: field:account.invoice,type:0
+#: field:account.journal,type:0
+#: field:account.move,type:0
+#: field:account.move.reconcile,type:0
+msgid "Type"
+msgstr "Typ"
+
+#. module: account
 #: view:account.subscription:0
 msgid "Entry Subscription"
 msgstr "Eingabe automat. Buchung"
@@ -4174,7 +4210,7 @@ msgstr "Wähle Kontenplan"
 #: selection:account.chart,init,target_move:0
 #: model:ir.actions.report.xml,name:account.account_move_line_list
 msgid "All Entries"
-msgstr "Gebucht"
+msgstr "Alle Einträge"
 
 #. module: account
 #: model:process.node,name:account.process_node_draftinvoices0
@@ -4351,17 +4387,6 @@ msgstr "Max. Menge"
 #: field:account.period,name:0
 msgid "Period Name"
 msgstr "Buchungsperiode"
-
-#. module: account
-#: code:addons/account/account.py:0
-#, python-format
-msgid "\"\"Couldn't create move with currency different from the secondary currency of the account \"%s - %s\". Clear the secondary currency field of the account definition if you want to accept all currencies.\"\"\" % (line.account_id.code, line.account_id.name)))\n"
-"\n"
-"            if abs(amount) < 0.0001:\n"
-"                if not len(line_draft_ids):\n"
-"                    continue\n"
-"                self.pool.get('account.move.line"
-msgstr ""
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -4932,7 +4957,7 @@ msgstr "Buchungen"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_unreconciled
 msgid "Receivables & Payables"
-msgstr "Offene Rechnungen"
+msgstr ""
 
 #. module: account
 #: rml:account.general.ledger:0
@@ -5377,7 +5402,7 @@ msgstr "Konto OP Ausgleich"
 #: view:account.bank.statement:0
 #: selection:account.bank.statement,state:0
 msgid "Confirm"
-msgstr "Gebucht"
+msgstr "Bestätigen"
 
 #. module: account
 #: wizard_view:account.account.balance.report,account_selection:0
@@ -5609,6 +5634,11 @@ msgid "Check this box if you want to use a different sequence for each created j
 msgstr "Hake diese Box an falls Sie unterschiedliche Sequenzer für jedes neue Journal haben möchten. Ansonsten wird immer das gleiche Journal verwendet."
 
 #. module: account
+#: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
+msgid "All Receivables & Payables"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.wizard,name:account.wizard_populate_statement_from_inv
 msgid "Import invoices"
 msgstr "Importiere Rechnungen"
@@ -5766,11 +5796,6 @@ msgstr "Ausgewählte Buchungen haben keine Entwurfspositionen"
 #: wizard_button:account.wizard_paid_open,init,end:0
 msgid "No"
 msgstr "Nummer"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.act_account_partner_account_move
-msgid "All account entries"
-msgstr "Alle Buchungen"
 
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0

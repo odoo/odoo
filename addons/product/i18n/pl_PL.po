@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:38:29+0000\n"
-"PO-Revision-Date: 2010-02-22 14:38:29+0000\n"
+"POT-Creation-Date: 2010-04-06 10:42:24+0000\n"
+"PO-Revision-Date: 2010-04-06 10:42:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,9 +66,9 @@ msgid "Net weight"
 msgstr "Waga netto"
 
 #. module: product
-#: help:product.product,incoming_qty:0
-msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
-msgstr "Ilości produktów, które wg planu mają dotrzeć do wybranej strefy magazynowej lub do wszystkich stref wewnętrznych, jeśli strefy nie wybrano."
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "Kategoria jm"
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -648,7 +648,7 @@ msgstr "Suma wag opakowań"
 #. module: product
 #: help:product.template,procure_method:0
 msgid "'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."
-msgstr ""
+msgstr "'Na Zapas': Kiedy potrzeba pobierz z zapasu lub poczekaj na dostawę. 'Na Zamówienie': Kiedy potrzeba kup lub wyprodukuj na zamówienie nabycia."
 
 #. module: product
 #: view:product.product:0
@@ -670,7 +670,7 @@ msgstr ""
 #. module: product
 #: help:product.pricelist.version,active:0
 msgid "When a version is duplicated it is set to non active, so that the dates do not overlaps with original version. You should change the dates and reactivate the pricelist"
-msgstr ""
+msgstr "Kiedy wersja jest duplikowana, to duplikat jest ustawiony na nie aktywny, aby daty nie pokrywały się z pierwotną wersją. Powinieneś zmienić daty i uaktywnić cennik."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -837,6 +837,12 @@ msgid "DDR 256MB PC400"
 msgstr ""
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!"
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Zapas rzeczywisty"
@@ -855,6 +861,11 @@ msgstr "Jednostka miary z danej kategorii może być konwertowana do innej z tej
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
 msgstr "Jednostka miary produktu"
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
+msgstr "Ilości produktów, które wg planu mają dotrzeć do wybranej strefy magazynowej lub do wszystkich stref wewnętrznych, jeśli strefy nie wybrano."
 
 #. module: product
 #: field:product.template,sale_ok:0
@@ -1400,8 +1411,9 @@ msgid "This is the average time between the confirmation of the customer order a
 msgstr "Jest to średni czas pomiędzy potwierdzeniem zamówienia przez klienta a dostawą gotowych produktów. To jest czas, który obiecujesz klientowi."
 
 #. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
+#: help:product.template,uos_coeff:0
+msgid "Coefficient to convert UOM to UOS\n"
+" uos = uom * coeff"
 msgstr ""
 
 #. module: product
@@ -1493,13 +1505,6 @@ msgid "Name"
 msgstr "Nazwa"
 
 #. module: product
-#: help:product.template,uos_coeff:0
-msgid "Coefficient to convert UOM to UOS\n"
-" uom = uos * coeff"
-msgstr "Przelicznik do konwersji JM na JS\n"
-" jm = js * przelicznik"
-
-#. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "Może być kupowane"
@@ -1539,6 +1544,7 @@ msgstr "Paletyzacja"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
+#: code:addons/product/product.py:0
 #, python-format
 msgid "Warning !"
 msgstr "Ostrzeżenie !"
@@ -1582,7 +1588,8 @@ msgstr "Produkty i cenniki"
 #: help:product.uom,factor:0
 msgid "The coefficient for the formula:\n"
 "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-msgstr ""
+msgstr "Współczynnik w wyrażeniu:\n"
+"1 (jednostka podst.) = współcz. (ta jednostka). Przelicznik = 1 / współcz."
 
 #. module: product
 #: help:product.template,weight_net:0

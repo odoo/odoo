@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:50:44+0000\n"
-"PO-Revision-Date: 2010-02-22 14:50:44+0000\n"
+"POT-Creation-Date: 2010-04-06 10:46:48+0000\n"
+"PO-Revision-Date: 2010-04-06 10:46:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,8 +66,8 @@ msgid "Net weight"
 msgstr "Čistá hmotnosť"
 
 #. module: product
-#: help:product.product,incoming_qty:0
-msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
 msgstr ""
 
 #. module: product
@@ -837,6 +837,12 @@ msgid "DDR 256MB PC400"
 msgstr ""
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!"
+msgstr ""
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
 msgstr "Reálne na sklade"
@@ -855,6 +861,11 @@ msgstr ""
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
 msgstr "Merná jednotka produktu"
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
+msgstr ""
 
 #. module: product
 #: field:product.template,sale_ok:0
@@ -1399,8 +1410,9 @@ msgid "This is the average time between the confirmation of the customer order a
 msgstr ""
 
 #. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
+#: help:product.template,uos_coeff:0
+msgid "Coefficient to convert UOM to UOS\n"
+" uos = uom * coeff"
 msgstr ""
 
 #. module: product
@@ -1492,12 +1504,6 @@ msgid "Name"
 msgstr ""
 
 #. module: product
-#: help:product.template,uos_coeff:0
-msgid "Coefficient to convert UOM to UOS\n"
-" uom = uos * coeff"
-msgstr ""
-
-#. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
 msgstr "Možnosť zakúpiť"
@@ -1537,6 +1543,7 @@ msgstr ""
 
 #. module: product
 #: code:addons/product/pricelist.py:0
+#: code:addons/product/product.py:0
 #, python-format
 msgid "Warning !"
 msgstr ""

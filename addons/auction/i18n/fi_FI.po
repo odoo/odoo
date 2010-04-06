@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.7\n"
+"Project-Id-Version: OpenERP Server 5.0.8\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-02-22 14:33:02+0000\n"
-"PO-Revision-Date: 2010-02-22 14:33:02+0000\n"
+"POT-Creation-Date: 2010-04-06 10:34:44+0000\n"
+"PO-Revision-Date: 2010-04-06 10:34:44+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -153,7 +153,7 @@ msgstr ""
 #. module: auction
 #: field:auction.deposit.cost,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Määrä"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_deposit_border
@@ -169,7 +169,7 @@ msgstr ""
 #. module: auction
 #: field:auction.dates,account_analytic_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analyyttinen tili"
 
 #. module: auction
 #: selection:auction.lot.category,aie_categ:0
@@ -265,7 +265,7 @@ msgstr ""
 #. module: auction
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö"
+msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö."
 
 #. module: auction
 #: rml:auction.total.rml:0
@@ -528,6 +528,11 @@ msgstr ""
 #: wizard_field:auction.pay.buy,init,amount2:0
 #: wizard_field:auction.pay.buy,init,amount3:0
 msgid "Amount paid"
+msgstr ""
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id4
+msgid "VAT 12%"
 msgstr ""
 
 #. module: auction
@@ -1510,6 +1515,11 @@ msgid "Antique/Religiosa"
 msgstr ""
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id3
+msgid "VAT 10%"
+msgstr ""
+
+#. module: auction
 #: wizard_button:auction.lots.make_invoice,init,invoice:0
 #: wizard_button:auction.lots.make_invoice_buyer,init,invoice:0
 msgid "Create invoices"
@@ -1518,7 +1528,12 @@ msgstr ""
 #. module: auction
 #: constraint:product.template:0
 msgid "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "Virhe: Oletusmittayksikkö ja ostojen mittayksikkö on oltava samassa kategoriassa."
+msgstr "Virhe: Oletus mittayksikkö ja ostojen mittayksikkö täytyy olla samassa kategoriassa."
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id5
+msgid "VAT 5%"
+msgstr ""
 
 #. module: auction
 #: selection:auction.dates,state:0
@@ -1723,7 +1738,7 @@ msgstr ""
 #: field:auction.deposit,lot_id:0
 #: model:ir.ui.menu,name:auction.auction_objects_menu
 msgid "Objects"
-msgstr "Objektit"
+msgstr ""
 
 #. module: auction
 #: wizard_view:auction.lots.numerotate,init:0
@@ -1894,6 +1909,11 @@ msgid "Frais de vente"
 msgstr ""
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id1
+msgid "VAT 1%"
+msgstr ""
+
+#. module: auction
 #: wizard_view:auction.lots.numerotate_cont,init:0
 #: wizard_field:auction.lots.numerotate_cont,init,number:0
 msgid "First Number"
@@ -2017,7 +2037,7 @@ msgstr ""
 #. module: auction
 #: constraint:res.partner:0
 msgid "The VAT doesn't seem to be correct."
-msgstr "ALV vaikuttaisi olevan väärin."
+msgstr "ALV ei vaikuta olevan oikein."
 
 #. module: auction
 #: field:report.attendance,employee_id:0
@@ -2087,6 +2107,11 @@ msgid "Image"
 msgstr ""
 
 #. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id2
+msgid "VAT 20%"
+msgstr ""
+
+#. module: auction
 #: selection:report.object.encoded,state:0
 msgid "Invoiced"
 msgstr ""
@@ -2122,7 +2147,7 @@ msgstr ""
 #. module: auction
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
+msgstr "Virhe! Et voi luoda itseään toistavasti rinnastettuja jäseniä."
 
 #. module: auction
 #: selection:auction.dates,state:0
