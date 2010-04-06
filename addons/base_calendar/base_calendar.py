@@ -90,7 +90,7 @@ def real_id2base_calendar_id(real_id, recurrent_date):
 
     if real_id and recurrent_date:
         recurrent_date = time.strftime("%Y%m%d%H%M%S", \
-                         time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
+                            time.strptime(recurrent_date, "%Y-%m-%d %H:%M:%S"))
         return '%d-%s' % (real_id, recurrent_date)
     return real_id
 
@@ -253,7 +253,7 @@ class calendar_attendee(osv.osv):
                     result[id][name] = ''
                     continue
                 else:
-                    result[id][name] =  self._get_address(attdata.sent_by_uid.name, \
+                    result[id][name] = self._get_address(attdata.sent_by_uid.name, \
                                         attdata.sent_by_uid.address_id.email)
             if name == 'cn':
                 if attdata.user_id:
@@ -350,36 +350,37 @@ request was delegated to"),
         'delegated_from': fields.function(_compute_data, method=True, string=\
             'Delegated From', type="char", store=True, size=124, multi='delegated_from'),
         'parent_ids': fields.many2many('calendar.attendee', 'calendar_attendee_parent_rel',\
-                                       'attendee_id', 'parent_id', 'Delegrated From'),
+                                    'attendee_id', 'parent_id', 'Delegrated From'),
         'child_ids': fields.many2many('calendar.attendee', 'calendar_attendee_child_rel',\
                                       'attendee_id', 'child_id', 'Delegrated To'),
         'sent_by': fields.function(_compute_data, method=True, string='Sent By',\
-                         type="char", multi='sent_by', store=True, size=124,\
-                         help="Specify the user that is acting on behalf of the calendar user"),
+                        type="char", multi='sent_by', store=True, size=124,\
+                        help="Specify the user that is acting on behalf of the calendar user"),
         'sent_by_uid': fields.function(_compute_data, method=True, string='Sent By User',\
-                             type="many2one", relation="res.users", multi='sent_by_uid'),
+                            type="many2one", relation="res.users", multi='sent_by_uid'),
         'cn': fields.function(_compute_data, method=True, string='Common name',\
-                             type="char", size=124, multi='cn', store=True),
+                            type="char", size=124, multi='cn', store=True),
         'dir': fields.char('URI Reference', size=124, help="Reference to the URI\
-                     that points to the directory information corresponding to the attendee."),
-        'language':  fields.function(_compute_data, method=True, string='Language',\
-                     type="selection", selection=_lang_get, multi='language',\
-                     store=True, help="To specify the language for text values in a\
-                      property or property parameter."),
+that points to the directory information corresponding to the attendee."),
+        'language': fields.function(_compute_data, method=True, string='Language',\
+                    type="selection", selection=_lang_get, multi='language',\
+                    store=True, help="To specify the language for text values in a\
+property or property parameter."),
         'user_id': fields.many2one('res.users', 'User'),
         'partner_address_id': fields.many2one('res.partner.address', 'Contact'),
         'partner_id': fields.related('partner_address_id', 'partner_id', type='many2one',\
                         relation='res.partner', string='Partner', help="Partner related to contact"),
         'email': fields.char('Email', size=124, help="Email of Invited Person"),
         'event_date': fields.function(_compute_data, method=True, string='Event Date',\
-                             type="datetime", multi='event_date'),
-        'event_end_date': fields.function(_compute_data, method=True, string='Event End Date',\
-                                 type="datetime", multi='event_end_date'),
+                            type="datetime", multi='event_date'),
+        'event_end_date': fields.function(_compute_data, method=True, \
+                            string='Event End Date', type="datetime", \
+                            multi='event_end_date'),
         'ref': fields.reference('Event Ref', selection=_links_get, size=128),
         'availability': fields.selection([('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly="True"),
      }
     _defaults = {
-        'state':  lambda *x: 'needs-action',
+        'state': lambda *x: 'needs-action',
     }
 
     response_re = re.compile("Are you coming\?.*\n*.*(YES|NO|MAYBE).*", re.UNICODE)
@@ -419,7 +420,7 @@ request was delegated to"),
             if msg_actions['state'] in ['YES', 'NO', 'MAYBE']:
                 mapping = {'YES': 'accepted', 'NO': 'declined', 'MAYBE': 'tentative'}
                 status = mapping[msg_actions['state']]
-                print 'Got response for invitation id: %s as %s'  % (ids, status)
+                print 'Got response for invitation id: %s as %s' % (ids, status)
                 self.write(cr, uid, ids, {'state': status})
         return True
 
@@ -438,13 +439,13 @@ request was delegated to"),
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
             res_obj = att.ref
-            sub = '[%s Invitation][%d] %s'  % (company, att.id, res_obj.name)
+            sub = '[%s Invitation][%d] %s' % (company, att.id, res_obj.name)
             att_infos = []
             other_invitaion_ids = self.search(cr, uid, [('ref','=', att.ref._name + ',' + str(att.ref.id))])
             for att2 in self.browse(cr, uid, other_invitaion_ids):
                 att_infos.append(((att2.user_id and att2.user_id.name) or \
                              (att2.partner_id and att2.partner_id.name) or \
-                                att2.email) +  ' - Status: ' + att2.state.title())
+                                att2.email) + ' - Status: ' + att2.state.title())
             body_vals = {'name': res_obj.name,
                         'start_date': res_obj.date,
                         'end_date': res_obj.date_deadline or False,
@@ -468,7 +469,7 @@ request was delegated to"),
             return True
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         """
-        Make entry on email and availbility  on change of user_id field.
+        Make entry on email and availbility on change of user_id field.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of calendar attendee’s IDs.
@@ -494,7 +495,7 @@ request was delegated to"),
 
     def do_accept(self, cr, uid, ids, context=None, *args):
         """
-        Update state which value is  accepted.
+        Update state which value is accepted.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of calendar attendee’s IDs.
@@ -511,7 +512,7 @@ request was delegated to"),
                 mod_obj = self.pool.get(vals.ref._name)
                 if vals.ref:
                     if vals.ref.user_id.id != user.id:
-                        defaults = {'user_id':  user.id}
+                        defaults = {'user_id': user.id}
                         new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
 
@@ -538,7 +539,7 @@ request was delegated to"),
             context = {}
         if not vals.get("email") and vals.get("cn"):
             cnval = vals.get("cn").split(':')
-            email =  filter(lambda x:x.__contains__('@'), cnval)
+            email = filter(lambda x:x.__contains__('@'), cnval)
             vals['email'] = email[0]
             vals['cn'] = vals.get("cn")
         res = super(calendar_attendee, self).create(cr, uid, vals, context)
@@ -551,13 +552,17 @@ class res_alarm(osv.osv):
     _description = 'Basic Alarm Information'
     _columns = {
         'name':fields.char('Name', size=256, required=True),
-        'trigger_occurs': fields.selection([('before', 'Before'), ('after', 'After')], \
+        'trigger_occurs': fields.selection([('before', 'Before'), \
+                                            ('after', 'After')], \
                                         'Triggers', required=True),
-        'trigger_interval': fields.selection([('minutes', 'Minutes'), ('hours', 'Hours'), \
-                ('days', 'Days')], 'Interval', required=True),
-        'trigger_duration':  fields.integer('Duration', required=True),
-        'trigger_related':  fields.selection([('start', 'The event starts'), ('end', \
-                                       'The event ends')], 'Related to', required=True),
+        'trigger_interval': fields.selection([('minutes', 'Minutes'), \
+                                                ('hours', 'Hours'), \
+                                                ('days', 'Days')], 'Interval',\
+                                                required=True),
+        'trigger_duration': fields.integer('Duration', required=True),
+        'trigger_related': fields.selection([('start', 'The event starts'), \
+                                            ('end', 'The event ends')], \
+                                            'Related to', required=True),
         'duration': fields.integer('Duration', help="""Duration' and 'Repeat' \
 are both optional, but if one occurs, so MUST the other"""),
         'repeat': fields.integer('Repeat'),
@@ -567,7 +572,7 @@ are both optional, but if one occurs, so MUST the other"""),
 
     }
     _defaults = {
-        'trigger_interval':  lambda *x: 'minutes',
+        'trigger_interval': lambda *x: 'minutes',
         'trigger_duration': lambda *x: 5,
         'trigger_occurs': lambda *x: 'before',
         'trigger_related': lambda *x: 'start',
@@ -641,7 +646,7 @@ are both optional, but if one occurs, so MUST the other"""),
             if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
                 cr.execute('Update %s set base_calendar_alarm_id=NULL, alarm_id=NULL\
-                             where id=%s' % (model_obj._table, datas.id))
+                            where id=%s' % (model_obj._table, datas.id))
         cr.commit()
         return True
 
@@ -656,8 +661,8 @@ class calendar_alarm(osv.osv):
     _columns = {
             'alarm_id': fields.many2one('res.alarm', 'Basic Alarm', ondelete='cascade'),
             'name': fields.char('Summary', size=124, help="""Contains the text to be \
-                         used as the message subject for email \
-                         or contains the text to be used for display"""),
+                        used as the message subject for email \
+                        or contains the text to be used for display"""),
             'action': fields.selection([('audio', 'Audio'), ('display', 'Display'), \
                     ('procedure', 'Procedure'), ('email', 'Email') ], 'Action', \
                     required=True, help="Defines the action to be invoked when an alarm is triggered"),
@@ -686,7 +691,7 @@ class calendar_alarm(osv.osv):
      }
 
     _defaults = {
-        'action':  lambda *x: 'email',
+        'action': lambda *x: 'email',
         'state': lambda *x: 'run',
      }
 
@@ -709,7 +714,7 @@ class calendar_alarm(osv.osv):
                 delta = timedelta(hours=vals['trigger_duration'])
             if vals['trigger_interval'] == 'minutes':
                 delta = timedelta(minutes=vals['trigger_duration'])
-            trigger_date =  dtstart + (vals['trigger_occurs'] == 'after' and delta or -delta)
+            trigger_date = dtstart + (vals['trigger_occurs'] == 'after' and delta or -delta)
             vals['trigger_date'] = trigger_date
         res = super(calendar_alarm, self).create(cr, uid, vals, context)
         return res
@@ -745,7 +750,7 @@ class calendar_alarm(osv.osv):
                    'act_to': alarm.user_id.id,
                    'body': alarm.description,
                    'trigger_date': alarm.trigger_date,
-                   'ref_doc1':  '%s,%s'  % (alarm.model_id.model, alarm.res_id)
+                   'ref_doc1': '%s,%s' % (alarm.model_id.model, alarm.res_id)
                 }
                 request_id = request_obj.create(cr, uid, value)
                 request_ids = [request_id]
@@ -757,7 +762,7 @@ class calendar_alarm(osv.osv):
                 request_obj.request_send(cr, uid, request_ids)
 
             if alarm.action == 'email':
-                sub = '[Openobject Remainder] %s'  % (alarm.name)
+                sub = '[Openobject Remainder] %s' % (alarm.name)
                 body = """
                 Name: %s
                 Date: %s
@@ -816,7 +821,7 @@ class calendar_event(osv.osv):
         if end_date and not duration:
             end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
             diff = end - start
-            duration =  float(diff.days)* 24 + (float(diff.seconds) / 3600)
+            duration = float(diff.days)* 24 + (float(diff.seconds) / 3600)
             value['duration'] = round(duration, 2)
         elif not end_date:
             end = start + timedelta(hours=duration)
@@ -911,7 +916,7 @@ class calendar_event(osv.osv):
         Get rule string.
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param id: List of  calendar event's ids.
+        @param id: List of calendar event's ids.
         @param context: A standard dictionary for contextual values
         @return: dictionary of rrule value.
         """
@@ -953,7 +958,10 @@ class calendar_event(osv.osv):
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
                     rule or repeating pattern for anexception to a recurrence set"),
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True,\
-                     string='Recurrent Rule', store=True, fnct_inv=_set_rrulestring),
+                                    string='Recurrent Rule', store=True, \
+                                    fnct_inv=_set_rrulestring, help='Defines a\
+ rule or repeating pattern for recurring events\n\
+ e.g.: '),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'),
@@ -998,9 +1006,9 @@ class calendar_event(osv.osv):
     _defaults = {
          'class': lambda *a: 'public',
          'show_as': lambda *a: 'busy',
-         'freq':  lambda *x: 'None',
-         'select1':  lambda *x: 'date',
-         'interval':  lambda *x: 1,
+         'freq': lambda *x: 'None',
+         'select1': lambda *x: 'date',
+         'interval': lambda *x: 1,
     }
 
     def modify_this(self, cr, uid, event_id, defaults, real_date, context=None, *args):
@@ -1018,11 +1026,11 @@ class calendar_event(osv.osv):
         event_id = base_calendar_id2real_id(event_id)
         datas = self.read(cr, uid, event_id, context=context)
         defaults.update({
-               'recurrent_uid': base_calendar_id2real_id(datas['id']),
-               'recurrent_id': defaults.get('date') or real_date,
-               'rrule_type': 'none',
-               'rrule': ''
-                    })
+                        'recurrent_uid': base_calendar_id2real_id(datas['id']),
+                        'recurrent_id': defaults.get('date') or real_date,
+                        'rrule_type': 'none',
+                        'rrule': ''
+                        })
         exdate = datas['exdate'] and datas['exdate'].split(',') or []
         if real_date and defaults.get('date'):
             exdate.append(real_date)
@@ -1046,7 +1054,7 @@ class calendar_event(osv.osv):
             defaults.update({'table': self._table})
 
             qry = "UPDATE %(table)s set name = '%(name)s', \
-                            date = '%(date)s',  date_deadline = '%(date_deadline)s'"
+                            date = '%(date)s', date_deadline = '%(date_deadline)s'"
             if defaults.get('alarm_id'):
                 qry += ", alarm_id = %(alarm_id)s"
             if defaults.get('location'):
@@ -1074,7 +1082,7 @@ class calendar_event(osv.osv):
         result = []
         if ids and (base_start_date or base_until_date):
             cr.execute("select m.id, m.rrule, m.date, m.date_deadline, \
-                            m.exdate  from "  + self._table + \
+                            m.exdate from " + self._table + \
                             " m where m.id in ("\
                             + ','.join(map(lambda x: str(x), ids))+")")
 
@@ -1196,7 +1204,7 @@ class calendar_event(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=100, order=None,
             context=None, count=False):
         """
-        Overrides  orm search method.
+        Overrides orm search method.
         @param cr: the current row, from the database cursor,
         @param user: the current user’s ID for security checks,
         @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
@@ -1262,7 +1270,7 @@ class calendar_event(osv.osv):
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):
         """
-        Overrides  orm browse method.
+        Overrides orm browse method.
         @param self: the object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -1283,7 +1291,7 @@ class calendar_event(osv.osv):
 
     def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
         """
-        Overrides  orm Read method.Read List of fields for calendar event.
+        Overrides orm Read method.Read List of fields for calendar event.
         @param cr: the current row, from the database cursor,
         @param user: the current user’s ID for security checks,
         @param ids: List of calendar event's id.
@@ -1299,8 +1307,7 @@ class calendar_event(osv.osv):
         if fields and 'date' not in fields:
             fields.append('date')
         for base_calendar_id, real_id in select:
-            res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, \
-                                              load=load)
+            res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res.get('duration', 0))
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
@@ -1342,7 +1349,7 @@ class calendar_event(osv.osv):
                 for record in self.read(cr, uid, [base_calendar_id2real_id(id)], \
                                             ['date', 'rrule', 'exdate']):
                     if record['rrule']:
-                        exdate = (record['exdate'] and (record['exdate'] + ',')  or '') + ''.join((re.compile('\d')).findall(date_new)) + 'Z'
+                        exdate = (record['exdate'] and (record['exdate'] + ',') or '') + ''.join((re.compile('\d')).findall(date_new)) + 'Z'
                         if record['date'] == date_new:
                             res = self.write(cr, uid, [base_calendar_id2real_id(id)], {'exdate': exdate})
                     else:
@@ -1408,8 +1415,8 @@ class calendar_todo(osv.osv):
         """
 
         event = self.browse(cr, uid, id, context=context)
-        cr.execute("UPDATE %s set date_start='%s' where id=%s"  \
-                           % (self._table, value, id))
+        cr.execute("UPDATE %s set date_start='%s' where id=%s" \
+                            % (self._table, value, id))
         return True
 
     _columns = {
@@ -1599,5 +1606,6 @@ class res_users(osv.osv):
                     string='Free/Busy', method=True),
     }
 res_users()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
