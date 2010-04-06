@@ -2493,12 +2493,12 @@ class orm(orm_template):
 
     def default_get(self, cr, uid, fields_list, context=None):
         """
-        Get default field values of the given field list of the model
+        To Get default field values of given fields list of the model
 
         :param cr: database cursor
         :param uid: current user id
         :param fields_list: a list of fields to get the default value
-        :type fields_list: a list (example ['field_name_1', ...])
+        :type fields_list: a list (example ['field1','field2',])
         :param context: context arguments, like lang, time zone
         :return: a dictionary of the default values for fields (set on the object class, by the user preferences, or via the context)
 
@@ -2872,9 +2872,9 @@ class orm(orm_template):
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """Verifies that the operation given by ``operation`` is allowed for the user
            according to ir.rules.
-           @param ``operation``: one of ``'read'``, ``'write'``, ``'unlink'``
-           @raise ``except_orm``: if current ir.rules do not permit this operation.
-           @return: ``None`` if the operation is allowed
+           :param operation: one of ``'read'``, ``'write'``, ``'unlink'``
+           :raise except_orm: * if current ir.rules do not permit this operation.
+           :return: None if the operation is allowed
         """
         where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
         if where_clause:
@@ -2955,9 +2955,9 @@ class orm(orm_template):
         :param cr: database cursor
         :param user: current user id
         :type user: integer (example 1)
-        :param ids: id or a list of ids
-        :param vals: a dictionary of field values to update
-        :type vals: a dictionary (example {'field_name':'value', ...})
+        :param ids: id or list of ids
+        :param vals: dictionary of field values to update
+        :type vals: dictionary (example {'field_name':'value', ...})
         :param context(optional, highly recommended): context arguments, like lang, time zone
         :return: True
         :raise AccessError: * if user has no write rights on the requested object
@@ -3165,10 +3165,10 @@ class orm(orm_template):
         :param cr: database cursor
         :param user: current user id
         :type user: integer (example 1)
-        :param vals: a dictionary for new record {'field_name':field_value, ...}
-        :type vals: a dictionary (example {'field_name':field_value, ...})
+        :param vals: dictionary for new record {'field_name':field_value, ...}
+        :type vals: dictionary (example {'field_name':field_value, ...})
         :param context(optional, highly recommended): context arguements, like lang, time zone
-        :type context: a dictionary (example {'lang':'en_us', ...})
+        :type context: dictionary (example {'lang':'en_us', ...})
         :return: id of new record created
         :raise AccessError: * if user has no create rights on the requested object
                             * if user tries to bypass access rules for create on the requested object
@@ -3532,10 +3532,10 @@ class orm(orm_template):
 
         :param cr: database cursor
         :param user: current user id
-        :param args: a list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
-        :param offset: optional number of records to skip
+        :param args: list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
+        :param offset: optional number from search starts
         :param limit: optional max number of records to return
-        :param order: optional columns to sort by (default: self._order )
+        :param order: optional columns to sort by (default: self._order=id )
         :param context(optional, highly recommended): context arguments, like lang, time zone
         :param count: if True, returns only the number of records matching the criteria, not their ids
         :return: id or a list of ids of records matching the criteria
