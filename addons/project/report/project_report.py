@@ -80,5 +80,89 @@ class report_project_task_user(osv.osv):
         """)
 report_project_task_user()
 
+#This class is generated for project deshboard purpose
+class project_vs_remaining_hours(osv.osv):
+    _name = "project.vs.remaining.hours"
+    _description = " Project vs Remaining hours"
+    _auto = False
+    _columns = {
+        'project': fields.char('Project', size=128, required=True),
+        'remaining_hours': fields.float('Remaining Hours', readonly=True),
+        'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Close'),('template', 'Template')], 'State', required=True,readonly=True)
+    }
+    _order = 'project desc'
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'project_vs_remaining_hours')
+        cr.execute("""
+            create or replace view project_vs_remaining_hours as (
+                   select
+                       min(pt.id) as id,
+                       a.name as project,
+                       sum(pt.remaining_hours) as remaining_hours,
+                       a.state
+                    from
+                         project_task as pt,
+                         project_project as p,
+                         account_analytic_account as a
+                    where
+                        pt.project_id=p.id and
+                        p.category_id = a.id
+                    group by
+                        a.name,a.state
+            )
+        """)
+project_vs_remaining_hours()
+
+class task_by_days(osv.osv):
+    _name = "task.by.days"
+    _description = "Task By Days"
+    _auto = False
+    _columns = {
+        'day': fields.char('Day', size=128, required=True),
+        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True),
+        'total_task': fields.float('Total tasks', readonly=True)
+     }
+    _order = 'day desc'
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'task_by_days')
+        cr.execute("""
+            create or replace view task_by_days as (
+                select
+                    min(pt.id) as id,
+                    to_char(pt.create_date, 'YYYY-MM-DD') as day,
+                    count(*) as total_task,
+                    pt.state as state
+                from
+                    project_task as pt
+                group by
+                    to_char(pt.create_date, 'YYYY-MM-DD'),pt.state
+            )
+        """)
+task_by_days()
+
+class task_by_days_vs_planned_hours(osv.osv):
+    _name = "task.by.days.vs.planned.hours"
+    _description = "Task By Days vs Planned Hours"
+    _auto = False
+    _columns = {
+        'day': fields.char('Day', size=128, required=True),
+        'planned_hour': fields.float('Planned Hours', readonly=True)
+     }
+    _order = 'day desc'
+    def init(self, cr):
+        tools.sql.drop_view_if_exists(cr, 'task_by_days_vs_planned_hours')
+        cr.execute("""
+            create or replace view task_by_days_vs_planned_hours as (
+                select
+                    min(pt.id) as id,
+                    to_char(pt.create_date, 'YYYY-MM-DD') as day,
+                    sum(planned_hours) as planned_hour
+                from
+                    project_task as pt
+                group by
+                    to_char(pt.create_date, 'YYYY-MM-DD')
+            )
+        """)
+task_by_days_vs_planned_hours()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

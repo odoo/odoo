@@ -39,6 +39,8 @@ class sale_report(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'shop_id':fields.many2one('sale.shop', 'Shop', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
+        'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position',readonly=True),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
         'delay':fields.float('Avg Closing Days', digits=(16,2), readonly=True),
@@ -70,6 +72,8 @@ class sale_report(osv.osv):
                      s.partner_id as partner_id,
                      s.user_id as user_id,
                      s.shop_id as shop_id,
+                     s.fiscal_position as fiscal_position,
+                     s.payment_term as payment_term,
                      s.company_id as company_id,
                      extract(epoch from avg(s.date_confirm-s.create_date))/(24*60*60)::decimal(16,2) as delay,
                      sum(l.product_uom_qty*l.price_unit) as price_total,
@@ -82,9 +86,16 @@ class sale_report(osv.osv):
                      sale_order s on (s.id=l.order_id)
                      left join product_uom u on (u.id=l.product_uom)
                  group by
-                     s.date_order, s.partner_id, l.product_id,
-                     l.product_uom, s.user_id, s.state, s.shop_id,
-                     s.company_id
+                     s.date_order,
+                     s.partner_id,
+                     l.product_id,
+                     l.product_uom,
+                     s.user_id,
+                     s.state,
+                     s.shop_id,
+                     s.company_id,
+                     s.fiscal_position,
+                     s.payment_term
             )
         """)
 sale_report()

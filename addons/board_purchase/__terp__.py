@@ -18,7 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import project_report
 
+
+{
+    'name': 'Board for Purchase Management',
+    'version': '1.0',
+    'category': 'Board/Purchase',
+    'description': """
+This module implements a dashboard for purcgase management that includes:
+    * Current Purchase Orders
+    * Draft Purchase Orders
+    * Graph for quantity and amount per month
+    """,
+    'author': 'Tiny',
+    'depends': [ 'purchase','board',
+    ],
+    'update_xml': ['board_purchase_view.xml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

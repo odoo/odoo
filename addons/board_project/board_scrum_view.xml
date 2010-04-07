@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="action_sprint_all_dashboard_tree" model="ir.actions.act_window">
+            <field name="name">Sprints List</field>
+            <field name="res_model">scrum.sprint</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="scrum.view_scrum_sprint_tree"/>
+        </record>
+        <record id="board_project_scrum_form" model="ir.ui.view">
+            <field name="name">board.project.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="My Board">
+                    <hpaned>
+                        <child1>
+                   				 <action colspan="4" height="220" name="%(action_sprint_all_dashboard_tree)d" string="Sprints List" width="510"/>
+                        </child1>
+                    </hpaned>
+                </form>
+            </field>
+        </record>
+        <record id="open_board_project_scrum" model="ir.actions.act_window">
+            <field name="name">Project Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="board_project_scrum_form"/>
+        </record>
+        <menuitem
+            id="menu_deshboard_scurm"
+            name="Scurm Dashboard" parent="next_id_86"
+            icon="terp-graph" action="open_board_project_scrum"/>
+    </data>
+</openerp>

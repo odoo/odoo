@@ -90,9 +90,9 @@
 
     <menuitem action="action_hr_holidays_report_all" id="menu_hr_holidays_report_all" parent="menu_hr_reporting_holidays" sequence="0"/>
 
-	<record id="view_hr_holidays_by_type_tree" model="ir.ui.view">
-        <field name="name">hr.holidays.by.type.tree</field>
-        <field name="model">hr.holidays.by.type</field>
+	<record id="view_hr_holidays_remaining_leaves_user_tree" model="ir.ui.view">
+        <field name="name">hr.holidays.remaining.leaves.user.tree</field>
+        <field name="model">hr.holidays.remaining.leaves.user</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Leaves by Type">
@@ -102,9 +102,9 @@
         </field>
     </record>
 
-    <record id="view_hr_holidays_by_type_graph" model="ir.ui.view">
-        <field name="name">hr.holidays.by.type.graph</field>
-        <field name="model">hr.holidays.by.type</field>
+    <record id="view_hr_holidays_remaining_leaves_user_graph" model="ir.ui.view">
+        <field name="name">hr.holidays.remaining.leaves.user.graph</field>
+        <field name="model">hr.holidays.remaining.leaves.user</field>
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Leaves by Type" orientation = "horizontal" type="bar">

@@ -35,6 +35,11 @@ class account_invoice_report(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),
+        'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True),
+        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')],readonly=True),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position',readonly=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'journal_id': fields.many2one('account.journal', 'Journal',readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
@@ -69,6 +74,11 @@ class account_invoice_report(osv.osv):
                      l.product_id as product_id,
                      sum(l.quantity * u.factor) as product_qty,
                      s.partner_id as partner_id,
+                     s.payment_term as payment_term,
+                     s.period_id as period_id,
+                     s.currency_id as currency_id,
+                     s.journal_id as journal_id,
+                     s.fiscal_position as fiscal_position,
                      s.user_id as user_id,
                      s.company_id as company_id,
                      sum(l.quantity*l.price_unit) as price_total,
@@ -82,9 +92,19 @@ class account_invoice_report(osv.osv):
                      account_invoice s on (s.id=l.invoice_id)
                      left join product_uom u on (u.id=l.uos_id)
                  group by
-                     s.type,s.date_invoice, s.partner_id, l.product_id,
-                     l.uos_id, s.user_id, s.state,
-                     s.company_id
+                     s.type,
+                     s.date_invoice,
+                     s.partner_id,
+                     l.product_id,
+                     l.uos_id,
+                     s.user_id,
+                     s.state,
+                     s.company_id,
+                     s.payment_term,
+                     s.period_id,
+                     s.fiscal_position,
+                     s.currency_id,
+                     s.journal_id
             )
         """)
 account_invoice_report()

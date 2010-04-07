@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    	<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+        <menuitem
+            id="menu_purchase_deshboard"
+            name="Purchase"
+            parent="base.dashboard"/>
+
+		<record id="purchase_waiting" model="ir.actions.act_window">
+            <field name="name">Quotation Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','in',('wait','confirmed'))]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="purchase.purchase_order_tree"/>
+        </record>
+
+        <record id="board_purchase_form" model="ir.ui.view">
+            <field name="name">board.purchase.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="My Board">
+                    <hpaned>
+                        <child1>
+                            <action colspan="4" height="220" name="%(purchase.purchase_rfq)d" string="Draft Purchase Order"  width="510"/>
+                            <action colspan="4" height="220" name="%(purchase_waiting)d" string="Purchase Order in Waiting"  width="510"/>
+                        </child1>
+                        <child2>
+                            <action colspan="4" height="220" name="%(purchase.action_purchase_order_qty_amount_all)d" string="Total Qty and Amount by month"  />
+                            <action colspan="4" height="220" name="%(purchase.action_purchase_order_by_user_all)d" string="Total Orders by User per month"  />
+                        </child2>
+                    </hpaned>
+                </form>
+            </field>
+        </record>
+
+		<record id="open_board_purchase" model="ir.actions.act_window">
+            <field name="name">Purchase Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="board_purchase_form"/>
+        </record>
+		<menuitem
+            action="open_board_purchase"
+            icon="terp-graph"
+            id="menu_board_purchase"
+            parent="menu_purchase_deshboard"
+            sequence="4"/>
+
+    </data>
+</openerp>
