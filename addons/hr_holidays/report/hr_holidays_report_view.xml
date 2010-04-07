@@ -96,7 +96,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Leaves by Type">
-                <field name="user_id"/>
+                <field name="name"/>
+                <field name="leave_type"/>
                 <field name="no_of_leaves"/>
             </tree>
         </field>
@@ -108,9 +109,9 @@
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Leaves by Type" orientation = "horizontal" type="bar">
-                <field name="user_id"/>
+                <field name="name"/>
+                <field name="leave_type" group="True"/>
                 <field name="no_of_leaves" operator="+"/>
-                <field  group = "True" name="name"/>
             </graph>
         </field>
     </record>

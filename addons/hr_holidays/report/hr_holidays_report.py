@@ -77,8 +77,9 @@ class hr_holidays_remaining_leaves_user(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Employee',size=64),
-        'no_of_leaves' : fields.integer('Remaining leaves'),
-        'user_id':fields.many2one('res.users','User'),
+        'no_of_leaves': fields.integer('Remaining leaves'),
+        'user_id': fields.many2one('res.users','User'),
+        'leave_type': fields.char('Leave Type',size=64),
 
     }
     def init(self, cr):
@@ -89,13 +90,17 @@ class hr_holidays_remaining_leaves_user(osv.osv):
                     min(hrs.id) as id,
                     rr.name as name,
                     sum(hrs.number_of_days) as no_of_leaves,
-                    hrs.user_id
+                    hrs.user_id,
+                    hhs.name as leave_type
                 from
-                    hr_holidays as hrs, hr_employee as hre, resource_resource as rr
+                    hr_holidays as hrs, hr_employee as hre,
+                    resource_resource as rr,hr_holidays_status as hhs
                 where
-                    hrs.employee_id = hre.id and hre.resource_id =  rr.id
+                    hrs.employee_id = hre.id and
+                    hre.resource_id =  rr.id and
+                    hhs.id = hrs.holiday_status_id
                 group by
-                    rr.name,hrs.user_id
+                    rr.name,hrs.user_id,hhs.name
             )
         """)
 hr_holidays_remaining_leaves_user()
