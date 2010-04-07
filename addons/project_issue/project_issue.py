@@ -25,6 +25,7 @@ import re
 import time
 import tools
 from crm import crm
+import mx.DateTime
 from datetime import datetime, timedelta
 from osv import fields,osv,orm
 from osv.orm import except_orm
@@ -56,37 +57,53 @@ class project_issue(osv.osv):
         @param ids: List of Openday’s IDs
         @return: difference between current date and log date
         @param context: A standard dictionary for contextual values
-        """
-        log_obj = self.pool.get('crm.case.log')
-        model_obj = self.pool.get('ir.model')
-        cal_obj = self.pool.get('resource.calendar')
-
-        model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
-        model_id = False
-        if len(model_ids):
-            model_id = model_ids[0]
+        """        
+        cal_obj = self.pool.get('resource.calendar') 
+        res_obj = self.pool.get('resource.resource')     
 
         res = {}
-        for project in self.browse(cr, uid, ids , context):
+        for issue in self.browse(cr, uid, ids , context):
             for field in fields:
-                res[project.id] = {}
+                res[issue.id] = {}
                 duration = 0
+                ans = False
                 if field == 'day_open':
-                    if project.date_open:
-                        date_create = datetime.strptime(project.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_open = datetime.strptime(project.date_open, "%Y-%m-%d %H:%M:%S")
-
+                    if issue.date_open:
+                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_open = datetime.strptime(issue.date_open, "%Y-%m-%d %H:%M:%S")
                         ans = date_open - date_create
-                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
-
+                        date_until = issue.date_open
                 elif field == 'day_close':
-                    if project.date_closed:
-                        date_create = datetime.strptime(project.create_date, "%Y-%m-%d %H:%M:%S")
-                        date_close = datetime.strptime(project.date_closed, "%Y-%m-%d %H:%M:%S")
-
+                    if issue.date_closed:
+                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
+                        date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
+                        date_until = issue.date_closed
                         ans = date_close - date_create
-                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
-                res[project.id][field] = abs(int(duration))
+                if ans:
+                    resource_id = False
+                    if issue.user_id:
+                        resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
+                        resource_id = len(resource_ids) or resource_ids[0]
+
+                    duration = float(ans.days)
+                    if issue.section_id.resource_calendar_id:
+                        duration =  float(ans.days) * 24                        
+                        new_dates = cal_obj.interval_get(cr,
+                            uid,
+                            issue.section_id.resource_calendar_id and issue.section_id.resource_calendar_id.id or False,
+                            mx.DateTime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
+                            duration,
+                            resource=resource_id
+                        )
+                        no_days = []
+                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
+                        for in_time, out_time in new_dates:
+                            if in_time.date not in no_days:
+                                no_days.append(in_time.date)                            
+                            if out_time > date_until:
+                                break                            
+                        duration =  len(no_days)
+                res[issue.id][field] = abs(int(duration))
         return res
 
     _columns = {
@@ -109,7 +126,7 @@ class project_issue(osv.osv):
                                 method=True, multi='day_open', type="integer", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="integer", store=True),
-       'assigned_to' : fields.many2one('res.users', 'Assigned to'),
+        'assigned_to' : fields.many2one('res.users', 'Assigned to'),
         'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
                                                 domain="[('partner_id', '=', partner_id)]",

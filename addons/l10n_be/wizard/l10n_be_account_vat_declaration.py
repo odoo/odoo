@@ -18,13 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import base64
 
+import time
+import datetime
+import base64
 from osv import osv, fields
 from tools.translate import _
 
 class l10n_be_vat_declaration(osv.osv_memory):
-    """ Periodical VAT Declaration """
+    """ Vat Declaration """
     _name = "l1on_be.vat.declaration"
     _description = "Vat Declaration"
 
@@ -32,14 +34,14 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'period_id': fields.many2one('account.period','Period', required=True),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
-        'ask_resitution': {'type': 'boolean', 'string': 'Ask Restitution',},
-        'ask_payment': {'type': 'boolean', 'string': 'Ask Payment',},
-        'client_nihil': {'type': 'boolean', 'string': 'Last Declaration of Entreprise', 'help': 'Thick this case only if it concerns only the last statement on the civil or cessation of activity'},
-                }
+        'ask_resitution': fields.boolean('Ask Restitution'),
+        'ask_payment': fields.boolean('Ask Payment'),
+        'client_nihil': fields.boolean('Last Declaration of Entreprise',help='Thick this case only if it concerns only the last statement on the civil or cessation of activity'),
+    }
 
     _defaults = {
         'msg': lambda *a:'''Save the File with '".xml"' extension.''',
-                }
+    }
 
     def create_xml(self, cr, uid, ids, context={}):
         obj_fyear = self.pool.get('account.fiscalyear')
@@ -54,7 +56,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         user_cmpny = obj_company.name
         vat_no=obj_company.partner_id.vat
         if not vat_no:
-            raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
@@ -63,7 +65,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         address = post_code = city = country_code = ''
-        city, post_code, address, country_code = obj_comp._get_default_ad(obj_company.partner_id.address)
+        city, post_code, address, country_code = pooler.get_pool(cr.dbname).get('res.company')._get_default_ad(obj_company.partner_id.address)
+
+
         year_id = obj_fyear.find(cr, uid)
 
         account_period = obj_acc_period.browse(cr, uid, data['period_id'], context=context)
@@ -81,25 +85,24 @@ class l10n_be_vat_declaration(osv.osv_memory):
             #starting month and ending month of selected period are not the same
             #it means that the accounting isn't based on periods of 1 month but on quarters
             quarter = str(((int(starting_month) - 1) / 3) + 1)
-            data_of_file += '<QUARTER>' + quarter + '</QUARTER>\n\t\t\t'
+            data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
         else:
-            data_of_file += '<MONTH>' + starting_month + '</MONTH>\n\t\t\t'
+            data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
         data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
         data_of_file += '\n\t\t<ClientListingNihil>'+ (data['form']['client_nihil'] and 'YES' or 'NO') +'</ClientListingNihil>'
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
         for item in tax_info:
             if item['code']:
-
                 if item['code'] == '71-72':
-                    item['code'] = '71'
+                    item['code']='71'
                 if item['code'] in list_of_tags:
                     data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(abs(int(item['sum_period']*100))) +  '</D'+str(int(item['code'])) +'>'
 
         data_of_file +='\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
         data['file_save'] = base64.encodestring(data_of_file)
         self.write(cr, uid, ids, {'file_save':data['file_save']}, context=context)
-        return True
+
 
 l10n_be_vat_declaration()
 

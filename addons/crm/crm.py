@@ -621,7 +621,7 @@ class crm_case(osv.osv):
         @email: Partner's email ID 
         """
         if not add:
-            return {'value': {'email_from': False, 'partner_name2': False}}
+            return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email}}
 

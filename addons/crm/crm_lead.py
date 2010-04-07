@@ -24,7 +24,7 @@ from datetime import datetime, timedelta
 import crm
 import math
 import time
-from mx import DateTime
+import mx.DateTime
 from tools.translate import _
 
 class crm_lead(osv.osv):
@@ -32,7 +32,7 @@ class crm_lead(osv.osv):
 
     _name = "crm.lead"
     _description = "Leads Cases"
-    _order = "priority desc, id desc"
+    _order = "priority, id desc"
     _inherit = ['res.partner.address', 'crm.case']
 
     def case_open(self, cr, uid, ids, *args):
@@ -55,36 +55,52 @@ class crm_lead(osv.osv):
         @param ids: List of Openday’s IDs
         @return: difference between current date and log date
         @param context: A standard dictionary for contextual values
-        """
-        log_obj = self.pool.get('crm.case.log')
-        model_obj = self.pool.get('ir.model')
-        cal_obj = self.pool.get('resource.calendar')
-
-        model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
-        model_id = False
-        if len(model_ids):
-            model_id = model_ids[0]
+        """        
+        cal_obj = self.pool.get('resource.calendar') 
+        res_obj = self.pool.get('resource.resource')     
 
         res = {}
         for lead in self.browse(cr, uid, ids , context):
             for field in fields:
                 res[lead.id] = {}
                 duration = 0
+                ans = False
                 if field == 'day_open':
                     if lead.date_open:
                         date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
                         date_open = datetime.strptime(lead.date_open, "%Y-%m-%d %H:%M:%S")
-
                         ans = date_open - date_create
-                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
-
+                        date_until = lead.date_open
                 elif field == 'day_close':
                     if lead.date_closed:
                         date_create = datetime.strptime(lead.create_date, "%Y-%m-%d %H:%M:%S")
                         date_close = datetime.strptime(lead.date_closed, "%Y-%m-%d %H:%M:%S")
-
+                        date_until = lead.date_closed
                         ans = date_close - date_create
-                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                if ans:
+                    resource_id = False
+                    if lead.user_id:
+                        resource_ids = res_obj.search(cr, uid, [('user_id','=',lead.user_id.id)])
+                        resource_id = len(resource_ids) or resource_ids[0]
+
+                    duration = float(ans.days)
+                    if lead.section_id.resource_calendar_id:
+                        duration =  float(ans.days) * 24                        
+                        new_dates = cal_obj.interval_get(cr,
+                            uid,
+                            lead.section_id.resource_calendar_id and lead.section_id.resource_calendar_id.id or False,
+                            mx.DateTime.strptime(lead.create_date, '%Y-%m-%d %H:%M:%S'),
+                            duration,
+                            resource=resource_id
+                        )
+                        no_days = []
+                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
+                        for in_time, out_time in new_dates:
+                            if in_time.date not in no_days:
+                                no_days.append(in_time.date)                            
+                            if out_time > date_until:
+                                break                            
+                        duration =  len(no_days)
                 res[lead.id][field] = abs(int(duration))
         return res
 
