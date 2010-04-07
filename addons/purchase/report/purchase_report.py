@@ -43,9 +43,15 @@ class report_purchase_order(osv.osv):
             ('done','Done'),
             ('cancel','Cancel')
         ], 'Order State', readonly=True),
+        'invoice_method': fields.selection([
+            ('manual','Manual'),
+            ('order','From Order'),
+            ('picking','From Picking')
+        ],'Invoicing Control', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
-        'category_id': fields.many2one('product.category', 'Categories', readonly=True),
+        'location_id': fields.many2one('stock.location', 'Destination', readonly=True),
+        'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position',readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
@@ -70,24 +76,24 @@ class report_purchase_order(osv.osv):
                     s.state,
                     s.warehouse_id as warehouse_id,
                     s.partner_id as partner_id,
+                    s.fiscal_position,
                     s.create_uid as user_id,
                     s.company_id as company_id,
+                    s.invoice_method,
                     l.product_id,
-                    t.categ_id as category_id,
+                    s.location_id as location_id,
                     sum(l.product_qty*u.factor) as quantity,
                     count(*) as nbr,
                     sum(l.product_qty*l.price_unit) as price_total,
                     (sum(l.product_qty*l.price_unit)/sum(l.product_qty*u.factor))::decimal(16,2) as price_average
                 from purchase_order s
                     left join purchase_order_line l on (s.id=l.order_id)
-                    left join product_product p on (p.id=l.product_id)
-                    left join product_template t on (t.id=p.product_tmpl_id)
                     left join product_uom u on (u.id=l.product_uom)
                 where l.product_id is not null
                 group by s.company_id,s.create_uid,s.partner_id,
-                         t.categ_id,l.product_id,s.date_order,
+                         s.location_id,l.product_id,s.date_order,
                          to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),s.state,
-                         s.warehouse_id
+                         s.warehouse_id,s.fiscal_position,s.invoice_method
             )
         """)
 report_purchase_order()

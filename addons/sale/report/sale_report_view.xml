@@ -21,6 +21,8 @@
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="state" invisible="1"/>
+                <field name="fiscal_position" invisible="1"/>
+                <field name="payment_term" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -72,6 +74,17 @@
                 <field name="product_id"/>
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 				</group>
+				<newline/>
+                <group expand="1" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-sale" string="Waiting Schedule" domain="[('state','=','waiting_date')]"/>
+                    <filter icon="terp-sale" string="Manual In Progress" domain="[('state','=','manual')]"/>
+                    <filter icon="terp-sale" string="In Progress" domain="[('state','=','progress')]"/>
+                    <filter icon="terp-sale" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
+                    <filter icon="terp-sale" string="Invoice Exception" domain="[('state','=','invoice_except')]"/>
+                    <filter icon="terp-sale" string="Done" domain="[('state','=','done')]"/>
+                    <filter icon="terp-sale" string="Cancelled" domain="[('state','=','cancel')]"/>
+                </group>
+                <newline/>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-sale" context="{'group_by':'company_id'}"/>
@@ -80,8 +93,10 @@
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-sale" context="{'group_by':'product_id'}"/>
                     <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
+                    <filter string="Payment Term" icon="terp-sale" context="{'group_by':'payment_term'}"/>
                     <filter string="State" icon="terp-sale" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Fiscal Position" icon="terp-sale" context="{'group_by':'fiscal_position'}"/>
                     <filter string="Month" icon="terp-sale" context="{'group_by':'date'}"/>
                     <filter string="Year" icon="terp-sale" context="{'group_by':'year'}"/>
                 </group>

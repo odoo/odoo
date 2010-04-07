@@ -33,6 +33,8 @@
                     <field name="warehouse_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="state" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="fiscal_position" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -72,16 +74,32 @@
                 <field name="product_id"/>
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 				</group>
+				<newline/>
+                <group expand="1" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-purchase" string="Manual" domain="[('invoice_method','=','manual')]"/>
+                    <filter icon="terp-purchase" string="From Order" domain="[('invoice_method','=','order')]"/>
+                    <filter icon="terp-purchase" string="From Picking" domain="[('invoice_method','=','picking')]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-purchase" string="Waiting Schedule" domain="[('state','=','waiting_date')]"/>
+                    <filter icon="terp-purchase" string="Manual in progress" domain="[('state','=','manual')]"/>
+                    <filter icon="terp-purchase" string="In progress" domain="[('state','=','progress')]"/>
+                    <filter icon="terp-purchase" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
+                    <filter icon="terp-purchase" string="Invoice Exception" domain="[('state','=','invoice_except')]"/>
+                    <filter icon="terp-purchase" string="Done" domain="[('state','=','done')]"/>
+                    <filter icon="terp-purchase" string="Cancel" domain="[('state','=','cancel')]"/>
+                </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}"/>
                     <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
-                    <filter string="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}" default="1"/>
+                    <filter string="Location" icon="terp-purchase" context="{'group_by':'location_id'}"/>
+                    <filter string="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
                     <filter string="Partner" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-purchase" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Fiscal Position" icon="terp-purchase" context="{'group_by':'fiscal_position'}"/>
                     <filter string="Month" icon="terp-purchase" context="{'group_by':'date'}"/>
                     <filter string="Year" icon="terp-purchase" context="{'group_by':'name'}"/>
                 </group>
@@ -95,6 +113,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_purchase_order_search"/>
+        <field name="context">{'search_default_user_id':True}</field>
     </record>
 
     <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"/>
