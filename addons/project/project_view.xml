@@ -49,7 +49,7 @@
                                 <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
                                 <button name="set_done" string="Done" type="object" states="open,pending" icon="gtk-jump-to"/>
                                 <button name="reset_project" string="Reset as Project" type="object" states="template" icon="gtk-convert"/>
-								<button
+                                <button
                                     string="New Project Based on Template"
                                     name="duplicate_template"  type="object"
                                     states="template" icon="gtk-new"/>
@@ -440,7 +440,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_current":1,"search_default_my_task":1,"search_default_project_id":project_id}</field>
+            <field name="context">{"search_default_current":1,"search_default_my_task":1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="2"/>
@@ -535,25 +535,25 @@
 
       <!--     User Form-->
       <record id="view_project_users_form_simple" model="ir.ui.view">
-	      <field name="name">res.users.project.form1</field>
-	      <field name="model">res.users</field>
-	      <field name="type">form</field>
-	      <field name="inherit_id" ref="base.view_users_form"/>
-	      <field eval="18" name="priority"/>
-	      <field name="arch" type="xml">
-	          <field name="password" position="after">
-	           <field name="context_project_id" completion="1" widget="selection"/>
-	          </field>
-	      </field>
+          <field name="name">res.users.project.form1</field>
+          <field name="model">res.users</field>
+          <field name="type">form</field>
+          <field name="inherit_id" ref="base.view_users_form"/>
+          <field eval="18" name="priority"/>
+          <field name="arch" type="xml">
+              <field name="password" position="after">
+               <field name="context_project_id" completion="1" widget="selection"/>
+              </field>
+          </field>
      </record>
 
      <record model="ir.ui.view" id="view_users_form_project_modif_inherited1">
-	     <field name="name">view.users.form.project.modif.inherited1</field>
-	     <field name="model">res.users</field>
-	     <field name="inherit_id" ref="base.view_users_form_simple_modif" />
-	     <field name="type">form</field>
-	     <field eval="18" name="priority"/>
-	     <field name="arch" type="xml">
+         <field name="name">view.users.form.project.modif.inherited1</field>
+         <field name="model">res.users</field>
+         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+         <field name="type">form</field>
+         <field eval="18" name="priority"/>
+         <field name="arch" type="xml">
             <page string="Current Activity" position="inside">
                 <field name="context_project_id" completion="1" widget="selection" context="{'user_prefence':True}"/>
             </page>
@@ -603,12 +603,12 @@
                        <filter domain="[('date','&gt;=',time.strftime('%%Y-%%m-01'))]" icon="terp-project" string="This Month" />
                        <filter domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" icon="terp-project" string="Today" />
 
-	                   <separator orientation="vertical"/>
-	                   <field name="subject"/>
-	                   <field name="project_id" select="1" widget="selection"/>
-	                   <field name="user_id" select="1" widget="selection">
-	                       <filter domain="[('user_id','=',uid)]" help="My Message" icon="gtk-execute" name="my_msg"/>
-	                   </field>
+                       <separator orientation="vertical"/>
+                       <field name="subject"/>
+                       <field name="project_id" select="1" widget="selection"/>
+                       <field name="user_id" select="1" widget="selection">
+                           <filter domain="[('user_id','=',uid)]" help="My Message" icon="gtk-execute" name="my_msg"/>
+                       </field>
                    </group>
                    <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="20">
