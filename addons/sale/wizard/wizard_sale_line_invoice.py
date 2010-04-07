@@ -29,13 +29,10 @@ from tools.translate import _
 invoice_form = """<?xml version="1.0"?>
 <form string="Create invoices">
     <separator colspan="4" string="Do you really want to create the invoices ?" />
-    <field name="grouped" />
 </form>
 """
 
-invoice_fields = {
-    'grouped' : {'string':'Group the invoices', 'type':'boolean', 'default': lambda *a: False}
-}
+invoice_fields = {}
 
 def _makeInvoices(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
