@@ -38,8 +38,9 @@ import wizard_partner_balance_report
 import account_period_close
 import wizard_fiscalyear_close
 import account_fiscalyear_close_state
+import account_vat
 import account_open_closed_fiscalyear
-import wizard_vat
+
 import wizard_compare_account_balance_report
 import wizard_invoice_state
 import wizard_account_duplicate
@@ -52,7 +53,7 @@ import wizard_use_model
 import wizard_state_open
 
 import wizard_statement_from_invoice
-import wizard_print_journal
+import account_print_journal
 import wizard_central_journal
 import wizard_general_journal
 import wizard_change_currency

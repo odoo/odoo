@@ -56,6 +56,9 @@ module named account_voucherss
         'account_wizard.xml',
         'wizard/account_open_closed_fiscalyear_view.xml',
         'wizard/account_move_line_unreconcile_select_view.xml',
+        'wizard/account_vat_view.xml',
+        'wizard/account_print_journal_view.xml',
+
         'wizard/account_subscription_generate_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_view.xml',
