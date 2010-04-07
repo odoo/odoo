@@ -136,7 +136,7 @@ class res_partner(osv.osv):
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
         'ref': fields.char('Code', size=64),
         'lang': fields.selection(_lang_get, 'Language', size=5, help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
-        'user_id': fields.many2one('res.users', 'Dedicated Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
+        'user_id': fields.many2one('res.users', 'Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
         'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64),
