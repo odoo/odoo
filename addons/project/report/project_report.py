@@ -41,11 +41,11 @@ class report_project_task_user(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'state': fields.selection([('draft', 'Draft'),
-                                   ('open', 'In Progress'),
-                                   ('pending', 'Pending'),
-                                   ('cancelled', 'Cancelled'),
-                                   ('done', 'Done')],
-                                'State', readonly=True),
+               ('open', 'In Progress'),
+               ('pending', 'Pending'),
+               ('cancelled', 'Cancelled'),
+               ('done', 'Done')],
+            'State', readonly=True),
 
     }
     _order = 'name desc, project_id'

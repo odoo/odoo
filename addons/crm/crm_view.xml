@@ -20,7 +20,6 @@
                             <field name="parent_id" select="2" widget="selection"/>
                             <field name="allow_unlink" select="2"/>
                             <field name="reply_to" select="2"/>
-                            <field name="resource_calendar_id"/>
                         </page>
                     </notebook>
                 </form>
@@ -142,8 +141,8 @@
         <menuitem id="menu_crm_case_categ"   name="Categories"  parent="crm.menu_crm_configuration"/>
 
         <menuitem action="crm_case_section_act"
-        	id="menu_crm_case_section_act"
-        	parent="crm.menu_crm_configuration" />
+            id="menu_crm_case_section_act"
+            parent="crm.menu_crm_configuration" />
 
 
 <!-- Resource Type of case Tree View -->
@@ -185,7 +184,7 @@
             <field name="view_id" ref="crm_case_resource_type_tree"/>
         </record>
         <menuitem id="menu_crm_case_resource_type" name="Resource Type"
-        	parent="crm.menu_crm_configuration" />
+            parent="crm.menu_crm_configuration" />
 
         <record id="crm_case_section_act_tree" model="ir.actions.act_window">
             <field name="name">Cases by section</field>
@@ -242,11 +241,11 @@
             <field name="type">calendar</field>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="create_date"
-                	date_stop="date_deadline" day_length="12"
-                	string="Cases">
-                	<field name="name" />
-                	<field name="partner_id" />
-                	<field name="state" />
+                    date_stop="date_deadline" day_length="12"
+                    string="Cases">
+                    <field name="name" />
+                    <field name="partner_id" />
+                    <field name="state" />
                 </calendar>
             </field>
         </record>
@@ -268,22 +267,22 @@
                     <field name="user_id"/>
                     <field name="state"/>
                     <button name="case_close"
-                    	states="open,draft,pending" string="Close"
-                    	type="object" icon="gtk-close" />
+                        states="open,draft,pending" string="Close"
+                        type="object" icon="gtk-close" />
                     <button name="case_open" states="draft,pending"
-                    	string="Open" type="object" icon="gtk-go-forward" />
+                        string="Open" type="object" icon="gtk-go-forward" />
                     <button name="case_cancel"
-                    	states="draft,open,pending" string="Cancel"
-                    	type="object" icon="gtk-cancel" />
+                        states="draft,open,pending" string="Cancel"
+                        type="object" icon="gtk-cancel" />
                     <button name="case_pending" states="draft,open"
-                    	string="Pending" type="object"
-                    	icon="gtk-media-pause" />
+                        string="Pending" type="object"
+                        icon="gtk-media-pause" />
                     <button name="case_escalate"
-                    	states="open,draft,pending" string="Escalate"
-                    	type="object" icon="gtk-go-up" />
+                        states="open,draft,pending" string="Escalate"
+                        type="object" icon="gtk-go-up" />
                     <button name="case_reset" states="done,cancel"
-                    	string="Reset to Draft" type="object"
-                    	icon="gtk-convert" />
+                        string="Reset to Draft" type="object"
+                        icon="gtk-convert" />
                 </tree>
             </field>
         </record>
@@ -306,24 +305,24 @@
                         <page string="General">
                             <group col="8" colspan="4">
                                 <field colspan="4" name="partner_id"
-                                	on_change="onchange_partner_id(partner_id, email_from)"
-                                	select="1" />
+                                    on_change="onchange_partner_id(partner_id, email_from)"
+                                    select="1" />
                                 <field colspan="3"
-                                	name="partner_address_id"
-                                	on_change="onchange_partner_address_id(partner_address_id, email_from)"
-                                	select="2" />
+                                    name="partner_address_id"
+                                    on_change="onchange_partner_address_id(partner_address_id, email_from)"
+                                    select="2" />
                                 <newline />
                                 <field colspan="3" name="email_from"
-                                	select="2" />
+                                    select="2" />
                                 <button name="remind_partner"
-                                	states="open,pending"
-                                	string="Send Reminder" type="object"
-                                	icon="gtk-go-forward" />
+                                    states="open,pending"
+                                    string="Send Reminder" type="object"
+                                    icon="gtk-go-forward" />
                                 <field name="user_id" select="1" />
                                 <button name="remind_user"
-                                	states="open,pending"
-                                	string="Send Reminder" type="object"
-                                	icon="gtk-go-forward" />
+                                    states="open,pending"
+                                    string="Send Reminder" type="object"
+                                    icon="gtk-go-forward" />
                             </group>
                             <separator colspan="4" string="Description"/>
                             <field name="description" colspan="4" nolabel="1"/>
@@ -331,27 +330,27 @@
                             <group col="8" colspan="4">
                                 <field name="state" select="1"/>
                                 <button name="case_close"
-                                	states="open,draft,pending"
-                                	string="Close" type="object"
-                                	icon="gtk-close" />
+                                    states="open,draft,pending"
+                                    string="Close" type="object"
+                                    icon="gtk-close" />
                                 <button name="case_open"
-                                	states="draft,pending" string="Open"
-                                	type="object" icon="gtk-go-forward" />
+                                    states="draft,pending" string="Open"
+                                    type="object" icon="gtk-go-forward" />
                                 <button name="case_cancel"
-                                	states="draft,open,pending"
-                                	string="Cancel" type="object"
-                                	icon="gtk-cancel" />
+                                    states="draft,open,pending"
+                                    string="Cancel" type="object"
+                                    icon="gtk-cancel" />
                                 <button name="case_pending"
-                                	states="draft,open" string="Pending"
-                                	type="object" icon="gtk-media-pause" />
+                                    states="draft,open" string="Pending"
+                                    type="object" icon="gtk-media-pause" />
                                 <button name="case_escalate"
-                                	states="open,draft,pending"
-                                	string="Escalate" type="object"
-                                	icon="gtk-go-up" />
+                                    states="open,draft,pending"
+                                    string="Escalate" type="object"
+                                    icon="gtk-go-up" />
                                 <button name="case_reset"
-                                	states="done,cancel"
-                                	string="Reset to Draft" type="object"
-                                	icon="gtk-convert" />
+                                    states="done,cancel"
+                                    string="Reset to Draft" type="object"
+                                    icon="gtk-convert" />
                             </group>
                         </page>
                         <page string="History" groups="base.group_extended">
@@ -364,7 +363,7 @@
                                     <separator colspan="4" string="Action Information"/>
                                     <field colspan="4" name="name"/>
                                     <field name="date" select="2"/>
-                                    <field name="user_id" select="2"/>
+                                    <field name="user_id" select="2"/>                                    
                                 </form>
                             </field>
                         </page>
@@ -377,7 +376,7 @@
                                    <group col="7" colspan="4">
                                        <field name="date"/>
                                        <field name="email_to"/>
-                                       <field name="email_from"/>
+                                       <field name="email_from"/>                                       
                                        <button
                                      string="Add a CC"
                                                name="%(crm.action_view_crm_email_add_cc_wizard)d"
@@ -386,10 +385,10 @@
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
-                                   	string="Reply to Last Email"
-                                   	name="%(action_crm_send_mail)d"
-                                   	context="{'mail':'reply', 'model': 'crm.case'}"
-                                   	icon="gtk-undo" type="action" />
+                                       string="Reply to Last Email"
+                                       name="%(action_crm_send_mail)d"
+                                       context="{'mail':'reply', 'model': 'crm.case'}"
+                                       icon="gtk-undo" type="action" />
                                </form>
                                <tree string="Communication history">
                                    <field name="description"/>
@@ -398,9 +397,9 @@
                                </tree>
                            </field>
                            <button colspan="4" string="Send New Email"
-                           	name="%(action_crm_send_mail)d"
-                           	context="{'mail':'new', 'model': 'crm.case'}"
-                           	icon="gtk-go-forward" type="action" />
+                               name="%(action_crm_send_mail)d"
+                               context="{'mail':'new', 'model': 'crm.case'}"
+                               icon="gtk-go-forward" type="action" />
                         </page>
                     </notebook>
                 </form>
@@ -415,28 +414,28 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Case">
-                	<group col='6' colspan='4'>
-                		<filter icon="terp-partner" string="My Cases"
-                			domain="[('user_id','=',uid)]" separator="1"
-                			default="1" help="Cases Related to Current User" />
-                		<field name="state" select="1">
-                			<filter icon="gtk-new"
-                				domain="[('state','in',('draft', 'open'))]"
-                				help="Current Cases" />
-                			<filter icon="gtk-yes"
-                				domain="[('state','=','open')]" help="Open Cases" />
-                			<filter icon="gtk-media-pause"
-                				domain="[('state','=','pending')]"
-                				help="Pending Cases" />
-                		</field>
-                		<separator orientation="vertical" />
-                		<field name="name" select='1' />
-                		<field name="user_id" select="1"
-                			widget="selection" />
-                	</group>
-                	<field name="section_id"
-                		default="context.get('section_id', False)" select="1"
-                		widget="selection" string="Section" />
+                    <group col='6' colspan='4'>
+                        <filter icon="terp-partner" string="My Cases"
+                            domain="[('user_id','=',uid)]" separator="1"
+                            default="1" help="Cases Related to Current User" />
+                        <field name="state" select="1">
+                            <filter icon="gtk-new"
+                                domain="[('state','in',('draft', 'open'))]"
+                                help="Current Cases" />
+                            <filter icon="gtk-yes"
+                                domain="[('state','=','open')]" help="Open Cases" />
+                            <filter icon="gtk-media-pause"
+                                domain="[('state','=','pending')]"
+                                help="Pending Cases" />
+                        </field>
+                        <separator orientation="vertical" />
+                        <field name="name" select='1' />
+                        <field name="user_id" select="1"
+                            widget="selection" />
+                    </group>
+                    <field name="section_id"
+                        default="context.get('section_id', False)" select="1"
+                        widget="selection"/>
                 </search>
             </field>
         </record>
@@ -454,7 +453,7 @@
             <field name="res_model">crm.case</field>
             <field name="view_type">form</field>
             <field name="domain">
-            	[('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]
+                [('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]
             </field>
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
@@ -504,15 +503,15 @@
         <field name="arch" type="xml">
                 <search string="Search Histories">
                        <filter icon="terp-crm" string="My Histories"
-                       	domain="[('user_id','=',uid)]"
-                       	help="My Histories" />
+                           domain="[('user_id','=',uid)]"
+                           help="My Histories" />
                        <separator orientation="vertical"/>
                      <group col="6" colspan="2">
                        <field name="date" select="1"/>
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="section_id"
-                    	default="context.get('section_id', False)"
-                    	select="1" widget="selection" string="Section" />
+                        default="context.get('section_id', False)"
+                        select="1" widget="selection"/>
                      </group>
                 </search>
             </field>
@@ -574,11 +573,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner Segmentation">
-                	<group col="6" colspan="4">
-	                    <field name="name" select="1"/>
-	                    <field name="categ_id" select="2"/>
-	                    <field name="exclusif"/>
-	                </group>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="categ_id" select="2"/>
+                        <field name="exclusif"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Sales Purchase">
                             <field name="sales_purchase_active"/>
@@ -591,21 +590,21 @@
                             <field colspan="4" name="segmentation_line" widget="one2many_list" nolabel="1"/>
                         </page>
                         <page string="Description">
-       	                    <field colspan="4" name="description" select="2" nolabel="1"/>
-       	                </page>
+                               <field colspan="4" name="description" select="2" nolabel="1"/>
+                           </page>
                     </notebook>
                     <field name="state"/>
                     <group col="3" colspan="2">
                         <button name="process_start"
-                        	states="not running"
-                        	string="Compute Segmentation" type="object"
-                        	icon="gtk-execute" />
+                            states="not running"
+                            string="Compute Segmentation" type="object"
+                            icon="gtk-execute" />
                         <button name="process_stop" states="running"
-                        	string="Stop Process" type="object"
-                        	icon="gtk-cancel" />
+                            string="Stop Process" type="object"
+                            icon="gtk-cancel" />
                         <button name="process_continue" states="running"
-                        	string="Continue Process" type="object"
-                        	icon="gtk-go-forward" />
+                            string="Continue Process" type="object"
+                            icon="gtk-go-forward" />
                     </group>
                 </form>
             </field>
@@ -640,8 +639,8 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="crm_segmentation_tree-act"
-        	id="menu_crm_segmentation-act"
-        	parent="crm.menu_crm_configuration" />
+            id="menu_crm_segmentation-act"
+            parent="crm.menu_crm_configuration" />
 
         <record model="ir.ui.view" id="view_users_form_simple_modif_inherited1">
             <field name="name">view.users.form.crm.modif.inherited1</field>
@@ -651,8 +650,8 @@
             <field name="arch" type="xml">
                 <page string="Current Activity" position="inside">
                     <field name="context_section_id" completion="1"
-                    	widget="selection"
-                    	context="{'user_prefence':True}" />
+                        widget="selection"
+                        context="{'user_prefence':True}" />
                 </page>
             </field>
         </record>
@@ -672,7 +671,7 @@
 
 <!-- Inherit View From Partner  -->
 
-		<record id="view_partners_form_crm1" model="ir.ui.view">
+        <record id="view_partners_form_crm1" model="ir.ui.view">
                 <field name="name">view.res.partner.form.crm.inherited1</field>
                 <field name="model">res.partner</field>
                 <field name="type">form</field>
