@@ -100,7 +100,7 @@
             <field name="arch" type="xml">
                 <search string="Product Backlogs">
                     <group col="10" colspan="4">
-                        <filter default="1"
+                        <filter name="current"
                             icon="terp-project"
                             string="Current"
                             domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open'])]"
@@ -112,10 +112,10 @@
                         <field name="name"/>
                         <field name="project_id"
                             widget="selection"
-                            default="context.get('project_id', False)"/>
+                            />
                         <field name="sprint_id"/>
                         <field name="user_id" widget="selection">
-                            <filter default="1"
+                            <filter name="my_features"
                                 icon="terp-project"
                                 string="My Features"
                                 domain="[('user_id','=',uid)]"
@@ -138,6 +138,7 @@
             <field name="name">Product Backlogs</field>
             <field name="res_model">scrum.product.backlog</field>
             <field name="view_type">form</field>
+            <field name="context">{"search_default_current":1,"search_default_my_features":1,"search_default_project_id":project_id}</field>
             <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
         </record>
         <menuitem
@@ -229,15 +230,14 @@
             <field name="arch" type="xml">
                 <search string="Sprints">
                     <group col="10" colspan="4">
-                        <filter default="1" icon="terp-project" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
+                        <filter name="current" icon="terp-project" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
                         <filter icon="terp-project" string="Draft" domain="[('state','=','draft')]" help="Draft Sprints"/>
                         <filter icon="terp-project" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="project_id" widget="selection"/>
                         <field name="scrum_master_id" widget="selection">
-                            <filter icon="gtk-execute" domain="[('scrum_master_id','=',uid)]"
-                                default="1"
+                            <filter icon="gtk-execute" name="my_sprints" domain="[('scrum_master_id','=',uid)]"
                                 help="My Sprints"/>
                         </field>
                         <field name="date_start"/>
@@ -261,6 +261,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_scrum_sprint_tree"/>
+            <field name="context">{"search_default_current":1,"search_default_my_sprints":1}</field>
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
         </record>
         <menuitem
@@ -323,7 +324,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="sprint_id">
-                            <filter icon="terp-project" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints" default="1"/>
+                            <filter icon="terp-project" name="current" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                         </field>
                         <field name="date"/>
                     </group>
@@ -341,6 +342,7 @@
             <field name="res_model">scrum.meeting</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_current":1}</field>
             <field name="search_view_id" ref="view_scrum_meeting_search"/>
         </record>
         <menuitem sequence="30"

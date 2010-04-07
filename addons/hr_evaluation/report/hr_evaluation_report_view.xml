@@ -25,6 +25,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Evaluations">
+                <group>
                 <filter icon="terp-hr"
                     string="This Year"
                     domain="[('year','=',time.strftime('%%Y'))]"
@@ -42,6 +43,7 @@
                     domain="[('closed','=',time.strftime('%%Y/%%m/%%d'))]"/>
                 <separator orientation="vertical"/>
                 <field name="employee_id"/>
+                </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
