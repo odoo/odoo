@@ -205,7 +205,10 @@ def init_logger():
 
         for level, (fg, bg) in mapping.items():
             msg = "\x1b[%dm\x1b[%dm%s\x1b[0m" % (foreground(fg), background(bg), level)
-            logging.addLevelName(getattr(logging, level), msg)
+# jth: we should not override default level name
+# jth: use this instead http://stackoverflow.com/questions/384076/how-can-i-make-the-python-logging-output-to-be-colored
+# jth: also, do not output ANSI if terminal doesn't support it (test it in Eclipse console and on windows)
+            #logging.addLevelName(getattr(logging, level), msg)
 
 
 class Logger(object):

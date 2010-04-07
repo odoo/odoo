@@ -548,10 +548,10 @@ class ir_model_data(osv.osv):
                                 table.replace('.', '_'))] = (table, inherit_id)
         return res_id
 
-    def _unlink(self, cr, uid, model, ids, direct=False):
-        for id in ids:
-            self.unlink_mark[(model, id)]=False
-            cr.execute('delete from ir_model_data where res_id=%s and model=%s', (id, model))
+    def _unlink(self, cr, uid, model, res_ids):
+        for res_id in res_ids:
+            self.unlink_mark[(model, res_id)] = False
+            cr.execute('delete from ir_model_data where res_id=%s and model=%s', (res_id, model))
         return True
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):

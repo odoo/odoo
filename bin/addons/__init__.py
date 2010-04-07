@@ -592,8 +592,75 @@ class MigrationManager(object):
                         if mod:
                             del mod
 
+log = logging.getLogger('init')
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
+    
+    def process_sql_file(cr, file):
+        queries = fp.read().split(';')
+        for query in queries:
+            new_query = ' '.join(query.split())
+            if new_query:
+                cr.execute(new_query)
+   
+    def load_init_update_xml(cr, m, idref, mode, kind):
+        for filename in package.data.get('%s_xml' % kind, []):
+            logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
+            _, ext = os.path.splitext(filename)
+            fp = tools.file_open(opj(m, filename))
+            if ext == '.csv':
+                noupdate = (kind == 'init')
+                tools.convert_csv_import(cr, m, os.path.basename(filename), fp.read(), idref, mode=mode, noupdate=noupdate)
+            elif ext == '.sql':
+                process_sql_file(cr, fp)
+            elif ext == '.yml':
+                tools.convert_yaml_import(cr, m, fp, idref, mode=mode, **kwargs)
+            else:
+                tools.convert_xml_import(cr, m, fp, idref, mode=mode, **kwargs)
+            fp.close()
+
+    def load_demo_xml(cr, m, idref, mode):
+        for xml in package.data.get('demo_xml', []):
+            name, ext = os.path.splitext(xml)
+            logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, xml))
+            fp = tools.file_open(opj(m, xml))
+            if ext == '.csv':
+                tools.convert_csv_import(cr, m, os.path.basename(xml), fp.read(), idref, mode=mode, noupdate=True)
+            elif ext == '.yml':
+                tools.convert_yaml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
+            else:
+                tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
+            fp.close()
+    
+    def load_data(cr, module_name, id_map, mode):
+        _load_data(cr, module_name, id_map, mode, 'data')
+    
+    def load_demo(cr, module_name, id_map, mode):
+        _load_data(cr, module_name, id_map, mode, 'demo')
+    
+    def load_test(cr, module_name, id_map, mode):
+        cr.commit()
+        try:
+            _load_data(cr, module_name, id_map, mode, 'test')
+        finally:
+            cr.rollback()
+    
+    def _load_data(cr, module_name, id_map, mode, kind):
+        noupdate = (kind == 'demo')
+        for filename in package.data.get(kind, []):
+            _, ext = os.path.splitext(filename)
+            log.info("module %s: loading %s", module_name, filename)
+            pathname = os.path.join(module_name, filename)
+            file = tools.file_open(pathname)
+            # TODO manage .csv file with noupdate == (kind == 'init')
+            if ext == '.sql':
+                process_sql_file(cr, fp)
+            elif ext == '.yml':
+                tools.convert_yaml_import(cr, module_name, file, id_map, mode, noupdate)
+            else:
+                tools.convert_xml_import(cr, module_name, file, id_map, mode, noupdate)
+            file.close()
+    
     # **kwargs is passed directly to convert_xml_import
     if not status:
         status = {}
@@ -650,40 +717,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                     'license': package.data.get('license', 'GPL-2'),
                     'certificate': package.data.get('certificate') or None,
                     })
-                for filename in package.data.get('%s_xml' % kind, []):
-                    logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
-                    name, ext = os.path.splitext(filename)
-                    fp = tools.file_open(opj(m, filename))
-                    if ext == '.csv':
-                        noupdate=False
-                        if kind == 'init':
-                            noupdate=True
-                        tools.convert_csv_import(cr, m, os.path.basename(filename), fp.read(), idref, mode=mode, noupdate=noupdate)
-                    elif ext == '.sql':
-                        queries = fp.read().split(';')
-                        for query in queries:
-                            new_query = ' '.join(query.split())
-                            if new_query:
-                                cr.execute(new_query)
-                    elif ext == '.yml':
-                        tools.convert_yaml_import(cr, m, fp, idref, mode=mode, **kwargs)
-                    else:
-                        tools.convert_xml_import(cr, m, fp, idref, mode=mode, **kwargs)
-                    fp.close()
+                load_init_update_xml(cr, m, idref, mode, kind)
+            load_data(cr, m, idref, mode)
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
                 status['progress'] = (float(statusi)+0.75) / len(graph)
-                for xml in package.data.get('demo_xml', []):
-                    name, ext = os.path.splitext(xml)
-                    logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, xml))
-                    fp = tools.file_open(opj(m, xml))
-                    if ext == '.csv':
-                        tools.convert_csv_import(cr, m, os.path.basename(xml), fp.read(), idref, mode=mode, noupdate=True)
-                    elif ext == '.yml':
-                        tools.convert_yaml_import(cr, m, fp, idref, mode=mode, **kwargs)
-                    else:
-                        tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
-                    fp.close()
+                load_demo_xml(cr, m, idref, mode)
+                load_demo(cr, m, idref, mode)                    
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
+            
+            load_test(cr, m, idref, mode)
+            
             package_todo.append(package.name)
 
             migrations.migrate_module(package, 'post')
