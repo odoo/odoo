@@ -10,17 +10,19 @@
                     <group col='8' colspan='4'>
                         <filter icon="terp-hr" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
-                        <filter icon="terp-hr" domain="[('department_id','=',context.get('department_id',False))]"
-                            string="My Departments Leaves"/>
+                        <separator orientation="vertical"/> 
+                        <filter icon="terp-hr" domain="[('type','=','remove')]" string="Leaves"/>
+                        <filter icon="terp-hr" domain="[('type','=','add')]" string="Allocations"/>
+                        <separator orientation="vertical"/> 
                         <filter icon="terp-hr" help="My Leaves" domain="[('user_id','=',uid)]" string="My Leaves"/>  
                         <separator orientation="vertical"/> 
-                        <field name="user_id" select="1" widget="selection" />
-                        <field name="department_id" select="1" widget="selection" />
-                        <field name="name" select='1'/>
-                        <field name="state" select="1">
-                            <filter icon="terp-hr" domain="[('state','=','refuse')]" help="Refused Holidays"/>
-                            <filter icon="terp-hr" domain="[('state','=','validate')]" help="Validated Holidays"/>
-                        </field>                          
+                        <field name="user_id" widget="selection" />
+                        <field name="department_id" widget="selection">
+                            <filter icon="terp-hr"
+                                domain="[('department_id.manager_id','=',uid)]"
+                                />
+                        </field>
+                        <field name="holiday_status_id"/>
                     </group>
                     <newline />
                     <group expand="1" string="Group By..." colspan="11" col="11">
@@ -30,8 +32,6 @@
                 </search>
             </field>
         </record>
-
-
 
         <!-- Holidays: Leave Request -->
         <record model="ir.ui.view" id="edit_holiday_new">
