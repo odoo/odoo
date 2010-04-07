@@ -224,6 +224,16 @@ class hr_holidays(osv.osv):
         else:
             raise osv.except_osv(_('Warning !'),_('Either there is no Employee defined, or no User attached with it.'))
         self.write(cr, uid, ids, vals)
+
+        vals= {
+               'name':record.name,
+               'date_from':record.date_from,
+               'date_to':record.date_to,
+               'calendar_id':record.employee_id.calendar_id.id,
+               'company_id':record.employee_id.company_id.id,
+               'resource_id':record.employee_id.resource_id.id
+             }
+        self.pool.get('resource.calendar.leaves').create(cr,uid,vals)
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
@@ -246,17 +256,7 @@ class hr_holidays(osv.osv):
                 'number_of_days': nb,
                 'user_id': user_id
             })
-            #vals= {
-            #       'name':record.name,
-            #       'date_from':record.date_from,
-            #       'date_to':record.date_to,
-            #       'calendar_id':record.employee_id.calendar_id.id,
-            #       'company_id':record.employee_id.company_id.id,
-            #       'resource_id':record.employee_id.resource_id.id
-            #     }
-            #self.pool.get('resource.calendar.leaves').create(cr,uid,vals)
-
-        return True
+       return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
         vals = {

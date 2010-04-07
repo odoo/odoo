@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-	    <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
+        <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
 
         <record id="view_task_project_user_tree" model="ir.ui.view">
             <field name="name">report.project.task.user.tree</field>
@@ -31,30 +31,29 @@
             <field name="model">report.project.task.user</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-            	<search string="Tasks">
-	            		<filter icon="terp-project" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
-	            		<filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
-	            		<separator orientation="vertical"/>
-	            		<filter string="Start" icon="terp-project" domain="[('date_start','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                 		<filter string="End" icon="terp-project" domain="[('date_end','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                 	    <filter string="Deadline" icon="terp-project" domain="[('date_deadline','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                 	    <filter string="Closed" icon="terp-project" domain="[('state','=','done')]"/>
-	            		<separator orientation="vertical"/>
-	            		<field name="project_id"/>
-	                    <field name="user_id" widget="selection">
-	            			<filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]" default="1"/>
-                		</field>
-	                    <newline/>
-                		<group expand="1" string="Group By..." colspan="10" col="11">
-                    		<filter string="User" icon="terp-project" context="{'group_by':'user_id'}" />
-                    		<filter string="Project" icon="terp-project" context="{'group_by':'project_id'}" />
-                 			<separator orientation="vertical"/>
-                 			<filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
-   							<separator orientation="vertical"/>
-                    		<filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
-                    		<filter string="Year" icon="terp-project" context="{'group_by':'name'}"/>
-                		</group>
-            	</search>
+                <search string="Tasks">
+                    <filter icon="terp-project" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
+                    <filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
+                    <separator orientation="vertical"/>
+                    <filter string="In Progress" icon="terp-project" domain="[('state','=','open')]"/>
+                    <filter string="Pending" icon="terp-project" domain="[('state','=','pending')]"/>
+                    <filter string="Closed" icon="terp-project" domain="[('state','=','done')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="project_id"/>
+                    <field name="user_id" widget="selection">
+                        <filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]" default="1"/>
+                    </field>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="10" col="11">
+                        <filter string="User" icon="terp-project" context="{'group_by':'user_id'}" />
+                        <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}" />
+                        <separator orientation="vertical"/>
+                        <filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
+                        <filter string="Year" icon="terp-project" context="{'group_by':'name'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 

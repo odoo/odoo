@@ -59,6 +59,9 @@
                 <filter icon="terp-account"
                     string="Invoices"
                     domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
+                <filter icon="terp-account"
+                    string="Paid"
+                    domain="[('state','=','paid')]"/>
                 <separator orientation="vertical"/>
                 <field name="product_id"/>
                 <field name="user_id" widget="selection">
@@ -72,17 +75,19 @@
                 <newline/>
                 <group expand="1" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-account"
-                    		string="Customer Invoices"
-                    		domain="[('type','=','out_invoice')]"/>
+                        string="Customer Invoices"
+                        domain="[('type','=','out_invoice')]"
+                        default="1"/>
                     <filter icon="terp-account"
-                    		string="Supplier Invoices"
-                    		domain="[('type','=','in_invoice')]"/>
+                        string="Customer Refunds"
+                        domain="[('type','=','out_refund')]"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-account"
-                    		string="Customer Refunds"
-                    		domain="[('type','=','out_refund')]"/>
+                        string="Supplier Invoices"
+                        domain="[('type','=','in_invoice')]"/>
                     <filter icon="terp-account"
-                    		string="Supplier Refunds"
-                    		domain="[('type','=','in_refund')]"/>
+                        string="Supplier Refunds"
+                        domain="[('type','=','in_refund')]"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
@@ -91,6 +96,7 @@
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
                     <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>
+                    <filter string="Type" icon="terp-account" context="{'group_by':'type'}"/>
                     <filter string="State" icon="terp-account" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Month" icon="terp-account" context="{'group_by':'date'}"/>

@@ -159,7 +159,7 @@ class mrp_bom(osv.osv):
         @param arg: User defined argument
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
-        """  
+        """
         result = {}
         for bom in self.browse(cr, uid, ids, context=context):
             result[bom.id] = map(lambda x: x.id, bom.bom_lines)
@@ -220,7 +220,6 @@ class mrp_bom(osv.osv):
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
         'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
         'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'Index type'),
-        'child_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
         'multi_level_bom': fields.boolean('Multi-level BoM'),

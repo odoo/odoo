@@ -448,15 +448,15 @@
                         domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"  default="1"
                         separator="1" />
                     <separator orientation="vertical"/>
-                    <field name="product_id" select="1"/>
                     <field name="order_id" select="1"/>
                     <field name="order_partner_id" select="1"/>
+                    <field name="product_id" select="1"/>
                     <field name="state" select="1"/>
                     <newline />
                     <group expand="1" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-sale" domain="[]" context="{'group_by':'product_id'}"/>
-<!--                        <filter string="Customer" icon="terp-sale" domain="[]" context="{'group_by':'order_partner_id'}"/>-->
                         <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>

@@ -2,27 +2,26 @@
 <openerp>
     <data>
 
-    	<!-- Search Views -->
+        <!-- Search Views -->
 
-	<record id="view_resource_resource_search" model="ir.ui.view">
+        <record id="view_resource_resource_search" model="ir.ui.view">
             <field name="name">resource.resource.search</field>
             <field name="model">resource.resource</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Resource">
                    <group col='15' colspan='4'>
-                       <field name="name" string="Resource Name"/>
-                       <field name="code" string="Code"/>
+                       <field name="name"/>
                        <field name="user_id" string="User" widget="selection">
-	                       <filter domain="[('user_id','=',uid)]" help="My Resouces" icon="gtk-execute" default="1"/>
-	                   </field>
-                       <field name="calendar_id" string="Working Calendar" widget="selection"/>
-                       <field name="resource_type" string="Resource Type"/>
-                       <field name="company_id" string="Company" widget="selection"/>
+                           <filter domain="[('user_id','=',uid)]" help="My Resouces" icon="gtk-execute" default="1"/>
+                       </field>
+                       <field name="resource_type"/>
+                       <field name="company_id" widget="selection"/>
                    </group>
                    <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Resouce Type" icon="terp-project" domain="[]" context="{'group_by':'resource_type'}"/>
+                        <filter string="Type" icon="terp-project" domain="[]" context="{'group_by':'resource_type'}"/>
+                        <filter string="Company" icon="terp-project" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="User" icon="terp-project" domain="[]" context="{'group_by':'user_id'}"/>
                     </group>
                </search>
@@ -37,10 +36,9 @@
             <field name="arch" type="xml">
                 <search string="Search Working Period">
                    <group col='15' colspan='4'>
-                   	   <field name="name" string="Name"/>
-               <!--     <field name="name" string="Working Calendar"/> -->
-                       <field name="manager" string="Workgroup Manager" widget="selection"/>
-                       <field name="company_id" string="Company" widget="selection"/>
+                       <field name="name" string="Name"/>
+                       <field name="manager" widget="selection"/>
+                       <field name="company_id" widget="selection"/>
                    </group>
                </search>
             </field>
@@ -71,7 +69,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string="Working Period">
+                <form string="Working Period">
                     <field name="name" select="1"/>
                     <field name="manager" select="1"/>
                     <field name="company_id" select="1"/>
@@ -86,7 +84,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Working Period">
+                <tree string="Working Period">
                     <field name="name"/>
                     <field name="manager" select="1"/>
                     <field name="company_id" select="1"/>
@@ -131,7 +129,7 @@
             </field>
         </record>
 
-		<record id="view_resource_calendar" model="ir.ui.view">
+        <record id="view_resource_calendar" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.calendar</field>
             <field name="model">resource.calendar.leaves</field>
             <field name="type">calendar</field>
@@ -143,20 +141,20 @@
         </record>
 
         <act_window
-        id="resource_calendar_closing_days"
-        name="Closing Days"
-        res_model="resource.calendar.leaves"
-        src_model="resource.calendar"
-        view_mode="calendar,tree,form"
-        domain="[('calendar_id','=',active_id), ('resource_id','=',False)]"/>
+            id="resource_calendar_closing_days"
+            name="Closing Days"
+            res_model="resource.calendar.leaves"
+            src_model="resource.calendar"
+            view_mode="calendar,tree,form"
+            domain="[('calendar_id','=',active_id), ('resource_id','=',False)]"/>
 
         <act_window
-        id="resource_calendar_resources_leaves"
-        name="Resources Leaves"
-        res_model="resource.calendar.leaves"
-        src_model="resource.calendar"
-        view_mode="calendar,tree,form"
-        domain="[('calendar_id','=',active_id), ('resource_id','!=',False)]"/>
+            id="resource_calendar_resources_leaves"
+            name="Resources Leaves"
+            res_model="resource.calendar.leaves"
+            src_model="resource.calendar"
+            view_mode="calendar,tree,form"
+            domain="[('calendar_id','=',active_id), ('resource_id','!=',False)]"/>
 
         <record id="resource_resource_form" model="ir.ui.view">
             <field name="name">resource.resource.form</field>
@@ -166,7 +164,7 @@
                 <form string="Resource">
                     <field name="name" />
                     <field name="active"/>
-                    <field name="company_id" />
+                    <field name="company_id" widget="selection"/>
                     <field name="calendar_id" />
                     <field name="resource_type" />
                     <field name="user_id" attrs="{'required':[('resource_type','=','user')]}"/>
@@ -203,7 +201,7 @@
             <field name="arch" type="xml">
                 <form string="Leave Detail">
                     <field name="name" />
-                    <field name="company_id" />
+                    <field name="company_id"  widget="selection"/>
                     <field name="calendar_id" />
                     <field name="date_from" />
                     <field name="date_to" />
