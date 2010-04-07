@@ -131,7 +131,6 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
-
     def _find_object_id(self, cr, uid, context=None):
 
         """
@@ -164,7 +163,6 @@ class crm_case_resource_type(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
-
     def _find_object_id(self, cr, uid, context=None):
         """
         @param self: The object pointer
@@ -204,7 +202,6 @@ class crm_case_stage(osv.osv):
                          help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements')
     }
-
     def _find_object_id(self, cr, uid, context=None):
 
         """
@@ -353,7 +350,6 @@ class crm_case(osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'company_id': fields.many2one('res.company', 'Company'),
     }
-
     def _get_default_partner_address(self, cr, uid, context):
 
         """

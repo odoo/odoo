@@ -77,7 +77,7 @@ class wizard_report(wizard.interface):
     states={
         'init':{
             'actions':[_check],
-            'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('checkdept', 'Print')]}
+            'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel', 'gtk-cancel'), ('checkdept', 'Print', 'gtk-print')]}
         },
         'checkdept': {
             'actions': [],
@@ -85,7 +85,7 @@ class wizard_report(wizard.interface):
         },
         'notify': {
             'actions': [],
-            'result': {'type':'form','arch':zero_form,'fields':zero_fields,'state':[('end','Ok')]}
+            'result': {'type':'form','arch':zero_form,'fields':zero_fields,'state':[('end','Ok', 'gtk-ok')]}
         },
         'report':{
             'actions':[],

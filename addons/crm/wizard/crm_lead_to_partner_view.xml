@@ -1,53 +1,53 @@
 <openerp>
-  	<data>
+      <data>
 
-		<!-- Lead to partner confirmation form -->
+        <!-- Lead to partner confirmation form -->
 
-  		<record id="view_crm_lead2partner_create" model="ir.ui.view">
-	      <field name="name">crm.lead2partner.view.create</field>
-	      <field name="model">crm.lead2partner</field>
-	      <field name="type">form</field>
-	      <field name="arch" type="xml">
-	      	<form string="Create a Partner?">
-	      		<label string="Are you sure you want to create a partner based on this lead ?" colspan="4"/>
-        		<label string="You may have to verify that this partner does not exist already." colspan="4"/>
-        		<separator string="" colspan="4" />
-	      		<group col="4" colspan="4">
-	      			<button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-	      			<button name="open_create_partner" string="Create _Partner" type="object" icon="gtk-ok"/>
-	      		</group>
-	      	</form>
-	      </field>
-	   </record>
+          <record id="view_crm_lead2partner_create" model="ir.ui.view">
+          <field name="name">crm.lead2partner.view.create</field>
+          <field name="model">crm.lead2partner</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+              <form string="Create a Partner?">
+                  <label string="Are you sure you want to create a partner based on this lead ?" colspan="4"/>
+                <label string="You may have to verify that this partner does not exist already." colspan="4"/>
+                <separator string="" colspan="4" />
+                  <group col="4" colspan="4">
+                      <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                      <button name="open_create_partner" string="Create _Partner" type="object" icon="gtk-ok"/>
+                  </group>
+              </form>
+          </field>
+       </record>
 
-	   <!-- Lead to Partner form view -->
+       <!-- Lead to Partner form view -->
 
-	   <record id="view_crm_lead2partner" model="ir.ui.view">
-	      <field name="name">crm.lead2partner.view</field>
-	      <field name="model">crm.lead2partner</field>
-	      <field name="type">form</field>
-	      <field name="arch" type="xml">
-	      	<form string="Create a Partner">
-	      		<field name="action"/>
-	      		<group attrs="{'invisible':[('action','!=','exist')]}">
-		            <field name="partner_id" attrs="{'required': [('action', '=', 'exist')]}"/>
-		        </group>
-		        <separator string="" colspan="4" />
-	      		<group col="4" colspan="4">
-	      			<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-	      			<button name="make_partner" string="Continue" type="object" icon="gtk-ok"/>
-	      		</group>
-	      	</form>
-	      </field>
-	   </record>
+       <record id="view_crm_lead2partner" model="ir.ui.view">
+          <field name="name">crm.lead2partner.view</field>
+          <field name="model">crm.lead2partner</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+              <form string="Create a Partner">
+                  <field name="action"/>
+                  <group attrs="{'invisible':[('action','!=','exist')]}">
+                    <field name="partner_id" attrs="{'required': [('action', '=', 'exist')]}"/>
+                </group>
+                <separator string="" colspan="4" />
+                  <group col="4" colspan="4">
+                      <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                      <button name="make_partner" string="Continue" type="object" icon="gtk-ok"/>
+                  </group>
+              </form>
+          </field>
+       </record>
 
-	   <!-- Lead to Partner wizard -->
+       <!-- Lead to Partner wizard -->
 
-	   <act_window id="action_crm_lead2partner"
-    		key2="client_action_multi" name="Create a Partner"
-    		res_model="crm.lead2partner" src_model="crm.lead"
-    		view_id="view_crm_lead2partner_create"
-    		view_mode="form" target="new" view_type="form" />
+       <act_window id="action_crm_lead2partner"
+            key2="client_action_multi" name="Create a Partner"
+            res_model="crm.lead2partner" src_model="crm.lead"
+            view_id="view_crm_lead2partner_create"
+            view_mode="form" target="new" view_type="form" />
 
- 	</data>
+     </data>
 </openerp>
