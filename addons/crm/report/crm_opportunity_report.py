@@ -24,12 +24,10 @@ import tools
 
 class crm_opportunity_report(osv.osv):
     """ CRM Opportunity Report """
-
     _name = "crm.opportunity.report"
     _auto = False
     _inherit = "crm.case.report"
     _description = "CRM Opportunity Report"
-
     _columns = {
         'probability': fields.float('Avg. Probability', readonly=True),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
@@ -47,7 +45,6 @@ class crm_opportunity_report(osv.osv):
     }
 
     def init(self, cr):
-
         """ Display Est.Revenue , Average Probability ,Est.Revenue Probability
             @param cr: the current row, from the database cursor
         """
@@ -88,5 +85,3 @@ class crm_opportunity_report(osv.osv):
             )""")
 
 crm_opportunity_report()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
