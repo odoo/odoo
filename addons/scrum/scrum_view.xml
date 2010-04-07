@@ -426,7 +426,7 @@
             <field name="inherit_id" ref="project.view_task_tree2"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="after">
-                    <field name="sprint_id" invisible="context.get('sprint_invisible',True)"/>
+                    <field name="sprint_id"/>
                     <field name="product_backlog_id" invisible="1"/>
                 </field>
             </field>
