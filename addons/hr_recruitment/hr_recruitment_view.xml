@@ -85,8 +85,8 @@
                     <field name="job_id"/>
                     <field name="department_id" widget="selection"/>
                     <button name="%(wizard_hr_job_meeting_set)d" string="Schedule Meeting" icon="terp-hr" type="action"/>
-					<button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
-						icon="gtk-print" context="{'survey_id': survey, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
+					<button name="action_print_survey" string="Print Interview" type="object"
+						icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
 				</group>
                 <notebook colspan="4">
                     <page string="Job Info">
