@@ -38,7 +38,7 @@ class crm_opportunity(osv.osv):
 
     _name = "crm.opportunity"
     _description = "Opportunity Cases"
-    _order = "id desc"
+    _order = "priority,id desc"
     _inherit = 'crm.case'
 
     def case_open(self, cr, uid, ids, *args):

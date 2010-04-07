@@ -108,6 +108,14 @@ class crm_phonecall(osv.osv):
 
         return value
 
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        res = super(crm_phonecall, self).onchange_partner_address_id(cr, uid, ids, add, email)
+        res.setdefault('value', {})
+        if add:
+            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            res['value']['partner_phone'] = address.mobile
+            res['value']['partner_mobile'] = address.phone
+        return res
 crm_phonecall()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

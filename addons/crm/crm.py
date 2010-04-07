@@ -652,13 +652,11 @@ class crm_case(osv.osv):
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
-
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         """
-
         if not part:
             return {'value': {'partner_address_id': False,
                             'email_from': False,
@@ -678,7 +676,7 @@ class crm_case(osv.osv):
 
         data = {}
         if not add:
-            return {'value': {'email_from': False, 'partner_name2': False}}
+            return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         data['email_from'] = address.email
         return {'value': data}
