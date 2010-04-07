@@ -43,8 +43,8 @@
                 <field name="partner_phone"/>
                 <field name="job_id"/>
                 <field name="stage_id"/>
-                <button name="stage_previous" string="Previous" states="open,pending" type="object" icon="gtk-go-back"/>
-                <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
+                <button name="stage_previous" string="Previous" states="draft,open,cancel,done,pending" type="object" icon="gtk-go-back"/>
+                <button name="stage_next" string="Next" states="draft,open,cancel,done,pending" type="object" icon="gtk-go-forward"/>
                 <field name="survey" invisible="1"/>
                 <field name="response" invisible="1"/>
                 <field name="priority"/>
@@ -71,8 +71,9 @@
                 <group colspan="4" col="8">
                     <field name="name" string="Subject"/>
                     <label string="Stage: " align="1.0"/>
-                    <group colspan="1" col="2">
+                    <group colspan="1" col="3">
                         <field name="stage_id" nolabel="1"/>
+                		<button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
                     <field name="user_id"/>
@@ -84,7 +85,8 @@
                     <field name="partner_name"/>
                     <field name="job_id"/>
                     <field name="department_id" widget="selection"/>
-                    <button name="%(wizard_hr_job_meeting_set)d" string="Schedule Meeting" icon="terp-hr" type="action"/>
+                    <button name="action_makeMeeting" type="object"
+                        string="Schedule Meeting" icon="terp-hr" />
 					<button name="action_print_survey" string="Print Interview" type="object"
 						icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
 				</group>
