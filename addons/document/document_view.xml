@@ -77,7 +77,7 @@
                 </page>
                 <page string="Generated Files">
                     <label colspan="4" string="For each entry here, virtual files will appear in this folder." />
-                    <field name="content_ids" nolabel="1" colspan="4">
+					<field name="content_ids" nolabel="1" colspan="4" attrs="{'readonly': [('ressource_type_id','=',False)]}">
                         <form string="Contents">
                             <field name="name"/>
                             <field name="sequence"/>
