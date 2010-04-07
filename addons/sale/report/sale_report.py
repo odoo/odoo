@@ -86,9 +86,16 @@ class sale_report(osv.osv):
                      sale_order s on (s.id=l.order_id)
                      left join product_uom u on (u.id=l.product_uom)
                  group by
-                     s.date_order, s.partner_id, l.product_id,
-                     l.product_uom, s.user_id, s.state, s.shop_id,
-                     s.company_id,s.fiscal_position,s.payment_term
+                     s.date_order,
+                     s.partner_id,
+                     l.product_id,
+                     l.product_uom,
+                     s.user_id,
+                     s.state,
+                     s.shop_id,
+                     s.company_id,
+                     s.fiscal_position,
+                     s.payment_term
             )
         """)
 sale_report()

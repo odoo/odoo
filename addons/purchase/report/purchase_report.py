@@ -90,10 +90,19 @@ class report_purchase_order(osv.osv):
                     left join purchase_order_line l on (s.id=l.order_id)
                     left join product_uom u on (u.id=l.product_uom)
                 where l.product_id is not null
-                group by s.company_id,s.create_uid,s.partner_id,
-                         s.location_id,l.product_id,s.date_order,
-                         to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),s.state,
-                         s.warehouse_id,s.fiscal_position,s.invoice_method
+                group by
+                    s.company_id,
+                    s.create_uid,
+                    s.partner_id,
+                    s.location_id,
+                    l.product_id,
+                    s.date_order,
+                    to_char(s.date_order, 'YYYY'),
+                    to_char(s.date_order, 'MM'),
+                    s.state,
+                    s.warehouse_id,
+                    s.fiscal_position,
+                    s.invoice_method
             )
         """)
 report_purchase_order()
