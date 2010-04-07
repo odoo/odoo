@@ -256,7 +256,7 @@ class hr_holidays(osv.osv):
                 'number_of_days': nb,
                 'user_id': user_id
             })
-       return True
+        return True
 
     def holidays_refuse(self, cr, uid, ids, *args):
         vals = {
