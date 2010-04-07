@@ -119,6 +119,7 @@ class task_by_days(osv.osv):
     _auto = False
     _columns = {
         'day': fields.char('Day', size=128, required=True),
+        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True),
         'total_task': fields.float('Total tasks', readonly=True)
      }
     _order = 'day desc'
@@ -129,11 +130,12 @@ class task_by_days(osv.osv):
                 select
                     min(pt.id) as id,
                     to_char(pt.create_date, 'YYYY-MM-DD') as day,
-                    count(*) as total_task
+                    count(*) as total_task,
+                    pt.state as state
                 from
                     project_task as pt
                 group by
-                    to_char(pt.create_date, 'YYYY-MM-DD')
+                    to_char(pt.create_date, 'YYYY-MM-DD'),pt.state
             )
         """)
 task_by_days()
