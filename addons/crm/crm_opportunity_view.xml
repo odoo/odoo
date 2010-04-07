@@ -220,6 +220,7 @@
                 <field name="date_deadline" string="Excepted Closing"/>
                 <field name="section_id"/>
                 <field name="user_id"/>
+                <field name="priority"/>
                 <field name="state"/>
                 <button name="case_open" string="Open"
                     states="draft,pending" type="object"
@@ -302,7 +303,8 @@
                 <group expand="1" string="Group By..." colspan="16">
                     <filter string="Stage" icon="terp-crm" domain="[]"
                         context="{'group_by':'stage_id'}" />
-
+                    <filter string="Priority" icon="terp-crm" domain="[]"
+                        context="{'group_by':'priority'}" />
                     <filter string="Category" icon="terp-crm"
                         domain="[]" context="{'group_by':'categ_id'}" />
 

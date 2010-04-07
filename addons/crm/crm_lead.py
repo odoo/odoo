@@ -32,7 +32,7 @@ class crm_lead(osv.osv):
 
     _name = "crm.lead"
     _description = "Leads Cases"
-    _order = "priority desc, id desc"
+    _order = "priority, id desc"
     _inherit = ['res.partner.address', 'crm.case']
 
     def case_open(self, cr, uid, ids, *args):
