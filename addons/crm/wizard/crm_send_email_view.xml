@@ -3,27 +3,32 @@
     <data>
 
 <!-- Send New Mail view -->
-    
+
         <record model="ir.ui.view" id="crm_send_new_mail_view">
             <field name="name">crm.new.send.mail.form</field>
             <field name="model">crm.send.mail</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Send New Mail" col="2">
-                    <field name="email_from" />
-                	<field name="email_to" />
-                	<field name="email_cc" />
-                	<field name="subject" />                	
-                	<field name="doc1" />
-                	<field name="doc2" />
-                	<field name="doc3" />
+                <form string="Send New Mail" col="4">
+                    <field name="email_to" />
+                    <field name="email_cc"/>
+                    <field name="subject" colspan="4"/>
+                    <group colspan="4" string="Extended Options" expand="1">
+                        <field name="email_from" />
+                        <field name="doc1" filename="doc1_fname"/>
+                        <field name="doc1_fname"/>
+                        <field name="doc2" filename="doc2_fname" />
+                        <field name="doc2_fname"/>
+                        <field name="doc3" filename="doc3_fname" />
+                        <field name="doc3_fname"/>
+                    </group>
                     <separator string="" colspan="4"/>
                     <field name="text" nolabel="1" colspan="4"/>
-                	<separator colspan="4" string="Set case state to" />
-                	<field name="state" />
-                	<separator string=" " colspan="4"/>
+                    <newline/>
+                    <field name="state" />
+                    <separator string=" " colspan="4"/>
                     <group colspan="4" col="3" >
-                    	<label string=" " />
+                        <label string=" " />
                         <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
                         <button name="action_send" type="object" string="_Send" icon="gtk-go-forward" />
                     </group>
@@ -41,10 +46,10 @@
             <field name="view_id" ref="crm_send_new_mail_view"/>
             <field name="target">new</field>
         </record>
-	
-	
-	<!-- Reply to Mail view -->
-    
+
+
+    <!-- Reply to Mail view -->
+
         <record model="ir.ui.view" id="crm_reply_mail_view">
             <field name="name">crm.mail.reply.form</field>
             <field name="model">crm.send.mail</field>
@@ -52,17 +57,17 @@
             <field name="arch" type="xml">
                 <form string="Reply to last Mail" col="2">
                     <field name="email_from" />
-                	<field name="email_to" />
-                	<field name="email_cc" />
-                	<field name="subject" />                	
-                	<field name="doc1" />
-                	<field name="doc2" />
-                	<field name="doc3" />
+                    <field name="email_to" />
+                    <field name="email_cc" />
+                    <field name="subject" />
+                    <field name="doc1" />
+                    <field name="doc2" />
+                    <field name="doc3" />
                     <separator string="" colspan="4"/>
                     <field name="text" nolabel="1" colspan="4"/>
-                	<separator string=" " colspan="4"/>
+                    <separator string=" " colspan="4"/>
                     <group colspan="4" col="3" >
-                    	<label string=" " />
+                        <label string=" " />
                         <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
                         <button name="action_send" type="object" string="_Send Reply" icon="gtk-go-forward" />
                     </group>
@@ -80,6 +85,6 @@
             <field name="view_id" ref="crm_reply_mail_view"/>
             <field name="target">new</field>
         </record>
-	
+
     </data>
-</openerp>   
+</openerp>
