@@ -28,6 +28,7 @@ class project_task(osv.osv):
     _columns = {
         'procurement_id': fields.many2one('mrp.procurement', 'Requisition', ondelete='set null')
     }
+
     def do_close(self, cr, uid, ids, *args):
         res = super(project_task, self).do_close(cr, uid, ids, *args)
         tasks = self.browse(cr, uid, ids)
@@ -45,6 +46,7 @@ class project_task(osv.osv):
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'mrp.procurement', task.procurement_id.id, 'subflow.cancel', cr)
         return True
-project_task()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+project_task()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

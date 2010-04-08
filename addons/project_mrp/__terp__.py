@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,23 +25,23 @@
     'version': '1.0',
     'category': 'Generic Modules/Projects & Services',
     'description': """
-This module creates a link between procurement orders 
+This module creates a link between procurement orders
 containing "service" lines and project management tasks.
 
-When installed, this module will automatically create a new task 
-for each procurement order line, when the corresponding product  
-meets the following characteristics: 
+When installed, this module will automatically create a new task
+for each procurement order line, when the corresponding product
+meets the following characteristics:
   * Type = Service
   * Procurement method (Order fulfillment) = MTO (make to order)
-  * Supply/Procurement method = Produce  
+  * Supply/Procurement method = Produce
 
-The new task is created outside of any existing project, but 
+The new task is created outside of any existing project, but
 can be added to a project manually.
 
 When the project task is completed or cancelled, the workflow of the corresponding
-procurement line is updated accordingly. 
+procurement line is updated accordingly.
 
-This module is useful to be able to invoice services based on tasks 
+This module is useful to be able to invoice services based on tasks
 automatically created via sale orders.
 
 """,
@@ -49,7 +49,7 @@ automatically created via sale orders.
     'website': 'http://www.openerp.com',
     'depends': ['project', 'mrp', 'sale', 'mrp_jit'],
     'init_xml': [],
-    'update_xml': ['project_workflow.xml', 'process/project_mrp_process.xml'],
+    'update_xml': ['project_mrp_workflow.xml', 'process/project_mrp_process.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
