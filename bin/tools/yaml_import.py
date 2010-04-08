@@ -590,7 +590,7 @@ class YamlInterpreter(object):
         _, fields = node.items()[0]
         res = {}
         for fieldname, expression in fields.items():
-            if isinstance(expression, Eval):
+            if is_eval(expression):
                 value = eval(expression.expression, self.eval_context)
             else:
                 value = expression
