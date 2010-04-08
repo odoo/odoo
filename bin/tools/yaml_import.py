@@ -399,10 +399,10 @@ class YamlInterpreter(object):
                 param_model = self.get_model(param.get('model', model))
                 if 'search' in param:
                     q = eval(param['search'], self.eval_context)
-                    ids = param_model.search(cr, uid, q)
+                    ids = param_model.search(self.cr, self.uid, q)
                     value = self._get_first_result(ids)
                 elif 'eval' in param:
-                    local_context = {'obj': lambda x: param_model.browse(self.cr, self.uid, x, context)}
+                    local_context = {'obj': lambda x: param_model.browse(self.cr, self.uid, x, self.context)}
                     local_context.update(self.id_map)
                     value = eval(param['eval'], self.eval_context, local_context)
                 else:
