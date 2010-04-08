@@ -1034,9 +1034,6 @@
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
-                        <page string="Delivery Info">
-                            <field colspan="4" name="delivery_line" nolabel="1"/>
-                        </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
@@ -1227,9 +1224,6 @@
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
-                        <page string="Delivery Info">
-                            <field colspan="4" name="delivery_line" nolabel="1"/>
-                        </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
@@ -1265,7 +1259,7 @@
 
 
         <record id="action_picking_tree4" model="ir.actions.act_window">
-            <field name="name">Incoming shipments</field>
+            <field name="name">Incoming Shipments</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -1754,56 +1748,6 @@
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_move_delivery_products_planned_graph"/>
         </record>
-          <!-- Product Delivered  -->
-        <record id="view_stock_delivery_form" model="ir.ui.view">
-            <field name="name">stock.delivery.from</field>
-            <field name="model">stock.delivery</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Product">
-                		<field name="name"/>
-	                    <field name="date"/>
-	                    <field name="partner_id"/>
-	                    <field name="address_id"/>
-	                    <field name="picking_id"/>
-	                    <separator string="Product Delivered Information" colspan="4" />
-	                    <field name="move_delivered" colspan="4" nolabel="1" widget="one2many" mode="tree,form">
-	                       <tree string="Stock Moves" editable="top">
-			                    <field name="picking_id" string="Reference"/>
-			                    <field name="origin" string="Latest Requisition"/>
-			                    <field name="partner_id" string="Supplier"/>
-			                    <field name="product_id"/>
-			                    <field name="product_qty" />
-			                    <field name="product_uom" string="UOM"/>
-			                    <field name="prodlot_id" string="Lot"/>
-		            		</tree>
-	           			</field> 
-                </form>
-            </field>
-        </record>
-        <record id="view_stock_delivery_tree" model="ir.ui.view">
-            <field name="name">stock.delivery.tree</field>
-            <field name="model">stock.delivery</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Delivered Product">	
-                	<field name="name"/>
-                    <field name="date"/>
-                    <field name="partner_id"/>
-                    <field name="address_id"/>
-                </tree>
-            </field>
-        </record>
-	    
-    	<record id="action_stock_delivery" model="ir.actions.act_window">
-            <field name="name">Delivered Products</field>
-            <field name="res_model">stock.delivery</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>            
-            <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="view_stock_delivery_tree"/>
-        </record>        
-		
-		<menuitem action="action_stock_delivery" id="menu_action_picking_all" parent="menu_traceability" sequence="4"/>
+
     </data>
 </openerp>

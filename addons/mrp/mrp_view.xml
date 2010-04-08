@@ -808,7 +808,7 @@
                     <page string="Procurement Details">
                         <separator colspan="4" string="Product &amp; Location"/>
                         <field name="product_id" select="1" on_change="onchange_product_id(product_id)"/>
-                        <field name="location_id" select="2"/>
+                        <field name="location_id" select="2" domain="[('usage','=','internal')]"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
 
@@ -896,7 +896,7 @@
         </record>
 
       <menuitem action="mrp_procurement_action3" id="menu_procurement_requisitions" parent="purchase.menu_procurement_management"
-                  name="Requisitions" sequence="5" />
+                  sequence="5" />
 
         <record id="mrp_procurement_action5" model="ir.actions.act_window">
             <field name="name">Procurement Exceptions</field>
