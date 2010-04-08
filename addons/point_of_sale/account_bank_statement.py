@@ -28,6 +28,7 @@ from tools.translate import _
 
 
 class account_journal(osv.osv):
+
     _inherit = 'account.journal'
     _columns = {
         'auto_cash': fields.boolean('Automatic Opening', help="This field authorize the automatic creation of the cashbox"),
@@ -44,21 +45,30 @@ account_journal()
 
 
 class singer_statement(osv.osv):
+    
+    """ Singer Statements """
+    
     _name = 'singer.statement'
     _description = 'Statements'
 
     def _sub_total(self, cr, uid, ids, name, arg, context=None):
+       
+        """ Calculates Sub total"
+        @param name: Names of fields.
+        @param arg: User defined arguments
+        @return: Dictionary of values.
+        """
         res = {}
         for obj in self.browse(cr, uid, ids):
             res[obj.id] = obj.pieces * obj.number
         return res
 
-    def on_change_sub2(self, cr, uid, ids, pieces, number, *a):
-        sub=pieces*number
-        return {'value':{'subtotal': sub or 0.0}}
-
-
     def on_change_sub(self, cr, uid, ids, pieces, number,*a):
+
+        """ Calculates Sub total on change of number
+        @param pieces: Names of fields.
+        @param number:
+        """           
         sub=pieces*number
         return {'value':{'subtotal': sub or 0.0}}
 
@@ -73,8 +83,16 @@ class singer_statement(osv.osv):
 singer_statement()
 
 class account_bank_statement(osv.osv):
+    
     _inherit = 'account.bank.statement'
+    
     def _get_starting_balance(self, cr, uid, ids, name, arg, context=None):
+
+        """ Find starting balance  "
+        @param name: Names of fields.
+        @param arg: User defined arguments
+        @return: Dictionary of values.
+        """          
         res ={}
         for statement in self.browse(cr, uid, ids):
             amount_total=0.0
@@ -84,6 +102,12 @@ class account_bank_statement(osv.osv):
         return res
 
     def _get_sum_entry_encoding(self, cr, uid, ids, name, arg, context=None):
+
+        """ Find encoding total of statements "
+        @param name: Names of fields.
+        @param arg: User defined arguments
+        @return: Dictionary of values.
+        """              
         res2={}
         for statement in self.browse(cr, uid, ids):
             encoding_total=0.0
@@ -93,8 +117,12 @@ class account_bank_statement(osv.osv):
         return res2
 
     def _default_journal_id(self, cr, uid, context={}):
+
+        """ To get default journal for the object" 
+        @param name: Names of fields.
+        @return: journal 
+        """  
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        print [('type','=','cash'),('auto_cash','=',False), ('company_id', '=', company_id)]
         journal = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('auto_cash','=',False), ('company_id', '=', company_id)])
         if journal:
             return journal[0]
@@ -140,6 +168,12 @@ class account_bank_statement(osv.osv):
         return res
 
     def onchange_journal_id(self, cursor, user, statement_id, journal_id, context=None):
+        
+        """ Changes balance start and starting details if journal_id changes" 
+        @param statement_id: Changed statement_id
+        @param journal_id: Changed journal_id
+        @return:  Dictionary of changed values
+        """  
         id_s=[]
         if not journal_id:
             return {'value': {'balance_start': 0.0}}
@@ -171,6 +205,10 @@ class account_bank_statement(osv.osv):
         return {'value': {'balance_start': balance_start, 'starting_details_ids':new}}
 
     def button_open(self, cr, uid, ids, context=None):
+        
+        """ Changes statement state to Running.
+        @return: True 
+        """       
         obj_inv = self.browse(cr, uid, ids)[0]
         s_id=obj_inv.journal_id
         if s_id.statement_sequence_id:
@@ -184,6 +222,10 @@ class account_bank_statement(osv.osv):
         return True
 
     def button_confirm(self, cr, uid, ids, context=None):
+        
+        """ Check the starting and ending detail of  statement 
+        @return: True 
+        """         
         val = 0.0
         val2 = 0.0
         val_statement_line = 0.0

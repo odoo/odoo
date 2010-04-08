@@ -19,4 +19,5 @@
 #
 ##############################################################################
 
-import wizard_purchase_line_invoice
+
+import purchase_line_invoice

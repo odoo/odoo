@@ -27,13 +27,9 @@ class product_product(osv.osv):
     _inherit = "product.product"    
 
     def get_product_accounts(self, cr, uid, product_id, context={}):
-        
-        """ 
-             To get the stock input account, stock output account and stock journal related to product.
-            
-             @param product_id : product id            
-             @return:  dictionary which contains information regarding stock input account, stock output account and stock journal
-        
+        """ To get the stock input account, stock output account and stock journal related to product.
+        @param product_id: product id            
+        @return: dictionary which contains information regarding stock input account, stock output account and stock journal
         """           
         product_obj = self.pool.get('product.product').browse(cr, uid, product_id, False)
         
@@ -55,14 +51,10 @@ class product_product(osv.osv):
         return res
     
     def do_change_standard_price(self, cr, uid, ids, datas, context={}):
-        """ 
-             Changes the Standard Price of Product and parent products and creates an account move accordingly.
-            
-             @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
-             @param context: A standard dictionary 
-             
-             @return:  
-        
+        """ Changes the Standard Price of Product and parent products and creates an account move accordingly.
+        @param datas: dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
+        @param context: A standard dictionary 
+        @return:  
         """           
         #TODO : TO Check 
         res = super(product_product, self).do_change_standard_price(cr, uid, ids, datas, context=context)
@@ -73,15 +65,15 @@ class product_product(osv.osv):
                 if bom.bom_id.bom_lines :
                     for bom_line in bom.bom_id.bom_lines :
                         prod_price = self.read(cr, uid, bom_line.product_id.id, ['standard_price'])['standard_price']
-                        price += bom_line.product_qty *  prod_price
+                        price += bom_line.product_qty * prod_price
 
-                    accounts = self.get_product_accounts(cr, uid, bom.bom_id.product_id.id , context)
+                    accounts = self.get_product_accounts(cr, uid, bom.bom_id.product_id.id, context)
                     
                     datas = {
-                        'new_price' : price,
-                        'stock_output_account' : accounts['stock_account_output'],
-                        'stock_input_account' : accounts['stock_account_input'],
-                        'stock_journal' : accounts['stock_journal']
+                        'new_price': price,
+                        'stock_output_account': accounts['stock_account_output'],
+                        'stock_input_account': accounts['stock_account_input'],
+                        'stock_journal': accounts['stock_journal']
                     }
                     super(product_product, self).do_change_standard_price(cr, uid, [bom.bom_id.product_id.id], datas, context)
                 _compute_price(bom.bom_id)
