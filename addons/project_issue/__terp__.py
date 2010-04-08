@@ -39,10 +39,8 @@
         'project_issue_data.xml'
     ],
     'update_xml': [
-        'project_issue_wizard.xml',
         'project_issue_view.xml',
-        'project_issue_menu.xml',        
-        'project_feature_menu.xml',
+        'project_issue_menu.xml',
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
