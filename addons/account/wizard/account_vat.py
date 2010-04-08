@@ -53,7 +53,6 @@ class account_vat_declaration(osv.osv_memory):
 		datas = {'ids': context.get('active_ids', [])}
   		datas['model'] = 'account.tax.code'
 		datas['form'] = self.read(cr, uid, ids)[0]
-		print "datasssss", datas, datas['form']
 		return {
 			'type': 'ir.actions.report.xml',
 			'report_name': 'account.vat.declaration',
