@@ -20,6 +20,7 @@
                             <field name="parent_id" select="2" widget="selection"/>
                             <field name="allow_unlink" select="2"/>
                             <field name="reply_to" select="2"/>
+                            <field name="resource_calendar_id" select="2"/>
                         </page>
                     </notebook>
                 </form>
@@ -417,7 +418,7 @@
                     <group col='6' colspan='4'>
                         <filter icon="terp-partner" string="My Cases"
                             domain="[('user_id','=',uid)]" separator="1"
-                            default="1" help="Cases Related to Current User" />
+                            help="Cases Related to Current User" />
                         <field name="state" select="1">
                             <filter icon="gtk-new"
                                 domain="[('state','in',('draft', 'open'))]"
@@ -434,8 +435,7 @@
                             widget="selection" />
                     </group>
                     <field name="section_id"
-                        default="context.get('section_id', False)" select="1"
-                        widget="selection"/>
+                        select="1" widget="selection" string="Section"/>
                 </search>
             </field>
         </record>
@@ -510,7 +510,6 @@
                        <field name="date" select="1"/>
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="section_id"
-                        default="context.get('section_id', False)"
                         select="1" widget="selection"/>
                      </group>
                 </search>

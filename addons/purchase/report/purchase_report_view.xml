@@ -44,14 +44,13 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Purchase Orders">
+                <group>
                 <filter icon="terp-purchase"
-                    string="This Year"
+                    string="This Year" name="this_year"
                     domain="[('name','=',time.strftime('%%Y'))]"
-                    default="1"
                     help="Purchase orders of the year"/>
                 <filter icon="terp-purchase"
-                    string="This Month"
-                    default="1"
+                    string="This Month" name="this_month"
                     domain="[('month','=',time.strftime('%%m'))]"
                     help="Purchase orders of this month"/>
                 <separator orientation="vertical"/>
@@ -59,8 +58,7 @@
                     string="Quotations"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-purchase"
-                    string="Purchase"
-                    default="1"
+                    string="Purchase" name="purchase"
                     domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
                 <separator orientation="vertical"/>
                 <field name="product_id"/>
@@ -71,12 +69,12 @@
                 </field>
                 <field name="partner_id"/>
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-
+                </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="1" string="Group By...">
                     <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}"/>
                     <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
-                    <filter string="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}" default="1"/>
+                    <filter string="Responsible" name="by_user" icon="terp-purchase" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
                     <filter string="Product Category" icon="terp-purchase" context="{'group_by':'category_id'}"/>
@@ -95,6 +93,7 @@
         <field name="res_model">report.purchase.order</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="context">{"search_default_this_year":1,"search_default_this_month":1,"search_default_purchase":1,"search_default_by_user":1}</field>
         <field name="search_view_id" ref="view_purchase_order_search"/>
     </record>
 

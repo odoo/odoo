@@ -196,7 +196,7 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group colspan="4" col="20">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Phases" icon="terp-project" default="1"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Phases" icon="terp-project" name="current"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Phases" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-project"/>
                         <separator orientation="vertical"/>
@@ -205,7 +205,7 @@
                             <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
                         </field>
                         <field name="responsible_id" widget="selection">
-                            <filter domain="[('responsible_id','=',uid)]" help="My Phase" icon="gtk-execute" default="1"/>
+                            <filter domain="[('responsible_id','=',uid)]" help="My Phase" icon="gtk-execute" name="my_phase"/>
                         </field>
                         <field name="date_start"/>
                     </group>
@@ -225,6 +225,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,gantt</field>
+            <field name="context">{"search_default_current":1,"search_default_my_phase":1}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
