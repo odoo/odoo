@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <record id="action_sprint_all_dashboard_tree" model="ir.actions.act_window">
-            <field name="name">Sprints List</field>
+            <field name="name">Sprint's List</field>
             <field name="res_model">scrum.sprint</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -16,14 +16,14 @@
                 <form string="My Board">
                     <hpaned>
                         <child1>
-                   				 <action colspan="4" height="220" name="%(action_sprint_all_dashboard_tree)d" string="Sprints List" width="510"/>
+                   				 <action colspan="4" height="220" name="%(action_sprint_all_dashboard_tree)d" string="Sprints" width="510"/>
                         </child1>
                     </hpaned>
                 </form>
             </field>
         </record>
         <record id="open_board_project_scrum" model="ir.actions.act_window">
-            <field name="name">Project Dashboard</field>
+            <field name="name">Scrum Dashboard</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

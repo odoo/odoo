@@ -103,8 +103,14 @@
                             <action colspan="4"  name="%(action_view_pending_task_tree)d" string="My Pending Tasks" width="510"/>
                    		</child1>
                         <child2>
-							<action colspan="4"  name="%(project.action_project_vs_remaining_hours_graph)d" string="Remaining Hours Per Project" />
-                   			<action colspan="4"  name="%(project.action_task_by_days_vs_planned_hours_graph)d" string="Planned Hours Per Day" />
+                        <vpaned>
+                        	<child1>
+                        		<action colspan="4"  name="%(project.action_project_vs_remaining_hours_graph)d" string="Remaining Hours Per Project" />
+                        	</child1>
+                        	<child2>
+                        		<action colspan="4"  name="%(project.action_task_by_days_vs_planned_hours_graph)d" string="Planned Hours Per Day" />
+                        	</child2>
+                        </vpaned>
                         </child2>
                     </hpaned>
                 </form>
