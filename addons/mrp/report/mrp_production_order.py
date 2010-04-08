@@ -78,7 +78,7 @@ class mrp_production_order(osv.osv):
                      s.picking_id,
                      s.date_start,
                      s.date_finnished,
-                     s.date_planned,
+                     to_date(to_char(s.date_planned, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_planned,
                      s.origin,
                      s.priority,
                      s.state
@@ -99,7 +99,7 @@ class mrp_production_order(osv.osv):
                      s.location_src_id,
                      s.location_dest_id,
                      s.state,
-                     s.date_planned,
+                     to_date(to_char(s.date_planned, 'dd-MM-YYYY'),'dd-MM-YYYY'),
                      s.origin,
                      s.date_start,
                      s.date_finnished,
