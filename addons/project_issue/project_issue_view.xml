@@ -190,7 +190,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
-                    <group col="3" colspan="1">
+                    <group>
                         <filter icon="gtk-home" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
@@ -204,16 +204,16 @@
 
                     </group>
                     <separator orientation="vertical"/>
-                    <group col="5" colspan="2">
+                    <group>
                         <field name="name" select='1' string="Subject"/>
                         <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" default="1"/>
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" name="my_bugs"/>
                         </field>
                         <field name="state" select="1">
-                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" default="1"/>
+                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" name="current_bugs"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
                         </field>
-                        <field name="project_id" select="1" widget="selection" string="Project" default="context.get('project_id', False)">
+                        <field name="project_id" select="1" widget="selection" string="Project">
                             <filter icon="terp-crm"
                                 domain="[('project_id','=',context.get('project_id',False))]"
                                 help="My Project"
@@ -277,7 +277,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
-                    <group col="3" colspan="1">
+                    <group>
                         <filter icon="gtk-home" string="   Today   "
                             separator="1"
                             domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]"
@@ -290,16 +290,16 @@
                             />
                     </group>
                     <separator orientation="vertical"/>
-                    <group col="5" colspan="2">
+                    <group>
                         <field name="name" select='1' string="Feature description"/>
                         <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Features" default="1"/>
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Features" name="my_feature"/>
                         </field>
                         <field name="state" select="1">
-                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" default="1"/>
+                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
-                        <field name="project_id" select="1" widget="selection" string="Project" default="context.get('project_id', False)">
+                        <field name="project_id" select="1" widget="selection" string="Project">
                             <filter icon="terp-crm"
                                 domain="[('project_id','=',context.get('project_id',False))]"
                                 help="My Project"

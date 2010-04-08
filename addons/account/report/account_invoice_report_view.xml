@@ -43,36 +43,37 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Invoices">
-                <filter icon="terp-account"
-                    string="This Year"
-                    domain="[('year','=',time.strftime('%%Y'))]"
-                    help="Invoices of the year"/>
-                <filter icon="terp-account"
-                    string="This Month"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    help="Invoices of this month"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-account"
-                    string="Draft"
-                    domain="[('state','=','draft')]"/>
-                <filter icon="terp-account"
-                    string="Invoices"
-                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
-                <filter icon="terp-account"
-                    string="Paid"
-                    domain="[('state','=','paid')]"/>
-                <separator orientation="vertical"/>
-                <field name="product_id"/>
-                <field name="user_id" widget="selection">
-                    <filter icon="terp-account"
-                        string="My Invoices"
-                        domain="[('user_id','=',uid)]"/>
-                </field>
-                <field name="partner_id"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-
+            	<group>
+	                <filter icon="terp-account"
+	                    string="This Year"
+	                    domain="[('year','=',time.strftime('%%Y'))]"
+	                    help="Invoices of the year"/>
+	                <filter icon="terp-account"
+	                    string="This Month"
+	                    domain="[('month','=',time.strftime('%%m'))]"
+	                    help="Invoices of this month"/>
+	                <separator orientation="vertical"/>
+	                <filter icon="terp-account"
+	                    string="Draft"
+	                    domain="[('state','=','draft')]"/>
+	                <filter icon="terp-account"
+	                    string="Invoices"
+	                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
+	                <filter icon="terp-account"
+	                    string="Paid"
+	                    domain="[('state','=','paid')]"/>
+	                <separator orientation="vertical"/>
+	                <field name="product_id"/>
+	                <field name="user_id" widget="selection">
+	                    <filter icon="terp-account"
+	                        string="My Invoices"
+	                        domain="[('user_id','=',uid)]"/>
+	                </field>
+	                <field name="partner_id"/>
+	                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </group>
                 <newline/>
-                <group expand="1" string="Extended options..." colspan="10" col="12">
+                <group expand="1" string="Extended options..." >
                     <filter icon="terp-account"
                         string="Customer Invoices"
                         domain="[('type','=','out_invoice')]"
@@ -89,9 +90,9 @@
                         domain="[('type','=','in_refund')]"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="1" string="Group By..." >
                     <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}"/>
-                    <filter string="Salesman" icon="terp-account" context="{'group_by':'user_id'}" default="1"/>
+                    <filter string="Salesman" icon="terp-account" context="{'group_by':'user_id'}" />
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-account" context="{'group_by':'product_id'}"/>
                     <filter string="Partner" icon="terp-account" context="{'group_by':'partner_id'}"/>

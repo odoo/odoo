@@ -88,6 +88,7 @@
             <field name="res_model">crm.opportunity.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="context">{"search_default_section_id":section_id,"search_default_this_year":1,"search_default_this_month":1,"search_default_by_user":1}</field>            
             <field name="search_view_id" ref="view_report_crm_opportunity_filter"/>
         </record>
       	<record model="ir.actions.act_window.view" id="action_report_crm_opportunity_tree">

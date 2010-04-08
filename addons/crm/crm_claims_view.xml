@@ -161,7 +161,7 @@
                             <separator string="Action Information" colspan="4"/>
                             <field name="name" colspan="4"/>
                             <field name="date"/>
-                            <field name="user_id"/>                            
+                            <field name="user_id"/>
                         </form>
                     </field>
                 </page>
@@ -245,9 +245,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <filter icon="gtk-new" string="Current"
+                   <filter icon="gtk-new" string="Current" name="current"
                        domain="[('state','in',('draft', 'open'))]"
-                       separator="1" help="Current Claims" default="1"
+                       separator="1" help="Current Claims"
                    />
                    <filter icon="gtk-execute"
                        string="In Progress"
@@ -263,16 +263,14 @@
                    <field name="name" select='1'/>
                    <field name="partner_id" select="1"/>
                    <field name="user_id" select="1" widget="selection">
-                           <filter icon="terp-partner"
-                               domain="[('user_id','=',uid)]" help="My Claims"
-                               default="1" />
+                       <filter icon="terp-partner" name="my_claims"
+                               domain="[('user_id','=',uid)]" help="My Claims"/>
                            <filter icon="terp-partner"
                                domain="[('user_id','=', False)]"
                                help="Unassigned Claims" />
                    </field>
                    <field name="section_id" select="1"
-                       widget="selection"
-                       default="context.get('section_id', False)">
+                       widget="selection">
                        <filter icon="terp-crm"
                            domain="[('section_id','=',context.get('section_id',False))]"
                            help="My section" />
