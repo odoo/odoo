@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -34,7 +34,8 @@
         'security/base_security.xml',
         'res/res_security.xml',
         'res/res_config.xml',
-        'maintenance/maintenance_security.xml'
+        'maintenance/maintenance_security.xml',
+        'data/res.country.state.csv'
     ],
     'update_xml': [
         'base_update.xml',
@@ -61,8 +62,9 @@
         'security/base_security.xml',
         'maintenance/maintenance_view.xml',
         'security/ir.model.access.csv'
+
     ],
-    'demo_xml': ['base_demo.xml', 'res/partner/partner_demo.xml', 'res/partner/crm_demo.xml'],
+    'demo_xml': ['base_demo.xml', 'res/partner/partner_demo.xml', 'res/partner/crm_demo.xml','test/base_test.xml'],
     'installable': True,
     'active': True,
     'certificate': '0076807797149',

@@ -61,5 +61,14 @@
             <field eval="True" name="readonly"/>
             <field name="bank_type_id" ref="bank_normal"/>
         </record>
+
+		<!--
+		Resource: res.request.link
+		-->
+
+        <record id="req_link_partner" model="res.request.link">
+            <field name="name">Partner</field>
+            <field name="object">res.partner</field>
+        </record>
     </data>
 </openerp>

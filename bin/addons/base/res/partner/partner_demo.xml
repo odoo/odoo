@@ -4,7 +4,7 @@
         <!--
 		Resource: res.partner.category
 		-->
-        
+
         <record id="res_partner_category_0" model="res.partner.category">
             <field name="name">Customer</field>
         </record>
@@ -43,7 +43,7 @@
             <field name="name">Bad customers</field>
             <field name="parent_id" ref="res_partner_category_12"/>
         </record>
-        
+
         <record id="res_partner_category_8" model="res.partner.category">
             <field name="name">Supplier</field>
         </record>
@@ -59,12 +59,12 @@
             <field name="name">Textile Suppliers</field>
             <field name="parent_id" ref="res_partner_category_8"/>
         </record>
-        
-        
+
+
         <!--
 		Resource: res.partner
 		-->
-        
+
         <record id="res_partner_asus" model="res.partner">
             <field name="name">ASUStek</field>
             <field name="user_id" ref="user_demo"/>
@@ -177,12 +177,12 @@
         <record id="res_partner_accent" model="res.partner">
             <field name="name">Université de Liège</field>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
-        </record>        
-        
+        </record>
+
         <!--
 		Resource: res.partner.address
 		-->
-        
+
         <record id="res_partner_address_1" model="res.partner.address">
             <field name="city">Bruxelles</field>
             <field name="name">Michel Schumacher</field>
@@ -349,6 +349,15 @@
             <field name="street">Université de Liège</field>
             <field name="partner_id" ref="res_partner_accent"/>
         </record>
-        
+
+		<!--
+		Resource: res.request
+		-->
+
+        <record id="res_partner_asustek_request" model="res.request">
+        	<field name="name">ASUSTEK-Subject</field>
+        	<field name="act_to" ref="user_demo"/>
+			<field name="ref_doc1">res.partner,2</field>
+        </record>
     </data>
 </openerp>
