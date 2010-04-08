@@ -918,15 +918,16 @@ class calendar_event(osv.osv):
         """
         result = {}
         for datas in self.read(cr, uid, ids, context=context):
+            event = datas['id']
             if datas.get('rrule_type'):
                 if datas.get('rrule_type') == 'none':
-                    result[datas['id']] = False
+                    result[event] = False
                 elif datas.get('rrule_type') == 'custom':
                     rrule_custom = self.compute_rule_string(cr, uid, datas,\
                                                          context=context)
-                    result[datas['id']] = rrule_custom
+                    result[event] = rrule_custom
                 else:
-                    result[datas['id']] = self.compute_rule_string(cr, uid, {'freq': datas.get('rrule_type').upper(), 'interval': 1}, context=context)
+                    result[event] = self.compute_rule_string(cr, uid, {'freq': datas.get('rrule_type').upper(), 'interval': 1}, context=context)
 
         return result
 
