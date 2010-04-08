@@ -724,8 +724,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
                 load_demo_xml(cr, m, idref, mode)
                 load_demo(cr, m, idref, mode)                    
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
-            
-            load_test(cr, m, idref, mode)
+                load_test(cr, m, idref, mode)
             
             package_todo.append(package.name)
 
