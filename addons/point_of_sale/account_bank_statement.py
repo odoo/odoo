@@ -65,11 +65,9 @@ class singer_statement(osv.osv):
 
     def on_change_sub(self, cr, uid, ids, pieces, number,*a):
 
-        """ Calculates Sub total on change of number"
+        """ Calculates Sub total on change of number
         @param pieces: Names of fields.
         @param number:
-        @param *a: User defined arguments
-        @return: Dictionary of values.
         """           
         sub=pieces*number
         return {'value':{'subtotal': sub or 0.0}}
@@ -207,6 +205,7 @@ class account_bank_statement(osv.osv):
         return {'value': {'balance_start': balance_start, 'starting_details_ids':new}}
 
     def button_open(self, cr, uid, ids, context=None):
+        
         """ Changes statement state to Running.
         @return: True 
         """       
