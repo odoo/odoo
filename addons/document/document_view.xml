@@ -71,7 +71,7 @@
                     <newline/>
                     <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     <field name="ressource_tree"/>
-                    <field name="resource_field"/>
+					<field name="resource_field" 	domain="[('model_id','=',ressource_type_id), ('ttype', 'in', ('char', 'selection', 'date', 'datetime'))]"/>
                     <field name="ressource_id" select="2" readonly="1"/>
                     <field name="ressource_parent_type_id"/>
                 </page>
