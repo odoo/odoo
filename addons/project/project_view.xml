@@ -30,7 +30,7 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Performance"/>
                                 <field name="planned_hours" widget="float_time"/>
-                                <field name="effective_hours" widget="float_time"/>
+                                <field name="effective_hours" widget="float_time" />
                             </group>
                             <group col="2" colspan="2" name="misc">
                                 <separator colspan="2" string="Miscelleanous"/>
@@ -119,7 +119,7 @@
                        <filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
                        <separator orientation="vertical"/>
                        <field name="name" string="Project Name"/>
-                       <field name="user_id" string="Project Manager"/>
+                       <field name="user_id" string="Project Manager" default="1"/>
                        <field name="partner_id" string="Partner"/>
                    </group>
                </search>
@@ -420,7 +420,7 @@
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
                         <filter string="Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
-                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}" default = "1"/>
                         <filter string="Stage" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
