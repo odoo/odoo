@@ -10,10 +10,9 @@
                     <group col='8' colspan='4'>
                         <filter icon="terp-hr" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
-                        <filter icon="terp-hr" domain="[('state','=','validate')]" string="Validated"
-                            default="context.get('report', False)"/>
+                        <filter icon="terp-hr" domain="[('state','=','validate')]" string="Validated"/>
                         <separator orientation="vertical"/> 
-                        <filter icon="terp-hr" help="My Leaves" domain="[('user_id','=',uid)]" string="My Leaves" default="1"/>
+                        <filter icon="terp-hr" help="My Leaves" domain="[('user_id','=',uid)]" string="My Leaves"/>
                         <separator orientation="vertical"/> 
                         <field name="user_id" widget="selection" />
                         <field name="department_id" widget="selection">
@@ -30,8 +29,7 @@
                         <filter string="User" icon="terp-sale" domain="[]" context="{'group_by':'employee_id'}"/>
                         <separator orientation="vertical"/> 
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Type" icon="terp-sale" domain="[]" context="{'group_by':'holiday_status_id'}"
-                            default="context.get('report', False)"/>
+                        <filter string="Type" icon="terp-sale" domain="[]" context="{'group_by':'holiday_status_id'}"/>
                     </group>
                 </search>
             </field>
