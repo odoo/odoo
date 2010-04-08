@@ -297,11 +297,7 @@ class rml_parse(object):
             rml_head =  self.rml_header2
         else:
             rml_head =  self.rml_header
-        if self.logo and (rml_head.find('company.logo')<0 or rml_head.find('<image')<0) and rml_head.find('<!--image')<0:
-            rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="70" width="90" >[[company.logo]] </image> ''')
-        if not self.logo and rml_head.find('company.logo')>=0:
-            rml_head = rml_head.replace('<image','<!--image')
-            rml_head = rml_head.replace('</image>','</image-->')
+
         head_dom = etree.XML(rml_head)
         for tag in head_dom:
             found = rml_dom.find('.//'+tag.tag)
@@ -443,9 +439,10 @@ class report_sxw(report_rml, preprocess.report):
         rml_parser = self.parser(cr, uid, self.name2, context=context)
         objs = self.getObjects(cr, uid, ids, context)
         rml_parser.set_context(objs, data, ids, report_xml.report_type)
-        processed_rml = self.preprocess_rml(etree.XML(rml),report_xml.report_type)
+        processed_rml = etree.XML(rml)
         if report_xml.header:
             rml_parser._add_header(processed_rml)
+        processed_rml = self.preprocess_rml(processed_rml,report_xml.report_type)            
         if rml_parser.logo:
             logo = base64.decodestring(rml_parser.logo)
         create_doc = self.generators[report_xml.report_type]
@@ -462,13 +459,18 @@ class report_sxw(report_rml, preprocess.report):
         sxw_z = zipfile.ZipFile(sxw_io, mode='r')
         rml = sxw_z.read('content.xml')
         meta = sxw_z.read('meta.xml')
+        mime_type = sxw_z.read('mimetype')
+        if mime_type == 'application/vnd.sun.xml.writer':
+            mime_type = 'sxw'
+        else :
+            mime_type = 'odt'
         sxw_z.close()
 
         rml_parser = self.parser(cr, uid, self.name2, context=context)
         rml_parser.parents = sxw_parents
         rml_parser.tag = sxw_tag
         objs = self.getObjects(cr, uid, ids, context)
-        rml_parser.set_context(objs, data, ids,report_xml.report_type)
+        rml_parser.set_context(objs, data, ids, mime_type)
 
         rml_dom_meta = node = etree.XML(meta)
         elements = node.findall(rml_parser.localcontext['name_space']["meta"]+"user-defined")
@@ -489,7 +491,7 @@ class report_sxw(report_rml, preprocess.report):
         for n in rml_dom.iterdescendants():
             if n.tag == key1:
                 elements.append(n)
-        if report_type == 'odt':
+        if mime_type == 'odt':
             for pe in elements:
                 e = pe.findall(key2)
                 for de in e:
@@ -520,8 +522,8 @@ class report_sxw(report_rml, preprocess.report):
                             if de.getparent():
                                 pp.remove(de)
 
-        rml_dom = self.preprocess_rml(rml_dom,report_type)
-        create_doc = self.generators[report_type]
+        rml_dom = self.preprocess_rml(rml_dom, mime_type)
+        create_doc = self.generators[mime_type]
         odt = etree.tostring(create_doc(rml_dom, rml_parser.localcontext),
                              encoding='utf-8', xml_declaration=True)
         sxw_z = zipfile.ZipFile(sxw_io, mode='a')
@@ -547,7 +549,7 @@ class report_sxw(report_rml, preprocess.report):
         sxw_z.close()
         final_op = sxw_io.getvalue()
         sxw_io.close()
-        return (final_op, report_type)
+        return (final_op, mime_type)
 
     def create_single_html2html(self, cr, uid, ids, data, report_xml, context=None):
         if not context:
