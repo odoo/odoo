@@ -104,7 +104,7 @@
                             domain="[('object_id.model', '=', 'crm.opportunity')]" />
                     </group>
 
-                    <separator colspan="4" string="Details"/>
+                    <separator colspan="4" string="Notes"/>
                     <field name="description" nolabel="1" colspan="4"/>
 
                     <separator colspan="4"/>
@@ -215,9 +215,9 @@
                 <button name="stage_next" string="Next"
                     states="open,pending" type="object"
                     icon="gtk-go-forward" />
-                <field name="planned_revenue" sum="Total of Planned Revenue"/>
+                <field name="planned_revenue" sum="Expected Revenue"/>
                 <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
-                <field name="date_deadline" string="Excepted Closing"/>
+                <field name="date_deadline" string="Expected Closing"/>
                 <field name="section_id"/>
                 <field name="user_id"/>
                 <field name="priority"/>
