@@ -2937,7 +2937,6 @@ class orm(orm_template):
         for sub_ids in cr.split_for_in_conditions(ids):
             cr.execute('delete from ' + self._table + ' ' \
                        'where id in %s', (sub_ids,))
-
         for order, object, store_ids, fields in result_store:
             if object != self._name:
                 obj =  self.pool.get(object)

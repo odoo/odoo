@@ -34,7 +34,8 @@
         'security/base_security.xml',
         'res/res_security.xml',
         'res/res_config.xml',
-        'maintenance/maintenance_security.xml'
+        'maintenance/maintenance_security.xml',
+        'data/res.country.state.csv'
     ],
     'update_xml': [
         'base_update.xml',

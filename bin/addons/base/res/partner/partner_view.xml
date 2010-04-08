@@ -329,7 +329,6 @@
                             <field colspan="4" name="events" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Notes">
-                            <separator string="Description" colspan="4"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                     </notebook>
@@ -344,7 +343,7 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                    <group col='10' colspan='4'>
-                        <filter string="My Partners" icon="terp-partner" domain="[('parent_id','!=',False)]"/>
+                        <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
                         <separator orientation="vertical"/>
                         <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
                         <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners" name='supplier'/>

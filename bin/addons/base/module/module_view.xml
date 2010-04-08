@@ -50,10 +50,12 @@
                         <filter icon="terp-sale" string="Uninstalled" domain="[('state', 'in', ['uninstalled', 'uninstallable'])]"/>
                         <filter icon="terp-sale" string="To be upgraded" domain="[('state','in', ['to upgrade', 'to remove', 'to install'])]"/>
                         <separator orientation="vertical"/>
-                       <field name="name" select="1"/>
-                       <field name="state" readonly="1" select="1"/>
+                        <filter icon="terp-sale" string="Certified" domain="[('certificate','&lt;&gt;', False)]"/>
+                        <separator orientation="vertical"/>
+                        <field name="name" select="1"/>
+                        <field name="state" readonly="1" select="1"/>
 
-					</group>
+                    </group>
 
                </search>
             </field>
