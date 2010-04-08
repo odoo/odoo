@@ -164,12 +164,13 @@ class hr_applicant(osv.osv):
         if not context:
             context = {}
         datas = {}
-        record = self.read(cr, uid, ids, ['survey', 'response'])
+        record = self.browse(cr, uid, ids, context)
+        record = record and record[0]
         page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
         report = {}
         if record:
-            datas['ids'] = [record[0]['survey'][0]]
-            response_id = record[0]['response']
+            datas['ids'] = [record.survey.id]
+            response_id = record.response
             if response_id:
                 context.update({'survey_id': datas['ids'], 'response_id' : [response_id], 'response_no':0,})
                 datas['form'] = page_setting
