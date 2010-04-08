@@ -2934,7 +2934,7 @@ class orm(orm_template):
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         for sub_ids in cr.split_for_in_conditions(ids):
             cr.execute('delete from ' + self._table + ' ' \
-                       'where id in ('+','.join(['%s'] * len(sub_ids))+')', sub_ids)
+                       'where id in %s', (sub_ids,))
         for order, object, store_ids, fields in result_store:
             if object != self._name:
                 obj =  self.pool.get(object)
