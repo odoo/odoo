@@ -22,7 +22,8 @@ from osv import fields, osv
 import netsvc
 
 class messages(osv.osv):
-    """Message from one user to another within a project
+    """
+    Message from one user to another within a project
     """
     _name = 'project.messages'
     logger = netsvc.Logger()
@@ -40,7 +41,7 @@ class messages(osv.osv):
         'to_id':None,
     }
 
-    def broadcast(self, cr, uid, project_id, message):
+    def broadcast(self, cr, uid, project_id, message, context=None):
         """ Send a message to all the users of a project.
         The sender of the message is the current user.
 
@@ -55,6 +56,7 @@ class messages(osv.osv):
             'project_id':project_id,
             'message':message
         }, context=context)
+
 messages()
 
 class project_with_message(osv.osv):
@@ -66,3 +68,5 @@ class project_with_message(osv.osv):
             domain="[('to_id','in',[uid,False])]"),
     }
 project_with_message()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
