@@ -44,7 +44,6 @@
     Then I should see an account entry linked to this invoice.
 -  
     !assert {model: account.invoice, id: invoice1}:
-      test:
         - bool(move_id)
 -  
     # This is not working, find a way to do that in YAML, *qty is not
@@ -53,14 +52,12 @@
     equal to *qty x *price x (1 + *tax)
 -  
     !assert {model: account.invoice, id: invoice1}:
-        test:
-            - abs(sum(x.credit for x in move_id.line_id) - 163.97) < 0.000001
+        - abs(sum(x.credit for x in move_id.line_id) - 163.97) < 0.000001
 -  
     And this account entry must have a credit equals to the debit
 -  
     !assert {model: account.invoice, id: invoice1}:
-        test:
-            - abs(sum(x.credit - x.debit for x in move_id.line_id)) < 0.000001
+        - abs(sum(x.credit - x.debit for x in move_id.line_id)) < 0.000001
 -  
     Then, I change the precision of numbers to 3 digits.
 -  
@@ -80,8 +77,7 @@
     Then this account entry must have a credit equals to the debit
 -  
     !assert {model: account.invoice, id: invoice2}:
-        test:
-            - abs(sum(x.credit - x.debit for x in move_id.line_id)) < 0.000001
+        - abs(sum(x.credit - x.debit for x in move_id.line_id)) < 0.000001
 -
     And this account entry must have a credit equals to 163.968€ which is
     equal to *qty x *price x (1 + *tax)

@@ -29,79 +29,130 @@ class change_standard_price(osv.osv_memory):
             'new_price': fields.float('Price', required=True),
             'stock_account_input':fields.many2one('account.account', 'Stock Input Account'),
             'stock_account_output':fields.many2one('account.account', 'Stock Output Account'),
-            'stock_journal':fields.many2one('account.journal', 'Stock journal', required=True),            
+            'stock_journal':fields.many2one('account.journal', 'Stock journal', required=True),
             'enable_stock_in_out_acc':fields.boolean('Enable Related Account',),
     }
-    
+
     def default_get(self, cr, uid, fields, context):
-        """ 
+        """
          To get default values for the object.
-        
+
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param fields: List of fields for which we want default values 
-         @param context: A standard dictionary 
-         
-         @return: A dictionary which of fields with values. 
-        
-        """ 
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary
+
+         @return: A dictionary which of fields with values.
+
+        """
         product_pool = self.pool.get('product.product')
         product_obj = product_pool.browse(cr, uid, context.get('active_id', False))
-        res = super(change_standard_price, self).default_get(cr, uid, fields, context=context)   
-        
+        res = super(change_standard_price, self).default_get(cr, uid, fields, context=context)
+
         accounts = product_pool.get_product_accounts(cr, uid, context.get('active_id', False), context={})
-        
+
         price = product_obj.standard_price
-        
+
         if 'new_price' in fields:
             res.update({'new_price': price})
         if 'stock_account_input' in fields:
-            res.update({'stock_account_input': accounts['stock_account_input']})         
+            res.update({'stock_account_input': accounts['stock_account_input']})
         if 'stock_account_output' in fields:
-            res.update({'stock_account_output': accounts['stock_account_output']})         
+            res.update({'stock_account_output': accounts['stock_account_output']})
         if 'stock_journal' in fields:
-            res.update({'stock_journal': accounts['stock_journal']})  
+            res.update({'stock_journal': accounts['stock_journal']})
         if 'enable_stock_in_out_acc' in fields:
-            res.update({'enable_stock_in_out_acc': True})              
-                     
+            res.update({'enable_stock_in_out_acc': True})
+
         return res
-    
+
     def onchange_price(self, cr, uid, ids, new_price, context = {}):
         product_obj = self.pool.get('product.product').browse(cr, uid, context.get('active_id', False))
         price = product_obj.standard_price
         diff = price - new_price
-        if diff > 0 : 
+        if diff > 0 :
             return {'value' : {'enable_stock_in_out_acc':True}}
         else :
             return {'value' : {'enable_stock_in_out_acc':False}}
-        
+
     def change_price(self, cr, uid, ids, context):
-        """ 
-             Changes the Standard Price of Product. 
+        """
+             Changes the Standard Price of Product.
              And creates an account move accordingly.
-            
+
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
-             @param context: A standard dictionary 
-             
-             @return:  
-        
+             @param ids: List of IDs selected
+             @param context: A standard dictionary
+
+             @return:
+
         """
         rec_id = context and context.get('active_id', False)
-        assert rec_id, _('Active ID is not set in Context')
-        prod_obj = self.pool.get('product.product')
-        res = self.browse(cr, uid, ids)        
-        datas = {
-            'new_price' : res[0].new_price,
-            'stock_output_account' : res[0].stock_account_output.id,
-            'stock_input_account' : res[0].stock_account_input.id,
-            'stock_journal' : res[0].stock_journal.id
-        }
-        prod_obj.do_change_standard_price(cr, uid, [rec_id], datas, context)
-        return {}      
-change_standard_price()
+        prod_obj = self.pool.get('product.template')
+        location_obj = self.pool.get('stock.location')
+        lot_obj = self.pool.get('stock.report.prodlots')
+        move_obj = self.pool.get('account.move')
+        move_line_obj = self.pool.get('account.move.line')
+        data_obj = self.pool.get('ir.model.data')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        res = self.read(cr, uid, ids[0], ['new_price'])
+        new_price = res.get('new_price',[])
+        data = prod_obj.browse(cr, uid, rec_id)
+        diff = data.standard_price - new_price
+        prod_obj.write(cr, uid, rec_id, {'standard_price': new_price})
+
+        loc_ids = location_obj.search(cr, uid, [('account_id','<>',False),('usage','=','internal')])
+        lot_ids = lot_obj.search(cr, uid, [('location_id', 'in', loc_ids),('product_id','=',rec_id)])
+        qty = 0
+        debit = 0.0
+        credit = 0.0
+        stock_input_acc = data.property_stock_account_input.id or data.categ_id.property_stock_account_input_categ.id
+        stock_output_acc = data.property_stock_account_output.id or data.categ_id.property_stock_account_output_categ.id
+
+        for lots in lot_obj.browse(cr, uid, lot_ids):
+            qty += lots.name
+
+        if stock_input_acc and stock_output_acc and lot_ids:
+            move_id = move_obj.create(cr, uid, {'journal_id': data.categ_id.property_stock_journal.id})
+            if diff > 0:
+                credit = qty * diff
+                move_line_obj.create(cr, uid, {
+                                'name': data.name,
+                                'account_id': stock_input_acc,
+                                'credit': credit,
+                                'move_id': move_id
+                                })
+                for lots in lot_obj.browse(cr, uid, lot_ids):
+                    credit = lots.name * diff
+                    move_line_obj.create(cr, uid, {
+                                    'name': 'Expense',
+                                    'account_id': lots.location_id.account_id.id,
+                                    'debit': credit,
+                                    'move_id': move_id
+                                    })
+            elif diff < 0:
+                debit = qty * -diff
+                move_line_obj.create(cr, uid, {
+                                'name': data.name,
+                                'account_id': stock_output_acc,
+                                'debit': debit,
+                                'move_id': move_id
+                                })
+                for lots in lot_obj.browse(cr, uid, lot_ids):
+                    debit = lots.name * -diff
+                    move_line_obj.create(cr, uid, {
+                                    'name': 'Income',
+                                    'account_id': lots.location_id.account_id.id,
+                                    'credit': debit,
+                                    'move_id': move_id
+                                    })
+            else:
+                raise osv.except_osv(_('Warning!'),_('No Change in Price.'))
+        else:
+            pass
+        return {}
+
+change_standard_price()

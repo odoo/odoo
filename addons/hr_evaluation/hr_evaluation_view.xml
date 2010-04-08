@@ -167,7 +167,7 @@
                     <group col="6" colspan="4">
                     <field name="state"/>
                     <button name="button_plan_in_progress"
-                            string="Plan In Progress"
+                            string="Start Evaluation"
                             states="draft"
                             type="object"/>
                     <button name="button_final_validation"
@@ -209,21 +209,31 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
-                   <group col='10' colspan='4'>
-                           <filter icon="terp-hr" string="Draft" domain="[('state','=','draft')]"/>
+                        <group>
+                        <filter icon="terp-hr" string="Draft" domain="[('state','=','draft')]"/>
                         <filter icon="terp-crm" string="In progress" domain="[('state','=','wait')]"/>
                         <filter icon="terp-mrp" string="Final Step" domain="[('state','=','progress')]"/>
-                        <filter icon="terp-stock" string="Done" domain="[('state','=','done')]"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="gtk-media-rewind" string="7 Days"
+                            help="Evaluations to close within the next 7 days"
+                            domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                        />
+                        <filter icon="gtk-media-rewind" string="Overpassed"
+                            help="Evaluations that overpassed the deadline"
+                            domain="[('date','&gt;=',(datetime.date.today()))]"
+                        />
+
                         <separator orientation="vertical"/>
                         <field name="employee_id" widget="selection" select="1"/>
                         <field name="plan_id" widget="selection" select="1"/>
-                        <field name="rating"/>
-                        <newline/>
-
-                        <group col='8' colspan='15' expand='1' string='Group by...'>
+					    </group>
+					    <newline/>
+                        <group expand='1' string='Group by...'>
+                        <filter string='Employee' icon="terp-stock" domain="[]" context="{'group_by' : 'employee_id'}" />
                         <filter string='Plan' icon="terp-stock" domain="[]" context="{'group_by' : 'plan_id'}" />
-                        <filter string='state' icon="terp-stock" domain="[]" context="{'group_by' : 'state'}" />
-                        </group>
+                        <filter string='State' icon="terp-stock" domain="[]" context="{'group_by' : 'state'}" />
+                        <separator orientation="vertical"/>
+                        <filter string='Date' icon="terp-stock" domain="[]" context="{'group_by' : 'date'}" />
                    </group>
                </search>
             </field>
@@ -282,6 +292,7 @@
                 <tree string="Interview Evaluation">
                     <field name="date_deadline"/>
                     <field name="survey_id"/>
+                    <field name="user_id" string="Interviewer"/>
                     <field name="user_to_review_id"/>
                     <field name="response" readonly="1" invisible="True"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
@@ -300,14 +311,14 @@
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
                    <group col='10' colspan='4'>
-                        <filter icon="terp-crm" string="Unanswered" domain="[('state','=','waiting_answer')]"/>
+                        <filter icon="terp-crm" string="To Do" domain="[('state','=','waiting_answer')]" default="1"/>
+                        <separator orientation="vertical"/>
+                        <filter string="My" icon="terp-partner" domain="[('user_id','=',uid)]" default="1"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                         <separator orientation="vertical"/>
-                        <field name="survey_id" widget="selection" select="1"/>
-                        <field name="email" select="1"/>
-                        <field name="user_id" select="1" widget="selection" default="1">
-                        <filter string="MY" icon="terp-partner" domain="[('user_id','=',uid)]"/>
-                        </field>
+                        <field name="user_to_review_id" widget="selection"/>
+                        <field name="user_id" widget="selection"/>
                    </group>
                </search>
             </field>
@@ -322,7 +333,7 @@
         </record>
 
         <menuitem
-            name="Intreview Requests" parent="menu_eval_hr"
+            name="Interview Requests" parent="menu_eval_hr"
             id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
 

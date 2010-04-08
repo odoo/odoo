@@ -1,85 +1,23 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
-		<report id="report_holidays_summary"
-				string="Summary Of Leaves"
-				model="hr.holidays"
-				name="holidays.summary"
-				xsl="hr_holidays/report/holidays_summary.xsl"
-				auto="False"
-				menu="False"/>
+    <data>
+        <report id="report_holidays_summary"
+                string="Summary Of Leaves"
+                model="hr.holidays"
+                name="holidays.summary"
+                xsl="hr_holidays/report/holidays_summary.xsl"
+                auto="False"
+                menu="False"/>
+
+        <menuitem
+            name="Leaves Summary"
+            parent="menu_hr_reporting_holidays"
+            id="menu_report_hr_holiday_tree"
+            action="open_company_allocation"
+            groups="hr.group_hr_manager"
+            sequence="40"/>
 
 
-
-
-<!-- available holidays report -->
-
-        <record id="view_report_hr_holiday_tree" model="ir.ui.view">
-            <field name="name">hr.holidays.report.tree</field>
-            <field name="model">hr.holidays.report</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-               <tree string="Available Holidays">
-                    <field name="employee_id"/>
-                    <field name="holiday_status_id"/>
-                    <field name="remaining_leave"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_report_hr_holiday_form" model="ir.ui.view">
-            <field name="name">hr.holidays.report.form</field>
-            <field name="model">hr.holidays.report</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-               <tree string="Available Holidays">
-                    <field name="employee_id" select="1"/>
-                    <field name="holiday_status_id" select="1"/>
-                    <field name="remaining_leave"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_report_hr_holiday_graph" model="ir.ui.view">
-            <field name="name">hr.holiday.report.graph</field>
-            <field name="model">hr.holidays.report</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Available Holidays" type="bar">
-                    <field name="holiday_status_id"/>
-                    <field name="remaining_leave" operator="+"/>
-                    <field group="True" name="employee_id"/>
-                </graph>
-            </field>
-        </record>
-
-        <record id="action_report_hr_holiday" model="ir.actions.act_window">
-            <field name="name">Available Holidays</field>
-            <field name="res_model">hr.holidays.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="view_id" ref="view_report_hr_holiday_tree"/>
-
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_report_hr_holiday_tree">
-                <field name="sequence" eval="1"/>
-                <field name="view_mode">tree</field>
-                <field name="view_id" ref="view_report_hr_holiday_tree"/>
-                <field name="act_window_id" ref="action_report_hr_holiday"/>
-            </record>
-
-
-        <record model="ir.actions.act_window.view" id="action_report_hr_holiday_graph">
-                <field name="sequence" eval="2"/>
-                <field name="view_mode">graph</field>
-                <field name="view_id" ref="view_report_hr_holiday_graph"/>
-                <field name="act_window_id" ref="action_report_hr_holiday"/>
-            </record>
-
-
-        <menuitem name="Available Holidays" id="menu_report_hr_holiday_tree" action="action_report_hr_holiday" parent="menu_hr_reporting_holidays"/>
-
-
-	</data>
+    </data>
 </openerp>
 

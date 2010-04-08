@@ -242,21 +242,21 @@
             <field name="arch" type="xml">
                 <form string="Bill of Material">
                     <group colspan="4" col="6">
-	                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
-	                    <field name="name" select="1"/>
-	                    <field name="code" select="1"/>
-	                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <newline/>
+                        <field name="product_uom"/>
+                        <field name="product_qty"/>
+                        <field name="routing_id" select="2" groups="base.group_extended"/>
+                        <newline/>
+                        <field name="product_uos" groups="product.group_uos"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <newline/>
+                        <field name="multi_level_bom" invisible="1"/>
+                        <field name="type" groups="base.group_extended"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
-                    <newline/>
-                    <field name="product_uos" groups="product.group_uos"/>
-                    <field name="product_uos_qty" groups="product.group_uos"/>
-                    <field name="routing_id" select="2" groups="base.group_extended"/>
-                    <field name="type" groups="base.group_extended"/>
-                    <group colspan="4" col="6">
-	                    <field name="product_uom"/>
-	                   	<field name="product_qty"/>
-	                    <field name="multi_level_bom"/>
-	                </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list"/>
@@ -276,9 +276,6 @@
                             <field name="product_efficiency"/>
                             <field colspan="4" name="property_ids" nolabel="2" groups="base.group_extended"/>
                         </page>
-                        <page string="Multi-Level BoM" attrs="{'invisible':[('multi_level_bom','=',False)]}">
-                        	<field colspan="4" name="child_ids" nolabel="1" string="BoM Hierarchy"/>
-                        </page>
                     </notebook>
                 </form>
             </field>
@@ -291,7 +288,7 @@
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree string="BoM Structure" colors="blue:method">
-					<field name="sequence" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="product_id"/>
@@ -461,8 +458,8 @@
                         <group colspan="2" col="3">
                         <field name="product_uom"/>
                         <button type="action"
-                        	name="%(mrp.action_change_production_qty)d"
-                        	string="Change Qty" states="ready,confirmed" />
+                            name="%(mrp.action_change_production_qty)d"
+                            string="Change Qty" states="ready,confirmed" />
                         </group>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
@@ -484,45 +481,45 @@
                                 mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
                                 <tree string="Products to Consume">
                                     <field name="product_id" />
-				                    <field name="product_qty"  string="Qty"/>
-				                    <field name="product_uom"  string="UOM"/>
+                                    <field name="product_qty"  string="Qty"/>
+                                    <field name="product_uom"  string="UOM"/>
                                     <field name="location_id"  string="Source Loc."/>
 
                                     <field name="state" invisible="1"/>
-				                    <button name="%(stock.move_consume)d"
-				                    	string="Consume Products" type="action"
-				                    	icon="gtk-go-forward" context="{'consume': True}"
-				                    	states="draft,waiting,confirmed,assigned" />
-				                    <button name="%(stock.move_scrap)d"
-				                    	string="Scrap Products" type="action"
-				                    	icon="gtk-convert" context="{'scrap': True}"
-				                    	states="draft,waiting,confirmed,assigned" />				                    
+                                    <button name="%(stock.move_consume)d"
+                                        string="Consume Products" type="action"
+                                        icon="gtk-go-forward" context="{'consume': True}"
+                                        states="draft,waiting,confirmed,assigned" />
+                                    <button name="%(stock.move_scrap)d"
+                                        string="Scrap Products" type="action"
+                                        icon="gtk-convert" context="{'scrap': True}"
+                                        states="draft,waiting,confirmed,assigned" />                                    
                                 </tree>
                             </field>
 
                             <field colspan="2" name="move_lines2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
-                           			widget="one2many_list" mode="tree,form" height="275">
-                           		<tree string="Consumed Products" editable="bottom" colors="red:scraped==True">
-                           			<field name="product_id" readonly="1"/>
-                           			<field name="product_qty" readonly="1" string="Qty"/>
-				                    <field name="product_uom" readonly="1" string="UOM"/>                                    
+                                       widget="one2many_list" mode="tree,form" height="275">
+                                   <tree string="Consumed Products" editable="bottom" colors="red:scraped==True">
+                                       <field name="product_id" readonly="1"/>
+                                       <field name="product_qty" readonly="1" string="Qty"/>
+                                    <field name="product_uom" readonly="1" string="UOM"/>                                    
                                     <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
-				                    <field name="prodlot_id" />
+                                    <field name="prodlot_id" />
                                     <field name="state" invisible="1"/>
                                     <field name="scraped" invisible="1"/>
-                           			<button
-                           				name="%(stock.track_line)d"
-                           				string="Split in production lots"
-                           				type="action" icon="gtk-justify-fill"
-                           				states="done,cancel" />
-                           			<button
-                           				name="%(stock.move_scrap)d"
-                           				string="Scrap Products" type="action"
-                           				icon="gtk-convert"
-                           				states="done,cancel" />                          			
-				                    
-                           		</tree>
-                           	</field>
+                                       <button
+                                           name="%(stock.track_line)d"
+                                           string="Split in production lots"
+                                           type="action" icon="gtk-justify-fill"
+                                           states="done,cancel" />
+                                       <button
+                                           name="%(stock.move_scrap)d"
+                                           string="Scrap Products" type="action"
+                                           icon="gtk-convert"
+                                           states="done,cancel" />                                      
+                                    
+                                   </tree>
+                               </field>
 
                             <group col="9" colspan="4">
                                 <field name="state" select="2"/>
@@ -540,38 +537,38 @@
                                 mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
                                 <tree string="Products to Finish">
                                     <field name="product_id" />
-				                    <field name="product_qty"  string="Qty"/>
-				                    <field name="product_uom"  string="UOM"/>
+                                    <field name="product_qty"  string="Qty"/>
+                                    <field name="product_uom"  string="UOM"/>
                                     <field name="location_id"  string="Source Loc."/>
                                     <field name="state" invisible="1"/>
-				                    <button name="%(stock.move_consume)d"
-				                    	string="Consume Products" type="action"
-				                    	icon="gtk-go-forward" context="{'consume': True}"
-				                    	states="draft,waiting,confirmed,assigned" />
-				                    <button name="%(stock.move_scrap)d"
-				                    	string="Scrap Products" type="action"
-				                    	icon="gtk-convert" context="{'scrap': True}"
-				                    	states="draft,waiting,confirmed,assigned" />				                    
+                                    <button name="%(stock.move_consume)d"
+                                        string="Consume Products" type="action"
+                                        icon="gtk-go-forward" context="{'consume': True}"
+                                        states="draft,waiting,confirmed,assigned" />
+                                    <button name="%(stock.move_scrap)d"
+                                        string="Scrap Products" type="action"
+                                        icon="gtk-convert" context="{'scrap': True}"
+                                        states="draft,waiting,confirmed,assigned" />                                    
                                 </tree>
                             </field>
 
                             <field colspan="2" name="move_created_ids2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
-                           			widget="one2many_list" mode="tree,form" height="275">
-                           		<tree string="Finished Products" editable="bottom" colors="red:scraped==True">
-                           			<field name="product_id" readonly="1"/>
-                           			<field name="product_qty" readonly="1" string="Qty"/>
-				                    <field name="product_uom" readonly="1" string="UOM"/>
+                                       widget="one2many_list" mode="tree,form" height="275">
+                                   <tree string="Finished Products" editable="bottom" colors="red:scraped==True">
+                                       <field name="product_id" readonly="1"/>
+                                       <field name="product_qty" readonly="1" string="Qty"/>
+                                    <field name="product_uom" readonly="1" string="UOM"/>
                                     <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
-                           			<field name="prodlot_id" />
+                                       <field name="prodlot_id" />
                                     <field name="state" invisible="1"/>
                                     <field name="scraped" invisible="1"/>
-                           			<button name="%(stock.track_line)d"
+                                       <button name="%(stock.track_line)d"
                                             string="Split in production lots" type="action" icon="gtk-justify-fill" states="done,cancel"/>
-                           			<button name="%(stock.move_scrap)d"
-                           				string="Scrap Products" type="action" icon="gtk-convert"
-                           				states="done,cancel" />
-                           		</tree>
-                           	</field>
+                                       <button name="%(stock.move_scrap)d"
+                                           string="Scrap Products" type="action" icon="gtk-convert"
+                                           states="done,cancel" />
+                                   </tree>
+                               </field>
                         </page>
                         <page string="Work Orders">
                             <field colspan="4" name="workcenter_lines" nolabel="1">
@@ -621,8 +618,7 @@
                        <filter icon="terp-mrp" string="Draft"
                            domain="[('state','=','draft')]"
                            help="Non confirmed manufacturing orders"/>
-                       <filter icon="terp-mrp" string="Current"
-                           default="1"
+                       <filter icon="terp-mrp" string="Current" name="current"
                            domain="[('state','in',('confirmed','ready'))]"
                            help="Manufacturing Orders which are waiting for raw materials"/>
                        <filter icon="terp-mrp" string="Ready"
@@ -660,6 +656,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
+            <field name="context">{"search_default_current":1}</field>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" sequence="1"/>
@@ -855,7 +852,7 @@
             <field name="arch" type="xml">
                 <search string="Search Procurement">
                     <group col='10' colspan='4'>
-                       <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" default="1" help="Procurement Orders in draft or open state."/>
+                       <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" name="current" help="Procurement Orders in draft or open state."/>
                        <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement Orders with exceptions"/>
                        <filter icon="terp-mrp" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
@@ -882,6 +879,7 @@
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
+            <field name="context">{"search_default_current":1}</field>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
         <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_manufacturing"
@@ -1040,12 +1038,12 @@
             res_model="mrp.bom"
             src_model="product.product"/>
 
-		<!-- Menu for Resource for MRP-->
-		<menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="3"/>
+        <!-- Menu for Resource for MRP-->
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="3"/>
         <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root" sequence="2"/>
-		<menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
-		<menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
-    	<menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
+        <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
+        <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
+        <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
 
     </data>
 </openerp>

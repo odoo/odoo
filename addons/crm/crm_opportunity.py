@@ -24,6 +24,7 @@ from osv import fields,osv,orm
 from tools.translate import _
 import crm
 import time
+import mx.DateTime
 
 AVAILABLE_STATES = [
     ('draft','New'),
@@ -38,7 +39,7 @@ class crm_opportunity(osv.osv):
 
     _name = "crm.opportunity"
     _description = "Opportunity Cases"
-    _order = "id desc"
+    _order = "priority,id desc"
     _inherit = 'crm.case'
 
     def case_open(self, cr, uid, ids, *args):
@@ -50,15 +51,9 @@ class crm_opportunity(osv.osv):
         @param *args: Give Tuple Value
         """
 
-        cases = self.browse(cr, uid, ids)
-        for case in cases:
-            data = {'state': 'open', 'active': True}
-            if not case.user_id:
-                data['user_id'] = uid
-            data.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
-            self.write(cr, uid, ids, data)
-        self._action(cr, uid, cases, 'open')
-        return True
+        res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
 
     def _compute_day(self, cr, uid, ids, fields, args, context={}):
         """
@@ -67,36 +62,52 @@ class crm_opportunity(osv.osv):
         @param ids: List of Openday’s IDs
         @return: difference between current date and log date
         @param context: A standard dictionary for contextual values
-        """
-        log_obj = self.pool.get('crm.case.log')
-        model_obj = self.pool.get('ir.model')
-        cal_obj = self.pool.get('resource.calendar')
-
-        model_ids = model_obj.search(cr, uid, [('model', '=', self._name)])
-        model_id = False
-        if len(model_ids):
-            model_id = model_ids[0]
+        """        
+        cal_obj = self.pool.get('resource.calendar') 
+        res_obj = self.pool.get('resource.resource')     
 
         res = {}
         for opportunity in self.browse(cr, uid, ids , context):
             for field in fields:
                 res[opportunity.id] = {}
                 duration = 0
+                ans = False
                 if field == 'day_open':
                     if opportunity.date_open:
                         date_create = datetime.strptime(opportunity.create_date, "%Y-%m-%d %H:%M:%S")
                         date_open = datetime.strptime(opportunity.date_open, "%Y-%m-%d %H:%M:%S")
-
                         ans = date_open - date_create
-                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
-
+                        date_until = opportunity.date_open
                 elif field == 'day_close':
                     if opportunity.date_closed:
                         date_create = datetime.strptime(opportunity.create_date, "%Y-%m-%d %H:%M:%S")
                         date_close = datetime.strptime(opportunity.date_closed, "%Y-%m-%d %H:%M:%S")
-
+                        date_until = opportunity.date_closed
                         ans = date_close - date_create
-                        duration =  float(ans.days) + (float(ans.seconds) / 86400)
+                if ans:
+                    resource_id = False
+                    if opportunity.user_id:
+                        resource_ids = res_obj.search(cr, uid, [('user_id','=',opportunity.user_id.id)])
+                        resource_id = len(resource_ids) or resource_ids[0]
+
+                    duration = float(ans.days)
+                    if opportunity.section_id.resource_calendar_id:
+                        duration =  float(ans.days) * 24                        
+                        new_dates = cal_obj.interval_get(cr,
+                            uid,
+                            opportunity.section_id.resource_calendar_id and opportunity.section_id.resource_calendar_id.id or False,
+                            mx.DateTime.strptime(opportunity.create_date, '%Y-%m-%d %H:%M:%S'),
+                            duration,
+                            resource=resource_id
+                        )
+                        no_days = []
+                        date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
+                        for in_time, out_time in new_dates:
+                            if in_time.date not in no_days:
+                                no_days.append(in_time.date)                            
+                            if out_time > date_until:
+                                break                            
+                        duration =  len(no_days)
                 res[opportunity.id][field] = abs(int(duration))
         return res
 

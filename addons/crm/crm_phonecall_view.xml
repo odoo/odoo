@@ -14,7 +14,7 @@
     </record>
 
     <menuitem action="crm_phonecall_categ_action"
-    	id="menu_crm_case_phonecall-act" parent="crm.menu_crm_case_categ" />
+        id="menu_crm_case_phonecall-act" parent="crm.menu_crm_case_categ" />
 
 <!-- ResourceType Form View -->
 
@@ -23,13 +23,13 @@
             <field name="res_model">crm.case.resource.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
-	        <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
-	        <field name="context">{'object_id':'crm.phonecall'}</field>
+            <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
+            <field name="context">{'object_id':'crm.phonecall'}</field>
         </record>
 
     <menuitem action="crm_phonecall_resource_act"
-    	id="menu_crm_phonecall_resource_act"
-    	parent="crm.menu_crm_case_resource_type" />
+        id="menu_crm_phonecall_resource_act"
+        parent="crm.menu_crm_case_resource_type" />
 
 
 <!--  PhoneCalls Tree View -->
@@ -87,9 +87,9 @@
                         name="%(phonecall2opportunity_act)d"
                         icon="gtk-index" type="action"
                         attrs="{'invisible':[('opportunity_id','!=',False)]}" />
-					<label colspan="6"  string=""/>
-	                <button string="Schedule Other Call"
-	                 icon="gtk-redo"
+                    <label colspan="6"  string=""/>
+                    <button string="Schedule Other Call"
+                     icon="gtk-redo"
                     name="%(phonecall_to_phonecall_act)d"
                     type="action"  />
 
@@ -97,7 +97,7 @@
                 <group col="3" colspan="2">
                     <separator colspan="3" string="Contacts" />
                     <field name="partner_id"
-                    	on_change="onchange_partner_id(partner_id, email_from)" />
+                        on_change="onchange_partner_id(partner_id, email_from)" />
                     <button string="Create a Partner"
                         icon="terp-crm"
                         name="%(action_crm_phonecall2partner)d"
@@ -105,7 +105,7 @@
                         attrs="{'invisible':[('partner_id','!=',False)]}" />
                     <newline/>
                     <field name="partner_address_id" string="Contact"
-                    	on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                     <newline/>
                     <field name="partner_mobile" />
                 </group>
@@ -120,19 +120,19 @@
                 <group col="8" colspan="4">
                     <field name="state" select="1" />
                     <button name="case_cancel" string="Cancel"
-                    	states="draft,open,pending" type="object"
-                    	icon="gtk-cancel" />
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
-                    	states="draft,pending" type="object"
-                    	icon="gtk-go-forward" />
+                        states="draft,pending" type="object"
+                        icon="gtk-go-forward" />
                     <button name="case_pending" string="Not Held"
-                    	states="open" type="object" icon="gtk-undo" />
+                        states="open" type="object" icon="gtk-undo" />
                     <button name="case_close" string="Held"
-                    	states="open,draft,pending" type="object"
-                    	icon="gtk-jump-to" />
+                        states="open,draft,pending" type="object"
+                        icon="gtk-jump-to" />
                     <button name="case_reset" string="Reset to Draft"
-                    	states="done,cancel" type="object"
-                    	icon="gtk-convert" />
+                        states="done,cancel" type="object"
+                        icon="gtk-convert" />
                 </group>
             </form>
         </field>
@@ -176,36 +176,30 @@
                <field name="name" string="Call Summary"/>
                <field name="partner_id"/>
                <field name="user_id" widget="selection">
+                   <filter icon="terp-partner" name="my_calls" 
+                       domain="[('user_id','=',uid)]" 
+                       help="My Phonecalls"/>               
                    <filter icon="terp-partner"
-                   	domain="[('user_id','=',uid)]" help="My Phonecalls"
-                   	default="1" />
-                   <filter icon="terp-partner"
-                   	domain="[('user_id','=',False)]"
-                   	help="Unassigned Phonecalls" />
-               </field>
-               <field name="state">
-                   <filter icon="gtk-index"
-                   	domain="[('state','in',('open','draft' ))]"
-                   	help="Current" default="1" />
+                       domain="[('user_id','=',False)]"
+                       help="Unassigned Phonecalls" />
                </field>
                <field name="section_id"
-               	default="context.get('section_id', False)" select="1"
-               	widget="selection" string="Section">
-               	<filter icon="terp-crm"
-               		domain="[('section_id','=',context.get('section_id',False))]"
-               		help="My section" />
+                   select="1" widget="selection" string="Section">
+                   <filter icon="terp-crm"
+                       domain="[('section_id','=',context.get('section_id',False))]"
+                       help="My section" />
                </field>
                <newline/>
                <group expand="1" string="Group By..." colspan="4">
                    <filter string="Partner" icon="terp-crm" domain="[]"
-                   	context="{'group_by':'partner_id'}" />
+                       context="{'group_by':'partner_id'}" />
                    <filter string="Responsible" icon="terp-crm"
-                   	domain="[]" context="{'group_by':'user_id'}" />
+                       domain="[]" context="{'group_by':'user_id'}" />
                    <separator orientation="vertical" />
                    <filter string="Creation" icon="terp-project"
-                   	domain="[]" context="{'group_by':'create_date'}" />
+                       domain="[]" context="{'group_by':'create_date'}" />
                    <filter string="Date" icon="terp-project" domain="[]"
-                   	context="{'group_by':'date'}" />
+                       context="{'group_by':'date'}" />
                </group>
            </search>
         </field>
