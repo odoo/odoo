@@ -18,7 +18,7 @@
                     <field name="warehouse_id" required="1" select="1" widget="selection"/>
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
-                    <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>
+                    <field domain="[('type','=','sale')]" name="pricelist_id" select="1" groups="base.group_extended"/>
                     <field name="project_id" select="1"/>
                 </form>
             </field>
@@ -31,7 +31,7 @@
                 <tree string="Sale Shop">
                     <field name="name"/>
                     <field name="warehouse_id"/>
-                    <field name="pricelist_id"/>
+                    <field name="pricelist_id" groups="base.group_extended"/>
                     <field name="project_id"/>
                 </tree>
             </field>
@@ -110,8 +110,9 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id"/>
-                            <field name="project_id" select="2" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
+                            <field name="project_id" select="2" 
+                                context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"/>
                             <newline/>
                             <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
                                 <form string="Sale Order Lines">
@@ -428,7 +429,7 @@
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
-                        <filter string="Product" icon="terp-sale"  default="1" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Product" icon="terp-sale"  domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     </group>
