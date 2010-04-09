@@ -348,7 +348,8 @@ class YamlInterpreter(object):
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
-        code_context = {'self': model, 'cr': self.cr, 'uid': self.uid, 'log': log, 'context': self.context}
+        code_context = {'model': model, 'cr': self.cr, 'uid': self.uid, 'log': log, 'context': self.context}
+        code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code = compile(statements, self.filename, 'exec')
             eval(code, {'ref': self.get_id}, code_context)
