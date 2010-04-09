@@ -662,10 +662,6 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <group col="7" colspan="4">
-                                <label colspan="6"/>
-                                <button name="%(act_split_moves)d" string="Split Entry Lines in two" type="action" icon="gtk-justify-fill"/>
-                            </group>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Confirm (Do Not Process Now)" type="object" icon="gtk-apply"/>
@@ -823,10 +819,6 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <group col="7" colspan="4">
-                                <label colspan="6"/>
-                                <button name="%(act_split_moves)d" string="Split in Two" type="action" states="assigned,confirmed,draft,auto" icon="gtk-justify-fill"/>
-                            </group>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
@@ -1020,10 +1012,6 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <group col="7" colspan="4">
-                                <label colspan="6"/>
-                                <button name="%(act_split_moves)d" string="Split in Two" type="action" icon="gtk-justify-fill"/>
-                            </group>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
@@ -1226,7 +1214,7 @@
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
-                        </page>
+
                     </notebook>
                 </form>
             </field>
@@ -1442,24 +1430,6 @@
             <field name="search_view_id" ref="view_move_search"/>
         </record>
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="1"/>
-
-        <record id="action_picking_all" model="ir.actions.act_window">
-            <field name="name">Picking lists</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="search_view_id" ref="view_stock_picking_filter"/>
-            <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'contact_display': 'partner',"search_default_available":1}</field>
-        </record>
-        <record id="action_picking_out_tree_view" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_out_tree"/>
-            <field name="act_window_id" ref="action_picking_all"/>
-        </record>
-        <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 
         ====================================
         Reception Picking (By Stock Move)
