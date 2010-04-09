@@ -38,12 +38,11 @@ class report_printscreen_list(report_int):
 
     def _parse_node(self, root_node):
         result = []
-        groupby = self.context.get('group_by',[])
         for node in root_node:
             field_name = node.get('name')
             if not eval(str(node.attrib.get('invisible',False)),{'context':self.context}):
                 if node.tag == 'field':
-                    if field_name in groupby:
+                    if field_name in self.groupby:
                         continue
                     result.append(field_name)
                 else:
