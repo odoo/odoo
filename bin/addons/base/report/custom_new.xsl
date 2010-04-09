@@ -114,14 +114,14 @@
 							</para>
 						</xsl:when>
                        <xsl:when test="@tree='float'">
-                           <para style="float_right"><font fontName="Helvetica-bold" fontSize="9">
+                           <para style="float_right"><font fontName="Helvetica-bold" fontSize="9" color="blue">
                                <xsl:value-of select="."/>
                                </font></para>
                        </xsl:when>
 
 						<xsl:otherwise>
 							<para>
-								<font fontName="Helvetica-bold" fontSize="9">
+								<font fontName="Helvetica-bold" fontSize="9" color="blue">
 								<xsl:value-of select="."/>
 								</font>
 							</para>
