@@ -492,7 +492,6 @@ class stock_picking(osv.osv):
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  method=True, store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Entry lines', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
-        'delivery_line':fields.one2many('stock.delivery', 'picking_id', 'Delivery lines', readonly=True),
         'auto_picking': fields.boolean('Auto-Picking'),
         'address_id': fields.many2one('res.partner.address', 'Partner', help="Address of partner"),
         'invoice_state': fields.selection([
@@ -877,7 +876,6 @@ class stock_picking(osv.osv):
         """
         res = {}
         move_obj = self.pool.get('stock.move')
-        delivery_obj = self.pool.get('stock.delivery')
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
         users_obj = self.pool.get('res.users')
@@ -1003,14 +1001,6 @@ class stock_picking(osv.osv):
                 delivered_pack_id = pick.id
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
-            delivery_id = delivery_obj.create(cr, uid, {
-                'name':  delivered_pack.name,
-                'partner_id': partner_id,
-                'address_id': address_id,
-                'date': delivery_date,
-                'picking_id' :  pick.id,
-                'move_delivered' : [(6,0, map(lambda x:x.id, delivered_pack.move_lines))]
-            }, context=context)
             res[pick.id] = {'delivered_picking': delivered_pack.id or False}
         return res
 
@@ -1112,26 +1102,6 @@ class stock_production_lot_revision(osv.osv):
 
 stock_production_lot_revision()
 
-class stock_delivery(osv.osv):
-
-    """ Tracability of partialdeliveries """
-
-    _name = "stock.delivery"
-    _description = "Delivery"
-    _columns = {
-        'name': fields.char('Name', size=60, required=True),
-        'date': fields.datetime('Date', required=True),
-        'partner_id': fields.many2one('res.partner', 'Partner', required=True),
-        'address_id': fields.many2one('res.partner.address', 'Address', required=True),
-        'move_delivered':fields.one2many('stock.move', 'delivered_id', 'Move Delivered'),
-        'picking_id': fields.many2one('stock.picking', 'Picking list'),
-
-    }
-stock_delivery()
-# ----------------------------------------------------
-# Move
-# ----------------------------------------------------
-
 #
 # Fields:
 #   location_dest_id is only used for predicting futur stocks
@@ -1211,7 +1181,6 @@ class stock_move(osv.osv):
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Orders"),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Origin"),
         'move_stock_return_history': fields.many2many('stock.move', 'stock_move_return_history', 'move_id', 'return_move_id', 'Move Return History',readonly=True),
-        'delivered_id': fields.many2one('stock.delivery', 'Product delivered'),
         'scraped': fields.boolean('Scraped'),
     }
     _constraints = [
@@ -1803,7 +1772,6 @@ class stock_move(osv.osv):
         """
         res = {}
         picking_obj = self.pool.get('stock.picking')
-        delivery_obj = self.pool.get('stock.delivery')
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
         users_obj = self.pool.get('res.users')
@@ -1909,18 +1877,6 @@ class stock_move(osv.osv):
         done_move_ids = []
         for move in complete:
             done_move_ids.append(move.id)
-            if move.picking_id.id not in ref:
-                delivery_id = delivery_obj.create(cr, uid, {
-                    'partner_id': partner_id,
-                    'address_id': address_id,
-                    'date': delivery_date,
-                    'name' : move.picking_id.name,
-                    'picking_id':  move.picking_id.id
-                }, context=context)
-                ref[move.picking_id.id] = delivery_id
-            delivery_obj.write(cr, uid, ref[move.picking_id.id], {
-                'move_delivered' : [(4,move.id)]
-            })
         return done_move_ids
 
 stock_move()
