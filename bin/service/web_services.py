@@ -217,7 +217,7 @@ class db(netsvc.ExportService):
 
         self._set_pg_psw_env_var()
 
-        if self.db_exist(db_name):
+        if self.exp_db_exist(db_name):
             logger.notifyChannel("web-services", netsvc.LOG_WARNING,
                     'RESTORE DB: %s already exists' % (db_name,))
             raise Exception, "Database already exists"
