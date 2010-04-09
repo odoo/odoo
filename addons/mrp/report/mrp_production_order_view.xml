@@ -48,8 +48,8 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="6">
-                   		<filter string="This Year" icon="terp-mrp" domain="[('name','=',time.localtime()[0])]" default="1" />
-						<filter string="This Month" icon="terp-mrp" domain="[('month','=',time.strftime('%%m'))]" default="1"/>
+                   		<filter string="This Year" name="this_year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" default = "1"/>
+						<filter string="This Month" name="this_month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]"/>
                         <separator orientation="vertical"/>
 						<filter string="Current" icon="terp-mrp" domain="[('state','in',('open','draft'))]"/>
 						<separator orientation="vertical"/>
@@ -99,6 +99,7 @@
             <field name="res_model">mrp.production.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="context">{"search_default_this_year":1,"search_default_this_month":1}</field>
             <field name="view_id" ref="view_report_mrp_production_order_tree"/>
             <field name="search_view_id" ref="view_report_mrp_production_order_filter"/>
         </record>

@@ -47,13 +47,11 @@
             <search string="Purchase Orders">
             <group>
                 <filter icon="terp-purchase"
-                    string="This Year"
+                    string="This Year" name="this_year"
                     domain="[('name','=',time.strftime('%%Y'))]"
-                    default="1"
                     help="Purchase orders of the year"/>
                 <filter icon="terp-purchase"
-                    string="This Month"
-                    default="1"
+                    string="This Month" name="this_month"
                     domain="[('month','=',time.strftime('%%m'))]"
                     help="Purchase orders of this month"/>
                 <separator orientation="vertical"/>
@@ -61,8 +59,7 @@
                     string="Quotations"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-purchase"
-                    string="Purchase"
-                    default="1"
+                    string="Purchase" name="purchase"
                     domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
                 <separator orientation="vertical"/>
                 <field name="user_id" widget="selection">
@@ -90,7 +87,6 @@
                 </group>
                 <newline/>
                 <separator string="Group by" />
-                <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}"/>
                     <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
                     <filter string="Location" icon="terp-purchase" context="{'group_by':'location_id'}"/>
@@ -113,6 +109,7 @@
         <field name="res_model">purchase.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="context">{"search_default_this_year":1,"search_default_this_month":1,"search_default_purchase":1,"search_default_by_user":1}</field>
         <field name="search_view_id" ref="view_purchase_order_search"/>
         <field name="context">{'search_default_user_id':True}</field>
     </record>

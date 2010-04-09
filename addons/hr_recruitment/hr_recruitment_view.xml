@@ -79,15 +79,15 @@
                     <button string="Schedule a Phone Call"
                         name="%(wizard_hr_job_reschedule_phone_call)d" icon="gtk-redo" type="action"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action"
-						icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
+                        icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}"/>
                     <newline/>
                     <field name="partner_name"/>
                     <field name="job_id"/>
                     <field name="department_id" widget="selection"/>
                     <button name="%(wizard_hr_job_meeting_set)d" string="Schedule Meeting" icon="terp-hr" type="action"/>
-					<button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
-						icon="gtk-print" context="{'survey_id': survey, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
-				</group>
+                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action"
+                        icon="gtk-print" context="{'survey_id': survey, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
+                </group>
                 <notebook colspan="4">
                     <page string="Job Info">
                         <group col="2" colspan="2">
@@ -158,10 +158,10 @@
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
-                                   	string="Reply to Last Email"
-                                   	name="%(crm.action_crm_send_mail)d"
-                                   	context="{'mail':'reply', 'model': 'hr.applicant'}"
-                                   	icon="gtk-undo" type="action" />
+                                       string="Reply to Last Email"
+                                       name="%(crm.action_crm_send_mail)d"
+                                       context="{'mail':'reply', 'model': 'hr.applicant'}"
+                                       icon="gtk-undo" type="action" />
                                </form>
                                <tree string="Communication history">
                                    <field name="description"/>
@@ -170,9 +170,9 @@
                                </tree>
                            </field>
                            <button colspan="4" string="Send New Email"
-                           	name="%(crm.action_crm_send_mail)d"
-                           	context="{'mail':'new', 'model': 'hr.applicant'}"
-                           	icon="gtk-go-forward" type="action" />
+                               name="%(crm.action_crm_send_mail)d"
+                               context="{'mail':'new', 'model': 'hr.applicant'}"
+                               icon="gtk-go-forward" type="action" />
                  </page>
                 </notebook>
             </form>
@@ -199,10 +199,10 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="gtk-new" string="Current"
+               <group>
+               <filter icon="gtk-new" string="Current" name="current"
                    domain="[('state','in',('draft','open'))]"
                    help="All new and in progress jobs"
-                   default="1"
                />
                <filter icon="gtk-new" string="New"
                    domain="[('state','=','draft')]"
@@ -220,8 +220,9 @@
                <field name="partner_name"/>
                <field name="email_from"/>
                <field name="job_id" widget="selection"/>
+               <newline/>
                <field name="user_id" widget="selection">
-                    <filter domain="[('user_id','=',uid)]" help="My Recruitements" icon="gtk-execute" default="1"/>
+                    <filter domain="[('user_id','=',uid)]" name="my_recrui" help="My Recruitements" icon="gtk-execute"/>
                     <filter domain="[('user_id','=',False)]" help="Unassigned Recruitements" icon="gtk-execute" separator="1"/>
                </field>
                <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
@@ -229,8 +230,9 @@
                        domain="[('department_id','=',context.get('department_id',False))]"
                        help="My Department"/>
                </field>
+               </group>
                <newline/>
-                <group expand="1" string="Group By..." colspan="11" col="20">
+                <group expand="1" string="Group By..." >
                     <filter string="Department" icon="terp-project" domain="[]" context="{'group_by':'department_id'}"/>
                     <filter string="Responsible" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>

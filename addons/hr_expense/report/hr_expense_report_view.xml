@@ -43,7 +43,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Expenses">
-            	<group>
+                <group>
 	                <filter icon="terp-hr"
 	                    	string="This Year"
 	                    	domain="[('year','=',time.strftime('%%Y'))]"
@@ -56,7 +56,7 @@
 	                <filter icon="terp-hr"
 		                    string="Draft"
 		                    domain="[('state','=','draft')]"/>
-	                <filter icon="terp-hr"
+                <filter icon="terp-hr"
 		                    string="Expenses"
 		                    default="1"
 		                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancelled')]"/>
@@ -68,11 +68,11 @@
 		                        domain="[('user_id','=',uid)]"/>
 	                </field>
 	                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-				</group>
+               </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="1" string="Group By...">
                     <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}"/>
-                    <filter string="User" icon="terp-hr" context="{'group_by':'user_id'}" default="1"/>
+                    <filter string="User" name="by_user" icon="terp-hr" context="{'group_by':'user_id'}"/>
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>
@@ -91,6 +91,7 @@
         <field name="res_model">hr.expense.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="context">{"search_default_expenses":1,"search_default_by_user":1}</field>
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 
