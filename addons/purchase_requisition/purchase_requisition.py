@@ -30,18 +30,20 @@ class purchase_requisition(osv.osv):
     _description="Purchase requisition"
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
-        'date_start': fields.datetime('Date Start'),
-        'date_end': fields.datetime('Date End'),
+        'origin': fields.char('Origin', size=32),
+        'date_start': fields.datetime('Requisition Date'),
+        'date_end': fields.datetime('Requisition Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'exclusive': fields.boolean('Exclusive', help="If the requisition is exclusive, it will cancel all purchase orders when you confirm one of them"),
+        'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', help="If the requisition is exclusive, it will cancel all purchase orders when you confirm one of them", required=True),
         'description': fields.text('Description'),
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('close','Close')], 'State', required=True)
+        'state': fields.selection([('draft','Draft'),('open','Open'),('cancel','Cancelled'),('close','Close')], 'State', required=True)
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
         'state': lambda *args: 'open',
+        'exclusive': lambda *args: 'multiple',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
 purchase_requisition()
@@ -67,7 +69,7 @@ class purchase_order(osv.osv):
     def wkf_confirm_order(self, cr, uid, ids, context={}):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context)
         for po in self.browse(cr, uid, ids, context):
-            if po.requisition_id and po.requisition_id.exclusive:
+            if po.requisition_id and (po.requisition_id.exclusive=='exclusive'):
                 for order in po.requisition_id.purchase_ids:
                     if order.id<>po.id:
                         wf_service = netsvc.LocalService("workflow")
@@ -97,6 +99,8 @@ class mrp_procurement(osv.osv):
             if procurement.product_id.purchase_requisition:
                 self.pool.get('purchase.requisition').create(cr, uid, {
                     'name': procurement.name,
+                    'origin': procurement.name,
+                    'date_end': procurement.date_planned,
                     'lines_ids': [(0,0,{
                         'product_id': procurement.product_id.id,
                         'product_uom_id': procurement.product_uom.id,
@@ -105,4 +109,5 @@ class mrp_procurement(osv.osv):
                     })],
                     'purchase_ids': [(6,0,[po_id])]
                 })
+        return res
 mrp_procurement()
