@@ -51,7 +51,7 @@
             	<xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Month"]' position='replace'>
                     	<filter string="This Month" icon="terp-sale" domain="[('month','=',time.strftime('%%m'))]"  />
             	</xpath>
-                <xpath expr='//search[@string="Search"]/group[1]/filter[@string="Lost"]' position='after'>
+                <xpath expr='//search[@string="Search"]/group[1]/filter[@string="Cancel"]' position='after'>
                         <separator orientation="vertical"/>
                     	<filter string="Closed Today" icon="terp-sale" domain="[('date_closed','=',time.strftime('%%Y/%%m/%%d'))]" />
             	</xpath>
@@ -76,6 +76,7 @@
                     		<filter icon="terp-sale"
                     		string="Lowest"
                     		domain="[('priority','=','5')]"/>
+                       <field name="date_closed" string="Date Closed"/>
                 		</group>
                 		<newline/>
 				</xpath>
@@ -85,7 +86,7 @@
 				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Category"]' position='after'>
             		<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
             		<separator orientation="vertical"/>
-            		<filter string="Project" icon="terp-sale" domain="[]" context="{'group_by':'project_id'}"/>
+            		<filter string="Project" icon="terp-sale" domain="[]" context="{'group_by':'project_id'}" default = "1"/>
             		<filter string="Type" icon="terp-sale" domain="[]" context="{'group_by':'type_id'}"/>
             	</xpath>
                 </data>

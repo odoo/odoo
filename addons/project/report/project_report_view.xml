@@ -45,31 +45,31 @@
                     <separator orientation="vertical"/>
                     <field name="project_id"/>
                     <field name="user_id" widget="selection">
-                        <filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]" default="1"/>
+                        <filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]"/>
                     </field>
                     </group>
                     <newline/>
 	                <group expand="1" string="Extended options..." colspan="10" col="12">
-	                	<filter string="Draft" icon="terp-project" domain="[('state','=','draft')]"/>
-	                	<filter string="In Progress" icon="terp-project" domain="[('state','=','open')]"/>
+	                	<filter string="Current" icon="terp-project" domain="['|', ('state','=','draft'),('state', '=' ,'open')]" help = "Draft and opened tasks"/>
                     	<filter string="Pending" icon="terp-project" domain="[('state','=','pending')]"/>
                     	<filter string="Done" icon="terp-project" domain="[('state','=','done')]"/>
                     	<filter string="Cancelled" icon="terp-project" domain="[('state','=','cancelled')]"/>
                     	<separator orientation="vertical"/>
-	                    <field name="date_start"/>
-						<newline/>
+                      <newline/>
 	                    <filter icon="terp-project" string="Very Low" domain="[('priority','=','4')]"/>
 	                    <filter icon="terp-project" string="Low" domain="[('priority','=','3')]"/>
 	                    <filter icon="terp-project" string="Medium" domain="[('priority','=','2')]"/>
 	                    <filter icon="terp-project" string="Urgent" domain="[('priority','=','1')]"/>
 	                    <filter icon="terp-project" string="Very Urgent" domain="[('priority','=','0')]"/>
 	                    <separator orientation="vertical"/>
+                    <newline/>
+	                    <field name="date_start"/>
 	                    <field name="date_end"/>
 	                </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="11">
                         <filter string="User" icon="terp-project" context="{'group_by':'user_id'}" />
-                        <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}" />
+                        <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}" default = "1" />
                         <filter string="Partner" icon="terp-project" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
@@ -159,6 +159,7 @@
         <field name="res_model">task.by.days</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
+        <field name="domain">[('day','&gt;=',time.strftime('%Y-%m-%d')),('day','&lt;=', time.strftime('%Y-%m-%d', time.localtime(time.time()-(15*24*3600))))]</field>
         <field name="view_id" ref="view_task_by_days_graph"/>
     </record>
 

@@ -9,7 +9,7 @@ class project_issue_report(osv.osv):
     _columns = {
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue.report')]"),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue.report')]"),
-        'nbr': fields.integer('# of Issues', reaadonly=True),
+        'nbr': fields.integer('# of Issues', readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
         'company_id' : fields.many2one('res.company', 'Company'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
