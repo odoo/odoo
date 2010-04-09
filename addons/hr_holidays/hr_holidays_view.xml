@@ -10,9 +10,10 @@
                     <group col='8' colspan='4'>
                         <filter icon="terp-hr" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
-                        <filter icon="terp-hr" domain="[('state','=','validate')]" string="Validated"/>
+                        <filter icon="terp-hr" domain="[('state','=','validate')]" string="Validated"
+                            default="context.get('report', False)"/>
                         <separator orientation="vertical"/> 
-                        <filter icon="terp-hr" help="My Leaves" domain="[('user_id','=',uid)]" string="My Leaves"/>
+                        <filter icon="terp-hr" help="My Leaves" domain="[('user_id','=',uid)]" string="My Leaves" default="1"/>
                         <separator orientation="vertical"/> 
                         <field name="user_id" widget="selection" />
                         <field name="department_id" widget="selection">
@@ -26,10 +27,11 @@
                     <group expand="1" string="Group By..." colspan="11" col="11">
                         <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Manager" icon="terp-sale" domain="[]" context="{'group_by':'manager_id'}"/>
-                        <filter string="User" icon="terp-sale" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="User" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/> 
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Type" icon="terp-sale" domain="[]" context="{'group_by':'holiday_status_id'}"/>
+                        <filter string="Type" icon="terp-sale" domain="[]" context="{'group_by':'holiday_status_id'}"
+                            default="context.get('report', False)"/>
                     </group>
                 </search>
             </field>

@@ -82,19 +82,21 @@
                 </group>
                 <notebook colspan="4">
                 <page string="Opportunity">
-                    <group col="4" colspan="2">
+                    <group col="3" colspan="2">
                         <separator colspan="4" string="Contacts"/>
                         <field name="partner_id" select="1"
-                            on_change="onchange_partner_id(partner_id, email_from)" />
+                            on_change="onchange_partner_id(partner_id, email_from)"
+                            colspan="2" />
                         <field name="partner_address_id"
                             string="Contact"
-                            on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
+                            on_change="onchange_partner_address_id(partner_address_id, email_from)"
+                            colspan="1" />
                         <field name="email_from" string="Email" />
                         <field name="phone"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Categorization"/>
-                        <field name="type_id" select="1" string="Campaign" groups="base.group_extended"/>
+                        <field name="type_id" select="1" string="Campaign"/>
                         <field name="section_id" colspan="1" widget="selection"/>
                         <field name="priority" string="Priority"/>
                         <field name="categ_id" select="1"
@@ -102,7 +104,7 @@
                             domain="[('object_id.model', '=', 'crm.opportunity')]" />
                     </group>
 
-                    <separator colspan="4" string="Notes"/>
+                    <separator colspan="4" string="Details"/>
                     <field name="description" nolabel="1" colspan="4"/>
 
                     <separator colspan="4"/>
@@ -213,9 +215,9 @@
                 <button name="stage_next" string="Next"
                     states="open,pending" type="object"
                     icon="gtk-go-forward" />
-                <field name="planned_revenue" sum="Expected Revenue"/>
+                <field name="planned_revenue" sum="Total of Planned Revenue"/>
                 <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
-                <field name="date_deadline" string="Expected Closing"/>
+                <field name="date_deadline" string="Excepted Closing"/>
                 <field name="section_id"/>
                 <field name="user_id"/>
                 <field name="priority"/>
@@ -261,6 +263,7 @@
             <search string="Search Opportunities">
                 <filter icon="terp-project"
                     string="Current"
+                    default="1"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-project"
                     string="Open"
@@ -281,15 +284,16 @@
                 <field name="name" string="Opportunity"/>
                 <field name="partner_id"/>
                 <field name="user_id" widget="selection">
-                    <filter icon="terp-partner" name="my_oprtnit"
+                    <filter icon="terp-partner"
                         domain="[('user_id','=',uid)]"
-                        help="My Opportunities" />
+                        help="My Opportunities" default="1"
+                    />
                     <filter icon="terp-partner"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Opportunities" />
                 </field>
                 <field name="section_id"
-                    select="1"
+                    default="context.get('section_id', False)" select="1"
                     widget="selection">
                     <filter icon="terp-crm"
                         domain="[('section_id','=',context.get('section_id',False))]"

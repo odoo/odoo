@@ -300,51 +300,6 @@ class hr_evaluation_interview(osv.osv):
         self.write(cr, uid, ids, { 'state' : 'cancel'}, context=context)
         return True
 
-    def action_print_survey(self, cr, uid, ids, context=None):
-        """
-        If response is available then print this response otherwise print survey form(print template of the survey).
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Survey IDs
-        @param context: A standard dictionary for contextual values
-        @return : Dictionary value for print survey form.
-        """
-        if not context:
-            context = {}
-        record = self.browse(cr, uid, ids, context)
-        record = record and record[0]
-        datas = {}
-        page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
-        report = {}
-        if record:
-            datas['ids'] = [record.survey_id.id]
-            response_id = record.response.id
-            if response_id:
-                context.update({'survey_id': datas['ids'], 'response_id' : [response_id], 'response_no':0})
-                datas['form'] = page_setting
-                datas['model'] = 'survey.print.answer'
-                report = {
-                    'type': 'ir.actions.report.xml',
-                    'report_name': 'survey.browse.response',
-                    'datas': datas,
-                    'nodestroy': True,
-                    'context' : context
-                }
-            else:
-                datas['form'] = page_setting
-                datas['model'] = 'survey.print'
-                report = {
-                    'type': 'ir.actions.report.xml',
-                    'report_name': 'survey.form',
-                    'datas': datas,
-                    'nodestroy':True,
-                    'context' : context
-                }
-        return report
-
-
 hr_evaluation_interview()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1

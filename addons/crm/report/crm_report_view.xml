@@ -65,11 +65,11 @@
                   <group col="16" colspan="8">
                    		<filter string="This Year" icon="terp-hr"
                    			domain="[('name','=',time.localtime()[0])]"
-                   			name="this_year" />
+                   			default="1" />
 
                    		<filter string="This Month" icon="terp-hr"
                    			domain="[('month','=',time.strftime('%%m'))]"
-                   			name="this_month" />
+                   			default="1" />
 
                    		<separator orientation="vertical" />
                    		<filter string="Current" icon="terp-hr"
@@ -83,6 +83,7 @@
 
                    		<separator orientation="vertical" />
                    		<field name="section_id"
+                   			default="context.get('section_id', False)"
                    			widget="selection"
                    			context="{'invisible_section': False}">
 
@@ -107,7 +108,7 @@
                   <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="User" icon="terp-sale"
                         	domain="[]" context="{'group_by':'user_id'}"
-                        	name="by_user" />
+                        	default="1" />
 
                         <filter string="Company" icon="terp-sale"
                         	domain="[]"
@@ -145,7 +146,6 @@
             <field name="res_model">crm.case.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{"search_default_section_id":section_id,"search_default_this_year":1,"search_default_this_month":1}</field>            
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
 

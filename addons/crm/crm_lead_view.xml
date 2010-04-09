@@ -166,7 +166,7 @@
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
                             <button colspan="4"
-                                string="Reply to Email"
+                                string="Reply to Last Email"
                                 name="%(action_crm_send_mail)d"
                                 context="{'mail':'reply', 'model': 'crm.lead'}"
                                 icon="gtk-undo" type="action" />
@@ -262,8 +262,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
-                <filter icon="terp-project" name="current"
+                <filter icon="terp-project"
                     string="Current"
+                    default="1"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-project"
                     string="Open"
@@ -288,13 +289,13 @@
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
                         domain="[('user_id','=',uid)]"
-                        help="My Leads" name="my_lead"
+                        help="My Leads" default="1"
                     />
                     <filter icon="terp-partner"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
                 </field>
-                <field name="section_id" widget="selection"
+                <field name="section_id" default="context.get('section_id', False)" widget="selection"
                     context="{'invisible_section': False}">
                     <filter icon="terp-crm"
                         context="{'invisible_section': False}"

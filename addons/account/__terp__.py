@@ -80,14 +80,12 @@ module named account_voucherss
         'report/account_analytic_report_view.xml',
     ],
     'demo_xml': [
+        #'demo/price_accuracy00.yml',
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
         'account_unit_test.xml',
-    ],
-    'test': [
-        'test/price_accuracy00.yml',
     ],
     'installable': True,
     'active': False,

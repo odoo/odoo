@@ -29,35 +29,23 @@ class report_project_task_user(osv.osv):
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'date_start': fields.datetime('Starting Date',readonly=True),
-        'date_end': fields.datetime('Ending Date',readonly=True),
-        'date_deadline': fields.date('Deadline',readonly=True),
+        'date_start': fields.datetime('Starting Date'),
+        'date_end': fields.datetime('Ending Date'),
+        'date_deadline': fields.date('Deadline'),
         'project_id':fields.many2one('project.project', 'Project', readonly=True),
         'hours_planned': fields.float('Planned Hours', readonly=True),
         'hours_effective': fields.float('Effective Hours', readonly=True),
         'hours_delay': fields.float('Avg. Plan.-Eff.', readonly=True),
         'closing_days': fields.char('Avg Closing Delay', size=64, readonly=True),
         'nbr': fields.integer('#Number of tasks', readonly=True),
-        'priority' : fields.selection([('4','Very Low'),
-                                       ('3','Low'),
-                                       ('2','Medium'),
-                                       ('1','Urgent'),
-                                       ('0','Very urgent')],
-                                       'Importance',readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
-        'state': fields.selection([
-               ('draft', 'Draft'),
+        'state': fields.selection([('draft', 'Draft'),
                ('open', 'In Progress'),
                ('pending', 'Pending'),
                ('cancelled', 'Cancelled'),
                ('done', 'Done')],
             'State', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company',readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
-        'type': fields.many2one('project.task.type', 'Stage',readonly=True),
-
-
 
     }
     _order = 'name desc, project_id'
@@ -72,14 +60,10 @@ class report_project_task_user(osv.osv):
                     count(distinct t.id) as nbr,
                     date_trunc('day',t.date_start) as date_start,
                     date_trunc('day',t.date_end) as date_end,
-                    to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_deadline,
+                    date_trunc('day',t.date_deadline) as date_deadline,
                     t.user_id,
                     t.project_id,
                     t.state,
-                    t.priority,
-                    t.company_id,
-                    t.partner_id,
-                    t.type,
                     sum(planned_hours) as hours_planned,
                     to_char(avg(date_end::abstime-t.create_date::timestamp), 'DD"d" HH24:MI:SS') as closing_days,
                     sum(w.hours) as hours_effective,
@@ -89,15 +73,8 @@ class report_project_task_user(osv.osv):
                 group by
                     to_char(date_start, 'YYYY'),
                     to_char(date_start, 'MM'),
-                    t.priority,
-                    t.user_id,
-                    t.state,
-                    t.date_end,
-                    to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY'),
-                    t.date_start,
-                    t.company_id,
-                    t.partner_id,
-                    t.type,
+                    t.user_id,t.state,t.date_end,
+                    t.date_deadline,t.date_start,
                     t.project_id
             )
         """)

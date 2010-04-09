@@ -95,46 +95,6 @@ class survey(osv.osv):
     def copy(self, cr, uid, id, default=None,context={}):
         raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
 
-    def action_print_survey(self, cr, uid, ids, context=None):
-        """
-        If response is available then print this response otherwise print survey form(print template of the survey).
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Survey IDs
-        @param context: A standard dictionary for contextual values
-        @return : Dictionary value for print survey form.
-        """
-        if not context:
-            context = {}
-        datas = {}
-        response_id = self.pool.get('survey.response').search(cr, uid, [('survey_id','=', ids)], context=context)
-        page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
-        report = {}
-        datas['ids'] = ids
-        if response_id:
-            context.update({'survey_id': datas['ids']})
-            datas['form'] = page_setting
-            datas['model'] = 'survey.print.answer'
-            report = {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'survey.browse.response',
-                'datas': datas,
-                'nodestroy': True,
-                'context' : context
-            }
-        else:
-            datas['form'] = page_setting
-            datas['model'] = 'survey.print'
-            report = {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'survey.form',
-                'datas': datas,
-                'nodestroy':True,
-                'context' : context
-            }
-        return report
-
 survey()
 
 class survey_history(osv.osv):

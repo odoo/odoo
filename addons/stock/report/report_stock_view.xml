@@ -9,10 +9,10 @@
             <field name="arch" type="xml">
                 <search string="Search Location">
                     <group col="10" colspan="4">
-                        <filter icon="terp-stock" name="in_location" string="Internal Locations" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations" />
+                        <filter icon="terp-stock" string="Internal Locations" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations" default="1" />
                         <filter icon="terp-stock" string="Customer Locations" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
                         <filter icon="terp-stock" string="Supplier Locations" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
-
+                        
                         <separator orientation="vertical"/>
                         <field name="location_id" select="1" />
                         <field name="product_id" select="1" />
@@ -61,7 +61,7 @@
             <field name="res_model">stock.report.prodlots</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'full':'1',"search_default_in_location":1}</field>
+            <field name="context">{'full':'1'}</field>
             <field name="search_view_id" ref="view_stock_report_prodlots_filter" />
         </record>
 

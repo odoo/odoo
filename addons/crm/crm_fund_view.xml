@@ -169,7 +169,7 @@
                             <separator string="Action Information" colspan="4"/>
                             <field name="name" colspan="4"/>
                             <field name="date"/>
-                            <field name="user_id"/>
+                            <field name="user_id"/>                            
                         </form>
                     </field>
                 </page>
@@ -181,8 +181,8 @@
                        <form string="Communication history">
                             <group col="7" colspan="4">
                                 <field name="date"/>
-                                <field name="email_to"/>
-                                <field name="email_from"/>
+                                <field name="email_to"/>                                
+                                <field name="email_from"/> 
                                 <button
                                      string="Add a CC"
                                                name="%(crm.action_view_crm_email_add_cc_wizard)d"
@@ -191,7 +191,7 @@
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
-                                       string="Reply to Email"
+                                       string="Reply to Last Email"
                                        name="%(action_crm_send_mail)d"
                                        context="{'mail':'reply', 'model': 'crm.fundraising'}"
                                        icon="gtk-undo" type="action" />
@@ -252,7 +252,7 @@
                 <search string="Search Funds">
                    <group col='6' colspan='4'>
                        <filter icon="terp-partner" string="My Funds"
-                          name="my_funds" domain="[('user_id','=',uid)]"
+                           default="1" domain="[('user_id','=',uid)]"
                            separator="1"
                            help="Funds Related to Current User"
                            />
@@ -277,7 +277,9 @@
                                domain="[('user_id','=', False)]"
                                help="Unassigned" />
                        </field>
-                       <field name="section_id" select="1" widget="selection" string="Section">
+                       <field name="section_id" select="1"
+                           widget="selection"
+                           default="context.get('section_id', False)">
                            <filter icon="terp-crm"
                                domain="[('section_id','=',context.get('section_id',False))]"
                                help="My section" />

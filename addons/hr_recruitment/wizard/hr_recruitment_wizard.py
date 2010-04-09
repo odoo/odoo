@@ -132,6 +132,61 @@ class job2phonecall(wizard.interface):
 
 job2phonecall('hr.applicant.reschedule_phone_call')
 
+class job2meeting(wizard.interface):
+
+    def _makeMeeting(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        job_case_obj = pool.get('hr.applicant')
+        meeting_case_obj = pool.get('hr.meeting')
+        for job in job_case_obj.browse(cr, uid, data['ids']):
+            new_meeting_id = meeting_case_obj.create(cr, uid, {
+                'name': job.name,
+                'date': job.date,
+                'duration': job.duration,
+                })
+            new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
+            vals = {}
+            job_case_obj.write(cr, uid, [job.id], vals)
+            job_case_obj.case_cancel(cr, uid, [job.id])
+            meeting_case_obj.case_open(cr, uid, [new_meeting_id])
+
+        data_obj = pool.get('ir.model.data')
+        result = data_obj._get_id(cr, uid, 'hr', 'view_hr_case_meetings_filter')
+        id = data_obj.read(cr, uid, result, ['res_id'])
+        id1 = data_obj._get_id(cr, uid, 'hr', 'hr_case_calendar_view_meet')
+        id2 = data_obj._get_id(cr, uid, 'hr', 'hr_case_form_view_meet')
+        id3 = data_obj._get_id(cr, uid, 'hr', 'hr_case_tree_view_meet')
+        if id1:
+            id1 = data_obj.browse(cr, uid, id1, context=context).res_id
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        return {
+            'name': _('Meetings'),
+            'view_type': 'form',
+            'view_mode': 'calendar,form,tree',
+            'res_model': 'hr.meeting',
+            'view_id': False,
+            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree'),(False,'graph')],
+            'type': 'ir.actions.act_window',
+            'search_view_id': id['res_id']
+            }
+
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'order'}
+        },
+        'order': {
+            'actions': [],
+            'result': {'type': 'state', 'state': 'end'}
+        }
+    }
+
+job2meeting('hr.applicant.meeting_set')
+
+
 class partner_create(wizard.interface):
 
     case_form = """<?xml version="1.0"?>
