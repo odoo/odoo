@@ -48,6 +48,7 @@
             <rng:attribute name="object"/>
             <rng:optional><rng:attribute name="shape"/></rng:optional>
             <rng:optional><rng:attribute name="bgcolor"/></rng:optional>
+            <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
@@ -61,6 +62,7 @@
             <rng:attribute name="object" />
             <rng:attribute name="source" />
             <rng:attribute name="destination" />
+			<rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
             <rng:optional><rng:attribute name="signal"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
