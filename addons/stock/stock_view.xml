@@ -1439,7 +1439,7 @@
             <field name="arch" type="xml">
                 <tree colors="grey:state in ('cancel','done');black:state not in ('cancel','done')" string="Moves">
                     <field name="picking_id" string="Reference"/>
-                    <field name="origin" string="Latest Requisition"/>
+                    <field name="origin" string="Latest Procurement"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="product_id"/>
                     <field name="product_qty" />
@@ -1517,7 +1517,7 @@
                         <filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
                         <filter icon="terp-stock" string="Planned Today" domain="[('date_planned::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
-                        <field name="origin" string="Latest Requisition" select="1"/>
+                        <field name="origin" string="Latest Procurement" select="1"/>
                         <field name="partner_id" string="Supplier" select="1"/>
                         <field name="product_id"/>
                     </group>
