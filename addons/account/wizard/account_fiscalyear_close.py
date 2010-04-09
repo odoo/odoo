@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import fields, osv
 from tools.translate import _
 import tools
@@ -38,15 +37,14 @@ class account_fiscalyear_close(osv.osv_memory):
                                  'Opening Entries Journal', required=True),
        'period_id': fields.many2one('account.period', \
                                  'Opening Entries Period', required=True),
-       'report_name': fields.char('Name of new entries',size=64,required=True),
-       'sure': fields.boolean('Check this box', required=False),
+       'report_name': fields.char('Name of new entries',size=64, required=True),
+       'sure': fields.boolean('Check this box'),
               }
     _defaults = {
         'report_name':'End of Fiscal Year Entry',
-
         }
 
-    def data_save(self, cr, uid, ids, context):
+    def data_save(self, cr, uid, ids, context=None):
         """
         This function close account fiscalyear and create entries in new fiscalyear
         @param cr: the current row, from the database cursor,
@@ -61,10 +59,12 @@ class account_fiscalyear_close(osv.osv_memory):
         obj_acc_account = self.pool.get('account.account')
         obj_acc_journal_period = self.pool.get('account.journal.period')
 
-        data =  self.read(cr, uid, ids,context=context)
+        data =  self.read(cr, uid, ids, context=context)
 
+        if context is None:
+            context = {}
         if not data[0]['sure']:
-                raise osv.except_osv(_('UserError'), _('Closing of fiscal year cancelled, please check the box !'))
+            raise osv.except_osv(_('UserError'), _('Closing of fiscal year cancelled, please check the box !'))
         fy_id = data[0]['fy_id']
 
 
@@ -223,8 +223,6 @@ class account_fiscalyear_close(osv.osv_memory):
                     'WHERE id = %s', (ids[0], old_fyear.id))
         return {}
 
-
 account_fiscalyear_close()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
