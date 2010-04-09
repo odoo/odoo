@@ -81,7 +81,8 @@ class crm_lead(osv.osv):
                     resource_id = False
                     if lead.user_id:
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',lead.user_id.id)])
-                        resource_id = len(resource_ids) or resource_ids[0]
+                        if len(resource_ids):
+                            resource_id = resource_ids[0]
 
                     duration = float(ans.days)
                     if lead.section_id.resource_calendar_id:
