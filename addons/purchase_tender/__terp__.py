@@ -31,7 +31,10 @@
     "depends" : ["purchase","mrp"],
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["purchase_tender_view.xml","security/ir.model.access.csv","purchase_tender_sequence.xml"],
+    "update_xml" : ["wizard/purchase_requisition_partner.xml",
+                    "purchase_tender_view.xml","security/ir.model.access.csv","purchase_tender_sequence.xml",
+                   
+                    ],
     "active": False,
     "installable": True
 }

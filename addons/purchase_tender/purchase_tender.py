@@ -37,13 +37,32 @@ class purchase_tender(osv.osv):
         'description': fields.text('Description'),
         'purchase_ids' : fields.one2many('purchase.order','tender_id','Purchase Orders'),
         'line_ids' : fields.one2many('purchase.tender.line','tender_id','Products to Purchase'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('close','Close')], 'State', required=True)
+        'state': fields.selection([('draft','Draft'),('open','Open'),('cancel','Cancel'),('close','Close'),('in_progress','In progress'),('done','Done')], 'State', required=True)
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
         'state': lambda *args: 'open',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.tender'),
     }
+    def tender_close(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state': 'done', 'date_end': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return True
+    
+    def tender_open(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        return True        
+    def tender_cancel(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state': 'cancel'})
+        return True        
+    def tender_confirm(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        return True 
+    def tender_reset(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state': 'draft'})
+        return True    
+    def tender_done(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        return True        
 purchase_tender()
 
 class purchase_tender_line(osv.osv):
@@ -56,6 +75,22 @@ class purchase_tender_line(osv.osv):
         'product_qty': fields.float('Date End', digits=(16,2)),
         'tender_id' : fields.many2one('purchase.tender','Purchase Tender', ondelete='cascade')
     }
+    def onchange_product_id(self, cr, uid, ids, product_id, context={}):
+        
+        """ Changes UoM and name if product_id changes.
+        @param name: Name of the field
+        @param product_id: Changed product_id
+        @return:  Dictionary of changed values
+        """
+        value = {}
+        
+        if product_id:
+            prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
+        
+            value = {'product_uom_id': prod.uom_id.id}
+        
+        return {'value': value}
+    
 purchase_tender_line()
 
 class purchase_order(osv.osv):
@@ -91,12 +126,13 @@ product_product()
 class mrp_procurement(osv.osv):
     _inherit = 'mrp.procurement'
     def make_po(self, cr, uid, ids, context={}):
+        sequence_obj=self.pool.get('ir.sequence')
         res = super(mrp_procurement, self).make_po(cr, uid, ids, context)
         for proc_id,po_id in res.items():
             procurement = self.browse(cr, uid, proc_id)
             if procurement.product_id.purchase_tender:
                 self.pool.get('purchase.tender').create(cr, uid, {
-                    'name': procurement.name,
+                    'name': sequence_obj.get(cr, uid, 'purchase.order.tender'),
                     'lines_ids': [(0,0,{
                         'product_id': procurement.product_id.id,
                         'product_uom_id': procurement.product_uom.id,
