@@ -27,9 +27,11 @@ class report_project_task_user(osv.osv):
     _description = "Tasks by user and project"
     _auto = False
     _columns = {
-        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'name': fields.char('Task Summary', size=128, readonly=True),
+        'year': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'date_start': fields.datetime('Starting Date',readonly=True),
+        'no_of_days': fields.char('#Days', size=128, readonly=True),
         'description': fields.text('Description',readonly=True),
         'date_end': fields.datetime('Ending Date',readonly=True),
         'date_deadline': fields.date('Deadline',readonly=True),
@@ -68,16 +70,18 @@ class report_project_task_user(osv.osv):
             create or replace view report_project_task_user as (
                 select
                     min(t.id) as id,
-                    to_char(date_start, 'YYYY') as name,
+                    to_char(date_start, 'YYYY') as year,
                     to_char(date_start, 'MM') as month,
                     count(distinct t.id) as nbr,
                     date_trunc('day',t.date_start) as date_start,
                     date_trunc('day',t.date_end) as date_end,
                     to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_deadline,
+                    to_char(date_trunc('day',t.date_end) - date_trunc('day',t.date_start),'DD" days"') as no_of_days,
                     t.user_id,
                     t.project_id,
                     t.state,
                     t.priority,
+                    t.name,
                     t.company_id,
                     t.partner_id,
                     t.type,
@@ -93,12 +97,13 @@ class report_project_task_user(osv.osv):
                     t.priority,
                     t.user_id,
                     t.state,
-                    t.date_end,
+                    date_trunc('day',t.date_end),
                     to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY'),
-                    t.date_start,
+                    date_trunc('day',t.date_start),
                     t.company_id,
                     t.partner_id,
                     t.type,
+                    t.name,
                     t.project_id
             )
         """)
