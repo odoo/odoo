@@ -148,6 +148,7 @@
              <graph string="Task By Days" type="bar">
                  <field name="day"/>
                  <field name="state" group="True"/>
+                 <field name="project_id" group="True"/>
                  <field name="total_task" operator="+"/>
              </graph>
          </field>
@@ -182,6 +183,7 @@
              <graph string="Task By Days vs Planned Hours" type="bar">
                  <field name="day"/>
                  <field name="planned_hour" operator="+"/>
+                 <field name="project_id" group="True"/>
              </graph>
          </field>
     </record>

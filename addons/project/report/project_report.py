@@ -144,7 +144,8 @@ class task_by_days(osv.osv):
     _columns = {
         'day': fields.char('Day', size=128, required=True),
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True),
-        'total_task': fields.float('Total tasks', readonly=True)
+        'total_task': fields.float('Total tasks', readonly=True),
+        'project_id':fields.many2one('project.project','Project')
      }
     _order = 'day desc'
     def init(self, cr):
@@ -155,11 +156,12 @@ class task_by_days(osv.osv):
                     min(pt.id) as id,
                     to_char(pt.create_date, 'YYYY-MM-DD') as day,
                     count(*) as total_task,
-                    pt.state as state
+                    pt.state as state,
+                    pt.project_id
                 from
                     project_task as pt
                 group by
-                    to_char(pt.create_date, 'YYYY-MM-DD'),pt.state
+                    to_char(pt.create_date, 'YYYY-MM-DD'),pt.state,pt.project_id
             )
         """)
 task_by_days()
@@ -170,7 +172,8 @@ class task_by_days_vs_planned_hours(osv.osv):
     _auto = False
     _columns = {
         'day': fields.char('Day', size=128, required=True),
-        'planned_hour': fields.float('Planned Hours', readonly=True)
+        'planned_hour': fields.float('Planned Hours', readonly=True),
+        'project_id':fields.many2one('project.project','Project')
      }
     _order = 'day desc'
     def init(self, cr):
@@ -180,11 +183,12 @@ class task_by_days_vs_planned_hours(osv.osv):
                 select
                     min(pt.id) as id,
                     to_char(pt.create_date, 'YYYY-MM-DD') as day,
-                    sum(planned_hours) as planned_hour
+                    sum(planned_hours) as planned_hour,
+                    pt.project_id
                 from
                     project_task as pt
                 group by
-                    to_char(pt.create_date, 'YYYY-MM-DD')
+                    to_char(pt.create_date, 'YYYY-MM-DD'),pt.project_id
             )
         """)
 task_by_days_vs_planned_hours()
