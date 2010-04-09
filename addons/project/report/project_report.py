@@ -165,6 +165,8 @@ class task_by_days(osv.osv):
                     pt.project_id
                 from
                     project_task as pt
+                where
+                    (to_date(to_char(pt.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
                 group by
                     to_char(pt.create_date, 'YYYY-MM-DD'),pt.state,pt.project_id
             )
