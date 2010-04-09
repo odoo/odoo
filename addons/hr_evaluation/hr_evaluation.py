@@ -313,37 +313,12 @@ class hr_evaluation_interview(osv.osv):
         """
         if not context:
             context = {}
+
         record = self.browse(cr, uid, ids, context)
         record = record and record[0]
-        datas = {}
-        page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
-        report = {}
-        if record:
-            datas['ids'] = [record.survey_id.id]
-            response_id = record.response.id
-            if response_id:
-                context.update({'survey_id': datas['ids'], 'response_id' : [response_id], 'response_no':0})
-                datas['form'] = page_setting
-                datas['model'] = 'survey.print.answer'
-                report = {
-                    'type': 'ir.actions.report.xml',
-                    'report_name': 'survey.browse.response',
-                    'datas': datas,
-                    'nodestroy': True,
-                    'context' : context
-                }
-            else:
-                datas['form'] = page_setting
-                datas['model'] = 'survey.print'
-                report = {
-                    'type': 'ir.actions.report.xml',
-                    'report_name': 'survey.form',
-                    'datas': datas,
-                    'nodestroy':True,
-                    'context' : context
-                }
-        return report
-
+        context.update({'survey_id': record.survey_id.id, 'response_id' : [record.response.id], 'response_no':0,})
+        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
+        return value            
 
 hr_evaluation_interview()
 
