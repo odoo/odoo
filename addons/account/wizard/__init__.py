@@ -50,7 +50,7 @@ import wizard_move_line_select
 import wizard_validate_account_move
 import wizard_use_model
 
-import wizard_state_open
+import account_state_open
 
 import wizard_statement_from_invoice
 import account_print_journal

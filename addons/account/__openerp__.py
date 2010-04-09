@@ -62,6 +62,7 @@ module named account_voucherss
         'wizard/account_central_journal_view.xml',
         'wizard/account_subscription_generate_view.xml',
         'wizard/account_fiscalyear_close_view.xml',
+        'wizard/account_state_open_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_view.xml',
         'account_end_fy.xml',
