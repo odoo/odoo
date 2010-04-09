@@ -126,7 +126,7 @@ class purchase_order_qty_amount(osv.osv):
                     min(id) as id,
                     to_char(create_date, 'MM') as month,
                     sum(product_qty) as total_qty,
-                    sum(price_unit) as total_amount
+                    sum(price_unit*product_qty) as total_amount
                 from
                     purchase_order_line
                 where
