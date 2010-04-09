@@ -261,8 +261,8 @@
                         <group  colspan="1">
                             <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
                                 icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                            <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done"
-                                icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
+                            <button name="action_print_survey" string="Print Interview" type="object" states="waiting_answer,done,cancel"
+                                icon="gtk-print"  attrs="{'readonly':[('survey_id','=',False)]}" />
                         </group>
                     </group>
                     <group col="4" colspan="4">
@@ -297,8 +297,8 @@
                     <field name="response" readonly="1" invisible="True"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
                         icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done"
-                        icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','=',False)]}" />
+                    <button name="action_print_survey" string="Print Interview" type="object" states="waiting_answer,done,cancel"
+                        icon="gtk-print" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <field name="state"/>
                 </tree>
             </field>
