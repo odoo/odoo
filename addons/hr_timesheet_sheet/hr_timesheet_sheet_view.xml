@@ -332,5 +332,8 @@
             </field>
         </record>
 
+	<!-- Timesheet Button on Employee Form -->
+	<act_window domain="[('user_id', '=', user_id)]" id="act_hr_employee_2_hr_timesheet" name="Timesheets" res_model="hr_timesheet_sheet.sheet" src_model="hr.employee"/>
+
     </data>
 </openerp>

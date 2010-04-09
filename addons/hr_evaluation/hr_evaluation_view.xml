@@ -311,9 +311,9 @@
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
                    <group col='10' colspan='4'>
-                        <filter icon="terp-crm" string="To Do" domain="[('state','=','waiting_answer')]" default="1"/>
+                        <filter icon="terp-crm" name="to_wait" string="To Do" domain="[('state','=','waiting_answer')]" />
                         <separator orientation="vertical"/>
-                        <filter string="My" icon="terp-partner" domain="[('user_id','=',uid)]" default="1"/>
+                        <filter string="My" name="my_user" icon="terp-partner" domain="[('user_id','=',uid)]" />
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                         <separator orientation="vertical"/>
@@ -329,6 +329,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
+            <field name="context">{"search_default_to_wait":1, "search_default_my_user":1}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
         </record>
 
@@ -341,5 +342,9 @@
            id="menu_eval_send_mail"
            action="action_hr_evaluation_send_mail"
            sequence="45"/>
+
+      <!-- Evaluation Interviews Button on Employee Form -->
+      <act_window domain="[('user_to_review_id', '=', active_id)]" id="act_hr_employee_2_hr__evaluation_interview" name="Evaluation Interviews" res_model="hr.evaluation.interview" src_model="hr.employee"/>
+
     </data>
 </openerp>
