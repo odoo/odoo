@@ -65,7 +65,8 @@ class purchase_requisition_partner(osv.osv_memory):
             acc_pos_obj = self.pool.get('account.fiscal.position')            
             partner_id = data[0]['partner_id']
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
-             
+            list_line=[]
+            purchase_order_line={}
             for tender in tender_obj.browse(cr, uid, record_ids):
                 for line in tender.line_ids:                
                     
@@ -74,21 +75,16 @@ class purchase_requisition_partner(osv.osv_memory):
                     newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
                     newdate = newdate - line.product_id.seller_ids[0].delay
         
-                    
-                    qty = uom_obj._compute_qty(cr, uid, line.product_uom_id.id, line.product_qty, uom_id)
-                                
-                    if line.product_id.seller_ids[0].qty:
-                            qty = max(qty,line.product_id.seller_ids[0].qty)
-            
+
                     partner = line.product_id.seller_ids[0].name   
                     pricelist_id = partner.property_product_pricelist_purchase.id             
-                    price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
+                    price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, line.product_qty, False, {'uom': uom_id})[pricelist_id]
                     product = prod_obj.browse(cr, uid, line.product_id.id, context=context)
         
                     
-                    order_line = {
+                    purchase_order_line= {
                             'name': product.partner_ref,
-                            'product_qty': qty,
+                            'product_qty': line.product_qty,
                             'product_id': line.product_id.id,
                             'product_uom': uom_id,
                             'price_unit': price,
@@ -97,22 +93,26 @@ class purchase_requisition_partner(osv.osv_memory):
                         }
                     taxes_ids = line.product_id.product_tmpl_id.supplier_taxes_id
                     taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
-                    order_line.update({
+                    purchase_order_line.update({
                             'taxes_id': [(6,0,taxes)]
-                        })        
+                        })   
+                    list_line.append(purchase_order_line)
                 purchase_id = order_obj.create(cr, uid, {
                             'origin': tender.name,
                             'partner_id': partner_id,
                             'partner_address_id': address_id,
                             'pricelist_id': pricelist_id,
                             'location_id': line.product_id.product_tmpl_id.property_stock_production.id,                            
-                            'order_line': [(0,0,order_line)],
                             'company_id': tender.company_id.id,
-                           'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
-                           'tender_id':tender.id,
+                            'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
+                            'tender_id':tender.id,
                         })
-                   
-                
+                order_ids=[]
+                for order_line in list_line:
+                    order_line.update({
+                            'order_id': purchase_id
+                        })   
+                    order_line_obj.create(cr,uid,order_line)
         return {}        
 
 purchase_requisition_partner()
