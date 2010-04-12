@@ -108,11 +108,15 @@ class survey(osv.osv):
         if not context:
             context = {}
         datas = {}
-        response_id = self.pool.get('survey.response').search(cr, uid, [('survey_id','=', ids)], context=context)
+        if 'response_id' in context:
+            response_id = context.get('response_id', 0)
+            datas['ids'] = [context.get('survey_id', 0)]
+        else:
+            response_id = self.pool.get('survey.response').search(cr, uid, [('survey_id','=', ids)], context=context)
+            datas['ids'] = ids
         page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
         report = {}
-        datas['ids'] = ids
-        if response_id:
+        if response_id and response_id[0]:
             context.update({'survey_id': datas['ids']})
             datas['form'] = page_setting
             datas['model'] = 'survey.print.answer'
