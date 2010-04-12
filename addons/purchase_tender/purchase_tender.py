@@ -37,12 +37,14 @@ class purchase_tender(osv.osv):
         'description': fields.text('Description'),
         'purchase_ids' : fields.one2many('purchase.order','tender_id','Purchase Orders'),
         'line_ids' : fields.one2many('purchase.tender.line','tender_id','Products to Purchase'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),        
         'state': fields.selection([('draft','Draft'),('open','Open'),('cancel','Cancel'),('close','Close'),('in_progress','In progress'),('done','Done')], 'State', required=True)
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
         'state': lambda *args: 'open',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.tender'),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     def tender_close(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'done', 'date_end': time.strftime('%Y-%m-%d %H:%M:%S')})
@@ -73,7 +75,8 @@ class purchase_tender_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_id': fields.many2one('product.uom', 'Product UoM'),
         'product_qty': fields.float('Date End', digits=(16,2)),
-        'tender_id' : fields.many2one('purchase.tender','Purchase Tender', ondelete='cascade')
+        'tender_id' : fields.many2one('purchase.tender','Purchase Tender', ondelete='cascade'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         
@@ -90,7 +93,9 @@ class purchase_tender_line(osv.osv):
             value = {'product_uom_id': prod.uom_id.id}
         
         return {'value': value}
-    
+    _defaults = {    
+                 'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+                 }
 purchase_tender_line()
 
 class purchase_order(osv.osv):
