@@ -27,9 +27,9 @@ import time
 from mx import DateTime
 from osv.orm import browse_record, browse_null
 
-class purchase_requisition_partner(osv.osv_memory):
-    _name = "purchase.requisition.partner"
-    _description = "Purchase Requisition"
+class purchase_tender_partner(osv.osv_memory):
+    _name = "purchase.tender.partner"
+    _description = "Purchase Tender Partner"
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
     }
@@ -40,7 +40,7 @@ class purchase_requisition_partner(osv.osv_memory):
 
     def create_order(self, cr, uid, ids, context):
         """ 
-             To merge similar type of purchase orders.
+             To Create a purchase orders .
             
              @param self: The object pointer.
              @param cr: A database cursor
@@ -58,7 +58,6 @@ class purchase_requisition_partner(osv.osv_memory):
             order_line_obj = self.pool.get('purchase.order.line')
             partner_obj = self.pool.get('res.partner')
             tender_line_obj = self.pool.get('purchase.tender.line')
-            uom_obj = self.pool.get('product.uom')
             pricelist_obj = self.pool.get('product.pricelist')
             prod_obj = self.pool.get('product.product')
             tender_obj = self.pool.get('purchase.tender')
@@ -115,5 +114,5 @@ class purchase_requisition_partner(osv.osv_memory):
                     order_line_obj.create(cr,uid,order_line)
         return {}        
 
-purchase_requisition_partner()
+purchase_tender_partner()
 

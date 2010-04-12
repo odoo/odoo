@@ -42,6 +42,7 @@ class purchase_tender(osv.osv):
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'user_id': lambda obj, cr, uid, context: uid,
         'state': lambda *args: 'open',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.tender'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
@@ -55,7 +56,6 @@ class purchase_tender(osv.osv):
         return True        
     def tender_cancel(self, cr, uid, ids, context={}):
         purchase_order_obj = self.pool.get('purchase.order')
-        wf_service = netsvc.LocalService("workflow")
         for purchase in self.browse(cr, uid, ids):
             for purchase_id in purchase.purchase_ids:
                 if str(purchase_id.state) in('draft','wait'):
@@ -70,7 +70,9 @@ class purchase_tender(osv.osv):
         return True    
     def tender_done(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
-        return True        
+        return True     
+    
+      
 purchase_tender()
 
 class purchase_tender_line(osv.osv):
@@ -121,6 +123,8 @@ class purchase_order(osv.osv):
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
                     self.pool.get('purchase.tender').write(cr, uid, [po.tender_id.id], {'state':'close'})
         return res
+    
+    
 purchase_order()
 
 
