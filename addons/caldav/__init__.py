@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import caldav
+import calendar
 import caldav_fs
 import wizard
 

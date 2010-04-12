@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-from caldav import caldav
+from caldav import calendar
 
 class project_task(osv.osv):
     _name = "project.task"
@@ -52,7 +52,7 @@ class project_task(osv.osv):
                 hours = (val['planned_hours'].seconds / float(3600)) + \
                                         (val['planned_hours'].days * 24)
                 val['planned_hours'] = hours
-            exists, r_id = caldav.uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
+            exists, r_id = calendar.uid2openobjectid(cr, val['id'], self._name, val.get('recurrent_id'))
             val.pop('id')
             if exists:
                 self.write(cr, uid, [exists], val)
