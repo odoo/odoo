@@ -25,6 +25,7 @@ import urlparse
 import urllib
 from DAV import utils
 from DAV.propfind import PROPFIND
+import tools
 
 
 super_mk_prop_response = PROPFIND.mk_prop_response

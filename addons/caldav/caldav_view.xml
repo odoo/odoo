@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
-        <record model="ir.ui.view" id="view_document_directory_caldav_form">
-            <field name="name">CalDAV Collections : Form</field>
-            <field name="model">document.directory</field>
+        <record model="ir.ui.view" id="view_caldav_form">
+            <field name="name">Calendar : Form</field>
+            <field name="model">basic.calendar</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="CalDAV Collections">
-                    <field name="name"/>
+                <form string="Calendar">
+                    <field name="name" colspan="4"/>
                     <field name="user_id"/>
-                    <separator string="Calendar" colspan="4"/>
+                    <field name="collection_id" required="1"/>                                        
                     <field name="line_ids" mode="form,tree" colspan="4" nolabel="1">
 					    <form string="Calendar Lines">
 					        <field name="name" required="1" select="1" />
@@ -43,13 +43,12 @@
     </record>
 
 
-    <record model="ir.ui.view" id="view_document_directory_caldav_tree">
-        <field name="name">CalDAV Collections : Tree</field>
-        <field name="model">document.directory</field>
-        <field name="type">tree</field>
-        <field name="field_parent">child_ids</field>
+    <record model="ir.ui.view" id="view_caldav_tree">
+        <field name="name">Calendar : Tree</field>
+        <field name="model">basic.calendar</field>
+        <field name="type">tree</field>        
         <field name="arch" type="xml">
-            <tree string="Collections" toolbar="1">
+            <tree string="Calendars" toolbar="1">
                 <field name="name"/>                
                 <field name="user_id"/>
                 <field name="create_date"/>
@@ -58,35 +57,30 @@
         </field>
     </record>
 
-    <record model="ir.actions.act_window" id="action_document_directory_caldav_form">
-        <field name="name">CalDAV Collections</field>
+    <record model="ir.actions.act_window" id="action_caldav_form">
+        <field name="name">Calendars</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">document.directory</field>
+        <field name="res_model">basic.calendar</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('line_ids','!=', False)]</field>
-    </record>
+        <field name="view_mode">tree,form</field>        
+    </record>    
 
-    <record model="ir.actions.act_window" id="document.action_document_directory_form">
-         <field name="domain">[('line_ids','=', False)]</field>
-    </record>
-
-    <record id="action_dir_caldav_view1" model="ir.actions.act_window.view">
+    <record id="action_caldav_view1" model="ir.actions.act_window.view">
         <field eval="10" name="sequence"/>
         <field name="view_mode">tree</field>
-        <field name="view_id" ref="view_document_directory_caldav_tree"/>
-        <field name="act_window_id" ref="action_document_directory_caldav_form"/>
+        <field name="view_id" ref="view_caldav_tree"/>
+        <field name="act_window_id" ref="action_caldav_form"/>
     </record>
-    <record id="action_dir_caldav_view2" model="ir.actions.act_window.view">
+    <record id="action_caldav_view2" model="ir.actions.act_window.view">
         <field eval="20" name="sequence"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_document_directory_caldav_form"/>
-        <field name="act_window_id" ref="action_document_directory_caldav_form"/>
+        <field name="view_id" ref="view_caldav_form"/>
+        <field name="act_window_id" ref="action_caldav_form"/>
     </record>
 
     <menuitem
-        action="action_document_directory_caldav_form"
-        id="menu_document_caldav_directories"
+        action="action_caldav_form"
+        id="menu_caldav_directories"
         parent="document.menu_document_management_configuration"/>
 	</data>
 </openerp>

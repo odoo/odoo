@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
-	<data noupdate="1">
+	<data noupdate="1">       
 
-        <record model="document.directory" id="caldav.basic_calendar2">
+        <record model="basic.calendar" id="caldav.basic_calendar2">
 			<field name="name">Todo</field>
+            <field name="collection_id" ref="document.dir_calendars"></field>
 		</record>
 		
         <record model="basic.calendar.lines" id="caldav.calendar_lines_todo">

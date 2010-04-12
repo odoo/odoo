@@ -410,9 +410,15 @@ class CalDAV(object):
             self.ical_reset('value')
         return res
 
+class calendar_collection(osv.osv):
+    _inherit = 'document.directory' 
+    _columns = {
+        'calendar_ids': fields.one2many('basic.calendar', 'collection_id', 'Calendars'),
+    }
+calendar_collection()
 
 class Calendar(CalDAV, osv.osv):
-    _inherit = 'document.directory'    
+    _name = 'basic.calendar'    
     _calname = 'calendar'
 
     __attribute__ = {
@@ -430,11 +436,13 @@ class Calendar(CalDAV, osv.osv):
     }
     _columns = {
             'name': fields.char("Name", size=64),
+            'collection_id': fields.many2one('document.directory', 'Collection', \
+                                       required=True),
+            'user_id': fields.many2one('res.users', 'Owner'),
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),            
             'create_date': fields.datetime('Created Date'),
             'write_date': fields.datetime('Modifided Date'),
-    }
-   
+    }   
 
     def export_cal(self, cr, uid, ids, vobj='vevent', context={}):
         """ Export Calendar
@@ -510,7 +518,7 @@ class basic_calendar_line(osv.osv):
                                     ('attendee', 'Attendee')], \
                                     string="Type", size=64),
             'object_id': fields.many2one('ir.model', 'Object'),
-            'calendar_id': fields.many2one('document.directory', 'Calendar', \
+            'calendar_id': fields.many2one('basic.calendar', 'Calendar', \
                                        required=True, ondelete='cascade'),
             'domain': fields.char('Domain', size=124),
             'mapping_ids': fields.one2many('basic.calendar.fields', 'type_id', 'Fields Mapping')

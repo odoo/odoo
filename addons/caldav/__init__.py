@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import caldav_collection
+import caldav
 import caldav_fs
 import wizard
 
