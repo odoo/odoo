@@ -44,7 +44,7 @@ class calendar_event_import(osv.osv_memory):
         """
 
         for data in self.read(cr, uid, ids):
-            model = data.get('model', 'document.directory')
+            model = data.get('model', 'basic.calendar')
             model_obj = self.pool.get(model)
             context.update({'model': model})
             data_obj = self.pool.get('ir.model.data')
