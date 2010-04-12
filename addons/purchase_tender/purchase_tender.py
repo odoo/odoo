@@ -94,7 +94,7 @@ class mrp_procurement(osv.osv):
         res = super(mrp_procurement, self).make_po(cr, uid, ids, context)
         for proc_id,po_id in res.items():
             procurement = self.browse(cr, uid, proc_id)
-            if proc.product_id.purchase_tender:
+            if procurement.product_id.purchase_tender:
                 self.pool.get('purchase.tender').create(cr, uid, {
                     'name': procurement.name,
                     'lines_ids': [(0,0,{
