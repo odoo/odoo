@@ -50,8 +50,6 @@
                     help="Recruitments of this month"/>
                 <separator orientation="vertical"/>
                 <filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
-				<filter string="Won" icon="terp-hr" domain="[('state','=','done')]"/>
-				<filter string="Lost" icon="terp-hr" domain="[('state','=','cancel')]"/>
                 <separator orientation="vertical"/>
                 <field name="company_id" widget="selection"/>
                 <field name="user_id" widget="selection">
@@ -63,6 +61,22 @@
                 </group>
                 <newline/>
                 <group expand="1" string="Extended options..." colspan="10" col="12">
+                	<filter icon="terp-hr"
+                    		string="New"
+                    		domain="[('state','=','draft')]"/>
+                    <filter icon="terp-hr"
+                    		string="In Progress"
+                    		domain="[('state','=','open')]"/>
+                    <filter icon="terp-hr"
+                    		string="Pending"
+                    		domain="[('state','=','pending')]"/>
+                    <filter icon="terp-hr"
+                    		string="Hired"
+                    		domain="[('state','=','done')]"/>
+                    <filter icon="terp-hr"
+                    		string="Refused"
+                    		domain="[('state','=','cancel')]"/>
+                	<newline/>
                     <filter icon="terp-hr"
                     		string="Not Good"
                     		domain="[('priority','=','5')]"/>
@@ -78,6 +92,9 @@
                     <filter icon="terp-hr"
                     		string="Excellent"
                     		domain="[('priority','=','1')]"/>
+                    <newline/>
+                    <field name="date"/>
+                    <field name="date_closed"/>
                 </group>
 
                 <newline/>

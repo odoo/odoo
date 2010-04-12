@@ -31,6 +31,7 @@ class hr_recruitment_report(osv.osv):
     _rec_name = 'date'
     _columns = {
         'date': fields.datetime('Date', readonly=True),
+        'date_closed': fields.datetime('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]",readonly=True),
         'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
@@ -46,6 +47,7 @@ class hr_recruitment_report(osv.osv):
                  select
                      min(s.id) as id,
                      s.date as date,
+                     s.date_closed,
                      to_char(s.date, 'YYYY') as name,
                      to_char(s.date, 'MM') as month,
                      s.state,
@@ -59,8 +61,16 @@ class hr_recruitment_report(osv.osv):
                      count(*) as nbr
                  from hr_applicant s
                  group by
-                     s.date,s.state,s.company_id,s.user_id,s.stage_id,s.type_id,s.priority,
-                     s.job_id,s.department_id
+                     s.date,
+                     s.state,
+                     s.company_id,
+                     s.user_id,
+                     s.stage_id,
+                     s.type_id,
+                     s.priority,
+                     s.date_closed,
+                     s.job_id,
+                     s.department_id
             )
         """)
 hr_recruitment_report()
