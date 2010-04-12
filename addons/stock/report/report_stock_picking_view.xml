@@ -56,19 +56,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="6">
-                   		<filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" default="1" />
-						<filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]" default="1"/>
+                  <group>
+                        <filter string="This Year" name="this_year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" />
+                        <filter string="This Month" name="this_month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]" />
                         <separator orientation="vertical"/>
   						<filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
-  						<filter string="Order Date" icon="terp-stock" domain="[('order_date',=,time.strftime('%%m/%%d/%%Y'))]"  />
-  						<filter string="Expected Date" icon="terp-hr" domain="[('expected_date',=,time.strftime('%%m/%%d/%%Y'))]"/>
+  						<filter string="Order Date" icon="terp-stock" domain="[('order_date',=,time.strftime('%%Y-%%m-%%d'))]"  />
+  						<filter string="Expected Date" icon="terp-hr" domain="[('expected_date',=,time.strftime('%%Y-%%m-%%d'))]"/>
 						<separator orientation="vertical"/>
 						<field name="reference" />
 						<field name="origin" />
                    </group>
                    <newline/>
-                   <group expand="1" string="Extended options..." colspan="4" col="5">
+                   <group expand="1" string="Extended options...">
                         <filter icon="terp-sale"
                     		string="Sending Goods"
                     		domain="[('type','=','out')]"/>
@@ -83,7 +83,7 @@
                     		domain="[('type','=','delivery')]"/>
                     </group>
                    <newline/>
-                   <group expand="1" string="Group By..." colspan="4" col="5">
+                   <group expand="1" string="Group By...">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
@@ -99,6 +99,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_report_stock_picking_tree"/>
+            <field name="context">{"search_default_this_year":1,"search_default_this_month":1}</field>            
             <field name="search_view_id" ref="view_report_report_stock_picking_filter"/>
         </record>
 

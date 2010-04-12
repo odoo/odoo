@@ -243,8 +243,8 @@
                         string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
 					<button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                         string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
-					<button name="%(survey_browse_response)d" states="open,draft,close,cancel"
-                                	string="Print Answer" type="action" icon="gtk-print"/>
+					<button name="action_print_survey" states="open,draft,close,cancel"
+                                	string="Print Answer" type="object" icon="gtk-print"/>
                 </tree>
             </field>
         </record>
@@ -261,7 +261,7 @@
                         <separator orientation="vertical"/>
                         <field name="title" select="1"/>
                         <field name="type" select="1" widget="selection"/>
-                        <field name="responsible_id" select="1" widget="selection" default="1">
+                        <field name="responsible_id" select="1" widget="selection" >
                         <filter string="MY" icon="terp-partner" domain="[('responsible_id','=',uid)]"/>
                         </field>
                    </group>
@@ -1071,7 +1071,7 @@
                         <separator orientation="vertical"/>
                         <field name="survey_id" widget="selection" select="1"/>
                         <field name="email" select="1"/>
-                        <field name="user_id" select="1" widget="selection" default="1">
+                        <field name="user_id" select="1" widget="selection" >
                         <filter string="MY" icon="terp-partner" domain="[('user_id','=',uid)]"/>
                         </field>
                    </group>

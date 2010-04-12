@@ -95,8 +95,51 @@ class survey(osv.osv):
     def copy(self, cr, uid, id, default=None,context={}):
         raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
 
-survey()
+    def action_print_survey(self, cr, uid, ids, context=None):
+        """
+        If response is available then print this response otherwise print survey form(print template of the survey).
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Survey IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for print survey form.
+        """
+        if not context:
+            context = {}
+        datas = {}
+        if 'response_id' in context:
+            response_id = context.get('response_id', 0)
+            datas['ids'] = [context.get('survey_id', 0)]
+        else:
+            response_id = self.pool.get('survey.response').search(cr, uid, [('survey_id','=', ids)], context=context)
+            datas['ids'] = ids
+        page_setting = {'orientation': 'vertical', 'without_pagebreak': 0, 'paper_size': 'letter', 'page_number': 1, 'survey_title': 1}
+        report = {}
+        if response_id and response_id[0]:
+            context.update({'survey_id': datas['ids']})
+            datas['form'] = page_setting
+            datas['model'] = 'survey.print.answer'
+            report = {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'survey.browse.response',
+                'datas': datas,
+                'nodestroy': True,
+                'context' : context
+            }
+        else:
+            datas['form'] = page_setting
+            datas['model'] = 'survey.print'
+            report = {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'survey.form',
+                'datas': datas,
+                'nodestroy':True,
+                'context' : context
+            }
+        return report
 
+survey()
 
 class survey_history(osv.osv):
     _name = 'survey.history'
@@ -110,7 +153,6 @@ class survey_history(osv.osv):
     _defaults = {
          'date': lambda * a: datetime.datetime.now()
     }
-
 survey_history()
 
 class survey_page(osv.osv):
@@ -144,14 +186,14 @@ class survey_page(osv.osv):
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'transfer':True, 'page_no' : context.get('page_number',0) })
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.question.wiz',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'search_view_id': search_id[0],
-                'context': context
-                }
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'search_view_id': search_id[0],
+            'context': context
+        }
 
     def copy(self, cr, uid, id, default=None, context={}):
         raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
@@ -196,28 +238,28 @@ class survey_question(osv.osv):
         'descriptive_text': fields.text('Descriptive Text', size=255),
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id',' Column heading'),
         'type': fields.selection([('multiple_choice_only_one_ans','Multiple Choice (Only One Answer)'),
-                                     ('multiple_choice_multiple_ans','Multiple Choice (Multiple Answer)'),
-                                     ('matrix_of_choices_only_one_ans','Matrix of Choices (Only One Answers Per Row)'),
-                                     ('matrix_of_choices_only_multi_ans','Matrix of Choices (Multiple Answers Per Row)'),
-                                     ('matrix_of_drop_down_menus','Matrix of Drop-down Menus'),
-                                     ('rating_scale','Rating Scale'),('single_textbox','Single Textbox'),
-                                     ('multiple_textboxes','Multiple Textboxes'),
-                                     ('multiple_textboxes_diff_type','Multiple Textboxes With Different Type'),
-                                     ('comment','Comment/Essay Box'),
-                                     ('numerical_textboxes','Numerical Textboxes'),('date','Date'),
-                                     ('date_and_time','Date and Time'),('descriptive_text','Descriptive Text'),
-                                     ('table','Table'),
-                                    ], 'Question Type',  required=1,),
+             ('multiple_choice_multiple_ans','Multiple Choice (Multiple Answer)'),
+             ('matrix_of_choices_only_one_ans','Matrix of Choices (Only One Answers Per Row)'),
+             ('matrix_of_choices_only_multi_ans','Matrix of Choices (Multiple Answers Per Row)'),
+             ('matrix_of_drop_down_menus','Matrix of Drop-down Menus'),
+             ('rating_scale','Rating Scale'),('single_textbox','Single Textbox'),
+             ('multiple_textboxes','Multiple Textboxes'),
+             ('multiple_textboxes_diff_type','Multiple Textboxes With Different Type'),
+             ('comment','Comment/Essay Box'),
+             ('numerical_textboxes','Numerical Textboxes'),('date','Date'),
+             ('date_and_time','Date and Time'),('descriptive_text','Descriptive Text'),
+             ('table','Table'),
+            ], 'Question Type',  required=1,),
         'is_comment_require': fields.boolean('Add Comment Field (optional)'),
         'comment_label': fields.char('Field Label', size = 255),
         'comment_field_type': fields.selection([('char', 'Single Line Of Text'), ('text', 'Paragraph of Text')], 'Comment Field Type'),
         'comment_valid_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),
-                                                 ('must_be_specific_length', 'Must Be Specific Length'),
-                                                 ('must_be_whole_number', 'Must Be A Whole Number'),
-                                                 ('must_be_decimal_number', 'Must Be A Decimal Number'),
-                                                 ('must_be_date', 'Must Be A Date'),
-                                                 ('must_be_email_address', 'Must Be An Email Address'),
-                                                 ], 'Text Validation'),
+             ('must_be_specific_length', 'Must Be Specific Length'),
+             ('must_be_whole_number', 'Must Be A Whole Number'),
+             ('must_be_decimal_number', 'Must Be A Decimal Number'),
+             ('must_be_date', 'Must Be A Date'),
+             ('must_be_email_address', 'Must Be An Email Address'),
+             ], 'Text Validation'),
         'comment_minimum_no': fields.integer('Minimum number'),
         'comment_maximum_no': fields.integer('Maximum number'),
         'comment_minimum_float': fields.float('Minimum decimal number'),
@@ -229,12 +271,12 @@ class survey_question(osv.osv):
         'make_comment_field_err_msg': fields.text('Error message'),
         'is_validation_require': fields.boolean('Validate Text (optional)'),
         'validation_type': fields.selection([('do_not_validate', '''Don't Validate Comment Text.'''),\
-                                                 ('must_be_specific_length', 'Must Be Specific Length'),\
-                                                 ('must_be_whole_number', 'Must Be A Whole Number'),\
-                                                 ('must_be_decimal_number', 'Must Be A Decimal Number'),\
-                                                 ('must_be_date', 'Must Be A Date'),\
-                                                 ('must_be_email_address', 'Must Be An Email Address')\
-                                                 ], 'Text Validation'),
+             ('must_be_specific_length', 'Must Be Specific Length'),\
+             ('must_be_whole_number', 'Must Be A Whole Number'),\
+             ('must_be_decimal_number', 'Must Be A Decimal Number'),\
+             ('must_be_date', 'Must Be A Date'),\
+             ('must_be_email_address', 'Must Be An Email Address')\
+             ], 'Text Validation'),
         'validation_minimum_no': fields.integer('Minimum number'),
         'validation_maximum_no': fields.integer('Maximum number'),
         'validation_minimum_float': fields.float('Minimum decimal number'),
@@ -437,14 +479,14 @@ class survey_question(osv.osv):
         surv_name_wiz = self.pool.get('survey.name.wiz')
         surv_name_wiz.write(cr, uid, [context.get('sur_name_id',False)], {'transfer':True, 'page_no' : context.get('page_number',False) })
         return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'survey.question.wiz',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'search_view_id': search_id[0],
-                'context': context
-                }
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'search_view_id': search_id[0],
+            'context': context
+        }
 
     def default_get(self, cr, uid, fields, context={}):
         data = super(survey_question, self).default_get(cr, uid, fields, context)
@@ -453,7 +495,7 @@ class survey_question(osv.osv):
                 data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
 
         if context.has_key('page_id'):
-            data['page_id']= context.get('page_id',False)
+            data['page_id']= context.get('page_id', False)
         return data
 
 survey_question()
@@ -465,11 +507,11 @@ class survey_question_column_heading(osv.osv):
     _rec_name = 'title'
 
     def _get_in_visible_rating_weight(self,cr, uid, context={}):
-        if context.get('in_visible_rating_weight',False):
+        if context.get('in_visible_rating_weight', False):
             return context['in_visible_rating_weight']
         return False
     def _get_in_visible_menu_choice(self,cr, uid, context={}):
-        if context.get('in_visible_menu_choice',False):
+        if context.get('in_visible_menu_choice', False):
             return context['in_visible_menu_choice']
         return False
 
@@ -485,7 +527,6 @@ class survey_question_column_heading(osv.osv):
        'in_visible_rating_weight': _get_in_visible_rating_weight,
        'in_visible_menu_choice': _get_in_visible_menu_choice,
     }
-
 survey_question_column_heading()
 
 class survey_answer(osv.osv):
@@ -496,7 +537,7 @@ class survey_answer(osv.osv):
 
     def _calc_response_avg(self, cr, uid, ids, field_name, arg, context):
         val = {}
-        for rec in self.browse(cr, uid, ids):
+        for rec in self.browse(cr, uid, ids, context):
             cr.execute("select count(question_id) ,(select count(answer_id) \
                 from survey_response_answer sra, survey_response_line sa \
                 where sra.response_id = sa.id and sra.answer_id = %d \
@@ -515,9 +556,7 @@ class survey_answer(osv.osv):
         return val
 
     def _get_in_visible_answer_type(self,cr, uid, context={}):
-        if context.get('in_visible_answer_type',False):
-            return context.get('in_visible_answer_type',False)
-        return False
+        return context.get('in_visible_answer_type', False)
 
     _columns = {
         'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
@@ -526,8 +565,8 @@ class survey_answer(osv.osv):
         'response': fields.function(_calc_response_avg, method=True, string="#Answer", multi='sums'),
         'average': fields.function(_calc_response_avg, method=True, string="#Avg", multi='sums'),
         'type': fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),\
-                    ('integer','Integer'),('float','Float'),('selection','Selection'),\
-                    ('email','Email')], "Type of Answer",required=1),
+            ('integer','Integer'),('float','Float'),('selection','Selection'),\
+            ('email','Email')], "Type of Answer",required=1),
         'menu_choice': fields.text('Menu Choices'),
         'in_visible_answer_type': fields.boolean('Is Answer Type Invisible??')
     }
@@ -539,7 +578,7 @@ class survey_answer(osv.osv):
 
     def default_get(self, cr, uid, fields, context={}):
         data = super(survey_answer, self).default_get(cr, uid, fields, context)
-        if context.get('line_order',False):
+        if context.get('line_order', False):
             if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
                 data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
         return data

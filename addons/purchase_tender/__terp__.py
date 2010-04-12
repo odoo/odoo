@@ -28,7 +28,7 @@
     When a purchase order is created, you now have the opportunity to save the related tender.
     This new object will regroup and will allow you to easily keep track and order all your purchase orders.
 """,
-    "depends" : ["purchase"],
+    "depends" : ["purchase","mrp"],
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : ["purchase_tender_view.xml","security/ir.model.access.csv","purchase_tender_sequence.xml"],

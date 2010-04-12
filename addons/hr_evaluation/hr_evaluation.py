@@ -183,79 +183,48 @@ class hr_evaluation(osv.osv):
         return {'value': {'plan_id':evaluation_plan_id}}
 
     def button_plan_in_progress(self,cr, uid, ids, context={}):
-        user_obj = self.pool.get('res.users')
-        employee_obj = self.pool.get('hr.employee')
-        hr_eval_inter_obj = self.pool.get('hr.evaluation.interview')
-        survey_request_obj = self.pool.get('survey.request')
-        hr_eval_plan_obj = self.pool.get('hr_evaluation.plan.phase')
-        curr_employee=self.browse(cr,uid, ids, context=context)[0].employee_id
-        child_employees=employee_obj.browse(cr,uid, employee_obj.search(cr,uid,[('parent_id','=',curr_employee.id)],context=context))
-        manager_employee=curr_employee.parent_id
-        for evaluation in self.browse(cr,uid,ids):
-            if evaluation and evaluation.plan_id:
-                apprai_id = []
-                for phase in evaluation.plan_id.phase_ids:
-                    if phase.action == "bottom-up":
-                        for child in child_employees:
-                            user = False
-                            if child.user_id:
-                                user = child.user_id.id
-                            id = hr_eval_inter_obj.create(cr, uid, {'evaluation_id':evaluation.id ,'user_id' : user,'survey_id' : phase.survey_id.id, 'user_to_review_id' : child.id, 'date_deadline' :(dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d')) + dt.RelativeDateTime(months =+ 1)).strftime('%Y-%m-%d')},context=context)
-                            if not phase.wait:
-                                hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [id], context=context)
-                            if phase.mail_feature:
-                                src = tools.config.options['email_from']
-                                user_obj_id = user_obj.browse(cr,uid,uid)
-                                val = {
-                                        'employee_name':child.name,
-                                        'user_signature':curr_employee.name,
-#                                        'company_name':user_obj_id.company_id.name,
-                                        'eval_name':phase.survey_id.title,
-                                        'date':time.strftime('%Y-%m-%d'),
-                                      }
-                                mailbody = hr_eval_plan_obj.read(cr,uid,phase.id,['mail_body','email_subject'],context=context)
-                                body = mailbody['mail_body']%val
-                                sub = mailbody['email_subject']+phase.survey_id.title
-                                dest=[child.work_email]
-                                if dest:
-                                   tools.email_send(src,dest,sub,body)
-                            apprai_id.append(id)
+        apprai_id = []
+        for evaluation in self.browse(cr,uid,ids, context):
+            wait = False
+            for phase in evaluation.plan_id.phase_ids:
+                childs = []
+                if phase.action == "bottom-up":
+                    childs = evaluation.employee_id.child_ids
+                elif phase.action in ("top-down", "final"):
+                    if evaluation.employee_id.parent_id:
+                        childs = [evaluation.employee_id.parent_id]
+                elif phase.action == "self":
+                    childs = [evaluation.employee_id]
+                for child in childs:
+                    if not child.user_id:
+                        continue
 
-                    elif phase.action == "top-down":
-                        if manager_employee:
-                            user = False
-                            if manager_employee.user_id:
-                                user = manager_employee.user_id.id
-                            id = hr_eval_inter_obj.create(cr, uid, {'evaluation_id':evaluation.id,'user_id': user ,'survey_id' : phase.survey_id.id, 'user_to_review_id' :manager_employee.id, 'date_deadline' :(dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d')) + dt.RelativeDateTime(months =+ 1)).strftime('%Y-%m-%d')},context=context)
-                            if not phase.wait:
-                                hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [id], context=context)
-                            if phase.mail_feature:
-                                val.update({'employee_name':manager_employee.name})
-                                mailbody = hr_eval_plan_obj.read(cr,uid,phase.id,['mail_body'],context=context)
-                                body = mailbody['mail_body']%val
-                                dest = [manager_employee.work_email]
-                                if dest:
-                                        tools.email_send(src,dest,sub,body)
-                            apprai_id.append(id)
-                    elif phase.action == "self":
-                        if curr_employee:
-                            user = False
-                            if curr_employee.user_id:
-                                user = curr_employee.user_id.id
-                            id = hr_eval_inter_obj.create(cr, uid, {'evaluation_id':evaluation.id,'user_id' : user, 'survey_id' : phase.survey_id.id, 'user_to_review_id' :curr_employee.id, 'date_deadline' :(dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d')) + dt.RelativeDateTime(months =+ 1)).strftime('%Y-%m-%d')},context=context)
-                            if not phase.wait:
-                                hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [id], context=context)
-                            apprai_id.append(id)
-                    elif phase.action == "final":
-                        if manager_employee:
-                            user = False
-                            if manager_employee.user_id:
-                                user = manager_employee.user_id.id
-                            id = hr_eval_inter_obj.create(cr, uid, {'evaluation_id':evaluation.id,'user_id' : user, 'survey_id' : phase.survey_id.id, 'user_to_review_id' :manager_employee.id, 'date_deadline' :(dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d')) + dt.RelativeDateTime(months =+ 1)).strftime('%Y-%m-%d')},context=context)
-                            if not phase.wait:
-                                hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [id], context=context)
-                            apprai_id.append(id)
-                self.write(cr, uid, evaluation.id, {'survey_request_ids':[[6, 0, apprai_id]]})
+                    hr_eval_inter_obj = self.pool.get('hr.evaluation.interview')
+                    int_id = hr_eval_inter_obj.create(cr, uid, {
+                        'evaluation_id': evaluation.id,
+                        'survey_id': phase.survey_id.id,
+                        'date_deadline': (dt.ISO.ParseAny(dt.now().strftime('%Y-%m-%d')) + dt.RelativeDateTime(months =+ 1)).strftime('%Y-%m-%d'),
+                        'user_id': child.user_id.id,
+                        'user_to_review_id': evaluation.employee_id.id
+                    }, context=context)
+                    if phase.wait:
+                        wait = True
+                    if not wait:
+                        hr_eval_inter_obj.survey_req_waiting_answer(cr, uid, [int_id], context=context)
+
+                    if (not wait) and phase.mail_feature:
+                        body = phase.mail_body % {
+                            'employee_name': child.name,
+                            'user_signature': user.signature,
+                            'eval_name': phase.survey_id.title,
+                            'date': time.strftime('%Y-%m-%d'),
+                            'time': time
+                        }
+                        sub = phase.email_subject
+                        dest = [child.work_email]
+                        if dest:
+                           tools.email_send(src,dest,sub,body)
+
         self.write(cr,uid,ids,{'state':'wait'},context=context)
         return True
 
@@ -291,21 +260,15 @@ class hr_evaluation_interview(osv.osv):
     _description='Evaluation Interview'
     _columns = {
         'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade'),
-        'user_to_review_id': fields.many2one('hr.employee', 'Employee'),
-        'evaluation_id' : fields.many2one('hr_evaluation.evaluation', 'Evaluation'),
-        }
+        'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
+        'evaluation_id' : fields.many2one('hr_evaluation.evaluation', 'Evaluation Type'),
+    }
     _defaults = {
         'is_evaluation': lambda *a: True,
-        }
+    }
 
     def survey_req_waiting_answer(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, { 'state' : 'waiting_answer'})
-#        for id in self.browse(cr, uid, ids):
-#            print"id",id
-#            if id.user_to_review_id and id.user_to_review_id.work_email:
-#                msg = " Hello %s, \n\n We are inviting you for %s survey. \n\n Thanks,"  %(id.user_to_review_id.name, id.survey_id.title)
-#                tools.email_send(tools.config['email_from'], [id.user_to_review_id.work_email],\
-#                                              'Invite to fill up Survey', msg)
         return True
 
     def survey_req_done(self, cr, uid, ids, context={}):
@@ -337,6 +300,24 @@ class hr_evaluation_interview(osv.osv):
         self.write(cr, uid, ids, { 'state' : 'cancel'}, context=context)
         return True
 
+    def action_print_survey(self, cr, uid, ids, context=None):
+        """
+        If response is available then print this response otherwise print survey form(print template of the survey).
+
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Survey IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for print survey form.
+        """
+        if not context:
+            context = {}
+        record = self.browse(cr, uid, ids, context)
+        record = record and record[0]
+        context.update({'survey_id': record.survey_id.id, 'response_id' : [record.response.id], 'response_no':0,})
+        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
+        return value            
 hr_evaluation_interview()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1

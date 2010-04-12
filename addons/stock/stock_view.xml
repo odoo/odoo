@@ -20,7 +20,7 @@
                     <field name="prod_lot_id"/>
                     <button name="%(stock.action_view_stock_inventory_line_split)d"
                             string="Split inventory lines"
-                            type="action" icon="gtk-justify-fill"/>                    
+                            type="action" icon="gtk-justify-fill"/>
                     <field name="location_id"/>
                 </tree>
             </field>
@@ -35,7 +35,7 @@
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="prod_lot_id"/>
-                    <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>                  
+                    <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
                         <button name="%(stock.action_view_stock_inventory_line_split)d"
                             string="Split inventory lines"
                             type="action" icon="gtk-justify-fill"/>
@@ -264,7 +264,7 @@
             <field name="arch" type="xml">
                 <search string="Product Lots Filter">
                     <group col="10" colspan="4">
-                        <filter icon="terp-stock" string="Available" domain="[('stock_available', '&gt;', 0)]" help="Available Product Lots" default="1" />
+                        <filter icon="terp-stock" name="available" string="Available" domain="[('stock_available', '&gt;', 0)]" help="Available Product Lots" />
                         <separator orientation="vertical"/>
                         <field name="prefix" select="1"/>
                         <field name="name" select="1"/>
@@ -287,7 +287,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_production_lot_tree"/>
             <field name="search_view_id" ref="search_product_lot_filter" />
-            <field name="context">{'full':'1'}</field>
+            <field name="context">{'full':'1',"search_default_available":1}</field>
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form" parent="menu_traceability"/>
 
@@ -426,7 +426,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_location_tree2" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
             <field name="model">stock.location</field>
@@ -585,17 +585,17 @@
                         <field name="min_date" select="1"/>
                         <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(act_stock_make_picking_wizard)d" 
-                            states="confirmed,assigned" 
-                            string="Make Picking" 
-                            type="action" 
+                        <button name="%(act_stock_make_picking_wizard)d"
+                            states="confirmed,assigned"
+                            string="Make Picking"
+                            type="action"
                             icon="gtk-go-forward"
                             help="Make Picking" colspan="2"/>
-                        <button name="%(act_stock_return_picking)d" 
-                            states="done" 
-                            string="Return Picking" 
+                        <button name="%(act_stock_return_picking)d"
+                            states="done"
+                            string="Return Picking"
                             type="action"
-                            icon="gtk-go-back" 
+                            icon="gtk-go-back"
                             help="Return Picking" colspan="2"/>
                     </group>
                     <notebook colspan="4">
@@ -619,9 +619,9 @@
                                            states="draft,waiting,confirmed,assigned" />
 
                                     <button name="%(stock.move_scrap)d"
-				                    	string="Scrap Products" type="action"
-				                    	icon="gtk-convert" context="{'scrap': True}"
-				                    	states="draft,waiting,confirmed,assigned" />                                       
+                                        string="Scrap Products" type="action"
+                                        icon="gtk-convert" context="{'scrap': True}"
+                                        states="draft,waiting,confirmed,assigned" />
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -662,10 +662,6 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <group col="7" colspan="4">
-                                <label colspan="6"/>
-                                <button name="%(act_split_moves)d" string="Split Entry Lines in two" type="action" icon="gtk-justify-fill"/>
-                            </group>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Confirm (Do Not Process Now)" type="object" icon="gtk-apply"/>
@@ -687,7 +683,7 @@
                             <newline/>
                             <field name="move_type"/>
                         </page>
-                    </notebook>                    
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -699,7 +695,7 @@
             <field name="arch" type="xml">
                 <search string="Search Stock Picking">
                     <group col="10" colspan="4">
-                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Available Pickings" default="1" />
+                        <filter icon="terp-stock" name="available" string="Available" domain="[('state','=','assigned')]" help="Available Pickings"/>
                         <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Pickings"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Back Order" domain="[('backorder_id', '!=', False)]" help="Has Back Order"  />
@@ -708,8 +704,8 @@
                         <field name="location_dest_id" select="1"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
-                    </group>  
-                    <newline/>                   
+                    </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
@@ -750,19 +746,18 @@
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="date" />
                         <field name="min_date" select="1"/>
-                        <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(act_stock_make_picking_wizard)d" 
-                                states="assigned" 
-                                string="Make Picking" 
-                                type="action" 
-                                icon="gtk-go-forward" 
+                        <button name="%(act_stock_make_picking_wizard)d"
+                                states="assigned"
+                                string="Make Picking"
+                                type="action"
+                                icon="gtk-go-forward"
                                 help="Make Picking" colspan="2"/>
-                        <button name="%(act_stock_return_picking)d" 
-                                states="done" 
-                                string="Return Picking" 
-                                type="action" 
-                                icon="gtk-go-back" 
+                        <button name="%(act_stock_return_picking)d"
+                                states="done"
+                                string="Return Picking"
+                                type="action"
+                                icon="gtk-go-back"
                                 help="Return Picking" colspan="2"/>
                     </group>
                         <notebook colspan="4">
@@ -785,9 +780,9 @@
                                            type="action" icon="gtk-justify-fill"
                                            states="draft,waiting,confirmed,assigned" />
                                        <button name="%(stock.move_scrap)d"
-				                    	string="Scrap Products" type="action"
-				                    	icon="gtk-convert" context="{'scrap': True}"
-				                    	states="draft,waiting,confirmed,assigned" />
+                                        string="Scrap Products" type="action"
+                                        icon="gtk-convert" context="{'scrap': True}"
+                                        states="draft,waiting,confirmed,assigned" />
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -823,10 +818,6 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <group col="7" colspan="4">
-                                <label colspan="6"/>
-                                <button name="%(act_split_moves)d" string="Split in Two" type="action" states="assigned,confirmed,draft,auto" icon="gtk-justify-fill"/>
-                            </group>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
@@ -848,7 +839,7 @@
                             <field name="date_done" select="2"/>
                             <field name="move_type"/>
                         </page>
-                    </notebook>                    
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -860,7 +851,7 @@
             <field name="arch" type="xml">
                 <search string="Search Stock Delivery">
                     <group col="10" colspan="4">
-                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Orders" default="1"/>
+                        <filter icon="terp-stock" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Orders" />
                         <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Orders"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Back Order" domain="[('backorder_id','!=',False)]" help="Back Order"/>
@@ -868,8 +859,8 @@
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
                         <field name="origin" select="1"/>
-                    </group> 
-                    <newline/>                    
+                    </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="10">
                         <filter string="Partner" icon="terp-stock" domain="[]"  context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
@@ -886,7 +877,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','delivery')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
+            <field name="context">{'contact_display': 'partner',"search_default_available":1}</field>
             <field name="search_view_id" ref="view_stock_delivery_filter"/>
         </record>
         <record id="action_picking_tree_delivery_view1" model="ir.actions.act_window.view">
@@ -939,24 +930,23 @@
                 <form string="Picking list">
                     <group col="6" colspan="4">
                         <field name="address_id" select="2"/>
-                        <field name="type"/>
                         <field name="min_date" select="2"/>
                         <field name="name" select="1" readonly="1"/>
                         <field name="invoice_state"/>
                         <field name="backorder_id" select="2" readonly="1"/>
                         <field name="origin" select="2" readonly="1"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(act_stock_make_picking_wizard)d" 
-                                states="assigned" 
-                                string="Make Picking" 
-                                type="action" 
-                                icon="gtk-go-forward" 
+                        <button name="%(act_stock_make_picking_wizard)d"
+                                states="assigned"
+                                string="Make Picking"
+                                type="action"
+                                icon="gtk-go-forward"
                                 help="Make Picking" colspan="2"/>
-                        <button name="%(act_stock_return_picking)d" 
-                                states="done" 
-                                string="Return Picking" 
-                                type="action" 
-                                icon="gtk-go-back" 
+                        <button name="%(act_stock_return_picking)d"
+                                states="done"
+                                string="Return Picking"
+                                type="action"
+                                icon="gtk-go-back"
                                 help="Return Picking" colspan="2"/>
                     </group>
                     <notebook colspan="4">
@@ -1020,10 +1010,6 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <group col="7" colspan="4">
-                                <label colspan="6"/>
-                                <button name="%(act_split_moves)d" string="Split in Two" type="action" icon="gtk-justify-fill"/>
-                            </group>
                             <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
@@ -1033,9 +1019,6 @@
                                 <button name="%(action_partial_picking)d" states="assigned" string="Picking Done" type="action" icon="gtk-execute"/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
-                        </page>
-                        <page string="Delivery Info">
-                            <field colspan="4" name="delivery_line" nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -1066,8 +1049,8 @@
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
-                   </group>   
-                    <newline/>                 
+                   </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
@@ -1139,19 +1122,18 @@
                         <field name="date"/>
                         <field name="min_date" select="2" readonly="1"/>
                         <field name="invoice_state" select="2" string="Invoice Control"/>
-                        <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(act_stock_make_picking_wizard)d" 
-                                states="confirmed,assigned" 
-                                string="Make Picking" 
-                                type="action" 
-                                icon="gtk-go-forward" 
+                        <button name="%(act_stock_make_picking_wizard)d"
+                                states="confirmed,assigned"
+                                string="Make Picking"
+                                type="action"
+                                icon="gtk-go-forward"
                                 help="Make Picking" colspan="2"/>
-                        <button name="%(act_stock_return_picking)d" 
-                                states="done" 
-                                string="Return Picking" 
-                                type="action" 
-                                icon="gtk-go-back" 
+                        <button name="%(act_stock_return_picking)d"
+                                states="done"
+                                string="Return Picking"
+                                type="action"
+                                icon="gtk-go-back"
                                 help="Return Picking" colspan="2"/>
                     </group>
                     <notebook colspan="4">
@@ -1170,9 +1152,9 @@
                                            type="action" icon="gtk-justify-fill"
                                            states="draft,waiting,confirmed,assigned" />
                                        <button name="%(stock.move_scrap)d"
-				                    	string="Scrap Products" type="action"
-				                    	icon="gtk-convert" context="{'scrap': True}"
-				                    	states="draft,waiting,confirmed,assigned" />
+                                        string="Scrap Products" type="action"
+                                        icon="gtk-convert" context="{'scrap': True}"
+                                        states="draft,waiting,confirmed,assigned" />
                                 </tree>
                                 <form string="Stock Moves">
                                     <notebook colspan="4">
@@ -1227,9 +1209,6 @@
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel" icon="gtk-cancel"/>
                             </group>
                         </page>
-                        <page string="Delivery Info">
-                            <field colspan="4" name="delivery_line" nolabel="1"/>
-                        </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
@@ -1245,15 +1224,15 @@
             <field name="arch" type="xml">
                 <search string="Input Picking List">
                     <group col="8" colspan="4">
-                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Incoming Orders" default="1" />
+                        <filter icon="terp-stock" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Incoming Orders" />
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Back Order" domain="[('backorder_id', '!=', False)]" help="Has Back Order" />
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address_id" select="1"/>
                         <field name="company_id" select="1" widget="selection" groups="base.group_multi_company" />
-                    </group>  
-                    <newline/>                   
+                    </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
@@ -1265,13 +1244,13 @@
 
 
         <record id="action_picking_tree4" model="ir.actions.act_window">
-            <field name="name">Incoming shipments</field>
+            <field name="name">Incoming Shipments</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
+            <field name="context">{'contact_display': 'partner',"search_default_available":1}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
         </record>
         <record id="action_invoice_tree5_view1" model="ir.actions.act_window.view">
@@ -1301,13 +1280,13 @@
                 <search string="Internal Picking List">
                     <group col="8" colspan="4">
                         <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
-                        <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" default="1" />
+                        <filter icon="terp-stock" name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" />
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="origin" select="1"/>
                         <field name="company_id" select="1" widget="selection"/>
-                    </group>  
-                    <newline/>                   
+                    </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
                         <filter string="Date" icon="terp-stock" domain="[]"  context="{'group_by':'date'}"/>
@@ -1324,7 +1303,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','internal')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
+            <field name="context">{'contact_display': 'partner',"search_default_confirmed":1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
         <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="2"/>
@@ -1364,7 +1343,6 @@
                             <group colspan="2" col="2">
                                 <separator colspan="2" string="Move Information"/>
                                 <field name="name" select="2"/>
-								<field name="delivered_id"/>                                
                                 <field name="product_id" select="1" on_change="onchange_product_id(product_id,location_id,location_dest_id)"/>
                                 <field name="product_qty" select="2" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                 <field name="product_uom" select="2"/>
@@ -1427,8 +1405,8 @@
                         <field name="location_id" select="1"/>
                         <field name="location_dest_id" select="1"/>
                         <field name="product_id" select="1"/>
-                    </group> 
-                    <newline/>                    
+                    </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Product" icon="terp-stock" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Date" icon="terp-stock" domain="[]" context="{'group_by':'date'}"/>
@@ -1448,24 +1426,6 @@
             <field name="search_view_id" ref="view_move_search"/>
         </record>
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="1"/>
-
-        <record id="action_picking_all" model="ir.actions.act_window">
-            <field name="name">Picking lists</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="search_view_id" ref="view_stock_picking_filter"/>
-            <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'contact_display': 'partner'}</field>
-        </record>
-        <record id="action_picking_out_tree_view" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_out_tree"/>
-            <field name="act_window_id" ref="action_picking_all"/>
-        </record>
-        <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_stock_warehouse_mgmt" sequence="3"/>
 
         ====================================
         Reception Picking (By Stock Move)
@@ -1504,7 +1464,6 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <separator colspan="4" string="Move Information"/>
-                            <field name="delivered_id"/>
                             <field name="location_id" select="1"/>
                             <field name="location_dest_id" select="1"/>
                             <field colspan="4" name="product_id" select="1" on_change="onchange_product_id(product_id,location_id,location_dest_id)"/>
@@ -1554,15 +1513,15 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <group col="8" colspan="4">
-                        <filter icon="terp-stock" string="To Receive" domain="[('state','in',('confirmed','assigned'))]" default="1" help="Stock to be received"/>
+                        <filter icon="terp-stock" name="receive" string="To Receive" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
                         <filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
                         <filter icon="terp-stock" string="Planned Today" domain="[('date_planned::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
                         <field name="origin" string="Latest Requisition" select="1"/>
                         <field name="partner_id" string="Supplier" select="1"/>
                         <field name="product_id"/>
-                    </group>   
-                    <newline/>                 
+                    </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="Product" icon="terp-stock" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
@@ -1580,6 +1539,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="context">{"search_default_receive":1}</field>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
         </record>
 
@@ -1753,56 +1713,6 @@
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_move_delivery_products_planned_graph"/>
         </record>
-          <!-- Product Delivered  -->
-        <record id="view_stock_delivery_form" model="ir.ui.view">
-            <field name="name">stock.delivery.from</field>
-            <field name="model">stock.delivery</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Product">
-                		<field name="name"/>
-	                    <field name="date"/>
-	                    <field name="partner_id"/>
-	                    <field name="address_id"/>
-	                    <field name="picking_id"/>
-	                    <separator string="Product Delivered Information" colspan="4" />
-	                    <field name="move_delivered" colspan="4" nolabel="1" widget="one2many" mode="tree,form">
-	                       <tree string="Stock Moves" editable="top">
-			                    <field name="picking_id" string="Reference"/>
-			                    <field name="origin" string="Latest Requisition"/>
-			                    <field name="partner_id" string="Supplier"/>
-			                    <field name="product_id"/>
-			                    <field name="product_qty" />
-			                    <field name="product_uom" string="UOM"/>
-			                    <field name="prodlot_id" string="Lot"/>
-		            		</tree>
-	           			</field> 
-                </form>
-            </field>
-        </record>
-        <record id="view_stock_delivery_tree" model="ir.ui.view">
-            <field name="name">stock.delivery.tree</field>
-            <field name="model">stock.delivery</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Delivered Product">	
-                	<field name="name"/>
-                    <field name="date"/>
-                    <field name="partner_id"/>
-                    <field name="address_id"/>
-                </tree>
-            </field>
-        </record>
-	    
-    	<record id="action_stock_delivery" model="ir.actions.act_window">
-            <field name="name">Delivered Products</field>
-            <field name="res_model">stock.delivery</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>            
-            <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="view_stock_delivery_tree"/>
-        </record>        
-		
-		<menuitem action="action_stock_delivery" id="menu_action_picking_all" parent="menu_traceability" sequence="4"/>
+
     </data>
 </openerp>

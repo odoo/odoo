@@ -136,7 +136,6 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
         'object_id': fields.many2one('ir.model', 'Object Name'), 
     }
-
     def _find_object_id(self, cr, uid, context=None):
 
 
@@ -172,7 +171,6 @@ class crm_case_resource_type(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
         'object_id': fields.many2one('ir.model', 'Object Name'), 
     }
-
     def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object
         @param self: The object pointer
@@ -210,7 +208,6 @@ class crm_case_stage(osv.osv):
                          help="Change Probability on next and previous stages."), 
         'requirements': fields.text('Requirements')
     }
-
     def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object
         @param self: The object pointer
@@ -357,7 +354,6 @@ class crm_case(osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'company_id': fields.many2one('res.company', 'Company'), 
     }
-
     def _get_default_partner_address(self, cr, uid, context):
         """Gives id of default address for current user
         @param self: The object pointer
@@ -604,7 +600,7 @@ class crm_case(osv.osv):
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
-        """This function returns value of partner address based on partner
+        """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -631,7 +627,7 @@ class crm_case(osv.osv):
         @email: Partner's email ID 
         """
         if not add:
-            return {'value': {'email_from': False, 'partner_name2': False}}
+            return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email}}
 
