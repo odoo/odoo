@@ -69,8 +69,9 @@ class crm_send_new_email(osv.osv_memory):
 
         for data in self.read(cr, uid, ids, context=context):
             attach = filter(lambda x: x, [data['doc1'], data['doc2'], data['doc3']])
-            attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
-
+            attach = map(lambda x: (data['doc' + str(attach.index(x) + 1) \
+                            + '_fname'], base64.decodestring(x)), attach)
+            
             if context.get('mail', 'new') == 'new':
                 case = case_pool.browse(cr, uid, res_id)
             else:
