@@ -284,14 +284,7 @@ class pos_order(osv.osv):
             return res[0]
         else:
             return False
-#
-#    def _receivable_get(self, cr, uid, context=None):
-#        
-#        """ To get  Shop  for this order" 
-#        @return: journal  """          
-#        prop_obj = self.pool.get('ir.property')
-#        res = prop_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
-#        return res
+
 
     def copy(self, cr, uid, id, default=None, context={}):
         
