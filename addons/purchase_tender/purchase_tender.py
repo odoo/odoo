@@ -54,6 +54,12 @@ class purchase_tender(osv.osv):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         return True        
     def tender_cancel(self, cr, uid, ids, context={}):
+        purchase_order_obj = self.pool.get('purchase.order')
+        wf_service = netsvc.LocalService("workflow")
+        for purchase in self.browse(cr, uid, ids):
+            for purchase_id in purchase.purchase_ids:
+                if str(purchase_id.state) in('draft','wait'):
+                    purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])     
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True        
     def tender_confirm(self, cr, uid, ids, context={}):
