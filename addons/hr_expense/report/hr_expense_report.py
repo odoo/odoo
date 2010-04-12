@@ -35,8 +35,11 @@ class hr_expense_report(osv.osv):
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'journal_id': fields.many2one('account.journal', 'Force Journal', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", readonly=True),
+        'date_confirm': fields.date('Confirmation Date', readonly=True),
+        'date_valid': fields.date('Validation Date', readonly=True),
         'invoice_id': fields.many2one('account.invoice', 'Invoice',readonly=True),
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
@@ -62,6 +65,9 @@ class hr_expense_report(osv.osv):
                      min(l.id) as id,
                      s.date as date,
                      s.employee_id,
+                     s.journal_id,
+                     to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_confirm,
+                     to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_valid,
                      s.invoice_id,
                      s.department_id,
                      to_char(s.date, 'YYYY') as year,
@@ -80,10 +86,18 @@ class hr_expense_report(osv.osv):
                      hr_expense_expense s on (s.id=l.expense_id)
                      left join product_uom u on (u.id=l.uom_id)
                  group by
-                     s.date, l.product_id,s.invoice_id,
+                     s.date,
+                     to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY'),
+                     to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY'),
+                     l.product_id,
+                     s.invoice_id,
                      s.department_id,
-                     l.uom_id, s.user_id, s.state,
-                     s.company_id,s.employee_id
+                     l.uom_id,
+                     s.user_id,
+                     s.state,
+                     s.journal_id,
+                     s.company_id,
+                     s.employee_id
             )
         """)
 hr_expense_report()

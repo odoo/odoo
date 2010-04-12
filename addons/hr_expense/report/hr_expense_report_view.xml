@@ -15,6 +15,7 @@
                 <field name="invoice_id" invisible="1"/>
                 <field name="department_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
+                <field name="journal_id" invisible="1"/>
                 <field name="product_id"/>
                 <field name="product_qty"/>
                 <field name="nbr" sum="# of Lines"/>
@@ -54,9 +55,6 @@
 		                    help="Expenses of this month"/>
 	                <separator orientation="vertical"/>
 	                <filter icon="terp-hr"
-		                    string="Draft"
-		                    domain="[('state','=','draft')]"/>
-	                <filter icon="terp-hr"
 		                    string="Expenses"
 		                    default="1"
 		                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancelled')]"/>
@@ -69,16 +67,41 @@
 	                </field>
 	                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
 				</group>
+				<newline/>
+				<group expand="1" string="Extended options..." colspan="10" col="12">
+                	<filter icon="terp-hr"
+                    		string="Draft"
+                    		domain="[('state','=','draft')]"/>
+                    <filter icon="terp-hr"
+                    		string="Waiting confirmation"
+                    		domain="[('state','=','confirm')]"/>
+                    <filter icon="terp-hr"
+                    		string="Accepted"
+                    		domain="[('state','=','accepted')]"/>
+                    <filter icon="terp-hr"
+                    		string="Invoiced"
+                    		domain="[('state','=','invoiced')]"/>
+                    <filter icon="terp-hr"
+                    		string="Reimbursed"
+                    		domain="[('state','=','paid')]"/>
+                    <filter icon="terp-hr"
+                    		string="Cancelled"
+                    		domain="[('state','=','cancelled')]"/>
+                    <newline/>
+                    <field name="date_confirm"/>
+                    <field name="date_valid"/>
+                </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}"/>
                     <filter string="User" icon="terp-hr" context="{'group_by':'user_id'}" default="1"/>
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
-                    <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
                     <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Force Journal" icon="terp-hr" context="{'group_by':'journal_id'}"/>
                     <filter string="Month" icon="terp-hr" context="{'group_by':'date'}"/>
                     <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
                 </group>

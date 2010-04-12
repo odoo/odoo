@@ -46,8 +46,8 @@ class hr_recruitment_report(osv.osv):
             create or replace view hr_recruitment_report as (
                  select
                      min(s.id) as id,
-                     s.date as date,
-                     s.date_closed,
+                     date_trunc('day',s.date) as date,
+                     date_trunc('day',s.date_closed) as date_closed,
                      to_char(s.date, 'YYYY') as name,
                      to_char(s.date, 'MM') as month,
                      s.state,
@@ -62,13 +62,14 @@ class hr_recruitment_report(osv.osv):
                  from hr_applicant s
                  group by
                      s.date,
+                     date_trunc('day',s.date),
+                     date_trunc('day',s.date_closed),
                      s.state,
                      s.company_id,
                      s.user_id,
                      s.stage_id,
                      s.type_id,
                      s.priority,
-                     s.date_closed,
                      s.job_id,
                      s.department_id
             )
