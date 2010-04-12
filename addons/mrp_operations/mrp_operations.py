@@ -179,13 +179,19 @@ class mrp_production(osv.osv):
         return result
 
     def action_production_end(self, cr, uid, ids):
-        obj=self.browse(cr,uid,ids)[0]
+        obj = self.browse(cr, uid, ids)[0]
         for workcenter_line in obj.workcenter_lines:
-            tmp=self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,[workcenter_line.id])
-        return super(mrp_production,self).action_production_end(cr,uid,ids)
-
+            tmp = self.pool.get('mrp.production.workcenter.line').action_done(cr, uid, [workcenter_line.id])
+        return super(mrp_production,self).action_production_end(cr, uid, ids)
+    
+    def action_in_production(self, cr, uid, ids):
+        obj = self.browse(cr, uid, ids)[0]
+        for workcenter_line in obj.workcenter_lines:
+            tmp = self.pool.get('mrp.production.workcenter.line').action_start_working(cr, uid, [workcenter_line.id])
+        return super(mrp_production,self).action_in_production(cr, uid, ids)
+    
     def action_cancel(self, cr, uid, ids):
-        obj=self.browse(cr,uid,ids)[0]
+        obj = self.browse(cr,uid,ids)[0]
         for workcenter_line in obj.workcenter_lines:
             tmp=self.pool.get('mrp.production.workcenter.line').action_cancel(cr,uid,[workcenter_line.id])
         return super(mrp_production,self).action_cancel(cr,uid,ids)
