@@ -37,6 +37,18 @@ class vat_listing_clients(osv.osv_memory):
         'amount': fields.float('Amount'),
         'turnover': fields.float('Turnover'),
             }
+    def name_get(self, cr, uid, ids, context={}):
+        if not len(ids):
+            return []
+        return [(r['id'], r['name'] + ' - ' + r['vat']) \
+                for r in self.read(cr, uid, ids, ['name', 'vat'],
+                    context, load='_classic_write')]
+
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        client = self.search(cr, uid, [('vat', '=', name)]+args, limit=limit, context=context)
+        if not client:
+            client = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args, limit=limit, context=context)
+        return self.name_get(cr, uid, client, context=context)
 
 vat_listing_clients()
 
