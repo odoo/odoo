@@ -11,6 +11,7 @@
                 <field name="employee_id"/>
                 <field name="deadline"/>
                 <field name="closed" invisible="1"/>
+                <field name="plan_id" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="nbr" sum="# of Requests"/>
@@ -43,11 +44,36 @@
 		                    domain="[('closed','=',time.strftime('%%Y/%%m/%%d'))]"/>
 	                <separator orientation="vertical"/>
 	                <field name="employee_id"/>
+	                <field name="rating"/>
+
+                </group>
+                <newline/>
+				<group expand="1" string="Extended options..." colspan="10" col="12">
+                	<filter icon="terp-hr"
+                    		string="Draft"
+                    		domain="[('state','=','draft')]"/>
+                    <filter icon="terp-hr"
+                    		string="Plan In Progress"
+                    		domain="[('state','=','wait')]"/>
+                    <filter icon="terp-hr"
+                    		string="Final Validation"
+                    		domain="[('state','=','progress')]"/>
+                    <filter icon="terp-hr"
+                    		string="Done"
+                    		domain="[('state','=','done')]"/>
+                    <filter icon="terp-hr"
+                    		string="Cancelled"
+                    		domain="[('state','=','cancel')]"/>
+                    <newline/>
+                    <field name="create_date"/>
+                    <field name="deadline"/>
+                    <field name="closed"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Plan" icon="terp-hr" context="{'group_by':'plan_id'}"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Month" icon="terp-hr" context="{'group_by':'create_date'}"/>
