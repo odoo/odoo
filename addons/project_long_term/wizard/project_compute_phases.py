@@ -32,10 +32,22 @@ class project_compute_phases(osv.osv_memory):
     _name = 'project.compute.phases'
     _description = 'Project Compute Phases'
     _columns = {
-        'project_id': fields.many2one('project.project', 'Project', help='If you do not specify project then it will take All projects with state=draft, open, pending')
+       'target_project': fields.selection([('all', 'Compute All Projects'),
+                                           ('one', 'Compute a Single Project'),
+                                           ], 'Schedule', required = True),
+
+        'project_id': fields.many2one('project.project', 'Project')
                 }
 
-    def _phase_schedule(self, cr, uid, phase, start_date, calendar_id=False, context={}):
+    _defaults = {
+        'target_project': 'all'
+                }
+
+    def check_selection(self, cr, uid, ids, context=None):
+        data_select = self.read(cr, uid, ids, ['target_project'])[0]
+        return self.compute_date(cr, uid, ids, context=context)
+
+    def _phase_schedule(self, cr, uid, phase, start_date, calendar_id=False, context=None):
 
        """Schedule phase with the start date till all the next phases are completed.
 
@@ -47,6 +59,9 @@ class project_compute_phases(osv.osv_memory):
        resource_obj = self.pool.get('resource.resource')
        uom_obj = self.pool.get('product.uom')
        phase_resource_obj = False
+
+       if context is None:
+           context = {}
        if phase:
             leaves = []
             time_efficiency = 1.0
@@ -120,6 +135,8 @@ class project_compute_phases(osv.osv_memory):
         project_obj = self.pool.get('project.project')
         phase_obj = self.pool.get('project.phase')
         data = self.read(cr, uid, ids, [], context=context)[0]
+        if not data['project_id'] and data['target_project'] == 'one':
+            raise osv.except_osv(_('Error!'), _('Please Specify Project to be schedule'))
         if data['project_id']:        # If project mentioned find its phases
             project_id = project_obj.browse(cr, uid, data['project_id'], context=context)
             phase_ids = phase_obj.search(cr, uid, [('project_id', '=', project_id.id),
