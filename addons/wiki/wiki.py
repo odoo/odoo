@@ -52,7 +52,7 @@ class WikiGroup(osv.osv):
        'section': fields.boolean("Make Section ?"), 
        'method':fields.selection([('list', 'List'), ('page', 'Home Page'), \
                                    ('tree', 'Tree')], 'Display Method'), 
-       'home':fields.many2one('wiki.wiki', 'Pages'), 
+       'home':fields.many2one('wiki.wiki', 'Home Page'), 
     }
 
     _defaults = {

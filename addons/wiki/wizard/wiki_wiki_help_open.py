@@ -36,7 +36,8 @@ class wiki_wiki_help_open(osv.osv_memory):
 
         """
         pages = self.pool.get('wiki.wiki').search(cr, uid, [('name', '=', 'Basic Wiki Editing')])
-
+        if not pages:
+            return {}
         value = {
             'view_type': 'form', 
             'view_mode': 'form,tree', 
