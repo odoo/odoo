@@ -27,14 +27,13 @@ class showdiff(osv.osv_memory):
 
     _name = 'wizard.wiki.history.show_diff'
 
-    def _get_diff(self, cr, uid, ctx):
+    def get_diff(self, cr, uid, context=None):
 
         """ @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         """
-
         history = self.pool.get('wiki.wiki.history')
-        ids = ctx.get('active_ids')
+        ids = context.get('active_ids')
         diff = ""
         if len(ids) == 2:
             if ids[0] > ids[1]:
@@ -49,14 +48,15 @@ class showdiff(osv.osv_memory):
             diff = history.getDiff(cr, uid, ids[0], nids[-1])
         else:
             raise osv.except_osv(_('Warning'), _('You need to select minimum 1 or maximum 2 history revision!'))
+
         return diff
 
     _columns = {
-        'diff': fields.text('Diff'), 
+        'diff': fields.text('Diff'),
     }
 
     _defaults = {
-        'diff': _get_diff
+        'diff': get_diff
     }
 
 showdiff()

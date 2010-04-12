@@ -38,13 +38,13 @@ class wiki_wiki_page_open(osv.osv_memory):
         group_ids = context.get('active_ids', [])
         for group in self.pool.get('wiki.groups').browse(cr, uid, group_ids):
             value = {
-                'domain': "[('group_id','=',%d)]" % (group.id), 
-                'name': 'Wiki Page', 
-                'view_type': 'form', 
-                'view_mode': 'form,tree', 
-                'res_model': 'wiki.wiki', 
-                'view_id': False, 
-                'type': 'ir.actions.act_window', 
+                'domain': "[('group_id','=',%d)]" % (group.id),
+                'name': 'Wiki Page',
+                'view_type': 'form',
+                'view_mode': 'form,tree',
+                'res_model': 'wiki.wiki',
+                'view_id': False,
+                'type': 'ir.actions.act_window',
                 }
         if group.method == 'page':
             value['res_id'] = group.home.id
