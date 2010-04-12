@@ -220,6 +220,21 @@
                                 />
                         </field>
                     </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="16">
+	                    <filter string="Stage" icon="terp-crm" domain="[]"
+	                        context="{'group_by':'stage_id'}" />
+	                    <filter string="Priority" icon="terp-crm" domain="[]"
+	                        context="{'group_by':'priority'}" />
+	                    <filter string="Campaign" icon="terp-crm"
+	                        domain="[]" context="{'group_by':'type_id'}" />
+	                    <separator orientation="vertical" />
+	                    <filter string="Partner" icon="terp-crm" domain="[]"
+	                        context="{'group_by':'partner_id'}" />
+	                    <filter string="Salesman" icon="terp-crm"
+	                        domain="[]" context="{'group_by':'user_id'}" />
+	                    <separator orientation="vertical" />
+                	</group>
                 </search>
             </field>
         </record>

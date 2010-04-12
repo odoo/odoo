@@ -148,10 +148,10 @@ class project_issue(osv.osv):
         if context is None:
             context = {}
 
-        for case in case_obj.browse(cr, uid, ids, context=context):
-            if case.state != 'open':
-                raise osv.except_osv(_('Warning !'),
-                    _('Issues or Feature Requests should be in \'Open\' state before converting into Task.'))
+#        for case in case_obj.browse(cr, uid, ids, context=context):
+#            if case.state != 'open':
+#                raise osv.except_osv(_('Warning !'),
+#                    _('Issues or Feature Requests should be in \'Open\' state before converting into Task.'))
 
         result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
         res = data_obj.read(cr, uid, result, ['res_id'])
