@@ -27,6 +27,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 import difflib
 
 class Wiki(osv.osv):
@@ -185,7 +186,8 @@ class Wiki(osv.osv):
         """
         pages = self.pool.get('wiki.wiki').search(cr, uid, [('name', '=', 'Basic Wiki Editing')])
         if not pages:
-            return {}
+           # return {}
+           raise osv.except_osv(_('Warning !'), _("No Help page is defined"))
         value = {
             'view_type': 'form',
             'view_mode': 'form,tree',
