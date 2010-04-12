@@ -413,8 +413,13 @@ class CalDAV(object):
 class calendar_collection(osv.osv):
     _inherit = 'document.directory' 
     _columns = {
+        'calendar_collection' : fields.boolean('Calendar Collection'),
         'calendar_ids': fields.one2many('basic.calendar', 'collection_id', 'Calendars'),
     }
+    _default = {
+        'calendar_collection' : False,
+    }
+    
 calendar_collection()
 
 class Calendar(CalDAV, osv.osv):
