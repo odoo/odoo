@@ -176,7 +176,8 @@
 	              	string="ReConfigure Structure" type="action"
 	              	states="done" />
 	              <field name="ready" select="2" colspan="3"/>
-	              <field name="note" colspan="4"/>
+	              <separator string="Schema description" colspan="4"/>
+	              <field name="note" colspan="4" nolabel="1"/>
 	              <field name="state" select="2" colspan="2" />
 	              <group colspan="2">
 	                <button string="Connect to Database" name="dbconnect" states="none"/>
@@ -279,10 +280,10 @@
 	        <field name="type">form</field>
 	        <field name="arch" type="xml">
 	            <form string="Olap cube">
-	                <field name="name" select="1" colspan="4"/>
-	                <field name="schema_id" select="1" attrs="{'readonly':[('schema_id','!=','')]}"/>
-	                <field name="query_log" select="2"/>
-	                <field name="table_id"  colspan="4" context="{'parent_schema_id':schema_id}"/>
+	                <field name="name" select="1" colspan="2"/>
+	                <field name="schema_id" select="1" attrs="{'readonly':[('schema_id','!=','')]}" colspan="2"/>
+	                <field name="table_id"   context="{'parent_schema_id':schema_id}" colspan="2"/>
+	                <field name="query_log" select="2" colspan="2"/>
 	            </form>
 	        </field>
 	    </record>
@@ -362,10 +363,11 @@
 	        <field name="type">form</field>
 	        <field name="arch" type="xml">
 	            <form string="Olap hierarchy">
-	                <field name="name" select="1" colspan="4"/>
-	                <field name="dimension_id" select="1" attrs="{'readonly':[('dimension_id','!=','')]}"/>
+	                <field name="name" select="1" colspan="2"/>
+	                <field name="sequence" colspan="2"/>
+	                <field name="dimension_id" select="1" attrs="{'readonly':[('dimension_id','!=','')]}" colspan="4"/>
 	<!--                <field name="field_name" select="2"/>-->
-	                <field name="sequence"/>
+	                
 	                <field name="table_id" select="2" colspan="4" context="{'d_id':dimension_id}"/>
 	<!--                <separator string="Levels" colspan="4"/>
 	                <field name="level_ids" colspan="4" nolabel="1"/>-->
@@ -474,8 +476,9 @@
 	                </group>
 	                <group colspan="4"  attrs="{'invisible':[('measure_type','!=','sql_expr')]}">
 	                    <newline/>
+	                    <separator string="SQL Expression" colspan="4"/>
 	                    <field name="value_sql" colspan="4" select="2"
-	                    	attrs="{'required':[('measure_type','=','sql_expr')]}" />
+	                    	attrs="{'required':[('measure_type','=','sql_expr')]}" nolabel="1" />
 	                    <field name="datatype" select="2"/>
 	                </group>
 	            </form>
@@ -535,13 +538,18 @@
 	        <field name="type">form</field>
 	        <field name="arch" type="xml">
 	            <form string="Olap Saved Query">
-	             	<field name="name" select="1" readonly="True"/>
-	                <field name="query" select="1" colspan="4" readonly="True"/>
-	                <field name="user_id" readonly="True"/>
-	                <field name="cube_id" select="2" readonly="True"/>
-	                <field name="mdx_id" select="2" readonly="True"/>
-	                <field name="schema_id" select="2" readonly="True"/>
-	                <field name="axis_keys" readonly="True"/>
+	            	<group colspan="4">
+		            	<field name="user_id" readonly="True"/>
+		                <field name="cube_id" select="2" readonly="True"/>
+		                <field name="mdx_id" select="2" readonly="True"/>
+		                <field name="schema_id" select="2" readonly="True"/>
+	                </group>
+		                <separator string="Query Name" colspan="4"/>
+		             	<field name="name" select="1" readonly="True" nolabel="1"/>
+		             	<separator string="Query" colspan="4"/>
+		                <field name="query" select="1" colspan="4" readonly="True" nolabel="1"/>
+		                <separator string="Axis Keys" colspan="4"/>
+		                <field name="axis_keys" readonly="True" nolabel="1"/>
 	            </form>
 	        </field>
 	    </record>
@@ -581,12 +589,13 @@
 	        <field name="type">form</field>
 	        <field name="arch" type="xml">
 	            <form string="All Logs">
-	                <field name="query" colspan="4" select="1" readonly="True"/>
-	                <field name="time" select="2" readonly="True"/>
-	                <field name="result_size" select="2" readonly="True"/>
-	                <field name="cube_id" select="2" readonly="True"/>
-	                <field name="count" readonly="True"/>
-	                <field name="schema_id" readonly="True"/>
+	            	<field name="cube_id" select="2" readonly="True" colspan="2"/>
+	            	<field name="schema_id" readonly="True" colspan="2"/>
+	            	<field name="time" select="2" readonly="True" colspan="4"/>
+	            	<field name="result_size" select="2" readonly="True" colspan="2"/>
+	            	<field name="count" readonly="True" colspan="2"/>
+	            	<separator string="Query" colspan="4"/>
+	                <field name="query" colspan="4" select="1" readonly="True" nolabel="1"/>
 	            </form>
 	        </field>
 	    </record>
@@ -640,7 +649,8 @@
 	        <field name="arch" type="xml">
 	            <form string="My Logs">
 	                <field name="user_id" select="1" readonly="True"/>
-	                <field name="query" colspan="4" select="1" readonly="True"/>
+	                <separator string="Query" colspan="4"/>
+	                <field name="query" colspan="4" select="1" readonly="True" nolabel="1"/>
 	                <field name="time" select="2" readonly="True"/>
 	                <field name="result_size" select="2" readonly="True"/>
 	                <field name="cube_id" select="2" readonly="True"/>

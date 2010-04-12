@@ -1249,7 +1249,7 @@ class olap_measure(osv.osv):
                              ('sql_expr', 'SQL Expression')],\
                              'Measure Type', required = True,\
                              help = "Select between auto column or sql expression for the measures"),
-        'value_sql': fields.char('SQL Expression', size = 200, help = "You can \
+        'value_sql': fields.text('SQL Expression', help = "You can \
                             provide valid sql expression. Make sure it have \
                          function with fully qualified column name like \
                          (sum,avg ...)(tablename.columnname (+,- ...) tablename.columnname)"),
