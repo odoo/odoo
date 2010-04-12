@@ -163,7 +163,7 @@
                 	</group>
                 	<newline/>
                 	<group expand="1" string="Group By..." colspan="4" col="3">
-                	    <filter string="User" name="by_user" icon="terp-project" context="{'group_by':'user_id'}" />
+                	    <filter string="User" icon="terp-project" context="{'group_by':'user_id'}" />
                     	<filter string="Year" icon="terp-project" context="{'group_by':'year'}" />
                     	<filter string="Month" icon="terp-project" context="{'group_by':'month'}" />
                 	</group>
@@ -175,7 +175,7 @@
             <field name="res_model">report.timesheet.task.user</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
-            <field name="context">{"search_default_by_user":1}</field>
+            <field name="context">{"search_default_User":1}</field>
             <field name="search_view_id" ref="view_report_timesheet_task_user_search"/>
         </record>
         <menuitem id="menu_timesheet_task_user" parent="hr.menu_hr_reporting" action="action_report_timesheet_task_user"/>

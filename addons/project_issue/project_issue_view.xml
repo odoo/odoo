@@ -207,10 +207,10 @@
                     <group>
                         <field name="name" select='1' string="Subject"/>
                         <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" name="my_bugs"/>
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Bugs" string="My Bugs"/>
                         </field>
                         <field name="state" select="1">
-                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" name="current_bugs"/>
+                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Bugs" string="Current Bugs"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Bugs"/>
                         </field>
                         <field name="project_id" select="1" widget="selection" string="Project">
@@ -293,10 +293,10 @@
                     <group>
                         <field name="name" select='1' string="Feature description"/>
                         <field name="user_id" select="1" widget="selection">
-                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Features" name="my_feature"/>
+                            <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Features" string="My Feature"/>
                         </field>
                         <field name="state" select="1">
-                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
+                            <filter icon="gtk-new" domain="[('state','in',('open','draft'))]" help="Current Features" string="Current Feature"/>
                             <filter icon="gtk-yes" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
                         <field name="project_id" select="1" widget="selection" string="Project">
