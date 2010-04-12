@@ -32,7 +32,10 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : ["wizard/purchase_requisition_partner.xml",
-                    "purchase_tender_view.xml","security/ir.model.access.csv","purchase_tender_sequence.xml",
+                    "purchase_tender_view.xml",
+                    "security/purchase_tender.xml",   
+                    "security/ir.model.access.csv",
+                    "purchase_tender_sequence.xml",
                    
                     ],
     "active": False,
