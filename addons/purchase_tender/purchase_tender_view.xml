@@ -42,13 +42,13 @@
                         <field name="line_ids" colspan="4" nolabel="1">
                             <tree string="Products" editable="bottom">
                                 <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                                <field name="product_uom_id"/>
                                 <field name="product_qty"/>
+                                <field name="product_uom_id"/>
                             </tree>
                             <form string="Products" editable="bottom">
                                 <field name="product_id"/>
+								<field name="product_qty"/>                                
                                 <field name="product_uom_id"/>
-                                <field name="product_qty"/>
 								<field name="company_id" groups="base.group_multi_company" widget="selection"/>                                
                             </form>
 							                            

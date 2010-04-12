@@ -31,7 +31,7 @@ class purchase_tender(osv.osv):
     _columns = {
         'name': fields.char('Tender Reference', size=32,required=True),
         'date_start': fields.datetime('Date Start'),
-        'date_end': fields.datetime('Date End'),
+        'date_end': fields.datetime('Date End',readonly=True),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'exclusive': fields.boolean('Exclusive', help="If the tender is exclusive, it will cancel all purchase orders when you confirm one of them"),
         'description': fields.text('Description'),
@@ -63,7 +63,7 @@ class purchase_tender(osv.osv):
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True        
     def tender_confirm(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        self.write(cr, uid, ids, {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True 
     def tender_reset(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'draft'})
@@ -84,6 +84,7 @@ class purchase_tender_line(osv.osv):
         'tender_id' : fields.many2one('purchase.tender','Purchase Tender', ondelete='cascade'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
+
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         
         """ Changes UoM and name if product_id changes.
