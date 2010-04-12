@@ -21,8 +21,6 @@
 
 from osv import fields, osv
 from crm import crm
-from caldav import caldav
-from base_calendar import base_calendar
 
 class crm_meeting(osv.osv):
     _inherit = 'crm.meeting'

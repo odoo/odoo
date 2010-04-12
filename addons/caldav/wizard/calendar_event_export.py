@@ -36,7 +36,7 @@ class calendar_event_export(osv.osv_memory):
         """
         Get Default value for file_path field.
         """
-        model = context.get('model', 'basic.calendar')
+        model = context.get('model', 'document.directory')
         model_obj = self.pool.get(model)
 
         calendar = model_obj.export_cal(cr, uid, context['active_ids'], context)
@@ -47,7 +47,7 @@ class calendar_event_export(osv.osv_memory):
         """
         Get Default value for Name field.
         """
-        model = context.get('model', 'basic.calendar')
+        model = context.get('model', 'document.directory')
         model_obj = self.pool.get(model)
         calendar = model_obj.export_cal(cr, uid, context['active_ids'], context)
         res = super(calendar_event_export, self).default_get( cr, uid, fields, context=context)

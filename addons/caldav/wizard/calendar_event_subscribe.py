@@ -51,10 +51,10 @@ class calendar_event_subscribe(osv.osv_memory):
                 f.close()
             except Exception,e:
                 raise osv.except_osv(_('Error!'), _('Please provide Proper URL !'))
-            model = data.get('model', 'basic.calendar')
+            model = data.get('model', 'document.directory')
             model_obj = self.pool.get(model)
             context.update({'url': data['url_path'],
-                                    'model': data.get('model', 'basic.calendar')})
+                                    'model': data.get('model', 'document.directory')})
             vals = model_obj.import_cal(cr, uid, base64.encodestring(caldata), \
                                             context['active_id'],  context)
             if vals:

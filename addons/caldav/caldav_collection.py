@@ -412,8 +412,7 @@ class CalDAV(object):
 
 
 class Calendar(CalDAV, osv.osv):
-    _name = 'basic.calendar'
-    _description = 'Calendar'
+    _inherit = 'document.directory'    
     _calname = 'calendar'
 
     __attribute__ = {
@@ -431,15 +430,11 @@ class Calendar(CalDAV, osv.osv):
     }
     _columns = {
             'name': fields.char("Name", size=64),
-            'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),
-            'active': fields.boolean('Active'),
+            'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),            
             'create_date': fields.datetime('Created Date'),
             'write_date': fields.datetime('Modifided Date'),
     }
-
-    _defaults = {
-                'active': lambda *a: True,
-                 }
+   
 
     def export_cal(self, cr, uid, ids, vobj='vevent', context={}):
         """ Export Calendar
@@ -515,7 +510,7 @@ class basic_calendar_line(osv.osv):
                                     ('attendee', 'Attendee')], \
                                     string="Type", size=64),
             'object_id': fields.many2one('ir.model', 'Object'),
-            'calendar_id': fields.many2one('basic.calendar', 'Calendar', \
+            'calendar_id': fields.many2one('document.directory', 'Calendar', \
                                        required=True, ondelete='cascade'),
             'domain': fields.char('Domain', size=124),
             'mapping_ids': fields.one2many('basic.calendar.fields', 'type_id', 'Fields Mapping')
