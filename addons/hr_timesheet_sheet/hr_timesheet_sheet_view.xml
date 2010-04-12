@@ -181,7 +181,7 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <group col="10" colspan="4">
-                        <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My" default="1"/>
+                        <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My" />
                         <separator orientation="vertical"/>
                         <filter icon="terp-crm" string="In Progress" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-crm" string="To Validate" domain="[('state','=','confirmed')]" help="Confirmed Timesheets"/>

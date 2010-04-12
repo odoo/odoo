@@ -6466,9 +6466,20 @@
         </record>
         <record id="vat_code_a44" model="account.tax.code.template">
             <field name="code">44</field>
-            <field name="name">Services intra-communautaires</field>
+            <field name="name">Services intra-communautaires et ABC</field>
             <field name="parent_id" ref="vat_code_out"/>
         </record>
+        <record id="vat_code_a44a" model="account.tax.code.template">
+            <field name="code">44a</field>
+            <field name="name">Services intra-communautaires</field>
+            <field name="parent_id" ref="vat_code_a44"/>
+        </record>
+        <record id="vat_code_a44b" model="account.tax.code.template">
+            <field name="code">44b</field>
+            <field name="name">ABC intra-communautaires</field>
+            <field name="parent_id" ref="vat_code_a44"/>
+        </record>
+
         <record id="vat_code_a45" model="account.tax.code.template">
             <field name="code">45</field>
             <field name="name">Operations avec TVA due par le cocontractant</field>
@@ -7053,14 +7064,25 @@
         </record>
         <record id="vat_IO_S" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
-            <field name="name">TVA 0% Intracommunautaire (Services et ABC)</field>
+            <field name="name">TVA 0% Services Intracommunautaires</field>
             <field name="description">V-INTRA-S 0</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
-            <field name="base_code_id" ref="vat_code_a44"/>
+            <field name="base_code_id" ref="vat_code_a44a"/>
             <field name="ref_base_code_id" ref="vat_code_a48"/>
             <field name="type_tax_use">sale</field>
         </record>
+        <record id="vat_IO_S" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="name">TVA 0% ABC Intracommunautaire</field>
+            <field name="description">V-INTRA-ABC 0</field>
+            <field eval="0.00" name="amount"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_a44b"/>
+            <field name="ref_base_code_id" ref="vat_code_a48"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+
 
     <!-- Purchases VAT -->
        <record id="vat_IO_buy_21b" model="account.tax.template">

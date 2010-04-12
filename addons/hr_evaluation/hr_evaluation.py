@@ -300,6 +300,24 @@ class hr_evaluation_interview(osv.osv):
         self.write(cr, uid, ids, { 'state' : 'cancel'}, context=context)
         return True
 
+    def action_print_survey(self, cr, uid, ids, context=None):
+        """
+        If response is available then print this response otherwise print survey form(print template of the survey).
+
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Survey IDs
+        @param context: A standard dictionary for contextual values
+        @return : Dictionary value for print survey form.
+        """
+        if not context:
+            context = {}
+        record = self.browse(cr, uid, ids, context)
+        record = record and record[0]
+        context.update({'survey_id': record.survey_id.id, 'response_id' : [record.response.id], 'response_no':0,})
+        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
+        return value            
 hr_evaluation_interview()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1

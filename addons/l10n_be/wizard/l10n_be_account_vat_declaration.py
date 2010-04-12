@@ -56,7 +56,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
         user_cmpny = obj_company.name
         vat_no=obj_company.partner_id.vat
         if not vat_no:
-            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+#            raise wizard.except_wizard(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+            osv.except_osv(_('Data Insufficient'), _('No VAT  Number Associated with Main Company!'))
+            
 
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
@@ -65,7 +67,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         address = post_code = city = country_code = ''
-        city, post_code, address, country_code = pooler.get_pool(cr.dbname).get('res.company')._get_default_ad(obj_company.partner_id.address)
+        city, post_code, address, country_code =self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
 
 
         year_id = obj_fyear.find(cr, uid)
@@ -77,7 +79,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         data_of_file='<?xml version="1.0"?>\n<VATSENDING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-14.xml">'
         data_of_file +='\n\t<DECLARER>\n\t\t<VATNUMBER>'+str(vat_no)+'</VATNUMBER>\n\t\t<NAME>'+str(obj_company.name)+'</NAME>\n\t\t<ADDRESS>'+address+'</ADDRESS>'
         data_of_file +='\n\t\t<POSTCODE>'+post_code+'</POSTCODE>\n\t\t<CITY>'+city+'</CITY>\n\t\t<COUNTRY>'+country_code+'</COUNTRY>\n\t\t<SENDINGREFERENCE>'+send_ref+'</SENDINGREFERENCE>\n\t</DECLARER>'
-        data_of_file +='\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>'+str(vat_no[2:])+'</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t'
+        data_of_file +='\n\t<VATRECORD>\n\t\t<RECNUM>1</RECNUM>\n\t\t<VATNUMBER>'+((vat_no and str(vat_no[2:])) or '')+'</VATNUMBER>\n\t\t<DPERIODE>\n\t\t\t'
  
         starting_month = account_period.date_start[5:7]
         ending_month = account_period.date_stop[5:7]
@@ -89,7 +91,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         else:
             data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
         data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
-        data_of_file += '\n\t\t<ClientListingNihil>'+ (data['form']['client_nihil'] and 'YES' or 'NO') +'</ClientListingNihil>'
+        data_of_file += '\n\t\t<ClientListingNihil>'+ (data['client_nihil'] and 'YES' or 'NO') +'</ClientListingNihil>'
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
         for item in tax_info:

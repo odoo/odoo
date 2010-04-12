@@ -364,7 +364,7 @@
                                     <separator colspan="4" string="Action Information"/>
                                     <field colspan="4" name="name"/>
                                     <field name="date" select="2"/>
-                                    <field name="user_id" select="2"/>                                    
+                                    <field name="user_id" select="2"/>
                                 </form>
                             </field>
                         </page>
@@ -377,7 +377,7 @@
                                    <group col="7" colspan="4">
                                        <field name="date"/>
                                        <field name="email_to"/>
-                                       <field name="email_from"/>                                       
+                                       <field name="email_from"/>
                                        <button
                                      string="Add a CC"
                                                name="%(crm.action_view_crm_email_add_cc_wizard)d"
@@ -386,7 +386,7 @@
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
-                                       string="Reply to Last Email"
+                                       string="Reply to Email"
                                        name="%(action_crm_send_mail)d"
                                        context="{'mail':'reply', 'model': 'crm.case'}"
                                        icon="gtk-undo" type="action" />
