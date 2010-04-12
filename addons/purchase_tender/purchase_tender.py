@@ -74,7 +74,7 @@ class purchase_tender_line(osv.osv):
     _columns = {
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_id': fields.many2one('product.uom', 'Product UoM'),
-        'product_qty': fields.float('Date End', digits=(16,2)),
+        'product_qty': fields.float('Quantity', digits=(16,2)),
         'tender_id' : fields.many2one('purchase.tender','Purchase Tender', ondelete='cascade'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
