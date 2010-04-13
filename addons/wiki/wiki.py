@@ -186,7 +186,6 @@ class Wiki(osv.osv):
         """
         pages = self.pool.get('wiki.wiki').search(cr, uid, [('name', '=', 'Basic Wiki Editing')])
         if not pages:
-           # return {}
            raise osv.except_osv(_('Warning !'), _("No Help page is defined"))
         value = {
             'view_type': 'form',
@@ -195,9 +194,8 @@ class Wiki(osv.osv):
             'view_id': False,
             'res_id': pages[0],
             'type': 'ir.actions.act_window',
-            'nodestroy':True,
+            'nodestroy': True,
         }
-
         return value
 
 Wiki()
