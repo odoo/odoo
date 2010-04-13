@@ -30,9 +30,10 @@
             <field name="type">diagram</field>
             <field name="arch" type="xml">
                 <diagram string="Workflow Editor">
-				  <node object="workflow.activity">
+				  <node object="workflow.activity" shape="rectangle:subflow_id!=False" bgcolor="red:flow_start==True;grey:flow_stop==True">
 				    <field name="name"/>
 				    <field name="kind"/>
+				    <field name="action"/>
 				  </node>
 				  <arrow object="workflow.transition" source="act_from" destination="act_to" label="['signal','condition']">
 				    <field name="act_from"/>
