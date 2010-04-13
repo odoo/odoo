@@ -27,19 +27,24 @@ from report import render
 import locale
 
 import time, os
+from operator import itemgetter
 from datetime import datetime
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
         self.context = {}
+        self.groupby = []
 
     def _parse_node(self, root_node):
         result = []
         for node in root_node:
+            field_name = node.get('name')
             if not eval(str(node.attrib.get('invisible',False)),{'context':self.context}):
                 if node.tag == 'field':
-                    result.append(node.get('name'))
+                    if field_name in self.groupby:
+                        continue
+                    result.append(field_name)
                 else:
                     result.extend(self._parse_node(node))
         return result
@@ -55,6 +60,7 @@ class report_printscreen_list(report_int):
         if not context:
             context={}
         self.context = context
+        self.groupby = context.get('group_by',[])
         pool = pooler.get_pool(cr.dbname)
         model = pool.get(datas['model'])
         model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
@@ -64,35 +70,37 @@ class report_printscreen_list(report_int):
         else:
             model_desc = model._description
             self.title = model_desc
-
         datas['ids'] = ids
         model = pooler.get_pool(cr.dbname).get(datas['model'])
         result = model.fields_view_get(cr, uid, view_type='tree', context=context)
-        fields_order = self._parse_string(result['arch'])
-        rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
-        ids2 = [x['id'] for x in rows] # getting the ids from read result
-        if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
-            rows_new = []
-            for id in datas['ids']:
-                element = [elem for elem in rows if elem['id']==id]
-                rows_new.append(element[0])
-            rows = rows_new
-        if context.get('group_by',False):
-            if context['group_by'] in fields_order:
-                fields_order.remove(context['group_by'])
-                fields_order.insert(0, context['group_by'])
-            re =  model.read_group(cr, uid, [('id','in',ids)], fields_order, context.get('group_by',False),0,None,context)
-            rows=[]
-            for r in re:
-                for f in fields_order:
-                    if f not in r:
-                        r.update({f:False})
-                r['__group']=True
-                rows.append(r)
-                _ids = model.search(cr, uid, r['__domain'])
-                res=model.read(cr, uid, _ids, result['fields'].keys(), context)
-                for r in res:
-                    rows.append(r)
+        fields_order =  self.groupby + self._parse_string(result['arch'])
+        if self.groupby:
+            rows = []
+            def get_groupby_data(groupby = [], domain = []):
+                records =  model.read_group(cr, uid, domain, fields_order, groupby , 0, None, context)
+                for rec in records:
+                    rec['__group'] = True
+                    for f in fields_order:
+                        if f not in rec:
+                            rec.update({f:False})
+                    rows.append(rec)
+                    groupby = (rec.get('__context', {})).get('group_by',[])
+                    domain = rec.get('__domain', [])
+                    if groupby:
+                        get_groupby_data(groupby, domain)
+                    else:
+                        child_ids = model.search(cr, uid, domain)
+                        res = model.read(cr, uid, child_ids, result['fields'].keys(), context)
+                        rows.extend(res)
+            get_groupby_data(self.groupby, [('id','in',ids)])
+        else:
+             rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context)
+             ids2 = map(itemgetter('id'), rows) # getting the ids from read result
+             if datas['ids'] != ids2: # sorted ids were not taken into consideration for print screen
+                 rows_new = []
+                 for id in datas['ids']:
+                     rows_new += [elem for elem in rows if elem['id'] == id]
+                 rows = rows_new
         res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)
         return (self.obj.get(), 'pdf')
 
@@ -116,13 +124,14 @@ class report_printscreen_list(report_int):
 
         l = []
         t = 0
-        rowcount=0;
+        rowcount = 0;
         strmax = (pageSize[0]-40) * 2.8346
         temp = []
+        tsum = []
         count = len(fields_order)
         for i in range(0, count):
             temp.append(0)
-
+            tsum.append(0)
         ince = -1;
         for f in fields_order:
             s = 0
@@ -131,7 +140,7 @@ class report_printscreen_list(report_int):
                 s = 60
                 strmax -= s
                 if fields[f]['type'] in ('float','integer'):
-                    temp[ince]=1;
+                    temp[ince] = 1
             else:
                 t += fields[f].get('size', 80) / 28 + 1
 
@@ -149,10 +158,6 @@ class report_printscreen_list(report_int):
             field.text = tools.ustr(fields[f]['string'] or '')
 
         lines = etree.SubElement(new_doc, 'lines')
-        tsum = []
-        count = len(fields_order)
-        for i in range(0,count):
-            tsum.append(0)
         for line in results:
             node_line = etree.SubElement(lines, 'row')
             count = -1
@@ -212,9 +217,8 @@ class report_printscreen_list(report_int):
                         tsum[count] = float(tsum[count])  + float(line[f]);
                 else:
                      col.text = '/'
-
         node_line = etree.SubElement(lines, 'row')
-        for f in range(0,count+1):
+        for f in range(0, count+1):
             col = etree.SubElement(node_line, 'col', para='group', tree='no')
             if tsum[f] != None:
                if tsum[f] >= 0.01 :

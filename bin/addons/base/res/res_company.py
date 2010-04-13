@@ -209,7 +209,7 @@ class res_company(osv.osv):
         <frame id="first" x1="1.3cm" y1="2.5cm" height="23.0cm" width="19cm"/>
         <pageGraphics>
             <!-- You Logo - Change X,Y,Width and Height -->
-        <image x="1.3cm" y="27.6cm" height="40.0" >[[company.logo]]</image>
+            <image x="1.3cm" y="27.6cm" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
             <setFont name="DejaVu Sans" size="8"/>
             <fill color="black"/>
             <stroke color="black"/>

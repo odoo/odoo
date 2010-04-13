@@ -541,7 +541,6 @@
     <rng:define name="filter">
         <rng:element name="filter">
             <rng:optional><rng:attribute name="attrs"/></rng:optional>
-            <rng:optional><rng:attribute name="name" /></rng:optional>
             <rng:optional><rng:attribute name="separator" /></rng:optional>
             <rng:optional><rng:attribute name="icon" /></rng:optional>
             <rng:optional><rng:attribute name="string" /></rng:optional>
@@ -554,7 +553,6 @@
             <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="domain"/></rng:optional>
-            <rng:optional><rng:attribute name="default"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="form" />
