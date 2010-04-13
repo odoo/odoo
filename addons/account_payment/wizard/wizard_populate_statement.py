@@ -22,12 +22,22 @@
 import wizard
 import pooler
 from tools.misc import UpdateableStr
+import time
 
 FORM = UpdateableStr()
 
 FIELDS = {
     'lines': {'string': 'Payment Lines', 'type': 'many2many',
         'relation': 'payment.line'},
+    'date_select': {
+                'string': 'Select Date',
+                'type': 'selection',
+                'selection': [('date_payment','Payment Order Date'),('date_current','Current Date'),('date_maturity','Maturity Date'),('date_other','Fixed Date')],
+                'required': True,
+                'default': lambda *a:'date_other',
+                'help': 'The selected date will be used for statement lines'
+        },
+    'd_date': {'string': 'Date', 'type': 'date',},         
 }
 
 def _search_entries(obj, cursor, user, data, context):
@@ -46,6 +56,12 @@ def _search_entries(obj, cursor, user, data, context):
 
     FORM.string = '''<?xml version="1.0"?>
 <form string="Populate Statement:">
+    <group colspan="2">
+        <field name="date_select"/>
+    </group>
+    <group attrs="{'invisible':[('date_select','!=','date_other')]}" colspan="2">
+        <field name="d_date" attrs="{'required':[('date_select','=','date_other')]}"/>
+    </group>   
     <field name="lines" colspan="4" height="300" width="800" nolabel="1"
         domain="[('id', 'in', [%s])]"/>
 </form>''' % (','.join([str(x) for x in line_ids]))
@@ -64,10 +80,19 @@ def _populate_statement(obj, cursor, user, data, context):
     statement_reconcile_obj = pool.get('account.bank.statement.reconcile')
 
     statement = statement_obj.browse(cursor, user, data['id'], context=context)
-
+    
+    if data['form']['date_select'] == 'date_current':
+        date_line = time.strftime('%Y-%m-%d')
+    elif data['form']['date_select'] == 'date_payment':
+        date_line = statement.date
+    else:
+        date_line = data['form']['d_date']
+        
     for line in line_obj.browse(cursor, user, line_ids, context=context):
         ctx = context.copy()
-        ctx['date'] = line.ml_maturity_date # was value_date earlier,but this field exists no more now
+        if data['form']['date_select'] == 'date_maturity':
+            date_line = line.ml_maturity_date
+        ctx['date'] = date_line
         amount = currency_obj.compute(cursor, user, line.currency.id,
                 statement.currency.id, line.amount_currency, context=ctx)
 
@@ -75,7 +100,9 @@ def _populate_statement(obj, cursor, user, data, context):
             reconcile_id = statement_reconcile_obj.create(cursor, user, {
                 'line_ids': [(6, 0, [line.move_line_id.id])]
                 }, context=context)
+            
             statement_line_obj.create(cursor, user, {
+                'date': date_line,                                     
                 'name': line.order_id.reference or '?',
                 'amount': - amount,
                 'type': 'supplier',
