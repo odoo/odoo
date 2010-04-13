@@ -31,7 +31,7 @@ import pytz
 import re
 import tools
 import time
-
+import caldav_node
 
 try:
     import vobject
@@ -418,7 +418,12 @@ class calendar_collection(osv.osv):
     }
     _default = {
         'calendar_collection' : False,
-    }
+    }   
+    def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
+        """ try to locate the node in uri,
+            Return a tuple (node_dir, remaining_path)
+        """
+        return (caldav_node.node_database(context=ncontext), uri)
     
 calendar_collection()
 
@@ -448,6 +453,19 @@ class Calendar(CalDAV, osv.osv):
             'create_date': fields.datetime('Created Date'),
             'write_date': fields.datetime('Modifided Date'),
     }   
+
+    def get_calendar_object(self, cr, uid, uri, context=None):
+        if not uri:
+            return None
+        if len(uri) > 1:
+            return None
+        name, file_type = tuple(uri[0].split('.'))
+        res = self.name_search(cr, uid, name)
+        if not res:
+            return None
+        calendar_id, calendar_name = res[0]
+        calendar = self.browse(cr, uid, calendar_id)
+        return node_calendar(uri, context, calendar)
 
     def export_cal(self, cr, uid, ids, vobj='vevent', context={}):
         """ Export Calendar

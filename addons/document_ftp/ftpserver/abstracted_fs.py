@@ -309,31 +309,18 @@ class abstracted_fs:
     def open(self, node, mode):
         if not node:
             raise OSError(1, 'Operation not permited.')
-        # Reading operation        
-        if node.type == 'file':
-            cr = pooler.get_db(node.context.dbname).cursor()
-            uid = node.context.uid
-            if not self.isfile(node):
-                raise OSError(1, 'Operation not permited.')
-            fobj = node.context._dirobj.pool.get('ir.attachment').browse(cr, uid, node.file_id, context=node.context.context)
-            if fobj.store_method and fobj.store_method== 'fs' :
-                s = StringIO.StringIO(node.get_data(cr, fobj))
-            else:
-                s = StringIO.StringIO(base64.decodestring(fobj.db_datas or ''))
-            s.name = node
-            cr.close()
-            return s
-        elif node.type == 'content':
-            uid = node.context.uid
-            cr = pooler.get_db(node.context.dbname).cursor()
-            pool = pooler.get_pool(node.context.dbname)
-            res = getattr(pool.get('document.directory.content'), 'process_read')(cr, uid, node)
-            res = StringIO.StringIO(res)
-            res.name = node
-            cr.close()
-            return res
-        else:
+        # Reading operation
+        cr = pooler.get_db(node.context.dbname).cursor()
+        res = False
+        #try:
+        if node.type not in ('collection','database'):            
+            res = node.open(cr, mode)   
+        #except:
+        #    pass
+        cr.close()     
+        if not res:
             raise OSError(1, 'Operation not permited.')
+        return res
 
     # ok, but need test more
 
