@@ -39,6 +39,7 @@
         'hr_attendance_report.xml',
         'security/ir.model.access.csv',
         'wizard/hr_attendance_bymonth_view.xml',
+        'wizard/hr_attendance_byweek_view.xml',
     ],
     'demo_xml': ['hr_attendance_demo.xml'],
     'installable': True,

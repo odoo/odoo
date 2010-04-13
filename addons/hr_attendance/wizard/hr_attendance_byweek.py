@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-###############################################################################
+##############################################################################
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
@@ -22,17 +22,16 @@ import time
 
 from osv import osv, fields
 
-class hr_attendance_bymonth(osv.osv_memory):
-    _name = 'hr.attendance.month'
-    _description = 'Print Monthly Attendance Report'
+class hr_attendance_byweek(osv.osv_memory):
+    _name = 'hr.attendance.week'
+    _description = 'Print Week Attendance Report'
     _columns = {
-        'month': fields.selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
-                                  'Month', required=True),
-        'year': fields.integer('Year', required=True)
+        'init_date': fields.date('Starting Date', required=True),
+        'end_date': fields.date('Ending Date', required=True)
                 }
     _defaults = {
-         'month': lambda * a: time.gmtime()[1],
-         'year': lambda * a: time.gmtime()[0],
+         'init_date': lambda *a: time.strftime('%Y-%m-%d'),
+         'end_date': lambda *a: time.strftime('%Y-%m-%d'),
              }
 
     def print_report(self, cr, uid, ids, context=None):
@@ -43,10 +42,9 @@ class hr_attendance_bymonth(osv.osv_memory):
                  }
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'hr.attendance.bymonth',
+            'report_name': 'hr.attendance.allweeks',
             'datas': datas,
             }
-
-hr_attendance_bymonth()
+hr_attendance_byweek()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
