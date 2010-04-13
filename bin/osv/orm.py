@@ -1134,7 +1134,21 @@ class orm_template(object):
         fields = {}
         childs = True
 
-        if node.tag == 'field':
+        if node.tag in ('field', 'node', 'arrow'):
+            if node.get('object'):
+                attrs = {}
+                views = {}
+                for f in node:
+                    if f.tag in ('field'):
+                        node.remove(f)
+                        ctx = context.copy()
+                        ctx['base_model_name'] = self._name
+                        xarch, xfields = self.pool.get(node.get('object')).__view_look_dom_arch(cr, user, f, view_id, ctx)
+                        views[str(f.tag)] = {
+                            'arch': xarch,
+                            'fields': xfields
+                        }
+                        attrs = {'views': views}
             if node.get('name'):
                 attrs = {}
                 try:
@@ -1253,20 +1267,8 @@ class orm_template(object):
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
 
-        #code for diagram view.
         fields={}
-        if node.tag=='diagram':
-            if node.getchildren()[0].tag=='node':
-               node_fields=self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
-            if node.getchildren()[1].tag=='arrow':
-               arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
-            for key,value in node_fields.items():
-                fields[key]=value
-            for key,value in arrow_fields.items():
-                fields[key]=value
-        else:
-            fields = self.fields_get(cr, user, fields_def.keys(), context)
-
+        fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
             if field == 'id':
                 # sometime, the view may containt the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
