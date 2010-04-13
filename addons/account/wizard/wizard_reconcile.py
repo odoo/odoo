@@ -25,7 +25,7 @@ import netsvc
 import time
 import osv
 import pooler
-from datetime import datetime
+from mx import DateTime as datetime
 from tools.translate import _
 
 _transaction_form = '''<?xml version="1.0"?>

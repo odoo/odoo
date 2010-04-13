@@ -30,6 +30,7 @@ import time
 import random
 import tools
 from tools.translate import _
+import mx
 
 ICS_TAGS = {
     'summary':'normal',
@@ -111,7 +112,7 @@ class document_directory_content(osv.osv):
             if short:
                 return datetime.date.fromtimestamp(time.mktime(time.strptime(idate, '%Y-%m-%d')))
             else:
-                return datetime.datetime.strptime(idate, '%Y-%m-%d %H:%M:%S')
+                return mx.DateTime.strptime(idate, '%Y-%m-%d %H:%M:%S')
 
         import vobject
         obj_class = self.pool.get(node.content.ics_object_id.model)

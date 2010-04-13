@@ -141,8 +141,8 @@ class mrp_production_workcenter_line(osv.osv):
         date_now = time.strftime('%Y-%m-%d %H:%M:%S')
         obj_line = self.browse(cr, uid, ids[0])
         
-        date_start = datetime.datetime.strptime(obj_line.date_start,'%Y-%m-%d %H:%M:%S')
-        date_finished = datetime.datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
+        date_start = DateTime.strptime(obj_line.date_start,'%Y-%m-%d %H:%M:%S')
+        date_finished = DateTime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
         delay += (date_finished-date_start).days * 24
         delay += (date_finished-date_start).seconds / float(60*60)
         
@@ -345,8 +345,8 @@ class mrp_operations_operation(osv.osv):
                 if not i: continue
                 if code_lst[i-1] not in ('resume','start'):
                    continue
-                a = datetime.datetime.strptime(time_lst[i-1],'%Y-%m-%d %H:%M:%S')
-                b = datetime.datetime.strptime(time_lst[i],'%Y-%m-%d %H:%M:%S')
+                a = DateTime.strptime(time_lst[i-1],'%Y-%m-%d %H:%M:%S')
+                b = DateTime.strptime(time_lst[i],'%Y-%m-%d %H:%M:%S')
                 diff += (b-a).days * 24
                 diff += (b-a).seconds / float(60*60)
         return diff
