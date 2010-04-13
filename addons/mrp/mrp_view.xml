@@ -441,7 +441,7 @@
                     <field name="cycle_total" operator="+"/>
                 </graph>
             </field>
-        </record>        
+        </record>
 
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
@@ -493,7 +493,7 @@
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" />                                    
+                                        states="draft,waiting,confirmed,assigned" />
                                 </tree>
                             </field>
 
@@ -502,7 +502,7 @@
                                    <tree string="Consumed Products" editable="bottom" colors="red:scraped==True">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                    <field name="product_uom" readonly="1" string="UOM"/>                                    
+                                    <field name="product_uom" readonly="1" string="UOM"/>
                                     <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                                     <field name="prodlot_id" />
                                     <field name="state" invisible="1"/>
@@ -516,8 +516,8 @@
                                            name="%(stock.move_scrap)d"
                                            string="Scrap Products" type="action"
                                            icon="gtk-convert"
-                                           states="done,cancel" />                                      
-                                    
+                                           states="done,cancel" />
+
                                    </tree>
                                </field>
 
@@ -525,13 +525,13 @@
                                 <field name="state" select="2"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="gtk-execute"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
-                                <button name="button_produce" states="ready" string="Mark as Started" icon="gtk-execute"/>                                
+                                <button name="button_produce" states="ready" string="Mark as Started" icon="gtk-execute"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
                                 <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
                                 <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-cancel"/>
                                 <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="gtk-convert"/>
                             </group>
-                        </page>                        
+                        </page>
                         <page string="Finished Products">
                             <field colspan="2" name="move_created_ids" nolabel="1" widget="one2many_list"
                                 mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
@@ -548,7 +548,7 @@
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" />                                    
+                                        states="draft,waiting,confirmed,assigned" />
                                 </tree>
                             </field>
 
@@ -618,7 +618,7 @@
                        <filter icon="terp-mrp" string="Draft"
                            domain="[('state','=','draft')]"
                            help="Non confirmed manufacturing orders"/>
-                       <filter icon="terp-mrp" string="Current" name="current"
+                       <filter icon="terp-mrp" string="Current"
                            domain="[('state','in',('confirmed','ready'))]"
                            help="Manufacturing Orders which are waiting for raw materials"/>
                        <filter icon="terp-mrp" string="Ready"
@@ -656,7 +656,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_current":1}</field>
+            <field name="context">{"search_default_Current":1}</field>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" sequence="1"/>
@@ -852,7 +852,7 @@
             <field name="arch" type="xml">
                 <search string="Search Procurement">
                     <group col='10' colspan='4'>
-                       <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" name="current" help="Procurement Orders in draft or open state."/>
+                       <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" help="Procurement Orders in draft or open state."/>
                        <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement Orders with exceptions"/>
                        <filter icon="terp-mrp" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
@@ -879,7 +879,7 @@
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_current":1}</field>
+            <field name="context">{"search_default_Current":1}</field>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
         <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_manufacturing"

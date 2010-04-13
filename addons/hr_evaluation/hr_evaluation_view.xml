@@ -311,9 +311,9 @@
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
                    <group col='10' colspan='4'>
-                        <filter icon="terp-crm" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
+                        <filter icon="terp-crm" string="To Do" domain="[('state','=','waiting_answer')]"/>
                         <separator orientation="vertical"/>
-                        <filter string="My" icon="terp-partner" name="my" domain="[('user_id','=',uid)]"/>
+                        <filter string="My" icon="terp-partner" domain="[('user_id','=',uid)]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                         <separator orientation="vertical"/>
@@ -329,7 +329,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
-            <field name="context">{"search_default_todo":1,"search_default_my":1}</field>
+            <field name="context">{"search_default_To Do":1,"search_default_My":1}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
         </record>
 

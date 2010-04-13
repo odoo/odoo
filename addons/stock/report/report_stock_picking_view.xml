@@ -57,8 +57,8 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group>
-                        <filter string="This Year" name="this_year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" />
-                        <filter string="This Month" name="this_month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]" />
+                        <filter string="This Year" icon="terp-hr" domain="[('name','=',time.localtime()[0])]" />
+                        <filter string="This Month" icon="terp-hr" domain="[('month','=',time.strftime('%%m'))]" />
                         <separator orientation="vertical"/>
   						<filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
   						<filter string="Order Date" icon="terp-stock" domain="[('order_date',=,time.strftime('%%Y-%%m-%%d'))]"  />
@@ -99,7 +99,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_report_stock_picking_tree"/>
-            <field name="context">{"search_default_this_year":1,"search_default_this_month":1}</field>            
+            <field name="context">{"search_default_This Year":1,"search_default_This Month":1}</field>
             <field name="search_view_id" ref="view_report_report_stock_picking_filter"/>
         </record>
 
