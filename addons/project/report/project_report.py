@@ -128,16 +128,19 @@ class project_vs_remaining_hours(osv.osv):
                        min(pt.id) as id,
                        a.name as project,
                        sum(pt.remaining_hours) as remaining_hours,
-                       a.state
+                       a.state,
+                       pu.uid
                     from
                          project_task as pt,
                          project_project as p,
-                         account_analytic_account as a
+                         account_analytic_account as a,
+                         project_user_rel as pu
                     where
                         pt.project_id=p.id and
-                        p.category_id = a.id
+                        p.category_id = a.id and
+                        pu.project_id=p.id
                     group by
-                        a.name,a.state
+                        a.name,a.state,pu.uid
             )
         """)
 project_vs_remaining_hours()
@@ -165,8 +168,6 @@ class task_by_days(osv.osv):
                     pt.project_id
                 from
                     project_task as pt
-                where
-                    (to_date(to_char(pt.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
                 group by
                     to_char(pt.create_date, 'YYYY-MM-DD'),pt.state,pt.project_id
             )

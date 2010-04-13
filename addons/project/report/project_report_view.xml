@@ -124,6 +124,7 @@
         <field name="res_model">project.vs.remaining.hours</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
+        <field name="domain">[('uid','=',uid)]</field>
         <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
     </record>
     <!-- Views and action for project issue dashboard -->
@@ -159,7 +160,7 @@
         <field name="res_model">task.by.days</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
-        <field name="domain">[('day','&gt;=',time.strftime('%Y-%m-%d')),('day','&lt;=', time.strftime('%Y-%m-%d', time.localtime(time.time()-(15*24*3600))))]</field>
+        <field name="domain">[('day','&lt;=',time.strftime('%Y-%m-%d')),('day','&gt;=', time.strftime('%Y-%m-%d', time.localtime(time.time()-(15*24*3600))))]</field>
         <field name="view_id" ref="view_task_by_days_graph"/>
     </record>
 
