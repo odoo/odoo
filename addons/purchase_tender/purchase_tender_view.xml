@@ -36,19 +36,20 @@
                 <field name="user_id" select="1"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
+                <field name="exclusive"/>
                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                 <notebook colspan="4">
                     <page string="Products">
                         <field name="line_ids" colspan="4" nolabel="1">
                             <tree string="Products" editable="bottom">
                                 <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                                <field name="product_uom_id"/>
                                 <field name="product_qty"/>
+                                <field name="product_uom_id"/>
                             </tree>
                             <form string="Products" editable="bottom">
                                 <field name="product_id"/>
+								<field name="product_qty"/>                                
                                 <field name="product_uom_id"/>
-                                <field name="product_qty"/>
 								<field name="company_id" groups="base.group_multi_company" widget="selection"/>                                
                             </form>
 							                            
@@ -59,7 +60,7 @@
                     </page>
                     <page string="Quotations">
                      	<group col="8" colspan="4">
-                    	<button name="%(action_purchase_requisition_partner)d" string="New RfQr" type="action" />
+                    	<button name="%(action_purchase_tender_partner)d" string="New RfQr" type="action" />
                     	 <label colspan="6"  string=""/>
                     	  </group>
                     	<field name="purchase_ids" nolabel="1" colspan="4"/>

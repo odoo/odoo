@@ -31,7 +31,7 @@ class purchase_tender(osv.osv):
     _columns = {
         'name': fields.char('Tender Reference', size=32,required=True),
         'date_start': fields.datetime('Date Start'),
-        'date_end': fields.datetime('Date End'),
+        'date_end': fields.datetime('Date End',readonly=True),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'exclusive': fields.boolean('Exclusive', help="If the tender is exclusive, it will cancel all purchase orders when you confirm one of them"),
         'description': fields.text('Description'),
@@ -42,6 +42,7 @@ class purchase_tender(osv.osv):
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'user_id': lambda obj, cr, uid, context: uid,
         'state': lambda *args: 'open',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.tender'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
@@ -54,17 +55,24 @@ class purchase_tender(osv.osv):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         return True        
     def tender_cancel(self, cr, uid, ids, context={}):
+        purchase_order_obj = self.pool.get('purchase.order')
+        for purchase in self.browse(cr, uid, ids):
+            for purchase_id in purchase.purchase_ids:
+                if str(purchase_id.state) in('draft','wait'):
+                    purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])     
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True        
     def tender_confirm(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        self.write(cr, uid, ids, {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True 
     def tender_reset(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'draft'})
         return True    
     def tender_done(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done'}, context=context)
-        return True        
+        return True     
+    
+      
 purchase_tender()
 
 class purchase_tender_line(osv.osv):
@@ -74,10 +82,11 @@ class purchase_tender_line(osv.osv):
     _columns = {
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_id': fields.many2one('product.uom', 'Product UoM'),
-        'product_qty': fields.float('Date End', digits=(16,2)),
+        'product_qty': fields.float('Quantity', digits=(16,2)),
         'tender_id' : fields.many2one('purchase.tender','Purchase Tender', ondelete='cascade'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
+
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         
         """ Changes UoM and name if product_id changes.
@@ -112,8 +121,10 @@ class purchase_order(osv.osv):
                     if order.id<>po.id:
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
-                    self.pool.get('purchase.tender').write(cr, uid, [po.tender_id.id], {'state':'close'})
+                    self.pool.get('purchase.tender').write(cr, uid, [po.tender_id.id], {'state':'close','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
+    
+    
 purchase_order()
 
 

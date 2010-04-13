@@ -13,7 +13,7 @@
                    <group>
                        <field name="name"/>
                        <field name="user_id" string="User" widget="selection">
-                           <filter domain="[('user_id','=',uid)]" help="My Resouces" icon="gtk-execute" name="my_resources"/>
+                           <filter domain="[('user_id','=',uid)]" help="My Resouces" icon="gtk-execute" string="My Resources"/>
                        </field>
                        <field name="resource_type"/>
                        <field name="company_id" widget="selection"/>
@@ -98,7 +98,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_my_resources":1}</field>
+            <field name="context">{"search_default_My Resources":1}</field>
             <field name="search_view_id" ref="view_resource_calendar_search"/>
         </record>
 

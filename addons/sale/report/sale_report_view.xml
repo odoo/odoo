@@ -45,11 +45,11 @@
             <search string="Sale Orders">
                 <group>
                 <filter icon="terp-sale"
-                    string="This Year" name="this_year"
+                    string="This Year"
                     domain="[('year','=',time.strftime('%%Y'))]"
                     help="Sales orders of the year"/>
                 <filter icon="terp-sale"
-                    string="This Month" name="this_month"
+                    string="This Month"
                     domain="[('month','=',time.strftime('%%m'))]"
                     help="Sales orders of this month"/>
                 <separator orientation="vertical"/>
@@ -57,7 +57,7 @@
                     string="Quotations"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-sale"
-                    string="Sales" name="sales"
+                    string="Sales"
                     domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
                 <separator orientation="vertical"/>
                 <field name="user_id" widget="selection">
@@ -73,7 +73,7 @@
                 <group expand="1" string="Group By..." >
                     <filter string="Company" icon="terp-sale" context="{'group_by':'company_id'}"/>
                     <filter string="Shop" icon="terp-sale" context="{'group_by':'shop_id'}"/>
-                    <filter string="Salesman" name="by_user" icon="terp-sale" context="{'group_by':'user_id'}" />
+                    <filter string="Salesman" icon="terp-sale" context="{'group_by':'user_id'}" />
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-sale" context="{'group_by':'product_id'}"/>
                     <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
@@ -91,7 +91,7 @@
         <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{"search_default_this_year":1,"search_default_this_month":1,"search_default_sales":1,"search_default_by_user":1}</field>
+        <field name="context">{"search_default_This Year":1,"search_default_This Month":1,"search_default_Sales":1,"search_default_Salesman":1}</field>
         <field name="search_view_id" ref="view_order_product_search"/>
     </record>
 

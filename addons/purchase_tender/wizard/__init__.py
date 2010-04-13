@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import purchase_requisition_partner
+import purchase_tender_partner
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

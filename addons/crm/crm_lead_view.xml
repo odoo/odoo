@@ -45,8 +45,8 @@
                             name="convert_opportunity"
                             string="Convert"
                             help="Convert into Opportunity"
-                            icon="gtk-index"   
-                            type="object"                         
+                            icon="gtk-index"
+                            type="object"
                             attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                     <newline />
                     <field name="section_id" colspan="1"
@@ -262,7 +262,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
-                <filter icon="terp-project" name="current"
+                <filter icon="terp-project"
                     string="Current"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-project"
@@ -288,7 +288,7 @@
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
                         domain="[('user_id','=',uid)]"
-                        help="My Leads" name="my_lead"
+                        help="My Leads" string="My Lead"
                     />
                     <filter icon="terp-partner"
                         domain="[('user_id','=', False)]"
