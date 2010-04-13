@@ -42,6 +42,7 @@
         'purchase_data.xml',
         'wizard/purchase_order_group_view.xml',
         'wizard/purchase_installer.xml',
+        'wizard/purchase_line_invoice_view.xml',
         'purchase_view.xml',
         'purchase_report.xml',
         'stock_view.xml',
