@@ -35,6 +35,20 @@ class purchase_tender_partner(osv.osv_memory):
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True),
     }
 
+        
+    def view_init(self, cr, uid, fields_list, context=None):
+        res = super(purchase_tender_partner, self).view_init(cr, uid, fields_list, context=context)
+        record_id = context and context.get('active_id', False) or False        
+        tender = self.pool.get('purchase.tender').browse(cr, uid, record_id)
+        if not tender.line_ids:
+                raise osv.except_osv('Error!','No Product in Tender')
+        True
+
+    def onchange_partner_id(self, cr, uid, ids, partner_id):
+        addr = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['default'])
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        return {'value':{'partner_address_id': addr['default']}}
+        
     def create_order(self, cr, uid, ids, context):
         """ 
              To Create a purchase orders .
