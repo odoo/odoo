@@ -20,7 +20,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="context">{"set_editable":True,"default_state":'open',"search_default_my_calls":1,"search_default_state":1,"search_default_section_id":section_id}</field>
+        <field name="context">{"set_editable":True,"default_state":'open',"search_default_my_calls":1,"search_default_section_id":section_id}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
     </record>
 
@@ -55,7 +55,7 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
-        <field name="context">{"default_state":'open',"search_default_my_calls":1,"search_default_state":1,"search_default_section_id":section_id}</field>
+        <field name="context">{"default_state":'open',"search_default_My Calls":1,"search_default_section_id":section_id}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
     </record>
 
