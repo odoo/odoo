@@ -843,7 +843,7 @@ class olap_cube_table(osv.osv):
             args = [('schema_id', '=', context['parent_schema_id'])]
 
         if context and context.has_key('d_id'):
-            dim_obj = self.pool.get('olap.dimension').browse(cr, uid, int(['d_id']))
+            dim_obj = self.pool.get('olap.dimension').browse(cr, uid, int(context['d_id']))
             args = [('schema_id', '=', dim_obj.cube_id.schema_id.id)]
 
         return super(olap_cube_table, self).search(cr, uid, args, offset, limit, \
