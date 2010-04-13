@@ -360,7 +360,7 @@ class purchase_order(osv.osv):
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
             self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
-            self.pool.get('purchase.order.line').write(cr, uid, todo, {'invoiced':True}, context)
+            self.pool.get('purchase.order.line').write(cr, uid, todo, {'invoiced':True})
             self.write(cr, uid, [o.id], {'invoice_id': inv_id})
             res = inv_id
         return res
