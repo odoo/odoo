@@ -37,7 +37,7 @@ class hr_action_reason(osv.osv):
     }
 hr_action_reason()
 
-def _employee_get(obj,cr,uid,context={}):
+def _employee_get(obj, cr, uid, context=None):
     ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
     if ids:
         return ids[0]
@@ -90,7 +90,7 @@ class hr_employee(osv.osv):
     _inherit = "hr.employee"
     _description = "Employee"
 
-    def _state(self, cr, uid, ids, name, args, context={}):
+    def _state(self, cr, uid, ids, name, args, context=None):
         result = {}
         for id in ids:
             result[id] = 'absent'
@@ -125,27 +125,27 @@ class hr_employee(osv.osv):
         #Special case when button calls this method :type=context
         if isinstance(type,dict):
             type = type.get('type','action')
-            
+
         if type == 'sign_in':
             warning_sign = "Sign In"
         elif type == 'sign_out':
-            warning_sign = "Sign Out"    
-        
+            warning_sign = "Sign Out"
+
         for emp in self.read(cr, uid, ids, ['id'], context=context):
             if not self._action_check(cr, uid, emp['id'], dt, context):
                 raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
-            
+
             res = {'action' : type, 'employee_id' : emp['id']}
 
             if dt:
                 res['name'] = dt
-                
+
             id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
-        
+
         if type != 'action':
             return id
         return True
-    
+
 hr_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
