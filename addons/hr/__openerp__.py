@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -28,11 +28,9 @@
     "website" : "http://www.openerp.com",
     "description": """
     Module for human resource management. You can manage:
-    * Employees and hierarchies
-    * Work hours sheets
-    * Attendances and sign in/out system
-
-    Different reports are also provided, mainly for attendance statistics.
+    * Employees and hierarchies : You can define your employee with User and display hierarchies
+    * HR Departments
+    * HR Jobs
     """,
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
@@ -47,7 +45,7 @@
         'hr_installer.xml',
         'hr_data.xml'
     ],
-    'demo_xml': ['hr_demo.xml', 
+    'demo_xml': ['hr_demo.xml',
         'hr_department_demo.xml'],
     'installable': True,
     'active': False,
