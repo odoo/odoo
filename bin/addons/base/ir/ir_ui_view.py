@@ -177,9 +177,13 @@ class view(osv.osv):
             for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
                 transitions.append((a['id'], t[des_node][0]))
                 tres[str(t['id'])] = (a['id'],t[des_node][0])
-                if t.has_key(str(label)) and str(t[label])=='False':
-                    t[label]=' '
-                labels[str(t['id'])] = (a['id'],t.get(label,' '))
+                label_string = ""
+                for lbl in eval(label):
+                    if t.has_key(str(lbl)) and str(t[lbl])=='False':
+                        label_string = label_string + ' '
+                    else:
+                        label_string = label_string + " " + t[lbl]
+                labels[str(t['id'])] = (a['id'],label_string)
         g  = graph(nodes, transitions, no_ancester)
         g.process(start)
         g.scale(*scale)
