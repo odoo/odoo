@@ -32,11 +32,8 @@ class purchase_tender_partner(osv.osv_memory):
     _description = "Purchase Tender Partner"
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
+        'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True),
     }
-    _defaults = {
-        'parnter_id': lambda *a: 1,
-    }          
-        
 
     def create_order(self, cr, uid, ids, context):
         """ 

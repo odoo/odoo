@@ -121,7 +121,7 @@ class purchase_order(osv.osv):
                     if order.id<>po.id:
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
-                    self.pool.get('purchase.tender').write(cr, uid, [po.tender_id.id], {'state':'close'})
+                    self.pool.get('purchase.tender').write(cr, uid, [po.tender_id.id], {'state':'close','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
     
     
