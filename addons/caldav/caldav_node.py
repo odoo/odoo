@@ -78,6 +78,9 @@ class node_calendar_collection(nodes.node_dir):
                 res.append(node_calendar(fil.name,self,self.context,fil))
         return res
 
+    def get_owner(self, cr):
+        return False
+
     
     def get_etag(self, cr):
         """ Get a tag, unique per object + modification.
@@ -94,6 +97,10 @@ class node_calendar_collection(nodes.node_dir):
 
     def _get_ttag(self, cr):
         return 'calendar collection-%d' % self.dir_id
+    
+    def get_ctag(self, cr):
+        return self.get_etag(cr)
+        
 
 class node_calendar(nodes.node_class):
     our_type = 'file'

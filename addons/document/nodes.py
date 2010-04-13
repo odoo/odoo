@@ -289,6 +289,19 @@ class node_dir(node_database):
         fnode = node_file(path,self,self.context,fil)
         fnode.set_data(cr,data,fil)
         return fnode
+
+    def get_etag(self, cr):
+        """ Get a tag, unique per object + modification.
+
+            see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
+        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
+
+    def _get_wtag(self, cr):
+        """ Return the modification time as a unique, compact string """
+        if self.write_date:
+            wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
+        else: wtime = time.time()
+        return str(wtime)    
     
     def _get_ttag(self,cr):
         return 'dir-%d' % self.dir_id

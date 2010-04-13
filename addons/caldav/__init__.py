@@ -21,6 +21,7 @@
 
 import calendar
 import caldav_fs
+import caldav_server
 import wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
