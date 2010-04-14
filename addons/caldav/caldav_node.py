@@ -184,7 +184,7 @@ class node_calendar_collection(nodes.node_dir):
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         ids = [self.dir_id]
-        res = collection_obj.get_schedule_inbox_URL(cr, uid, ids, context=ctx)
+        res = dirobj.get_schedule_inbox_URL(cr, uid, ids, context=ctx)
         
         doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
         href = doc.documentElement
@@ -203,7 +203,7 @@ class node_calendar_collection(nodes.node_dir):
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         ids = [self.dir_id]
-        res = collection_obj.get_schedule_outbox_URL(cr, uid, ids, context=ctx)
+        res = dirobj.get_schedule_outbox_URL(cr, uid, ids, context=ctx)
         
         doc = xml.dom.minidom.getDOMImplementation().createDocument(None, 'href', None)
         href = doc.documentElement
