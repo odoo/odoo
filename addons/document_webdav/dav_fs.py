@@ -63,7 +63,17 @@ class openerp_dav_handler(dav_interface):
         self.verbose = verbose
 
     def get_propnames(self,uri):
-        props = self.PROPS        
+        props = self.PROPS   
+        self.parent.log_message('get propnames: %s' % uri)
+        if uri[-1]=='/':uri=uri[:-1]
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        if not dbname:
+            cr.close()
+            return props
+        node = self.uri2object(cr, uid, pool, uri2)
+        if node:
+            props.update(node.get_dav_props(cr))
+        cr.close()     
         return props
 
     def _get_dav_lockdiscovery(self, uri):
@@ -71,7 +81,8 @@ class openerp_dav_handler(dav_interface):
 
     def _get_dav_supportedlock(self, uri):
         raise DAV_NotFound
-    def get_prop(self,uri,ns,propname):
+
+    def get_prop(self, uri, ns, propname):
         """ return the value of a given property
 
             uri        -- uri of the object to get the property of
@@ -79,8 +90,19 @@ class openerp_dav_handler(dav_interface):
             pname        -- name of the property
          """            
         if self.M_NS.has_key(ns):
-           return dav_interface.get_prop(self,uri,ns,propname)        
-        raise DAV_NotFound    
+           return dav_interface.get_prop(self,uri,ns,propname) 
+        if uri[-1]=='/':uri=uri[:-1]
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        if not dbname:
+            cr.close()
+            raise DAV_NotFound
+        node = self.uri2object(cr, uid, pool, uri2)
+        if not node:
+            cr.close()
+            raise DAV_NotFound
+        res = node.get_dav_eprop(cr,ns,propname)
+        cr.close()       
+        return res    
 
     def get_db(self,uri):
         names=self.uri2local(uri).split('/')        

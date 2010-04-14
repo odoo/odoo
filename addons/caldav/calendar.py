@@ -31,7 +31,6 @@ import pytz
 import re
 import tools
 import time
-import caldav_node
 
 try:
     import vobject
@@ -410,23 +409,6 @@ class CalDAV(object):
             self.ical_reset('value')
         return res
 
-class calendar_collection(osv.osv):
-    _inherit = 'document.directory' 
-    _columns = {
-        'calendar_collection' : fields.boolean('Calendar Collection'),
-        'calendar_ids': fields.one2many('basic.calendar', 'collection_id', 'Calendars'),
-    }
-    _default = {
-        'calendar_collection' : False,
-    }   
-    def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
-        """ try to locate the node in uri,
-            Return a tuple (node_dir, remaining_path)
-        """
-        return (caldav_node.node_database(context=ncontext), uri)
-    
-calendar_collection()
-
 class Calendar(CalDAV, osv.osv):
     _name = 'basic.calendar'    
     _calname = 'calendar'
@@ -445,10 +427,10 @@ class Calendar(CalDAV, osv.osv):
         'vtimezone': None, # Use: O-n, Type: Collection of Timezone class
     }
     _columns = {
-            'name': fields.char("Name", size=64),
-            'collection_id': fields.many2one('document.directory', 'Collection', \
-                                       required=True),
+            'name': fields.char("Name", size=64),            
             'user_id': fields.many2one('res.users', 'Owner'),
+            'collection_id': fields.many2one('document.directory', 'Collection', \
+                                           required=True),
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),            
             'create_date': fields.datetime('Created Date'),
             'write_date': fields.datetime('Modifided Date'),
