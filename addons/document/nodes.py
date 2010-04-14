@@ -254,8 +254,8 @@ class node_dir(node_database):
                     pass
 
     
-    def get_data(self,cr):
-        return ''
+    #def get_data(self,cr):
+    #    return ''
 
     
 
@@ -266,6 +266,26 @@ class node_dir(node_database):
 
     def _child_get(self, cr, name = None):
         return super(node_dir,self)._child_get(cr, name, self.dir_id)
+
+    def create_child_collection(self, cr, objname):
+        object2 = False            
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        obj = dirobj.browse(cr, uid, self.dir_id)            
+        if obj and (obj.type == 'ressource') and not object2:
+            raise OSError(1, 'Operation not permited.')
+
+        #objname = uri2[-1]
+        val = {
+                'name': objname,
+                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
+                'ressource_id': object2 and object2.id or False,
+                'parent_id' : obj and obj.id or False
+        }                 
+        
+        return dirobj.create(cr, uid, val)
         
     
     def create_child(self,cr,path,data):
@@ -556,6 +576,31 @@ class node_res_obj(node_class):
                 if dirr.type == 'ressource':
                     res.append(node_res_dir(dirr.name, self, self.context, dirr, {'active_id': self.res_id}))                
         return res
+
+    def create_child_collection(self, cr, objname):
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        res_obj = dirobj.pool.get(self.context.context['res_model'])           
+        
+        object2 = res_obj.browse(cr, uid, self.context.context['res_id']) or False            
+        
+        obj = dirobj.browse(cr, uid, self.dir_id)            
+        if obj and (obj.type == 'ressource') and not object2:
+            raise OSError(1, 'Operation not permited.')
+
+        
+        val = {
+                'name': objname,
+                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
+                'ressource_id': object2 and object2.id or False,
+                'parent_id' : False
+        }        
+        if (obj and (obj.type in ('directory'))) or not object2:                
+            val['parent_id'] =  obj and obj.id or False            
+        
+        return dirobj.create(cr, uid, val)
     
     def create_child(self,cr,path,data):
         """ API function to create a child file object and node

@@ -68,7 +68,7 @@ class openerp_dav_handler(dav_interface):
         if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
-            cr.close()
+            if cr: cr.close()
             return props
         node = self.uri2object(cr, uid, pool, uri2)
         if node:
@@ -94,7 +94,7 @@ class openerp_dav_handler(dav_interface):
         if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
-            cr.close()
+            if cr: cr.close()
             raise DAV_NotFound
         node = self.uri2object(cr, uid, pool, uri2)
         if not node:
@@ -360,40 +360,20 @@ class openerp_dav_handler(dav_interface):
             if cr: cr.close()    
     
     def mkcol(self,uri):
-        """ create a new collection """
+        """ create a new collection """                  
         self.parent.log_message('MKCOL: %s' % uri)
+        uri = self.uri2local(uri)[1:]
         if uri[-1]=='/':uri=uri[:-1]
-        parent='/'.join(uri.split('/')[:-1])
-        if not parent.startswith(self.baseuri):
-            parent=self.baseuri + ''.join(parent[1:])
-        if not uri.startswith(self.baseuri):
-            uri=self.baseuri + ''.join(uri[1:])
-
-
+        parent = '/'.join(uri.split('/')[:-1])        
+        parent = self.baseuri + parent
+        uri = self.baseuri + uri        
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:
             raise DAV_Error, 409
         node = self.uri2object(cr,uid,pool, uri2[:-1])
-        object2 = False            
-        if isinstance(node, node_res_obj):
-            object2 = node and pool.get(node.context.context['res_model']).browse(cr, uid, node.context.context['res_id']) or False            
-        
-        obj = node.context._dirobj.browse(cr, uid, node.dir_id)            
-        if obj and (obj.type == 'ressource') and not object2:
-            raise OSError(1, 'Operation not permited.')
-
-        objname = uri2[-1]
-        val = {
-                'name': objname,
-                'ressource_parent_type_id': obj and obj.ressource_type_id.id or False,
-                'ressource_id': object2 and object2.id or False,
-                'parent_id' : False
-        }
-        if (obj and (obj.type in ('directory'))) or not object2:                
-            val['parent_id'] =  obj and obj.id or False            
-        
-        pool.get('document.directory').create(cr, uid, val)
-        cr.commit() 
+        if node:
+            node.create_child_collection(cr, uri2[-1])  
+            cr.commit()      
         cr.close()
         return True
 
