@@ -30,6 +30,10 @@ class hr_recruitment_report(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
+        'year': fields.char('Year', size=4, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
+            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'date': fields.datetime('Date', readonly=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
@@ -48,7 +52,7 @@ class hr_recruitment_report(osv.osv):
                      min(s.id) as id,
                      date_trunc('day',s.date) as date,
                      date_trunc('day',s.date_closed) as date_closed,
-                     to_char(s.date, 'YYYY') as name,
+                     to_char(s.date, 'YYYY') as year,
                      to_char(s.date, 'MM') as month,
                      s.state,
                      s.company_id,
@@ -61,7 +65,8 @@ class hr_recruitment_report(osv.osv):
                      count(*) as nbr
                  from hr_applicant s
                  group by
-                     s.date,
+                     to_char(s.date, 'YYYY'),
+                     to_char(s.date, 'MM'),
                      date_trunc('day',s.date),
                      date_trunc('day',s.date_closed),
                      s.state,
