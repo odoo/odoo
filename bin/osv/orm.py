@@ -1134,21 +1134,31 @@ class orm_template(object):
         fields = {}
         childs = True
 
+        def encode(s):
+            if isinstance(s, unicode):
+                return s.encode('utf8')
+            return s
+
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
                 attrs = {}
                 views = {}
+                xml = "<form>"
                 for f in node:
                     if f.tag in ('field'):
-                        node.remove(f)
-                        ctx = context.copy()
-                        ctx['base_model_name'] = self._name
-                        xarch, xfields = self.pool.get(node.get('object')).__view_look_dom_arch(cr, user, f, view_id, ctx)
-                        views[str(f.tag)] = {
-                            'arch': xarch,
-                            'fields': xfields
-                        }
-                        attrs = {'views': views}
+                        xml += etree.tostring(f, encoding="utf-8")
+                xml += "</form>"
+                new_xml = etree.fromstring(encode(xml))
+                ctx = context.copy()
+                ctx['base_model_name'] = self._name
+                xarch, xfields = self.pool.get(node.get('object',False)).__view_look_dom_arch(cr, user, new_xml, view_id, ctx)
+                views[str(f.tag)] = {
+                    'arch': xarch,
+                    'fields': xfields
+                }
+                attrs = {'views': views}
+                view = False
+                fields = views.get('field',False) and views['field'].get('fields',False)
             if node.get('name'):
                 attrs = {}
                 try:
@@ -1268,7 +1278,17 @@ class orm_template(object):
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
 
         fields={}
-        fields = self.fields_get(cr, user, fields_def.keys(), context)
+        if node.tag=='diagram':
+            if node.getchildren()[0].tag=='node':
+               node_fields=self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
+            if node.getchildren()[1].tag=='arrow':
+               arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
+            for key,value in node_fields.items():
+                fields[key]=value
+            for key,value in arrow_fields.items():
+                fields[key]=value
+        else:
+            fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
             if field == 'id':
                 # sometime, the view may containt the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
