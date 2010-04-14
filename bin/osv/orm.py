@@ -1167,7 +1167,7 @@ class orm_template(object):
                             dom = column._domain
                         dom += eval(node.get('domain','[]'), {'uid':user, 'time':time})
                         context.update(eval(node.get('context','{}')))
-                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context)
+                        attrs['selection'] = self.pool.get(relation).name_search(cr, user, '', dom, context=context,limit=None)
                         if (node.get('required') and not int(node.get('required'))) or not column.required:
                             attrs['selection'].append((False,''))
                 fields[node.get('name')] = attrs
