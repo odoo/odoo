@@ -58,7 +58,7 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="12">
-	                    <filter string="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
+	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
 	                    <filter string="Account" icon="terp-hr" context="{'group_by':'account_id'}"/>
 	                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
 	                    <separator orientation="vertical"/>
@@ -74,6 +74,7 @@
             <field name="res_model">report.timesheet.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="context">{'search_default_User': 1}</field>
             <field name="search_view_id" ref="view_timesheet_line_search"/>
         </record>
         <menuitem action="action_timesheet_line_stat_all" id="menu_report_timesheet_line_all" parent="hr.menu_hr_reporting"/>
@@ -162,7 +163,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_timesheet_user_search"/>
         </record>
-        <menuitem action="action_timesheet_user_stat_all" id="menu_report_timesheet_user_all" parent="hr.menu_hr_reporting"/>
+        <!-- <menuitem action="action_timesheet_user_stat_all" id="menu_report_timesheet_user_all" parent="hr.menu_hr_reporting"/> -->
 
         <!-- Statistics report on timesheets to invoice -->
 
@@ -228,7 +229,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_timesheet_invoice_search"/>
         </record>
-        <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="hr.menu_hr_reporting"/>
+       <!--  <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="hr.menu_hr_reporting"/> -->
 
         <!-- Statistics report on daily timesheets per account -->
 
@@ -302,7 +303,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_timesheet_account_date_search"/>
         </record>
-        <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="hr.menu_hr_reporting"/>
+        <!--  <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="hr.menu_hr_reporting"/>-->
 
         <!-- Statistics report on timesheets per account -->
 
@@ -377,7 +378,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_timesheet_account_search"/>
         </record>
-        <menuitem action="action_timesheet_account_stat_all" id="menu_report_timesheet_account_all" parent="hr.menu_hr_reporting"/>
+        <!-- <menuitem action="action_timesheet_account_stat_all" id="menu_report_timesheet_account_all" parent="hr.menu_hr_reporting"/> -->
 
         <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_timesheet_user" name="Timesheets per day" res_model="report_timesheet.user" src_model="res.users"/>
 

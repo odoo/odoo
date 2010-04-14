@@ -202,7 +202,17 @@
                 </tree>
             </field>
         </record>
-
+        <record model="ir.ui.view" id="view_hr_evaluation_graph">
+            <field name="name">hr_evaluation.evaluation.graph</field>
+            <field name="model">hr_evaluation.evaluation</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Evaluation" type="bar">
+                    <field name="employee_id"/>
+                    <field name="progress"  operator="+"/>
+                </graph>
+            </field>
+        </record>
        <record id="hr_evaluation.evaluation_search" model="ir.ui.view">
             <field name="name">hr_evaluation.evaluation_search</field>
             <field name="model">hr_evaluation.evaluation</field>
@@ -242,7 +252,7 @@
         <record model="ir.actions.act_window" id="open_view_hr_evaluation_tree">
             <field name="res_model">hr_evaluation.evaluation</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
         </record>
         <menuitem
