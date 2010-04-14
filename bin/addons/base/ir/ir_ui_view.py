@@ -133,6 +133,8 @@ class view(osv.osv):
         return super(view, self).write(cr, uid, ids, vals, context)
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,label,scale,context={}):
+        if not label:
+            label = []
         nodes=[]
         nodes_name=[]
         transitions=[]
@@ -178,11 +180,12 @@ class view(osv.osv):
                 transitions.append((a['id'], t[des_node][0]))
                 tres[str(t['id'])] = (a['id'],t[des_node][0])
                 label_string = ""
-                for lbl in eval(label):
-                    if t.has_key(str(lbl)) and str(t[lbl])=='False':
-                        label_string = label_string + ' '
-                    else:
-                        label_string = label_string + " " + t[lbl]
+                if label:
+                    for lbl in eval(label):
+                        if t.has_key(str(lbl)) and str(t[lbl])=='False':
+                            label_string = label_string + ' '
+                        else:
+                            label_string = label_string + " " + t[lbl]
                 labels[str(t['id'])] = (a['id'],label_string)
         g  = graph(nodes, transitions, no_ancester)
         g.process(start)
