@@ -15,7 +15,7 @@ class YamlTag(object):
         return "<%s %s>" % (self.__class__.__name__, sorted(self.__dict__.items()))
 
 class Assert(YamlTag):
-    def __init__(self, model, id, severity=logging.ERROR, string="NONAME", **kwargs):
+    def __init__(self, model, id, severity=logging.WARNING, string="NONAME", **kwargs):
         self.model = model
         self.id = id
         self.severity = severity
@@ -29,7 +29,7 @@ class Record(YamlTag):
         super(Record, self).__init__(**kwargs)
     
 class Python(YamlTag):
-    def __init__(self, model, severity=logging.ERROR, name="", **kwargs):
+    def __init__(self, model, severity=logging.WARNING, name="", **kwargs):
         self.model= model
         self.severity = severity
         self.name = name

@@ -929,7 +929,7 @@ class property(function):
                 res[int(prop.res_id.id)] = (prop.value and \
                         int(prop.value.split(',')[1])) or False
             else:
-                res[int(prop.res_id.split(',')[1])] = prop.value or ''
+                res[int(prop.res_id.id)] = prop.value or ''
 
         if self._obj:
             obj = obj.pool.get(self._obj)

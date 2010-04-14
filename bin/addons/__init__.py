@@ -306,7 +306,7 @@ def load_information_from_description_file(module):
         if os.path.isfile(description_file):
             return eval(tools.file_open(description_file).read())
 
-    #TODO: refactor the logger in this file to follow the logging guidelines 
+    #TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
     logging.getLogger('addons').debug('The module %s does not contain a description file:'\
                                       '__openerp__.py or __terp__.py (deprecated)', module)
@@ -595,14 +595,14 @@ class MigrationManager(object):
 log = logging.getLogger('init')
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
-    
+
     def process_sql_file(cr, file):
         queries = fp.read().split(';')
         for query in queries:
             new_query = ' '.join(query.split())
             if new_query:
                 cr.execute(new_query)
-   
+
     def load_init_update_xml(cr, m, idref, mode, kind):
         for filename in package.data.get('%s_xml' % kind, []):
             logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
@@ -631,20 +631,20 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             else:
                 tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
             fp.close()
-    
+
     def load_data(cr, module_name, id_map, mode):
         _load_data(cr, module_name, id_map, mode, 'data')
-    
+
     def load_demo(cr, module_name, id_map, mode):
         _load_data(cr, module_name, id_map, mode, 'demo')
-    
+
     def load_test(cr, module_name, id_map, mode):
         cr.commit()
         try:
             _load_data(cr, module_name, id_map, mode, 'test')
         finally:
             cr.rollback()
-    
+
     def _load_data(cr, module_name, id_map, mode, kind):
         noupdate = (kind == 'demo')
         for filename in package.data.get(kind, []):
@@ -660,7 +660,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             else:
                 tools.convert_xml_import(cr, module_name, file, id_map, mode, noupdate)
             file.close()
-    
+
     # **kwargs is passed directly to convert_xml_import
     if not status:
         status = {}
@@ -722,11 +722,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, **kwargs):
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
                 status['progress'] = (float(statusi)+0.75) / len(graph)
                 load_demo_xml(cr, m, idref, mode)
-                load_demo(cr, m, idref, mode)                    
+                load_demo(cr, m, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
-            
-            load_test(cr, m, idref, mode)
-            
+                load_test(cr, m, idref, mode)
+
             package_todo.append(package.name)
 
             migrations.migrate_module(package, 'post')
