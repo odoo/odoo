@@ -116,6 +116,7 @@ class purchase_order_qty_amount(osv.osv):
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'total_qty' : fields.float('Total Qty'),
         'total_amount' : fields.float('Total Amount'),
+        'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
 
         }
     def init(self, cr):
@@ -126,13 +127,14 @@ class purchase_order_qty_amount(osv.osv):
                     min(id) as id,
                     to_char(create_date, 'MM') as month,
                     sum(product_qty) as total_qty,
+                    create_uid as user_id,
                     sum(price_unit*product_qty) as total_amount
                 from
                     purchase_order_line
                 where
                     to_char(create_date,'YYYY') =  to_char(current_date,'YYYY')
                 group by
-                    to_char(create_date, 'MM')
+                    to_char(create_date, 'MM'), create_uid
 
             )
         """)
