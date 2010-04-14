@@ -31,6 +31,7 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+		        <field name="domain">[('user_id','=',uid)]</field>
             <field name="view_id" ref="hr_holidays.open_allocation_holidays"/>
         </record>
 		<record id="action_timesheet_report_all" model="ir.actions.act_window">
@@ -39,7 +40,7 @@
 		        <field name="res_model">timesheet.report</field>
 		        <field name="view_type">form</field>
 		        <field name="view_mode">graph,tree</field>
-		        <field name="domain">[('user_id','=',uid)]</field>
+		        <field name="domain">[('user_id','=',uid), ('month', '=' , time.strftime('%m')), ('year', '=', time.strftime('%Y'))]</field>
 		        <field name="view_id" ref="hr_timesheet_sheet.view_timesheet_report_graph"/>
 		</record>
 

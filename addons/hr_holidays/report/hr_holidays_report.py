@@ -90,7 +90,7 @@ class hr_holidays_remaining_leaves_user(osv.osv):
                     min(hrs.id) as id,
                     rr.name as name,
                     sum(hrs.number_of_days) as no_of_leaves,
-                    hrs.user_id,
+                    rr.user_id as user_id,
                     hhs.name as leave_type
                 from
                     hr_holidays as hrs, hr_employee as hre,
@@ -98,9 +98,10 @@ class hr_holidays_remaining_leaves_user(osv.osv):
                 where
                     hrs.employee_id = hre.id and
                     hre.resource_id =  rr.id and
-                    hhs.id = hrs.holiday_status_id
+                    hhs.id = hrs.holiday_status_id  
                 group by
-                    rr.name,hrs.user_id,hhs.name
+                    rr.name,rr.user_id,hhs.name
             )
         """)
+
 hr_holidays_remaining_leaves_user()

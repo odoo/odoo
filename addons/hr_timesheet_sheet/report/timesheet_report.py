@@ -31,23 +31,31 @@ class timesheet_report(osv.osv):
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'no_of_timesheet': fields.integer('Total Timesheet',readonly=True),
+        'total_att': fields.float('Total Attendance'),
+        'total_ts': fields.float('Total Timesheet'),
+        'year': fields.char('Remaining leaves', size=4),
+        'name': fields.char('Name', size=64),
+        'user_id': fields.many2one('res.users','User'),
+        'leave_type': fields.char('Leave Type',size=64),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                          ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         }
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'timesheet_report')
         cr.execute("""
             create or replace view timesheet_report as (
-                    select
-                        min(id) as id,
-                        to_char(create_date, 'MM') as month,
-                        user_id,
-                        count(*) as no_of_timesheet
-                    from
-                        hr_timesheet_sheet_sheet
-                    where
-                         to_char(create_date,'YYYY') =  to_char(current_date,'YYYY')
-                    group by
-                        to_char(create_date,'MM'),user_id
-            )
-        """)
+                    SELECT sheet.name as name, 
+                           min(sheet.id) as id,
+                           to_char(sheet.date_current, 'YYYY') as year,
+                           to_char(sheet.date_current, 'MM') as month,
+                           sum(day.total_attendance) as total_att,
+                           sum(day.total_timesheet) as total_ts,
+                           sheet.user_id as user_id
+                    FROM hr_timesheet_sheet_sheet AS sheet
+                    LEFT JOIN hr_timesheet_sheet_sheet_day AS day
+                    ON (sheet.id = day.sheet_id)
+                    GROUP BY sheet.name, year, month, user_id
+                    ) """)
+
 timesheet_report()

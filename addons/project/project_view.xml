@@ -123,7 +123,8 @@
                        <field name="partner_id" string="Partner"/>
                    </group>
                     <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Users" icon="terp-project" domain = "[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Users" name="Users"  icon="terp-project" domain = "[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Partner" name="Partner"  icon="terp-project" domain = "[]" context="{'group_by':'partner_id'}"/>
                       </group>
                </search>
             </field>
@@ -156,6 +157,7 @@
             <field name="domain">[]</field>
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
+            <field name="context">{'search_default_Users':1}</field>
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
@@ -422,7 +424,7 @@
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="20">
-                        <filter string="Users" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
+                        <filter string="Users" name="user_id" icon="terp-project" domain="[]"  context="{'group_by':'user_id'}"/>
                         <filter string="Project" icon="terp-project" domain="[]" context="{'group_by':'project_id'}" default = "1"/>
                         <filter string="Stage" icon="terp-project" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="State" icon="terp-project" domain="[]" context="{'group_by':'state'}"/>
@@ -443,6 +445,8 @@
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
             <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="context">{'search_default_user_id': 1}</field>
+
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="2"/>
 

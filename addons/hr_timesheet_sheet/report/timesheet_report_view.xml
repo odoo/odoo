@@ -8,8 +8,11 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="TimeSheet">
+                <field name="name"/>
+                <field name="total_att"/>
+                <field name="total_ts"/>
+                <field name="user_id" />
             	<field name="month" />
-                 <field name="no_of_timesheet" />
             </tree>
         </field>
     </record>
@@ -20,8 +23,11 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="TimeSheet" type="bar">
-                 <field name="month" />
-                 <field name="no_of_timesheet" operator="+"/>
+                <field name="name" />
+                <field name="total_att" operator = "+"/>
+                <field name="total_ts" operator = "+"/>
+                <field name="user_id" group = "True"/>
+
              </graph>
          </field>
     </record>
