@@ -7,8 +7,8 @@ class project_issue_report(osv.osv):
     _auto = False
     _inherit = "crm.case.report"
     _columns = {
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue.report')]"),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue.report')]"),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'project.issue')]"),
         'nbr': fields.integer('# of Issues', readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
         'company_id' : fields.many2one('res.company', 'Company'),
