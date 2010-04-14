@@ -20,10 +20,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Orders Statistics">
-                	<field name="date" invisible = "1"/>
-                	<field name="user_id" invisible = "1"/>
-                	<field name="partner_id" invisible = "1"/>
-                    <field name="product_id" invisible = "1"/>
+                	<field name="date"/>
+                	<field name="user_id"/>
+                	<field name="partner_id"/>
+                    <field name="product_id"/>
                     <field name="quantity"/>
                     <field name="nbr" sum="# of Lines"/>
                     <field name="price_average" avg="Average Price"/>
@@ -93,10 +93,10 @@
                     <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}"/>
                     <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
                     <filter string="Location" icon="terp-purchase" context="{'group_by':'location_id'}"/>
-                    <filter string="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}"/>
+                    <filter string="Responsible" name="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
-                    <filter string="Partner" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
+                    <filter string="Partner" name="partner_id" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-purchase" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Fiscal Position" icon="terp-purchase" context="{'group_by':'fiscal_position'}"/>
@@ -113,7 +113,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_purchase_order_search"/>
-        <field name="context">{'search_default_user_id':True}</field>
+        <field name="context">{'search_default_Responsible': 1}</field>
     </record>
 
     <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"/>
