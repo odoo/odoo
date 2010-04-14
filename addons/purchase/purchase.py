@@ -533,9 +533,9 @@ class purchase_order_line(osv.osv):
         return res
 
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False):
+            partner_id, date_order=False, fiscal_position=False):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-                partner_id, date_order=date_order)
+                partner_id, date_order=date_order, fiscal_position=fiscal_position)
         if 'product_uom' in res['value']:
             del res['value']['product_uom']
         if not uom:
