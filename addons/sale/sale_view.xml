@@ -212,12 +212,12 @@
                             </group>
                         </page>
                         <page string="Other data">
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Logistic" colspan="2"/>
-                                <field groups="base.group_extended" name="incoterm"/>
-                                <field groups="base.group_extended" name="picking_policy" required="True"/>
+                                <field name="incoterm"/>
+                                <field name="picking_policy" required="True"/>
                                 <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
-                                <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
+                                <field name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="References" colspan="2"/>
