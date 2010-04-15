@@ -56,7 +56,8 @@
                 <filter icon="terp-hr"
                     string="Draft"
                     domain="[('state','=','draft')]"/>
-                <filter icon="terp-hr" string="Expenses"
+                <filter icon="terp-hr" name="expenses"
+                    string="Expenses"
                     domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancelled')]"/>
                 <separator orientation="vertical"/>
                 <field name="product_id"/>
@@ -70,7 +71,7 @@
                 <newline/>
                 <group expand="1" string="Group By...">
                     <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}"/>
-                    <filter string="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
+                    <filter string="User" name="by_user" icon="terp-hr" context="{'group_by':'user_id'}"/>
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>
@@ -89,7 +90,7 @@
         <field name="res_model">hr.expense.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{"search_default_Expenses":1,"search_default_User":1}</field>
+        <field name="context">{"search_default_expenses":1,"search_default_by_user":1}</field>
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 
