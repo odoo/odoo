@@ -501,20 +501,7 @@ class crm_case(osv.osv):
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
         return True
 
-    def history(self, cr, uid, ids, keyword, history=False, email=False, details=None, context={}):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of History’s IDs
-        @param context: A standard dictionary for contextual values"""
-
-        cases = self.browse(cr, uid, ids, context=context)
-        return self.__history(cr, uid, cases, keyword=keyword, \
-                               history=history, email=email, details=details, \
-                               context=context)
-
-    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, context={}):
+    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -533,7 +520,8 @@ class crm_case(osv.osv):
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'model_id' : model_ids and model_ids[0] or False,
                 'res_id': case.id,
-                'section_id': case.section_id.id
+                'section_id': case.section_id.id,
+                'message_id':message_id
             }
 
             obj = self.pool.get('crm.case.log')
@@ -551,6 +539,7 @@ class crm_case(osv.osv):
             res = obj.create(cr, uid, data, context)
         return True
     _history = __history
+    history = __history
 
     def create(self, cr, uid, *args, **argv):
 
@@ -849,6 +838,7 @@ class crm_case_history(osv.osv):
         'email_to': fields.char('Email TO', size=84),
         'email_from' : fields.char('Email From', size=84),
         'log_id': fields.many2one('crm.case.log','Log',ondelete='cascade'),
+        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True),
     }
 
 crm_case_history()
