@@ -71,7 +71,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
         for url in [x[1] for x in link.attrs if x[0]=='href']:
             urls.append(dict(url=url, tag=str(link), title=title))
 
-    html = soup.__str__()
+    html = unicode(soup)
             
     url_index = []
     i = 0
