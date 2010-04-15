@@ -63,13 +63,11 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="8">
-                   		<filter string="This Year" icon="terp-hr"
-                   			domain="[('name','=',time.localtime()[0])]"
-                   			default="1" />
+                   		<filter string="This Year" name="This Year" icon="terp-hr"
+                   			domain="[('name','=',time.localtime()[0])]"/>
 
-                   		<filter string="This Month" icon="terp-hr"
-                   			domain="[('month','=',time.strftime('%%m'))]"
-                   			default="1" />
+                   		<filter string="This Month" name="This Year" icon="terp-hr"
+                   			domain="[('month','=',time.strftime('%%m'))]" />
 
                    		<separator orientation="vertical" />
                    		<filter string="Current" icon="terp-hr"
@@ -106,9 +104,8 @@
                    </group>
                    <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="User" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'user_id'}"
-                        	default="1" />
+                        <filter string="User" name="User" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'user_id'}" />
 
                         <filter string="Company" icon="terp-sale"
                         	domain="[]"
