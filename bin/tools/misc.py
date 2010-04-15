@@ -798,6 +798,7 @@ def get_languages():
         'es_ES': u'Spanish / Español',
         'et_EE': u'Estonian / Eesti keel',
         'fi_FI': u'Finland / Suomi',
+        'fa_IR': u'Persian / فارس',
         'fr_BE': u'French (BE) / Français (BE)',
         'fr_CH': u'French (CH) / Français (CH)',
         'fr_FR': u'French / Français',
