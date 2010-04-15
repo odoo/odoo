@@ -19,9 +19,22 @@
 #
 ##############################################################################
 
-import calendar
-import calendar_collection
-import caldav
-import wizard
+from document_webdav import webdav
+import tools
+from DAV.propfind import PROPFIND
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+super_mk_prop_response = webdav.mk_prop_response
+def mk_prop_response(self,uri,good_props,bad_props,doc):            
+    res = super_mk_prop_response(self, uri,good_props,bad_props,doc)    
+    uris = uri.split('/')
+    if uri[-1] in ('Calendars'):
+        ad = doc.createElement('calendar')
+        ad.setAttribute('xmlns', 'urn:ietf:params:xml:ns:caldav')        
+        cols = res.getElementsByTagName('D:collection')
+        if cols:
+            cols[0].parentNode.appendChild(ad)
+                #cols[0].parentNode.appendChild(vc)
+    return res
+
+PROPFIND.mk_prop_response = mk_prop_response

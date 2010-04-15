@@ -135,8 +135,8 @@ class openerp_dav_handler(dav_interface):
             cr.close()
         return self.db_name_list
 
-    def get_childs(self,uri):
-        """ return the child objects as self.baseuris for the given URI """
+    def get_childs(self,uri, filters=None):
+        """ return the child objects as self.baseuris for the given URI """        
         self.parent.log_message('get childs: %s' % uri)
         if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)  
@@ -158,14 +158,16 @@ class openerp_dav_handler(dav_interface):
                 fp = '/'.join(fp)
             else:
                 fp = None
-            for d in node.children(cr):
+            domain = None
+            if filters:
+                domain = node.get_domain(cr, filters)
+            for d in node.children(cr, domain):
                 self.parent.log_message('child: %s' % d.path)                
                 if fp:
                     result.append( self.urijoin(dbname,fp,d.path) )
                 else:
                     result.append( self.urijoin(dbname,d.path) )
         if cr: cr.close()        
-        
         return result
 
     def uri2local(self, uri):

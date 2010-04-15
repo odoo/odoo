@@ -431,6 +431,8 @@ class Calendar(CalDAV, osv.osv):
             'user_id': fields.many2one('res.users', 'Owner'),
             'collection_id': fields.many2one('document.directory', 'Collection', \
                                            required=True),
+            'type': fields.selection([('vevent', 'Event'), ('vtodo', 'TODO')], \
+                                    string="Type", size=64),
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),            
             'create_date': fields.datetime('Created Date'),
             'write_date': fields.datetime('Modifided Date'),
