@@ -72,6 +72,7 @@
                 <field name="user_id" widget="selection">
                     <filter icon="terp-account"
                         string="My Invoices"
+                        name='User'
                         domain="[('user_id','=',uid)]"/>
                 </field>
                 <field name="partner_id"/>
@@ -97,7 +98,7 @@
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-account" context="{'group_by':'company_id'}"/>
-                    <filter string="Salesman" icon="terp-account" context="{'group_by':'user_id'}" default="1"/>
+                    <filter string="Salesman" name='User' icon="terp-account" context="{'group_by':'user_id'}"/>
                     <filter string="Payment Term" icon="terp-account" context="{'group_by':'payment_term'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Currency" icon="terp-account" context="{'group_by':'currency_id'}"/>
@@ -121,6 +122,7 @@
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_User':1,'search_default_user_id':uid}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
     </record>
 
