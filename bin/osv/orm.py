@@ -374,7 +374,7 @@ class orm_template(object):
                 'name': k,
                 'field_description': f.string.replace("'", " "),
                 'ttype': f._type,
-                'relation': f._obj or 'NULL',
+                'relation': f._obj or '',
                 'view_load': (f.view_load and 1) or 0,
                 'select_level': tools.ustr(f.select or 0),
                 'readonly':(f.readonly and 1) or 0,

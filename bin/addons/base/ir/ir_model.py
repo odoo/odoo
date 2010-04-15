@@ -251,7 +251,7 @@ class ir_model_fields(osv.osv):
         if 'model_id' in vals:
             model_data = self.pool.get('ir.model').browse(cr, user, vals['model_id'])
             vals['model'] = model_data.model
-        if not context:
+        if context is None:
             context = {}
         if context and context.get('manual',False):
             vals['state'] = 'manual'
@@ -260,7 +260,7 @@ class ir_model_fields(osv.osv):
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
-            if 'relation' in vals and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
+            if vals.get('relation',False) and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
                  raise except_orm(_('Error'), _("Model %s Does not Exist !" % vals['relation']))
 
             if self.pool.get(vals['model']):
