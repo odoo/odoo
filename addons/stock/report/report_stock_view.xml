@@ -9,15 +9,9 @@
             <field name="arch" type="xml">
                 <search string="Search Location">
                     <group col="10" colspan="4">
-<<<<<<< TREE
                         <filter icon="terp-stock" name="in_location" string="Internal" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations" />
                         <filter icon="terp-stock" string="Customer" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
                         <filter icon="terp-stock" string="Supplier" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
-=======
-                        <filter icon="terp-stock" string="Internal Locations" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations" />
-                        <filter icon="terp-stock" string="Customer Locations" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
-                        <filter icon="terp-stock" string="Supplier Locations" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
->>>>>>> MERGE-SOURCE
 
                         <separator orientation="vertical"/>
                         <field name="location_id" select="1"/>

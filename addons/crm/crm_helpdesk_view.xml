@@ -104,7 +104,7 @@
                                 <separator colspan="4" string="Action Information"/>
                                 <field colspan="4" name="name"/>
                                 <field name="date" select="2"/>
-                                <field name="user_id" select="2"/>
+                                <field name="user_id" select="2"/>                                
                             </form>
                         </field>
                     </page>
@@ -223,7 +223,7 @@
                 <field name="name" select='1' string="Query"/>
                 <field name="partner_id" />
                 <field name="user_id" select="1" widget="selection">
-                    <filter icon="terp-partner" string="My Request"
+                    <filter icon="terp-partner" name="my_hd_request" 
                     domain="[('user_id','=',uid)]" help="My Helpdesk Requests"/>
                 </field>
                 <field name="section_id" select="1" widget="selection" string="Section">
