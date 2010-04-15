@@ -53,6 +53,14 @@
 		        <field name="domain">[('user_id','=',uid)]</field>
 		        <field name="view_id" ref="hr_holidays.view_hr_holidays_remaining_leaves_user_graph"/>
 		</record>
+	   <record id="action_hr_timesheet_sheet_graph" model="ir.actions.act_window">
+            <field name="name">Timesheets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_graph"/>
+        </record>
         <record id="board_hr_form" model="ir.ui.view">
             <field name="name">board.hr.form</field>
             <field name="model">board.board</field>
@@ -66,7 +74,7 @@
                             <action colspan="4" height="220" name="%(action_my_expense)d" string="My Expenses" />
                         </child1>
                         <child2>
-                        	<action colspan="4" height="220" name="%(action_timesheet_report_all)d" string="Timesheets by Month" />
+                        	<action colspan="4" height="220" name="%(action_hr_timesheet_sheet_graph)d" string="Timesheets by Month" />
            					<action colspan="4" height="220" name="%(action_hr_holidays_remaining_leaves_user_all)d" string="Reamining Leaves by Type and User" />
                         </child2>
                     </hpaned>
