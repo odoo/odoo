@@ -142,20 +142,12 @@ class olap_schema(osv.osv ):
 
     def _app_detect(self, cr, uid, ids, field_name, arg, context = {}):
         """
-<<<<<<< TREE
             Return a Application type
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param ids: List of Detected Application’s IDs
             @param context: A standard dictionary for contextual values
-=======
-        Return a Application type
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Detected Application’s IDs
-        @param context: A standard dictionary for contextual values
->>>>>>> MERGE-SOURCE
         """
 
         res = {}
