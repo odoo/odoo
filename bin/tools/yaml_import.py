@@ -348,7 +348,8 @@ class YamlInterpreter(object):
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
-        code_context = {'self': model, 'cr': self.cr, 'uid': self.uid, 'log': log, 'context': self.context}
+        code_context = {'model': model, 'cr': self.cr, 'uid': self.uid, 'log': log, 'context': self.context}
+        code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code = compile(statements, self.filename, 'exec')
             eval(code, {'ref': self.get_id}, code_context)
@@ -399,10 +400,10 @@ class YamlInterpreter(object):
                 param_model = self.get_model(param.get('model', model))
                 if 'search' in param:
                     q = eval(param['search'], self.eval_context)
-                    ids = param_model.search(cr, uid, q)
+                    ids = param_model.search(self.cr, self.uid, q)
                     value = self._get_first_result(ids)
                 elif 'eval' in param:
-                    local_context = {'obj': lambda x: param_model.browse(self.cr, self.uid, x, context)}
+                    local_context = {'obj': lambda x: param_model.browse(self.cr, self.uid, x, self.context)}
                     local_context.update(self.id_map)
                     value = eval(param['eval'], self.eval_context, local_context)
                 else:
@@ -590,7 +591,7 @@ class YamlInterpreter(object):
         _, fields = node.items()[0]
         res = {}
         for fieldname, expression in fields.items():
-            if isinstance(expression, Eval):
+            if is_eval(expression):
                 value = eval(expression.expression, self.eval_context)
             else:
                 value = expression

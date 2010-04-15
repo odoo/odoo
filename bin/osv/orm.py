@@ -1134,7 +1134,31 @@ class orm_template(object):
         fields = {}
         childs = True
 
-        if node.tag == 'field':
+        def encode(s):
+            if isinstance(s, unicode):
+                return s.encode('utf8')
+            return s
+
+        if node.tag in ('field', 'node', 'arrow'):
+            if node.get('object'):
+                attrs = {}
+                views = {}
+                xml = "<form>"
+                for f in node:
+                    if f.tag in ('field'):
+                        xml += etree.tostring(f, encoding="utf-8")
+                xml += "</form>"
+                new_xml = etree.fromstring(encode(xml))
+                ctx = context.copy()
+                ctx['base_model_name'] = self._name
+                xarch, xfields = self.pool.get(node.get('object',False)).__view_look_dom_arch(cr, user, new_xml, view_id, ctx)
+                views[str(f.tag)] = {
+                    'arch': xarch,
+                    'fields': xfields
+                }
+                attrs = {'views': views}
+                view = False
+                fields = views.get('field',False) and views['field'].get('fields',False)
             if node.get('name'):
                 attrs = {}
                 try:
@@ -1253,7 +1277,6 @@ class orm_template(object):
 
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
 
-        #code for diagram view.
         fields={}
         if node.tag=='diagram':
             if node.getchildren()[0].tag=='node':
@@ -1266,7 +1289,6 @@ class orm_template(object):
                 fields[key]=value
         else:
             fields = self.fields_get(cr, user, fields_def.keys(), context)
-
         for field in fields_def:
             if field == 'id':
                 # sometime, the view may containt the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
@@ -2904,7 +2926,6 @@ class orm(orm_template):
         :raise UserError: if the record is default property for other records
 
         """
-
         if not ids:
             return True
         if isinstance(ids, (int, long)):

@@ -77,7 +77,7 @@ class configmanager(object):
             'secure' : False,
             'syslog' : False,
             'log_level': logging.INFO,
-            'assert_exit_level': logging.WARNING, # level above which a failed assert will be raised
+            'assert_exit_level': logging.ERROR, # level above which a failed assert will be raised
             'cache_timeout': 100000,
             'login_message': False,
             'list_db' : True,
