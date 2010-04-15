@@ -100,8 +100,8 @@ class openerp_dav_handler(dav_interface):
         if not node:
             cr.close()
             raise DAV_NotFound
-        res = node.get_dav_eprop(cr,ns,propname)
-        cr.close()       
+        res = node.get_dav_eprop(cr,ns,propname)        
+        cr.close()        
         return res    
 
     def get_db(self,uri):

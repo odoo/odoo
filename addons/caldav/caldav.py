@@ -22,8 +22,9 @@
 from document_webdav import webdav
 import tools
 from DAV.propfind import PROPFIND
-
-
+import urlparse
+urlparse.uses_netloc.append('caldav')
+urlparse.uses_netloc.append('caldavs')
 super_mk_prop_response = webdav.mk_prop_response
 def mk_prop_response(self,uri,good_props,bad_props,doc):            
     res = super_mk_prop_response(self, uri,good_props,bad_props,doc)    

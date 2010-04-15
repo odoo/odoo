@@ -62,7 +62,7 @@ class node_calendar_collection(nodes.node_dir):
     def get_dav_props(self, cr):                
         return self.PROPS
 
-    def get_dav_eprop(self,cr, ns, propname):   
+    def get_dav_eprop(self,cr, ns, propname):         
         if self.M_NS.has_key(ns):
             prefix = self.M_NS[ns]
         else:
@@ -84,7 +84,7 @@ class node_calendar_collection(nodes.node_dir):
         return None
 
     def _file_get(self,cr, nodename=False):
-        return []
+        return []   
 
 
     def get_domain(self, cr, filters):        
@@ -231,7 +231,7 @@ class node_calendar(nodes.node_class):
 
         try:
             m = getattr(self, mname)
-            r = m(cr)
+            r = m(cr)            
             return r
         except AttributeError, e:
             print 'Property %s not supported' % propname
@@ -239,10 +239,11 @@ class node_calendar(nodes.node_class):
         return None
 
 
-    def get_data(self, cr, fil_obj = None):        
+    def get_data(self, cr, fil_obj = None):            
         uid = self.context.uid
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
-        return calendar_obj.export_cal(cr, uid, [self.calendar_id])        
+        res = calendar_obj.export_cal(cr, uid, [self.calendar_id])        
+        return res
 
     def get_data_len(self, cr, fil_obj = None):        
         return self.content_length
@@ -257,9 +258,9 @@ class node_calendar(nodes.node_class):
 
 
     
-    def _get_caldav_calendar_data(self, cr):
-        res = self.get_data(cr)
-
+    def _get_caldav_calendar_data(self, cr):        
+        return self.get_data(cr)
+        
 
     def _get_caldav_calendar_description(self, cr):
         uid = self.context.uid

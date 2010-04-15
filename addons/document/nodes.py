@@ -257,8 +257,11 @@ class node_dir(node_database):
                     pass
 
     
-    #def get_data(self,cr):
-    #    return ''
+    def get_data(self,cr):
+        res = ''
+        for child in self.children(cr):
+            res += child.get_data(cr)        
+        return res
 
     
 
