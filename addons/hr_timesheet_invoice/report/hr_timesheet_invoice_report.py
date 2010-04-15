@@ -29,7 +29,7 @@ class report_timesheet_line(osv.osv):
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'date' : fields.date('Date', readonly=True),
+        'day' : fields.date('Day', readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'cost': fields.float('Cost', readonly=True),
         'product_id' : fields.many2one('product.product', 'Product',readonly=True),
@@ -49,7 +49,7 @@ class report_timesheet_line(osv.osv):
                     to_char(l.date,'YYYY') as name,
                     to_char(l.date,'MM') as month,
                     l.user_id,
-                    l.date,
+                    l.date as day,
                     l.invoice_id,
                     l.product_id,
                     l.account_id,

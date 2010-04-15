@@ -26,7 +26,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Timesheet Line">
-                    <field name="date"/>
+                    <field name="day"/>
                     <field name="quantity"/>
                     <field name="cost"/>
                     <field name="user_id"/>
@@ -61,8 +61,10 @@
 	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
 	                    <filter string="Account" icon="terp-hr" context="{'group_by':'account_id'}"/>
 	                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
+	                    <filter string="Invoice" icon="terp-hr" context="{'group_by':'invoice_id'}"/>
 	                    <separator orientation="vertical"/>
-	                    <filter string="Month" icon="terp-hr" context="{'group_by':'date'}"/>
+	                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
+	                    <filter string="Month" icon="terp-hr" context="{'group_by':'month'}"/>
 	                    <filter string="Year" icon="terp-hr" context="{'group_by':'name'}"/>
                     </group>
                 </search>

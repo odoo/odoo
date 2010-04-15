@@ -34,7 +34,7 @@ class hr_recruitment_report(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'date': fields.datetime('Date', readonly=True),
+        'date': fields.date('Date', readonly=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]",readonly=True),
