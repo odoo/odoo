@@ -85,7 +85,7 @@
                    <newline/>
                    <group expand="1" string="Group By..." colspan="4" col="5">
                         <filter string="Partner" icon="terp-stock" domain="[]" context="{'group_by':'address_id'}"/>
-                        <filter string="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="State" name="State" icon="terp-stock" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                     	<filter string="Month" icon="terp-sale" domain="[]" context="{'group_by':'month'}"/>
                     	<filter string="Year" icon="terp-sale" domain="[]" context="{'group_by':'name'}"/>
@@ -100,6 +100,7 @@
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_report_stock_picking_tree"/>
             <field name="search_view_id" ref="view_report_report_stock_picking_filter"/>
+            <field name="context">{'search_default_State': 1}</field>
         </record>
 
        	<record model="ir.actions.act_window.view" id="action_report_report_stock_picking_tree">

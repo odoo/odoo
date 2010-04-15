@@ -84,7 +84,7 @@
                     	<filter string="Picking" icon="terp-mrp" context="{'group_by':'picking_id'}"/>
                     	<separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-mrp" context="{'group_by':'routing_id'}"/>
-                        <filter string="Product" icon="terp-mrp" context="{'group_by':'product_id'}" default = "1"/>
+                        <filter string="Product" name="Product" icon="terp-mrp" context="{'group_by':'product_id'}" />
                         <filter string="State" icon="terp-mrp" context="{'group_by':'state'}"/>
                     	<separator orientation="vertical"/>
                     	<filter string="BOM" icon="terp-mrp" context="{'group_by':'bom_id'}"/>
@@ -101,6 +101,8 @@
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_mrp_production_order_tree"/>
             <field name="search_view_id" ref="view_report_mrp_production_order_filter"/>
+          <field name="context">{'search_default_Product': 1}</field>
+            
         </record>
 
        	<record model="ir.actions.act_window.view" id="action_report_mrp_production_order_tree">

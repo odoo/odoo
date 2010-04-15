@@ -124,23 +124,19 @@ class project_vs_remaining_hours(osv.osv):
         tools.sql.drop_view_if_exists(cr, 'project_vs_remaining_hours')
         cr.execute("""
             create or replace view project_vs_remaining_hours as (
-                   select
-                       min(pt.id) as id,
-                       a.name as project,
-                       sum(pt.remaining_hours) as remaining_hours,
-                       a.state,
-                       pu.uid
-                    from
-                         project_task as pt,
-                         project_project as p,
-                         account_analytic_account as a,
-                         project_user_rel as pu
-                    where
-                        pt.project_id=p.id and
-                        p.category_id = a.id and
-                        pu.project_id=p.id
-                    group by
-                        a.name,a.state,pu.uid
+                select
+                    min(pt.id) as id,
+                    aaa.name as project,
+                    CASE WHEN pu.uid is null
+                    THEN aaa.user_id ELSE pu.uid END as uid,
+                    sum(pt.remaining_hours) as remaining_hours,
+                    aaa.state
+                from project_task pt
+                left join project_project as pp ON (pt.project_id=pp.id)
+                left join account_analytic_account as aaa ON (pp.category_id=aaa.id)
+                left join project_user_rel as pu ON (pu.project_id=pp.id)
+                where pt.create_uid=aaa.user_id
+                group by aaa.name,aaa.state,pu.uid,aaa.user_id
             )
         """)
 project_vs_remaining_hours()
