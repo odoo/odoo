@@ -160,8 +160,7 @@ def map_data(cr, uid, obj):
             if field_type == 'timedelta':
                 if map_val:
                     vals[field] = (map_val.seconds/float(86400) + map_val.days)
-            if map_val:
-                vals[field] = map_val
+            vals[field] = map_val
     return vals
 
 class CalDAV(object):
