@@ -210,8 +210,7 @@ class report_custom(report_rml):
         row_id=1
 
         if data['model']=='hr.employee':
-
-            for id in data['form']['emp'][0][2]:
+            for id in data['form']['emp']:
                  items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr,uid,id,['id','name'])
 
                  emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,items['id'],items['name'],som, eom)
