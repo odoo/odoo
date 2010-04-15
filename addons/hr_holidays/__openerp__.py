@@ -55,6 +55,7 @@
         'hr_holidays_view.xml',
         'hr_holidays_wizard.xml',
         'hr_holidays_report.xml',
+        'wizard/hr_holidays_summary_department_view.xml',
         #'process/hr_holidays_process.xml'
     ],
     'demo_xml': [],
