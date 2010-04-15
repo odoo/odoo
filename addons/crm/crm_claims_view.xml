@@ -245,7 +245,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <filter icon="gtk-new" string="Current"
+                   <filter icon="gtk-new" string="Current" name="current"
                        domain="[('state','in',('draft', 'open'))]"
                        separator="1" help="Current Claims"
                    />
@@ -263,7 +263,7 @@
                    <field name="name" select='1'/>
                    <field name="partner_id" select="1"/>
                    <field name="user_id" select="1" widget="selection">
-                       <filter icon="terp-partner" string="My Claims"
+                       <filter icon="terp-partner" name="my_claims"
                                domain="[('user_id','=',uid)]" help="My Claims"/>
                            <filter icon="terp-partner"
                                domain="[('user_id','=', False)]"

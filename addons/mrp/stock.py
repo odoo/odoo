@@ -44,13 +44,13 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True ),
         'product_min_qty': fields.float('Min Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
-            "a requisition to bring the virtual stock to the Max Quantity."),
+            "a procurement to bring the virtual stock to the Max Quantity."),
         'product_max_qty': fields.float('Max Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
-            "a requisition to bring the virtual stock to the Max Quantity."),
+            "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
-            help="The requisition quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Latest Requisition'),
+            help="The procurement quantity will by rounded up to this multiple."),
+        'procurement_id': fields.many2one('mrp.procurement', 'Latest procurement'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -94,7 +94,7 @@ class StockMove(osv.osv):
     _inherit = 'stock.move'
     _columns = {
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
-        'procurements': fields.one2many('mrp.procurement', 'move_id', 'Requisitions'),
+        'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
     }
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}

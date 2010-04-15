@@ -26,7 +26,7 @@ class project_task(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
     _columns = {
-        'procurement_id': fields.many2one('mrp.procurement', 'Requisition', ondelete='set null')
+        'procurement_id': fields.many2one('mrp.procurement', 'Procurement', ondelete='set null')
     }
 
     def do_close(self, cr, uid, ids, *args):
