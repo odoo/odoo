@@ -66,6 +66,7 @@ module named account_voucherss
         'wizard/account_journal_select_view.xml',
         'wizard/account_change_currency_view.xml',
         'wizard/account_validate_move_view.xml',
+        'wizard/account_statement_from_invoice_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_view.xml',
         'account_end_fy.xml',

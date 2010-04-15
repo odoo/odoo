@@ -52,7 +52,7 @@ import wizard_use_model
 
 import account_state_open
 
-import wizard_statement_from_invoice
+import account_statement_from_invoice
 import account_print_journal
 import account_central_journal
 import account_general_journal
