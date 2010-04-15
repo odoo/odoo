@@ -68,8 +68,9 @@ class ir_ui_menu(osv.osv):
         if context is None:
             context = {}
         ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order, context=context, count=(count and uid==1))
-        if uid==1:
-            return ids
+
+        #if uid==1:
+        #    return ids
 
         if not ids:
             if count:
