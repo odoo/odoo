@@ -264,7 +264,7 @@
             <field name="arch" type="xml">
                 <search string="Product Lots Filter">
                     <group col="10" colspan="4">
-                        <filter icon="terp-stock" name="available" string="Available" domain="[('stock_available', '&gt;', 0)]" help="Available Product Lots" />
+                        <filter icon="terp-stock" string="Available" domain="[('stock_available', '&gt;', 0)]" help="Available Product Lots" />
                         <separator orientation="vertical"/>
                         <field name="prefix" select="1"/>
                         <field name="name" select="1"/>
@@ -287,7 +287,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_production_lot_tree"/>
             <field name="search_view_id" ref="search_product_lot_filter" />
-            <field name="context">{'full':'1',"search_default_available":1}</field>
+            <field name="context">{'full':'1',"search_default_Available":1}</field>
         </record>
         <menuitem action="action_production_lot_form" id="menu_action_production_lot_form" parent="menu_traceability"/>
 
@@ -695,7 +695,7 @@
             <field name="arch" type="xml">
                 <search string="Search Stock Picking">
                     <group col="10" colspan="4">
-                        <filter icon="terp-stock" name="available" string="Available" domain="[('state','=','assigned')]" help="Available Pickings"/>
+                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Available Pickings"/>
                         <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Pickings"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Back Order" domain="[('backorder_id', '!=', False)]" help="Has Back Order"  />
@@ -852,7 +852,7 @@
             <field name="arch" type="xml">
                 <search string="Search Stock Delivery">
                     <group col="10" colspan="4">
-                        <filter icon="terp-stock" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Orders" />
+                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Orders" />
                         <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Orders"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Back Order" domain="[('backorder_id','!=',False)]" help="Back Order"/>
@@ -878,7 +878,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','delivery')]</field>
-            <field name="context">{'contact_display': 'partner',"search_default_available":1}</field>
+            <field name="context">{'contact_display': 'partner',"search_default_Available":1}</field>
             <field name="search_view_id" ref="view_stock_delivery_filter"/>
         </record>
         <record id="action_picking_tree_delivery_view1" model="ir.actions.act_window.view">
@@ -1225,7 +1225,7 @@
             <field name="arch" type="xml">
                 <search string="Input Picking List">
                     <group col="8" colspan="4">
-                        <filter icon="terp-stock" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Incoming Orders" />
+                        <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Incoming Orders" />
                         <separator orientation="vertical"/>
                         <filter icon="terp-stock" string="Back Order" domain="[('backorder_id', '!=', False)]" help="Has Back Order" />
                         <separator orientation="vertical"/>
@@ -1251,7 +1251,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
-            <field name="context">{'contact_display': 'partner',"search_default_available":1}</field>
+            <field name="context">{'contact_display': 'partner',"search_default_Available":1}</field>
             <field name="search_view_id" ref="view_picking_in_search"/>
         </record>
         <record id="action_invoice_tree5_view1" model="ir.actions.act_window.view">
@@ -1281,7 +1281,7 @@
                 <search string="Internal Picking List">
                     <group col="8" colspan="4">
                         <filter icon="terp-stock" string="Available" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
-                        <filter icon="terp-stock" name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" />
+                        <filter icon="terp-stock" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" />
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="origin" select="1"/>
@@ -1304,7 +1304,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','internal')]</field>
-            <field name="context">{'contact_display': 'partner',"search_default_confirmed":1}</field>
+            <field name="context">{'contact_display': 'partner',"search_default_Confirmed":1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
         </record>
         <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="2"/>
@@ -1513,7 +1513,7 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <group col="8" colspan="4">
-                        <filter icon="terp-stock" name="receive" string="To Receive" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
+                        <filter icon="terp-stock" string="To Receive" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
                         <filter icon="terp-stock" string="Back Orders" domain="[('backorder_id','!=',False)]" help="Back Orders"/>
                         <filter icon="terp-stock" string="Planned Today" domain="[('date_planned::date','=',time.strftime('%%Y-%%m-%%d'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
@@ -1539,7 +1539,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context">{"search_default_receive":1}</field>
+            <field name="context">{"search_default_To Receive":1}</field>
             <field name="search_view_id" ref="view_move_search_reception_picking"/>
         </record>
 
