@@ -1,38 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
+    <data>
+        <record id="view_timesheet_report_graph" model="ir.ui.view">
+            <field name="name">timesheet.report.graph</field>
+            <field name="model">timesheet.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet" type="bar">
+                    <field name="name" />
+                	<field name="total_att" operator = "+"/>
+                	<field name="total_ts" operator = "+"/>
+                	<field name="user_id" group = "True"/>
+                </graph>
+            </field>
+        </record>
+        <record id="view_timesheet_report_tree" model="ir.ui.view">
+            <field name="name">timesheet.report.tree</field>
+            <field name="model">timesheet.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet">
+                    <field name="date_current"/>
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+					<field name="total_att"/>
+					<field name="total_diff"/>
+                    <field name="total_ts"/>
+                    <field name="state"/>
+                    <field name="department_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_timesheet_report_search" model="ir.ui.view">
+            <field name="name">timesheet.report.search</field>
+            <field name="model">timesheet.report</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet">
+                    <group col="10" colspan="4">
+                        <filter icon="terp-hr" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" help="Timesheet by user in this year"/>
+                        <filter icon="terp-hr" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Timesheet by user in this month"/>
+                        <separator orientation="vertical"/>
+                        <field name="user_id" widget="selection">
+                    		<filter icon="terp-hr"
+                        	string="My Timesheet"
+                        	domain="[('user_id','=',uid)]"/></field>
+                        <field name="name"/>
+                        <field name="department_id"/>
+                    </group>
+                    <newline/>
+                <group expand="1" string="Extended options..." colspan="10" col="12">
+                	<filter icon="terp-hr"
+                    		string="New"
+                    		domain="[('state','=','new')]"/>
+                    <filter icon="terp-hr"
+                    		string="Draft"
+                    		domain="[('state','=','draft')]"/>
+                    <filter icon="terp-hr"
+                    		string="Confirmed"
+                    		domain="[('state','=','confirm')]"/>
+                    <filter icon="terp-hr"
+                    		string="Done"
+                    		domain="[('state','=','done')]"/>
+                    <newline/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="10" col="12">
+	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
+	                    <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}"/>
+	                    <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="Month" icon="terp-hr" context="{'group_by':'date_current'}"/>
+	                    <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
-	<record id="view_timesheet_report_tree" model="ir.ui.view">
-        <field name="name">timesheet.report.tree</field>
-        <field name="model">timesheet.report</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="TimeSheet">
-                <field name="name"/>
-                <field name="total_att"/>
-                <field name="total_ts"/>
-                <field name="user_id" />
-            	<field name="month" />
-            </tree>
-        </field>
-    </record>
-
-	<record id="view_timesheet_report_graph" model="ir.ui.view">
-         <field name="name">timesheet.report.graph</field>
-         <field name="model">timesheet.report</field>
-         <field name="type">graph</field>
-         <field name="arch" type="xml">
-             <graph string="TimeSheet" type="bar">
-                <field name="name" />
-                <field name="total_att" operator = "+"/>
-                <field name="total_ts" operator = "+"/>
-                <field name="user_id" group = "True"/>
-
-             </graph>
-         </field>
-    </record>
-
-
-
-</data>
+        <record id="action_timesheet_report_stat_all" model="ir.actions.act_window">
+            <field name="name">Timesheet</field>
+            <field name="res_model">timesheet.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="context">{'search_default_User': 1}</field>
+            <field name="search_view_id" ref="view_timesheet_report_search"/>
+        </record>
+        <menuitem action="action_timesheet_report_stat_all" id="menu_timesheet_report_all" parent="hr.menu_hr_reporting"/>
+    </data>
 </openerp>
