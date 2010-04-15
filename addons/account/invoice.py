@@ -23,6 +23,7 @@
 import time
 import netsvc
 from osv import fields, osv
+from osv.orm import except_orm
 import pooler
 from tools import config
 from tools.translate import _
@@ -325,7 +326,18 @@ class account_invoice(osv.osv):
         'reference_type': lambda *a: 'none',
         'check_total': lambda *a: 0.0,
     }
-
+    
+    def create(self, cr, uid, vals, context={}):
+        try:
+            res = super(account_invoice, self).create(cr, uid, vals, context)
+            return res
+        except Exception,e:
+            if '"journal_id" viol' in e.args[0]:
+                raise except_orm(_('Configuration Error!'),
+                     _('There is no Accounting Journal of type Sale/Purchase defined!'))
+            else:
+                raise except_orm(_('UnknownError'), str(e))
+            
     def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
