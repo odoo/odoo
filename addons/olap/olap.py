@@ -41,13 +41,12 @@ class olap_fact_database(osv.osv):
 
     def _connection_get(self, cr, uid, ids, field_name, arg, context = {}):
         """
-            Return a connection string url needed by SQL Alchemy. Exemple:
-            'postgres://scott:tiger@localhost:5432/mydatabase'
-             @param cr: the current row, from the database cursor,
-             @param uid: the current user’s ID for security checks,
-             @param ids: List of connection’s IDs
-             @param context: A standard dictionary for contextual values
-
+        Return a connection string url needed by SQL Alchemy. Exemple:
+        'postgres://scott:tiger@localhost:5432/mydatabase'
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of connection’s IDs
+        @param context: A standard dictionary for contextual values
         """
         res = {}
         for obj in self.browse(cr, uid, ids, context):
@@ -56,14 +55,12 @@ class olap_fact_database(osv.osv):
         return res
 
     def test_connection(self, cr, uid, ids, context = {}):
-
         """ Test connection for postgres Or ,MySql Or ,Oracle
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of Test Connection’s IDs
         @param context: A standard dictionary for contextual values
         """
-
         try:
             self_obj = self.browse(cr, uid, ids, context)
             for obj in self_obj:
@@ -140,13 +137,12 @@ class olap_schema(osv.osv ):
     _description = "Olap Schema"
 
     def _app_detect(self, cr, uid, ids, field_name, arg, context = {}):
-
         """
-            Return a Application type
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of Detected Application’s IDs
-            @param context: A standard dictionary for contextual values
+        Return a Application type
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Detected Application’s IDs
+        @param context: A standard dictionary for contextual values
         """
         res = {}
 
@@ -202,13 +198,12 @@ class olap_schema(osv.osv ):
         }
 
     def action_dbconnect(self, cr, uid, ids, context = {}):
-
         """ Connect DB with postgres ,Or MySql , Or  Orcale
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of Database Connection action’s IDs
         @param context: A standard dictionary for contextual values
-    """
+        """
 
         schema = self.browse(cr, uid, ids, context)[0]
         type = schema.database_id.type
@@ -255,7 +250,6 @@ class olap_schema(osv.osv ):
         return True
 
     def action_dbload(self, cr, uid, ids, context = {}):
-
         """ Load DB
          @param cr: the current row, from the database cursor,
          @param uid: the current user’s ID for security checks,
@@ -271,14 +265,12 @@ class olap_schema(osv.osv ):
 
 
     def action_dbconfigure(self, cr, uid, ids, context = {}):
-
         """ Configure with Database
-         @param cr: the current row, from the database cursor,
-         @param uid: the current user’s ID for security checks,
-         @param ids: List of Database Configuraion Action’s IDs
-         @param context: A standard dictionary for contextual values
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Database Configuraion Action’s IDs
+        @param context: A standard dictionary for contextual values
         """
-
         for id in ids:
             id_browsed = self.browse(cr, uid, id)
 
@@ -288,11 +280,12 @@ class olap_schema(osv.osv ):
         return True
 
     def action_dbready(self, cr, uid, ids, context = {}):
-
-        """ @param cr: the current row, from the database cursor,
-         @param uid: the current user’s ID for security checks,
+        """Makes Database ready for query browsing
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
         @param ids: List of Database Action’s IDs
-        @param context: A standard dictionary for contextual values """
+        @param context: A standard dictionary for contextual values
+        """
 
         for id in ids:
             self.write(cr, uid, id, {'ready': True})
@@ -300,11 +293,12 @@ class olap_schema(osv.osv ):
         return True
 
     def action_done(self, cr, uid, ids, context = {}):
-
-        """ @param cr: the current row, from the database cursor,
-         @param uid: the current user’s ID for security checks,
+        """Makes schema as done
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
         @param ids: List of Action’s IDs
-        @param context: A standard dictionary for contextual values """
+        @param context: A standard dictionary for contextual values
+        """
 
         for id in ids:
             self.write(cr, uid, id, {'state': 'done'})
@@ -343,14 +337,12 @@ class olap_schema(osv.osv ):
         raise 'Not implemented !'
 
     def request(self, cr, uid, name, request, context = {}):
-
-        """
+        """Handles MDX request
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of Request’s IDs
         @param context: A standard dictionary for contextual values
         """
-
         ids = self.search(cr, uid, [('name', '=', name)])
 
         if not ids:
@@ -387,7 +379,7 @@ olap_schema()
 
 
 class olap_database_tables(osv.osv):
-    """ Database Tables """
+    """Database Tables"""
 
     _name = "olap.database.tables"
     _description = "Olap Database Tables"
@@ -408,7 +400,6 @@ class olap_database_tables(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context = {}):
-
         """ Get Database Name
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -426,11 +417,12 @@ class olap_database_tables(osv.osv):
         return result
 
     def show_col_view(self, cr, uid, ids, context = {}):
-        """ Open Tree View of Database Columns
-         @param cr: the current row, from the database cursor,
-         @param uid: the current user’s ID for security checks,
-         @param ids: List of Column’s IDs
-         @param context: A standard dictionary for contextual values """
+        """Open Tree View of Database Columns
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Column’s IDs
+        @param context: A standard dictionary for contextual values
+        """
 
         ids_cols = self.pool.get('olap.database.columns').search(cr, uid, ([('table_id', '=', ids[0])]))
         id = self.pool.get('ir.ui.view').search(cr, uid, \
@@ -487,9 +479,9 @@ class olap_database_columns(osv.osv):
     }
 
     def _datatypes_get(self, *args, **argv):
-
-        """ @param *args: For Positional Argument
-            @param **args: For Keyword Argument """
+        """
+        @param *args: For Positional Argument
+        @param **args: For Keyword Argument """
 
         return self.datatypes.items()
 
@@ -512,7 +504,6 @@ class olap_database_columns(osv.osv):
     }
 
     def name_get(self, cr, uid, ids, context = {}):
-
         """ Get Database Column
          @param cr: the current row, from the database cursor,
          @param uid: the current user’s ID for security checks,
@@ -594,7 +585,7 @@ class olap_database_columns(osv.osv):
             for lines in cube_obj.table_id.line_ids:
                 make_ids.append(lines.table_id.id)
 
-            if make_ids:
+            if make_ids and cube_obj.table_id.line_ids:
                 make_ids.append(cube_obj.table_id.line_ids[len(cube_obj.table_id.line_ids) - 1].field_id.related_to.id)
                 args = [('table_id', 'in', make_ids), ('related_to', '=', False), \
                     ('primary_key', '<>', True), \
@@ -647,11 +638,12 @@ class olap_database_columns(osv.osv):
 
 
     def hide_col(self, cr, uid, ids, context = {}):
-
-        """ @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of Hide Column’s IDs
-            @param context: A standard dictionary for contextual values """
+        """Hides column
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Hide Column’s IDs
+        @param context: A standard dictionary for contextual values
+        """
 
         for id in ids:
             self.write(cr, uid, id, {'hide':True})
@@ -752,10 +744,11 @@ class olap_cube_table(osv.osv):
 
     def write(self, cr, uid, ids, vals, context = None):
 
-        """ @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of Cube Table’s IDs
-            @param context: A standard dictionary for contextual values """
+        """
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of Cube Table’s IDs
+        @param context: A standard dictionary for contextual values """
 
         if vals and vals.get('available_table_ids', 0) and context and \
             (context.has_key('master_dim') or context.has_key('d_id') or \
