@@ -60,9 +60,10 @@
 		                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancelled')]"/>
 	                <separator orientation="vertical"/>
 	                <field name="product_id"/>
-	                <field name="user_id" widget="selection">
+	                <field name="user_id" widget="selection" default="1">
 	                    <filter icon="terp-hr"
 		                        string="My Expenses"
+		                        name='User'
 		                        domain="[('user_id','=',uid)]"/>
 	                </field>
 	                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -94,7 +95,7 @@
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}"/>
-                    <filter string="User" icon="terp-hr" context="{'group_by':'user_id'}" default="1"/>
+                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}" default="1"/>
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
@@ -114,6 +115,7 @@
         <field name="res_model">hr.expense.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_User':1,'search_default_user_id':uid}</field>
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 
