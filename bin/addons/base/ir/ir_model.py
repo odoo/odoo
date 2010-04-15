@@ -444,7 +444,7 @@ class ir_model_data(osv.osv):
     def _get_id(self, cr, uid, module, xml_id):
         ids = self.search(cr, uid, [('module','=',module),('name','=', xml_id)])
         if not ids:
-            raise Exception('No references to %s.%s' % (module, xml_id))
+            raise ValueError('No references to %s.%s' % (module, xml_id))
         # the sql constraints ensure us we have only one result
         return ids[0]
 

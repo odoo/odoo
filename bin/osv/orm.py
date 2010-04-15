@@ -681,9 +681,14 @@ class orm_template(object):
                                 module, xml_id = line[i].rsplit('.', 1)
                             else:
                                 module, xml_id = current_module, line[i]                            
-                            id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
-                            res_id = ir_model_data_obj.read(cr, uid, [id],
-                                    ['res_id'])[0]['res_id']
+
+                            record_id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
+                            ir_model_data = ir_model_data_obj.read(cr, uid, [record_id], ['res_id'])
+                            if ir_model_data:
+                                res_id = ir_model_data[0]['res_id']
+                            else:
+                                raise ValueError('No references to %s.%s' % (module, xml_id))
+
                     row[field[-1][:-3]] = res_id or False
                     continue
                 if (len(field) == len(prefix)+1) and \
