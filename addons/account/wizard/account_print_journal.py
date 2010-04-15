@@ -18,8 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import osv, fields
+from tools.translate import _
 
 class account_print_journal(osv.osv_memory):
     _name = 'account.print.journal'

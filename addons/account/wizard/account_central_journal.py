@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 
 class account_central_journal(osv.osv_memory):
     _name = 'account.central.journal'
