@@ -27,7 +27,7 @@ class hr_evaluation_report(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'create_date': fields.datetime('Create Date', readonly=True),
+        'create_date': fields.date('Create Date', readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
         'request_id': fields.many2one('survey.request','Request_id', readonly=True),
         'closed': fields.date("closed", readonly=True),

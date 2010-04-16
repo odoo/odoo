@@ -69,7 +69,7 @@
                 </field>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Employee" name="employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
@@ -85,6 +85,7 @@
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_employee': 1}</field>
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 

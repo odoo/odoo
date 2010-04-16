@@ -157,7 +157,6 @@
             <field name="domain">[]</field>
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
-            <field name="context">{'search_default_Users':1}</field>
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
@@ -445,7 +444,6 @@
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="context">{'search_default_user_id': 1}</field>
 
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="2"/>
