@@ -71,10 +71,14 @@ class crm_send_new_email(osv.osv_memory):
             attach = filter(lambda x: x, [data['doc1'], data['doc2'], data['doc3']])
             attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
 
+            message_id = None            
+            
             if context.get('mail', 'new') == 'new':
                 case = case_pool.browse(cr, uid, res_id)
+                message_id = case.history_line[0].message_id
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
+                message_id = hist.message_id
                 model = hist.log_id.model_id.model
                 model_pool = self.pool.get(model)
                 case = model_pool.browse(cr, uid, hist.log_id.res_id)
@@ -84,7 +88,11 @@ class crm_send_new_email(osv.osv_memory):
 
             body = case_pool.format_body(body)
             email_from = data.get('email_from', False)
-            case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from)
+            case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from, message_id=message_id)
+
+            x_headers = {
+                'References':"%s" % (message_id)
+            }
 
             flag = tools.email_send(
                 email_from,
@@ -94,6 +102,7 @@ class crm_send_new_email(osv.osv_memory):
                 attach=attach,
                 reply_to=case.section_id.reply_to,
                 openobject_id=str(case.id),
+                x_headers=x_headers
             )
             if flag:
                 if data['state'] == 'unchanged':
@@ -111,7 +120,7 @@ class crm_send_new_email(osv.osv_memory):
 #                raise osv.except_osv(_('Email!'), ("Email Successfully Sent"))
 #            else:
 #                raise osv.except_osv(_('Warning!'), _("Email not sent !"))
-
+    
         return {}
 
     def default_get(self, cr, uid, fields, context=None):

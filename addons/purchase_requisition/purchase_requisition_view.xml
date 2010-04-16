@@ -9,7 +9,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="tender_id"/>
+                <field name="requisition_id"/>
             </field>
         </field>
     </record>
@@ -21,21 +21,25 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <field name="partner_ref" position="after">
-                <field name="tender_id"/>
+                <field name="requisition_id"/>
             </field>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_purchase_tender_form">
-        <field name="name">purchase.tender.form</field>
+    <record model="ir.ui.view" id="view_purchase_requisition_form">
+        <field name="name">purchase.requisition.form</field>
         <field name="type">form</field>
-        <field name="model">purchase.tender</field>
+        <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <form string="Purchase Tender">
-                <field name="name" select="1"/>
-                <field name="user_id" select="1"/>
-                <field name="date_start"/>
-                <field name="date_end"/>
+            <form string="Purchase Requisition">
+                <group colspan="4" col="6">
+                    <field name="name" select="1"/>
+                    <field name="user_id" select="1"/>
+                    <field name="exclusive" select="1"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="origin"/>
+                </group>
                 <notebook colspan="4">
                     <page string="Products">
                         <field name="line_ids" colspan="4" nolabel="1">
@@ -62,28 +66,33 @@
             </form>
         </field>
     </record>
-    <record model="ir.ui.view" id="view_purchase_tender_tree">
-        <field name="name">purchase.tender.tree</field>
+    <record model="ir.ui.view" id="view_purchase_requisition_tree">
+        <field name="name">purchase.requisition.tree</field>
         <field name="type">tree</field>
-        <field name="model">purchase.tender</field>
+        <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree string="Purchase Tender">
+            <tree string="Purchase Requisition">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="date_start"/>
                 <field name="date_end"/>
+                <field name="origin"/>
                 <field name="state"/>
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="action_purchase_tender">
-        <field name="name">Purchase Tenders</field>
+    <record model="ir.actions.act_window" id="action_purchase_requisition">
+        <field name="name">Purchase Requisitions</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">purchase.tender</field>
+        <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
     </record>
 
-    <menuitem id="menu_purchase_Tender_pro_mgt" parent="purchase.menu_procurement_management" action="action_purchase_tender"/>
+    <menuitem 
+        id="menu_purchase_requisition_pro_mgt" 
+        sequence="0"
+        parent="purchase.menu_procurement_management" 
+        action="action_purchase_requisition"/>
 
     <record model="ir.ui.view" id="product_normal_form_view_inherit">
         <field name="name">product.form.inherit</field>
@@ -93,7 +102,7 @@
         <field name="arch" type="xml">
             <field name="supply_method" position="after">
                 <group colspan="2" col="2" attrs="{'invisible': [('supply_method','&lt;&gt;','buy')]}">
-                <field name="purchase_tender"/>
+                <field name="purchase_requisition"/>
                 </group>
             </field>
         </field>
