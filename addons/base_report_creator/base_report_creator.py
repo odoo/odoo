@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from tools.translate import _
+from tools import ustr
 
 class report_creator(osv.osv):
     """
@@ -45,9 +46,9 @@ class report_creator(osv.osv):
                 if key not in fields_to_export:
                     continue
                 if isinstance(value, tuple):
-                    datas.append(str(value[1]))
+                    datas.append(ustr(value[1]))
                 else:
-                    datas.append(str(value))
+                    datas.append(ustr(value))
             final_datas += [datas]
             #End Loop
         return {'datas': final_datas}
