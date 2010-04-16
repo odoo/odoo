@@ -19,23 +19,23 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'eMail Gateway',
+    'name': 'Email Gateway System',
     'version': '1.0',
-    'category': 'Generic Modules/eMail Gate',
-    'description': """
-The generic email gateway system for the synchronisation interface
-between mails and Open Objects.
-""",
+    'category': 'Generic Modules/Mail Service',
+    'description': """The generic email gateway system allows to send and receive emails
+    * IMAP / IMAP with SSL
+    * POP / POP with SSL
+    * SMTP / SMTP with TLS
+    * ACL basd access polocy 
+    * Queing and History for Emails
+    * Easy Integration with any Module""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'process'],
-    'init_xml': ['mail_gateway_data.xml',],
+    'depends': ['smtpclient', 'fetchmail'],
+    'init_xml': [],
     'update_xml': [
-        'mail_gateway_wizard.xml',        
-        'mail_gateway_view.xml',                
-        'security/ir.model.access.csv',        
+        
     ],
     'demo_xml': [],
     'installable': True,

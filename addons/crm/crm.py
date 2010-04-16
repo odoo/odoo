@@ -500,28 +500,8 @@ class crm_case(osv.osv):
                     self.write(cr, uid, [case.id], {'stage_id': s[section][st]})
         return True
 
-    def history(self, cr, uid, ids, keyword, history=False, email=False, details=None, context=None):
-        """This function is used to make entry in case history according to action performed
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Case ids
-        @param keyword: Case action keyword e.g.: If case is closed "Close" keyword is used
-        @param history: Value True/False, If True it makes entry in case History otherwise in Case Log
-        @param email: Email address if any
-        @param details: Details of case history if any 
-        @param context: A standard dictionary for contextual values"""
-        
-        if not context:
-            context = {}
-
-        cases = self.browse(cr, uid, ids, context=context)
-        return self.__history(cr, uid, cases, keyword=keyword, \
-                               history=history, email=email, details=details, \
-                               context=context)
-
-    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, context=None):
-        """This function is used to make entry in case history according to action performed
+    def __history(self, cr, uid, cases, keyword, history=False, email=False, details=None, email_from=False, message_id=False, context={}):
+        """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -539,12 +519,13 @@ class crm_case(osv.osv):
         for case in cases:
             model_ids = model_obj.search(cr, uid, [('model', '=', case._name)])
             data = {
-                'name': keyword, 
-                'user_id': uid, 
-                'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
-                'model_id' : model_ids and model_ids[0] or False, 
-                'res_id': case.id, 
-                'section_id': case.section_id.id
+                'name': keyword,
+                'user_id': uid,
+                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'model_id' : model_ids and model_ids[0] or False,
+                'res_id': case.id,
+                'section_id': case.section_id.id,
+                'message_id':message_id
             }
 
             if history:
@@ -562,6 +543,7 @@ class crm_case(osv.osv):
         return True
     
     _history = __history
+    history = __history
 
     def create(self, cr, uid, *args, **argv):
         """Overrides orm create method
@@ -778,11 +760,12 @@ class crm_case_history(osv.osv):
         return res
 
     _columns = {
-        'description': fields.text('Description'), 
-        'note': fields.function(_note_get, method=True, string="Description", type="text"), 
-        'email_to': fields.char('Email TO', size=84), 
-        'email_from' : fields.char('Email From', size=84), 
-        'log_id': fields.many2one('crm.case.log', 'Log', ondelete='cascade'), 
+        'description': fields.text('Description'),
+        'note': fields.function(_note_get, method=True, string="Description", type="text"),
+        'email_to': fields.char('Email TO', size=84),
+        'email_from' : fields.char('Email From', size=84),
+        'log_id': fields.many2one('crm.case.log','Log',ondelete='cascade'),
+        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email Server.", select=True),
     }
 
 crm_case_history()
