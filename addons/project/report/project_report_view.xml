@@ -51,9 +51,11 @@
             <field name="arch" type="xml">
                 <search string="Tasks">
                 	<group>
-                    <filter icon="terp-project" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
+                    <filter icon="terp-project" string=" Year" 
+                    domain="[('date_start','&lt;', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;=',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                    help="Tasks performed within a year"/>
                     <filter icon="terp-project" string="This Month" name="month"
-                    		domain="[('date_start','&lt;', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;=',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]" help="Tasks performed in this month"/>
+                    		domain="[('date_start','&lt;', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;=',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]" help="Tasks performed within a month"/>
 	                	 <filter icon="gtk-media-rewind"
                             string="    7 Days    " separator="1"
                             domain="[('date_start','&lt;', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
