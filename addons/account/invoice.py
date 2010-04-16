@@ -652,6 +652,7 @@ class account_invoice(osv.osv):
     def compute_invoice_totals(self, cr, uid, inv, company_currency, ref, invoice_move_lines):
         total = 0
         total_currency = 0
+        cur_obj = self.pool.get('res.currency')
         for i in invoice_move_lines:
             if inv.currency_id.id != company_currency:
                 i['currency_id'] = inv.currency_id.id

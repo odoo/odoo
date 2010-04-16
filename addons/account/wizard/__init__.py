@@ -25,7 +25,7 @@ import account_move_line_unreconcile_select
 import wizard_reconcile
 import wizard_unreconcile
 import account_invoice_refund
-import wizard_pay_invoice
+import account_pay_invoice
 import account_move_journal
 import account_journal_select
 import account_move_bank_reconcile
