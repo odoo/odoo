@@ -125,18 +125,29 @@ class project_vs_remaining_hours(osv.osv):
         cr.execute("""
             create or replace view project_vs_remaining_hours as (
                 select
-                    min(pt.id) as id,
-                    aaa.name as project,
-                    CASE WHEN pu.uid is null
-                    THEN aaa.user_id ELSE pu.uid END as uid,
-                    sum(pt.remaining_hours) as remaining_hours,
-                    aaa.state
-                from project_task pt
-                left join project_project as pp ON (pt.project_id=pp.id)
-                left join account_analytic_account as aaa ON (pp.category_id=aaa.id)
-                left join project_user_rel as pu ON (pu.project_id=pp.id)
-                where pt.create_uid=aaa.user_id
-                group by aaa.name,aaa.state,pu.uid,aaa.user_id
+                      min(pt.id) as id,
+                      aaa.user_id as uid,
+                      aaa.name as project,
+                      aaa.state,
+                      sum(pt.remaining_hours) as remaining_hours
+                 from project_project as pp,
+                       account_analytic_account as aaa,
+                       project_task as pt
+                 where aaa.id=pp.category_id and pt.project_id=pp.id and pp.category_id=aaa.id
+                 group by aaa.user_id,aaa.state,aaa.name
+                 UNION All
+                 select
+                      min(pt.id) as id,
+                      pur.uid as uid,
+                      aaa.name as project,
+                      aaa.state,
+                      sum(pt.remaining_hours) as remaining_hours
+                 from project_project as pp,
+                      project_user_rel as pur,
+                      account_analytic_account as aaa,
+                      project_task as pt
+                 where pur.project_id=pp.id and pt.project_id=pp.id and pp.category_id=aaa.id
+                 group by pur.uid,aaa.state,aaa.name
             )
         """)
 project_vs_remaining_hours()
