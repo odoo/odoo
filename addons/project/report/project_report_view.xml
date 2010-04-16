@@ -55,7 +55,7 @@
                     <filter icon="terp-project" string="This Month" name="month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
 	                	 <filter icon="gtk-media-rewind"
                             string="    7 Days    " separator="1"
-                            domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            domain="[('date_start','&lt;', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Tasks during last 7 days"
                             />
 	                	<filter string="Current" icon="terp-project" domain="['|', ('state','=','draft'),('state', '=' ,'open')]" help = "Draft and in progress tasks"/>
