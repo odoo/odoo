@@ -27,9 +27,9 @@ import time
 from mx import DateTime
 from osv.orm import browse_record, browse_null
 
-class purchase_tender_partner(osv.osv_memory):
-    _name = "purchase.tender.partner"
-    _description = "Purchase Tender Partner"
+class purchase_requisition_partner(osv.osv_memory):
+    _name = "purchase.requisition.partner"
+    _description = "Purchase Requisition Partner"
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True),
@@ -37,9 +37,9 @@ class purchase_tender_partner(osv.osv_memory):
 
         
     def view_init(self, cr, uid, fields_list, context=None):
-        res = super(purchase_tender_partner, self).view_init(cr, uid, fields_list, context=context)
+        res = super(purchase_requisition_partner, self).view_init(cr, uid, fields_list, context=context)
         record_id = context and context.get('active_id', False) or False        
-        tender = self.pool.get('purchase.tender').browse(cr, uid, record_id)
+        tender = self.pool.get('purchase.requisition').browse(cr, uid, record_id)
         if not tender.line_ids:
                 raise osv.except_osv('Error!','No Product in Tender')
         True
@@ -68,10 +68,10 @@ class purchase_tender_partner(osv.osv_memory):
             order_obj = self.pool.get('purchase.order')
             order_line_obj = self.pool.get('purchase.order.line')
             partner_obj = self.pool.get('res.partner')
-            tender_line_obj = self.pool.get('purchase.tender.line')
+            tender_line_obj = self.pool.get('purchase.requisition.line')
             pricelist_obj = self.pool.get('product.pricelist')
             prod_obj = self.pool.get('product.product')
-            tender_obj = self.pool.get('purchase.tender')
+            tender_obj = self.pool.get('purchase.requisition')
             acc_pos_obj = self.pool.get('account.fiscal.position')            
             partner_id = data[0]['partner_id']
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
@@ -115,7 +115,7 @@ class purchase_tender_partner(osv.osv_memory):
                             'location_id': line.product_id.product_tmpl_id.property_stock_production.id,                            
                             'company_id': tender.company_id.id,
                             'fiscal_position': partner.property_account_position and partner.property_account_position.id or False,
-                            'tender_id':tender.id,
+                            'requisition_id':tender.id,
                         })
                 order_ids=[]
                 for order_line in list_line:
@@ -125,5 +125,5 @@ class purchase_tender_partner(osv.osv_memory):
                     order_line_obj.create(cr,uid,order_line)
         return {}        
 
-purchase_tender_partner()
+purchase_requisition_partner()
 

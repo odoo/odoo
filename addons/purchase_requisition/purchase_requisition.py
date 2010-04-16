@@ -36,14 +36,17 @@ class purchase_requisition(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible'),
         'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', help="If the requisition is exclusive, it will cancel all purchase orders when you confirm one of them", required=True),
         'description': fields.text('Description'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),        
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('cancel','Cancelled'),('close','Close')], 'State', required=True)
+        'state': fields.selection([('draft','Draft'),('open','Open'),('cancel','Cancelled'),('close','Close'),('done','Done')], 'State', required=True)
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
         'state': lambda *args: 'open',
         'exclusive': lambda *args: 'multiple',
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id ,       
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
 
@@ -83,11 +86,9 @@ class purchase_requisition_line(osv.osv):
     _columns = {
         'product_id': fields.many2one('product.product', 'Product'),
         'product_uom_id': fields.many2one('product.uom', 'Product UoM'),
-
         'product_qty': fields.float('Quantity', digits=(16,2)),
-        'tender_id' : fields.many2one('purchase.tender','Purchase Tender', ondelete='cascade'),
+        'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'product_qty': fields.float('Date End', digits=(16,2)),
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade')
     }
 

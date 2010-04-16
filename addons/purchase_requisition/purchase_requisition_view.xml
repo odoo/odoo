@@ -64,7 +64,7 @@
                     </page>
                     <page string="Quotations">
                      	<group col="8" colspan="4">
-                    	<button name="%(action_purchase_tender_partner)d" string="New RfQr" type="action" />
+                    	<button name="%(action_purchase_requisition_partner)d" string="New RfQr" type="action" />
                     	 <label colspan="6"  string=""/>
                     	  </group>
                     	<field name="purchase_ids" nolabel="1" colspan="4"/>
@@ -73,10 +73,10 @@
 				<separator colspan="4"/>
 	                <group col="8" colspan="4">
 	                    <field name="state" select="1" readonly ="1"/>
-						<button name="tender_close" states="open,draft,in_progress" string="Close" type="object" icon="gtk-close" />
+						<button name="tender_close" states="open,draft" string="Close" type="object" icon="gtk-close" />
 	                    <button name="tender_open" states="draft,in_progress" string="Open" type="object" icon="gtk-go-forward" />
-	                    <button name="tender_cancel" states="draft,open,in_progress" string="Cancel" type="object" icon="gtk-cancel" />
-	                    <button name="tender_confirm" states="open,in_progress" string="Confirm" type="object" icon="gtk-go-up" />
+	                    <button name="tender_cancel" states="draft,open," string="Cancel" type="object" icon="gtk-cancel" />
+	                    <button name="tender_confirm" states="open" string="Confirm" type="object" icon="gtk-go-up" />
 	                    <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
 	                </group>
 
@@ -100,21 +100,22 @@
         </field>
     </record>
 
-	<record id="view_purchase_tender_filter" model="ir.ui.view">
-            <field name="name">purchase.tender.list.select</field>
-            <field name="model">purchase.tender</field>
+	<record id="view_purchase_requisition_filter" model="ir.ui.view">
+            <field name="name">purchase.requisition.list.select</field>
+            <field name="model">purchase.requisition</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Purchase Tender">
+                <search string="Search Purchase Requisition">
                  <group col='10' colspan='4'>
                     <filter icon="terp-purchase" string="Quotations" domain="[('state','=','draft')]" separator="1"/>
-                    <filter icon="terp-purchase" string="Approved" domain="[('state','=','confirmed')]" separator="1"/>
+                    <filter icon="terp-purchase" string="Approved" domain="[('state','=','open')]" separator="1"/>
                     <separator orientation="vertical"/>
-                    <field name="name" select="1" string="Tender Reference"/>
+                    <field name="name" select="1" string="Requisition Reference"/>
                     <field name="purchase_ids" select="1"/>
                     <field name="user_id" select="1" widget="selection">
-                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Tender "/>                        
+                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Requisition "/>                        
                     </field>
+                    <field name="exclusive" select="1" />
                     <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <newline/>
@@ -134,7 +135,7 @@
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>  
-        <field name="search_view_id" ref="view_purchase_tender_filter"/>          
+        <field name="search_view_id" ref="view_purchase_requisition_filter"/>          
     </record>
 
     <menuitem 
