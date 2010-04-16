@@ -23,11 +23,11 @@ import base64
 import os
 import re
 import time
-import time
-import tools
-from crm import crm
 import mx.DateTime
 from datetime import datetime, timedelta
+
+import tools
+from crm import crm
 from osv import fields,osv,orm
 from osv.orm import except_orm
 from tools.translate import _
@@ -58,9 +58,9 @@ class project_issue(osv.osv):
         @param ids: List of Openday’s IDs
         @return: difference between current date and log date
         @param context: A standard dictionary for contextual values
-        """        
-        cal_obj = self.pool.get('resource.calendar') 
-        res_obj = self.pool.get('resource.resource')     
+        """
+        cal_obj = self.pool.get('resource.calendar')
+        res_obj = self.pool.get('resource.resource')
 
         res = {}
         for issue in self.browse(cr, uid, ids , context):
@@ -88,7 +88,7 @@ class project_issue(osv.osv):
 
                     duration = float(ans.days)
                     if issue.section_id.resource_calendar_id:
-                        duration =  float(ans.days) * 24                        
+                        duration =  float(ans.days) * 24
                         new_dates = cal_obj.interval_get(cr,
                             uid,
                             issue.section_id.resource_calendar_id and issue.section_id.resource_calendar_id.id or False,
@@ -100,9 +100,9 @@ class project_issue(osv.osv):
                         date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
                         for in_time, out_time in new_dates:
                             if in_time.date not in no_days:
-                                no_days.append(in_time.date)                            
+                                no_days.append(in_time.date)
                             if out_time > date_until:
-                                break                            
+                                break
                         duration =  len(no_days)
                 res[issue.id][field] = abs(int(duration))
         return res
@@ -139,6 +139,60 @@ class project_issue(osv.osv):
        if user.context_project_id:
            return user.context_project_id
        return False
+
+    def convert_issue_task(self, cr, uid, ids, context=None):
+        case_obj = self.pool.get('project.issue')
+        data_obj = self.pool.get('ir.model.data')
+        task_obj = self.pool.get('project.task')
+
+        if context is None:
+            context = {}
+
+#        for case in case_obj.browse(cr, uid, ids, context=context):
+#            if case.state != 'open':
+#                raise osv.except_osv(_('Warning !'),
+#                    _('Issues or Feature Requests should be in \'Open\' state before converting into Task.'))
+
+        result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
+        res = data_obj.read(cr, uid, result, ['res_id'])
+        id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
+        id3 = data_obj._get_id(cr, uid, 'project', 'view_task_tree2')
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+
+        for bug in case_obj.browse(cr, uid, ids, context=context):
+            new_task_id = task_obj.create(cr, uid, {
+                'name': bug.name,
+                'partner_id': bug.partner_id.id,
+                'description':bug.description,
+                'date': bug.date,
+                'project_id':bug.project_id.id,
+                'priority':bug.priority,
+                'user_id':bug.user_id.id,
+                'planned_hours': 0.0,
+            })
+
+            new_task = task_obj.browse(cr, uid, new_task_id)
+
+            vals = {
+                'task_id': new_task_id,
+                }
+            case_obj.write(cr, uid, [bug.id], vals)
+
+        return  {
+            'name': _('Tasks'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'project.task',
+            'res_id': int(new_task_id),
+            'view_id': False,
+            'views': [(id2,'form'),(id3,'tree'),(False,'calendar'),(False,'graph')],
+            'type': 'ir.actions.act_window',
+            'search_view_id': res['res_id'],
+            'nodestroy': True
+        }
 
     def _convert(self, cr, uid, ids, xml_id, context=None):
         data_obj = self.pool.get('ir.model.data')

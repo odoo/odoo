@@ -18,23 +18,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+import time
 
 from osv import fields, osv
-import time
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherit = "hr.employee"
     _columns = {
-        'manager' : fields.boolean('Manager'),
-        'medic_exam' : fields.date('Medical Examination Date'),
-        'place_of_birth' : fields.char('Place of Birth', size=30),
-        'children' : fields.integer('Number of Children'),
-        'vehicle' : fields.integer('Company Vehicle'),
-        'vehicle_distance' : fields.integer('Home-Work Distance', help="In kilometers"),
-        'contract_ids' : fields.one2many('hr.contract', 'employee_id', 'Contracts'),
+        'manager': fields.boolean('Manager'),
+        'medic_exam': fields.date('Medical Examination Date'),
+        'place_of_birth': fields.char('Place of Birth', size=30),
+        'children': fields.integer('Number of Children'),
+        'vehicle': fields.integer('Company Vehicle'),
+        'vehicle_distance': fields.integer('Home-Work Distance', help="In kilometers"),
+        'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
     }
 hr_employee()
 
@@ -43,7 +42,7 @@ class hr_contract_wage_type_period(osv.osv):
     _name='hr.contract.wage.type.period'
     _description='Wage Period'
     _columns = {
-        'name' : fields.char('Period Name', size=50, required=True, select=True),
+        'name': fields.char('Period Name', size=50, required=True, select=True),
         'factor_days': fields.float('Hours in the period', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
     }
     _defaults = {
@@ -72,7 +71,7 @@ class hr_contract_type(osv.osv):
     _name = 'hr.contract.type'
     _description = 'Contract Type'
     _columns = {
-        'name' : fields.char('Contract Type', size=30, required=True),
+        'name': fields.char('Contract Type', size=32, required=True),
     }
 hr_contract_type()
 
@@ -80,7 +79,7 @@ class hr_contract(osv.osv):
     _name = 'hr.contract'
     _description = 'Contract'
     _columns = {
-        'name': fields.char('Contract Reference', size=30, required=True),
+        'name': fields.char('Contract Reference', size=32, required=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'department_id': fields.related('employee_id','department_id', string="Department", readonly=True),
         'type_id': fields.many2one('hr.contract.type', "Contract Type"),
@@ -100,6 +99,4 @@ class hr_contract(osv.osv):
     }
 hr_contract()
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

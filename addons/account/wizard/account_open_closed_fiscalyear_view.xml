@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_account_open_closed_fiscalyear" model="ir.ui.view">
+            <field name="name">account.open.closed.fiscalyear.form</field>
+            <field name="model">account.open.closed.fiscalyear</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Choose Fiscal Year ">
+                	<group colspan="4" >
+                		 <field name="fyear_id"  domain = "[('state','=','draft')]"/>
+                    </group>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-open" string="Open" name="remove_entries" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_open_closed_fiscalyear" model="ir.actions.act_window">
+            <field name="name">Cancel Opening Entries</field>
+            <field name="res_model">account.open.closed.fiscalyear</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_account_open_closed_fiscalyear"/>
+           <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_account_open_closed_fiscalyear"
+        	id="menu_wizard_open_closed_fy"  sequence="2"
+        	parent="account.menu_account_end_year_treatments" />
+
+    </data>
+</openerp>

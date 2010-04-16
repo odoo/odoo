@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,13 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import sign_in_out
-import print_attendance_error
-from print_byweek import wiz_byweek
-from print_bymonth import wiz_bymonth
+import hr_attendance_sign_in_out
+import hr_attendance_error
+import hr_attendance_byweek
+import hr_attendance_bymonth
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -338,9 +338,12 @@
             id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
 
-        <menuitem name="Evaluation Reminders" parent="menu_eval_hr"
-            id="menu_eval_send_mail"
-            action="action_hr_evaluation_send_mail"
-            sequence="45"/>
+      <menuitem name="Evaluation Reminders" parent="menu_eval_hr"
+           id="menu_eval_send_mail"
+           action="action_hr_evaluation_send_mail"
+           sequence="45"/>
+
+      <!-- Evaluation Interviews Button on Employee Form -->
+      <act_window domain="[('user_to_review_id', '=', active_id)]" id="act_hr_employee_2_hr__evaluation_interview" name="Evaluation Interviews" res_model="hr.evaluation.interview" src_model="hr.employee"/>
     </data>
 </openerp>
