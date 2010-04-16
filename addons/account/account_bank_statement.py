@@ -353,6 +353,15 @@ class account_bank_statement(osv.osv):
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
     
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}    
+        default = default.copy()
+        default['move_line_ids'] = []
+        return super(account_bank_statement, self).copy(cr, uid, id, default, context)
+    
 account_bank_statement()
 
 
