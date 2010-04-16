@@ -74,20 +74,23 @@ class purchase_requisition_partner(osv.osv_memory):
             tender_obj = self.pool.get('purchase.requisition')
             acc_pos_obj = self.pool.get('account.fiscal.position')            
             partner_id = data[0]['partner_id']
+            
+            supplier_data = partner_obj.browse(cr, uid,[ partner_id])[0]
+
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             list_line=[]
             purchase_order_line={}
             for tender in tender_obj.browse(cr, uid, record_ids):
                 for line in tender.line_ids:                
                     
-                    uom_id = line.product_id.uom_po_id.id            
+                    uom_id = line.product_id.uom_po_id and line.product_id.uom_po_id.id or False            
                     newdate = DateTime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S')
                     newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
-                    newdate = newdate - line.product_id.seller_ids[0].delay
-        
+                    newdate = newdate -(line.product_id.seller_ids and line.product_id.seller_ids[0].delay or DateTime.strptime(tender.date_start, '%Y-%m-%d %H:%M:%S') )
+                    
 
-                    partner = line.product_id.seller_ids[0].name   
-                    pricelist_id = partner.property_product_pricelist_purchase.id             
+                    partner = line.product_id.seller_ids and line.product_id.seller_ids[0].name or supplier_data
+                    pricelist_id = partner.property_product_pricelist_purchase and partner.property_product_pricelist_purchase.id 
                     price = pricelist_obj.price_get(cr, uid, [pricelist_id], line.product_id.id, line.product_qty, False, {'uom': uom_id})[pricelist_id]
                     product = prod_obj.browse(cr, uid, line.product_id.id, context=context)
         
