@@ -144,6 +144,7 @@
                     <group col="6" colspan="4">
                         <field domain="[('type', '=', 'purchase')]" name="journal_id"/>
                         <field name="number" readonly="1"/>
+                        <field name="type" invisible="1"/>
                         <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)"/>
                         <newline/>
                         <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" context="{'default_customer': 0}"/>
@@ -249,6 +250,7 @@
                     <group colspan="4" col="6">
                         <field name="journal_id" groups="base.group_user"/>
                         <field name="number"/>
+                        <field name="type" invisible="1"/>
                         <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)"/>
                         <newline/>
                         <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" groups="base.group_user"/>
