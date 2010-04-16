@@ -296,9 +296,13 @@
     # Menu Items
     # ------------------------------------------------------
 
-        <menuitem action="act_project_phase" id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
+        <menuitem action="act_project_phase"
+            groups="base.group_extended"
+            id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
-        <menuitem id="menu_pm_resources_project1" name="Resources" parent="base.menu_main_pm" sequence="2"/>
+        <menuitem id="menu_pm_resources_project1"
+            groups="base.group_extended"
+            name="Resources" parent="base.menu_main_pm" sequence="2"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves" parent="menu_pm_resources_project1" sequence="1"/>

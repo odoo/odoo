@@ -226,8 +226,8 @@
                         <separator orientation="vertical"/>
                         <field name="employee_id" widget="selection" select="1"/>
                         <field name="plan_id" widget="selection" select="1"/>
-					    </group>
-					    <newline/>
+                        </group>
+                        <newline/>
                         <group expand='1' string='Group by...'>
                         <filter string='Employee' icon="terp-stock" domain="[]" context="{'group_by' : 'employee_id'}" />
                         <filter string='Plan' icon="terp-stock" domain="[]" context="{'group_by' : 'plan_id'}" />
@@ -345,6 +345,5 @@
 
       <!-- Evaluation Interviews Button on Employee Form -->
       <act_window domain="[('user_to_review_id', '=', active_id)]" id="act_hr_employee_2_hr__evaluation_interview" name="Evaluation Interviews" res_model="hr.evaluation.interview" src_model="hr.employee"/>
-
     </data>
 </openerp>

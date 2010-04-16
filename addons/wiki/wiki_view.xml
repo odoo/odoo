@@ -2,17 +2,17 @@
 <openerp>
     <data>
        <menuitem name="Knowledge Management" icon="terp-stock"
-       	id="base.menu_document" sequence="4" />
+           id="base.menu_document" sequence="4" />
 
        <menuitem name="Configuration"
-       	id="base.menu_document_configuration"
-       	parent="base.menu_document" sequence="50" />
+           id="base.menu_document_configuration"
+           parent="base.menu_document" sequence="50" />
 
        <menuitem name="Wiki" id="menu_wiki_configuration"
-       	parent="base.menu_document_configuration" sequence="2" />
+           parent="base.menu_document_configuration" sequence="2" />
 
        <menuitem id="base.menu_document2" name="Collaborative Content"
-       	parent="base.menu_document" />
+           parent="base.menu_document" />
 
 <!--  Wiki Groups Tree view -->
 
@@ -40,7 +40,7 @@
                         <field name="create_date" readonly="2"/>
                         <field name="method" select="1"/>
                         <field name="home" select="1"
-                        	attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
+                            attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
                     </group>
                     <notebook colspan="4">
                     <page string="Notes">
@@ -51,10 +51,10 @@
                     </page>
                     </notebook>
                      <button
-			 	    	name="%(wiki.action_wiki_create_menu)d"
-			 	    	string="Create Menu"
-			 	     	type="action"
-			 	     	icon="gtk-justify-fill" />
+                         name="%(wiki.action_wiki_create_menu)d"
+                         string="Create Menu"
+                          type="action"
+                          icon="gtk-justify-fill" />
                 </form>
             </field>
         </record>
@@ -145,7 +145,7 @@
 
 <!-- wiki Search view  -->
 
-		<record id="view_wiki_filter" model="ir.ui.view">
+        <record id="view_wiki_filter" model="ir.ui.view">
             <field name="name">wiki.wiki.search</field>
             <field name="model">wiki.wiki</field>
             <field name="type">search</field>
@@ -176,8 +176,8 @@
         </record>
 
         <menuitem parent="base.menu_document2"
-        	id="menu_action_wiki_wiki" name="Wiki Pages"
-        	action="action_wiki" />
+            id="menu_action_wiki_wiki" name="Wiki Pages"
+            action="action_wiki" />
 
 <!--  Pages Waiting Review -->
 

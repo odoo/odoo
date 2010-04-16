@@ -44,7 +44,9 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_pricelist_version_tree_view"/>
         </record>
-        <menuitem action="product_pricelist_action" id="menu_product_pricelist_action" parent="product.menu_product_pricelist_main" sequence="2"/>
+        <menuitem
+            action="product_pricelist_action" id="menu_product_pricelist_action" 
+            parent="product.menu_product_pricelist_main" sequence="2"/>
 
         <record id="product_pricelist_item_tree_view" model="ir.ui.view">
             <field name="name">product.pricelist.item.tree</field>
@@ -147,7 +149,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="product_pricelist_action2" id="menu_product_pricelist_action2" parent="product.menu_product_pricelist_main" sequence="1"/>
+        <menuitem
+            action="product_pricelist_action2" id="menu_product_pricelist_action2"
+            parent="product.menu_product_pricelist_main" sequence="1"/>
 
         <record id="product_price_type_view" model="ir.ui.view">
             <field name="name">product.price.type.form</field>
@@ -169,9 +173,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-<!--        <menuitem name="Prices Computations" id="menu_price" parent="product.menu_config_product"/>-->
-<!--        <menuitem action="product_price_type_action" groups="base.group_extended" id="menu_product_price_type_action" parent="menu_price"/>-->
-
         <record id="product_pricelist_type_view" model="ir.ui.view">
             <field name="name">product.pricelist.type.form</field>
             <field name="model">product.pricelist.type</field>
@@ -190,7 +191,5 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-<!--        <menuitem action="product_pricelist_type_action" groups="base.group_extended" id="menu_product_pricelist_type_action" parent="menu_price"/>-->
-
     </data>
 </openerp>

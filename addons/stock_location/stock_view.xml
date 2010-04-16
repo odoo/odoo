@@ -41,7 +41,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <page string="Procurement &amp; Locations">
-                    <field name="path_ids" editable="bottom" colspan="4" nolabel="1">
+                    <field name="path_ids" editable="bottom" colspan="4" nolabel="1" groups="base.group_extended">
                         <tree string="Location Paths" editable="bottom">
                             <field name="location_from_id"/>
                             <field name="location_dest_id"/>

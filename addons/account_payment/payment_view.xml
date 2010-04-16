@@ -10,7 +10,7 @@
             <field name="inherit_id" ref="account.view_move_line_form"/>
             <field name="arch" type="xml">
                 <field name="reconcile_partial_id" position="after">
-                    <field name="amount_to_pay" select="2"/>
+                    <field name="amount_to_pay"/>
                 </field>
             </field>
         </record>
@@ -90,7 +90,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-		<menuitem id="next_id_44" name="Payment" parent="account.menu_finance_configuration"/>
+        <menuitem id="next_id_44" name="Payment" parent="account.menu_finance_configuration"/>
 
         <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="next_id_44"/>
 
@@ -106,7 +106,7 @@
                     <field name="mode"/>
                     <field name="date_prefered"/>
                     <field name="date_planned" select="1"/>
-                    <field name="user_id" select="2"/>
+                    <field name="user_id"/>
                     <button colspan="2" name="%(wizard_populate_payment)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
                     <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1">
                         <form string="Payment Line">
@@ -116,7 +116,7 @@
                                     <separator colspan="4" string="Transaction Information"/>
                                     <field name="date"/>
                                     <group colspan="2">
-                                        <field name="amount_currency" select="2" on_change="onchange_amount(amount_currency,currency,company_currency)"/>
+                                        <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)"/>
                                         <field name="currency" nolabel="1"/>
                                     </group>
                                     <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)" select="1"/>
@@ -150,14 +150,14 @@
                             <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                             <field name="ml_maturity_date"/>
                             <field name="date"/>
-                            <field name="amount_currency" select="2" string="Amount"/>
+                            <field name="amount_currency" string="Amount"/>
                             <field name="currency"/>
                             <field name="name"/>
                             <field name="amount" sum="Total in Company Currency" invisible="1"/>
                         </tree>
                     </field>
-                    <field name="date_created" select="2"/>
-                    <field name="date_done" select="2"/>
+                    <field name="date_created"/>
+                    <field name="date_done"/>
                     <field name="state" readonly="1" select="1"/>
                     <group col="4" colspan="2">
                          <button name="cancel" states="draft,open" string="Cancel" icon="gtk-cancel"/>
@@ -179,8 +179,8 @@
                     <field name="reference"/>
                     <field name="mode"/>
                     <field name="date_planned"/>
-                    <field name="date_created" select="2"/>
-                    <field name="date_done" select="2"/>
+                    <field name="date_created"/>
+                    <field name="date_done"/>
                     <field name="total"/>
                     <field name="state"/>
                 </tree>
@@ -232,7 +232,7 @@
                             <separator colspan="4" string="Transaction Information"/>
                             <field name="date"/>
                             <group colspan="2">
-                                <field name="amount_currency" select="2" on_change="onchange_amount(amount_currency,currency,comapny_currency)"/>
+                                <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,comapny_currency)"/>
                                 <field name="currency" nolabel="1"/>
                             </group>
                             <field name="partner_id" on_change="onchange_partner(partner_id, False)" select="1"/>
@@ -275,7 +275,7 @@
                     <field name="ml_maturity_date"/>
                     <field name="partner_id" select="1"/>
                     <field name="amount" sum="Amount Total"/>
-                    <field name="amount_currency" sum="Currency Amount Total" select="2" />
+                    <field name="amount_currency" sum="Currency Amount Total"/>
                     <field name="currency"/>
                     <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                     <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode)"/>

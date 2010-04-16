@@ -69,12 +69,12 @@
                 <form string="Purchase Order">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date_order" select="2"/>
-                        <field name="invoiced" select="2"/>
+                        <field name="date_order"/>
+                        <field name="invoiced"/>
                         <newline/>
                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                        <field name="origin" select="2"/>
-                        <field name="shipped" select="2"/>
+                        <field name="origin"/>
+                        <field name="shipped"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
@@ -82,7 +82,7 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" domain="[('supplier','=', 1)]"/>
                             <field name="partner_address_id"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id"/>
-                            <field name="partner_ref" select="2"/>
+                            <field name="partner_ref"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
                                 <tree colors="red:date_planned&lt;=current_date;black:date_planned&gt;current_date" string="Purchase Order Lines">
@@ -289,15 +289,5 @@
             name="Product purchases"
             res_model="purchase.order.line"
             src_model="product.product"/>
-<!-- 
-	<record model="ir.values" id="action_merge_purchase_order">
-                <field name="object" eval="1" />
-                <field name="name">Purchase Order</field>
-                <field name="key2">client_action_multi</field>
-                <field name="value" eval="'ir.actions.act_window,' + str(ref('action_view_purchase_order_group'))" />
-                <field name="key">action</field>
-                <field name="model">purchase.order</field>
-         </record>
-          -->
     </data>
 </openerp>

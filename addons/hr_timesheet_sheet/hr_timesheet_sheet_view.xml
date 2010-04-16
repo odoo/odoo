@@ -30,7 +30,7 @@
                     <field name="sheet_id" select="1"/>
                     <field name="name" select="1"/>
                     <field name="total" sum="Total"/>
-                    <field name="invoice_rate" select="2"/>
+                    <field name="invoice_rate"/>
                 </form>
             </field>
         </record>
@@ -280,7 +280,7 @@
             <field name="inherit_id" ref="hr_attendance.view_attendance_form"/>
             <field name="arch" type="xml">
                 <field name="action_desc" position="after">
-                    <field name="sheet_id" select="2"/>
+                    <field name="sheet_id"/>
                 </field>
             </field>
         </record>
