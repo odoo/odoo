@@ -247,7 +247,7 @@
                                 attrs="{'readonly':[('state','!=','draft')]}"
                                 on_change="onchange_planned(planned_hours, effective_hours)"/>
                                 <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
-                                <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
+                                <button name="%(action_config_compute_remaining)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
                             <group col="2" colspan="2">
                             <field name="delay_hours" widget="float_time"/>
@@ -626,7 +626,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_project_message_tree"/>
-            <field name="context">{"search_default_my_msg":1}</field>        
+            <field name="context">{"search_default_my_msg":1}</field>
             <field name="search_view_id" ref="view_project_message_search"/>
        </record>
 
