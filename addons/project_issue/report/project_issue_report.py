@@ -16,6 +16,7 @@ class project_issue_report(osv.osv):
         'project_id':fields.many2one('project.project', 'Project'),
         'type_id': fields.many2one('crm.case.resource.type', 'Bug Type', domain="[('object_id.model', '=', 'project.issue')]"),
         'date_closed': fields.datetime('Close Date', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'project_issue_report')
@@ -36,6 +37,7 @@ class project_issue_report(osv.osv):
                     c.project_id as project_id,
                     c.type_id as type_id,
                     count(*) as nbr,
+                    c.create_date as create_date,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     project_issue c
@@ -43,6 +45,7 @@ class project_issue_report(osv.osv):
                     res_users u on (c.id = u.id)
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.categ_id,c.stage_id
                 ,c.date_closed,u.company_id,c.priority,c.project_id,c.type_id
+                ,c.create_date
             )""")
 
 
