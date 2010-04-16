@@ -626,11 +626,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_project_message_tree"/>
-            <field name="context">{"search_default_my_msg":1}</field>        
+            <field name="context">{"search_default_my_msg":1}</field>
             <field name="search_view_id" ref="view_project_message_search"/>
        </record>
 
-        <!--<menuitem id="menu_message_main" name="Message" parent="base.menu_main_pm"/>-->
         <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_project_management" sequence="11"/>
 
         <act_window domain="[('user_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>

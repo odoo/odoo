@@ -71,7 +71,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <notebook>
-                    <page string="Accounting" position="inside">
+                <page string="Accounting" position="inside">
                     <group col="2" colspan="2">
                         <separator string="Customer Accounting Properties" colspan="2"/>
                         <field name="property_account_receivable"/>
@@ -85,7 +85,7 @@
                     <group col="2" colspan="2">
                         <separator string="Customer Credit" colspan="2"/>
                         <field name="credit" select="2"/>
-                        <field name="credit_limit" select="2"/>
+                        <field name="credit_limit" select="2" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Supplier Debit" colspan="2"/>

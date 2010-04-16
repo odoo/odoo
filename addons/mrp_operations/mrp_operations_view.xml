@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-	<menuitem id="menu_mrp_planning" name="Planning" parent="base.menu_mrp_root" sequence="2"/>
+    <menuitem id="menu_mrp_planning" name="Planning"
+        parent="base.menu_mrp_root" sequence="2"
+        groups="base.group_extended"/>
     <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
         <field name="name">mrp.production.workcenter.line.tree</field>
         <field name="model">mrp.production.workcenter.line</field>
@@ -175,12 +177,21 @@
 
     </record>
 
-    <menuitem action="mrp.mrp_production_action" id="menu_mrp_production_order_action" parent="menu_mrp_planning" sequence="1"/>
-    <menuitem name="Work Orders" parent="mrp.menu_mrp_manufacturing" id="menu_mrp_production_wc_order" action="mrp_production_wc_action_form"/>
-	<menuitem name="Work Orders" parent="menu_mrp_planning" id="menu_mrp_production_wc_action_planning" action="mrp_production_wc_action_planning" sequence="2"/>
-<!--    <menuitem name="All Work Orders" parent="menu_mrp_planning" id="menu_mrp_production_wc_action" action="mrp_production_wc_action"/>-->
+    <menuitem action="mrp.mrp_production_action"
+        id="menu_mrp_production_order_action"
+        parent="menu_mrp_planning" sequence="1"
+        groups="base.group_extended"/>
+    <menuitem name="Work Orders" parent="mrp.menu_mrp_manufacturing"
+        id="menu_mrp_production_wc_order"
+        action="mrp_production_wc_action_form"
+        groups="base.group_extended"/>
+    <menuitem name="Work Orders" parent="menu_mrp_planning"
+        id="menu_mrp_production_wc_action_planning"
+        action="mrp_production_wc_action_planning"
+        sequence="2"
+        groups="base.group_extended"/>
 
-<!-- Operation codes -->
+    <!-- Operation codes -->
 
     <record model="ir.ui.view" id="mrp_production_code_tree_view">
         <field name="name">mrp.production.code.tree</field>
@@ -194,7 +205,6 @@
             </tree>
         </field>
     </record>
-
     <record model="ir.ui.view" id="mrp_production_code_form_view">
         <field name="name">mrp.production.code.form</field>
         <field name="model">mrp_operations.operation.code</field>
@@ -217,9 +227,7 @@
         <field name="view_id" ref="mrp_production_code_tree_view"/>
     </record>
 
-<!--    <menuitem name="Start - Stop Codes" parent="menu_mrp_planning" id="menu_mrp_production_code_action" action="mrp_production_code_action"/>-->
-
-<!-- Operations -->
+    <!-- Operations -->
 
     <record model="ir.ui.view" id="mrp_production_operation_tree_view">
         <field name="name">mrp.production.operation.tree</field>
@@ -250,21 +258,6 @@
             </field>
         </record>
 
-
-
-    <!--<record model="ir.ui.view" id="mrp_production_operation_form_view">
-        <field name="name">mrp.production.operation.form</field>
-        <field name="model">mrp_operations.operation</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Production Operation">
-                <field name="production_id" select="1"/>
-                <field name="workcenter_id" select="1"/>
-                <field name="code_id" select="1"/>
-            </form>
-        </field>
-    </record>
--->
     <record model="ir.actions.act_window" id="mrp_production_operation_action">
         <field name="name">Operations</field>
         <field name="type">ir.actions.act_window</field>
@@ -273,13 +266,6 @@
         <field name="view_mode">tree,calendar,form</field>
         <field name="view_id" ref="mrp_production_operation_tree_view"/>
     </record>
-
-<!--    <menuitem-->
-<!--        name="Work Order Events Using Bar Codes"-->
-<!--        parent="menu_mrp_planning"-->
-<!--        id="menu_mrp_production_operation_action"-->
-<!--        action="mrp_production_operation_action"/>-->
-
     <record id="mrp_production_reorder_form_view" model="ir.ui.view">
         <field name="name">mrp.production.allow_reorder.form</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>

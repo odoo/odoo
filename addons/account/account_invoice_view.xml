@@ -54,13 +54,13 @@
                         <page string="Line">
                             <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
                             <field name="uos_id"/>
-                            <field name="quantity" select="1"/>
-                            <field name="price_unit" select="1"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
                             <field name="discount"/>
                             <field colspan="4" name="name"/>
                             <field colspan="4" name="origin" groups="base.group_extended"/>
                             <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)" groups="base.group_user"/>
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="base.group_user"/>
+                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="base.group_user,base.group_extended"/>
                             <newline/>
                             <field name="price_subtotal"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -94,11 +94,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manual Invoice Taxes">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="sequence"/>
-                    <field name="account_id" select="1" groups="base.group_user"/>
-                    <field name="manual" select="1"/>
-                    <field name="amount" select="1"/>
+                    <field name="account_id" groups="base.group_user"/>
+                    <field name="manual"/>
+                    <field name="amount"/>
                     <field name="base" readonly="0"/>
                     <separator colspan="4" string="Tax codes"/>
                     <field name="base_code_id"/>
@@ -115,7 +115,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft');black:state not in ('draft')" string="Invoice">
-                    <field name="date_invoice" select="1"/>
+                    <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="partner_id" groups="base.group_user"/>
                     <field name="name"/>
@@ -142,14 +142,15 @@
             <field name="arch" type="xml">
                 <form string="Supplier invoice">
                     <group col="6" colspan="4">
-                        <field domain="[('type', '=', 'purchase')]" name="journal_id" select="2"/>
-                        <field name="type" readonly="1" select="2"/>
-                        <field name="number" select="1" readonly="1"/>
-                        <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" select="1" context="{'default_customer': 0}"/>
+                        <field domain="[('type', '=', 'purchase')]" name="journal_id"/>
+                        <field name="number" readonly="1"/>
+                        <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)"/>
+                        <newline/>
+                        <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" context="{'default_customer': 0}"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
-
-                        <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)" select="2"/>
-                        <field name="date_invoice" select="1"/>
+                        <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
+                        <newline/>
+                        <field name="date_invoice"/>
                         <field name="period_id" groups="base.group_user"/>
                         <group colspan="2" col="1" groups="base.group_user">
                             <label align="0.0" string="(keep empty to use the current period)"/>
@@ -158,9 +159,9 @@
                     <notebook colspan="4">
                         <page string="Invoice">
                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
-                            <field name="reference_type" nolabel="1" select="2" size="0"/>
-                            <field name="reference" nolabel="1" select="1"/>
-                            <field name="date_due" select="1"/>
+                            <field name="reference_type" nolabel="1" size="0"/>
+                            <field name="reference" nolabel="1"/>
+                            <field name="date_due"/>
                             <field name="check_total" required="2"/>
                             <field colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}" name="invoice_line" nolabel="1">
                                 <tree string="Invoice lines">
@@ -195,7 +196,7 @@
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state" select="2"/>
+                                <field name="state"/>
                                 <field name="residual"/>
                                 <group col="3" colspan="4">
                                     <button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-apply"/>
@@ -206,21 +207,20 @@
                             </group>
                         </page>
                         <page string="Other Info">
-                            <field domain="[('partner_id', '=', partner_id)]" name="partner_bank" on_change="onchange_partner_bank(partner_bank)" select="2"/>
+                            <field domain="[('partner_id', '=', partner_id)]" name="partner_bank" on_change="onchange_partner_bank(partner_bank)"/>
 
                             <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" groups="base.group_multi_company"/>
-                            <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                             <newline/>
                             <field name="payment_term" widget="selection"/>
-                            <field name="name" select="2"/>
+                            <field name="name"/>
                             <newline/>
-                            <field name="origin" select="2"/>
-                            <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id"/>
+                            <field name="origin" groups="base.group_extended"/>
+                            <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id" groups="base.group_extended"/>
                             <field name="move_id"/>
                             <separator colspan="4" string="Additional Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
-                        <page string="Payments">
+                        <page string="Payments" groups="base.group_extended">
                             <field name="payment_ids" colspan="4" nolabel="1" >
                                 <tree string="Payments">
                                     <field name="date"/>
@@ -247,13 +247,16 @@
             <field name="arch" type="xml">
                 <form string="Invoice">
                     <group colspan="4" col="6">
-                        <field name="journal_id" select="2" groups="base.group_user"/>
-                        <field name="type" readonly="1" select="2"/>
-                        <field name="number" select="1"/>
-                        <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" select="1" groups="base.group_user"/>
+                        <field name="journal_id" groups="base.group_user"/>
+                        <field name="number"/>
+                        <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)"/>
+                        <newline/>
+                        <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank,company_id)" groups="base.group_user"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
-                        <field name="currency_id" domain="[('company_id','=', company_id)]" on_change="onchange_currency_id(currency_id, company_id)" select="2"/>
-                        <field name="date_invoice" select="1"/>
+                        <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
+                        <newline/>
+
+                        <field name="date_invoice"/>
                         <field name="period_id" groups="base.group_user"/>
                         <group colspan="2" col="1" groups="base.group_user">
                             <label align="0.0" string="(keep empty to use the current period)"/>
@@ -262,7 +265,7 @@
                     <notebook colspan="4">
                         <page string="Invoice">
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id" groups="base.group_user"/>
-                            <field name="name" select="2"/>
+                            <field name="name"/>
                             <field name="payment_term" widget="selection"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list"/>
                             <group col="1" colspan="2">
@@ -283,7 +286,7 @@
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state" select="2"/>
+                                <field name="state"/>
                                 <field name="residual"/>
                                 <group col="3" colspan="4" groups="base.group_user">
                                     <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="gtk-print"/>
@@ -296,14 +299,15 @@
                         </page>
                         <page string="Other Info">
                             <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection"  groups="base.group_multi_company"/>
-                            <field name="fiscal_position" groups="base.group_extended,base.group_user" widget="selection"/>
                             <newline/>
                             <field name="date_due"/>
                             <field name="user_id"/>
                             <newline/>
-                            <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank" select="2"/>
-                            <field name="origin" select="2"/>
-                            <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id"/>
+                            <field domain="[('partner_id.ref_companies', 'in', [company_id])]" name="partner_bank"
+                                groups="base.group_extended"/>
+                            <field name="origin"/>
+                            <field colspan="4" domain="[('partner_id','=',partner_id)]" name="address_contact_id"
+                                groups="base.group_extended"/>
                             <field name="move_id" groups="base.group_user"/>
                             <separator colspan="4" string="Additionnal Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
@@ -340,9 +344,7 @@
                         <separator orientation="vertical"/>
                         <field name="number"/>
                         <field name="partner_id"/>
-                        <field name="user_id">
-                            <filter string="My Invoices" icon="terp-account" domain="[('user_id','=',uid)]"/>
-                        </field>
+                        <field name="user_id" default="uid"/>
                         <field name="origin"/>
                         <field name="amount_total"/>
                     </group>
