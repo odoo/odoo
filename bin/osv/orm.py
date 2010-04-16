@@ -1998,7 +1998,21 @@ class orm(orm_template):
             create = not bool(cr.fetchone())
 
         cr.commit()     # start a new transaction
+        
+        store_fncts = self.pool._store_function.get(self._name, [])
+        #if any field is changed from function to storable, we need to remove its entry from store_function
+        remove_stores = []
+        
+        for record in store_fncts:
+            if record[0] == self._name and (self._columns.get(record[1],False) or self._inherit_fields.get(record[1],False)):
+                if (not isinstance(self._columns[record[1]],fields.function)) or (record[1] in self._inherit_fields and not isinstance(self._inherit_fields[[record[1]]][2],fields.function)):
+                    remove_stores.append(record)
 
+        for stores in remove_stores:
+            store_fncts.remove(stores)
+
+        self.pool._store_function[self._name] = store_fncts
+        
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
             cr.execute("SELECT conname FROM pg_constraint where conname=%s", (conname,))
