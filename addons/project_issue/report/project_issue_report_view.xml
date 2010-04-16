@@ -49,7 +49,11 @@
                     	<filter string="This Year" icon="terp-sale" domain="[('name','=',time.strftime('%%Y'))]"/>
            		</xpath>
             	<xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Month"]' position='replace'>
-                    	<filter string="This Month" icon="terp-sale" domain="[('month','=',time.strftime('%%m'))]"  />
+                    	<filter string="This Month" icon="terp-sale" name="This Month"
+                    	domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+						<filter icon="gtk-media-rewind" string="7 Days" separator="1"
+                            domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            help="Project isuue last 7 days"/>
             	</xpath>
             	<xpath expr='//search[@string="Search"]/group[1]/filter[@string="Done"]' position='replace'>
             	</xpath>
@@ -108,7 +112,7 @@
 				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Category"]' position='after'>
             		<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
             		<separator orientation="vertical"/>
-            		<filter string="Project" name="Project" icon="terp-sale" domain="[]" context="{'group_by':'project_id'}" />
+            		<filter string="Project"  icon="terp-sale" domain="[]" context="{'group_by':'project_id'}" />
             		<filter string="Type"  icon="terp-sale" domain="[]" context="{'group_by':'type_id'}"/>
             	</xpath>
                 </data>
@@ -120,7 +124,7 @@
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">graph,tree</field>
-  			<field name="context">{"search_default_Project":1}</field>
+  			<field name="context">{"search_default_This Month":1}</field>
             <field name="view_id" ref="view_project_issue_report_tree"/>
             <field name="search_view_id" ref="view_project_issue_report_filter"/>
         </record>
