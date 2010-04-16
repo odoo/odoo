@@ -7,17 +7,17 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Expenses Statistics">
-                <field name="date"/>
-                <field name="employee_id"/>
-                <field name="user_id"/>
+                <field name="date" invisible="1"/>
+                <field name="employee_id" invisible="1"/>
+                <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="invoice_id" invisible="1"/>
                 <field name="department_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
-                <field name="product_id"/>
-                <field name="product_qty"/>
+                <field name="product_id" invisible="1"/>
+                <field name="product_qty" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
@@ -32,8 +32,9 @@
          <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Expenses Statistics" type="bar">
-                 <field name="product_id"/>
-                 <field name="price_total"/>
+                 <field name="user_id"/>
+                 <field name="state" group="True"/>
+                 <field name="nbr" operator="+"/>
              </graph>
          </field>
     </record>
@@ -45,57 +46,62 @@
         <field name="arch" type="xml">
             <search string="Expenses">
             	<group>
-	                <filter icon="terp-hr"
-	                    	string="This Year"
-	                    	domain="[('year','=',time.strftime('%%Y'))]"
-	                    	help="Expenses of the year"/>
-	                <filter icon="terp-hr"
-		                    string="This Month"
-		                    domain="[('month','=',time.strftime('%%m'))]"
-		                    help="Expenses of this month"/>
+            		<filter icon="terp-hr" string="This Year"
+	                  	    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                   	    help="Expenses during last 7 year"/>
+	                <filter icon="terp-hr" string="This Month"
+	                   		name="month"
+	                   		domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                   		help="Expenses during last month"/>
+		            <filter icon="gtk-media-rewind"
+	                        string="    7 Days    "
+	                        separator="1"
+	                        domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                        help="Expenses during last 7 days"/>
 	                <separator orientation="vertical"/>
-	                <filter icon="terp-hr"
-		                    string="Expenses"
-		                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancelled')]"/>
-	                <separator orientation="vertical"/>
-	                <field name="product_id"/>
+	                <filter string="Draft"
+	                    	icon="terp-hr"
+	                    	domain="[('state','=','draft')]"
+	                    	help = "Draft Expenses"/>
+		            <filter string="Waiting"
+		                	icon="terp-hr"
+		                	domain="[('state', '=' ,'confirm')]"
+		                	help = "Confirm Expenses"/>
+	                <filter string="Accepted"
+	                   		icon="terp-hr"
+	                   		domain="[('state','=','accepted')]"
+	                   		help = "Accepted Expenses"/>
+	                <filter string="Invoiced"
+	                   		icon="terp-hr"
+	                   		domain="[('state','=','invoiced')]"
+	                   		help = "Invoiced Expenses"/>
+	  				<separator orientation="vertical"/>
 	                <field name="user_id" widget="selection">
-	                    <filter icon="terp-hr"
-		                        string="My Expenses"
-		                        name='User'
-		                        domain="[('user_id','=',uid)]"/>
-	                </field>
-	                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <filter icon="terp-hr"
+                        		string="My Expenses"
+                        		help = "My Expenses"
+                        		domain="[('user_id','=',uid)]" />
+                    </field>
+
 				</group>
 				<newline/>
 				<group expand="1" string="Extended options..." colspan="10" col="12">
-                	<filter icon="terp-hr"
-                    		string="Draft"
-                    		domain="[('state','=','draft')]"/>
-                    <filter icon="terp-hr"
-                    		string="Waiting confirmation"
-                    		domain="[('state','=','confirm')]"/>
-                    <filter icon="terp-hr"
-                    		string="Accepted"
-                    		domain="[('state','=','accepted')]"/>
-                    <filter icon="terp-hr"
-                    		string="Invoiced"
-                    		domain="[('state','=','invoiced')]"/>
-                    <filter icon="terp-hr"
-                    		string="Reimbursed"
-                    		domain="[('state','=','paid')]"/>
-                    <filter icon="terp-hr"
-                    		string="Cancelled"
-                    		domain="[('state','=','cancelled')]"/>
+                    <field name="employee_id" widget="selection"/>
+                    <field name="product_id" widget="selection"/>
+                    <field name="department_id" widget="selection"/>
+                    <newline/>
+                    <field name="journal_id" widget="selection"/>
+                    <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <newline/>
                     <field name="date_confirm"/>
                     <field name="date_valid"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}"/>
+                <group string="Group By...">
                     <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
                     <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
                     <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
@@ -114,7 +120,7 @@
         <field name="res_model">hr.expense.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_User':1,'search_default_user_id':uid}</field>
+        <field name="context">{'search_default_month':1,'search_default_user_id':uid}</field>
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 
