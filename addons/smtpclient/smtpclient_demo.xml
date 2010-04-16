@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data noupdate="1">
+		<record id="email_smtpclient_sendmailserver0" model="email.smtpclient">
+			<field eval="0" name="auth_type"/>
+			<field eval="&quot;&quot;&quot;SendMail Server&quot;&quot;&quot;" name="name"/>
+			<field eval="0" name="ssl"/>
+			<field eval="&quot;&quot;&quot;localhost&quot;&quot;&quot;" name="server"/>
+			<field eval="0" name="auth"/>
+			<field eval="&quot;&quot;&quot;Administrator &lt;admin@company.com&gt;&quot;&quot;&quot;" name="from_email"/>
+			<field eval="&quot;&quot;&quot;admin@company.com&quot;&quot;&quot;" name="email"/>
+			<field eval="&quot;&quot;&quot;new&quot;&quot;&quot;" name="state"/>
+			<field eval="&quot;&quot;&quot;admin&quot;&quot;&quot;" name="user"/>
+			<field eval="1" name="active"/>
+			<field eval="&quot;&quot;&quot;Verification Message. This is the code\n__code__ \nyou must copy in the OpenERP Email Server (Verify Server wizard).\nCreated by user __user__&quot;&quot;&quot;" name="verify_email"></field>
+			<field eval="&quot;&quot;&quot;default&quot;&quot;&quot;" name="type"/>
+			<field eval="25" name="port"/>
+			<field eval="[(6,0,[ref('base.user_root')])]" name="users_id"/>
+		</record>
+	</data>
+</openerp>

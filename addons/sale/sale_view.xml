@@ -261,7 +261,7 @@
                     <field name="name" select="1"/>
                     <field name="partner_id" select="1"/>
                     <field name="user_id" select="1" widget="selection">
-                        <filter icon="terp-partner" string="My Sale" domain="[('user_id','=',uid)]" help="My Sale Orders" />
+                        <filter icon="terp-partner" name="my_sale" domain="[('user_id','=',uid)]" help="My Sale Orders" />
                     </field>
                     <field name="date_order" select="1" string="Order date" />
                     <newline/>
@@ -281,7 +281,7 @@
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{"search_default_My Sale":1}</field>
+            <field name="context">{"search_default_my_sale":1}</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
@@ -448,7 +448,7 @@
                     <filter icon="terp-purchase" string="Shipped"
                         domain="[('state','=','done')]"
                         separator="1" />
-                    <filter icon="terp-purchase" string="Uninvoiced"
+                    <filter icon="terp-purchase" string="Uninvoiced" name="uninvoiced"
                         domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"
                         separator="1" />
                     <separator orientation="vertical"/>
@@ -473,7 +473,7 @@
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="context">{"search_default_Uninvoiced":1}</field>
+            <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="filter" eval="True"/>
         </record>
