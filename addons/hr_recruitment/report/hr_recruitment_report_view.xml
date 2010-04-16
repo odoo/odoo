@@ -7,17 +7,19 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Recruitments Statistics">
-                <field name="date"/>
-                <field name="user_id"/>
-                <field name="job_id"/>
-                <field name="stage_id"/>
-                <field name="department_id"/>
-                <field name="nbr"/>
-                <field name="type_id"/>
-                <field name="company_id"/>
-                <field name="state"/>
+                <field name="date" invisible="1"/>
+                <field name="user_id" invisible="1"/>
+                <field name="job_id" invisible="1"/>
+                <field name="stage_id" invisible="1"/>
+                <field name="department_id" invisible="1"/>
+                <field name="type_id" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
+                <field name="nbr"/>
+                <field name="salary_prop"/>
+                <field name="salary_exp"/>
             </tree>
         </field>
     </record>
@@ -49,58 +51,57 @@
                     string="This Month"
                     domain="[('month','=',time.strftime('%%m'))]"
                     help="Recruitments of this month"/>
+                	<filter icon="terp-hr"
+                    		string="Current"
+                    		help="Draft and in progress recruitments"
+                        domain="[('state','in',('open','draft'))]"
+                        name="inprogress"
+                        />
+                    <filter icon="terp-hr"
+                    		string="Pending"
+                    		domain="[('state','=','pending')]"/>
+                    <field name="department_id" widget="selection">
+                      <filter icon="terp-sale"
+                        string="My Recruitments "
+                        help="My Department Recruitments"
+                        domain="[('user_id','=',uid)]"/>
+                      <filter icon="terp-sale"
+                        string="Recruitments non assigned to departments"
+                        help="Recruitments non assigned to departments"
+                        domain="[('user_id','=',False)]"/>
+                    </field>
+
                 <separator orientation="vertical"/>
-                <filter string="Current" icon="terp-hr" domain="[('state','in',('open','draft'))]"/>
-                <separator orientation="vertical"/>
-                <field name="company_id" widget="selection"/>
+                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-sale"
                         string="My Recruitments"
-                        default="1"
+                        help="My Recruitments"
                         domain="[('user_id','=',uid)]"/>
+                    <filter icon="terp-sale"
+                        string="Recruitments non assigned"
+                        help="Recruitments non assigned"
+                        domain="[('user_id','=',False)]"/>
                 </field>
                 </group>
                 <newline/>
                 <group expand="1" string="Extended options..." colspan="10" col="12">
-                	<filter icon="terp-hr"
-                    		string="New"
-                    		domain="[('state','=','draft')]"/>
-                    <filter icon="terp-hr"
-                    		string="In Progress"
-                    		domain="[('state','=','open')]"/>
-                    <filter icon="terp-hr"
-                    		string="Pending"
-                    		domain="[('state','=','pending')]"/>
                     <filter icon="terp-hr"
                     		string="Hired"
+                        name="done"
                     		domain="[('state','=','done')]"/>
                     <filter icon="terp-hr"
                     		string="Refused"
                     		domain="[('state','=','cancel')]"/>
                 	<newline/>
-                    <filter icon="terp-hr"
-                    		string="Not Good"
-                    		domain="[('priority','=','5')]"/>
-                    <filter icon="terp-hr"
-                    		string="On Average"
-                    		domain="[('priority','=','4')]"/>
-                    <filter icon="terp-hr"
-                    		string="Good"
-                    		domain="[('priority','=','3')]"/>
-                    <filter icon="terp-hr"
-                    		string="Very Good"
-                    		domain="[('priority','=','2')]"/>
-                    <filter icon="terp-hr"
-                    		string="Excellent"
-                    		domain="[('priority','=','1')]"/>
-                    <newline/>
+                    <field name="priority"/>
                     <field name="date"/>
                     <field name="date_closed"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By ..." colspan="10" col="12">
+                <group string="Group By ..." colspan="10" col="12">
                    <filter string="User" icon="terp-hr" domain="[]" context="{'group_by':'user_id'}"/>
-                   <filter string="Company" icon="terp-hr" domain="[]" context="{'group_by':'company_id'}"/>
+                   <filter string="Company" icon="terp-hr" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                    <filter string="Stage" name="Stage" icon="terp-hr" domain="[]" context="{'group_by':'stage_id'}" />
                    <separator orientation="vertical"/>
                    <filter string="State" icon="terp-hr" domain="[]" context="{'group_by':'state'}"/>
@@ -121,7 +122,7 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_Stage': 1 }</field>
+        <field name="context">{'search_default_inprogress': 1 }</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
 	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root"/>

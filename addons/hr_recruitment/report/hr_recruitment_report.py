@@ -41,6 +41,8 @@ class hr_recruitment_report(osv.osv):
         'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
+        'salary_prop' : fields.float("Salary Proposed"),
+        'salary_exp' : fields.float("Salary Expected")
 
     }
     _order = 'date desc'
@@ -62,6 +64,8 @@ class hr_recruitment_report(osv.osv):
                      s.department_id,
                      s.priority,
                      s.stage_id,
+                     sum(salary_proposed) as salary_prop,
+                     sum(salary_expected) as salary_exp,
                      count(*) as nbr
                  from hr_applicant s
                  group by
