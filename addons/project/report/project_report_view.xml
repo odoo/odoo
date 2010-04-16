@@ -58,11 +58,12 @@
                             domain="[('date_start','&lt;', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                             help="Tasks during last 7 days"
                             />
+                         <separator orientation="vertical"/>
 	                	<filter string="Current" icon="terp-project" domain="['|', ('state','=','draft'),('state', '=' ,'open')]" help = "Draft and in progress tasks"/>
                     	<filter string="Pending" icon="terp-project" domain="[('state','=','pending')]"/>
-                    <separator orientation="vertical"/>
+
                     <filter string="Deadline" icon="terp-project" domain="[('date_deadline','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                    <separator orientation="vertical"/>
+  					<separator orientation="vertical"/>
                     <field name="project_id">
                         <filter icon="terp-project" string="My Task" help="My Tasks" domain="[('project_id','=',context.get('project_id', False)]"/>
                         <filter icon="terp-project" string="Non assigned Tasks" help ="Non assigned Tasks"  domain="[('project_id','=',False"/>
