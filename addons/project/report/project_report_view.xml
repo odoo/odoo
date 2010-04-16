@@ -31,6 +31,19 @@
             </field>
         </record>
 
+        <record id="view_task_project_user_tree" model="ir.ui.view">
+            <field name="name">report.project.task.user.graph</field>
+            <field name="model">report.project.task.user</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+            <graph string="Tasks" type="bar">
+                 <field name="name"/>
+                 <field name="state" group="True"/>
+                 <field name="no_of_days" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
             <field name="model">report.project.task.user</field>
@@ -39,35 +52,34 @@
                 <search string="Tasks">
                 	<group>
                     <filter icon="terp-project" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
-                    <filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
+                    <filter icon="terp-project" string="This Month" name="month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
+	                	<filter string="Current" icon="terp-project" domain="['|', ('state','=','draft'),('state', '=' ,'open')]" help = "Draft and in progress tasks"/>
+                    	<filter string="Pending" icon="terp-project" domain="[('state','=','pending')]"/>
                     <separator orientation="vertical"/>
                     <filter string="Deadline" icon="terp-project" domain="[('date_deadline','=',time.strftime('%%Y/%%m/%%d'))]"/>
                     <separator orientation="vertical"/>
-                    <field name="project_id"/>
+                    <field name="project_id">
+                        <filter icon="terp-project" string="My Task" help="My Tasks" domain="[('project_id','=',context.get('project_id', False)]"/>
+                        <filter icon="terp-project" string="Non assigned Tasks" help ="Non assigned Tasks"  domain="[('project_id','=',False"/>
+                      </field>
                     <field name="user_id" widget="selection">
-                        <filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]"/>
+                        <filter icon="terp-project" string="My Task" help = "My tasks" domain="[('user_id','=',uid)]" />
+                        <filter icon="terp-project" string="Non Assigned Task" help="Non Assigned Tasks"  domain="[('user_id','=',False)]"/>
                     </field>
                     </group>
                     <newline/>
 	                <group expand="1" string="Extended options..." colspan="10" col="12">
-	                	<filter string="Current" icon="terp-project" domain="['|', ('state','=','draft'),('state', '=' ,'open')]" help = "Draft and opened tasks"/>
-                    	<filter string="Pending" icon="terp-project" domain="[('state','=','pending')]"/>
-                    	<filter string="Done" icon="terp-project" domain="[('state','=','done')]"/>
+                    	<filter string="Done" icon="terp-project" name="done" domain="[('state','=','done')]"/>
                     	<filter string="Cancelled" icon="terp-project" domain="[('state','=','cancelled')]"/>
-                    	<separator orientation="vertical"/>
-                      <newline/>
-	                    <filter icon="terp-project" string="Very Low" domain="[('priority','=','4')]"/>
-	                    <filter icon="terp-project" string="Low" domain="[('priority','=','3')]"/>
-	                    <filter icon="terp-project" string="Medium" domain="[('priority','=','2')]"/>
-	                    <filter icon="terp-project" string="Urgent" domain="[('priority','=','1')]"/>
-	                    <filter icon="terp-project" string="Very Urgent" domain="[('priority','=','0')]"/>
-	                    <separator orientation="vertical"/>
+	                    <field name="priority"/>
+	                    <field name="type"/>
                     <newline/>
 	                    <field name="date_start"/>
 	                    <field name="date_end"/>
+                      <field name="date_deadline"/>
 	                </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="11">
+                    <group  string="Group By..." colspan="10" col="11">
                         <filter string="User" name="user_id" icon="terp-project" context="{'group_by':'user_id'}" />
                         <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}" default = "1" />
                         <filter string="Partner" icon="terp-project" context="{'group_by':'partner_id'}" />
@@ -77,7 +89,7 @@
                         <filter string="Stage" icon="terp-project" context="{'group_by':'type'}" />
                         <separator orientation="vertical"/>
                         <filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
-                        <filter string="Year" icon="terp-project" context="{'group_by':'name'}"/>
+                        <filter string="Year" icon="terp-project" context="{'group_by':'year'}"/>
                     </group>
                 </search>
             </field>
@@ -89,7 +101,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
-            <field name="context">{'search_default_user_id': 1 }</field>
+            <field name="context">{'search_default_done': 1 }</field>
 
         </record>
         <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
