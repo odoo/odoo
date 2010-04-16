@@ -16,7 +16,7 @@
                     <field name="state" invisible="1"/>
                     <field name="date_start" invisible="1"/>
                     <field name="date_end" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="year" invisible="1"/>
@@ -76,9 +76,6 @@
 	                   			icon="terp-project"
 	                   			domain="[('state','=','pending')]"
 	                   			help = "Pending tasks"/>
-	                    <!--filter string="Deadline"
-	                    		icon="terp-project"
-	                    		domain="[('date_deadline','=',time.strftime('%%Y/%%m/%%d'))]"/-->
 	  					<separator orientation="vertical"/>
 	                    <field name="project_id">
 	                        <filter icon="terp-project"
@@ -124,7 +121,7 @@
                         <filter string="Partner" icon="terp-project" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
-                        <filter string="Company" icon="terp-project" context="{'group_by':'company_id'}" />
+                        <filter string="Company" icon="terp-project" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                         <filter string="Stage" icon="terp-project" context="{'group_by':'type'}" />
                         <separator orientation="vertical"/>
                         <filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
@@ -140,7 +137,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
-            <field name="context">{'search_default_month':1,'search_default_user_id':uid}</field>
+            <field name="context">{'search_default_month':1,'search_default_user_id':uid, 'search_default_project_id':context.get('project_id', False)}</field>
 
         </record>
         <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
