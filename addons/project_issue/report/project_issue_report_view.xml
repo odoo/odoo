@@ -10,19 +10,19 @@
 				<tree string="Project Issue">
 	              	<field name="name" invisible="1"/>
 					<field name="month" invisible="1"/>
-					<field name="project_id" />
-					<field name="stage_id" />
-					<field name="type_id" string="Type"/>
-					<field name="priority" />
-					<field name="company_id" />
+					<field name="project_id" invisible="1"/>
+					<field name="stage_id" invisible="1"/>
+					<field name="type_id" string="Type" invisible="1"/>
+					<field name="priority" invisible="1"/>
+					<field name="company_id" invisible="1"/>
                 	<field name="nbr" string="#Project Issue"/>
-                    <field name="delay_close"/>
+                    <field name="delay_close" invisible="1"/>
                     <field name="section_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="stage_id" invisible="1" />
-                    <field name="categ_id" />
-                    <field name="date_closed" />
-                    <field name="state" />
+                    <field name="categ_id" invisible="1"/>
+                    <field name="date_closed" invisible="1"/>
+                    <field name="state" invisible="1"/>
                   </tree>
             </field>
         </record>
@@ -46,7 +46,7 @@
             <field name="arch" type="xml">
                <data>
                 <xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Year"]' position='replace'>
-                    	<filter string="This Year" icon="terp-sale" domain="[('name','=',time.strftime('%%Y'))]"/>
+                    	<filter string="This Year" icon="terp-sale" domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
            		</xpath>
             	<xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Month"]' position='replace'>
                     	<filter string="This Month" icon="terp-sale" name="This Month"
@@ -64,45 +64,20 @@
                	<xpath expr='//search[@string="Search"]/group[@string="Group By..."]' position='before'>
                	       <newline/>
                 		<group expand="1" string="Extended options..." colspan="10" col="12">
-                    		<filter icon="terp-sale"
-                    		string="Highest"
-                    		domain="[('priority','=','1')]"/>
-                    		<filter icon="terp-sale"
-                    		string="High"
-                    		domain="[('priority','=','2')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Normal"
-                    		domain="[('priority','=','3')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Low"
-                    		domain="[('priority','=','4')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Lowest"
-                    		domain="[('priority','=','5')]"/>
-                    		<separator orientation="vertical"/>
-                    		<field name="project_id" widget="selection"/>
-                    		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
-                    		<newline/>
-                           <filter icon="terp-sale"
-                    		string="Draft"
-                    		domain="[('state','=','draft')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Open"
-                    		domain="[('state','=','open')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Cancelled"
-                    		domain="[('state','=','cancel')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Closed"
-                    		domain="[('state','=','done')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Pending"
-                    		domain="[('state','=','pending')]"/>
-                    		<separator orientation="vertical"/>
+                  			<field name="project_id" widget="selection"/>
+                    		<field name="priority" />
                     		<field name="type_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                    		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                    		<separator orientation="vertical"/>
+                    		<field name="assigned_to" widget="selection">
+                    			<filter icon="terp-crm"  help = "Project Issue Assigned To Me" domain="[('assigned_to','=',uid)]" />
+ 						    	<filter icon="terp-crm"  help="Non Assigned Project Issue"  domain="[('assigned_to','=',False)]"/>
+                    		</field>
                     		<newline/>
-                        <field name="date_closed" string="Date Closed"/>
+                    		<field name="state" />
+                    		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                    		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
+                            <separator orientation="vertical"/>
+                            <field name="date_closed" string="Date Closed"/>
                 		</group>
                 		<newline/>
 				</xpath>
@@ -113,6 +88,7 @@
             		<filter string="Stage" icon="terp-sale" domain="[]" context="{'group_by':'stage_id'}"/>
             		<separator orientation="vertical"/>
             		<filter string="Project"  icon="terp-sale" domain="[]" context="{'group_by':'project_id'}" />
+            		<filter string="Priority"  icon="terp-sale" domain="[]" context="{'group_by':'priority'}" />
             		<filter string="Type"  icon="terp-sale" domain="[]" context="{'group_by':'type_id'}"/>
             	</xpath>
                 </data>
