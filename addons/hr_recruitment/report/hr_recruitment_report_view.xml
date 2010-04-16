@@ -39,7 +39,6 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Recruitments">
-                <group>
                 <filter icon="terp-hr"
                     string="This Year"
                     domain="[('year','=',time.strftime('%%Y'))]"
@@ -59,9 +58,8 @@
                         string="My Recruitments"
                         domain="[('user_id','=',uid)]"/>
                 </field>
-                </group>
                 <newline/>
-                <group expand="1" string="Extended options...">
+                <group expand="1" string="Extended options..." colspan="10" col="12">
                     <filter icon="terp-hr"
                     		string="Not Good"
                     		domain="[('priority','=','5')]"/>
@@ -78,9 +76,10 @@
                     		string="Excellent"
                     		domain="[('priority','=','1')]"/>
                 </group>
+
                 <newline/>
-                <group expand="1" string="Group By...">
-                   <filter string="User" icon="terp-hr" domain="[]" context="{'group_by':'user_id'}" />
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                   <filter string="User" name="by_user" icon="terp-hr" domain="[]" context="{'group_by':'user_id'}" />
                    <filter string="Company" icon="terp-hr" domain="[]" context="{'group_by':'company_id'}"/>
                    <filter string="Stage" icon="terp-hr" domain="[]" context="{'group_by':'stage_id'}"/>
                    <separator orientation="vertical"/>
@@ -101,7 +100,7 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{"search_default_User":1}</field>
+        <field name="context">{"search_default_user_id":1,"search_default_by_user":1}</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
 	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root"/>

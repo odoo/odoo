@@ -18,27 +18,23 @@
 #
 ##############################################################################
 {
-    "name" : "Purchase - Purchase Tender",
+    "name" : "Purchase - Purchase Requisition",
     "version" : "0.1",
     "author" : "Tiny",
     "category" : "Generic Modules/Sales & Purchases",
     "website" : "http://www.openerp.com",
     "description": """
-    This module allows you to manage your Purchase Tenders.
-    When a purchase order is created, you now have the opportunity to save the related tender.
+    This module allows you to manage your Purchase Requisition.
+    When a purchase order is created, you now have the opportunity to save the related requisition.
     This new object will regroup and will allow you to easily keep track and order all your purchase orders.
 """,
     "depends" : ["purchase","mrp"],
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : [
-                    "wizard//purchase_tender_partner.xml",
-                    "purchase_tender_view.xml",
-                    "security/purchase_tender.xml",   
-                    "security/ir.model.access.csv",
-                    "purchase_tender_sequence.xml",
-                   
-                    ],
+    "update_xml" : [ "wizard//purchase_tender_partner.xml",
+                    "purchase_requisition_view.xml",
+                    "security/ir.model.access.csv","purchase_requisition_sequence.xml"],
+
     "active": False,
     "installable": True
 }

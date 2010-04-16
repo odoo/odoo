@@ -17,7 +17,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import purchase_tender
-import wizard
+
+from osv import fields,osv
+
+class EmailAddress(osv.osv):
+    _name = "res.company.address"
+    _columns = {
+        'company_id' : fields.many2one('res.company', 'Company' , required=True),
+        'email': fields.many2one('email.smtpclient', 'Email Address',  required=True),
+        'name' : fields.selection([("default", "Default"),("invoice", "Invoice"),("sale","Sale"),("delivery","Delivery")], "Address Type",required=True)
+    }
+EmailAddress()
+
+class Company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'addresses': fields.one2many('res.company.address', 'company_id', 'Email Addresses'),
+    }
+Company()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

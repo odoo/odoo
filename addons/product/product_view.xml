@@ -84,7 +84,7 @@
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
-                                <separator string="    Requisition" colspan="2"/>
+                                <separator string="Procurement" colspan="2"/>
                                 <field name="type" select="2"/>
                                 <field name="procure_method"/>
                                 <field name="supply_method"/>
@@ -118,7 +118,7 @@
                             </group>
 
                         </page>
-                        <page string="Requisition &amp; Locations">
+                        <page string="Procurement &amp; Locations">
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
@@ -144,8 +144,8 @@
                             <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                             <field name="list_price"/>
                             <newline/>
-                            <field name="price_margin" select="1"/>
-                            <field name="price_extra" select="1"/>
+                            <field name="price_margin" groups="base.group_extended"/>
+                            <field name="price_extra" groups="base.group_extended"/>
                             <newline/>
                             <field groups="base.group_extended" name="cost_method"/>
                             <newline/>
@@ -428,8 +428,8 @@
                 <form string="Supplier Information">
                     <field name="name"/>
                     <field name="sequence"/>
-                    <field name="product_name"/>
-                    <field name="product_code"/>
+                    <field name="product_name" groups="base.group_extended"/>
+                    <field name="product_code" groups="base.group_extended"/>
                     <field name="delay"/>
                     <field name="qty"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -456,7 +456,6 @@
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="qty"/>
-                    <field name="product_code"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
@@ -528,7 +527,7 @@
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
-                                <separator string="Requisition" colspan="2"/>
+                                <separator string="Procurement" colspan="2"/>
                                 <field name="type" select="2"/>
                                 <field name="procure_method"/>
                                 <field name="supply_method"/>
@@ -562,7 +561,7 @@
                             </group>
 
                         </page>
-                        <page string="Requisition &amp; Locations">
+                        <page string="Procurement &amp; Locations" groups="base.group_extended">
                             <group colspan="2" col="2" name="delay">
                                 <separator string="Delays" colspan="2"/>
                                 <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
@@ -575,7 +574,6 @@
                                 <field name="loc_row"/>
                                 <field name="loc_case"/>
                             </group>
-
                             <group colspan="2" col="2" name="misc">
                                 <separator string="Miscelleanous" colspan="2"/>
                             </group>

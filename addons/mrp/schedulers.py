@@ -115,7 +115,7 @@ class mrp_procurement(osv.osv):
     '''% (start_date, end_date, report_total, report_except, report_later)
             summary += '\n'.join(report)
             request.create(cr, uid,
-                {'name': "Requisition calculation report.",
+                {'name': "Procurement calculation report.",
                     'act_from': uid,
                     'act_to': uid,
                     'body': summary,

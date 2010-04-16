@@ -1,0 +1,505 @@
+# Translation of OpenERP Server.
+# This file containt the translation of the following modules:
+#	* smtpclient
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.0-rc1\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2008-11-30 15:52:27+0000\n"
+"PO-Revision-Date: 2008-11-30 17:41+0100\n"
+"Last-Translator: Jordi Esteve <jesteve@zikzakmedia.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "__number__ for Invoice / Sales Number"
+msgstr "__number__ para número de Factura / Pedido venta"
+
+#. module: smtpclient
+#: field:email.smtpclient,ssl:0
+msgid "Use SSL?"
+msgstr "Utilizar SSL"
+
+#. module: smtpclient
+#: model:ir.actions.wizard,name:smtpclient.wizard_email_verifycode
+msgid "Verify Server"
+msgstr "Verificar servidor"
+
+#. module: smtpclient
+#: wizard_view:email.sendcode,init:0
+#: wizard_button:email.sendcode,init,send:0
+msgid "Send Code"
+msgstr "Enviar código"
+
+#. module: smtpclient
+#: wizard_view:email.testemail,init:0
+msgid "Test Email"
+msgstr "Email de prueba"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "Message Error!"
+msgstr "¡Mensaje de error!"
+
+#. module: smtpclient
+#: field:email.smtpclient,test_email:0
+#: view:email.smtpclient:0
+msgid "Test Message"
+msgstr "Mensaje de prueba"
+
+#. module: smtpclient
+#: wizard_button:email.testemail,init,send:0
+msgid "Send Email"
+msgstr "Enviar Email"
+
+#. module: smtpclient
+#: field:email.smtpclient,server:0
+#: model:ir.ui.menu,name:smtpclient.menu_smtpclient_administration_smtp_server
+#: view:email.smtpclient:0
+msgid "SMTP Server"
+msgstr "Servidor SMTP"
+
+#. module: smtpclient
+#: code:addons/smtpclient/wizard/verifycode.py:0
+#, python-format
+msgid "Server already verified!"
+msgstr "¡El servidor ya está verificado!"
+
+#. module: smtpclient
+#: code:addons/smtpclient/wizard/sendcode.py:0
+#: code:addons/smtpclient/wizard/testemail.py:0
+#, python-format
+msgid "Verification Failed. Please check the Server Configuration!"
+msgstr "Ha fallado la verificación. ¡Compruebe la configuración del servidor!"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "Please verify Email Server, without verification you can not send Email(s)."
+msgstr "Por favor, verifique el servidor de correo electrónico, sin verificarlo no puede enviar Email(s)."
+
+#. module: smtpclient
+#: field:email.smtpclient,type:0
+msgid "Server Type"
+msgstr "Tipo de servidor"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "The Email is sent successfully to corresponding address"
+msgstr "El correo ha sido enviado correctamente a la dirección correspondiente"
+
+#. module: smtpclient
+#: selection:email.smtpclient,type:0
+msgid "Account"
+msgstr "Contabilidad"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "User Information"
+msgstr "Información del usuario"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "OpenERP SMTP server Email Registration Code!"
+msgstr "¡Código de registro por Email del servidor SMTP de OpenERP!"
+
+#. module: smtpclient
+#: model:ir.model,name:smtpclient.model_report_smtp_server
+#: view:report.smtp.server:0
+msgid "Server Statistics"
+msgstr "Estadísticas del servidor"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "Verification Message"
+msgstr "Mensaje de verificación"
+
+#. module: smtpclient
+#: selection:email.smtpclient,type:0
+#: selection:res.company.address,name:0
+msgid "Sale"
+msgstr "Ventas"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "Access Permission"
+msgstr "Permiso de acceso"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "Please configure Email Server Messages [Verification / Test]"
+msgstr "Por favor, configure el servidor de mensajes por Email [Verificación / Prueba]"
+
+#. module: smtpclient
+#: code:addons/smtpclient/wizard/verifycode.py:0
+#, python-format
+msgid "Verification failed. Invalid Verification Code!"
+msgstr "Ha fallado la verificación. ¡Código de verificación inválido!"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+#: view:email.smtpclient.history:0
+msgid "Server History"
+msgstr "Historial servidor"
+
+#. module: smtpclient
+#: field:report.smtp.server,server_id:0
+msgid "Server ID"
+msgstr "ID servidor"
+
+#. module: smtpclient
+#: field:report.smtp.server,no:0
+msgid "Total No."
+msgstr "Núm. total"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "__user__ for User Name"
+msgstr "__user__ para nombre de usuario"
+
+#. module: smtpclient
+#: field:email.smtpclient,date_create:0
+msgid "Date Create"
+msgstr "Fecha creación"
+
+#. module: smtpclient
+#: field:email.smtpclient,active:0
+msgid "Active"
+msgstr "Activo"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "Unable to read Server Settings"
+msgstr "No es posible leer la configuración del servidor"
+
+#. module: smtpclient
+#: field:email.smtpclient,server_statistics:0
+#: view:email.smtpclient:0
+msgid "Statistics"
+msgstr "Estadísticas"
+
+#. module: smtpclient
+#: field:email.smtpclient.history,server_id:0
+msgid "Smtp Server"
+msgstr "Servidor SMTP"
+
+#. module: smtpclient
+#: field:res.company,addresses:0
+msgid "Email Addresses"
+msgstr "Dirección de Email"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "You have no permission to access SMTP Server : %s "
+msgstr "No tiene permiso para acceder al servidor SMTP: %s "
+
+#. module: smtpclient
+#: selection:email.smtpclient,state:0
+msgid "Not Verified"
+msgstr "No verificado"
+
+#. module: smtpclient
+#: field:email.smtpclient.history,email:0
+msgid "Email"
+msgstr "Email"
+
+#. module: smtpclient
+#: field:email.smtpclient.history,user_id:0
+msgid "Username"
+msgstr "Nombre usuario"
+
+#. module: smtpclient
+#: model:ir.actions.wizard,name:smtpclient.wizard_email_sendcode
+msgid "Send Verification Code"
+msgstr "Enviar código de verificación"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "Permission"
+msgstr "Permiso"
+
+#. module: smtpclient
+#: model:ir.ui.menu,name:smtpclient.menu_smtpclient_administration_cofiguration
+#: view:email.smtpclient:0
+msgid "Configuration"
+msgstr "Configuración"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "Read Error!"
+msgstr "¡Error de lectura!"
+
+#. module: smtpclient
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "¡XML inválido para la definición de la vista!"
+
+#. module: smtpclient
+#: model:ir.model,name:smtpclient.model_email_smtpclient
+msgid "Email Client"
+msgstr "Cliente Email"
+
+#. module: smtpclient
+#: help:email.smtpclient,body:0
+msgid "The message text that will be send along with the email which is send through this server"
+msgstr "El texto del mensaje que será enviado junto con el Email que es enviado mediante este servidor"
+
+#. module: smtpclient
+#: field:report.smtp.server,name:0
+msgid "Server"
+msgstr "Servidor"
+
+#. module: smtpclient
+#: wizard_view:email.verifycode,init:0
+#: wizard_button:email.verifycode,init,check:0
+msgid "Verify Code"
+msgstr "Verificar código"
+
+#. module: smtpclient
+#: model:ir.ui.menu,name:smtpclient.menu_smtpclient_administration_server
+msgid "Servers"
+msgstr "Servidores"
+
+#. module: smtpclient
+#: model:ir.model,name:smtpclient.model_email_smtpclient_history
+msgid "Email Client History"
+msgstr "Historial del cliente de Email"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "OpenERP Test Email!"
+msgstr "¡Email de prueba de OpenERP!"
+
+#. module: smtpclient
+#: field:email.smtpclient,body:0
+#: view:email.smtpclient:0
+msgid "Message"
+msgstr "Mensaje"
+
+#. module: smtpclient
+#: field:res.company.address,company_id:0
+msgid "Company"
+msgstr "Compañía"
+
+#. module: smtpclient
+#: selection:email.smtpclient,state:0
+msgid "Verified"
+msgstr "Verificado"
+
+#. module: smtpclient
+#: field:email.smtpclient,name:0
+msgid "Server Name"
+msgstr "Nombre servidor"
+
+#. module: smtpclient
+#: field:email.smtpclient,port:0
+msgid "SMTP Port"
+msgstr "Puerto SMTP"
+
+#. module: smtpclient
+#: field:email.smtpclient,state:0
+msgid "Server Status"
+msgstr "Estado servidor"
+
+#. module: smtpclient
+#: field:email.smtpclient,verify_email:0
+msgid "Verify Message"
+msgstr "Verificar mensaje"
+
+#. module: smtpclient
+#: model:ir.actions.wizard,name:smtpclient.wizard_email_testemail
+msgid "Send Test Email"
+msgstr "Enviar Email de prueba"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "__code__ for Verification Code"
+msgstr "__code__ para código de verificación"
+
+#. module: smtpclient
+#: field:email.smtpclient,user:0
+msgid "User Name"
+msgstr "Nombre usuario"
+
+#. module: smtpclient
+#: field:email.smtpclient.history,date_create:0
+msgid "Date"
+msgstr "Fecha"
+
+#. module: smtpclient
+#: selection:email.smtpclient,type:0
+#: selection:res.company.address,name:0
+msgid "Default"
+msgstr "Por defecto"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "Permission Error!"
+msgstr "¡Error de los permisos!"
+
+#. module: smtpclient
+#: code:addons/smtpclient/wizard/sendcode.py:0
+#: code:addons/smtpclient/wizard/testemail.py:0
+#: code:addons/smtpclient/wizard/verifycode.py:0
+#, python-format
+msgid "Error"
+msgstr "Error"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "Server Error!"
+msgstr "¡Error del servidor!"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "SMTP Server Error!"
+msgstr "¡Error del servidor SMTP!"
+
+#. module: smtpclient
+#: field:email.smtpclient,history_line:0
+#: field:report.smtp.server,history:0
+#: view:email.smtpclient:0
+msgid "History"
+msgstr "Historial"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "Verification Message. This is the code\n\n__code__\n\nyou must copy in the OpenERP Email Server (Verify Server wizard).\n\nCreated by user __user__"
+msgstr "Mensaje de verificación. Éste es el código\n\n__code__\n\nque deberá copiar en el servidor de Email de OpenERP (asistente Verificar servidor).\n\nCreado por el usuario __user__"
+
+#. module: smtpclient
+#: selection:res.company.address,name:0
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "Server Information"
+msgstr "Información del servidor"
+
+#. module: smtpclient
+#: wizard_button:email.sendcode,init,end:0
+#: wizard_button:email.testemail,init,end:0
+#: wizard_button:email.verifycode,init,end:0
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: smtpclient
+#: field:email.smtpclient.history,resource_id:0
+msgid "Resource ID"
+msgstr "ID del registro"
+
+#. module: smtpclient
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter especial!"
+
+#. module: smtpclient
+#: field:email.smtpclient,from:0
+msgid "Email From"
+msgstr "Remitente Email"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "Verification Information"
+msgstr "Información de verificación"
+
+#. module: smtpclient
+#: selection:email.smtpclient,type:0
+msgid "Stock"
+msgstr "Stock"
+
+#. module: smtpclient
+#: field:email.smtpclient.history,name:0
+msgid "Description"
+msgstr "Descripción"
+
+#. module: smtpclient
+#: wizard_field:email.verifycode,init,code:0
+#: field:email.smtpclient,code:0
+msgid "Verification Code"
+msgstr "Código de verificación"
+
+#. module: smtpclient
+#: selection:res.company.address,name:0
+msgid "Delivery"
+msgstr "Envío"
+
+#. module: smtpclient
+#: selection:email.smtpclient,state:0
+msgid "Waiting for Verification"
+msgstr "Esperando verificación"
+
+#. module: smtpclient
+#: field:email.smtpclient,password:0
+msgid "Password"
+msgstr "Contraseña"
+
+#. module: smtpclient
+#: field:email.smtpclient,users_id:0
+msgid "Users Allowed"
+msgstr "Usuarios permitidos"
+
+#. module: smtpclient
+#: wizard_field:email.sendcode,init,emailto:0
+#: wizard_field:email.testemail,init,emailto:0
+#: field:email.smtpclient,email:0
+#: field:res.company.address,email:0
+#: view:res.company:0
+msgid "Email Address"
+msgstr "Dirección de correo"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: smtpclient
+#: field:res.company.address,name:0
+msgid "Address Type"
+msgstr "Tipo de dirección"
+
+#. module: smtpclient
+#: field:email.smtpclient.history,model:0
+#: field:report.smtp.server,model:0
+msgid "Model"
+msgstr "Modelo"
+
+#. module: smtpclient
+#: model:ir.actions.act_window,name:smtpclient.action_email_smtpclient_tree
+msgid "Email Server"
+msgstr "Servidor Email"
+
+#. module: smtpclient
+#: code:addons/smtpclient/smtpclient.py:0
+#, python-format
+msgid "Report name and Resources ids are required!"
+msgstr "¡Nombre de informe y ids de registros son necesarios!"
+
+#. module: smtpclient
+#: view:email.smtpclient:0
+msgid "__name__ for Customer Name"
+msgstr "__name__ para nombre de cliente"
+
+#. module: smtpclient
+#: model:ir.model,name:smtpclient.model_res_company_address
+msgid "res.company.address"
+msgstr "res.company.address"
+

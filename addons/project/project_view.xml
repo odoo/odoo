@@ -110,11 +110,11 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                    <group col='15' colspan='4'>
-                       <filter icon="terp-project" string="Current" domain="[('state', 'in',('open','draft'))]" help="Open and Draft Projects"/>
+                       <filter icon="terp-project" string="Current" domain="[('state', 'in',('open','draft'))]" help="Open and Draft Projects" name="open"/>
                        <filter icon="terp-project" string="Pending" domain="[('state', '=', 'pending')]" help="Pending Projects"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-project" string="Manager" domain="[('user_id', '=', uid)]" help="Projects in which I am a manager."/>
-                       <filter icon="terp-project" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member."/>
+                       <filter icon="terp-project" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member." name="member"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-project" string="Templates" domain="[('state','=','template')]" help="Template Projects"/>
                        <separator orientation="vertical"/>
@@ -152,7 +152,7 @@
             <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_project"/>
-            <field name="context">{"search_default_Current":1,"search_default_Member":1}</field>
+            <field name="context">{"search_default_open":1,"search_default_member":1}</field>
             <field name="search_view_id" ref="view_project_project_filter"/>
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
@@ -403,7 +403,7 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Tasks" icon="terp-project"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Tasks" icon="terp-project" name="current"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Tasks" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-project"/>
                         <separator orientation="vertical"/>
@@ -414,7 +414,7 @@
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
                         </field>
                         <field name="user_id" select="1" widget="selection">
-                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" string="My Task"/>
+                            <filter domain="[('user_id','=',uid)]" help="My Tasks" icon="gtk-execute" name="my_task"/>
                             <filter domain="[('user_id','=',False)]" help="Unassigned Tasks" icon="gtk-execute" separator="1"/>
                         </field>
                     </group>
@@ -440,7 +440,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_Current":1,"search_default_My Task":1}</field>
+            <field name="context">{"search_default_current":1,"search_default_my_task":1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="2"/>
@@ -607,7 +607,7 @@
                        <field name="subject"/>
                        <field name="project_id" select="1" widget="selection"/>
                        <field name="user_id" select="1" widget="selection">
-                           <filter domain="[('user_id','=',uid)]" help="My Message" icon="gtk-execute" string="My Msg"/>
+                           <filter domain="[('user_id','=',uid)]" help="My Message" icon="gtk-execute" name="my_msg"/>
                        </field>
                    </group>
                    <newline/>
@@ -626,7 +626,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_project_message_tree"/>
-            <field name="context">{"search_default_My Msg":1}</field>
+            <field name="context">{"search_default_my_msg":1}</field>        
             <field name="search_view_id" ref="view_project_message_search"/>
        </record>
 
