@@ -31,7 +31,7 @@
             </field>
         </record>
 
-        <record id="view_task_project_user_tree" model="ir.ui.view">
+        <record id="view_task_project_user_graph" model="ir.ui.view">
             <field name="name">report.project.task.user.graph</field>
             <field name="model">report.project.task.user</field>
             <field name="type">graph</field>
@@ -53,6 +53,11 @@
                 	<group>
                     <filter icon="terp-project" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
                     <filter icon="terp-project" string="This Month" name="month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
+	                	 <filter icon="gtk-media-rewind"
+                            string="    7 Days    " separator="1"
+                            domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            help="Tasks during last 7 days"
+                            />
 	                	<filter string="Current" icon="terp-project" domain="['|', ('state','=','draft'),('state', '=' ,'open')]" help = "Draft and in progress tasks"/>
                     	<filter string="Pending" icon="terp-project" domain="[('state','=','pending')]"/>
                     <separator orientation="vertical"/>
