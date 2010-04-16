@@ -57,8 +57,8 @@
                             <field name="quantity" select="1"/>
                             <field name="price_unit" select="1"/>
                             <field name="discount"/>
-                            <field colspan="4" name="name" select="1"/>
-                            <field colspan="4" name="origin" select="1"/>
+                            <field colspan="4" name="name"/>
+                            <field colspan="4" name="origin" groups="base.group_extended"/>
                             <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)" groups="base.group_user"/>
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id" groups="base.group_user"/>
                             <newline/>
