@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,8 +18,33 @@
 #
 ##############################################################################
 
-import wizard_fetch_mail
-
-
+{
+    "name" : "Email Client",
+    "version" : "1.0",
+    "depends" : ["base"],
+    "author" : "Tiny/Axelor",
+    "description": """Email Client module that provides:
+    Sending Email
+    Use Multiple Server
+    Multi Threading
+    Multi Attachment
+    """,
+    "website" : "http://www.openerp.com",
+    "category" : "Generic Modules",
+    "init_xml" : [
+    ],
+    "demo_xml" : [
+        "smtpclient_demo.xml"
+    ],
+    "update_xml" : [
+        "smtpclient_view.xml",
+        "serveraction_view.xml",
+        "smtpclient_wizard.xml",
+        "security/ir.model.access.csv",
+        "smtpclient_data.xml",
+    ],
+    "active": False,
+    "installable": True
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
