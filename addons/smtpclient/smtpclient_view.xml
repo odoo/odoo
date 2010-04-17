@@ -81,31 +81,30 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Configuration">
-                            <separator string="Server Information"
-                                colspan="4" />
-                            <field name="auth_type" on_change="change_servertype(auth_type)"/>
-                            <field name="server" select="2" />
-                            <field name="ssl" select="2" />
-                            <field name="port" select="2" />
+                            <group col="2" colspan="2">
+                                <separator string="Server Configuration" colspan="2" />
+                                <field name="auth_type" on_change="change_servertype(auth_type)"/>
+                                <field name="server" select="2" />
+                                <field name="port" select="2" />
+                                <field name="ssl" select="2" />
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="User Configuration" colspan="2" />
+                                <field name="email" select="1" on_change="change_email(email)"/>
+                                <field name="from_email" select="1"/>
+                                <field name="auth" select="2"/>
+                                <field name="user" select="1" attrs="{'required': [('auth_type','in',['gmail','yahoo'])]}"/>
+                                <field name="password" password="True" attrs="{'required': [('auth_type','in',['gmail','yahoo'])]}"/>
+                            </group>
                             
-                            <separator string="User Information"
-                                colspan="4" />
-                            <field name="email" select="1"
-                                on_change="change_email(email)"/>
-                            <field name="from_email" select="1"/>
-                            <field name="auth" select="2"/>
+                            <group col="2" colspan="2">
+                                <separator string="Message Queue Configuration" colspan="2" />
+                                <field name="type" select="1" />
+                                <field name="active" select="2" />
+                                <field name="delete_queue" select="2" />
+                                <field name="delete_queue_period" select="2" attrs="{'readonly':[('delete_queue','not in',['content','all'])]}"/>
+                            </group>
                             <newline/>
-                            <field name="user" select="1" attrs="{'required': [('auth_type','in',['gmail','yahoo'])]}"/>
-                            <field name="password" password="True" attrs="{'required': [('auth_type','in',['gmail','yahoo'])]}"/>
-                            <newline />
-                    
-                            <separator string="Other Information"
-                                colspan="4" />
-                            <field name="type" select="1" />
-                            <field name="active" select="2" />
-                            <field name="delete_queue" select="2" />
-                            <field name="delete_queue_period" select="2" attrs="{'readonly':[('delete_queue','not in',['content','all'])]}"/>
-                            
                             <separator string="Server Information" colspan="4"/>
                             <group col="3" colspan="4">
                                 <field name="state" select="1"/>
@@ -135,11 +134,6 @@
                             <label string="__code__ for Verification Code" />
                             <separator string="Test Message" colspan="4" />
                             <field name="test_email" select="2" colspan="4" nolabel="1" />
-                            <separator string="Message" colspan="4" />
-                            <field name="body" select="2" colspan="4" nolabel="1" />
-                            <label string="__name__ for Customer Name" />
-                            <label string="__number__ for Invoice / Sales Number" />
-                            <label string="__user__ for User Name" />
                         </page>
                         <page string="Disclaimers">
                             <separator string="Disclaimers Message" colspan="4" />
