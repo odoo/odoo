@@ -1955,9 +1955,6 @@ class orm(orm_template):
                             * if user tries to bypass access rules for read on the requested object
 
         """
-        groupby_list = groupby
-        if isinstance(groupby, list):
-            groupby = groupby[0]
         context = context or {}
         self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
         if not fields:
@@ -1972,7 +1969,13 @@ class orm(orm_template):
                 tables.append(t)
 
         # Take care of adding join(s) if groupby is an '_inherits'ed field
-        tables, where_clause = self._inherits_join_calc(groupby,tables,where_clause)
+        groupby_list = groupby
+        if groupby:
+            if groupby and isinstance(groupby, list):
+                groupby = groupby[0]
+            tables, where_clause = self._inherits_join_calc(groupby,tables,where_clause)
+        else:
+            where_clause = ''
 
         if len(where_clause):
             where_clause = ' where '+string.join(where_clause, ' and ')
@@ -1985,12 +1988,15 @@ class orm(orm_template):
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float','integer'), fields)
         sum = {}
 
+        flist = ''
         group_by = groupby
-        if fget.get(groupby,False) and fget[groupby]['type'] in ('date','datetime'):
-            flist = "to_char(%s,'yyyy-mm') as %s "%(groupby,groupby)
-            groupby = "to_char(%s,'yyyy-mm')"%(groupby)
-        else:
-            flist = groupby
+        if groupby:
+            if fget.get(groupby,False) and fget[groupby]['type'] in ('date','datetime'):
+                flist = "to_char(%s,'yyyy-mm') as %s "%(groupby,groupby)
+                groupby = "to_char(%s,'yyyy-mm')"%(groupby)
+            else:
+                flist = groupby
+
 
         fields_pre = [f for f in float_int_fields if
                    f == self.CONCURRENCY_CHECK_FIELD
@@ -1998,9 +2004,15 @@ class orm(orm_template):
         for f in fields_pre:
             if f not in ['id','sequence']:
                 operator = fget[f].get('group_operator','sum')
-                flist += ','+operator+'('+f+') as '+f
+                if flist:
+                    flist += ','
+                flist += operator+'('+f+') as '+f
 
-        cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + ' group by '+ groupby + limit_str + offset_str, where_params)
+        if groupby:
+            gb = ' group by '+groupby
+        else:
+            gb = ''
+        cr.execute('select min(%s.id) as id,' % self._table + flist + ' from ' + ','.join(tables) + where_clause + gb + limit_str + offset_str, where_params)
         alldata = {}
         groupby = group_by
         for r in cr.dictfetchall():
@@ -2008,14 +2020,15 @@ class orm(orm_template):
                 if val == None:r[fld] = False
             alldata[r['id']] = r
             del r['id']
-        data = self.read(cr, uid, alldata.keys(), [groupby], context=context)
+        data = self.read(cr, uid, alldata.keys(), groupby and [groupby] or [], context=context)
         today = datetime.date.today()
-
         for d in data:
-            d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
-            if not isinstance(groupby_list,(str, unicode)):
-                d['__context'] = {'group_by':groupby_list[1:]}
-            if fget.has_key(groupby):
+            if groupby:
+                d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
+                if not isinstance(groupby_list,(str, unicode)):
+                    if not context.get('group_by_no_leaf', False):
+                        d['__context'] = {'group_by':groupby_list[1:]}
+            if groupby and fget.has_key(groupby):
                 if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
                    dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7],'%Y-%m')
                    days = calendar.monthrange(dt.year, dt.month)[1]
@@ -2026,7 +2039,7 @@ class orm(orm_template):
                 elif fget[groupby]['type'] == 'many2one':
                     d[groupby] = d[groupby] and ((type(d[groupby])==type(1)) and d[groupby] or d[groupby][1])  or ''
 
-            del alldata[d['id']][groupby]
+                del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
         return data
@@ -2638,24 +2651,29 @@ class orm(orm_template):
             select = ids
         select = map(lambda x: isinstance(x,dict) and x['id'] or x, select)
         result = self._read_flat(cr, user, select, fields, context, load)
+
         for r in result:
             for key, v in r.items():
-                if v == None:
-                    r[key] = False
-                if key in self._columns.keys():
-                    type = self._columns[key]._type
-                elif key in self._inherit_fields.keys():
-                    type = self._inherit_fields[key][2]._type
+                if key in self._columns:
+                    column = self._columns[key]
+                elif key in self._inherit_fields:
+                    column = self._inherit_fields[key][2]
                 else:
                     continue
-                if type == 'reference' and v:
-                    model,ref_id = v.split(',')
-                    table = self.pool.get(model)._table
-                    cr.execute('select id from "%s" where id=%s' % (table,ref_id))
-                    id_exist = cr.fetchone()
-                    if not id_exist:
-                        cr.execute('update "'+self._table+'" set "'+key+'"=NULL where "%s"=%s' %(key,''.join("'"+str(v)+"'")))
-                        r[key] = ''
+                if v and column._type == 'reference':
+                    model_name, ref_id = v.split(',', 1)
+                    model = self.pool.get(model_name)
+                    if not model:
+                        reset = True
+                    else:
+                        cr.execute('SELECT count(1) FROM "%s" WHERE id=%%s' % (model._table,), (ref_id,))
+                        reset = not cr.fetchone()[0]
+                    if reset:
+                        if column._classic_write:
+                            query = 'UPDATE "%s" SET "%s"=NULL WHERE id=%%s' % (self._table, key)
+                            cr.execute(query, (r['id'],))
+                        r[key] = False
+
         if isinstance(ids, (int, long, dict)):
             return result and result[0] or False
         return result
@@ -2719,7 +2737,7 @@ class orm(orm_template):
 
         for table in self._inherits:
             col = self._inherits[table]
-            cols = intersect(self._inherit_fields.keys(), fields_to_read)
+            cols = intersect(self._inherit_fields.keys(), set(fields_to_read) - set(self._columns.keys()))
             if not cols:
                 continue
             res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)

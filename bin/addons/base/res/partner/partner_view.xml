@@ -267,7 +267,7 @@
                         <group colspan="5" col="6">
                             <field name="name" select="1"/>
                             <field name="ref"/>
-                            <field domain="[('domain', '=', 'partner')]" name="title"/>
+                            <field domain="[('domain', '=', 'partner')]" name="title" groups="base.group_extended"/>
                             <field name="lang"/>
                         </group>
                         <group colspan="1" col="2">
@@ -321,7 +321,7 @@
                             <field name="active"/>
                             <field name="website" widget="url"/>
                             <field name="date"/>
-                            <field name="parent_id"/>
+                            <field name="parent_id" groups="base.group_extended"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <newline/>
                         </page>
@@ -588,7 +588,8 @@
             <field name="view_id" ref="view_partner_category_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_address_book" sequence="1"/>
+        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_address_book" sequence="1"
+            groups="base.group_extended"/>
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
             <field name="name">Partner Categories</field>
