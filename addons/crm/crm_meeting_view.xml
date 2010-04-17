@@ -14,7 +14,7 @@
     </record>
 
     <menuitem action="crm_meeting_categ_action"
-    	id="menu_crm_case_meeting-act" parent="crm.menu_crm_case_categ" />
+        id="menu_crm_case_meeting-act" parent="crm.menu_crm_case_categ" />
 
 <!-- CRM Meetings Form View -->
 
@@ -28,26 +28,26 @@
                     <field name="name" select="1" string="Summary"
                         colspan="4" />
                     <field name="categ_id" widget="selection"
-                    	string="Meeting Type"
-                    	domain="[('object_id.model', '=', 'crm.meeting')]" />
+                        string="Meeting Type"
+                        domain="[('object_id.model', '=', 'crm.meeting')]" />
                     <field name="date" string="Start Date" required="1"
-                    	on_change="onchange_dates(date,duration,False)" />
+                        on_change="onchange_dates(date,duration,False)" />
                     <field name="duration" widget="float_time"
-                    	on_change="onchange_dates(date,duration,False)" />
+                        on_change="onchange_dates(date,duration,False)" />
                     <field name="date_deadline" string="End Date"
-                    	required="1"
-                    	on_change="onchange_dates(date,False,date_deadline)" />
+                        required="1"
+                        on_change="onchange_dates(date,False,date_deadline)" />
                     <field name="location" />
                     <field name="alarm_id" string="Reminder"
-                    	widget="selection" />
+                        widget="selection" />
                     <group colspan="2" col="4" >
                            <field name="rrule_type" string="Recurrency"
                                 colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
                            <button string="Edit All"
-                           	help="Edit all Ourrences of recurrent Meeting"
-                           	attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
-                           	name="open_meeting" icon="gtk-edit"
-                           	type="object" />
+                               help="Edit all Ourrences of recurrent Meeting"
+                               attrs="{'invisible':[('rrule_type','in', ('none', False))]}"
+                               name="open_meeting" icon="gtk-edit"
+                               type="object" />
                     </group>
                 </group>
                 <group col="4" colspan="4" name="rrule" attrs="{'invisible': [('rrule_type','!=','custom')]}">
@@ -157,27 +157,27 @@
                                         <group col="6" colspan="4">
                                             <field name="state" select="2" />
                                             <button name="do_tentative"
-                                            	states="needs-action,declined,accepted"
-                                            	string="Uncertain"
-                                            	type="object"
-                                            	icon="terp-crm" />
+                                                states="needs-action,declined,accepted"
+                                                string="Uncertain"
+                                                type="object"
+                                                icon="terp-crm" />
                                             <button name="do_accept"
-                                            	string="Accept"
-                                            	states="needs-action,tentative,declined"
-                                            	type="object"
-                                            	icon="gtk-apply" />
+                                                string="Accept"
+                                                states="needs-action,tentative,declined"
+                                                type="object"
+                                                icon="gtk-apply" />
                                             <button name="do_decline"
-                                            	string="Decline"
-                                            	states="needs-action,tentative,accepted"
-                                            	type="object"
-                                            	icon="gtk-cancel" />
+                                                string="Decline"
+                                                states="needs-action,tentative,accepted"
+                                                type="object"
+                                                icon="gtk-cancel" />
                                             <button
-                                            	name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                            	string="Delegate"
-                                            	type="action"
-                                            	icon="gtk-sort-descending"
-                                            	states="needs-action,tentative,declined,accepted"
-                                            	context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                                                name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
+                                                string="Delegate"
+                                                type="action"
+                                                icon="gtk-sort-descending"
+                                                states="needs-action,tentative,declined,accepted"
+                                                context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                                         </group>
                                     </page>
                                     <page string="Other">
@@ -202,15 +202,15 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Meetings"
-            	colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
-            	<field name="id" widget="char" />
-            	<field name="name" string="Subject" />
-            	<field name="partner_id" string="Partner" />
-            	<field name="section_id" />
-            	<field name="date" string="Meeting Date" />
-            	<field name="categ_id" />
-            	<field name="user_id" />
-            	<field name="state" />
+                colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                <field name="id" widget="char" />
+                <field name="name" string="Subject" />
+                <field name="partner_id" string="Partner" />
+                <field name="section_id" />
+                <field name="date" string="Meeting Date" />
+                <field name="categ_id" />
+                <field name="user_id" />
+                <field name="state" />
             </tree>
         </field>
     </record>
@@ -257,19 +257,19 @@
                 <search string="Search Meetings">
                        <group col="12" colspan="4">
                            <filter icon="terp-crm" string="My Meetings"
-                           	domain="[('user_id','=',uid)]"
-                           	help="My Meetings" />
-                           <filter icon="terp-crm" name="current" string="Current" 
-                           domain="[('state','in',('draft', 'open'))]" 
-                           help="Current Meetings"/>                           
+                               domain="[('user_id','=',uid)]"
+                               help="My Meetings" />
+                           <filter icon="terp-crm" name="current" string="Current"
+                           domain="[('state','in',('draft', 'open'))]"
+                           help="Current Meetings"/>
                            <separator orientation="vertical"/>
                            <field name="name" select="1" string="Subject"/>
                            <field name="partner_id" select="1" />
                            <field name="section_id"
-                           	select="1" widget="selection">
-                           	<filter icon="terp-crm"
-                           		domain="[('section_id','=',context.get('section_id',False))]"
-                           		help="My section" />
+                               select="1" widget="selection">
+                               <filter icon="terp-crm"
+                                   domain="[('section_id','=',context.get('section_id',False))]"
+                                   help="My section" />
                            </field>
                            <field name="user_id" select="1" widget="selection"/>
                        </group>

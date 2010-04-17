@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-<!--        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"-->
-<!--            groups="group_sale_user"/>-->
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="4"/>
@@ -45,7 +43,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
         </record>
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="70"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form"
+            parent="base.menu_base_config" sequence="70"
+            groups="base.group_extended"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -76,8 +76,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales orders">
-                    <field name="date_order" string="Order date"/>
-                    <field name="name" string="Reference"/>
+                    <field name="date_order"/>
+                    <field name="name"/>
                     <field name="partner_id"/>
                     <field name="partner_shipping_id"/>
                     <field name="user_id" />
@@ -100,8 +100,8 @@
                         <field name="name" select="1"/>
                         <field name="client_order_ref"/>
                         <field name="shipped"/>
-                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
-                        <field name="date_order" select="1" string="Order date" />
+                        <field name="date_order" select="1"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
                         <field name="invoiced"/>
                     </group>
                     <notebook colspan="4">

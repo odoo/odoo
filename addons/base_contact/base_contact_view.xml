@@ -38,7 +38,7 @@
                        <group string="Partner" colspan="2" col="2">
                            <field name="partner_id" invisible="1" select="1"/>
                            <field name="title" select="1"/>
-                           <field name="function_id" invisible="1" select="2"/>
+                           <field name="function_id" invisible="1"/>
                         <field name="email"/>
                            <field name="lang_id"/>
                            <field name="active"/>
@@ -51,13 +51,13 @@
                        <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
                                <group string="Partner" colspan="2" col="4">
-	                               <field name="function_id"/>
-	                               <field name="address_id" context="{'address_partner_id': name}"/>
-	                               <field name="name"/>
-	                               <field name="date_start" />
-	                               <field name="date_stop" />
-	                               <field name="state" />
-	                               <field name="sequence_contact" />
+                                   <field name="function_id"/>
+                                   <field name="address_id" context="{'address_partner_id': name}"/>
+                                   <field name="name"/>
+                                   <field name="date_start" />
+                                   <field name="date_stop" />
+                                   <field name="state" />
+                                   <field name="sequence_contact" />
                                </group>
                                <group string="Communication" colspan="2" col="2">
                                    <field name="phone"/>
@@ -135,13 +135,13 @@
                 <field name="address" mode="form,tree" colspan="4" nolabel="1" select="1">
                     <form string="Address">
                        <group string="Postal Address" colspan="2" col="2">
-                           <field name="type" select="2" />
-                           <field name="street" select="2"/>
+                           <field name="type" />
+                           <field name="street"/>
                            <field name="street2"/>
-                           <field name="zip" select="2"/>
-                           <field name="city" select="2"/>
-                           <field name="country_id" select="2" completion="1"/>
-                           <field name="state_id" select="2"/>
+                           <field name="zip"/>
+                           <field name="city"/>
+                           <field name="country_id" completion="1"/>
+                           <field name="state_id"/>
                         </group>
                         <group string="Communication" colspan="2" col="2">
                            <field name="phone"/>
@@ -226,7 +226,7 @@
                 <notebook position="inside">
                     <page string="Categories">
                         <separator colspan="4" string="Categories"/>
-                        <field colspan="4" name="category_id" nolabel="1" select="2"/>
+                        <field colspan="4" name="category_id" nolabel="1"/>
                     </page>
                 </notebook>
             </field>
@@ -311,7 +311,7 @@
             <field name="partner_id" position="replace">
                 <field name='partner_id' select='1'/>
                 <field name='type' select='2'/>
-                <field name='job_id' invisible="1" select="2"/>
+                <field name='job_id' invisible="1"/>
             </field>
         </field>
     </record>
@@ -363,15 +363,15 @@
                         <field name="address_id" select="1" context="{'address_partner_id': name}"/>
                         <field name="contact_id" select="1"/>
                         <field name="function_id" select="1"/>
-                        <field name="email" select="2" widget="email"/>
-                        <field name="phone" select="2"/>
+                        <field name="email" widget="email"/>
+                        <field name="phone"/>
                         <field name="fax"/>
                         <field name="extension"/>
-                        <field name="sequence_contact" select="2" groups="base.group_user"/>
-                        <field name="sequence_partner" select="2" groups="base.group_user"/>
+                        <field name="sequence_contact" groups="base.group_user"/>
+                        <field name="sequence_partner" groups="base.group_user"/>
                         <field name="date_start" groups="base.group_user"/>
                         <field name="date_stop" groups="base.group_user"/>
-                        <field name="state" select="2" />
+                        <field name="state" />
                     </page>
                 </notebook>
             </form>
@@ -393,7 +393,7 @@
         src_model="res.partner"
         />
 
-	<!-- Act window defining a shorcut on partner address to open all his jobs -->
+    <!-- Act window defining a shorcut on partner address to open all his jobs -->
 
     <act_window
         id="act_res_partner_jobs" name="Open Jobs"
@@ -403,12 +403,12 @@
         />
 
     <menuitem icon="terp-purchase" id="base.menu_purchase_root"
-    	name="Procurement Management" sequence="7" />
+        name="Procurement Management" sequence="7" />
     <menuitem id="base.menu_procurement_management_supplier"
-    	name="Suppliers" parent="base.menu_purchase_root" sequence="3" />
+        name="Suppliers" parent="base.menu_purchase_root" sequence="3" />
     <menuitem name="Contacts" id="menu_partner_contact_supplier_form"
-    	action="action_partner_contact_form"
-    	parent="base.menu_procurement_management_supplier" sequence="2" />
+        action="action_partner_contact_form"
+        parent="base.menu_procurement_management_supplier" sequence="2" />
 
 </data>
 </openerp>

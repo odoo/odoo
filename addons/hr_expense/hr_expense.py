@@ -19,20 +19,20 @@
 #
 ##############################################################################
 
-from mx import DateTime
 import time
 
 from osv import fields, osv
 from tools.translate import _
 
-def _employee_get(obj,cr,uid,context={}):
+def _employee_get(obj, cr, uid, context=None):
     ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
     if ids:
         return ids[0]
     return False
 
 class hr_expense_expense(osv.osv):
-    def copy(self, cr, uid, id, default=None, context={}):
+
+    def copy(self, cr, uid, id, default=None, context=None):
         if not default: default = {}
         default.update( {'invoice_id':False,'date_confirm':False,'date_valid':False,'user_valid':False})
         return super(hr_expense_expense, self).copy(cr, uid, id, default, context)
@@ -50,7 +50,7 @@ class hr_expense_expense(osv.osv):
             return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
 
     _name = "hr.expense.expense"
-    _description = "Expense"
+    _description = "HR Expense"
     _columns = {
         'name': fields.char('Expense Sheet', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
@@ -84,9 +84,9 @@ class hr_expense_expense(osv.osv):
         'date' : lambda *a: time.strftime('%Y-%m-%d'),
         'state': lambda *a: 'draft',
         'employee_id' : _employee_get,
-        'user_id' : lambda cr,uid,id,c={}: id,
+        'user_id' : lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     def expense_confirm(self, cr, uid, ids, *args):
         #for exp in self.browse(cr, uid, ids):
@@ -182,10 +182,10 @@ class product_product(osv.osv):
 
 product_product()
 
-
 class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
     _description = "Expense Line"
+
     def _amount(self, cr, uid, ids, field_name, arg, context):
         if not len(ids):
             return {}
@@ -212,8 +212,11 @@ class hr_expense_line(osv.osv):
         'date_value' : lambda *a: time.strftime('%Y-%m-%d'),
     }
     _order = "sequence"
-    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context={}):
-        v={}
+
+    def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
+        if context is None:
+            context = {}
+        v = {}
         if product_id:
             product=self.pool.get('product.product').browse(cr,uid,product_id, context=context)
             v['name']=product.name
@@ -227,9 +230,8 @@ class hr_expense_line(osv.osv):
             v['unit_amount']=amount_unit
             if not uom_id:
                 v['uom_id']=product.uom_id.id
-        return {'value':v}
+        return {'value': v}
 
 hr_expense_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

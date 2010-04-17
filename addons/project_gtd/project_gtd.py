@@ -62,58 +62,58 @@ class project_gtd_timebox(osv.osv):
         'icon': fields.selection(tools.icons, 'Icon', size=64),
     }
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(project_gtd_timebox,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if (res['type']=='form') and ('record_id' in context):
-            if context['record_id']:
-                rec = self.browse(cr, uid, int(context['record_id']), context)
-            else:
-                iids = self.search(cr,uid, [('user_id','=',uid),('parent_id','=',False)], context=context)
-                if len(iids):
-                    rec = self.browse(cr, uid, int(iids[0]), context=context)
-                else:
-                    return res
-            res['arch'] = """
-    <form string="Daily Timebox">
-        <field name="name" readonly="1"/>
-        <notebook position="top">
-            """
-            for i in range(1,7):
-                if not getattr(rec, 'context%d_id'%i):
-                    continue
-                res['arch']+= """
-            <page string="%s">
-                <field name="%s" colspan="4" nolabel="1">
-                    <tree editable="bottom" colors="grey:state in ('done','pending');red:state=='cancelled'" string="Tasks">
-                        <field name="name"/>
-                """ % (getattr(rec, 'context%d_id'%(i,)).name.encode('utf-8'), 'task%d_ids'%(i,))
-                if rec.col_project:
-                    res['arch'] += '<field name="project_id" required="1"/>\n'
-                if rec.col_date_start:
-                    res['arch'] += '<field name="date_start"/>\n'
-                if rec.col_priority:
-                    res['arch'] += '<field name="priority"/>\n'
-                if rec.col_deadline:
-                    res['arch'] += '<field name="date_deadline"/>\n'
-                if rec.col_planned_hours:
-                    res['arch'] += '<field name="planned_hours"  widget="float_time" sum="Est. Hours"/>\n'
-                if rec.col_effective_hours:
-                    res['arch'] += '<field name="effective_hours"  widget="float_time" sum="%s"/>\n' % (_('Eff. Hours'),)
-                res['arch'] += """
-                        <field name="state" readonly="1"/>
-                    </tree>
-                </field>
-            </page>
-                """
-            res['arch']+="""
-        </notebook>
-    </form>
-            """
-        doc = etree.XML(res['arch'])
-        xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
-        res['arch'] = xarch
-        res['fields'] = xfields
-        return res
+#    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+#        res = super(project_gtd_timebox,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+#        if (res['type']=='form') and ('record_id' in context):
+#            if context['record_id']:
+#                rec = self.browse(cr, uid, int(context['record_id']), context)
+#            else:
+#                iids = self.search(cr,uid, [('user_id','=',uid),('parent_id','=',False)], context=context)
+#                if len(iids):
+#                    rec = self.browse(cr, uid, int(iids[0]), context=context)
+#                else:
+#                    return res
+#            res['arch'] = """
+#    <form string="Daily Timebox">
+#        <field name="name" readonly="1"/>
+#        <notebook position="top">
+#            """
+#            for i in range(1,7):
+#                if not getattr(rec, 'context%d_id'%i):
+#                    continue
+#                res['arch']+= """
+#            <page string="%s">
+#                <field name="%s" colspan="4" nolabel="1">
+#                    <tree editable="bottom" colors="grey:state in ('done','pending');red:state=='cancelled'" string="Tasks">
+#                        <field name="name"/>
+#                """ % (getattr(rec, 'context%d_id'%(i,)).name.encode('utf-8'), 'task%d_ids'%(i,))
+#                if rec.col_project:
+#                    res['arch'] += '<field name="project_id" required="1"/>\n'
+#                if rec.col_date_start:
+#                    res['arch'] += '<field name="date_start"/>\n'
+#                if rec.col_priority:
+#                    res['arch'] += '<field name="priority"/>\n'
+#                if rec.col_deadline:
+#                    res['arch'] += '<field name="date_deadline"/>\n'
+#                if rec.col_planned_hours:
+#                    res['arch'] += '<field name="planned_hours"  widget="float_time" sum="Est. Hours"/>\n'
+#                if rec.col_effective_hours:
+#                    res['arch'] += '<field name="effective_hours"  widget="float_time" sum="%s"/>\n' % (_('Eff. Hours'),)
+#                res['arch'] += """
+#                        <field name="state" readonly="1"/>
+#                    </tree>
+#                </field>
+#            </page>
+#                """
+#            res['arch']+="""
+#        </notebook>
+#    </form>
+#            """
+#        doc = etree.XML(res['arch'])
+#        xarch, xfields = self._view_look_dom_arch(cr, uid, doc, view_id, context=context)
+#        res['arch'] = xarch
+#        res['fields'] = xfields
+#        return res
 
 project_gtd_timebox()
 

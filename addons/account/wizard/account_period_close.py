@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 from tools.translate import _
-import tools
 
 class account_period_close(osv.osv_memory):
     """
@@ -30,7 +29,7 @@ class account_period_close(osv.osv_memory):
     _name = "account.period.close"
     _description = "period close"
     _columns = {
-        'sure': fields.boolean('Check this box', required=False),
+        'sure': fields.boolean('Check this box'),
               }
 
     def data_save(self, cr, uid, ids, context={}):
@@ -47,7 +46,7 @@ class account_period_close(osv.osv_memory):
                 for id in context['active_ids']:
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
-            return {}
+        return {}
 
 account_period_close()
 

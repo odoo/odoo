@@ -14,7 +14,7 @@
                     <field name="name" select="1"/>
                     <field name="parent_id" select="1"/>
                     <newline/>
-                    <field name="summary" select="2" colspan="4"/>
+                    <field name="summary" colspan="4"/>
                 </form>
             </field>
         </record>
@@ -124,7 +124,7 @@
         <form string="Votes">
             <field name="idea_id" select="1" />
             <field name="user_id" select="1" />
-            <field name="score" select="2"/>
+            <field name="score"/>
         </form>
         </field>
     </record>
@@ -143,8 +143,8 @@
                     <field name="category_id" select="1"/>
                     <field name="user_id" select="1"/>
                     <field name="vote_avg" />
-                    <field name="description" colspan="4" select="2" widget="text_wiki"/>
-                    <field name="state" select="2"/>
+                    <field name="description" colspan="4" widget="text_wiki"/>
+                    <field name="state"/>
                     <group colspan="2" col="3">
                         <button name="idea_open" string="Open" states="draft" icon="gtk-go-forward"/>
                         <button name="idea_close" string="Close" states="open" icon="gtk-close"/>
@@ -286,7 +286,7 @@
                 <form string="vote_stat of ideas">
                     <field name="idea_id" select="1"/>
                     <field name="score"  select="1"/>
-                    <field name="nbr"  select="2"/>
+                    <field name="nbr" />
                 </form>
             </field>
         </record>
