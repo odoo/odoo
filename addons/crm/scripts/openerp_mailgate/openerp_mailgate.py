@@ -282,7 +282,7 @@ class email_parser(object):
             if actions['state'] in ['draft', 'close', 'cancel', 'open', 'pending']:
                 act = 'case_' + actions['state']
 
-        for k1, k2 in [('cost', 'planned_cost'), ('revenue', 'planned_revenue'), ('probability', 'probability')]:
+            for k1, k2 in [('cost', 'planned_cost'), ('revenue', 'planned_revenue'), ('probability', 'probability')]:
             try:
                 data[k2] = float(actions[k1])
             except:
