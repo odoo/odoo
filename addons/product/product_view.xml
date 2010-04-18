@@ -42,7 +42,7 @@
                 <tree colors="red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')" string="Products">
                     <field name="default_code"/>
                     <field name="name"/>
-                    <field name="categ_id" />
+                    <field name="categ_id" invisible="1"/>
                     <field name="variants" groups="product.group_product_variant"/>
                     <field name="uom_id"/>
                     <field name="type"/>
@@ -66,18 +66,18 @@
                     <group colspan="4" col="2">
                         <separator string="Product Description" colspan="4"/>
                         <field name="name" select="1"  />
-                        <field groups="product.group_product_variant" name="variants" select="2" />
+                        <field groups="product.group_product_variant" name="variants" />
                     </group>
                     <group colspan="1" col="2">
                         <separator string="Codes" colspan="2"/>
                         <field name="default_code" select="1"/>
-                        <field groups="base.group_extended" name="ean13" select="2"/>
+                        <field groups="base.group_extended" name="ean13"/>
                     </group>
                     <group colspan="1" col="2">
                         <separator string="Product Characteristics" colspan="2"/>
-                        <field name="sale_ok" select="2"/>
-                        <field name="purchase_ok" select="2"/>
-                        <field groups="base.group_extended" name="rental" select="2"/>
+                        <field name="sale_ok"/>
+                        <field name="purchase_ok"/>
+                        <field groups="base.group_extended" name="rental"/>
                     </group>
                    </group>
 
@@ -85,7 +85,7 @@
                         <page string="Information">
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
-                                <field name="type" select="2"/>
+                                <field name="type"/>
                                 <field name="procure_method"/>
                                 <field name="supply_method"/>
                             </group>
@@ -100,8 +100,8 @@
                             <group colspan="2" col="2" name="status">
                                 <separator string="Status" colspan="2"/>
                                 <field name="categ_id" select="1"/>
-                                <field name="state" select="2"/>
-                                <field groups="base.group_extended" name="product_manager" select="2"/>
+                                <field name="state"/>
+                                <field groups="base.group_extended" name="product_manager"/>
                             </group>
 
                             <group colspan="2" col="2" name="uom">
@@ -133,9 +133,9 @@
                             </group>
 
                             <group colspan="2" col="2" name="misc">
-                                <separator string="Miscellaneous" colspan="2"/>
-                                <field name="active" select="2"/>
-                                <field name="company_id" select="2" groups="base.group_multi_company" widget="selection"/>
+                                <separator string="Miscellaneous" colspan="2" groups="base.group_extended"/>
+                                <field name="active"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>
 
                         </page>
@@ -163,7 +163,7 @@
                             <field colspan="4" name="packaging" nolabel="1">
                                 <form string="Packaging">
                                     <field name="ean" select="1"/>
-                                    <field name="sequence"/>
+                                    <field name="sequence" invisible="1"/>
                                     <newline/>
                                     <field name="qty" select="1"/>
                                     <field name="ul"/>
@@ -215,7 +215,7 @@
                 <form string="Product Categories">
                     <field name="name" select="1"/>
                     <field name="parent_id"/>
-                    <field name="sequence"/>
+                    <field name="sequence" invisible="1"/>
                     <field name="type"/>
                     <newline/>
                 </form>
@@ -383,7 +383,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Packaging">
-                    <field name="sequence"/>
+                    <field name="sequence" invisible="1"/>
                     <field name="ean"/>
                     <field name="qty"/>
                     <field name="ul"/>
@@ -400,7 +400,7 @@
                     <field name="product_id" select="1"/>
                     <newline/>
                     <field name="ean" select="1"/>
-                    <field name="sequence"/>
+                    <field name="sequence" invisible="1"/>
                     <newline/>
                     <field name="qty" select="1"/>
                     <field name="ul"/>
@@ -426,7 +426,7 @@
             <field name="arch" type="xml">
                 <form string="Supplier Information">
                     <field name="name"/>
-                    <field name="sequence"/>
+                    <field name="sequence" invisible="1"/>
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>
                     <field name="delay"/>
@@ -451,7 +451,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Supplier Information">
-                    <field name="sequence" string="Seq"/>
+                    <field name="sequence" string="Seq" invisible="1"/>
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="qty"/>
@@ -519,15 +519,15 @@
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Product Type" colspan="2"/>
-                        <field name="sale_ok" select="2"/>
-                        <field name="purchase_ok" select="2"/>
-                        <field groups="base.group_extended" name="rental" select="2"/>
+                        <field name="sale_ok"/>
+                        <field name="purchase_ok"/>
+                        <field groups="base.group_extended" name="rental"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
-                                <field name="type" select="2"/>
+                                <field name="type"/>
                                 <field name="procure_method"/>
                                 <field name="supply_method"/>
                             </group>
@@ -542,8 +542,8 @@
                             <group colspan="2" col="2" name="status">
                                 <separator string="Status" colspan="2"/>
                                 <field name="categ_id" select="1"/>
-                                <field name="state" select="2"/>
-                                <field groups="base.group_extended" name="product_manager" select="2"/>
+                                <field name="state"/>
+                                <field groups="base.group_extended" name="product_manager"/>
                             </group>
 
                             <group colspan="2" col="2" name="uom">

@@ -13,11 +13,11 @@
                         <field name="product_id" select="1"  on_change="onchange_product_id(product_id)"/>
                         <field name="deliver_bool"/>
                         <newline/>
-                        <field name="prodlot_id" select="2" on_change="onchange_lot_id(prodlot_id,product_id)"/>
+                        <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)"/>
                         <field name="move_id" on_change="onchange_move_id(product_id, move_id)"/>
                         <field name="repaired"/>
                         <newline/>
-                        <field name="partner_id" select="2" on_change="onchange_partner_id(partner_id,address_id)"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)"/>
                         <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}"/>
                         <field name="invoiced"/>
                     </group>
@@ -78,7 +78,7 @@
                             </group>
                             <newline/>
                             <group col="13" colspan="4">
-                                <field name="state" select="2"/>
+                                <field name="state"/>
                                 <button name="repair_confirm" states="draft" string="Confirm Repair"/>
                                 <button name="repair_ready" states="confirmed" string="Start Repair"/>
                                 <button name="action_repair_start" states="ready" string="Start Repair"/>
@@ -158,11 +158,11 @@
                 <tree string="Repairs order">
                     <field name="name" select="1" />
                         <field name="product_id" select="1" />
-                        <field name="prodlot_id" select="2"/>
-                        <field name="partner_id" select="2"/>
+                        <field name="prodlot_id"/>
+                        <field name="partner_id"/>
                         <field name="address_id"/>
                             <field name="location_id"/>
-                            <field name="state" select="2"/>
+                            <field name="state"/>
                             <field name="move_id"/>
                             <field name="location_dest_id"/>
                             <field name="guarantee_limit"/>

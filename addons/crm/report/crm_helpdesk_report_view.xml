@@ -10,18 +10,18 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Helpdesk">
-					<field name="name" />
-					<field name="month"/>
-					<field name="section_id" />
+                    <field name="name" />
+                    <field name="month"/>
+                    <field name="section_id" />
                     <field name="user_id" />
                     <field name="company_id"/>
                     <field name="partner_id" />
                     <field name="date_deadline" invisible="1"/>
                     <field name="priority" invisible="1"/>
-					<field name="nbr" string="#Helpdesk" />
-	                <field name="delay_close"/>
+                    <field name="nbr" string="#Helpdesk" />
+                    <field name="delay_close"/>
                     <field name="state" invisible="1"/>
-				</tree>
+                </tree>
             </field>
         </record>
 
@@ -34,7 +34,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="nbr" position="after">
-                	<field name="delay_close"/>
+                    <field name="delay_close"/>
                     <field name="amount_revenue"/>
                     <field name="amount_revenue_prob"/>
                     <field name="probability"/>
@@ -59,46 +59,46 @@
 
 <!-- Helpdesk report after Sales Services Search View -->
 
-		<record id="view_report_crm_helpdesk_filter" model="ir.ui.view">
+        <record id="view_report_crm_helpdesk_filter" model="ir.ui.view">
             <field name="name">crm.helpdesk.report.select</field>
             <field name="model">crm.helpdesk.report</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="9">
-                   		<filter string="This Year" icon="terp-hr"
-                   			domain="[('name','=',time.localtime()[0])]"
-                   			name="this_year" />
+                           <filter string="This Year" icon="terp-hr"
+                               domain="[('name','=',time.localtime()[0])]"
+                               name="this_year" />
 
-                   		<filter string="This Month" icon="terp-hr"
-                   			domain="[('month','=',time.strftime('%%m'))]"
-                   			name="this_month" />
+                           <filter string="This Month" icon="terp-hr"
+                               domain="[('month','=',time.strftime('%%m'))]"
+                               name="this_month" />
 
-                   		<separator orientation="vertical" />
-                   		<filter string="Current" icon="terp-hr"
-                   			domain="[('state','in',('open','draft'))]" />
+                           <separator orientation="vertical" />
+                           <filter string="Current" icon="terp-hr"
+                               domain="[('state','in',('open','draft'))]" />
 
-                   		<filter string="Won" icon="terp-hr"
-                   			domain="[('state','=','done')]" />
+                           <filter string="Won" icon="terp-hr"
+                               domain="[('state','=','done')]" />
 
-                   		<filter string="Lost" icon="terp-hr"
-                   			domain="[('state','=','cancel')]" />
+                           <filter string="Lost" icon="terp-hr"
+                               domain="[('state','=','cancel')]" />
 
-                   		<filter string="Deadline" icon="terp-hr"
-                   			domain="[('date_deadline','=',time.strftime('%%m/%%d/%%Y'))]" />
+                           <filter string="Deadline" icon="terp-hr"
+                               domain="[('date_deadline','=',time.strftime('%%m/%%d/%%Y'))]" />
 
-                   		<separator orientation="vertical" />
-                   		<field name="section_id"
-                   			widget="selection"
-                   			context="{'invisible_section': False}">
+                           <separator orientation="vertical" />
+                           <field name="section_id"
+                               widget="selection"
+                               context="{'invisible_section': False}">
 
-                   			<filter icon="terp-crm"
-                   				context="{'invisible_section': False}"
-                   				domain="[('section_id.user_id','=',uid)]"
-                   				help="My section" />
+                               <filter icon="terp-crm"
+                                   context="{'invisible_section': False}"
+                                   domain="[('section_id.user_id','=',uid)]"
+                                   help="My section" />
 
-                   		</field>
-                   		<field name="company_id" widget="selection">
+                           </field>
+                           <field name="company_id" widget="selection">
 
                            <filter icon="terp-crm"
                         context="{'invisible_section': False}"
@@ -111,24 +111,24 @@
                    <newline/>
                    <group expand="1" string="Extended options..." colspan="4" col="5">
                         <filter icon="terp-sale"
-                    		string="Lowest"
-                    		domain="[('priority','=','5')]"/>
+                            string="Lowest"
+                            domain="[('priority','=','5')]"/>
 
-                    	<filter icon="terp-sale"
-                    		string="Low"
-                    		domain="[('priority','=','4')]"/>
+                        <filter icon="terp-sale"
+                            string="Low"
+                            domain="[('priority','=','4')]"/>
 
-                    	<filter icon="terp-sale"
-                    		string="Normal"
-                    		domain="[('priority','=','3')]"/>
+                        <filter icon="terp-sale"
+                            string="Normal"
+                            domain="[('priority','=','3')]"/>
 
-                    	<filter icon="terp-sale"
-                    		string="High"
-                    		domain="[('priority','=','2')]"/>
+                        <filter icon="terp-sale"
+                            string="High"
+                            domain="[('priority','=','2')]"/>
 
-                    	<filter icon="terp-sale"
-                    		string="Highest"
-                    		domain="[('priority','=','1')]"/>
+                        <filter icon="terp-sale"
+                            string="Highest"
+                            domain="[('priority','=','1')]"/>
 
                    </group>
                    <newline/>
@@ -137,30 +137,30 @@
 
                   <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="User" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'user_id'}" />
+                            domain="[]" context="{'group_by':'user_id'}" />
 
                         <filter string="Company" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'company_id'}" />
+                            domain="[]"
+                            context="{'group_by':'company_id'}" />
 
                         <filter string="Section" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'section_id'}" />
+                            domain="[]"
+                            context="{'group_by':'section_id'}" />
 
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'state'}" />
+                            domain="[]" context="{'group_by':'state'}" />
 
                         <filter string="Partner" icon="terp-sale"
-                        	domain="[]"
-                        	context="{'group_by':'partner_id'}" />
+                            domain="[]"
+                            context="{'group_by':'partner_id'}" />
 
                         <separator orientation="vertical" />
                         <filter string="Month" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'month'}" />
+                            domain="[]" context="{'group_by':'month'}" />
 
                         <filter string="Year" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'name'}" />
+                            domain="[]" context="{'group_by':'name'}" />
 
                   </group>
                </search>
@@ -179,22 +179,23 @@
             <field name="search_view_id" ref="view_report_crm_helpdesk_filter"/>
         </record>
 
-       	<record model="ir.actions.act_window.view" id="action_report_crm_helpdesk_tree">
-	        <field name="sequence" eval="1"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="view_report_crm_helpdesk_tree"/>
-	        <field name="act_window_id" ref="action_report_crm_helpdesk"/>
-	    </record>
+           <record model="ir.actions.act_window.view" id="action_report_crm_helpdesk_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_crm_helpdesk_tree"/>
+            <field name="act_window_id" ref="action_report_crm_helpdesk"/>
+        </record>
 
         <record model="ir.actions.act_window.view" id="action_report_crm_helpdesk_graph">
-	        <field name="sequence" eval="2"/>
-	        <field name="view_mode">graph</field>
-	        <field name="view_id" ref="view_report_crm_helpdesk_graph"/>
-	        <field name="act_window_id" ref="action_report_crm_helpdesk"/>
-	    </record>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_helpdesk_graph"/>
+            <field name="act_window_id" ref="action_report_crm_helpdesk"/>
+        </record>
 
         <menuitem name="Helpdesk" action="action_report_crm_helpdesk"
-        	id="menu_report_crm_helpdesks_tree" parent="base.next_id_64" />
+            groups="base.group_extended"
+            id="menu_report_crm_helpdesks_tree" parent="base.next_id_64" />
 
     </data>
 </openerp>

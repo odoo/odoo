@@ -323,14 +323,17 @@
                   id="menu_mrp_bom"
                   parent="menu_mrp_bom"
                   sequence="50" />-->
-        <menuitem action="mrp_bom_form_action"
-                  id="menu_mrp_bom_form_action"
-                  parent="menu_mrp_bom"
-                  sequence="10"/>
-        <menuitem action="mrp_bom_form_action2"
-                  id="menu_mrp_bom_form_action2"
-                  parent="menu_mrp_bom"
-                  sequence="20"/>
+        <menuitem
+            action="mrp_bom_form_action"
+            id="menu_mrp_bom_form_action"
+            parent="menu_mrp_bom"
+            sequence="10"/>
+        <menuitem
+            action="mrp_bom_form_action2"
+            id="menu_mrp_bom_form_action2"
+            groups="base.group_extended"
+            parent="menu_mrp_bom"
+            sequence="20"/>
 
         <record id="action2" model="ir.actions.act_window">
             <field name="name">Bill of Materials Structure</field>
@@ -1034,7 +1037,10 @@
 
         <!-- Menu for Resource for MRP-->
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="3"/>
-        <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root" sequence="2"/>
+
+        <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
+            groups="base.group_extended"
+            sequence="2"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>

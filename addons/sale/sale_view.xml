@@ -352,8 +352,7 @@
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="UoM"/>
-                    <field name="discount"/>
-                    <field name="price_unit"/>
+                    <field name="salesman_id"/>
                     <field name="price_net"/>
                     <field name="price_subtotal"/>
                     <field name="th_weight"/>
@@ -432,6 +431,7 @@
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-sale"  domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'salesman_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -447,6 +447,7 @@
                     <group>
                     <filter icon="terp-purchase" string="Shipped"
                         domain="[('state','=','done')]"
+                        name="unshipped"
                         separator="1" />
                     <filter icon="terp-purchase" string="Uninvoiced" name="uninvoiced"
                         domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"
@@ -468,12 +469,12 @@
         </record>
 
         <record id="action_order_line_tree2" model="ir.actions.act_window">
-            <field name="name">Uninvoiced Lines</field>
+            <field name="name">Lines to Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="context">{"search_default_uninvoiced":1}</field>
+            <field name="context">{"search_default_uninvoiced":1,"search_default_unshipped":1}</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="filter" eval="True"/>
         </record>
@@ -492,7 +493,7 @@
 
         <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product"/>
 
-        <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="6"/>
+        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="6"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2"/>
         <!-- configartion view -->
 

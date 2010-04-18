@@ -27,7 +27,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Timesheet Lines">
-                    <field colspan="4" name="name" select="2"/>
+                    <field colspan="4" name="name"/>
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1" select="1"/>
                     <field name="date" select="1" on_change="on_change_date(date)"/>
                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
@@ -36,8 +36,8 @@
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
 
                     <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" select="1"/>
-                    <field name="amount" select="2"/>
-                    <field name="general_account_id" select="2"/>
+                    <field name="amount"/>
+                    <field name="general_account_id"/>
                     <field name="journal_id"/>
                 </form>
             </field>

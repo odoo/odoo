@@ -77,6 +77,7 @@ class crm_lead2opportunity(osv.osv_memory):
             for this in self.browse(cr, uid, ids, context=context):
                 new_opportunity_id = opp_obj.create(cr, uid, {
                         'name': this.name, 
+                        'referred': this.referred,
                         'planned_revenue': this.planned_revenue, 
                         'probability': this.probability, 
                         'partner_id': lead.partner_id and lead.partner_id.id or False , 
@@ -89,7 +90,6 @@ class crm_lead2opportunity(osv.osv_memory):
                         'phone': lead.phone, 
                         'email_from': lead.email_from
                     })
-
                 new_opportunity = opp_obj.browse(cr, uid, new_opportunity_id)
                 vals = {
                         'partner_id': this.partner_id and this.partner_id.id or False, 
