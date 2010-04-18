@@ -72,7 +72,7 @@ class crm_cases(osv.osv):
         self._history(cr, uid, cases, _('Receive'), history=True, details=body, email_from=msg_from, message_id=msg.get('id'))
         return res
 
-    def message_update(self, cr, uid, ids, msg, default_act='pending', context={}):
+    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
         """ 
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -80,7 +80,6 @@ class crm_cases(osv.osv):
         @param ids: List of update mail’s IDs 
         """
         
-        vals = { }
         if isinstance(ids, (str, int, long)):
             ids = [ids]
         
@@ -102,7 +101,7 @@ class crm_cases(osv.osv):
 
         res = self.write(cr, uid, ids, vals)
         cases = self.browse(cr, uid, ids)
-        message_id = context.get('message_id', False)
+        message_id = context.get('references_id', False)
         self._history(cr, uid, cases, _('Receive'), history=True, details=msg['body'], email_from=msg_from, message_id=message_id)        
         #getattr(self, act)(cr, uid, select)
         return res

@@ -56,6 +56,7 @@ class crm_send_new_email(osv.osv_memory):
         """
 
         hist_obj = self.pool.get('crm.case.history')
+        smtp_pool = self.pool.get('email.smtpclient')
 
         if not context:
             context = {}
@@ -73,8 +74,8 @@ class crm_send_new_email(osv.osv_memory):
 
             message_id = None            
             
+            case = case_pool.browse(cr, uid, res_id)
             if context.get('mail', 'new') == 'new':
-                case = case_pool.browse(cr, uid, res_id)
                 message_id = case.history_line[0].message_id
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
@@ -91,19 +92,34 @@ class crm_send_new_email(osv.osv_memory):
             case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from, message_id=message_id)
 
             x_headers = {
-                'References':"%s" % (message_id)
+                'References':"%s" % (message_id),
+                'Reply-To':"%s" % case.section_id.reply_to,
             }
-
-            flag = tools.email_send(
-                email_from,
-                emails,
-                data['subject'],
-                body,
-                attach=attach,
-                reply_to=case.section_id.reply_to,
-                openobject_id=str(case.id),
-                x_headers=x_headers
-            )
+            flag = False
+            if case.section_id and case.section_id.server_id:
+                
+                flag = smtp_pool.send_email(
+                    cr=cr,
+                    uid=uid, 
+                    server_id=case.section_id.server_id.id,
+                    emailto=emails,
+                    subject=data['subject'],
+                    body="<pre>%s</pre>" % body,
+                    attachments=attach,
+                    headers=x_headers
+                )
+            else:
+                flag = tools.email_send(
+                    email_from,
+                    emails,
+                    data['subject'],
+                    body,
+                    attach=attach,
+                    reply_to=case.section_id.reply_to,
+                    openobject_id=str(case.id),
+                    x_headers=x_headers
+                )
+            
             if flag:
                 if data['state'] == 'unchanged':
                     pass
