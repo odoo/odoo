@@ -466,13 +466,13 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     msg['X-Generated-By'] = 'OpenERP (http://www.openerp.com)'
     msg['X-OpenERP-Server-Host'] = socket.gethostname()
     msg['X-OpenERP-Server-Version'] = release.version
-
     msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 
     # Add dynamic X Header
     for key, value in x_headers.iteritems():
         msg['X-OpenERP-%s' % key] = str(value)
-
+        msg['%s' % key] = str(value)
+    
     if openobject_id:
         msg['Message-Id'] = "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
