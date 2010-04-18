@@ -119,7 +119,6 @@
                                 <form string="Sale Order Lines">
                                     <notebook>
                                         <page string="Order Line">
-                                            <separator colspan="4" string="Automatic Declaration"/>
                                             <field colspan="4"
                                                 context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
                                                 name="product_id"
@@ -140,7 +139,6 @@
                                                 groups="base.group_extended"/>
 
                                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                            <separator colspan="4" string="Manual Description"/>
                                             <field colspan="4" name="name"/>
                                             <field name="price_unit"/>
                                             <field name="discount"/>
@@ -148,9 +146,9 @@
                                             <field name="delay" groups="base.group_extended"/>
                                             <newline/>
                                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                            <separator colspan="4" string="States"/>
-                                            <field name="state"/>
-                                            <group col="3" colspan="2">
+                                            <group colspan="4" col="5" groups="base.group_extended">
+                                                <separator colspan="5" string="States"/>
+                                                <field name="state"/>
                                                 <field name="invoiced"/>
                                                 <button colspan="1"
                                                     name="%(action_view_sale_order_line_make_invoice)d"
@@ -212,7 +210,7 @@
                             </group>
                         </page>
                         <page string="Other data">
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group colspan="2" col="2" groups="base.group_extended" name="logistic">
                                 <separator string="Logistic" colspan="2"/>
                                 <field name="incoterm"/>
                                 <field name="picking_policy" required="True"/>
@@ -509,11 +507,11 @@
                 </form>
                 <group string="res_config_contents" position="replace">
                   <label colspan="4" align="0.0"
-                         string="Set the policies selected by default when creating a new sale order."/>
+                         string="Setup your sales workflow and default values."/>
                   <separator colspan="4"
                        string="Configure Sale Order Logistic"/>
                   <newline/>
-                  <field name="picking_policy"/>
+                  <field name="picking_policy" groups="base.group_extended"/>
                   <newline/>
                   <field name="order_policy"/>
                   <newline/>

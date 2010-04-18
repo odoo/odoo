@@ -8,10 +8,10 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
         <field name="arch" type="xml">
-            <xpath expr="/form[@string='Opportunities']/group/button[@string='Schedule Call']" position="after">
+            <field name="priority" position="after">
                 <button string="Convert to Quote" icon="terp-sale" name="%(sale_crm_wizard)d" type="action"/>
-                <label colspan="6"  string=""/>
-            </xpath>           
+                <label colspan="2"  string=""/>
+            </field>
         </field>
     </record>
 
@@ -22,7 +22,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <field name="user_id" position="after">
-                <field name="section_id" widget="selection"/>
+                <field name="section_id" widget="selection" groups="base.group_extended"/>
             </field>
         </field>
     </record>
@@ -37,6 +37,7 @@
                 <field name="section_id" default="context.get('section_id', False)" select="1" widget="selection" string="Section">
                     <filter icon="terp-crm"
                             domain="[('section_id','=',context.get('section_id',False))]"
+                            groups="base.group_extended"
                             help="My section"/>
                 </field>
             </field>

@@ -71,7 +71,7 @@
                     <group colspan="1" col="2">
                         <separator string="Codes" colspan="2"/>
                         <field name="default_code" select="1"/>
-                        <field groups="base.group_extended" name="ean13"/>
+                        <field name="ean13" groups="base.group_extended"/>
                     </group>
                     <group colspan="1" col="2">
                         <separator string="Product Characteristics" colspan="2"/>
@@ -132,8 +132,8 @@
                                 <field name="loc_case"/>
                             </group>
 
-                            <group colspan="2" col="2" name="misc">
-                                <separator string="Miscellaneous" colspan="2" groups="base.group_extended"/>
+                            <group colspan="2" col="2" name="misc" groups="base.group_extended">
+                                <separator string="Miscellaneous" colspan="2"/>
                                 <field name="active"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </group>

@@ -29,7 +29,9 @@
                         colspan="4" />
                     <field name="categ_id" widget="selection"
                         string="Meeting Type"
+                        groups="base.group_extended"
                         domain="[('object_id.model', '=', 'crm.meeting')]" />
+                    <newline/>
                     <field name="date" string="Start Date" required="1"
                         on_change="onchange_dates(date,duration,False)" />
                     <field name="duration" widget="float_time"
@@ -99,8 +101,9 @@
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Assignment"/>
-                            <field name="section_id" widget="selection" />
                             <field name="user_id" />
+                            <field name="section_id" widget="selection"
+                                groups="base.group_extended"/>
                         </group><group col="2" colspan="2">
                             <separator colspan="2" string="Contacts"/>
                             <field name="partner_id" string="Partner"
@@ -111,11 +114,11 @@
                             <field name="email_from"/>
                         </group><group col="2" colspan="2">
                             <separator colspan="2" string="Visibility"/>
-                            <field name="show_as" string="Show time as"/>
                             <field name="class" string="Privacy"/>
+                            <field name="show_as" string="Show time as" groups="base.group_extended"/>
                             <field name="rrule" groups="base.group_extended" />
-                            <field name="recurrent_id" invisible="1" />
-                            <field name="recurrent_uid" invisible="1" />
+                            <field name="recurrent_id" invisible="1"/>
+                            <field name="recurrent_uid" invisible="1"/>
                         </group>
                     </group>
                     <separator string="Description" colspan="4" />
@@ -203,14 +206,12 @@
         <field name="arch" type="xml">
             <tree string="Meetings"
                 colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
-                <field name="id" widget="char" />
                 <field name="name" string="Subject" />
                 <field name="partner_id" string="Partner" />
-                <field name="section_id" />
                 <field name="date" string="Meeting Date" />
-                <field name="categ_id" />
+                <field name="duration" />
                 <field name="user_id" />
-                <field name="state" />
+                <field name="state" invisible="1"/>
             </tree>
         </field>
     </record>

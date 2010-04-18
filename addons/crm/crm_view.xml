@@ -296,6 +296,7 @@
                         icon="gtk-media-pause" />
                     <button name="case_escalate"
                         states="open,draft,pending" string="Escalate"
+                        groups="base.group_extended"
                         type="object" icon="gtk-go-up" />
                     <button name="case_reset" states="done,cancel"
                         string="Reset to Draft" type="object"
@@ -363,6 +364,7 @@
                                 <button name="case_escalate"
                                     states="open,draft,pending"
                                     string="Escalate" type="object"
+                                    groups="base.group_extended"
                                     icon="gtk-go-up" />
                                 <button name="case_reset"
                                     states="done,cancel"
@@ -680,7 +682,7 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="password" position="after">
-                    <field name="context_section_id" completion="1" widget="selection"/>
+                        <field name="context_section_id" completion="1" widget="selection"/>
                     </field>
                 </field>
         </record>
@@ -695,7 +697,8 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="parent_id" position="after">
-                    <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1" widget="selection"
+                            groups="base.group_extended"/>
                     </field>
                 </field>
         </record>
@@ -708,7 +711,8 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="lang" position="after">
-                    <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1" widget="selection"
+                            groups="base.group_extended"/>
                     </field>
                 </field>
         </record>
@@ -721,7 +725,8 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="category_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"/>
+                        <field name="section_id" completion="1" widget="selection"
+                            groups="base.group_extended"/>
                     </field>
                 </field>
         </record>
