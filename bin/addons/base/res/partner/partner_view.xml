@@ -141,7 +141,9 @@
             <field name="view_id" ref="view_partner_address_form1"/>
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
-        <menuitem action="action_partner_address_form" id="menu_partner_address_form" parent="base.menu_address_book" sequence="30"/>
+        <menuitem action="action_partner_address_form" id="menu_partner_address_form"
+            groups="base.group_extended"
+            parent="base.menu_address_book" sequence="30"/>
 
         <!--
           =========================================
