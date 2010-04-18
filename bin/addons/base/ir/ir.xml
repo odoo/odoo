@@ -106,9 +106,9 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="company_id"/>
-                        <field name="active" select="2"/>
+                        <field name="active" groups="base.group_extended"/>
                     </group>
-                    <notebook>
+                    <notebook colspan="4">
                     <page string="Sequence">
                         <field name="prefix"/>
                         <field name="suffix"/>
@@ -191,7 +191,9 @@
             <field name="view_mode">tree,form</field>
             <field eval="False" name="view_id"/>
         </record>
-        <menuitem action="ir_sequence_type" id="menu_ir_sequence_type" parent="base.next_id_5"/>
+        <menuitem action="ir_sequence_type" id="menu_ir_sequence_type"
+            groups="base.group_extended"
+            parent="base.next_id_5"/>
 
         <!-- Actions -->
 
@@ -434,6 +436,7 @@
         <menuitem id="menu_res_company_global"
             parent="base.menu_administration"
             name="Companies"
+            groups="base.group_multi_company"
             sequence="5"/>
 
         <record id="action_res_company_tree" model="ir.actions.act_window">
@@ -443,8 +446,10 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
         </record>
-        <menuitem action="action_res_company_tree" id="menu_action_res_company_tree" parent="base.menu_res_company_global" sequence="16"/>
-
+        <menuitem action="action_res_company_tree"
+            groups="base.group_multi_company"
+            id="menu_action_res_company_tree" parent="base.menu_res_company_global"
+            sequence="16"/>
         <record id="action_res_company_form" model="ir.actions.act_window">
             <field name="name">Companies</field>
             <field name="type">ir.actions.act_window</field>
@@ -534,7 +539,9 @@
             <field name="view_type">tree</field>
             <field eval="[('parent_id','=',False)]" name="domain"/>
         </record>
-        <menuitem action="action_res_roles" id="menu_action_res_roles" parent="base.menu_users"/>
+        <menuitem action="action_res_roles"
+            groups="base.group_extended"
+            id="menu_action_res_roles" parent="base.menu_users"/>
 
         <record id="action_res_roles_form" model="ir.actions.act_window">
             <field name="name">Roles</field>
@@ -914,18 +921,35 @@
 
         <!-- Translations -->
 
+        <record id="view_translation_search" model="ir.ui.view">
+            <field name="name">Translations</field>
+            <field name="model">ir.translation</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Translations">
+                    <filter icon="terp-project"
+                        string="Untranslated"
+                        domain="['|',('value', '=', False),('value','=','')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="lang" select="1"/>
+                    <field name="src" select="1"/>
+                    <field name="value" select="1"/>
+                </search>
+            </field>
+        </record>
+
         <record id="view_translation_form" model="ir.ui.view">
             <field name="name">Translations</field>
             <field name="model">ir.translation</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Translations">
-                    <field name="name" select="2"/>
-                    <field name="res_id" select="2"/>
-                    <field name="type" select="2"/>
-                    <field name="lang" select="1"/>
-                    <field name="src" select="1"/>
-                    <field name="value" select="1"/>
+                    <field name="name"/>
+                    <field name="res_id"/>
+                    <field name="type"/>
+                    <field name="lang"/>
+                    <field name="src"/>
+                    <field name="value"/>
                 </form>
             </field>
         </record>
@@ -945,20 +969,12 @@
         </record>
 
         <record id="action_translation" model="ir.actions.act_window">
-            <field name="name">All terms</field>
+            <field name="name">Translation Terms</field>
             <field name="res_model">ir.translation</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_translation_tree"/>
         </record>
         <menuitem action="action_translation" id="menu_action_translation" parent="base.menu_translation_app"/>
-        <record id="action_translation_untrans" model="ir.actions.act_window">
-            <field name="name">Untranslated terms</field>
-            <field name="res_model">ir.translation</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_translation_tree"/>
-            <field name="domain">['|',('value', '=', False),('value','=','')]</field>
-        </record>
-        <menuitem action="action_translation_untrans" id="menu_action_translation_untrans" parent="menu_action_translation"/>
 
         <!--
     =============================================================
@@ -1354,7 +1370,6 @@
                     <field name="sequence"/>
                     <field name="action_id" select="1"/>
                     <field name="state"/>
-                    <field name="active" select="2" invisible="True"/>
                 </tree>
             </field>
         </record>
@@ -1366,28 +1381,31 @@
                 <form editable="bottom" string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id" select="1"/>
+                    <field name="restart"/>
                     <field name="state"/>
-                    <field name="active" select="2"/>
                 </form>
             </field>
         </record>
         <record id="act_ir_actions_todo_form" model="ir.actions.act_window">
-            <field name="name">Config Wizard Steps</field>
+            <field name="name">List of Configuration Wizards</field>
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="view_type">form</field>
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
-        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"/>
+
+        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form" parent="next_id_11"
+            groups="base.group_extended"/>
 
         <record id="action_start_configurator" model="ir.actions.server">
-          <field name="name">Start Configuration</field>
+          <field name="name">Launch Configuration Wizards</field>
           <field name="model_id" ref="model_res_config"/>
           <field name="state">code</field>
-          <field name="code">action = self.next(cr, uid, [])</field>
+          <field name="code">action = self.start(cr, uid, [])</field>
         </record>
-        <menuitem action="action_start_configurator" name="Start Configuration"
-                  id="menu_configurator_module" parent="next_id_11"
-                  type="server"/>
+        <menuitem
+            action="action_start_configurator" name="Start Configuration"
+            id="menu_configurator_module" parent="next_id_11"
+            type="server"/>
     </data>
 </openerp>

@@ -119,23 +119,23 @@ class boolean(_column):
     _symbol_f = lambda x: x and 'True' or 'False'
     _symbol_set = (_symbol_c, _symbol_f)
 
-
 class integer_big(_column):
     _type = 'integer_big'
     _symbol_c = '%s'
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
+    _symbol_get = lambda self,x: x or 0
 
 class integer(_column):
     _type = 'integer'
     _symbol_c = '%s'
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
+    _symbol_get = lambda self,x: x or 0
 
 
 class reference(_column):
     _type = 'reference'
-
     def __init__(self, string, selection, size, **args):
         _column.__init__(self, string=string, size=size, selection=selection, **args)
 
@@ -173,6 +173,7 @@ class float(_column):
     _symbol_c = '%s'
     _symbol_f = lambda x: __builtin__.float(x or 0.0)
     _symbol_set = (_symbol_c, _symbol_f)
+    _symbol_get = lambda self,x: x or 0.0
 
     def __init__(self, string='unknown', digits=None, digits_compute=None, **args):
         _column.__init__(self, string=string, **args)
@@ -196,7 +197,6 @@ class datetime(_column):
 
 class time(_column):
     _type = 'time'
-
 
 class binary(_column):
     _type = 'binary'

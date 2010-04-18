@@ -320,7 +320,7 @@
                         <page string="Sales &amp; Purchases">
                             <separator string="General Information" colspan="4"/>
                             <field name="user_id"/>
-                            <field name="active"/>
+                            <field name="active" groups="base.group_extended"/>
                             <field name="website" widget="url"/>
                             <field name="date"/>
                             <field name="parent_id" groups="base.group_extended"/>
@@ -552,7 +552,7 @@
             <field name="arch" type="xml">
                 <form string="Partner Category">
                     <field name="name" select="1"/>
-                    <field name="active" select="1"/>
+                    <field name="active" groups="base.group_extended"/>
                     <field name="parent_id"/>
                     <separator colspan="4" string="Partners"/>
                     <field colspan="4" name="partner_ids" nolabel="1"/>
@@ -567,7 +567,6 @@
             <field name="arch" type="xml">
                 <tree string="Partner Categories">
                     <field name="complete_name"/>
-                    <field name="active" />
                 </tree>
             </field>
         </record>

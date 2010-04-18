@@ -721,10 +721,11 @@ class act_window_close(osv.osv):
 act_window_close()
 
 # This model use to register action services.
-TODO_STATES = [('open', 'Not Started'),
+TODO_STATES = [('open', 'To Do'),
                ('done', 'Done'),
                ('skip','Skipped'),
                ('cancel','Cancel')]
+
 class ir_actions_todo(osv.osv):
     _name = 'ir.actions.todo'
     _columns={
@@ -732,17 +733,17 @@ class ir_actions_todo(osv.osv):
             'ir.actions.act_window', 'Action', select=True, required=True,
             ondelete='cascade'),
         'sequence': fields.integer('Sequence'),
-        'active': fields.boolean('Active'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name':fields.char('Name', size=64),
+        'restart': fields.selection([('onskip','On Skip'),('always','Always'),('never','Never')],'Restart',required=True),
         'note':fields.text('Text', translate=True),
     }
     _defaults={
         'state': lambda *a: 'open',
         'sequence': lambda *a: 10,
-        'active': lambda *a: True,
+        'restart': lambda *a: 'always',
     }
-    _order="sequence"
+    _order="sequence,id"
 ir_actions_todo()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
