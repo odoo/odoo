@@ -13,14 +13,14 @@ class project_issue_report(osv.osv):
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
         'company_id' : fields.many2one('res.company', 'Company'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
-        'project_id':fields.many2one('project.project', 'Project'),
+        'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'type_id': fields.many2one('crm.case.resource.type', 'Type', domain="[('object_id.model', '=', 'project.issue')]"),
         'date_closed': fields.datetime('Close Date', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
-        'assigned_to' : fields.many2one('res.users', 'Assigned to',),
+        'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
-        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
+        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" )
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'project_issue_report')
@@ -45,7 +45,7 @@ class project_issue_report(osv.osv):
                     c.partner_id,
                     c.canal_id,
                     c.task_id,
-                    c.create_date,
+                    date_trunc('day',c.create_date) as create_date,
                     to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
                 from
                     project_issue c
@@ -53,7 +53,7 @@ class project_issue_report(osv.osv):
                     res_users u on (c.id = u.id)
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), c.state, c.user_id,c.section_id,c.categ_id,c.stage_id
                 ,c.date_closed,u.company_id,c.priority,c.project_id,c.type_id
-                ,c.create_date,c.assigned_to,c.partner_id,c.canal_id,c.task_id
+                ,date_trunc('day',c.create_date),c.assigned_to,c.partner_id,c.canal_id,c.task_id
             )""")
 
 
