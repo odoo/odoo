@@ -41,7 +41,7 @@
                                         <form string="Survey Question">
                                             <field name="question" colspan="4" select="1"/>
                                             <field name="sequence"/>
-                                            <field name="tot_resp" select="2"/>
+                                            <field name="tot_resp"/>
                                             <field name="type" on_change="on_change_type(type)"/>
                                             <field name="in_visible_rating_weight" invisible="1"/>
                                             <field name="in_visible_menu_choice" invisible="1"/>
@@ -193,7 +193,7 @@
                             <group colspan="6" col='4'>
                                 <field name="max_response_limit" select="1"
                                     attrs="{'readonly':[('state','in',('open','close'))]}"/>
-                                <field name="response_user" select="2"
+                                <field name="response_user"
                                     attrs="{'readonly':[('state','in',('open','close'))]}"/>
                                 <field name="type"/>
                                 <field name="send_response"/>
@@ -203,7 +203,7 @@
                         </page>
                         <page string="History">
                             <field name="date_open" select="1"/>
-                            <field name="date_close" select="2"/>
+                            <field name="date_close"/>
                             <field name="tot_start_survey" select="1"/>
                             <field name="tot_comp_survey" select="1"/>
                             <field name="history" colspan="4" nolabel="1">
@@ -231,9 +231,9 @@
                     <field name="title" select="1"/>
                     <field name="type" select="1"/>
                     <field name="date_open" select="1" string="Open Date"/>
-                    <field name="responsible_id" select="2"/>
-                    <field name="tot_start_survey" select="2" string="Started"/>
-                    <field name="tot_comp_survey" select="2" string="Completed"/>
+                    <field name="responsible_id"/>
+                    <field name="tot_start_survey" string="Started"/>
+                    <field name="tot_comp_survey" string="Completed"/>
                     <field name="state" select="1"/>
                     <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
                         string="Test Survey" type="action" icon="gtk-new"
@@ -301,7 +301,7 @@
                     <form string="Survey Question">
                         <field name="question" colspan="4" select="1"/>
                         <field name="sequence"/>
-                        <field name="tot_resp" select="2"/>
+                        <field name="tot_resp"/>
                         <field name="type" on_change="on_change_type(type)"/>
                         <field name="in_visible_rating_weight" invisible="1"/>
                         <field name="in_visible_menu_choice" invisible="1"/>

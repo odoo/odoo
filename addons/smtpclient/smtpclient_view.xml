@@ -96,7 +96,6 @@
                                 <field name="user" select="1" attrs="{'required': [('auth_type','in',['gmail','yahoo'])]}"/>
                                 <field name="password" password="True" attrs="{'required': [('auth_type','in',['gmail','yahoo'])]}"/>
                             </group>
-                            
                             <group col="2" colspan="2">
                                 <separator string="Message Queue Configuration" colspan="2" />
                                 <field name="active" select="2" />
@@ -129,7 +128,7 @@
                         </page>
                         <page string="Messages">
                             <separator string="Verification Message" colspan="4" />
-                            <field name="verify_email" select="2" colspan="4" nolabel="1" />
+                            <field name="verify_email" colspan="4" nolabel="1" />
                             <label string="__code__ for Verification Code" />
                             <separator string="Test Message" colspan="4" />
                             <field name="test_email" select="2" colspan="4" nolabel="1" />
@@ -263,7 +262,7 @@
                         </page>
                         <page string="Error">
                             <separator string="Last Error occured" colspan="4"/>
-                            <field name="error" select="2" nolabel="1"/>
+                            <field name="error" nolabel="1"/>
                         </page>
                         <page string="Message">
                             <separator string="Message with All Headers" colspan="4"/>

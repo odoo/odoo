@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -20,35 +20,33 @@
 #
 ##############################################################################
 
-from osv import fields, osv
 
-class wiki_wiki_help_open(osv.osv_memory):
-    """ Basic Wiki Editing """
-    _name = "wiki.wiki.help.open"
-    _description = "Basic Wiki Editing"
-
-    def open_wiki_page(self, cr, uid, ids, context):
-
-        """ Opens Wiki Page for Editing
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of wiki page’s IDs
-
-        """
-        pages = self.pool.get('wiki.wiki').search(cr, uid, [('name', '=', 'Basic Wiki Editing')])
-
-        value = {
-            'view_type': 'form', 
-            'view_mode': 'form,tree', 
-            'res_model': 'wiki.wiki', 
-            'view_id': False, 
-            'res_id': pages[0], 
-            'type': 'ir.actions.act_window', 
-        }
-
-        return value
-
-wiki_wiki_help_open()
-
+{
+    'name': 'Issue Management in Project Management',
+    'version': '1.0',
+    'category': 'Generic Modules/CRM & SRM',
+    'description': """
+        This module provide Issues/Bugs Management in Project
+    """,
+    'author': 'Tiny',
+    'website': 'http://www.openerp.com',
+    'depends': [
+        'crm',
+        'project',
+        'hr_timesheet_sheet',
+    ],
+    'init_xml': [
+        'project_issue_data.xml'
+    ],
+    'update_xml': [
+        'project_issue_view.xml',
+        'project_issue_menu.xml',
+        'report/project_issue_report_view.xml',
+        'security/project_issue_security.xml',
+        'security/ir.model.access.csv',
+     ],
+    'demo_xml': ['project_issue_demo.xml'],
+    'installable': True,
+    'active': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

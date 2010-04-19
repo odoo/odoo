@@ -176,7 +176,9 @@
             <field name="view_id" ref="view_tracking_tree"/>
         </record>
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="4"/>
-        <menuitem action="action_tracking_form" id="menu_action_tracking_form" parent="menu_traceability"/>
+        <menuitem action="action_tracking_form" id="menu_action_tracking_form"
+            groups="base.group_extended"
+            parent="menu_traceability"/>
 
         <record id="lot_line_tree" model="ir.ui.view">
             <field name="name">stock.tracking.tree</field>
@@ -339,12 +341,6 @@
         </record>
 
         <!--wizard
-            id="action_lot2"
-            model="stock.production.lot"
-            name="stock.traceability.lot.upstream"
-            string="Upstream traceability"/-->
-
-        <!--wizard
             id="action_lot4"
             model="stock.production.lot"
             name="stock.traceability.lot.downstream"
@@ -428,6 +424,25 @@
             </field>
         </record>
 
+        <record id="view_location_search" model="ir.ui.view">
+            <field name="name">stock.location.search</field>
+            <field name="model">stock.location</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Stock Locations">
+                    <filter icon="terp-stock" name="in_location"
+                        string="Internal" domain="[('location_id.usage', '=', 'internal')]" help="Internal Locations" />
+                    <filter icon="terp-stock" name="customer"
+                        string="Customer" domain="[('location_id.usage', '=', 'customer')]" help="Customer Locations" />
+                    <filter icon="terp-stock" name="supplier"
+                        string="Supplier" domain="[('location_id.usage', '=', 'supplier')]" help="Supplier Locations" />
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+
         <record id="view_location_tree2" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
             <field name="model">stock.location</field>
@@ -449,7 +464,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_location_tree2"/>
-            <field name="context">{'full':'1'}</field>
+            <field name="context">{'full':1, 'search_default_in_location':1}</field>
         </record>
         <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_stock_configuration" />
 

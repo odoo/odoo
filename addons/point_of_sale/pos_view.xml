@@ -50,7 +50,7 @@
                             <group colspan="4" col="9" groups="base.group_extended">
                             <separator colspan="4" string="Validation of the Sale"/>
                                 <newline/>
-                                <field name="state_2" select="2" />
+                                <field name="state_2" />
                                 <button name="button_validate"
                                         string="Accept"
                                         type="object"
@@ -257,8 +257,8 @@ invoiced
                 <form string="POS Order line">
                     <field name="product_id"  select="1"/>
                     <field name="qty"  select="1"/>
-                    <field name="discount"  select="2"/>
-                    <field name="price_unit"  select="2"/>
+                    <field name="discount" />
+                    <field name="price_unit" />
                     <field name="create_date"  select="1"/>
                 </form>
             </field>
@@ -306,9 +306,9 @@ invoiced
                     <field name="journal_id" select="1"/>
                     <field name="jl_id" select="1"/>
                     <field name="date_create" select="1" widget="date"/>
-                    <field name="no_trans" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="invoice_id" select="2"/>
+                    <field name="no_trans"/>
+                    <field name="amount"/>
+                    <field name="invoice_id"/>
                 </form>
             </field>
         </record>
@@ -394,9 +394,9 @@ invoiced
             <field name="arch" type="xml">
                 <form string="POS ">
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="user_id" select="2"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
                 </form>
             </field>
         </record>
@@ -409,9 +409,9 @@ invoiced
             <field name="arch" type="xml">
                 <tree string="POS">
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="user_id" select="2"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -423,7 +423,7 @@ invoiced
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_order" string="POS Report">
-                    <field name="qty" select="2"/>
+                    <field name="qty"/>
                     <field name="amount" />
                 </calendar>
             </field>
@@ -460,9 +460,9 @@ invoiced
             <field name="arch" type="xml">
                 <form string="POS ">
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="user_id" select="2"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
                 </form>
             </field>
         </record>
@@ -475,9 +475,9 @@ invoiced
             <field name="arch" type="xml">
                 <tree string="POS">
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="user_id" select="2"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -489,7 +489,7 @@ invoiced
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_order" string="POS Report">
-                    <field name="qty" select="2"/>
+                    <field name="qty"/>
                     <field name="amount" />
                 </calendar>
             </field>
@@ -525,12 +525,12 @@ invoiced
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS ">
-                    <field name="user_id" select="2"/>
-                    <field name="product_name" select="2"/>
+                    <field name="user_id"/>
+                    <field name="product_name"/>
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="net_margin_per_qty" select="2"/>
-                    <field name="total" select="2"/>
+                    <field name="qty"/>
+                    <field name="net_margin_per_qty"/>
+                    <field name="total"/>
                 </form>
             </field>
         </record>
@@ -542,12 +542,12 @@ invoiced
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
-                    <field name="user_id" select="2"/>
-                    <field name="product_name" select="2"/>
+                    <field name="user_id"/>
+                    <field name="product_name"/>
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="net_margin_per_qty" select="2"/>
-                    <field name="total" select="2"/>
+                    <field name="qty"/>
+                    <field name="net_margin_per_qty"/>
+                    <field name="total"/>
                 </tree>
             </field>
         </record>
@@ -559,7 +559,7 @@ invoiced
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
-                    <field name="product_name" select="2"/>
+                    <field name="product_name"/>
                     <field name="total" />
                 </calendar>
             </field>
@@ -592,12 +592,12 @@ invoiced
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS ">
-                    <field name="user_id" select="2"/>
-                    <field name="product_name" select="2"/>
+                    <field name="user_id"/>
+                    <field name="product_name"/>
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="net_margin_per_qty" select="2"/>
-                    <field name="total" select="2"/>
+                    <field name="qty"/>
+                    <field name="net_margin_per_qty"/>
+                    <field name="total"/>
                 </form>
             </field>
         </record>
@@ -609,12 +609,12 @@ invoiced
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
-                    <field name="user_id" select="2"/>
-                    <field name="product_name" select="2"/>
+                    <field name="user_id"/>
+                    <field name="product_name"/>
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="net_margin_per_qty" select="2"/>
-                    <field name="total" select="2"/>
+                    <field name="qty"/>
+                    <field name="net_margin_per_qty"/>
+                    <field name="total"/>
                 </tree>
             </field>
         </record>
@@ -626,7 +626,7 @@ invoiced
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
-                    <field name="product_name" select="2"/>
+                    <field name="product_name"/>
                     <field name="total" />
                 </calendar>
             </field>
@@ -677,7 +677,7 @@ invoiced
             <field name="arch" type="xml">
              <form string="Contact Mode">
                     <field  name="name" select="1"/>
-                    <field  name="active" select="2"/>
+                    <field  name="active"/>
               </form>
             </field>
           </record>
@@ -741,12 +741,12 @@ invoiced
                     <group colspan="4" col="2">
                         <separator string="Product Description" colspan="4"/>
                         <field name="name" select="1"  />
-                        <field groups="base.group_extended" name="variants" select="2" />
+                        <field groups="base.group_extended" name="variants" />
                     </group>
                     <group colspan="1" col="2">
                         <separator string="Codes" colspan="2"/>
                         <field name="default_code" select="1"/>
-                        <field groups="base.group_extended" name="ean13" select="2"/>
+                        <field groups="base.group_extended" name="ean13"/>
                     </group>
 
                    </group>
@@ -756,7 +756,7 @@ invoiced
                             <separator string="Product Type" colspan="2"/>
                               <field name="categ_id" select="1"/>
                               <field name="property_account_income" select="1" string="Account" required="1"/>
-                              <field name="type" select="2"/>
+                              <field name="type"/>
                             </group>
                             <group colspan="2" col="2" name="Miscelleanous">
                               <separator string="Miscelleanous" colspan="2"/>
@@ -764,7 +764,7 @@ invoiced
                                   <field name="expense_pdt"/>
                             <field name="am_out"/>
                           <field name="disc_controle"/>
-                                  <field name="company_id" select="2" groups="base.group_extended"/>
+                                  <field name="company_id" groups="base.group_extended"/>
                               </group>
                               <group colspan="2" col="2" name="Prices">
                                   <separator string="Prices" colspan="2"/>

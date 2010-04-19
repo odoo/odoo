@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,37 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-{
-    'name': 'Document Management - Wiki',
-    'version': '1.0',
-    'category': 'Generic Modules/Others',
-    'description': """
-    The base module to manage documents(wiki)
+import project_issue_report
 
-    keep track for the wiki groups, pages, and history
-    """,
-    'author': 'Tiny & Axelor',
-    'website': 'http://openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
-        'wizard/wizard_view.xml',
-        'wizard/wiki_wiki_page_open_view.xml',
-        'wizard/wiki_create_menu_view.xml',
-        'wizard/wiki_wiki_help_open_view.xml',
-        'wizard/wiki_make_index_view.xml',
-        'wiki_view.xml',
-        'data/wiki_quickstart.xml',
-        'data/wiki_main.xml',
-        'security/ir.model.access.csv'
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': '0086363630317',
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

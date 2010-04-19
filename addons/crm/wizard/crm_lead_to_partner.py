@@ -53,42 +53,41 @@ class crm_lead2partner(osv.osv_memory):
                      raise osv.except_osv(_('Warning !'),
                         _('A partner is already defined on this lead.'))
 
-    def _select_partner(self, cr, uid, context=None):
+    def default_get(self, cr, uid, fields, context=None):
         """
-        This function Searches for Partner from selected lead.
+        This function gets default values
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
 
-        @return : Partner id if any for selected lead.
+        @return : default values of fields.
         """
-        if not context:
-            context = {}
-
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
         rec_ids = context and context.get('active_ids', [])
         partner_id = False
 
-        for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
+        data = context and context.get('active_ids', []) or []
+        res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
+
+        for lead in lead_obj.browse(cr, uid, data, context=context):
             partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
             if not partner_ids and lead.email_from:
                 address_ids = contact_obj.search(cr, uid, [('email', '=', lead.email_from)])
                 if address_ids:
                     addresses = contact_obj.browse(cr, uid, address_ids)
                     partner_ids = addresses and [addresses[0].partner_id.id] or False
-
             partner_id = partner_ids and partner_ids[0] or False
-        return partner_id
 
-    _defaults = {
-        'action': lambda *a:'exist',
-        'partner_id': _select_partner
-        }
-
+            if 'partner_id' in fields:
+                res.update({'partner_id': partner_id})
+            if 'action' in fields:
+                res.update({'action': partner_id and 'exist' or 'create'})
+        return res
+    
     def open_create_partner(self, cr, uid, ids, context=None):
         """
         This function Opens form of create partner.
