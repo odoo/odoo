@@ -2,14 +2,13 @@
 <openerp>
     <data>
         <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="15"/>
-       <!-- <menuitem icon="STOCK_PREFERENCES" id="menu_tools" name="Tools"/>-->
         <menuitem id="next_id_45" name="Recurring Events" parent="base.menu_tools" sequence="2"/>
-<!--        <menuitem id="menu_subscription_config" name="Configuration" parent="next_id_45"/>-->
+
         <!--
-	=======================================================
-	Subscription Views
-	=======================================================
-	-->
+        =======================================================
+        Subscription Views
+        =======================================================
+        -->
         <record id="view_subscription_form" model="ir.ui.view">
             <field name="name">subscription.subscription.form</field>
             <field name="model">subscription.subscription</field>
@@ -18,7 +17,7 @@
                 <form string="Subscriptions">
                     <group colspan="4">
                         <field name="name" select="1"/>
-                        <field name="active" select="1"/>
+                        <field name="active" select="1" groups="base.group_extended"/>
                         <field name="user_id" select="1"/>
                         <field name="partner_id" select="1"/>
                     </group>
@@ -55,7 +54,7 @@
             <field name="arch" type="xml">
                 <tree string="Subscriptions">
                     <field name="name"/>
-                    <field name="active"/>
+                    <field name="active" groups="base.group_extended"/>
                     <field name="user_id"/>
                     <field name="partner_id"/>
                     <field name="state"/>

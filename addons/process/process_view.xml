@@ -16,7 +16,7 @@
             <form string="Process">
                 <group colspan="4" string="Details">
                     <field name="name" select="1"/>
-                    <field name="active" select="2"/>
+                    <field name="active"/>
                     <field name="model_id" select="1"/>
                 </group>
                 <notebook colspan="4">
@@ -35,7 +35,7 @@
                                     <field name="process_id" readonly="1" required="0"/> <!-- used by transition_out -->
                                     <newline/>
                                     <field name="model_id" select="1"/>
-                                    <field name="menu_id" select="2"/>                                    
+                                    <field name="menu_id"/>
                                     <newline/>
                                     <field name="kind" select="1"/>
                                     <field name="help_url" widget="url"/>
@@ -68,7 +68,7 @@
                                                                 <newline/>
                                                                 <field name="state"/>
                                                                 <field name="action"/>
-                                                            </form>               
+                                                            </form>
                                                         </field>
                                                     </page>
                                                     <page string="Roles Required">
@@ -145,8 +145,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Process Nodes">
-                <field name="name"/>      
-                <field name="process_id" select="1"/>          
+                <field name="name"/>
+                <field name="process_id" select="1"/>
                 <field name="model_id" select="1"/>
                 <field name="kind" select="1"/>
                 <field name="flow_start"/>
@@ -162,11 +162,11 @@
             <form string="Process Node">
                 <group colspan="4" string="Details">
                     <field name="name" select="1"/>
-                    <field name="flow_start"/>                                    
+                    <field name="flow_start"/>
                     <field name="process_id"/>
-                    <newline/>                                    
+                    <newline/>
                     <field name="model_id" select="1"/>
-                    <field name="menu_id" select="2"/>                                    
+                    <field name="menu_id"/>
                     <newline/>
                     <field name="kind" select="1"/>
                     <field name="help_url" widget="url"/>
@@ -199,7 +199,7 @@
                                                 <newline/>
                                                 <field name="state"/>
                                                 <field name="action"/>
-                                            </form>               
+                                            </form>
                                         </field>
                                     </page>
                                     <page string="Roles Required">
@@ -234,7 +234,7 @@
                         <field name="note" nolabel="1" colspan="4"/>
                     </page>
                 </notebook>
-            </form>                                
+            </form>
         </field>
     </record>
 

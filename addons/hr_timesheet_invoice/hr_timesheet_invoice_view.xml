@@ -27,8 +27,8 @@
             <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="company_currency_id" select="2" position="replace">
-                    <field name="currency_id" select="2"/>
+                <field name="company_currency_id" position="replace">
+                    <field name="currency_id"/>
                 </field>
             </field>
         </record>
@@ -40,7 +40,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="journal_id" position="after">
-                    <field name="to_invoice" select="2"/>
+                    <field name="to_invoice"/>
                     <field name="invoice_id"/>
                 </field>
             </field>
@@ -154,7 +154,7 @@
             <field name="arch" type="xml">
                 <form string="Type of invoicing">
                     <field colspan="1" name="name" select="1"/>
-                    <field colspan="1" name="customer_name" select="2"/>
+                    <field colspan="1" name="customer_name"/>
                     <field colspan="2" name="factor"/>
                 </form>
             </field>

@@ -20,7 +20,7 @@
       <menuitem id="menu_procurement_management_nventory" name="Inventory Control"
             parent="base.menu_purchase_root" sequence="4"/>
       <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_nventory"
-              name="Incoming shipments" sequence="9"/>
+              name="Incoming Shipments" sequence="9"/>
         <menuitem action="stock.action_reception_picking_move" id="menu_action_reception_picking_move"
               name="Incoming Products" parent="menu_procurement_management_nventory" sequence="10"/>
 
@@ -69,12 +69,12 @@
                 <form string="Purchase Order">
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
-                        <field name="date_order" select="2"/>
-                        <field name="invoiced" select="2"/>
+                        <field name="date_order"/>
+                        <field name="invoiced"/>
                         <newline/>
                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                        <field name="origin" select="2"/>
-                        <field name="shipped" select="2"/>
+                        <field name="origin"/>
+                        <field name="shipped"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
@@ -82,7 +82,7 @@
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" domain="[('supplier','=', 1)]"/>
                             <field name="partner_address_id"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id"/>
-                            <field name="partner_ref" select="2"/>
+                            <field name="partner_ref"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" mode="tree,form">
                                 <tree colors="red:date_planned&lt;=current_date;black:date_planned&gt;current_date" string="Purchase Order Lines">
@@ -351,5 +351,6 @@
         </record>
          <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_purchase_line_form_action"/>
           
+
     </data>
 </openerp>

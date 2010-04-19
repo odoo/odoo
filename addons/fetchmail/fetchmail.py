@@ -129,8 +129,8 @@ class mail_server(osv.osv):
             ('wating','Waiting for Verification'),
             ('done','Confirmed'),
         ],'State', select=True, readonly=True),
-        'server' : fields.char('SMTP Server', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'port' : fields.integer('SMTP Port', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'server' : fields.char('Server', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'port' : fields.integer('Port', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'type':fields.selection([
             ('pop','POP Server'),
             ('imap','IMAP Server'),
@@ -255,17 +255,35 @@ class mail_server(osv.osv):
         
         if msg.get('references', False):
             id = False
-            ref = msg.get('references').split('\r\n')
+            ref = msg.get('references')
+            if '\r\n' in ref:
+                ref = msg.get('references').split('\r\n')
+            else:
+                ref = msg.get('references').split(' ')
+                
             if ref:
-                hids = history_pool.search(cr, uid, [('name','=',ref[0])])
+                hids = history_pool.search(cr, uid, [('name','=',ref[0].strip())])
                 if hids:
                     id = hids[0]
                     history = history_pool.browse(cr, uid, id)
                     model_pool = self.pool.get(server.object_id.model)
                     context.update({
-                        'message_id':ref[0]
+                        'references_id':ref[0]
                     })
-                    model_pool.message_update(cr, uid, [history.res_id], msg, context=context)
+                    maps = {
+                        'cost':'planned_cost',
+                        'revenue': 'planned_revenue',
+                        'probability':'probability'
+                    }
+                    vals = { }
+                    for line in msg['body'].split('\n'):
+                        line = line.strip()
+                        res = command_re.match(line)
+                        if res and maps.get(res.group(1).lower(), False):
+                            key = maps.get(res.group(1).lower())
+                            vals[key] = res.group(2).lower()
+                        
+                    model_pool.message_update(cr, uid, [history.res_id], vals, msg, context=context)
             res_id = id
         else:
             model_pool = self.pool.get(server.object_id.model)

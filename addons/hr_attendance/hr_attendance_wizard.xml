@@ -2,22 +2,22 @@
 <openerp>
     <data>
 
- 		<wizard id="si_so" model="hr.employee" name="hr.si_so" string="Sign in / Sign out"/>
-		<wizard id="wizard_attendance_error" keyword="client_print_multi" model="hr.employee" name="hr.attendance.report" string="Print Attendance Error Report"/>
+ 		<!--<wizard multi="1" menu="False" id="si_so" model="hr.employee" name="hr.si_so" string="Sign in / Sign out"/>-->
+		<!--<wizard id="wizard_attendance_error" keyword="client_print_multi" model="hr.employee" name="hr.attendance.report" string="Print Attendance Error Report"/>
 
-		<wizard id="print_week" keyword="client_print_multi" model="hr.employee" name="hr.attendance.print_week" string="Print Timesheet by week"/>
-		<wizard id="print_month" keyword="client_print_multi" model="hr.employee" name="hr.attendance.print_month" string="Print Timesheet by month"/>
+		<wizard id="print_week" keyword="client_print_multi" model="hr.employee" name="hr.attendance.print_week" string="Print Timesheet by week"/>-->
+		<!--<wizard id="print_month" keyword="client_print_multi" model="hr.employee" name="hr.attendance.print_month" string="Print Timesheet by month"/>-->
 
 
-        <menuitem action="si_so" id="menu_si_so" parent="menu_hr_time_tracking" type="wizard" sequence="1"
-            groups="group_hr_attendance"/>
+      <!--  <menuitem action="si_so" id="menu_si_so" parent="menu_hr_time_tracking" type="wizard" sequence="1"
+            groups="group_hr_attendance"/>-->
         <!--Time Tracking menu for Project Management-->
          <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
          <menuitem
              id="base.menu_project_management_time_tracking"
              name="Time Tracking"
              parent="base.menu_main_pm" sequence="3"/>
-        <menuitem action="hr_attendance.si_so" id="menu_project_management_si_so" parent="base.menu_project_management_time_tracking" type="wizard" sequence="9"/>
-
+        <!--<menuitem action="hr_attendance.si_so" id="menu_project_management_si_so" parent="base.menu_project_management_time_tracking" type="wizard" sequence="9"/>
+-->
     </data>
 </openerp>

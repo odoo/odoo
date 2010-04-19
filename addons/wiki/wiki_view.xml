@@ -2,17 +2,17 @@
 <openerp>
     <data>
        <menuitem name="Knowledge Management" icon="terp-stock"
-       	id="base.menu_document" sequence="4" />
+           id="base.menu_document" sequence="4" />
 
        <menuitem name="Configuration"
-       	id="base.menu_document_configuration"
-       	parent="base.menu_document" sequence="50" />
+           id="base.menu_document_configuration"
+           parent="base.menu_document" sequence="50" />
 
        <menuitem name="Wiki" id="menu_wiki_configuration"
-       	parent="base.menu_document_configuration" sequence="2" />
+           parent="base.menu_document_configuration" sequence="2" />
 
        <menuitem id="base.menu_document2" name="Collaborative Content"
-       	parent="base.menu_document" />
+           parent="base.menu_document" />
 
 <!--  Wiki Groups Tree view -->
 
@@ -40,7 +40,7 @@
                         <field name="create_date" readonly="2"/>
                         <field name="method" select="1"/>
                         <field name="home" select="1"
-                        	attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
+                            attrs="{'required':[('method','=','page')], 'readonly':[('method','!=','page')]}" />
                     </group>
                     <notebook colspan="4">
                     <page string="Notes">
@@ -51,10 +51,10 @@
                     </page>
                     </notebook>
                      <button
-			 	    	name="%(wiki.action_wiki_create_menu)d"
-			 	    	string="Create Menu"
-			 	     	type="action"
-			 	     	icon="gtk-justify-fill" />
+                         name="%(wiki.action_wiki_create_menu)d"
+                         string="Create Menu"
+                          type="action"
+                          icon="gtk-justify-fill" />
                 </form>
             </field>
         </record>
@@ -127,17 +127,17 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="6"/>
                         <field name="group_id" select="1" on_change="onchange_group_id(group_id, text_area)"/>
-                        <field name="section" select="2" invisible="not context.get('section',False)"/>
+                        <field name="section" invisible="not context.get('section',False)"/>
                         <field name="parent_id"/>
                     </group>
                     <field name="text_area" nolabel="1" colspan="4" select="1" widget="text_wiki"/>
                     <separator colspan="4" string="Modifications"/>
                     <group col="6" colspan="4">
-                        <field name="write_date" readonly="1" select="2"/>
+                        <field name="write_date" readonly="1"/>
                         <field name="review" select="1"/>
                         <field name="toc"/>
                         <field name="tags" select="1" groups="base.group_extended"/>
-                        <field name="summary" colspan="4" select="2" groups="base.group_extended"/>
+                        <field name="summary" colspan="4" groups="base.group_extended"/>
                     </group>
                 </form>
             </field>
@@ -145,7 +145,7 @@
 
 <!-- wiki Search view  -->
 
-		<record id="view_wiki_filter" model="ir.ui.view">
+        <record id="view_wiki_filter" model="ir.ui.view">
             <field name="name">wiki.wiki.search</field>
             <field name="model">wiki.wiki</field>
             <field name="type">search</field>
@@ -176,8 +176,8 @@
         </record>
 
         <menuitem parent="base.menu_document2"
-        	id="menu_action_wiki_wiki" name="Wiki Pages"
-        	action="action_wiki" />
+            id="menu_action_wiki_wiki" name="Wiki Pages"
+            action="action_wiki" />
 
 <!--  Pages Waiting Review -->
 

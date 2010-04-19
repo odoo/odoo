@@ -229,5 +229,10 @@
 
         <menuitem  id="hr_menu_contract_main" parent="hr.menu_hr_root" name="Contracts" sequence="3"/>
         <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr_menu_contract_main" name="Contracts"/>
+
+        <!-- Contracts Button on Employee Form -->
+		<act_window domain="[('employee_id', '=', active_id)]" id="act_hr_employee_2_hr_contract" name="Contracts" res_model="hr.contract" src_model="hr.employee"/>
+
+
     </data>
 </openerp>

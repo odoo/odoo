@@ -2,39 +2,39 @@
 <openerp>
 <data>
 
-	<record model="ir.ui.view" id="view_order_form_inherit">
-		<field name="name">sale.order.form.inherit</field>
-		<field name="model">sale.order</field>
-		<field name="type">form</field>
-		<field name="inherit_id" ref="sale.view_order_form"/>
-		<field name="arch" type="xml">
-			<field name="project_id" select="2" position="replace"/>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_order_form_inherit">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="project_id" position="replace"/>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_order_form_inherit2">
-		<field name="name">sale.order.form.inherit2</field>
-		<field name="model">sale.order</field>
-		<field name="type">form</field>
-		<field name="inherit_id" ref="sale.view_order_form"/>
-		<field name="arch" type="xml">
-			<field name="product_id" position="after">
-				<field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
-			</field>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_order_form_inherit2">
+        <field name="name">sale.order.form.inherit2</field>
+        <field name="model">sale.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
+            </field>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_order_line_form2_inherit">
-		<field name="name">sale.order.line.form2.inherit</field>
-		<field name="model">sale.order.line</field>
-		<field name="type">form</field>
-		<field name="inherit_id" ref="sale.view_order_line_form2"/>
-		<field name="arch" type="xml">
-			<field name="product_id" readonly="1" select="1" position="after">
-				<field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
-			</field>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_order_line_form2_inherit">
+        <field name="name">sale.order.line.form2.inherit</field>
+        <field name="model">sale.order.line</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="sale.view_order_line_form2"/>
+        <field name="arch" type="xml">
+            <field name="product_id" readonly="1" select="1" position="after">
+                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
+            </field>
+        </field>
+    </record>
 
 </data>
 </openerp>

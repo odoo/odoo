@@ -1151,7 +1151,8 @@ class sale_config_picking_policy(osv.osv_memory):
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
-        ], 'Shipping Default Policy', required=True),
+        ], 'Shipping Default Policy', required=True,
+           help="You can generate invoices based on sales orders or based on shippings."),
         'step': fields.selection([
             ('one', 'Delivery Order Only'),
             ('two', 'Picking List & Delivery Order')
@@ -1163,7 +1164,7 @@ class sale_config_picking_policy(osv.osv_memory):
     }
     _defaults = {
         'picking_policy': lambda *a: 'direct',
-        'order_policy': lambda *a: 'picking',
+        'order_policy': lambda *a: 'manual',
         'step': lambda *a: 'one'
     }
 

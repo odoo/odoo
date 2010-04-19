@@ -9,7 +9,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="requisition_id"/>
+                <field name="requisition_id" groups="base.group_extended"/>
             </field>
         </field>
     </record>
@@ -21,7 +21,7 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <field name="partner_ref" position="after">
-                <field name="requisition_id"/>
+                <field name="requisition_id" groups="base.group_extended"/>
             </field>
         </field>
     </record>
@@ -141,6 +141,7 @@
     <menuitem 
         id="menu_purchase_requisition_pro_mgt" 
         sequence="0"
+        groups="base.group_extended"
         parent="purchase.menu_procurement_management" 
         action="action_purchase_requisition"/>
 

@@ -51,6 +51,7 @@ def _do_create(self, cr, uid, data, context={}):
             'user_id': data['form']['user_id'] or False,
             'planned_hours': backlog.planned_hours,
             'remaining_hours':backlog.expected_hours,
+            'sequence':backlog.sequence,
         }))
     value = {
         'domain': "[('product_backlog_id','in',["+','.join(map(str,data['ids']))+"])]",
