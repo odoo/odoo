@@ -43,7 +43,7 @@
         'data/wiki_main.xml',
         'security/ir.model.access.csv'
     ],
-    'test':['test/wiki_test00.yml'],
+    'demo_xml': [],
     'installable': True,
     'active': False,
     'certificate': '0086363630317',
