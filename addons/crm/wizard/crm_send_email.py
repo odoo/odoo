@@ -132,11 +132,6 @@ class crm_send_new_email(osv.osv_memory):
                     getattr(case_pool, act)(cr, uid, [case.id])
                 cr.commit()
 
-#            Commented because form does not close due to raise
-#                raise osv.except_osv(_('Email!'), ("Email Successfully Sent"))
-#            else:
-#                raise osv.except_osv(_('Warning!'), _("Email not sent !"))
-    
         return {}
 
     def default_get(self, cr, uid, fields, context=None):

@@ -32,6 +32,8 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
+from tools import command_re
+
 class crm_cases(osv.osv):
     """ crm cases """
 
@@ -39,7 +41,7 @@ class crm_cases(osv.osv):
     _inherit = "crm.case"    
 
     def message_new(self, cr, uid, msg, context):
-        """ 
+        """
         Automatically calls when new email message arrives
         
         @param self: The object pointer
