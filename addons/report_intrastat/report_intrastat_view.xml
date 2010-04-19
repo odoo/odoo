@@ -77,7 +77,7 @@
             <field name="arch" type="xml">
                 <tree string="Intrastat Data">
                     <field name="name" />
-	                <field name="month"/>
+                    <field name="month"/>
                     <field name="code"/>
                     <field name="ref"/>
                     <field name="intrastat_id"/>
@@ -96,16 +96,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Intrastat Data">
-                	<group col="10" colspan="4">
-                		<filter string="This Year" icon="terp-stock" domain="[('name','=',time.localtime()[0])]"/>
-						<filter string="This Month" icon="terp-stock" domain="[('month','=',time.localtime()[1])]"/>
-						<separator orientation="vertical"/>
-	                    <field name="name" select="1"/>
-	                    <field name="month" select="1"/>
-	                    <field name="code" select="1"/>
-	                    <field name="intrastat_id" select="1"/>
-	                    <field name="type" select="1"/>
-					</group>
+                    <group col="10" colspan="4">
+                        <filter string="This Year" icon="terp-stock" domain="[('name','=',time.localtime()[0])]"/>
+                        <filter string="This Month" icon="terp-stock" domain="[('month','=',time.localtime()[1])]"/>
+                        <separator orientation="vertical"/>
+                        <field name="name" select="1"/>
+                        <field name="month" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="intrastat_id" select="1"/>
+                        <field name="type" select="1"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -119,6 +119,6 @@
             <field name="search_view_id" ref="view_report_intrastat_search"/>
         </record>
 
-		<menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" parent="stock.next_id_61"/>
+        <menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" parent="stock.next_id_61"/>
     </data>
 </openerp>

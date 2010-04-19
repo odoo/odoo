@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-<!--        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"-->
-<!--            groups="group_sale_user"/>-->
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="4"/>
@@ -45,7 +43,9 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
         </record>
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="70"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form"
+            parent="base.menu_base_config" sequence="70"
+            groups="base.group_extended"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
@@ -76,8 +76,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Sales orders">
-                    <field name="date_order" string="Order date"/>
-                    <field name="name" string="Reference"/>
+                    <field name="date_order"/>
+                    <field name="name"/>
                     <field name="partner_id"/>
                     <field name="partner_shipping_id"/>
                     <field name="user_id" />
@@ -100,8 +100,8 @@
                         <field name="name" select="1"/>
                         <field name="client_order_ref"/>
                         <field name="shipped"/>
-                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
-                        <field name="date_order" select="1" string="Order date" />
+                        <field name="date_order" select="1"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="base.group_extended"/>
                         <field name="invoiced"/>
                     </group>
                     <notebook colspan="4">
@@ -119,7 +119,6 @@
                                 <form string="Sale Order Lines">
                                     <notebook>
                                         <page string="Order Line">
-                                            <separator colspan="4" string="Automatic Declaration"/>
                                             <field colspan="4"
                                                 context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
                                                 name="product_id"
@@ -140,7 +139,6 @@
                                                 groups="base.group_extended"/>
 
                                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                            <separator colspan="4" string="Manual Description"/>
                                             <field colspan="4" name="name"/>
                                             <field name="price_unit"/>
                                             <field name="discount"/>
@@ -148,9 +146,9 @@
                                             <field name="delay" groups="base.group_extended"/>
                                             <newline/>
                                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-                                            <separator colspan="4" string="States"/>
-                                            <field name="state"/>
-                                            <group col="3" colspan="2">
+                                            <group colspan="4" col="5" groups="base.group_extended">
+                                                <separator colspan="5" string="States"/>
+                                                <field name="state"/>
                                                 <field name="invoiced"/>
                                                 <button colspan="1"
                                                     name="%(action_view_sale_order_line_make_invoice)d"
@@ -212,7 +210,7 @@
                             </group>
                         </page>
                         <page string="Other data">
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group colspan="2" col="2" groups="base.group_extended" name="logistic">
                                 <separator string="Logistic" colspan="2"/>
                                 <field name="incoterm"/>
                                 <field name="picking_policy" required="True"/>
@@ -352,8 +350,7 @@
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="UoM"/>
-                    <field name="discount"/>
-                    <field name="price_unit"/>
+                    <field name="salesman_id"/>
                     <field name="price_net"/>
                     <field name="price_subtotal"/>
                     <field name="th_weight"/>
@@ -432,6 +429,7 @@
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-sale"  domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="Salesman" icon="terp-sale" domain="[]" context="{'group_by':'salesman_id'}"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
@@ -447,6 +445,7 @@
                     <group>
                     <filter icon="terp-purchase" string="Shipped"
                         domain="[('state','=','done')]"
+                        name="unshipped"
                         separator="1" />
                     <filter icon="terp-purchase" string="Uninvoiced" name="uninvoiced"
                         domain="[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"
@@ -468,12 +467,12 @@
         </record>
 
         <record id="action_order_line_tree2" model="ir.actions.act_window">
-            <field name="name">Uninvoiced Lines</field>
+            <field name="name">Lines to Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="context">{"search_default_uninvoiced":1}</field>
+            <field name="context">{"search_default_uninvoiced":1,"search_default_unshipped":1}</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="filter" eval="True"/>
         </record>
@@ -492,7 +491,7 @@
 
         <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product"/>
 
-        <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="6"/>
+        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="6"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2"/>
         <!-- configartion view -->
 
@@ -508,11 +507,11 @@
                 </form>
                 <group string="res_config_contents" position="replace">
                   <label colspan="4" align="0.0"
-                         string="Set the policies selected by default when creating a new sale order."/>
+                         string="Setup your sales workflow and default values."/>
                   <separator colspan="4"
                        string="Configure Sale Order Logistic"/>
                   <newline/>
-                  <field name="picking_policy"/>
+                  <field name="picking_policy" groups="base.group_extended"/>
                   <newline/>
                   <field name="order_policy"/>
                   <newline/>

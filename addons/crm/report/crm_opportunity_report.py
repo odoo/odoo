@@ -29,10 +29,11 @@ class crm_opportunity_report(osv.osv):
     _inherit = "crm.case.report"
     _description = "CRM Opportunity Report"
     _columns = {
-        'probability': fields.float('Avg. Probability', readonly=True),
+        'probability': fields.float('Avg. Probability', readonly=True, group_operator="avg"),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
-        'delay_close': fields.char('Delay to close', size=20, readonly=True),
+        'delay_close': fields.float('Days to Close', digits=(16,2), readonly=True, group_operator="avg",
+            help="Number of Days to close the opportunities"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                      domain="[('section_id','=',section_id),\
                     ('object_id.model', '=', 'crm.opportunity')]", readonly=True),
@@ -70,7 +71,7 @@ class crm_opportunity_report(osv.osv):
                     sum(planned_revenue) as amount_revenue,
                     sum((planned_revenue*probability)/100.0)::decimal(16,2) as amount_revenue_prob,
                     avg(probability)::decimal(16,2) as probability,
-                    to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
+                    avg(extract('epoch' from (date_closed-c.create_date)))/(3600*24) as delay_close
                 from
                     crm_opportunity c
                 group by

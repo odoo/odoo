@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <menuitem icon="terp-graph" id="base.reporting_menu"
-        	name="Reporting" sequence="8" />
+            name="Reporting" sequence="8" />
 
  <!--Board Note Tree View  -->
 
@@ -67,9 +67,9 @@
                 <form string="Dashboard">
                     <field name="name" select="1"/>
                     <button colspan="2"
-                    	name="%(action_board_menu_create)d"
-                    	string="Create Menu" type="action"
-                    	icon="gtk-justify-fill" />
+                        name="%(action_board_menu_create)d"
+                        string="Create Menu" type="action"
+                        icon="gtk-justify-fill" />
                     <field colspan="4" name="line_ids">
                         <tree string="Dashboard View">
                             <field name="name"/>
@@ -83,7 +83,7 @@
                             <field name="width"/>
                             <field name="height"/>
                             <field name="action_id"
-                            	domain="[('view_type','!=','tree')]" />
+                                domain="[('view_type','!=','tree')]" />
                             <field name="position"/>
                         </form>
                     </field>
@@ -112,12 +112,12 @@
             parent="base.next_id_50" sequence="1"/>
 
         <menuitem action="action_view_board_note_form"
-        	id="menu_view_board_note_form" parent="base.next_id_50"
-        	sequence="3" groups="base.group_system" />
+            id="menu_view_board_note_form" parent="base.next_id_50"
+            sequence="3" groups="base.group_system" />
 
         <act_window context="{'view': active_id}" id="dashboard_open"
-        	multi="True" name="Open Dashboard" res_model="board.board"
-        	src_model="board.board" />
+            multi="True" name="Open Dashboard" res_model="board.board"
+            src_model="board.board" />
 
     </data>
 </openerp>

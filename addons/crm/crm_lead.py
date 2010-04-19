@@ -123,7 +123,7 @@ class crm_lead(osv.osv):
         'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'),
 
         'user_id': fields.many2one('res.users', 'Salesman'),
-        'referred': fields.char('Referred By', size=32),
+        'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 method=True, multi='day_open', type="integer", store=True),

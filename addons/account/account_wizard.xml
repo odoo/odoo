@@ -16,42 +16,22 @@
 
 
 
-        <wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice" groups="base.group_user"/>
+        <!--  wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice" groups="base.group_user"/-->
 
         <!-- close year, period, journal -->
-        <wizard id="wizard_fiscalyear_close" menu="False" model="account.fiscalyear" name="account.fiscalyear.close" string="Generate Fiscal Year Opening Entries"/>
-
-        <menuitem
-            action="wizard_fiscalyear_close"
-            id="menu_wizard_fy_close"
-            parent="menu_account_end_year_treatments"
-            type="wizard"
-            sequence="1"/>
+<!--        <wizard id="wizard_fiscalyear_close" menu="False" model="account.fiscalyear" name="account.fiscalyear.close" string="Generate Fiscal Year Opening Entries"/>-->
+<!---->
+<!--        <menuitem-->
+<!--            action="wizard_fiscalyear_close"-->
+<!--            id="menu_wizard_fy_close"-->
+<!--            parent="menu_account_end_year_treatments"-->
+<!--            type="wizard"-->
+<!--            sequence="1"/>-->
 
   <!--     <wizard id="wizard_fiscalyear_close_state" menu="False" model="account.fiscalyear" name="account.fiscalyear.close.state" string="Close a Fiscal Year"/>
         <menuitem action="wizard_fiscalyear_close_state" id="menu_wizard_fy_close_state" parent="menu_account_end_year_treatments" type="wizard"/>
  -->
 
-        <wizard
-            id="wizard_open_closed_fiscalyear"
-            menu="False"
-            model="account.fiscalyear"
-            name="account.open_closed_fiscalyear"
-            string="Cancel Opening Entries"/>
-        <menuitem
-            action="wizard_open_closed_fiscalyear"
-            id="menu_wizard_open_closed_fy"
-            sequence="2"
-            parent="account.menu_account_end_year_treatments" type="wizard"/>
-<!--  period close
-
-
-       <wizard id="wizard_period_close" model="account.period" name="account.period.close" string="Close a Period"/>
-
-      <wizard id="action_account_period_close" model="account.period" name="account.period.close" string="Close a Period"/>
-
-
--->
         <!-- automatic reconcile -->
         <wizard id="wizard_automatic_reconcile" menu="False" model="account.account" name="account.automatic.reconcile" string="Automatic reconciliation"/>
         <menuitem id="next_id_20" name="Reconciliation" parent="menu_finance_periodical_processing"/>
@@ -59,12 +39,12 @@
 
         <!-- Import entry in statement -->
 
-        <wizard
-            string="Import invoices"
-            model="account.bank.statement"
-            name="populate_statement_from_inv"
-            menu="False"
-            id="wizard_populate_statement_from_inv"/>
+<!--        <wizard-->
+<!--            string="Import invoices"-->
+<!--            model="account.bank.statement"-->
+<!--            name="populate_statement_from_inv"-->
+<!--            menu="False"-->
+<!--            id="wizard_populate_statement_from_inv"/>-->
 
         <!-- manual reconcile -->
         <wizard id="wizard_reconcile" model="account.move.line" name="account.move.line.reconcile" string="Reconcile Entries"/>
@@ -110,10 +90,10 @@
 
 
         <!-- account.move validate -->
-        <wizard id="wizard_validate_account_moves" menu="False" model="account.move" name="account.move.validate" string="Validate Ledger Postings"/>
+<!--        <wizard id="wizard_validate_account_moves" menu="False" model="account.move" name="account.move.validate" string="Validate Ledger Postings"/>
         <menuitem action="wizard_validate_account_moves" id="menu_validate_account_moves" parent="account.menu_finance_periodical_processing" type="wizard"/>
 
-        <wizard id="wizard_validate_account_moves_line" menu="True" model="account.move.line" name="account.move_line.validate" string="Validate Ledger Postings"/>
+        <wizard id="wizard_validate_account_moves_line" menu="True" model="account.move.line" name="account.move_line.validate" string="Validate Ledger Postings"/>-->
 
 		<!-- Use Models -->
         <wizard string="Create Entries From Models" model="account.model" name="account_use_models" menu="False" id="wizard_account_use_model"/>
@@ -122,7 +102,7 @@
         <wizard string="Create Entries From Models" model="account.move.line" name="account_use_models" menu="True" id="wizard_line_account_use_model"/>
 
 		<!-- account.invoice -->
-	    <wizard string="Open State" model="account.invoice" name="account.wizard_paid_open" menu="False" id="wizard_paid_open" groups="base.group_user"/>
+<!--    <wizard string="Open State" model="account.invoice" name="account.wizard_paid_open" menu="False" id="wizard_paid_open" groups="base.group_user"/> -->
 
 	    <!-- generic report wizard -->
 	    <wizard id="wizard_account_balance_report" menu="False" model="account.account" name="account.account.balance.report" string="Account Balance"/>
@@ -131,15 +111,15 @@
 		<wizard id="wizard_general_ledger" menu="False" model="account.account" name="account.general.ledger.report" string="General Ledger"/>
         <menuitem icon="STOCK_PRINT" action="wizard_general_ledger" id="menu_general_ledger" parent="account.menu_generic_report" type="wizard"/>
 
-        <wizard id="wizard_print_journal" menu="False" model="account.journal.period" name="account.print.journal.report" string="Print Journal" />
+<!--        <wizard id="wizard_print_journal" menu="False" model="account.journal.period" name="account.print.journal.report" string="Print Journal" />
 		<menuitem icon="STOCK_PRINT" action="wizard_print_journal" id="menu_print_journal" parent="account.menu_generic_report" type="wizard" />
 
         <wizard id="wizard_central_journal" menu="False" model="account.journal.period" name="account.central.journal.report" string="Print Central Journal" />
 		<menuitem icon="STOCK_PRINT" action="wizard_central_journal" id="menu_central_journal" parent="account.menu_generic_report" type="wizard" />
 
         <wizard id="wizard_general_journal" menu="False" model="account.journal.period" name="account.general.journal.report" string="Print General Journal" />
-		<menuitem icon="STOCK_PRINT" action="wizard_general_journal" id="menu_general_journal" parent="account.menu_generic_report" type="wizard" />
+		<menuitem icon="STOCK_PRINT" action="wizard_general_journal" id="menu_general_journal" parent="account.menu_generic_report" type="wizard" />-->
 
-        <wizard id="wizard_invoice_currency_change" model="account.invoice" name="account.invoice.currency_change" string="Change Currency" groups="base.group_user"/>
+<!--        <wizard id="wizard_invoice_currency_change" model="account.invoice" name="account.invoice.currency_change" string="Change Currency" groups="base.group_user"/>-->
     </data>
 </openerp>

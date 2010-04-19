@@ -87,8 +87,8 @@
             <form string="Analytic Distribution">
                 <field name="name" select="1"/>
                 <field name="code" select="1"/>
-                <field name="plan_id" select="2" required="True"/>
-                <field name="journal_id" select="2"/>
+                <field name="plan_id" required="True"/>
+                <field name="journal_id"/>
                 <field name="account_ids" string="Analytic Distribution" colspan="4">
                     <tree string="Analytic Distribution" editable="bottom">
                         <field name="rate"/>
@@ -107,8 +107,8 @@
             <tree string="Analytic Distribution">
                 <field name="name" select="1"/>
                 <field name="code" select="1"/>
-                <field name="plan_id" select="2"/>
-                <field name="journal_id" select="2"/>
+                <field name="plan_id"/>
+                <field name="journal_id"/>
             </tree>
         </field>
     </record>
@@ -222,7 +222,7 @@
             <tree string="Analytic Plan Lines">
                 <field name="name" select="1"/>
                 <field name="sequence"/>
-                <field name="root_analytic_id" select="2"/>
+                <field name="root_analytic_id"/>
                 <field name="min_required"/>
                 <field name="max_required"/>
             </tree>

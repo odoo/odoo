@@ -46,7 +46,7 @@ AVAILABLE_PRIORITIES = [
 ]
 
 class crm_case_section(osv.osv):
-    """ Cases Section"""
+    """Sales Team"""
 
     _name = "crm.case.section"
     _description = "Sales Teams"
@@ -60,10 +60,12 @@ class crm_case_section(osv.osv):
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"), 
         'user_id': fields.many2one('res.users', 'Responsible User'), 
         'reply_to': fields.char('Reply-To', size=64, help="The email address put \
-                        in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"), 
-        'parent_id': fields.many2one('crm.case.section', 'Parent Section'), 
-        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'), 
-        'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"), 
+                        in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
+        'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
+        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
+        'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
+        'server_id':fields.many2one('email.smtpclient', 'Server ID'),
+        'note': fields.text('Description'),
     }
 
     _defaults = {
@@ -72,7 +74,7 @@ class crm_case_section(osv.osv):
     }
 
     _sql_constraints = [
-        ('code_uniq', 'unique (code)', 'The code of the section must be unique !')
+        ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
     ]
 
     def _check_recursion(self, cr, uid, ids):
@@ -643,7 +645,7 @@ class crm_case(osv.osv):
                     data['user_id'] = case.section_id.parent_id.user_id.id
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate this case.\nYou are already at the top level.'))
-            self.write(cr, uid, ids, data)
+            self.write(cr, uid, [case.id], data)
         cases = self.browse(cr, uid, ids)
         self.__history(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')

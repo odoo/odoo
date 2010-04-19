@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_account_invoice_pay" model="ir.ui.view">
+            <field name="name">account.invoice.pay.form</field>
+            <field name="model">account.invoice.pay</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Pay invoice">
+                	<group colspan="4" >
+						<field name="amount"/>
+					    <newline/>
+					    <field name="name"/>
+					    <field name="date"/>
+					    <field name="journal_id"/>
+					    <field name="period_id"/>
+                	</group>
+                    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-execute" string="Partial Payment" name="pay_and_reconcile" type="object"/>
+                    	<button icon="gtk-execute" string="Full Payment" name="wo_check" type="object"/>
+                   </group>
+               </form>
+            </field>
+        </record>
+
+
+		<act_window name="Pay Invoice"
+				res_model="account.invoice.pay"
+				src_model="account.invoice"
+				view_mode="form"
+				target="new"
+				key2="client_action_multi"
+			id="action_view_account_invoice_pay"/>
+
+		<record id="view_account_invoice_pay_writeoff" model="ir.ui.view">
+            <field name="name">account.invoice.pay.writeoff.form</field>
+            <field name="model">account.invoice.pay.writeoff</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Information addendum">
+                	<group colspan="4" >
+					    <separator string="Write-Off Move" colspan="4"/>
+					    <field name="writeoff_journal_id"/>
+    					<field name="writeoff_acc_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+    					<field name="comment"/>
+    					<separator string="Analytic" colspan="4"/>
+    					<field name="analytic_id"/>
+                	</group>
+                    <group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-execute" string="Pay and reconcile" name="pay_and_reconcile_writeoff" type="object"/>
+                   </group>
+               </form>
+            </field>
+        </record>
+
+
+	</data>
+</openerp>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -39,8 +39,8 @@ def strToDate(dt):
         dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
         return dt_date
     else:
-        return 
-    
+        return
+
 
 def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
     display={}
@@ -48,11 +48,11 @@ def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
         count=0
         p_id=pooler.get_pool(cr.dbname).get('hr.holidays').search(cr,uid,[('employee_id','in',[empid,False]), ('type', '=', 'remove')])
         ids_date = pooler.get_pool(cr.dbname).get('hr.holidays').read(cr,uid,p_id,['date_from','date_to','holiday_status_id','state'])
-        
+
         for index in range(1,61):
             diff=index-1
             current=som+datetime.timedelta(diff)
-            
+
             for item in ids_date:
                 if current >= strToDate(item['date_from']) and current <= strToDate(item['date_to']):
                     if item['state'] in holiday_type:
@@ -210,19 +210,18 @@ class report_custom(report_rml):
         row_id=1
 
         if data['model']=='hr.employee':
-
-            for id in data['form']['emp'][0][2]:
+            for id in data['form']['emp']:
                  items = pooler.get_pool(cr.dbname).get('hr.employee').read(cr,uid,id,['id','name'])
 
                  emp_xml += emp_create_xml(self,cr,uid,0,holiday_type,row_id,items['id'],items['name'],som, eom)
                  row_id = row_id +1
-                 
+
         elif data['model']=='ir.ui.menu':
-            for id in data['form']['depts'][0][2]:
+            for id in data['form']['depts']:
                 dept = pooler.get_pool(cr.dbname).get('hr.department').browse(cr, uid, id, context.copy())
                 depts.append(dept)
-                dept_ids = tuple(data['form']['depts'][0][2])
-                
+                dept_ids = tuple(data['form']['depts'])
+
                 cr.execute("""select dept_user.user_id \
                 from hr_department_user_rel dept_user \
                 where dept_user.department_id = %s\
@@ -258,7 +257,7 @@ class report_custom(report_rml):
         %s
         </report>
         ''' % (months_xml,date_xml, emp_xml)
-        
+
         return xml
 
 report_custom('report.holidays.summary', 'hr.holidays', '', 'addons/hr_holidays/report/holidays_summary.xsl')
