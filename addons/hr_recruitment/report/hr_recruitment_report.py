@@ -42,7 +42,8 @@ class hr_recruitment_report(osv.osv):
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
         'salary_prop' : fields.float("Salary Proposed"),
-        'salary_exp' : fields.float("Salary Expected")
+        'salary_exp' : fields.float("Salary Expected"),
+        'available' : fields.float("Availability")
 
     }
     _order = 'date desc'
@@ -52,15 +53,16 @@ class hr_recruitment_report(osv.osv):
             create or replace view hr_recruitment_report as (
                  select
                      min(s.id) as id,
-                     date_trunc('day',s.date) as date,
+                     date_trunc('day',s.create_date) as date,
                      date_trunc('day',s.date_closed) as date_closed,
-                     to_char(s.date, 'YYYY') as year,
-                     to_char(s.date, 'MM') as month,
+                     to_char(s.create_date, 'YYYY') as year,
+                     to_char(s.create_date, 'MM') as month,
                      s.state,
                      s.company_id,
                      s.user_id,
                      s.job_id,
                      s.type_id,
+                     sum(s.availability) as available,
                      s.department_id,
                      s.priority,
                      s.stage_id,
@@ -69,9 +71,9 @@ class hr_recruitment_report(osv.osv):
                      count(*) as nbr
                  from hr_applicant s
                  group by
-                     to_char(s.date, 'YYYY'),
-                     to_char(s.date, 'MM'),
-                     date_trunc('day',s.date),
+                     to_char(s.create_date, 'YYYY'),
+                     to_char(s.create_date, 'MM'),
+                     date_trunc('day',s.create_date),
                      date_trunc('day',s.date_closed),
                      s.state,
                      s.company_id,

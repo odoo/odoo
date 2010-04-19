@@ -10,16 +10,17 @@
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="job_id" invisible="1"/>
-                <field name="stage_id" invisible="1"/>
+                <field name="stage_id" invisible="1"  widget="selection"/>
                 <field name="department_id" invisible="1"/>
                 <field name="type_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
-                <field name="nbr"/>
-                <field name="salary_prop"/>
-                <field name="salary_exp"/>
+                <field name="nbr" sum="# Cases"/>
+                <field name="salary_prop" sum="Salary Proposed" />
+                <field name="salary_exp" sum="Salary Expected"/>
+                <field name="available" sum="Available"/>
             </tree>
         </field>
     </record>
@@ -93,9 +94,12 @@
                     <filter icon="terp-hr"
                     		string="Refused"
                     		domain="[('state','=','cancel')]"/>
-                	<newline/>
                     <field name="priority"/>
+                	<newline/>
                     <field name="date"/>
+                  <field name="stage_id" widget="selection"/>
+                  <field name="job_id" widget="selection"/>
+                  <field name="type_id" widget="selection"/>
                     <field name="date_closed"/>
                 </group>
                 <newline/>
@@ -122,7 +126,7 @@
         <field name="res_model">hr.recruitment.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_inprogress': 1 }</field>
+        <field name="context">{'search_default_inprogress': 1, 'search_default_user_id': uid }</field>
         <field name="search_view_id" ref="view_hr_recruitment_report_search"/>
     </record>
 	<menuitem id="hr.menu_hr_reporting" name="Reporting" parent="hr.menu_hr_root"/>

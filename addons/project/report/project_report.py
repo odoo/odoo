@@ -28,6 +28,7 @@ class report_project_task_user(osv.osv):
     _auto = False
     _columns = {
         'name': fields.char('Task Summary', size=128, readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'date_start': fields.datetime('Starting Date',readonly=True),
@@ -57,10 +58,9 @@ class report_project_task_user(osv.osv):
                ('done', 'Done')],
             'State', readonly=True),
         'company_id': fields.many2one('res.company', 'Company',readonly=True),
+        'sprint_id': fields.many2one('scrum.sprint', 'Sprint',readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'type': fields.many2one('project.task.type', 'Stage',readonly=True),
-
-
 
     }
     _order = 'name desc, project_id'
@@ -72,6 +72,7 @@ class report_project_task_user(osv.osv):
                     min(t.id) as id,
                     to_char(date_start, 'YYYY') as year,
                     to_char(date_start, 'MM') as month,
+                    to_char(date_start, 'YYYY-MM-DD') as day,
                     count(distinct t.id) as nbr,
                     date_trunc('day',t.date_start) as date_start,
                     date_trunc('day',t.date_end) as date_end,
@@ -79,6 +80,7 @@ class report_project_task_user(osv.osv):
                     sum(cast(to_char(date_trunc('day',t.date_end) - date_trunc('day',t.date_start),'DD') as int)) as no_of_days,
                     t.user_id,
                     t.project_id,
+                    t.sprint_id as sprint_id,
                     t.state,
                     t.priority,
                     t.name,
@@ -104,7 +106,9 @@ class report_project_task_user(osv.osv):
                     t.partner_id,
                     t.type,
                     t.name,
-                    t.project_id
+                    t.sprint_id,
+                    t.project_id,
+                    t.date_start
             )
         """)
 report_project_task_user()
