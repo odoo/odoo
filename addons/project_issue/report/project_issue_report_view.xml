@@ -76,7 +76,14 @@
             	</xpath>
                	<xpath expr='//search[@string="Search"]/group[@string="Group By..."]' position='before'>
                	       <newline/>
-                		<group expand="1" string="Extended options..." colspan="10" col="12">
+                		<group  string="Extended options..." colspan="10" col="12">
+                		<filter icon="terp-sale"
+                    		string="Done"
+                    		domain="[('state','=','done')]"/>
+                    		<filter icon="terp-sale"
+                    		string="Cancel"
+                    		domain="[('state','=','cancel')]"/>
+                    		<separator orientation="vertical"/>
                   			<field name="project_id" widget="selection" />
                     		<field name="priority" />
                     		<separator orientation="vertical"/>
@@ -123,7 +130,7 @@
             <field name="res_model">project.issue.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">graph,tree</field>
-  			<field name="context">{"search_default_This Month":1}</field>
+  			<field name="context">{"search_default_This Month":1,"search_default_User":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_project_issue_report_tree"/>
             <field name="search_view_id" ref="view_project_issue_report_filter"/>
         </record>
