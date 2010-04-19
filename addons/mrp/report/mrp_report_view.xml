@@ -50,8 +50,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
         </record>
-        <menuitem id="next_id_77" name="Reporting" parent="base.menu_mrp_root" sequence="49"/>
-        <menuitem action="action_report_workcenter_load_tree" id="menu_report_workcenter_load" parent="next_id_77"/>
+        <menuitem id="next_id_77" name="Reporting"
+            parent="base.menu_mrp_root" sequence="49"/>
+        <menuitem action="action_report_workcenter_load_tree"
+            id="menu_report_workcenter_load" parent="next_id_77"
+            groups="base.group_extended"/>
 
         <!-- stock.move compared to internal location src/dest -->
 

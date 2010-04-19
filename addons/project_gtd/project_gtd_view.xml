@@ -90,7 +90,7 @@
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
             <field name="progress" position="after">
-                <field name="context_id" select="2" widget="selection" groups="project_gtd.group_project_getting"/>
+                <field name="context_id" widget="selection" groups="project_gtd.group_project_getting"/>
                 <field name="timebox_id" select="1" groups="project_gtd.group_project_getting"/>
             </field>
         </field>

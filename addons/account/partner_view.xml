@@ -84,23 +84,23 @@
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Customer Credit" colspan="2"/>
-                        <field name="credit" select="2"/>
-                        <field name="credit_limit" select="2" groups="base.group_extended"/>
+                        <field name="credit"/>
+                        <field name="credit_limit" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Supplier Debit" colspan="2"/>
-                        <field name="debit" select="2"/>
+                        <field name="debit"/>
                     </group>
-                    <field colspan="4" context="{'address': address}" name="bank_ids" nolabel="1" select="2">
+                    <field colspan="4" context="{'address': address}" name="bank_ids" nolabel="1">
                         <form string="Bank account">
-                            <field name="state" select="2"/>
+                            <field name="state"/>
                             <newline/>
                             <field name="acc_number" select="1"/>
                             <newline/>
                             <field name="bank"/>
                             <newline/>
                             <field name="sequence"/>
-                            <field colspan="4" name="name" select="2"/>
+                            <field colspan="4" name="name"/>
                             <separator colspan="4" string="Bank account owner"/>
                             <field colspan="4" name="owner_name"/>
                             <field colspan="4" name="street"/>

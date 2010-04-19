@@ -39,7 +39,7 @@ class crm_opportunity(osv.osv):
 
     _name = "crm.opportunity"
     _description = "Opportunity Cases"
-    _order = "priority,id desc"
+    _order = "priority,date_action,id desc"
     _inherit = 'crm.case'
 
     def case_open(self, cr, uid, ids, *args):
@@ -118,9 +118,8 @@ class crm_opportunity(osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                      domain="[('section_id','=',section_id), \
                     ('object_id.model', '=', 'crm.opportunity')]"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Resource Type',\
-                    domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.opportunity')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+        'referred': fields.char('Referred By', size=64),
         'probability': fields.float('Probability (%)'),
         'planned_revenue': fields.float('Expected Revenue'),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
@@ -129,6 +128,7 @@ class crm_opportunity(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesman'),
         'phone': fields.char("Phone", size=64),
         'date_deadline': fields.date('Expected Closing'),
+        'date_action': fields.date('Next Action'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
