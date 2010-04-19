@@ -47,16 +47,16 @@
             <search string="Expenses">
             	<group>
             		<filter icon="terp-hr" string="This Year"
-	                  	    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                  	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                   	    help="Expenses during last 7 year"/>
 	                <filter icon="terp-hr" string="This Month"
 	                   		name="month"
-	                   		domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                   		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                   		help="Expenses during last month"/>
 		            <filter icon="gtk-media-rewind"
 	                        string="    7 Days    "
 	                        separator="1"
-	                        domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
 	                        help="Expenses during last 7 days"/>
 	                <separator orientation="vertical"/>
 	                <filter string="Draft"

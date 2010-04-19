@@ -63,15 +63,15 @@ class hr_expense_report(osv.osv):
             create or replace view hr_expense_report as (
                  select
                      min(l.id) as id,
-                     s.date as date,
+                     date_trunc('day',s.create_date) as date,
                      s.employee_id,
                      s.journal_id,
                      to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_confirm,
                      to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_valid,
                      s.invoice_id,
                      s.department_id,
-                     to_char(s.date, 'YYYY') as year,
-                     to_char(s.date, 'MM') as month,
+                     to_char(date_trunc('day',s.create_date), 'YYYY') as year,
+                     to_char(date_trunc('day',s.create_date), 'MM') as month,
                      l.product_id as product_id,
                      sum(l.unit_quantity * u.factor) as product_qty,
                      s.user_id as user_id,
@@ -86,7 +86,7 @@ class hr_expense_report(osv.osv):
                      hr_expense_expense s on (s.id=l.expense_id)
                      left join product_uom u on (u.id=l.uom_id)
                  group by
-                     s.date,
+                     date_trunc('day',s.create_date),
                      to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY'),
                      to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY'),
                      l.product_id,
