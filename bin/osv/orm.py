@@ -2837,7 +2837,7 @@ class orm(orm_template):
         :param user: current user id
         :param ids: id or list of ids
         :param context: context arguments, like lang, time zone
-        :param details: if True, *_uid fields are replaced with the name of the user
+        :param details: if True, \*_uid fields are replaced with the name of the user
         :return: list of ownership dictionaries for each requested record
         :rtype: list of dictionaries with the following keys:
 
