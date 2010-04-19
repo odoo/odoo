@@ -182,6 +182,8 @@ class crm_send_new_email(osv.osv_memory):
         """
         hist_obj = self.pool.get('crm.case.history')
         res_ids = context and context.get('active_ids', []) or []
+
+        include_original = context and context.get('include_original', False) or False
         res = {}
         for hist in hist_obj.browse(cr, uid, res_ids):
             model = hist.log_id.model_id.model
@@ -193,7 +195,8 @@ class crm_send_new_email(osv.osv_memory):
                 res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
                             (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or hist.email_to or tools.config.get('email_from',False)})
-            if 'text' in fields:
+
+            if include_original == True and 'text' in fields:
                 header = '-------- Original Message --------'
                 sender = 'From: %s' %(hist.email_from or '')
                 to = 'To: %s' % (hist.email_to or '')

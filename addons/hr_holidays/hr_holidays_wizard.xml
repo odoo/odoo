@@ -19,11 +19,10 @@
 		 action="holidays_summary"
 		 type="wizard"
 		 id="menu_holidays_summary" sequence="20"/>
--->
-	 <!-- restrict menu access to HR Manager -->
 	 <record model='ir.ui.menu' id="menu_holidays_summary">
 		 <field eval="[(6,0,[ref('hr.group_hr_manager')])]" name="groups_id"/>
   	 </record>
+-->
 
 	<!--<wizard string="Employee's Holidays"
 		model="hr.employee" name="hr.holidays.summary.employee"
