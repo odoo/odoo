@@ -35,7 +35,7 @@ class calendar_event_edit_all(osv.osv_memory):
         context_id = context and context.get('active_id', False) or False
         if context_id:
             if context.get('date'):
-                 return context.get('date')
+                return context.get('date')
             else:
                 model = context.get('model', False)
                 model_obj = self.pool.get(model)

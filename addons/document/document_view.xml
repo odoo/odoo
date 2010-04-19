@@ -13,12 +13,16 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Storage Media">
-                <field name="name" select="1" colspan="4"/>
-                <field name="user_id"/>
-                <field name="type" />
-                <field name="online" />
-                <field name="readonly" />
-                <field name="path" />
+            	<group colspan="4" col="4">
+	                <field name="name" select="1" colspan="4"/>
+	                <field name="user_id"/>
+	                <field name="type"/>
+	                <field name="online"/>
+	                <field name="readonly"/>
+                </group>
+                <group colspan="2" attrs="{'invisible':[('type','!=','realstore')]}">
+                	<field name="path"/>
+                </group>
             </form>
         </field>
     </record>
@@ -67,13 +71,13 @@
                     <newline/>
                     <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     <field name="ressource_tree"/>
-                    <field name="resource_field"/>
-                    <field name="ressource_id" readonly="1"/>
+					<field name="resource_field" 	domain="[('model_id','=',ressource_type_id), ('ttype', 'in', ('char', 'selection', 'date', 'datetime'))]"/>
+                    <field name="ressource_id" select="2" readonly="1"/>
                     <field name="ressource_parent_type_id"/>
                 </page>
                 <page string="Generated Files">
                     <label colspan="4" string="For each entry here, virtual files will appear in this folder." />
-                    <field name="content_ids" nolabel="1" colspan="4">
+					<field name="content_ids" nolabel="1" colspan="4" attrs="{'readonly': [('ressource_type_id','=',False)]}">
                         <form string="Contents">
                             <field name="name"/>
                             <field name="sequence"/>

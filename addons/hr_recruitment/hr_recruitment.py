@@ -163,7 +163,6 @@ class hr_applicant(osv.osv):
         """
         if not context:
             context = {}
-
         record = self.browse(cr, uid, ids, context)
         record = record and record[0]
         context.update({'survey_id': record.survey.id, 'response_id' : [record.response], 'response_no':0,})

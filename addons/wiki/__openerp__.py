@@ -36,7 +36,6 @@
         'wizard/wizard_view.xml',
         'wizard/wiki_wiki_page_open_view.xml',
         'wizard/wiki_create_menu_view.xml',
-        'wizard/wiki_wiki_help_open_view.xml',
         'wizard/wiki_make_index_view.xml',
         'wiki_view.xml',
         'data/wiki_quickstart.xml',

@@ -47,7 +47,10 @@
         'base_contact_view.xml',
         'process/base_contact_process.xml'
     ],
-    'demo_xml': ['base_contact_demo.xml'],
+    'demo_xml': ['base_contact_demo.xml'], 
+    'test': [
+        'test/base_contact00.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0031287885469',
