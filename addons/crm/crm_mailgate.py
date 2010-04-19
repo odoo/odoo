@@ -90,15 +90,20 @@ class crm_cases(osv.osv):
         if msg.get('priority', False):
             vals['priority'] = msg.get('priority')
 
-#        act = 'case_'+default_act
-#        if 'state' in msg_actions:
-#            if msg_actions['state'] in ['draft','close','cancel','open','pending']:
-#                act = 'case_' + msg_actions['state']
-
-#        for k1,k2 in [('cost','planned_cost'),('revenue','planned_revenue'),('probability','probability')]:
-#            if k1 in msg_actions:
-#                data[k2] = float(msg_actions[k1])
-
+        maps = {
+            'cost':'planned_cost',
+            'revenue': 'planned_revenue',
+            'probability':'probability'
+        }
+        vls = { }
+        for line in msg['body'].split('\n'):
+            line = line.strip()
+            res = command_re.match(line)
+            if res and maps.get(res.group(1).lower(), False):
+                key = maps.get(res.group(1).lower())
+                vls[key] = res.group(2).lower()
+        
+        vals.update(vls)
         res = self.write(cr, uid, ids, vals)
         cases = self.browse(cr, uid, ids)
         message_id = context.get('references_id', False)

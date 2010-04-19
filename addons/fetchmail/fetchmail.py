@@ -270,19 +270,7 @@ class mail_server(osv.osv):
                     context.update({
                         'references_id':ref[0]
                     })
-                    maps = {
-                        'cost':'planned_cost',
-                        'revenue': 'planned_revenue',
-                        'probability':'probability'
-                    }
-                    vals = { }
-                    for line in msg['body'].split('\n'):
-                        line = line.strip()
-                        res = command_re.match(line)
-                        if res and maps.get(res.group(1).lower(), False):
-                            key = maps.get(res.group(1).lower())
-                            vals[key] = res.group(2).lower()
-                        
+                                            
                     model_pool.message_update(cr, uid, [history.res_id], vals, msg, context=context)
             res_id = id
         else:
