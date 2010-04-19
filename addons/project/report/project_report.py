@@ -40,7 +40,10 @@ class report_project_task_user(osv.osv):
         'hours_planned': fields.float('Planned Hours', readonly=True),
         'hours_effective': fields.float('Effective Hours', readonly=True),
         'hours_delay': fields.float('Avg. Plan.-Eff.', readonly=True),
-        'closing_days': fields.char('Avg Closing Delay', size=64, readonly=True),
+#        'closing_days': fields.char('Avg Closing Delay', size=64, readonly=True),
+        'closing_days': fields.float('Avg Closing Delay', digits=(16,2), readonly=True, group_operator="avg",
+                                       help="Number of Days to close the task"),
+
         'nbr': fields.integer('#Number of tasks', readonly=True),
         'priority' : fields.selection([('4','Very Low'),
                                        ('3','Low'),
@@ -58,7 +61,6 @@ class report_project_task_user(osv.osv):
                ('done', 'Done')],
             'State', readonly=True),
         'company_id': fields.many2one('res.company', 'Company',readonly=True),
-        'sprint_id': fields.many2one('scrum.sprint', 'Sprint',readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'type': fields.many2one('project.task.type', 'Stage',readonly=True),
 
@@ -80,7 +82,6 @@ class report_project_task_user(osv.osv):
                     sum(cast(to_char(date_trunc('day',t.date_end) - date_trunc('day',t.date_start),'DD') as int)) as no_of_days,
                     t.user_id,
                     t.project_id,
-                    t.sprint_id as sprint_id,
                     t.state,
                     t.priority,
                     t.name,
@@ -88,7 +89,7 @@ class report_project_task_user(osv.osv):
                     t.partner_id,
                     t.type,
                     sum(planned_hours) as hours_planned,
-                    to_char(avg(date_end::abstime-t.create_date::timestamp), 'DD"d" HH24:MI:SS') as closing_days,
+                    avg(extract('epoch' from (t.date_end-t.create_date)))/(3600*24)  as closing_days,
                     sum(w.hours) as hours_effective,
                     ((sum(planned_hours)-sum(w.hours))/count(distinct t.id))::decimal(16,2) as hours_delay
                 from project_task t
@@ -106,7 +107,6 @@ class report_project_task_user(osv.osv):
                     t.partner_id,
                     t.type,
                     t.name,
-                    t.sprint_id,
                     t.project_id,
                     t.date_start
             )
