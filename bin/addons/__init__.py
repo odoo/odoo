@@ -336,7 +336,7 @@ def upgrade_graph(graph, cr, module_list, force=None):
     for module in module_list:
         mod_path = get_module_path(module)
         terp_file = get_module_resource(module, '__openerp__.py')
-        if not os.path.isfile(terp_file):
+        if not terp_file or not os.path.isfile(terp_file):
             terp_file = get_module_resource(module, '__terp__.py')
 
         if not mod_path or not terp_file:
