@@ -1197,7 +1197,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
-                    start_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date)
                     for rdate in rdates:
                         r_date = datetime.strptime(rdate, "%Y-%m-%d %H:%M:%S")
@@ -1289,8 +1288,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 args_without_date.append(arg)
             else:
                 if arg[1] in ('>', '>='):
+                    if start_date:
+                        continue
                     start_date = arg[2]
                 elif arg[1] in ('<', '<='):
+                    if until_date:
+                        continue
                     until_date = arg[2]
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
                                  offset, limit, order, context, count)
