@@ -2020,7 +2020,7 @@ class orm(orm_template):
                 if val == None:r[fld] = False
             alldata[r['id']] = r
             del r['id']
-        data = self.read(cr, uid, alldata.keys(), groupby and [groupby] or [], context=context)
+        data = self.read(cr, uid, alldata.keys(), groupby and [groupby] or ['id'], context=context)
         today = datetime.date.today()
         for d in data:
             if groupby:
