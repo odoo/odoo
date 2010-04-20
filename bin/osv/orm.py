@@ -2026,7 +2026,7 @@ class orm(orm_template):
             if groupby:
                 d['__domain'] = [(groupby,'=',alldata[d['id']][groupby] or False)] + domain
                 if not isinstance(groupby_list,(str, unicode)):
-                    if not context.get('group_by_no_leaf', False):
+                    if groupby or not context.get('group_by_no_leaf', False):
                         d['__context'] = {'group_by':groupby_list[1:]}
             if groupby and fget.has_key(groupby):
                 if d[groupby] and fget[groupby]['type'] in ('date','datetime'):
