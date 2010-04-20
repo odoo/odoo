@@ -123,7 +123,7 @@ class pos_order(osv.osv):
         tot =0.0
         val=None
         for order in self.browse(cr, uid, ids):
-            cr.execute("select date_payment2 from pos_order where id=%d"%(order.id))
+            cr.execute("select date_payment from pos_order where id=%d"%(order.id))
             date_p=cr.fetchone()
             date_p=date_p and date_p[0] or None
             if date_p:
@@ -150,7 +150,7 @@ class pos_order(osv.osv):
         tot =0.0
         val=None
         for order in self.browse(cr, uid, ids):
-            cr.execute("select date_payment from pos_order where id=%d"%(order.id))
+            cr.execute("select date_validation from pos_order where id=%d"%(order.id))
             date_p=cr.fetchone()
             date_p=date_p and date_p[0] or None
             if date_p:
@@ -316,12 +316,12 @@ class pos_order(osv.osv):
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True,
             states={'draft': [('readonly', False)]}, readonly=True),
         'date_order': fields.datetime('Date Ordered', readonly=True),
-        'date_payment': fields.function(_get_date_payment, method=True, string='Validation Date', type='date',  store=True),
-        'date_payment2': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date',  store=True),
+        'date_validation': fields.function(_get_date_payment, method=True, string='Validation Date', type='date',  store=True),
+        'date_payment': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date',  store=True),
         'date_validity': fields.date('Validity Date', required=True),
         'user_id': fields.many2one('res.users', 'Connected Salesman', readonly=True),
-        'user_id1': fields.many2one('res.users', 'Salesman', required=True),
-        'user_id2': fields.many2one('res.users', 'Salesman Manager'),
+        'user_saleman': fields.many2one('res.users', 'Salesman', required=True),
+        'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
         'amount_paid': fields.function(_total_payment, 'Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True),
@@ -393,7 +393,7 @@ class pos_order(osv.osv):
 
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
-        'user_id2': lambda self, cr, uid, context: uid,
+        'sale_manager': lambda self, cr, uid, context: uid,
         'state': lambda *a: 'draft',
         'price_type': lambda *a: 'tax_excluded',
         'state_2': lambda *a: 'to_verify',
@@ -600,7 +600,7 @@ class pos_order(osv.osv):
 
     def button_validate(self, cr, uid, ids, *args):
                 
-        """ Check the access for the sale order  and update the date_payment
+        """ Check the access for the sale order  and update the date_validation
         @return: True
         """        
         res_obj = self.pool.get('res.company')
@@ -611,12 +611,12 @@ class pos_order(osv.osv):
         if part_company:
             raise osv.except_osv(_('Error'), _('You don\'t have enough access to validate this sale!'))
         for order in self.browse(cr, uid, ids):
-            if not order.date_payment:
+            if not order.date_validation:
                 cr.execute("select max(date) from account_bank_statement_line where pos_statement_id=%d"%(order.id))
                 val=cr.fetchone()
                 val=val and val[0] or None
                 if val:
-                    cr.execute("Update pos_order set date_payment='%s' where id = %d"%(val, order.id))
+                    cr.execute("Update pos_order set date_validation='%s' where id = %d"%(val, order.id))
         return True
 
 
@@ -746,7 +746,7 @@ class pos_order(osv.osv):
         inv_ids = []
 
         for order in self.browse(cr, uid, ids, context):
-            curr_c = order.user_id1.company_id
+            curr_c = order.user_saleman.company_id
             if order.invoice_id:
                 inv_ids.append(order.invoice_id.id)
                 continue
@@ -1023,8 +1023,8 @@ class pos_order(osv.osv):
                     create_contract_nb = True
                     break
             if create_contract_nb:
-                seq = self.pool.get('ir.sequence').get(cr, uid, 'pos.user_%s' % pos.user_id1.login)
-                vals['contract_number'] ='%s-%s' % (pos.user_id1.login, seq)
+                seq = self.pool.get('ir.sequence').get(cr, uid, 'pos.user_%s' % pos.user_saleman.login)
+                vals['contract_number'] ='%s-%s' % (pos.user_saleman.login, seq)
         self.write(cr, uid, ids, vals)
 
     def action_paid(self, cr, uid, ids, context=None):

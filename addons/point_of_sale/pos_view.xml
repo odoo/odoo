@@ -11,7 +11,7 @@
                     <notebook >
                         <page string="Order lines">
                             <group colspan="4" col="6">
-                                <field name="user_id1" />
+                                <field name="user_saleman" />
                                 <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
                                 <field name="contract_number" select="1" />
                             </group>
@@ -90,14 +90,14 @@
                                 <field name="shop_id" widget="selection"  />
                                 <field name="name" select="1"/>
                                 <field name="user_id" />
-                                <field name="user_id2" />
+                                <field name="sale_manager" />
                                 <field name="price_type" />
                             </group>
                             <group colspan="2" col="2" name="Type">
                                 <separator string="Dates" colspan="4"/>
                                 <field name="date_order" select="1" />
-                                <field name="date_payment" select="1"  />
-                                <field name="date_payment2" select="1"  groups="base.group_extended"/>
+                                <field name="date_validation" select="1"  />
+                                <field name="date_payment" select="1"  groups="base.group_extended"/>
                             </group>
                             <group colspan="4">
                                 <separator string="Invoicing" colspan="4"/>
@@ -155,8 +155,8 @@
                 <tree string="POS Orders">
                     <field name="name"/>
                     <field name="date_order" select="1"/>
+                    <field name="date_validation"/>
                     <field name="date_payment"/>
-                    <field name="date_payment2"/>
                     <field name="user_id"/>
                     <field name="invoice_id"/>
                     <field name="state" select="1"/>
@@ -864,8 +864,8 @@ invoiced
                     <field name="name"/>
                     <field name="date_order" select="1"/>
                     <field name="partner_id" />
+                    <field name="date_validation"/>
                     <field name="date_payment"/>
-                    <field name="date_payment2"/>
                     <field name="user_id"/>
                     <field name="invoice_id"/>
                     <field name="note" select="1" />
