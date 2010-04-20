@@ -73,7 +73,7 @@ class document_file(osv.osv):
 
     _columns = {
         'user_id': fields.many2one('res.users', 'Owner', select=1),
-        'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
+        'group_ids': fields.many2many('res.groups', 'document_group_rel', 'item_id', 'group_id', 'Groups'),
         # the directory id now is mandatory. It can still be computed automatically.
         'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True),
         'file_size': fields.integer('File Size', required=True),

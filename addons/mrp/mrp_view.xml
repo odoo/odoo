@@ -39,7 +39,7 @@
             id="menu_mrp_configuration"
             name="Configuration"
             parent="base.menu_mrp_root"
-            groups="group_mrp_manager"
+            groups="base.group_extended"
             sequence="50" />
 
         <record id="mrp_property_tree_view" model="ir.ui.view">
@@ -115,7 +115,7 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="active" select="2"/>
+                        <field name="active"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
@@ -134,7 +134,7 @@
                                 <field name="time_stop"/>
                             </group>
                         </page>
-                        <page string="Analytic Accounting">
+                        <page string="Analytic Accounting" groups="base.group_extended">
                             <field name="costs_hour"/>
                             <field name="costs_hour_account_id"/>
                             <field name="costs_cycle"/>
@@ -197,7 +197,7 @@
                 <form string="Routing">
                     <separator colspan="4" string="General Information"/>
                     <field name="name" select="1"/>
-                    <field name="active" select="1"/>
+                    <field name="active" select="1" groups="base.group_extended"/>
                     <field name="code" select="1"/>
                     <field name="location_id"/>
                     <separator colspan="4" string="Description"/>
@@ -244,11 +244,11 @@
                     <group colspan="4" col="6">
                         <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
                         <field name="name" select="1"/>
-                        <field name="code" select="1"/>
+                        <field name="code" select="1" groups="base.group_extended"/>
                         <newline/>
                         <field name="product_uom"/>
                         <field name="product_qty"/>
-                        <field name="routing_id" select="2" groups="base.group_extended"/>
+                        <field name="routing_id" groups="base.group_extended"/>
                         <newline/>
                         <field name="product_uos" groups="product.group_uos"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
@@ -264,14 +264,14 @@
                         <page string="Revisions" groups="base.group_extended">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Properties">
-                            <field name="position" select="2"/>
-                            <field name="active" select="2"/>
+                        <page string="Properties" groups="base.group_extended">
+                            <field name="position"/>
+                            <field name="active"/>
                             <field name="sequence"/>
                             <field name="bom_id"/>
 
-                            <field name="date_start" select="2"/>
-                            <field name="date_stop" select="2"/>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
                             <field name="product_rounding"/>
                             <field name="product_efficiency"/>
                             <field colspan="4" name="property_ids" nolabel="2" groups="base.group_extended"/>
@@ -323,14 +323,17 @@
                   id="menu_mrp_bom"
                   parent="menu_mrp_bom"
                   sequence="50" />-->
-        <menuitem action="mrp_bom_form_action"
-                  id="menu_mrp_bom_form_action"
-                  parent="menu_mrp_bom"
-                  sequence="10"/>
-        <menuitem action="mrp_bom_form_action2"
-                  id="menu_mrp_bom_form_action2"
-                  parent="menu_mrp_bom"
-                  sequence="20"/>
+        <menuitem
+            action="mrp_bom_form_action"
+            id="menu_mrp_bom_form_action"
+            parent="menu_mrp_bom"
+            sequence="10"/>
+        <menuitem
+            action="mrp_bom_form_action2"
+            id="menu_mrp_bom_form_action2"
+            groups="base.group_extended"
+            parent="menu_mrp_bom"
+            sequence="20"/>
 
         <record id="action2" model="ir.actions.act_window">
             <field name="name">Bill of Materials Structure</field>
@@ -441,7 +444,7 @@
                     <field name="cycle_total" operator="+"/>
                 </graph>
             </field>
-        </record>        
+        </record>
 
         <record id="mrp_production_form_view" model="ir.ui.view">
             <field name="name">mrp.production.form</field>
@@ -471,9 +474,9 @@
 
                     <notebook colspan="4">
                         <page string="Consumed Products">
-                            <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
+                            <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]" on_change="bom_id_change(bom_id)"/>
                             <field name="routing_id" groups="base.group_extended" select="1"/>
-                            <field name="location_src_id" select="2" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                             <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                             <separator string="" colspan="4"/>
 
@@ -484,7 +487,6 @@
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM"/>
                                     <field name="location_id"  string="Source Loc."/>
-
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
                                         string="Consume Products" type="action"
@@ -493,7 +495,7 @@
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" />                                    
+                                        states="draft,waiting,confirmed,assigned"/>
                                 </tree>
                             </field>
 
@@ -502,7 +504,7 @@
                                    <tree string="Consumed Products" editable="bottom" colors="red:scraped==True">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
-                                    <field name="product_uom" readonly="1" string="UOM"/>                                    
+                                    <field name="product_uom" readonly="1" string="UOM"/>
                                     <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                                     <field name="prodlot_id" />
                                     <field name="state" invisible="1"/>
@@ -516,22 +518,21 @@
                                            name="%(stock.move_scrap)d"
                                            string="Scrap Products" type="action"
                                            icon="gtk-convert"
-                                           states="done,cancel" />                                      
-                                    
+                                           states="done,cancel"/>
                                    </tree>
                                </field>
 
                             <group col="9" colspan="4">
-                                <field name="state" select="2"/>
+                                <field name="state"/>
                                 <button name="action_compute" states="draft" string="Compute Data" type="object" icon="gtk-execute"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
-                                <button name="button_produce" states="ready" string="Mark as Started" icon="gtk-execute"/>                                
+                                <button name="button_produce" states="ready" string="Mark as Started" icon="gtk-execute"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
                                 <button name="force_production" states="confirmed,picking_except" string="Force Reservation" type="object" icon="gtk-jump-to"/>
                                 <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-cancel"/>
                                 <button name="button_recreate" states="picking_except" string="Recreate Picking" icon="gtk-convert"/>
                             </group>
-                        </page>                        
+                        </page>
                         <page string="Finished Products">
                             <field colspan="2" name="move_created_ids" nolabel="1" widget="one2many_list"
                                 mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
@@ -548,7 +549,7 @@
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
-                                        states="draft,waiting,confirmed,assigned" />                                    
+                                        states="draft,waiting,confirmed,assigned" />
                                 </tree>
                             </field>
 
@@ -570,7 +571,7 @@
                                    </tree>
                                </field>
                         </page>
-                        <page string="Work Orders">
+                        <page string="Work Orders" groups="base.group_extended">
                             <field colspan="4" name="workcenter_lines" nolabel="1">
                                 <form string="Production Work Centers">
                                     <field colspan="4" name="name" select="1"/>
@@ -587,7 +588,6 @@
                                     <field name="hour"/>
                                 </tree>
                             </field>
-
                         </page>
                         <page string="Scheduled Products">
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
@@ -596,12 +596,12 @@
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <field name="priority" groups="base.group_extended"/>
                             <newline/>
-                            <field name="date_start" select="2"/>
+                            <field name="date_start"/>
                             <field name="date_finnished"/>
-                            <field name="picking_id"/>
-                            <field name="move_prod_id"/>
-                            <field name="sale_name"/>
-                            <field name="sale_ref"/>
+                            <field name="picking_id" groups="base.group_extended"/>
+                            <field name="move_prod_id" groups="base.group_extended"/>
+                            <field name="sale_name" groups="base.group_extended"/>
+                            <field name="sale_ref" groups="base.group_extended"/>
                         </page>
                     </notebook>
                 </form>
@@ -634,14 +634,14 @@
                        <separator orientation="vertical"/>
                        <field name="name"/>
                        <field name="product_id"/>
-                       <field name="routing_id"/>
+                       <field name="routing_id" groups="base.group_extended"/>
                        <field name="origin"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By" colspan="10" col="8">
                         <filter string="Product" icon="terp-mrp" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="State" icon="terp-mrp" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Routing" icon="terp-mrp" domain="[]" context="{'group_by':'routing_id'}"/>
+                        <filter string="Routing" icon="terp-mrp" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-mrp" domain="[]" context="{'group_by':'date_planned'}"/>
                     </group>
@@ -714,8 +714,8 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
-                    <field name="product_uos_qty"/>
-                    <field name="product_uos"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
                     <field name="tracking_id"/>
                 </form>
             </field>
@@ -729,8 +729,8 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
-                    <field name="product_uos_qty"/>
-                    <field name="product_uos"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
                     <field name="tracking_id"/>
                 </tree>
             </field>
@@ -746,8 +746,8 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
-                    <field name="product_uos_qty"/>
-                    <field name="product_uos"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
                 </form>
             </field>
         </record>
@@ -760,8 +760,8 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
-                    <field name="product_uos_qty"/>
-                    <field name="product_uos"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
                 </tree>
             </field>
         </record>
@@ -795,20 +795,20 @@
                     <group col="2" colspan="2">
                         <separator colspan="2" string="References"/>
                         <field name="name" select="1" string="Procurement Reason"/>
-                        <field name="origin" select="2"/>
+                        <field name="origin"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Planification"/>
                         <field name="date_planned" select="1"/>
-                        <field name="procure_method" select="2"/>
+                        <field name="procure_method"/>
                         <field name="priority" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
                     <page string="Procurement Details">
                         <separator colspan="4" string="Product &amp; Location"/>
                         <field name="product_id" select="1" on_change="onchange_product_id(product_id)"/>
-                        <field name="location_id" select="2" domain="[('usage','=','internal')]"/>
+                        <field name="location_id" domain="[('usage','=','internal')]"/>
                         <field name="product_qty"/>
                         <field name="product_uom"/>
 
@@ -817,7 +817,7 @@
 
                         <separator colspan="4" string="Status"/>
                         <field colspan="4" name="message" readonly="1"/>
-                        <field name="state" readonly="1" select="2"/>
+                        <field name="state" readonly="1"/>
                         <group col="7" colspan="2">
                             <button name="button_confirm" states="draft" string="Confirm" icon="gtk-apply"/>
                             <button name="button_restart" states="exception" string="Retry" icon="gtk-convert"/>
@@ -827,9 +827,9 @@
                     </page>
                     <page string="Extra Information">
                         <separator colspan="4" string="Details"/>
-                        <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                        <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                         <field name="move_id" groups="base.group_extended"/>
-                        <field name="date_close" select="2"/>
+                        <field name="date_close"/>
                         <field name="close_move" groups="base.group_extended"/>
                         <field name="purchase_id"/>
                         <group colspan="4"  groups="base.group_extended">
@@ -974,7 +974,7 @@
                     <group col="2" colspan="2">
                         <separator string="General Information" colspan="2" />
                         <field name="name" />
-                        <field name="product_id" on_change="onchange_product_id(product_id)" />
+                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
                         <field name="product_uom"/>
                     </group>
                     <group col="2" colspan="2">
@@ -989,7 +989,7 @@
                         <field name="product_max_qty"/>
                         <field name="qty_multiple"/>
                     </group>
-                    <group col="2" colspan="2">
+                    <group col="2" colspan="2" groups="base.group_extended">
                         <separator string="Misc" colspan="2" />
                         <field name="procurement_id" readonly="1"/>
                         <field name="active" />
@@ -997,6 +997,7 @@
                 </form>
             </field>
         </record>
+
         <record id="action_orderpoint_form" model="ir.actions.act_window">
             <field name="name">Minimum Stock Rules</field>
             <field name="res_model">stock.warehouse.orderpoint</field>
@@ -1036,7 +1037,10 @@
 
         <!-- Menu for Resource for MRP-->
         <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="3"/>
-        <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root" sequence="2"/>
+
+        <menuitem id="menu_pm_resources_mrp" name="Resources" parent="base.menu_mrp_root"
+            groups="base.group_extended"
+            sequence="2"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search_mrp" parent="menu_pm_resources_mrp" sequence="1"/>

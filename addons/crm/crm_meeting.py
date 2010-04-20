@@ -33,9 +33,7 @@ crm_opportunity()
 
 class crm_phonecall(osv.osv):
     """ CRM Phonecall """
-
     _name = 'crm.phonecall'
-
 crm_phonecall()
 
 

@@ -32,6 +32,9 @@ import mimetypes
 from imaplib import IMAP4
 from imaplib import IMAP4_SSL   
 
+from poplib import POP3
+from poplib import POP3_SSL
+
 from email.header import Header
 from email.header import decode_header
 
@@ -39,8 +42,6 @@ import netsvc
 from osv import osv
 from osv import fields
 from tools.translate import _
-
-command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 
 logger = netsvc.Logger()
 
@@ -129,12 +130,12 @@ class mail_server(osv.osv):
             ('wating','Waiting for Verification'),
             ('done','Confirmed'),
         ],'State', select=True, readonly=True),
-        'server' : fields.char('SMTP Server', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'port' : fields.integer('SMTP Port', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'server' : fields.char('Server', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'port' : fields.integer('Port', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'type':fields.selection([
             ('pop','POP Server'),
             ('imap','IMAP Server'),
-        ],'State', select=True, readonly=True),
+        ],'State', select=True, readonly=False),
         'is_ssl':fields.boolean('SSL ?', required=False),
         'date': fields.date('Date'),
         'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -145,7 +146,7 @@ class mail_server(osv.osv):
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly',False)]}, help="Priority between 0 to 10, select define the order of Processing"),
     }
     _defaults = {
-        'type': lambda *a: "imap",
+#        'type': lambda *a: "imap",
         'state': lambda *a: "draft",
         'active': lambda *a: True,
         'priority': lambda *a: 5,
@@ -255,17 +256,25 @@ class mail_server(osv.osv):
         
         if msg.get('references', False):
             id = False
-            ref = msg.get('references').split('\r\n')
+            ref = msg.get('references')
+            if '\r\n' in ref:
+                ref = msg.get('references').split('\r\n')
+            else:
+                ref = msg.get('references').split(' ')
+                
             if ref:
-                hids = history_pool.search(cr, uid, [('name','=',ref[0])])
+                hids = history_pool.search(cr, uid, [('name','=',ref[0].strip())])
                 if hids:
                     id = hids[0]
                     history = history_pool.browse(cr, uid, id)
                     model_pool = self.pool.get(server.object_id.model)
                     context.update({
-                        'message_id':ref[0]
+                        'references_id':ref[0]
                     })
-                    model_pool.message_update(cr, uid, [history.res_id], msg, context=context)
+                    vals = {
+                    
+                    }
+                    model_pool.message_update(cr, uid, [history.res_id], vals, msg, context=context)
             res_id = id
         else:
             model_pool = self.pool.get(server.object_id.model)
@@ -307,7 +316,7 @@ class mail_server(osv.osv):
         fp = os.popen('ping www.google.com -c 1 -w 5',"r")
         if not fp.read():
             logger.notifyChannel('imap', netsvc.LOG_WARNING, 'No address associated with hostname !')
-        
+
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             
@@ -322,7 +331,6 @@ class mail_server(osv.osv):
                     imap_server.login(server.user, server.password)
                     imap_server.select()
                     result, data = imap_server.search(None, '(UNSEEN)')
-                    count = 0
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
                         self._process_email(cr, uid, server, data[0][1], context)
@@ -332,11 +340,36 @@ class mail_server(osv.osv):
                     
                     imap_server.close()
                     imap_server.logout()
+                elif server.type == 'pop':
+                    pop_server = None
+                    if server.is_ssl:
+                        pop_server = POP3_SSL(server.server, int(server.port))
+                    else:
+                        pop_server = POP3(server.server, int(server.port))
+                    
+                    #TODO: use this to remove only unread messages
+                    #pop_server.user("recent:"+server.user)
+                    pop_server.user(server.user)
+                    pop_server.pass_(server.password)
+                    pop_server.list()
+
+                    (numMsgs, totalSize) = pop_server.stat()
+                    count = 0
+                    for num in range(1, numMsgs + 1):
+                        (header, msges, octets) = pop_server.retr(num)
+                        msg = '\n'.join(msges)
+                        self._process_email(cr, uid, server, msg, context)
+                        pop_server.dele(num)
+
+                    pop_server.quit()
+                    
+                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
+                    
             except Exception, e:
                 logger.notifyChannel('IMAP', netsvc.LOG_WARNING, '%s' % (e))
                 
         return True
-                
+
 mail_server()
 
 class mail_server_history(osv.osv):

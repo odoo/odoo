@@ -46,7 +46,7 @@ AVAILABLE_PRIORITIES = [
 ]
 
 class crm_case_section(osv.osv):
-    """ Cases Section"""
+    """Sales Team"""
 
     _name = "crm.case.section"
     _description = "Sales Teams"
@@ -60,10 +60,12 @@ class crm_case_section(osv.osv):
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"), 
         'user_id': fields.many2one('res.users', 'Responsible User'), 
         'reply_to': fields.char('Reply-To', size=64, help="The email address put \
-                        in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"), 
-        'parent_id': fields.many2one('crm.case.section', 'Parent Section'), 
-        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Sections'), 
-        'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"), 
+                        in the 'Reply-To' of all emails sent by Open ERP about cases in this sales team"),
+        'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
+        'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
+        'resource_calendar_id': fields.many2one('resource.calendar', "Resource's Calendar"),
+        'server_id':fields.many2one('email.smtpclient', 'Server ID'),
+        'note': fields.text('Description'),
     }
 
     _defaults = {
@@ -72,7 +74,7 @@ class crm_case_section(osv.osv):
     }
 
     _sql_constraints = [
-        ('code_uniq', 'unique (code)', 'The code of the section must be unique !')
+        ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
     ]
 
     def _check_recursion(self, cr, uid, ids):
@@ -98,7 +100,6 @@ class crm_case_section(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive sections.', ['parent_id'])
     ]
-
 
     def name_get(self, cr, uid, ids, context=None):
         """Overrides orm name_get method
@@ -136,9 +137,8 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'), 
         'object_id': fields.many2one('ir.model', 'Object Name'), 
     }
+
     def _find_object_id(self, cr, uid, context=None):
-
-
         """Finds id for case object
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -154,8 +154,6 @@ class crm_case_categ(osv.osv):
         'object_id' : _find_object_id
 
     }
-
-
 crm_case_categ()
 
 
@@ -277,7 +275,6 @@ class crm_case(osv.osv):
             default = {}
         default.update({'state': 'draft', 'id': False})
         return super(crm_case, self).copy(cr, uid, id, default, context)
-
 
     def _get_log_ids(self, cr, uid, ids, field_names, arg, context=None):
         """Gets id for case log from history of particular case
@@ -582,7 +579,7 @@ class crm_case(osv.osv):
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
-        """
+        """This function returns value of partner address based on partner
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -649,7 +646,7 @@ class crm_case(osv.osv):
                     data['user_id'] = case.section_id.parent_id.user_id.id
             else:
                 raise osv.except_osv(_('Error !'), _('You can not escalate this case.\nYou are already at the top level.'))
-            self.write(cr, uid, ids, data)
+            self.write(cr, uid, [case.id], data)
         cases = self.browse(cr, uid, ids)
         self.__history(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')

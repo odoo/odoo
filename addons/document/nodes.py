@@ -351,7 +351,7 @@ class node_res_dir(node_class):
         self.content_length = 0
         self.res_model = dirr.ressource_type_id and dirr.ressource_type_id.model or False
         self.resm_id = dirr.ressource_id
-        self.namefield = dirr.resource_field or 'name'
+        self.namefield = dirr.resource_field.name or 'name'
         self.displayname = dirr.name
         # Important: the domain is evaluated using the *parent* dctx!        
         self.domain = dirr.domain
@@ -539,7 +539,7 @@ class node_res_obj(node_class):
                 where1 = where + [(obj._parent_name, '=', self.res_id)]
             resids = obj.search(cr,uid, where1, context=ctx)                        
             for bo in obj.browse(cr,uid,resids,context=ctx):
-                namefield = directory.resource_field or 'name'
+                namefield = directory.resource_field.name or 'name'
                 if not bo:
                     continue
                 res_name = getattr(bo, namefield)

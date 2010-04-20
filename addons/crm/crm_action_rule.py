@@ -70,7 +70,7 @@ class case(osv.osv):
         """
         for case in self.browse(cr, uid, ids):
             if not case.section_id.reply_to:
-                raise osv.except_osv(_('Error!'), ("Reply To is not specified in Section"))
+                raise osv.except_osv(_('Error!'), ("Reply To is not specified in the sales team"))
             if not case.email_from:
                 raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
             if case.section_id.reply_to and case.email_from:
@@ -259,11 +259,11 @@ class base_action_rule_line(osv.osv):
         return res + crm.AVAILABLE_PRIORITIES
 
     _columns = {
-        'trg_section_id': fields.many2one('crm.case.section', 'Section'),
+        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'trg_max_history': fields.integer('Maximum Communication History'),
         'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),
         'regex_history' : fields.char('Regular Expression on Case History', size=128),
-        'act_section_id': fields.many2one('crm.case.section', 'Set section to'),
+        'act_section_id': fields.many2one('crm.case.section', 'Set Team to'),
         'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
         'act_mail_to_partner': fields.boolean('Mail to partner',help="Check this \
                                 if you want the rule to send an email to the partner."),

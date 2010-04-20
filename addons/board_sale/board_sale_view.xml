@@ -5,24 +5,24 @@
             <field name="name">Sales</field>
         </record>
 
-		<record model="ir.actions.act_window" id="board_crm_case_categ_phone_incoming0">
-	        <field name="res_model">crm.phonecall</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">tree,calendar</field>
-	        <field name="view_id" ref="crm.crm_case_phone_tree_view"/>
-	        <field name="domain">[('user_id','=',uid)]</field>
-	        <field name="context" eval="{'default_state':'open'}"/>
-	        <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-	    </record>
+        <record model="ir.actions.act_window" id="board_crm_case_categ_phone_incoming0">
+            <field name="res_model">crm.phonecall</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,calendar</field>
+            <field name="view_id" ref="crm.crm_case_phone_tree_view"/>
+            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="context" eval="{'default_state':'open'}"/>
+            <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
+        </record>
 
-		<record model="ir.actions.act_window" id="board_crm_case_categ_meet">
-	        <field name="res_model">crm.meeting</field>
-	        <field name="view_mode">tree,form,gantt</field>
-	        <field name="view_id" ref="crm.crm_case_tree_view_meet"/>
-	        <field name="domain">[('user_id','=',uid)]</field>
-	        <field name="domain">[('date','&gt;=',time.strftime('%Y-%m-%d')),('date','&lt;=',(datetime.datetime.today() + datetime.timedelta(days=2)).strftime('%Y-%m-%d'))]</field>
-	        <field name="context" eval="{'default_state':'open'}"/>
-	    </record>
+        <record model="ir.actions.act_window" id="board_crm_case_categ_meet">
+            <field name="res_model">crm.meeting</field>
+            <field name="view_mode">tree,form,gantt</field>
+            <field name="view_id" ref="crm.crm_case_tree_view_meet"/>
+            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="domain">[('date','&gt;=',time.strftime('%Y-%m-%d')),('date','&lt;=',(datetime.datetime.today() + datetime.timedelta(days=2)).strftime('%Y-%m-%d'))]</field>
+            <field name="context" eval="{'default_state':'open'}"/>
+        </record>
         <record id="board_sales_manager_form" model="ir.ui.view">
             <field name="name">board.sales.manager.form</field>
             <field name="model">board.board</field>
@@ -36,8 +36,8 @@
                         </child1>
 
                         <child2>
-							<action colspan="4" name="%(crm.crm_case_category_act_oppor11)d" string="My Opportunities" width="510" domain="[('user_id','=',uid)]"/>
-							<action colspan="4" name="%(board_crm_case_categ_meet)d" String="My Meetings" domain="[('state','=','open')]" width="510"/>
+                            <action colspan="4" name="%(crm.crm_case_category_act_oppor11)d" string="My Opportunities" width="510" domain="[('user_id','=',uid)]"/>
+                            <action colspan="4" name="%(board_crm_case_categ_meet)d" String="My Meetings" domain="[('state','=','open')]" width="510"/>
                         </child2>
                     </hpaned>
                 </form>
@@ -52,7 +52,7 @@
             <field name="view_id" ref="board_sales_manager_form"/>
         </record>
 
-		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
         <menuitem id="next_id_88" name="Sales" parent="base.dashboard"/><menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="next_id_88" sequence="1"/>
 
     </data>

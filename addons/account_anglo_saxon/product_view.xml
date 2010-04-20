@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit.stock</field>
             <field name="model">product.product</field>
@@ -10,8 +10,8 @@
                 <xpath expr="/form/notebook/page/field[@name='property_account_expense']" position="after">
                     <field name="property_account_creditor_price_difference" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
                     <newline/>
-<!--	                <field name="property_account_sending_goods" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}" />-->
-<!--	                <field name="property_account_received_goods" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />-->
+<!--                    <field name="property_account_sending_goods" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}" />-->
+<!--                    <field name="property_account_received_goods" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />-->
                 </xpath>
             </field>
         </record>
@@ -22,11 +22,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-            	<xpath expr="/form/notebook/page/field[@name='property_account_expense']" position="after">
+                <xpath expr="/form/notebook/page/field[@name='property_account_expense']" position="after">
                     <field name="property_account_creditor_price_difference" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
                     <newline/>
-<!--					<field name="property_account_sending_goods" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}" />-->
-<!--	                <field name="property_account_received_goods" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />-->
+<!--                    <field name="property_account_sending_goods" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}" />-->
+<!--                    <field name="property_account_received_goods" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />-->
                 </xpath>
              </field>
         </record>
@@ -41,13 +41,13 @@
                     <group col="2" colspan="2">
                         <separator string=" Accounting Property" colspan="2"/>
                             <field name="property_account_creditor_price_difference_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />                        
-<!--					<field name="property_account_sending_goods_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}" />-->
-<!--	                <field name="property_account_received_goods_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />-->
+<!--                    <field name="property_account_sending_goods_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}" />-->
+<!--                    <field name="property_account_received_goods_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />-->
                     </group>
                 </form>
             </field>
         </record>
 
-	</data>
+    </data>
 </openerp>
 

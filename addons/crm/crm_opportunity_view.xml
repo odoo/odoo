@@ -79,6 +79,10 @@
                     <field name="date_deadline" string="Expected Closing"/>
                     <button string="Schedule Call"
                         name="%(opportunity2phonecall_act)d" icon="gtk-redo" type="action"  />
+
+                    <newline/>
+                    <field name="date_action"/>
+                    <field name="priority" string="Priority"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Opportunity">
@@ -94,9 +98,7 @@
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Categorization"/>
-                        <field name="type_id" select="1" string="Campaign" groups="base.group_extended"/>
                         <field name="section_id" colspan="1" widget="selection"/>
-                        <field name="priority" string="Priority"/>
                         <field name="categ_id" select="1"
                             string="Category" widget="selection"
                             domain="[('object_id.model', '=', 'crm.opportunity')]" />
@@ -107,12 +109,13 @@
 
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="2"/>
+                        <field name="state"/>
                         <button name="case_open" string="Open"
                             states="draft,pending" type="object"
                             icon="gtk-go-forward" />
                         <button name="case_escalate" string="Escalate"
                             states="open,draft,pending" type="object"
+                            groups="base.group_extended"
                             icon="gtk-go-up" />
                         <button name="case_pending" string="Pending"
                             states="draft,open" type="object"
@@ -142,6 +145,7 @@
                         <field name="active"/>
                         <field name="day_open"/>
                         <field name="day_close"/>
+                        <field name="referred"/>
                     </group>
                     <separator colspan="4" string="References"/>
                     <field name="ref"/>
@@ -207,7 +211,6 @@
                 <field name="partner_id"/>
                 <field name="stage_id"/>
                 <field name="categ_id" invisible="1"/>
-                <field name="type_id" invisible="1"/>
                 <button name="stage_previous" string="Previous"
                     states="open,pending" type="object" icon="gtk-go-back" />
                 <button name="stage_next" string="Next"
@@ -215,7 +218,7 @@
                     icon="gtk-go-forward" />
                 <field name="planned_revenue" sum="Expected Revenue"/>
                 <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
-                <field name="date_deadline" string="Expected Closing"/>
+                <field name="date_action"/>
                 <field name="section_id"/>
                 <field name="user_id"/>
                 <field name="priority"/>
@@ -304,8 +307,6 @@
                     <filter string="Category" icon="terp-crm"
                         domain="[]" context="{'group_by':'categ_id'}" />
 
-                    <filter string="Campaign" icon="terp-crm"
-                        domain="[]" context="{'group_by':'type_id'}" />
                     <separator orientation="vertical" />
                     <filter string="Partner" icon="terp-crm" domain="[]"
                         context="{'group_by':'partner_id'}" />

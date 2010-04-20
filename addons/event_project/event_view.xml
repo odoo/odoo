@@ -1,44 +1,44 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
-	<!-- EVENTS  -->
+    <!-- EVENTS  -->
 
-		<record model="ir.ui.view" id="view_event_form_inherited">
-			<field name="name">Events</field>
-			<field name="model">event.event</field>
-			<field name="inherit_id" ref="event.view_event_form"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="register_max" position="after">
-					<separator string="Tasks management" colspan="4"/>
-					<field name="project_id"/>
+        <record model="ir.ui.view" id="view_event_form_inherited">
+            <field name="name">Events</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="register_max" position="after">
+                    <separator string="Tasks management" colspan="4"/>
+                    <field name="project_id"/>
                     <button string="Create Retro-Planning" name="%(event_wiz)d" type="action" icon="gtk-execute"/>
-				</field>
-			</field>
-		</record>
+                </field>
+            </field>
+        </record>
 
-		<record model="ir.ui.view" id="view_event_form_inherited2">
-			<field name="name">Events</field>
-			<field name="model">event.event</field>
-			<field name="inherit_id" ref="event.view_event_form"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="register_prospect" position="after">
-					<field name="task_ids" colspan="4" nolabel="1" widget="one2many_list" >
-					   <tree string="All tasks" colors="red:date_deadline&lt;current_date and state=='draft';blue:date_deadline==current_date and state=='draft';grey:state in ('cancel','done');black:state not in ('cancel','done')">
-							<field name="sequence"/>
-							<field name="name"/>
-							<field name="user_id" />
-							<field name="date_deadline" />
-							<field name="planned_hours" widget="float_time"/>
-							<field name="effective_hours" widget="float_time"/>
-							<field name="state" />
-						</tree>
-					</field>
-				</field>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_event_form_inherited2">
+            <field name="name">Events</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="register_prospect" position="after">
+                    <field name="task_ids" colspan="4" nolabel="1" widget="one2many_list" >
+                       <tree string="All tasks" colors="red:date_deadline&lt;current_date and state=='draft';blue:date_deadline==current_date and state=='draft';grey:state in ('cancel','done');black:state not in ('cancel','done')">
+                            <field name="sequence"/>
+                            <field name="name"/>
+                            <field name="user_id" />
+                            <field name="date_deadline" />
+                            <field name="planned_hours" widget="float_time"/>
+                            <field name="effective_hours" widget="float_time"/>
+                            <field name="state" />
+                        </tree>
+                    </field>
+                </field>
+            </field>
+        </record>
 
-	</data>
+    </data>
 </openerp>

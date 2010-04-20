@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -59,8 +59,8 @@ class journal_print(report_sxw.rml_parse):
     def _sum_credit(self, period_id, journal_id):
         self.cr.execute('select sum(credit) from account_move_line where period_id=%s and journal_id=%s and state<>\'draft\'', (period_id, journal_id))
         return self.cr.fetchone()[0] or 0.0
-report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/central_journal.rml',parser=journal_print, header=False)
-report_sxw.report_sxw('report.account.central.journal.wiz', 'account.journal.period', 'addons/account/report/wizard_central_journal.rml',parser=journal_print, header=False)
+report_sxw.report_sxw('report.account.central.journal', 'account.journal.period', 'addons/account/report/central_journal.rml', parser=journal_print, header=False)
+report_sxw.report_sxw('report.account.central.journal.wiz', 'account.journal.period', 'addons/account/report/wizard_central_journal.rml', parser=journal_print, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -447,16 +447,16 @@ property or property parameter."),
             for att2 in self.browse(cr, uid, other_invitaion_ids):
                 att_infos.append(((att2.user_id and att2.user_id.name) or \
                              (att2.partner_id and att2.partner_id.name) or \
-                                att2.email) +  ' - Status: ' + att2.state.title())
-            body_vals = {'name': res_obj.name,
-                'start_date': res_obj.date,
-                'end_date': res_obj.date_deadline or False,
-                'description': res_obj.description or '-',
-                'location': res_obj.location or '-',
-                'attendees': '<br>'.join(att_infos),
-                'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
-                'sign': sign,
-                'company': company
+                                att2.email) + ' - Status: ' + att2.state.title())
+            body_vals = {'name': res_obj.name, 
+                        'start_date': res_obj.date, 
+                        'end_date': res_obj.date_deadline or False, 
+                        'description': res_obj.description or '-', 
+                        'location': res_obj.location or '-', 
+                        'attendees': '<br>'.join(att_infos), 
+                        'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User', 
+                        'sign': sign, 
+                        'company': company
             }
             body = html_invitation % body_vals
             if mail_to and email_from:
@@ -693,7 +693,6 @@ class calendar_alarm(osv.osv):
         'action': lambda *x: 'email', 
         'state': lambda *x: 'run', 
      }
-
     def create(self, cr, uid, vals, context={}):
         """
         create new record.
@@ -918,17 +917,21 @@ class calendar_event(osv.osv):
         @return: dictionary of rrule value.
         """
         result = {}
-        for datas in self.read(cr, uid, ids):
+        for datas in self.read(cr, uid, ids, context=context):
+            event = datas['id']
             if datas.get('rrule_type'):
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
                 elif datas.get('rrule_type') == 'custom':
-                    rrule_custom = self.compute_rule_string(cr, uid, datas)
+                    if datas.get('interval', 0) < 0:
+                        raise osv.except_osv('Warning!', 'Interval can not be Negative')
+                    if datas.get('count', 0) < 0:
+                        raise osv.except_osv('Warning!', 'Count can not be Negative')
+                    rrule_custom = self.compute_rule_string(cr, uid, datas,\
+                                                         context=context)
                     result[event] = rrule_custom
                 else:
-                    result[event] = self.compute_rule_string(cr, uid, {'freq':\
-                                        datas.get('rrule_type').upper(), \
-                                      'interval': 1}, context=context)
+                    result[event] = self.compute_rule_string(cr, uid, {'freq': datas.get('rrule_type').upper(), 'interval': 1}, context=context)
 
         return result
 
@@ -944,9 +947,9 @@ class calendar_event(osv.osv):
         'class': fields.selection([('public', 'Public'), ('private', 'Private'), \
              ('confidential', 'Confidential')], 'Mark as'),
         'location': fields.char('Location', size=264, help="Location of Event"),
-        'show_as': fields.selection([('free', 'Free'), \
-              ('busy', 'Busy')], 'Show as'),
-        'base_calendar_url': fields.char('Caldav URL', size=264),
+        'show_as': fields.selection([('free', 'Free'), ('busy', 'Busy')], \
+                                                'Show as'), 
+        'base_calendar_url': fields.char('Caldav URL', size=264), 
         'exdate': fields.text('Exception Date/Times', help="This property \
                     defines the list of date/time exceptions for arecurring calendar component."), 
         'exrule': fields.char('Exception Rule', size=352, help="defines a \
@@ -958,43 +961,43 @@ class calendar_event(osv.osv):
 e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'), 
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
-            ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
-            ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'),
-        'alarm_id': fields.many2one('res.alarm', 'Alarm'),
-        'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'),
-        'recurrent_uid': fields.integer('Recurrent ID'),
-        'recurrent_id': fields.datetime('Recurrent ID date'),
-        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24,\
-                         string='Timezone', store=True),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+                            ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
+                            ('yearly', 'Yearly'), ('custom', 'Custom')], 'Recurrency'), 
+        'alarm_id': fields.many2one('res.alarm', 'Alarm'), 
+        'base_calendar_alarm_id': fields.many2one('calendar.alarm', 'Alarm'), 
+        'recurrent_uid': fields.integer('Recurrent ID'), 
+        'recurrent_id': fields.datetime('Recurrent ID date'), 
+        'vtimezone': fields.related('user_id', 'context_tz', type='char', size=24, \
+                         string='Timezone', store=True), 
+        'user_id': fields.many2one('res.users', 'Responsible'), 
         'freq': fields.selection([('None', 'No Repeat'), \
-            ('secondly', 'Secondly'), \
-            ('minutely', 'Minutely'), \
-            ('hourly', 'Hourly'), \
-            ('daily', 'Daily'), \
-            ('weekly', 'Weekly'), \
-            ('monthly', 'Monthly'), \
-            ('yearly', 'Yearly')], 'Frequency'),
-        'interval': fields.integer('Interval'),
-        'count': fields.integer('Count'),
-        'mo': fields.boolean('Mon'),
-        'tu': fields.boolean('Tue'),
-        'we': fields.boolean('Wed'),
-        'th': fields.boolean('Thu'),
-        'fr': fields.boolean('Fri'),
-        'sa': fields.boolean('Sat'),
-        'su': fields.boolean('Sun'),
+                                ('secondly', 'Secondly'), \
+                                ('minutely', 'Minutely'), \
+                                ('hourly', 'Hourly'), \
+                                ('daily', 'Daily'), \
+                                ('weekly', 'Weekly'), \
+                                ('monthly', 'Monthly'), \
+                                ('yearly', 'Yearly')], 'Frequency'), 
+        'interval': fields.integer('Interval'), 
+        'count': fields.integer('Count'), 
+        'mo': fields.boolean('Mon'), 
+        'tu': fields.boolean('Tue'), 
+        'we': fields.boolean('Wed'), 
+        'th': fields.boolean('Thu'), 
+        'fr': fields.boolean('Fri'), 
+        'sa': fields.boolean('Sat'), 
+        'su': fields.boolean('Sun'), 
         'select1': fields.selection([('date', 'Date of month'), \
-            ('day', 'Day of month')], 'Option'),
-        'day': fields.integer('Date of month'),
+                                    ('day', 'Day of month')], 'Option'), 
+        'day': fields.integer('Date of month'), 
         'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
-           ('WE', 'Wednesday'), ('TH', 'Thursday'), \
-           ('FR', 'Friday'), ('SA', 'Saturday'), \
-           ('SU', 'Sunday')], 'Weekday'),
+                                   ('WE', 'Wednesday'), ('TH', 'Thursday'), \
+                                   ('FR', 'Friday'), ('SA', 'Saturday'), \
+                                   ('SU', 'Sunday')], 'Weekday'), 
         'byday': fields.selection([('1', 'First'), ('2', 'Second'), \
-           ('3', 'Third'), ('4', 'Fourth'), \
-           ('5', 'Fifth'), ('-1', 'Last')], 'By day'),
-        'month_list': fields.selection(months.items(), 'Month'),
+                                   ('3', 'Third'), ('4', 'Fourth'), \
+                                   ('5', 'Fifth'), ('-1', 'Last')], 'By day'), 
+        'month_list': fields.selection(months.items(), 'Month'), 
         'end_date': fields.date('Repeat Until')
     }
     _defaults = {
@@ -1020,11 +1023,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         event_id = base_calendar_id2real_id(event_id)
         datas = self.read(cr, uid, event_id, context=context)
         defaults.update({
-           'recurrent_uid': base_calendar_id2real_id(datas['id']),
-           'recurrent_id': defaults.get('date') or real_date,
-           'rrule_type': 'none',
-           'rrule': ''
-        })
+                        'recurrent_uid': base_calendar_id2real_id(datas['id']), 
+                        'recurrent_id': defaults.get('date') or real_date, 
+                        'rrule_type': 'none', 
+                        'rrule': ''
+                        })
         exdate = datas['exdate'] and datas['exdate'].split(',') or []
         if real_date and defaults.get('date'):
             exdate.append(real_date)

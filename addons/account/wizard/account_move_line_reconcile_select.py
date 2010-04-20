@@ -18,11 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import fields, osv
 from tools.translate import _
-import tools
-
 
 class account_move_line_reconcile_select(osv.osv_memory):
     _name = "account.move.line.reconcile.select"
@@ -41,17 +38,16 @@ class account_move_line_reconcile_select(osv.osv_memory):
         @return: dictionary of  Open  account move line window for reconcile on given account id
 
          """
-        for data in  self.read(cr, uid, ids,context=context):
-
-            return {
-                'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['account_id'],
-                'name': _('Reconciliation'),
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'view_id': False,
-                'res_model': 'account.move.line',
-                'type': 'ir.actions.act_window'
-                }
+        data = self.read(cr, uid, ids, context=context)[0]
+        return {
+            'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['account_id'],
+            'name': _('Reconciliation'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'view_id': False,
+            'res_model': 'account.move.line',
+            'type': 'ir.actions.act_window'
+            }
 
 account_move_line_reconcile_select()
 

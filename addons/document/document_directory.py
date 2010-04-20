@@ -52,7 +52,7 @@ class document_directory(osv.osv):
         'ressource_type_id': fields.many2one('ir.model', 'Directories Mapped to Objects',
             help="Select an object here and Open ERP will create a mapping for each of these " \
                  "objects, using the given domain, when browsing through FTP."),
-        'resource_field': fields.char('Name field',size=32,help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
+        'resource_field': fields.many2one('ir.model.fields', 'Name field', help='Field to be used as name on resource directories. If empty, the "name" will be used.'),
         'ressource_parent_type_id': fields.many2one('ir.model', 'Parent Model',
             help="If you put an object here, this directory template will appear bellow all of these objects. " \
                  "Don't put a parent directory if you select a parent model."),
@@ -61,10 +61,12 @@ class document_directory(osv.osv):
             help="Check this if you want to use the same tree structure as the object selected in the system."),
         'dctx_ids': fields.one2many('document.directory.dctx', 'dir_id', 'Context fields'),
     }
+
+
     def _get_root_directory(self, cr,uid, context=None):
         objid=self.pool.get('ir.model.data')
         try:
-            mid = objid._get_id(cr, uid, 'document', 'dir_root')            
+            mid = objid._get_id(cr, uid, 'document', 'dir_root')
             if not mid:
                 return False
             root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']

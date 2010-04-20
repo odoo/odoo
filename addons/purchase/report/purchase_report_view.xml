@@ -76,9 +76,9 @@
                     <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
                     <filter string="Responsible" name="by_user" icon="terp-purchase" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
+                    <filter string="Product" name="by_product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
                     <filter string="Product Category" icon="terp-purchase" context="{'group_by':'category_id'}"/>
-                    <filter string="Partner" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
+                    <filter string="Supplier" name="by_partner" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-purchase" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Month" icon="terp-purchase" context="{'group_by':'date'}"/>
@@ -93,7 +93,7 @@
         <field name="res_model">report.purchase.order</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{"search_default_this_year":1,"search_default_this_month":1,"search_default_purchase":1,"search_default_by_user":1}</field>
+        <field name="context">{"search_default_this_year":1,"search_default_this_month":1,"search_default_purchase":1,"search_default_by_product":1}</field>
         <field name="search_view_id" ref="view_purchase_order_search"/>
     </record>
 

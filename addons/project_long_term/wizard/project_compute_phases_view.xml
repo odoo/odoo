@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    	<record id="view_project_compute_phases_select" model="ir.ui.view">
+            <field name="name">Compute Scheduling of Phases</field>
+            <field name="model">project.compute.phases</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+              	<form string="Compute Scheduling of Phases">
+		              <field name="target_project" />
+		              <newline />
+		              <group colspan="4" col="6" attrs="{'invisible':[('target_project','=','all')]}">
+		              		<field name="project_id"/>
+		              </group>
+		              <group colspan="4" col="6"> <!-- Improve me -->
+		            		<button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
+		            		<button icon="gtk-ok" name="check_selection" string="_Compute" type="object"/>
+		              </group>
+			  	</form>
+            </field>
+		</record>
+
+		<record id="action_project_compute_phases" model="ir.actions.act_window">
+	           <field name="name">Compute Phase Scheduling</field>
+	           <field name="type">ir.actions.act_window</field>
+	           <field name="res_model">project.compute.phases</field>
+	           <field name="view_type">form</field>
+	           <field name="view_mode">form</field>
+	           <field name="view_id" ref="view_project_compute_phases_select"/>
+		       <field name="context">{'record_id' : active_id}</field>
+	           <field name="target">new</field>
+    	</record>
+
+ 		<menuitem id="menu_compute_phase" name="Compute Phase Scheduling"
+        	parent="base.menu_pm_planning" action="action_project_compute_phases"/>
+
+    </data>
+</openerp>

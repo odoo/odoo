@@ -52,12 +52,14 @@ from osv import fields
 from osv import osv
 from tools.translate import _
 
-error_msg = {'not_active' : "Please activate Email Server, without activating you can not send Email(s).",
-             'server_stop' : 'Please start Email Server, without starting  you can not send Email(s).',
-             'server_not_confirm' : 'Please Verify Email Server, without verifying you can not send Email(s).'}
+error_msg = {
+    'not_active' : "Please activate Email Server, without activating you can not send Email(s).",
+    'server_stop' : 'Please start Email Server, without starting  you can not send Email(s).',
+    'server_not_confirm' : 'Please Verify Email Server, without verifying you can not send Email(s).'
+}
 
 logger = netsvc.Logger()
-             
+
 class smtpclient(osv.osv):
 
     _name = 'email.smtpclient'
@@ -123,6 +125,7 @@ class smtpclient(osv.osv):
         'users_id': _get_users,
         'verify_email': lambda *a: _("Verification Message. This is the code\n\n__code__\n\nyou must copy in the OpenERP Email Server (Verify Server wizard).\n\nCreated by user __user__"),
     }
+    
     server = {}
     smtpServer = {}
     
@@ -393,7 +396,7 @@ class smtpclient(osv.osv):
             if body == False:
                 body = ''
                             
-            if smtp_server.disclaimers != False:
+            if smtp_server.disclaimers:
                 body = body + "\n" + smtp_server.disclaimers
                 
             try:
@@ -555,7 +558,8 @@ class smtpclient(osv.osv):
                 'interval_number':1,
                 'interval_type':'minutes',
                 'user_id':uid,
-                'numbercall':-1
+                'numbercall':-1,
+                'doall':False
             }
             id = self.pool.get('ir.cron').create(cr, uid, res)
             self.write(cr, uid, ids, {'process_id':id})

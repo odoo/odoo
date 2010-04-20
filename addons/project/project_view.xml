@@ -25,7 +25,7 @@
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Scheduling"/>
                                 <field name="priority"/>
-                                <field name="active" select="2"/>
+                                <field name="active"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Performance"/>
@@ -57,7 +57,7 @@
                         </page>
                         <page groups="base.group_extended" string="Partner Info">
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="contact_id" select="2"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="contact_id"/>
                             <field name="warn_customer"/>
                             <newline/>
                             <separator colspan="2" string="Mail Header"/>
@@ -234,7 +234,7 @@
                         <field name="name" select="1"/>
                         <field name="project_id" required="1" select="1" domain="['|',('user_id','=',uid),('members','=',uid)]"/>
                         <field name="total_hours" widget="float_time"/>
-                        <field name="date_deadline" select="2"/>
+                        <field name="date_deadline"/>
                         <field name="user_id" select="1"/>
                         <field name="progress" widget="progressbar"/>
                     </group>
@@ -246,15 +246,15 @@
                                 widget="float_time"
                                 attrs="{'readonly':[('state','!=','draft')]}"
                                 on_change="onchange_planned(planned_hours, effective_hours)"/>
-                                <field name="remaining_hours" select="2" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
-                                <button name="%(action_config_compute_remaining)d" string="Review" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
+                                <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
+                                <button name="%(action_config_compute_remaining)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
                             <group col="2" colspan="2">
                             <field name="delay_hours" widget="float_time"/>
                             <field name="effective_hours" widget="float_time"/>
                             </group>
 
-                            <field colspan="4" name="description" nolabel="1" select="2"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
+                            <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
                             <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['draft','done'])]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
@@ -270,7 +270,7 @@
                                 <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute"/>
                                 <button name="%(action_config_compute_remaining)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
                                 <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
-                                <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
+                                <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
                                 <button name="do_close" states="pending,open" string="Done" type="object" icon="gtk-jump-to"/>
                                 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
                             </group>
@@ -304,14 +304,14 @@
                                 <field name="date_end"/>
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
-                            <field name="partner_id" select="2"/>
+                            <field name="partner_id"/>
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <group col="4" colspan="2">
                                 <field name="type" widget="selection" />
                                 <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                                 <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                             </group>
-                            <field name="active" select="2"/>
+                            <field name="active"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="notes" nolabel="1"/>
                         </page>
@@ -349,7 +349,7 @@
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>
                     <field name="state" invisible="context.get('set_visible',False)"/>
                     <button name="do_open" states="pending,draft,done,cancel" string="Start Task" type="object" icon="gtk-execute" help="For changing to open state" invisible="context.get('set_visible',False)"/>
-                    <button groups="base.group_extended" name="%(wizard_delegate_task)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-execute" help="For changing to delegate state"/>
+                    <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-execute" help="For changing to delegate state"/>
                     <button name="do_close" states="draft,pending,open" string="Done" type="object" icon="gtk-jump-to" help="For changing to done state"/>
                     <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
                 </tree>
@@ -571,7 +571,7 @@
                         <field name="subject" select="1"/>
                         <field name="project_id"/>
                         <field name="user_id" select="1"/>
-                          <field name="date" select="2"/>
+                          <field name="date"/>
                      </group>
                         <separator string="Description"  colspan="4"/>
                         <field name="description"  nolabel="1" colspan="4"/>
@@ -626,11 +626,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_project_message_tree"/>
-            <field name="context">{"search_default_my_msg":1}</field>        
+            <field name="context">{"search_default_my_msg":1}</field>
             <field name="search_view_id" ref="view_project_message_search"/>
        </record>
 
-        <!--<menuitem id="menu_message_main" name="Message" parent="base.menu_main_pm"/>-->
         <menuitem action="action_view_project_messages_tree" id="menu_message_tree" parent="menu_project_management" sequence="11"/>
 
         <act_window domain="[('user_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>

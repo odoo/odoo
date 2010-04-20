@@ -26,11 +26,11 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="4"/>
                         <field name="journal_id" select="1" on_change="onchange_journal(journal_id,type)"/>
-                        <field name="account_id" select="2" on_change="onchange_account(account_id)"/>
-                        <field name="type" select="2" on_change="onchange_journal(journal_id,type)"/>
+                        <field name="account_id" on_change="onchange_account(account_id)"/>
+                        <field name="type" on_change="onchange_journal(journal_id,type)"/>
                         <field name="number"/>
                         <!--field name="amount" select="1" invisible="1"/-->
-                        <!--field name="partner_id" select="2"/-->
+                        <!--field name="partner_id"/-->
                     </group>
                     <notebook colspan="4">
                         <page string="Entry Lines">
@@ -60,7 +60,7 @@
                             <field name="currency_id" select="1" />
                             <field name="period_id"/>
                             <field name="date" select="1"/>
-                            <!--field name="reference_type" select="2" nolabel="1" size="0"/>
+                            <!--field name="reference_type" nolabel="1" size="0"/>
                             <field name="reference" select="1" nolabel="1"/-->
                             <separator string="General Entries" colspan="4"/>
                             <field name="move_ids" colspan="4" nolabel="1" readonly="1"/>

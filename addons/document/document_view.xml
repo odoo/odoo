@@ -71,13 +71,13 @@
                     <newline/>
                     <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
                     <field name="ressource_tree"/>
-                    <field name="resource_field"/>
+					<field name="resource_field" 	domain="[('model_id','=',ressource_type_id), ('ttype', 'in', ('char', 'selection', 'date', 'datetime'))]"/>
                     <field name="ressource_id" select="2" readonly="1"/>
                     <field name="ressource_parent_type_id"/>
                 </page>
                 <page string="Generated Files">
                     <label colspan="4" string="For each entry here, virtual files will appear in this folder." />
-                    <field name="content_ids" nolabel="1" colspan="4">
+					<field name="content_ids" nolabel="1" colspan="4" attrs="{'readonly': [('ressource_type_id','=',False)]}">
                         <form string="Contents">
                             <field name="name"/>
                             <field name="sequence"/>
@@ -182,7 +182,7 @@
                     <field name="title" select="1"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="parent_id" select="2"/>                    
+                    <field name="parent_id"/>
                 </group>
                 <notebook colspan="4">
                 <page string="Attachment">
@@ -193,7 +193,7 @@
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Attached To" colspan="2"/>
-                        <field name="res_model" select="2" readonly="1"/>
+                        <field name="res_model" readonly="1"/>
                         <field name="res_id" readonly="1"/>
                     </group>
                     <separator string="Preview" colspan="4"/>
@@ -210,18 +210,18 @@
                     <field name="index_content" nolabel="1" colspan="4" select="1"/>
                 </page><page string="Security">
                     <field name="group_ids" colspan="4" nolabel="1"/>
-                </page><page string="Others Info">                                        
-                    <group colspan="4" col="4">   
-                        <separator string="File Information" colspan="4"/>                     
-                        <field name="file_size" readonly="1"/>                      
+                </page><page string="Others Info">
+                    <group colspan="4" col="4">
+                        <separator string="File Information" colspan="4"/>
+                        <field name="file_size" readonly="1"/>
                         <newline/>
-                        <separator string="History" colspan="4"/>                     
+                        <separator string="History" colspan="4"/>
                         <field name="create_uid"/>
                         <field name="create_date"/>
                         <field name="write_uid"/>
-                        <field name="write_date"/>                        
-                    </group>                   
-                    
+                        <field name="write_date"/>
+                    </group>
+
                 </page><page string="Notes">
                     <field colspan="4" name="description" nolabel="1"/>
                 </page>
