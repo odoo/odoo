@@ -22,23 +22,23 @@
 
             groups="hr.group_hr_manager"
             />-->
-        <wizard id="wizard_hr_timesheet_my" menu="False" model="hr.employee" name="hr.analytical.timesheet.my" string="Print My Timesheet"/>
+       <!-- <wizard id="wizard_hr_timesheet_my" menu="False" model="hr.employee" name="hr.analytical.timesheet.my" string="Print My Timesheet"/>
         <menuitem
             action="wizard_hr_timesheet_my"
             id="menu_wizard_hr_timesheet_my"
             parent="menu_hr_reporting_timesheet"
             type="wizard"
             groups="hr.group_hr_user"
-            />
+            />-->
 
         <report auto="False" id="report_users_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet_users" string="Employees Timesheet" xsl="hr_timesheet/report/users_timesheet.xsl"/>
 
         <wizard id="wizard_hr_timesheet_users" menu="False" model="hr.employee" name="hr.analytical.timesheet_users" string="Employees Timesheet"/>
-        <menuitem
+        <!--<menuitem
             action="wizard_hr_timesheet_users"
             id="menu_wizard_hr_timesheet_users"
             groups="hr.group_hr_manager"
             parent="menu_hr_reporting_timesheet" type="wizard"/>
-
+-->
     </data>
 </openerp>
