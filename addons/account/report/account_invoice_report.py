@@ -30,6 +30,7 @@ class account_invoice_report(osv.osv):
     _columns = {
         'date': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
@@ -71,6 +72,7 @@ class account_invoice_report(osv.osv):
                      s.date_invoice as date,
                      to_char(s.date_invoice, 'YYYY') as year,
                      to_char(s.date_invoice, 'MM') as month,
+                     to_char(s.date_invoice, 'YYYY-MM-DD') as day,
                      l.product_id as product_id,
                      sum(l.quantity * u.factor) as product_qty,
                      s.partner_id as partner_id,
