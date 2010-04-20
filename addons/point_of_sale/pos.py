@@ -31,8 +31,11 @@ import re
 
 
 class pos_config_journal(osv.osv):
+    
+    """ Point of Sale journal configuration"""
+    
     _name = 'pos.config.journal'
-    _description = "Point of Sale journal configuration."
+    _description = "Point of Sale journal configuration"
     _columns = {
         'name': fields.char('Description', size=64),
         'code': fields.char('Code', size=64),
@@ -42,8 +45,12 @@ class pos_config_journal(osv.osv):
 pos_config_journal()
 
 class res_mode_contact(osv.osv):
+
+    """ Contact mode for Partner  """    
+    
     _name = "res.mode.contact"
     _description = "Contact mode"
+    
     _columns={
         'name': fields.char('Mode', size=64, select=1),
         'active': fields.boolean('Active', select=2),
@@ -51,6 +58,8 @@ class res_mode_contact(osv.osv):
 res_mode_contact()
 
 class contact_mode_partner(osv.osv):
+
+  
     _inherit = 'res.partner'
     _columns = {
         'contact_mode_id': fields.many2one('res.mode.contact','Contact Mode'),
@@ -59,6 +68,9 @@ contact_mode_partner()
 
 
 class pos_company_discount(osv.osv):
+  
+    """ Company Discount and Cashboxes """   
+         
     _inherit = 'res.company'
     _columns = {
         'company_discount': fields.float('Max Discount(%)', digits=(16,2)),
@@ -71,12 +83,18 @@ pos_company_discount()
 
 
 class pos_order(osv.osv):
+     
+    """ Point of sale gives business owners a convenient way of checking out customers
+        and of recording sales """   
+    
     _name = "pos.order"
     _description = "Point of Sale"
     _order = "date_order, create_date desc"
     _order = "date_order desc"
 
+
     def unlink(self, cr, uid, ids, context={}):
+        
         for rec in self.browse(cr, uid, ids, context=context):
             for rec_statement in rec.statement_ids:
                 if (rec_statement.statement_id and rec_statement.statement_id.state=='confirm') or rec.state=='done':
@@ -84,12 +102,20 @@ class pos_order(osv.osv):
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
     def onchange_partner_pricelist(self, cr, uid, ids, part, context={}):
+
+        """ Changed price list on_change of partner_id"""
+        
         if not part:
             return {}
         pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
         return {'value':{'pricelist_id': pricelist}}
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
+
+        """ Calculates amount_tax of order line
+        @param field_names: Names of fields.
+        @return: Dictionary of values """
+
         cr.execute("""
         SELECT
             p.id,
@@ -110,6 +136,13 @@ class pos_order(osv.osv):
         return res
 
     def _get_date_payment2(self, cr, uid, ids, context, *a):
+        
+        # Todo need to check this function 
+        """ Find payment Date
+        
+        @param field_names: Names of fields.
+        @return: Dictionary of values """
+        
         res = {}
         pay_obj = self.pool.get('account.bank.statement')
         stat_obj_line = self.pool.get('account.bank.statement.line')
@@ -132,7 +165,12 @@ class pos_order(osv.osv):
             if val:
                 res[order.id]=val
         return res
+    
     def _get_date_payment(self, cr, uid, ids, context, *a):
+        
+        """ Find  Validation Date
+        @return: Dictionary of values """      
+          
         res = {}
         pay_obj = self.pool.get('pos.payment')
         tot =0.0
@@ -162,6 +200,10 @@ class pos_order(osv.osv):
         return res
 
     def _amount_tax(self, cr, uid, ids, field_name, arg, context):
+        
+        """  Calculates Taxes of order
+        @return: Dictionary of values """    
+                  
         res = {}
         tax_obj = self.pool.get('account.tax')
         for order in self.browse(cr, uid, ids):
@@ -184,6 +226,10 @@ class pos_order(osv.osv):
         return res
 
     def _total_payment(self, cr, uid, ids, field_name, arg, context):
+        
+        """  Calculates Total payment  of order
+        @return: Dictionary of values """     
+             
         res = {}
         i=0
         for order in self.browse(cr, uid, ids):
@@ -195,6 +241,10 @@ class pos_order(osv.osv):
         return {order.id:val}
 
     def _total_return(self, cr, uid, ids, field_name, arg, context):
+        
+        """  Calculates Total Returned  from the order
+        @return: Dictionary of values """   
+                  
         res = {}
         for order in self.browse(cr, uid, ids):
             val = 0.0
@@ -203,11 +253,17 @@ class pos_order(osv.osv):
             res[order.id] = val
         return res
 
-    def payment_get(self, cr, uid, ids, context=None):
-        cr.execute("select id from pos_payment where order_id =ANY(%s)",(ids,))
-        return [i[0] for i in cr.fetchall()]
+#    def payment_get(self, cr, uid, ids, context=None):
+#        """  Calculates Total Returned  from the order
+#        @return: Dictionary of values """          
+#        cr.execute("select id from pos_payment where order_id =ANY(%s)",(ids,))
+#        return [i[0] for i in cr.fetchall()]
 
     def _sale_journal_get(self, cr, uid, context):
+        
+        """ To get  sale journal for this order" 
+        @return: journal  """  
+
         journal_obj = self.pool.get('account.journal')
         res = journal_obj.search(cr, uid,
             [('type', '=', 'sale')], limit=1)
@@ -217,6 +273,10 @@ class pos_order(osv.osv):
             return False
 
     def _shop_get(self, cr, uid, context):
+        
+        """ To get  Shop  for this order" 
+        @return: Shop id  """   
+               
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         res = self.pool.get('sale.shop').search(cr, uid, [])
        # res = self.pool.get('sale.shop').search(cr, uid, [('company_id', '=', company.id)])
@@ -225,12 +285,9 @@ class pos_order(osv.osv):
         else:
             return False
 
-    def _receivable_get(self, cr, uid, context=None):
-        prop_obj = self.pool.get('ir.property')
-        res = prop_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
-        return res
 
     def copy(self, cr, uid, id, default=None, context={}):
+        
         if not default:
             default = {}
         default.update({
@@ -246,6 +303,10 @@ class pos_order(osv.osv):
         return super(pos_order, self).copy(cr, uid, id, default, context)
 
     def _get_v( self, cr, uid, ids,*a):
+        
+        """ Changed the Validation state of order
+        @return: State  """
+
         flag=False
         res_company = self.pool.get('res.company')
         res_obj = self.pool.get('res.users')
@@ -333,6 +394,11 @@ class pos_order(osv.osv):
 
 
     def _select_pricelist(self, cr, uid, context):
+        
+        """ To get default pricelist for the order" 
+        @param name: Names of fields.
+        @return: pricelist ID
+        """  
         pricelist = self.pool.get('product.pricelist').search(cr, uid, [('name', '=', 'Public Pricelist')])
         if pricelist:
             return pricelist[0]
@@ -340,6 +406,11 @@ class pos_order(osv.osv):
             return False
 
     def _journal_default(self, cr, uid, context={}):
+        
+        """ To get default pricelist for the order" 
+        @param name: Names of fields.
+        @return: journal ID
+        """          
         journal_list = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')])
         if journal_list:
             return journal_list[0]
@@ -365,6 +436,11 @@ class pos_order(osv.osv):
 
 
     def test_order_lines(self, cr, uid, order, context={}):
+    
+        """ Test  order line is created or not for the order " 
+        @param name: Names of fields.
+        @return: True
+        """             
         if not order.lines:
             raise osv.except_osv(_('Error'), _('No order lines defined for this sale.'))
 
@@ -376,6 +452,10 @@ class pos_order(osv.osv):
         return True
 
     def test_paid(self, cr, uid, ids, context=None):
+        
+        """ Test all amount is paid for this order 
+        @return: True
+        """    
         for order in self.browse(cr, uid, ids, context):
             if order.lines and not order.amount_total:
                 return True
@@ -385,7 +465,9 @@ class pos_order(osv.osv):
         return True
 
     def _get_qty_differences(self, orders, old_picking):
-        """check if the customer changed the product quantity"""
+        
+        """check if the customer changed the product quantity """
+        
         order_dict = {}
         for order in orders:
             for line in order.lines:
@@ -407,7 +489,9 @@ class pos_order(osv.osv):
         return diff_dict
 
     def _split_picking(self, cr, uid, ids, context, old_picking, diff_dict):
+        
         """if the customer changes the product quantity, split the picking in two"""
+        
         # create a copy of the original picking and adjust the product qty:
         picking_model = self.pool.get('stock.picking')
         defaults = {
@@ -445,7 +529,9 @@ class pos_order(osv.osv):
                 line.unlink(context=context)
 
     def create_picking(self, cr, uid, ids, context={}):
+        
         """Create a picking for each order and validate it."""
+        
         picking_obj = self.pool.get('stock.picking')
 
         orders = self.browse(cr, uid, ids, context)
@@ -510,6 +596,10 @@ class pos_order(osv.osv):
         return True
 
     def set_to_draft(self, cr, uid, ids, *args):
+        
+        """ Changes order state to draft 
+        @return: True
+        """
         if not len(ids):
             return False
 
@@ -521,6 +611,10 @@ class pos_order(osv.osv):
         return True
 
     def button_invalidate(self, cr, uid, ids, *args):
+        
+        """ Check the access for the sale order 
+        @return: True
+        """        
         res_obj = self.pool.get('res.company')
         try:
             part_company=res_obj.browse(cr,uid,uid) and res_obj.browse(cr,uid,uid).parent_id and res_obj.browse(cr,uid,uid).parent_id.id or None
@@ -531,6 +625,10 @@ class pos_order(osv.osv):
         return True
 
     def button_validate(self, cr, uid, ids, *args):
+                
+        """ Check the access for the sale order  and update the date_payment
+        @return: True
+        """        
         res_obj = self.pool.get('res.company')
         try:
             part_company=res_obj.browse(cr,uid,uid) and res_obj.browse(cr,uid,uid).parent_id and res_obj.browse(cr,uid,uid).parent_id.id or None
@@ -549,12 +647,18 @@ class pos_order(osv.osv):
 
 
     def cancel_order(self, cr, uid, ids, context=None):
+        
+        """ Changes order state to cancel 
+        @return: True
+        """        
         self.write(cr, uid, ids, {'state': 'cancel'})
         self.cancel_picking(cr, uid, ids, context={})
         return True
 
     def add_payment(self, cr, uid, order_id, data, context=None):
+        
         """Create a new payment for the order"""
+        
         res_obj = self.pool.get('res.company')
         statementl_obj = self.pool.get('account.bank.statement.line')
         prod_obj = self.pool.get('product.product')
@@ -597,7 +701,7 @@ class pos_order(osv.osv):
         args['statement_id']= statement_id
         args['pos_statement_id']= order_id
         args['journal_id']= data['journal']
-        statement_line_id = self.pool.get('account.bank.statement.line').create(cr, uid, args)
+        statement_line_id = statementl_obj.create(cr, uid, args)
         ids_new.append(statement_id)
 
         wf_service = netsvc.LocalService("workflow")
@@ -607,7 +711,9 @@ class pos_order(osv.osv):
         return statement_id
 
     def add_product(self, cr, uid, order_id, product_id, qty, context=None):
+        
         """Create a new order line the order"""
+        
         line_obj = self.pool.get('pos.order.line')
         values = self.read(cr, uid, order_id, ['partner_id', 'pricelist_id'])
 
@@ -629,6 +735,9 @@ class pos_order(osv.osv):
         return order_line_id
 
     def refund(self, cr, uid, ids, context={}):
+        
+        """Create a copy of order  for refund order"""      
+          
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
 
@@ -653,9 +762,13 @@ class pos_order(osv.osv):
         return clone_list
 
     def action_invoice(self, cr, uid, ids, context={}):
+           
+        """Create a invoice of order  """
+
         res_obj = self.pool.get('res.company')
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
+        product_obj= self.pool.get('product.product')
         inv_ids = []
 
         for order in self.browse(cr, uid, ids, context):
@@ -693,7 +806,7 @@ class pos_order(osv.osv):
                     'product_id': line.product_id.id,
                     'quantity': line.qty,
                 }
-                inv_name = self.pool.get('product.product').name_get(cr, uid, [line.product_id.id], context=context)[0][1]
+                inv_name = product_obj.name_get(cr, uid, [line.product_id.id], context=context)[0][1]
                 
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                                                                line.product_id.id,
@@ -714,6 +827,9 @@ class pos_order(osv.osv):
         return inv_ids
 
     def create_account_move(self, cr, uid, ids, context=None):
+        
+        """Create a account move line of order  """      
+          
         account_move_obj = self.pool.get('account.move')
         account_move_line_obj = self.pool.get('account.move.line')
         account_period_obj = self.pool.get('account.period')

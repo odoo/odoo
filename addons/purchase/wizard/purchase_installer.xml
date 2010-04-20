@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_purchase_install_module_form" model="ir.ui.view">
+            <field name="name">Purchase Requisition</field>
+            <field name="model">purchase.installer</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="arch" type="xml">
+              <data>
+                <form position="attributes">
+                  <attribute name="string">Purchase Modules Installation</attribute>
+                </form>
+                <xpath expr="//label[@string='description']"
+                       position="attributes">
+                  <attribute name="string"> This module allows you to manage your Purchase Requisition.</attribute>
+                </xpath>
+                <separator string="title" position="replace"/>
+                <group colspan="8">
+                  <separator string="Purchase Requisition" colspan="4"/>
+                  <field name="purchase_requisition"/>
+                </group>
+              </data>
+            </field>
+        </record>
+
+        <record id="action_purchase_install_module" model="ir.actions.act_window">
+            <field name="name">Purchase  Profile : Install Extra Modules</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.installer</field>
+            <field name="view_id" ref="view_purchase_install_module_form"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+	<record id="purchase_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="action_purchase_install_module"/>
+      <field name="sequence">3</field>
+    
+    </record>
+    </data>
+</openerp>

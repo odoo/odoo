@@ -246,6 +246,7 @@ class purchase_order(osv.osv):
         return {'value':{'location_id': res, 'dest_address_id': False}}
 
     def onchange_partner_id(self, cr, uid, ids, part):
+        
         if not part:
             return {'value':{'partner_address_id': False, 'fiscal_position': False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
@@ -259,12 +260,18 @@ class purchase_order(osv.osv):
         return True
 
     def wkf_confirm_order(self, cr, uid, ids, context={}):
+        todo = []
         for po in self.browse(cr, uid, ids):
+            
             if self.pool.get('res.partner.event.type').check(cr, uid, 'purchase_open'):
                 self.pool.get('res.partner.event').create(cr, uid, {'name':'Purchase Order: '+po.name, 'partner_id':po.partner_id.id, 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id':uid, 'partner_type':'retailer', 'probability': 1.0, 'planned_cost':po.amount_untaxed})
             if not po.order_line:
                 raise osv.except_osv(_('Error !'),_('You can not confirm purchase order without Purchase Order Lines.'))
+            for line in po.order_line:            
+                if line.state=='draft':
+                    todo.append(line.id)            
         current_name = self.name_get(cr, uid, ids)[0][1]
+        self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
@@ -312,11 +319,13 @@ class purchase_order(osv.osv):
 
     def action_invoice_create(self, cr, uid, ids, *args):
         res = False
+       
         journal_obj = self.pool.get('account.journal')
         for o in self.browse(cr, uid, ids):
             il = []
+            todo = []
             for ol in o.order_line:
-
+                todo.append(ol.id)
                 if ol.product_id:
                     a = ol.product_id.product_tmpl_id.property_account_expense.id
                     if not a:
@@ -352,7 +361,7 @@ class purchase_order(osv.osv):
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
             self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
-
+            self.pool.get('purchase.order.line').write(cr, uid, todo, {'invoiced':True})
             self.write(cr, uid, [o.id], {'invoice_id': inv_id})
             res = inv_id
         return res
@@ -579,10 +588,22 @@ class purchase_order_line(osv.osv):
         'notes': fields.text('Notes', translate=True),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company')
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company'),
+        'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', required=True, readonly=True,
+                                  help=' * The \'Draft\' state is set automatically when purchase order in draft state. \
+                                       \n* The \'Confirmed\' state is set automatically as confirm when purchase order in confirm state. \
+                                       \n* The \'Done\' state is set automatically when purchase order is set as done. \
+                                       \n* The \'Cancelled\' state is set automatically when user cancel purchase order.'),
+        'invoice_lines': fields.many2many('account.invoice.line', 'purchase_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
+        'invoiced': fields.boolean('Invoiced', readonly=True),
+        'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner"),
+        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date")
+        
     }
     _defaults = {
-        'product_qty': lambda *a: 1.0
+        'product_qty': lambda *a: 1.0,
+        'state': lambda *args: 'draft',
+        'invoiced': lambda *a: 0,
     }
     _table = 'purchase_order_line'
     _name = 'purchase.order.line'
@@ -590,7 +611,7 @@ class purchase_order_line(osv.osv):
     def copy_data(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
-        default.update({'state':'draft', 'move_ids':[]})
+        default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
@@ -658,14 +679,17 @@ class purchase_order_line(osv.osv):
         return res
 
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False):
+            partner_id, date_order=False,fiscal_position=False):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-                partner_id, date_order=date_order)
+                partner_id, date_order=date_order,fiscal_position=fiscal_position)
         if 'product_uom' in res['value']:
             del res['value']['product_uom']
         if not uom:
             res['value']['price_unit'] = 0.0
         return res
+    def action_confirm(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state': 'confirmed'}, context)
+        return True    
 purchase_order_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

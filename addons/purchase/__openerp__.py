@@ -34,12 +34,15 @@
     'depends': ['base', 'account', 'stock', 'process'],
     'init_xml': [],
     'update_xml': [
+                   
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
         'purchase_workflow.xml',
         'purchase_sequence.xml',
         'purchase_data.xml',
         'wizard/purchase_order_group_view.xml',
+        'wizard/purchase_installer.xml',
+        'wizard/purchase_line_invoice_view.xml',
         'purchase_view.xml',
         'purchase_report.xml',
         'stock_view.xml',
