@@ -1996,8 +1996,6 @@ class orm(orm_template):
             if groupby and isinstance(groupby, list):
                 groupby = groupby[0]
             tables, where_clause = self._inherits_join_calc(groupby,tables,where_clause)
-        else:
-            where_clause = ''
 
         if len(where_clause):
             where_clause = ' where '+string.join(where_clause, ' and ')
