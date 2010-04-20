@@ -23,7 +23,7 @@ import wizard_automatic_reconcile
 import account_move_line_reconcile_select
 import account_move_line_unreconcile_select
 import wizard_reconcile
-import wizard_unreconcile
+import account_unreconcile
 import account_invoice_refund
 import account_pay_invoice
 import account_move_journal
@@ -42,7 +42,7 @@ import account_vat
 import account_open_closed_fiscalyear
 
 import wizard_compare_account_balance_report
-import wizard_invoice_state
+import account_invoice_state
 import wizard_account_duplicate
 import account_chart
 import wizard_move_line_select

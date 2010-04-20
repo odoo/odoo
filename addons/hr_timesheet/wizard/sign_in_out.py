@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,7 +25,7 @@ import time
 import pooler
 from tools.translate import _
 
-si_form ='''<?xml version="1.0"?> 
+si_form ='''<?xml version="1.0"?>
 <form string="Sign in / Sign out">
     <separator string="Sign in" colspan="4"/>
     <field name="name" readonly="True" />
@@ -98,6 +98,7 @@ def _sign_in_result(self, cr, uid, data, context):
 
 def _write(self, cr, uid, data, emp_id, context):
     timesheet_obj = pooler.get_pool(cr.dbname).get('hr.analytic.timesheet')
+    emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
     hour = (time.mktime(time.strptime(data['form']['date'] or time.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')) -
         time.mktime(time.strptime(data['form']['date_start'], '%Y-%m-%d %H:%M:%S'))) / 3600.0
     minimum = data['form']['analytic_amount']
@@ -110,6 +111,8 @@ def _write(self, cr, uid, data, emp_id, context):
     res['name'] = data['form']['info']
     res['account_id'] = data['form']['account_id']
     res['unit_amount'] = hour
+    emp_journal = emp_obj.browse(cr, uid, emp_id, context).journal_id
+    res['journal_id'] = emp_journal and emp_journal.id or False
     res.update(up)
     up = timesheet_obj.on_change_account_id(cr, uid, [], res['account_id']).get('value', {})
     res.update(up)
