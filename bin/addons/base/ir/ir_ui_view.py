@@ -115,13 +115,15 @@ class view(osv.osv):
 
         return super(view, self).write(cr, uid, ids, vals, context)
 
-    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,signal,scale,context={}):
+    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,label,scale,context={}):
+        if not label:
+            label = []
         nodes=[]
         nodes_name=[]
         transitions=[]
         start=[]
         tres={}
-        sig={}
+        labels={}
         no_ancester=[]
         blank_nodes = []
 
@@ -160,9 +162,14 @@ class view(osv.osv):
             for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
                 transitions.append((a['id'], t[des_node][0]))
                 tres[str(t['id'])] = (a['id'],t[des_node][0])
-                if t.has_key(str(signal)) and str(t[signal])=='False':
-                    t[signal]=' '
-                sig[str(t['id'])] = (a['id'],t.get(signal,' '))
+                label_string = ""
+                if label:
+                    for lbl in eval(label):
+                        if t.has_key(str(lbl)) and str(t[lbl])=='False':
+                            label_string = label_string + ' '
+                        else:
+                            label_string = label_string + " " + t[lbl]
+                labels[str(t['id'])] = (a['id'],label_string)
         g  = graph(nodes, transitions, no_ancester)
         g.process(start)
         g.scale(*scale)
@@ -171,7 +178,7 @@ class view(osv.osv):
         for node in nodes_name:
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
-        return {'nodes': results, 'transitions': tres, 'signal' : sig, 'blank_nodes': blank_nodes}
+        return {'nodes': results, 'transitions': tres, 'label' : labels, 'blank_nodes': blank_nodes}
 view()
 
 class view_sc(osv.osv):

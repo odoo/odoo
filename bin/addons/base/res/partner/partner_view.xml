@@ -348,7 +348,7 @@
                         <filter string="My Partners" icon="terp-partner" domain="[('user_id','=',uid)]"/>
                         <separator orientation="vertical"/>
                         <filter string="Customers" icon="terp-partner" domain="[('customer','=',1)]" help="Customer Partners"/>
-                        <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners" name='supplier'/>
+                        <filter string="Suppliers" icon="terp-partner" domain="[('supplier','=',1)]" help="Supplier Partners"/>
                         <separator orientation="vertical"/>
                         <field name="name" select="1"/>
                         <field name="address" select="1"/>
@@ -391,7 +391,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('customer','=',1)]</field>
             <field name="context">{'default_customer':1}</field>
             <field name="filter" eval="True"/>
         </record>
@@ -401,7 +401,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('supplier','=',1)]</field>
             <field name="context">{'default_customer':0, 'default_supplier':1}</field>
             <field name="filter" eval="True"/>
         </record>
