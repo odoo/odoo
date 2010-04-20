@@ -42,7 +42,7 @@ import account_vat
 import account_open_closed_fiscalyear
 
 import wizard_compare_account_balance_report
-import wizard_invoice_state
+import account_invoice_state
 import wizard_account_duplicate
 import account_chart
 import wizard_move_line_select
