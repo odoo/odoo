@@ -71,7 +71,7 @@
             <field name="arch" type="xml">
                 <tree string="Invitation details">
                     <field name="email" string="Invitation To"/>
-                    <field name="partner_id" string="Partner" />
+                    <field name="user_id" string="Internal User" />
                     <field name="partner_address_id" string="Contact" />
                     <field name="role" />
                     <field name="state" />
@@ -119,9 +119,8 @@
 		<!-- Invitation menu -->
 		<menuitem id="menu_attendee_invitations"
 			name="Event Invitations" parent="base.menu_calendar_configuration"
-			groups="base.group_extended" sequence="10"
-			action="action_view_attendee_form" />
-		
+			sequence="10" action="action_view_attendee_form" />
+
 		<!--		ALARM FORM VIEW-->
 
 		<record id="res_alarm_form_view" model="ir.ui.view">
@@ -192,8 +191,7 @@
 	                    	on_change="onchange_dates(date,duration,False,allday)" />
 	                    <field name="duration" widget="float_time"
 	                    	on_change="onchange_dates(date,duration,False,allday)" attrs="{'readonly': [('allday', '=', True)]}"/>
-	                    <field name="date_deadline" string="End Date"
-	                    	required="1" select="1"
+	                    <field name="date_deadline" string="End Date" required="1"
 	                    	on_change="onchange_dates(date,False,date_deadline)" />
 	                    <field name="location" />
 	                    <field name="alarm_id" string="Reminder"
@@ -256,6 +254,7 @@
 	                <page string="Event">
 	                    <group col="6" colspan="4">
 	                         <separator colspan="6" string="Visibility"/>
+	                         <field name="user_id" string="Responsible User" />
 	                         <field name="show_as" string="Show time as"/>
 	                         <field name="class" string="Privacy"/>
 	                         <field name="rrule" groups="base.group_extended" />
@@ -329,9 +328,11 @@
 	        <field name="type">tree</field>
 	        <field name="arch" type="xml">
 	            <tree string="Events">
-	            	<field name="id" widget="char" />
 	            	<field name="name" string="Subject" />
 	            	<field name="date" string="Meeting Date" />
+	            	<field name="location" />
+	            	<field name="show_as" />
+	            	<field name="class" string="Privacy" />
 	            </tree>
 	        </field>
 	    </record>

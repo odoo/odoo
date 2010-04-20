@@ -469,6 +469,7 @@ property or property parameter."),
                         reply_to=email_from
                     )
             return True
+
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         """
         Make entry on email and availbility on change of user_id field.
