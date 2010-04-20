@@ -830,9 +830,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if has_updates:
             cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
-                obj = pool.get(model)
-                if osv.osv.osv_memory in obj.__class__.__bases__:
-                    continue
                 logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
 
             cr.execute("SELECT model from ir_model")
