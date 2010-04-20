@@ -43,30 +43,6 @@ class pos_config_journal(osv.osv):
     }
 
 pos_config_journal()
-
-class res_mode_contact(osv.osv):
-
-    """ Contact mode for Partner  """    
-    
-    _name = "res.mode.contact"
-    _description = "Contact mode"
-    
-    _columns={
-        'name': fields.char('Mode', size=64, select=1),
-        'active': fields.boolean('Active', select=2),
-    }
-res_mode_contact()
-
-class contact_mode_partner(osv.osv):
-
-  
-    _inherit = 'res.partner'
-    _columns = {
-        'contact_mode_id': fields.many2one('res.mode.contact','Contact Mode'),
-     }
-contact_mode_partner()
-
-
 class pos_company_discount(osv.osv):
   
     """ Company Discount and Cashboxes """   
@@ -75,8 +51,6 @@ class pos_company_discount(osv.osv):
     _columns = {
         'company_discount': fields.float('Max Discount(%)', digits=(16,2)),
         'max_diff': fields.float('Max Difference for Cashboxes', digits=(16,2)),
-        'account_receivable': fields.many2one('account.account',
-            'Default Receivable', states={'draft': [('readonly', False)]}),
      }
 
 pos_company_discount()

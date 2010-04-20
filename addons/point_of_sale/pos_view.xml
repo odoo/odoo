@@ -144,7 +144,6 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_pos_pos_form"/>
             <field name="domain">[['date_order','>=',time.strftime('%Y-%m-%d')]]</field>
-            <field name="search_view_id" ref="view_pos_order_filter"/>	  
         </record>
 
 
@@ -695,47 +694,10 @@ invoiced
                     <page string="Other">
                       <field  name="company_discount" colspan="4"/>
                       <field  name="max_diff" colspan="4"/>
-                      <field  name="account_receivable" required="1" colspan="4"/>
                     </page>
                 </notebook>
         	</field>
        	</record>
-
-
-        <record model="ir.ui.view" id="form_mode_p_contact">
-            <field name="name">Contact Mode</field>
-            <field name="model">res.mode.contact</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-             <form string="Contact Mode">
-                    <field  name="name" select="1"/>
-                    <field  name="active" select="2"/>
-              </form>
-            </field>
-          </record>
-
-        <record model="ir.ui.view" id="tree_mode_p_contact">
-            <field name="name">Contact Mode</field>
-            <field name="model">res.mode.contact</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-             <tree string="Contact Mode">
-                    <field  name="name"/>
-                    <field  name="active"/>
-              </tree>
-            </field>
-          </record>
-
-        <record model="ir.actions.act_window" id="action_mode_p">
-            <field name="name">Contact Mode</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.mode.contact</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem name="Contact Mode" parent="base.menu_base_config" action="action_mode_p" id="menu_mode_po"/>
-
         <record model="ir.ui.view" id="view_partner_contact">
             <field name="name">view.partner.contact</field>
             <field name="model">res.partner</field>
