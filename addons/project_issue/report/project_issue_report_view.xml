@@ -75,8 +75,8 @@
                     		string="Pending"
                     		domain="[('state','=','pending')]"/>
             	</xpath>
-            	<xpath expr='//search[@string="Search"]/group[1]/field[@string="User"]' position='replace'>
-            	        <field name="user_id" string="User" select="1" widget="selection">
+            	<xpath expr='//search[@string="Search"]/group[1]/field[@name="user_id"]' position='replace'>
+            	        <field name="user_id"  select="1" widget="selection">
 	            			<filter icon="terp-crm" string="My Project Issue" help="My Project Issue Entries" domain="[('user_id','=',uid)]" />
                			</field>
             	</xpath>
