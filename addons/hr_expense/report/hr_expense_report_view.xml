@@ -12,6 +12,7 @@
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
+                <field name="day" invisible="1"/>
                 <field name="invoice_id" invisible="1"/>
                 <field name="department_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
@@ -47,16 +48,16 @@
             <search string="Expenses">
             	<group>
             		<filter icon="terp-hr" string="This Year"
-	                  	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                  	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
 	                   	    help="Expenses during last 7 year"/>
 	                <filter icon="terp-hr" string="This Month"
 	                   		name="month"
-	                   		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                   		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
 	                   		help="Expenses during last month"/>
 		            <filter icon="gtk-media-rewind"
 	                        string="    7 Days    "
 	                        separator="1"
-	                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
 	                        help="Expenses during last 7 days"/>
 	                <separator orientation="vertical"/>
 	                <filter string="Draft"
@@ -71,34 +72,45 @@
 	                   		icon="terp-hr"
 	                   		domain="[('state','=','accepted')]"
 	                   		help = "Accepted Expenses"/>
-	                <filter string="Invoiced"
-	                   		icon="terp-hr"
-	                   		domain="[('state','=','invoiced')]"
-	                   		help = "Invoiced Expenses"/>
 	  				<separator orientation="vertical"/>
 	                <field name="user_id" widget="selection">
                         <filter icon="terp-hr"
                         		string="My Expenses"
                         		help = "My Expenses"
                         		domain="[('user_id','=',uid)]" />
+                        <filter icon="terp-hr"
+	                        		string="Expenses Non Assigned User"
+	                        		help="Expenses Non Assigned User"
+	                        		domain="[('user_id','=',False)]"/>
                     </field>
-
 				</group>
 				<newline/>
-				<group expand="1" string="Extended options..." colspan="10" col="12">
+				<group expand="0" string="Extended options..." colspan="10" col="12">
+					<filter string="Invoiced"
+	                   		icon="terp-hr"
+	                   		domain="[('state','=','invoiced')]"
+	                   		help = "Invoiced Expenses"/>
+	                <filter string="Reimbursed"
+	                   		icon="terp-hr"
+	                   		domain="[('state','=','paid')]"
+	                   		help = "Reimbursed Expenses"/>
+	                <filter string="Cancelled"
+	                   		icon="terp-hr"
+	                   		domain="[('state','=','cancelled')]"
+	                   		help = "Cancelled Expenses"/>
+	                <separator orientation="vertical"/>
                     <field name="employee_id" widget="selection"/>
                     <field name="product_id" widget="selection"/>
                     <field name="department_id" widget="selection"/>
                     <newline/>
                     <field name="journal_id" widget="selection"/>
-                    <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
+  				    <separator orientation="vertical"/>
                     <field name="date_confirm"/>
                     <field name="date_valid"/>
                 </group>
                 <newline/>
-                <group string="Group By...">
+                <group expand="1" string="Group By...">
                     <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
                     <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <filter string="Company" icon="terp-hr" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -106,8 +118,9 @@
                     <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
                     <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Force Journal" icon="terp-hr" context="{'group_by':'journal_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-hr" context="{'group_by':'date'}"/>
                     <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
                 </group>
@@ -120,7 +133,7 @@
         <field name="res_model">hr.expense.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_user_id':uid}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_expense_report_search"/>
     </record>
 

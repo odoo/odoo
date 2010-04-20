@@ -31,6 +31,7 @@ class hr_expense_report(osv.osv):
     _columns = {
         'date': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
@@ -72,6 +73,7 @@ class hr_expense_report(osv.osv):
                      s.department_id,
                      to_char(date_trunc('day',s.create_date), 'YYYY') as year,
                      to_char(date_trunc('day',s.create_date), 'MM') as month,
+                     to_char(date_trunc('day',s.create_date), 'YYYY-MM-DD') as day,
                      l.product_id as product_id,
                      sum(l.unit_quantity * u.factor) as product_qty,
                      s.user_id as user_id,
@@ -87,6 +89,7 @@ class hr_expense_report(osv.osv):
                      left join product_uom u on (u.id=l.uom_id)
                  group by
                      date_trunc('day',s.create_date),
+                     to_char(date_trunc('day',s.create_date), 'YYYY-MM-DD'),
                      to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY'),
                      to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY'),
                      l.product_id,
