@@ -2655,6 +2655,8 @@ class orm(orm_template):
 
         for r in result:
             for key, v in r.items():
+                if v is None:
+                    r[key] = False
                 if key in self._columns:
                     column = self._columns[key]
                 elif key in self._inherit_fields:
