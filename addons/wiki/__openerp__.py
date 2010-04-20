@@ -19,24 +19,32 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'Dashboard for Document Management',
+    'name': 'Document Management - Wiki',
     'version': '1.0',
-    'category': 'Board/Document',
+    'category': 'Generic Modules/Others',
     'description': """
-    This module implements a dashboard for Document that includes:
-        * New Files (list)
-        * Files by Resource Type (graph)
-        * Files by Partner (graph)
-        * Files by Month (graph)
+    The base module to manage documents(wiki)
+
+    keep track for the wiki groups, pages, and history
     """,
-    'author': 'Tiny',
-    'depends': ['board', 'document', 'report_document'],
-    'update_xml': ['board_document_view.xml'],
-    'demo_xml': ['board_document_demo.xml'],
+    'author': 'Tiny & Axelor',
+    'website': 'http://openerp.com',
+    'depends': ['base'],
+    'init_xml': [],
+    'update_xml': [
+        'wizard/wizard_view.xml',
+        'wizard/wiki_wiki_page_open_view.xml',
+        'wizard/wiki_create_menu_view.xml',
+        'wizard/wiki_make_index_view.xml',
+        'wiki_view.xml',
+        'data/wiki_quickstart.xml',
+        'data/wiki_main.xml',
+        'security/ir.model.access.csv'
+    ],
+    'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0044628458429',
+    'certificate': '0086363630317',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

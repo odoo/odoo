@@ -70,8 +70,8 @@ class crm_send_new_email(osv.osv_memory):
 
         for data in self.read(cr, uid, ids, context=context):
             attach = filter(lambda x: x, [data['doc1'], data['doc2'], data['doc3']])
-            attach = map(lambda x: x and ('Attachment'+str(attach.index(x)+1), base64.decodestring(x)), attach)
-
+            attach = map(lambda x: (data['doc' + str(attach.index(x) + 1) \
+                            + '_fname'], base64.decodestring(x)), attach)
             message_id = None            
             
             case = case_pool.browse(cr, uid, res_id)
@@ -132,11 +132,6 @@ class crm_send_new_email(osv.osv_memory):
                     getattr(case_pool, act)(cr, uid, [case.id])
                 cr.commit()
 
-#            Commented because form does not close due to raise
-#                raise osv.except_osv(_('Email!'), ("Email Successfully Sent"))
-#            else:
-#                raise osv.except_osv(_('Warning!'), _("Email not sent !"))
-    
         return {}
 
     def default_get(self, cr, uid, fields, context=None):
@@ -182,6 +177,8 @@ class crm_send_new_email(osv.osv_memory):
         """
         hist_obj = self.pool.get('crm.case.history')
         res_ids = context and context.get('active_ids', []) or []
+
+        include_original = context and context.get('include_original', False) or False
         res = {}
         for hist in hist_obj.browse(cr, uid, res_ids):
             model = hist.log_id.model_id.model
@@ -193,7 +190,8 @@ class crm_send_new_email(osv.osv_memory):
                 res.update({'email_from': (case.section_id and case.section_id.reply_to) or \
                             (case.user_id and case.user_id.address_id and \
                             case.user_id.address_id.email) or hist.email_to or tools.config.get('email_from',False)})
-            if 'text' in fields:
+
+            if include_original == True and 'text' in fields:
                 header = '-------- Original Message --------'
                 sender = 'From: %s' %(hist.email_from or '')
                 to = 'To: %s' % (hist.email_to or '')

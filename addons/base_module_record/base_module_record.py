@@ -143,7 +143,7 @@ class base_module_record(osv.osv):
         obj = dt.browse(cr, uid, dtids[0])
         self.depends[obj.module] = True
         return obj.module+'.'+obj.name, obj.noupdate
-
+    
     def _create_record(self, cr, uid, doc, model, data, record_id, noupdate=False):
         
         data_pool = self.pool.get('ir.model.data')
@@ -384,7 +384,7 @@ class base_module_record(osv.osv):
         elif rec[3]=='create':
             id = self._create_id(cr, uid, rec[2],rec[4])
             record,noupdate = self._create_record(cr, uid, doc, rec[2], rec[4], id)
-            self.ids[(rec[3], result)] = id
+            self.ids[(rec[2], result)] = id
             record_list += record
 
         elif rec[3]=='copy':
@@ -446,8 +446,8 @@ class base_module_record(osv.osv):
                     terp.appendChild(data)
                     wkf = doc.createElement('workflow')
                     data.appendChild(wkf)
-                    wkf.setAttribute("model", rec[1][3])
-                    wkf.setAttribute("action", rec[1][4])
+                    wkf.setAttribute("model", rec[1][2])
+                    wkf.setAttribute("action", rec[1][3])
                     if noupdate:
                         data.setAttribute("noupdate", "1")
                     wkf.setAttribute("ref", rec_id)
@@ -482,10 +482,12 @@ class base_module_record(osv.osv):
                     continue
                 if self.mode == "workflow":
                     record= self._generate_object_yaml(cr, uid, rec[1],rec[0])
+                    yaml_file+="!comment Performing a workflow action %s on module %s"%(record['action'], record['model']) + '''\n'''
                     object=yaml.load(unicode('''\n !workflow %s \n'''%record,'iso-8859-1'))
-                    yaml_file += str(object) + '''\n'''
+                    yaml_file += str(object) + '''\n\n'''
                 else:
                     record= self._generate_object_yaml(cr, uid, rec[1],rec[3])
+                    yaml_file+="!comment Creating an %s record"%(record['model']) + '''\n'''
                     object= yaml.load(unicode('''\n !record %s \n'''%record,'iso-8859-1'))
                     yaml_file += str(object) + '''\n'''
                     attrs=yaml.dump(object.attrs, default_flow_style=False)
@@ -497,7 +499,9 @@ class base_module_record(osv.osv):
             if line.find('!record') == 0:
                 line = "- \n" + "  " + line
             elif line.find('!workflow') == 0:
-                line = "- \n" + "  " + line                    
+                line = "- \n" + "  " + line
+            elif line.find('!comment') == 0:
+                line=line.replace('!comment','- \n ')   
             elif line.find('- -') != -1:
                 line=line.replace('- -','  -')
                 line = "    " + line

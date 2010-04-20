@@ -88,7 +88,8 @@ class crm_opportunity(osv.osv):
                     resource_id = False
                     if opportunity.user_id:
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',opportunity.user_id.id)])
-                        resource_id = len(resource_ids) and resource_ids[0] or False
+                        if resource_ids and len(resource_ids):
+                            resource_id = resource_ids[0]
 
                     duration = float(ans.days)
                     if opportunity.section_id.resource_calendar_id:

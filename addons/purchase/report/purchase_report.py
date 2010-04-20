@@ -46,7 +46,7 @@ class report_purchase_order(osv.osv):
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
         'category_id': fields.many2one('product.category', 'Categories', readonly=True),
-        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
+        'partner_id':fields.many2one('res.partner', 'Supplier', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'quantity': fields.float('# of Products', readonly=True),
