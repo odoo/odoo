@@ -15,7 +15,7 @@
                     <field name="type_id" string="Type" invisible="1"/>
                     <field name="priority" invisible="1"/>
                     <field name="company_id" invisible="1" groups="base.group_multi_company"/>
-                    <field name="delay_close" invisible="1"/>
+                    <field name="delay_close" sum='Avg Closing Delay'/>
                     <field name="section_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="categ_id" invisible="1"/>
@@ -26,7 +26,8 @@
                     <field name="date_closed" invisible="1"/>
                     <field name="create_date" invisible="1"/>
                     <field name="state" invisible="1"/>
-                    <field name="nbr" string="#Project Issue"/>
+                    <field name="day" invisible="1"/>
+                    <field name="nbr" string="#Project Issue" sum='#Number of Project Issue'/>
                   </tree>
             </field>
         </record>
@@ -74,6 +75,11 @@
                     		string="Pending"
                     		domain="[('state','=','pending')]"/>
             	</xpath>
+            	<xpath expr='//search[@string="Search"]/group[1]/field[@string="User"]' position='replace'>
+            	        <field name="user_id" string="User" select="1" widget="selection">
+	            			<filter icon="terp-crm" string="My Project Issue" help="My Project Issue Entries" domain="[('user_id','=',uid)]" />
+               			</field>
+            	</xpath>
                	<xpath expr='//search[@string="Search"]/group[@string="Group By..."]' position='before'>
                	       <newline/>
                 		<group  expand="0" string="Extended options..." colspan="10" col="12">
@@ -120,6 +126,9 @@
             		<filter string="Assigned To"  icon="terp-sale" domain="[]" context="{'group_by':'assigned_to'}"/>
             		<filter string="Partner"  icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
             		<filter string="Channel"  icon="terp-sale" domain="[]" context="{'group_by':'canal_id'}"/>
+            	</xpath>
+         		<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Month"]' position='before'>
+					<filter string="Day" icon="terp-sale" domain="[]" context="{'group_by':'day'}"/>
             	</xpath>
                 </data>
             </field>
