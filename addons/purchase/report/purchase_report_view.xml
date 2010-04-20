@@ -20,14 +20,15 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Orders Statistics">
-                	<field name="date"/>
-                	<field name="user_id"/>
-                	<field name="partner_id"/>
-                    <field name="product_id"/>
-                    <field name="quantity"/>
+                	<field name="date" invisible="1"/>
+                	<field name="user_id" invisible="1"/>
+                	<field name="partner_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="quantity" invisible="1"/>
                     <field name="nbr" sum="# of Lines"/>
                     <field name="price_average" avg="Average Price"/>
                 	<field name="price_total" sum="Total Price"/>
+                	<field name="day" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="warehouse_id" invisible="1"/>
@@ -46,51 +47,63 @@
         <field name="arch" type="xml">
             <search string="Purchase Orders">
             <group>
-                <filter icon="terp-purchase"
-                    string="This Year"
-                    domain="[('name','=',time.strftime('%%Y'))]"
-                    default="1"
-                    help="Purchase orders of the year"/>
-                <filter icon="terp-purchase"
-                    string="This Month"
-                    default="1"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    help="Purchase orders of this month"/>
+            	<filter icon="terp-purchase" string="This Year"
+	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                    	    help="Tasks performed in this year"/>
+                <filter icon="terp-purchase" string="This Month"
+                		name="month"
+                		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                		help="Tasks performed in this month"/>
+                <filter icon="gtk-media-rewind"
+                        string="    7 Days    "
+                        separator="1"
+                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                        help="Tasks during last 7 days"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-purchase"
-                    string="Quotations"
-                    domain="[('state','=','draft')]"/>
+                    	string="Quotations"
+                    	domain="[('state','=','draft')]"/>
                 <filter icon="terp-purchase"
-                    string="Purchase"
-                    default="1"
-                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
+                		string="Waiting Schedule"
+                		domain="[('state','=','waiting_date')]"/>
+                <filter icon="terp-purchase"
+                		string="Manual in progress"
+                		domain="[('state','=','manual')]"/>
+
                 <separator orientation="vertical"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-purchase"
-                        string="My Purchases"
-                        domain="[('user_id','=',uid)]"/>
+                    		string="My Purchaes"
+                    		help = "My Purchaes"
+                    		domain="[('user_id','=',uid)]" />
+                    <filter icon="terp-purchase"
+                    		string="Purchase Non User"
+                    		help="Purchase Non User"
+                    		domain="[('user_id','=',False)]"/>
                 </field>
                 <field name="partner_id"/>
                 <field name="product_id"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+
 				</group>
 				<newline/>
                 <group expand="1" string="Extended options..." colspan="10" col="12">
-                    <filter icon="terp-purchase" string="Manual" domain="[('invoice_method','=','manual')]"/>
-                    <filter icon="terp-purchase" string="From Order" domain="[('invoice_method','=','order')]"/>
-                    <filter icon="terp-purchase" string="From Picking" domain="[('invoice_method','=','picking')]"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-purchase" string="Waiting Schedule" domain="[('state','=','waiting_date')]"/>
-                    <filter icon="terp-purchase" string="Manual in progress" domain="[('state','=','manual')]"/>
-                    <filter icon="terp-purchase" string="In progress" domain="[('state','=','progress')]"/>
                     <filter icon="terp-purchase" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
-                    <filter icon="terp-purchase" string="Invoice Exception" domain="[('state','=','invoice_except')]"/>
                     <filter icon="terp-purchase" string="Done" domain="[('state','=','done')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="invoice_method"/>
+                    <field name="warehouse_id" widget="selection"/>
+                    <field name="location_id" widget="selection"/>
+                    <newline/>
+                    <filter icon="terp-purchase" string="Invoice Exception  " domain="[('state','=','invoice_except')]"/>
                     <filter icon="terp-purchase" string="Cancel" domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="fiscal_position" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="date"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}"/>
+                    <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
                     <filter string="Location" icon="terp-purchase" context="{'group_by':'location_id'}"/>
                     <filter string="Responsible" name="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}"/>
@@ -98,8 +111,9 @@
                     <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
                     <filter string="Partner" name="partner_id" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-purchase" context="{'group_by':'state'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Fiscal Position" icon="terp-purchase" context="{'group_by':'fiscal_position'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-purchase" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-purchase" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-purchase" context="{'group_by':'name'}"/>
                 </group>
@@ -113,7 +127,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id" ref="view_purchase_order_search"/>
-        <field name="context">{'search_default_Responsible': 1}</field>
+        <field name="context">{'search_default_month':1,'search_default_Responsible':1,'group_by_no_leaf':1,'group_by':[]}</field>
     </record>
 
     <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"/>

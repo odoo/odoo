@@ -33,6 +33,7 @@ class purchase_report(osv.osv):
     _columns = {
         'date': fields.date('Date', readonly=True),
         'name': fields.char('Year',size=64,required=False, readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'state': fields.selection([
             ('draft','Quotation'),
             ('waiting_date','Waiting Schedule'),
@@ -73,6 +74,7 @@ class purchase_report(osv.osv):
                     s.date_order as date,
                     to_char(s.date_order, 'YYYY') as name,
                     to_char(s.date_order, 'MM') as month,
+                    to_char(s.date_order, 'YYYY-MM-DD') as day,
                     s.state,
                     s.warehouse_id as warehouse_id,
                     s.partner_id as partner_id,
@@ -99,6 +101,7 @@ class purchase_report(osv.osv):
                     s.date_order,
                     to_char(s.date_order, 'YYYY'),
                     to_char(s.date_order, 'MM'),
+                    to_char(s.date_order, 'YYYY-MM-DD'),
                     s.state,
                     s.warehouse_id,
                     s.fiscal_position,
