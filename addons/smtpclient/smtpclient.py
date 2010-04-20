@@ -396,7 +396,7 @@ class smtpclient(osv.osv):
             if body == False:
                 body = ''
                             
-            if smtp_server.disclaimers != False:
+            if smtp_server.disclaimers:
                 body = body + "\n" + smtp_server.disclaimers
                 
             try:

@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class idea_post_vote(osv.osv_memory):
     """ Post Vote For Idea """
@@ -35,6 +36,27 @@ class idea_post_vote(osv.osv_memory):
                                           ('75', 'Good'),
                                           ('100', 'Very Good') ], 'Post Vote', required=True)
                 }
+    
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+        """
+        idea_obj = self.pool.get('idea.idea')
+
+        for idea in idea_obj.browse(cr, uid, context.get('active_ids', [])):
+            if idea.state in ['draft', 'close', 'cancel']:
+                raise osv.except_osv(_("Warning !"), _("Draft/Accepted/Cancelled \
+ideas Could not be voted"))
+            if idea.state != 'open':
+                raise osv.except_osv(_('Warning !'), _('idea should be in \
+\'Open\' state before vote for that idea.'))
+        return False
+
 
     def do_vote(self, cr, uid, ids, context):
 
@@ -52,6 +74,7 @@ class idea_post_vote(osv.osv_memory):
         for do_vote_obj in self.read(cr, uid, ids):
             score = str(do_vote_obj['vote'])
             dic = {'idea_id': data, 'user_id': uid, 'score': score }
+            
             vote = vote_obj.create(cr, uid, dic)
             return {}
 
