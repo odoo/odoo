@@ -601,18 +601,6 @@
                         <field name="min_date" select="1"/>
                         <field name="type"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(act_stock_make_picking_wizard)d"
-                            states="confirmed,assigned"
-                            string="Make Picking"
-                            type="action"
-                            icon="gtk-go-forward"
-                            help="Make Picking" colspan="2"/>
-                        <button name="%(act_stock_return_picking)d"
-                            states="done"
-                            string="Return Picking"
-                            type="action"
-                            icon="gtk-go-back"
-                            help="Return Picking" colspan="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -763,18 +751,6 @@
                         <field name="date" />
                         <field name="min_date" select="1"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(act_stock_make_picking_wizard)d"
-                                states="assigned"
-                                string="Make Picking"
-                                type="action"
-                                icon="gtk-go-forward"
-                                help="Make Picking" colspan="2"/>
-                        <button name="%(act_stock_return_picking)d"
-                                states="done"
-                                string="Return Picking"
-                                type="action"
-                                icon="gtk-go-back"
-                                help="Return Picking" colspan="2"/>
                     </group>
                         <notebook colspan="4">
                         <page string="General Information">
@@ -953,18 +929,6 @@
                         <field name="backorder_id" readonly="1"/>
                         <field name="origin" readonly="1"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(act_stock_make_picking_wizard)d"
-                                states="assigned"
-                                string="Make Picking"
-                                type="action"
-                                icon="gtk-go-forward"
-                                help="Make Picking" colspan="2"/>
-                        <button name="%(act_stock_return_picking)d"
-                                states="done"
-                                string="Return Picking"
-                                type="action"
-                                icon="gtk-go-back"
-                                help="Return Picking" colspan="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -1140,18 +1104,6 @@
                         <field name="min_date" readonly="1"/>
                         <field name="invoice_state" string="Invoice Control"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                        <button name="%(act_stock_make_picking_wizard)d"
-                                states="confirmed,assigned"
-                                string="Make Picking"
-                                type="action"
-                                icon="gtk-go-forward"
-                                help="Make Picking" colspan="2"/>
-                        <button name="%(act_stock_return_picking)d"
-                                states="done"
-                                string="Return Picking"
-                                type="action"
-                                icon="gtk-go-back"
-                                help="Return Picking" colspan="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
