@@ -33,7 +33,7 @@ import account_subscription_generate
 import wizard_aged_trial_balance
 import wizard_general_ledger_report
 import wizard_third_party_ledger
-import wizard_account_balance_report
+import account_partner_balance_report
 import wizard_partner_balance_report
 import account_period_close
 import account_fiscalyear_close
