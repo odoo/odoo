@@ -71,7 +71,7 @@ class hr_evaluation_report(osv.osv):
                      s.date_close as closed,
                      to_char(s.create_date, 'YYYY') as year,
                      to_char(s.create_date, 'MM') as month,
-                     count(*) as nbr,
+                     count(l.*) as nbr,
                      s.state
                      from
                  hr_evaluation_interview l
