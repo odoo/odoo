@@ -1,19 +1,8 @@
 - |
   Now I will test Meetings which may be customer meeting or phonecall meeting or
   internal Meeting.
--   
-  I start by creating a new Meeting.   
--
-  For that, I first create alarm.
-- 
-  !record {model: res.alarm, id: res_alarm_minituesbefore0}:
-    name: 40 minutes before
-    trigger_duration: 40
-    trigger_interval: minutes
-    trigger_occurs: before
-    trigger_related: start
--
-  I create Meeting.       
+-  
+  I start by creating a new Meeting.     
 - 
   !record {model: crm.meeting, id: crm_meeting_regardingpresentation0}:
     categ_id: crm.categ_meet2
@@ -51,20 +40,19 @@
 - |
   In order to check recurrence on meetings I will set Recurrency to Custom
   and I set the fields so that the meeting will occure weekly on Monday and Friday 10 times
-- 
-  !record {model: crm.meeting, id: crm_meeting_regardingpresentation0}:
-    count: 10
-    fr: 1
-    freq: weekly
-    mo: 1
-    rrule_type: custom
-    th: 1
-    tu: 1
-    we: 1
+-
+  !python {model: crm.meeting}: |
+     self.write(cr, uid, [ref("crm_meeting_regardingpresentation0")], {'fr': 1, 'mo': 1, 'th': 1, 'tu': 1, 'we':1,   'count':10, 'interval': 1, 'freq': 'weekly', 'rrule_type': 'custom'})
+      
 - |
   I can see from the calendar view that the meeting is scheduled on Monday and Friday
   for 10 times,
-  I will search for one of the recurrent event and count the number of events
+  
+-
+  !python {model: crm.meeting}: |
+    self.fields_view_get(cr, uid, False, 'calendar', context)
+  
+  I will search for one of the recurrent event and count the number of meeting.
 -
   !python {model: crm.meeting}: |
      ids = self.search(cr, uid, [('date', '>=', '2010-05-21 00:00:00'), ('date', '<=', '2010-04-21 00:00:00')] )
