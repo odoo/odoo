@@ -15,7 +15,7 @@
                     <field name="type_id" string="Type" invisible="1"/>
                     <field name="priority" invisible="1"/>
                     <field name="company_id" invisible="1" groups="base.group_multi_company"/>
-                    <field name="delay_close" sum='Avg Closing Delay'/>
+                    <field name="delay_close" avg='Avg Closing Delay'/>
                     <field name="section_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="categ_id" invisible="1"/>
@@ -50,51 +50,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                <data>
-                <xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Year"]' position='replace'>
-                    	<filter string="This Year" icon="terp-sale" domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
-           		</xpath>
-            	<xpath expr='//search[@string="Search"]/group[1]/filter[@string="This Month"]' position='replace'>
-                    	<filter string="This Month" icon="terp-sale" name="This Month"
-                    	domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-						<filter icon="gtk-media-rewind" string="7 Days" separator="1"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                            help="Project isuue last 7 days"/>
-            	</xpath>
-            	<xpath expr='//search[@string="Search"]/group[1]/filter[@string="Done"]' position='replace'>
-            	</xpath>
-            	<xpath expr='//search[@string="Search"]/group[1]/filter[@string="Current"]' position='replace'>
-            	</xpath>
-                <xpath expr='//search[@string="Search"]/group[1]/filter[@string="Cancel"]' position='replace'>
-                    		<filter icon="terp-sale"
-                    		string="Draft"
-                    		domain="[('state','=','draft')]"/>
-					<filter icon="terp-sale"
-                    		string="Open"
-                    		domain="[('state','=','open')]"/>
-					<filter icon="terp-sale"
-                    		string="Pending"
-                    		domain="[('state','=','pending')]"/>
-            	</xpath>
+
             	<xpath expr='//search[@string="Search"]/group[1]/field[@name="user_id"]' position='replace'>
             	        <field name="user_id"  select="1" widget="selection">
 	            			<filter icon="terp-crm" string="My Project Issue" help="My Project Issue Entries" domain="[('user_id','=',uid)]" />
                			</field>
             	</xpath>
-               	<xpath expr='//search[@string="Search"]/group[@string="Group By..."]' position='before'>
-               	       <newline/>
-                		<group  expand="0" string="Extended options..." colspan="10" col="12">
-                		<filter icon="terp-sale"
-                    		string="Done"
-                    		domain="[('state','=','done')]"/>
-                    		<filter icon="terp-sale"
-                    		string="Cancel"
-                    		domain="[('state','=','cancel')]"/>
+               	<xpath expr='//search[@string="Search"]/group[@string="Extended options..."]/filter[@string="Cancel"]' position='after'>
                     		<separator orientation="vertical"/>
                   			<field name="project_id" widget="selection" />
                     		<field name="priority" />
                     		<separator orientation="vertical"/>
                     		<field name="type_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                    		<field name="task_id" widget="selection"/>
+                    		<field name="task_id"/>
                     		<separator orientation="vertical"/>
                     		<field name="assigned_to" widget="selection">
                     			<filter icon="terp-crm"  help = "Project Issue Assigned To Me" domain="[('assigned_to','=',uid)]" />
@@ -104,12 +72,10 @@
                     		<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                     		<field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]" />
                     		<separator orientation="vertical"/>
-                    		<field name="partner_id" widget="selection" />
+                    		<field name="partner_id"  />
                     		<field name="canal_id" widget="selection"/>
                             <separator orientation="vertical"/>
                             <field name="date_closed" string="Date Closed"/>
-                		</group>
-                		<newline/>
 				</xpath>
 				<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Company"]' position='replace'>
 					<filter string="Company" icon="terp-sale" domain="[]" context="{'group_by':'company_id'}"/>
@@ -126,9 +92,6 @@
             		<filter string="Assigned To"  icon="terp-sale" domain="[]" context="{'group_by':'assigned_to'}"/>
             		<filter string="Partner"  icon="terp-sale" domain="[]" context="{'group_by':'partner_id'}"/>
             		<filter string="Channel"  icon="terp-sale" domain="[]" context="{'group_by':'canal_id'}"/>
-            	</xpath>
-         		<xpath expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="Month"]' position='before'>
-					<filter string="Day" icon="terp-sale" domain="[]" context="{'group_by':'day'}"/>
             	</xpath>
                 </data>
             </field>

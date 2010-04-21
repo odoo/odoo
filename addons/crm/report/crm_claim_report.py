@@ -32,7 +32,7 @@ class crm_claim_report(osv.osv):
     _description = "CRM Claim Report"
 
     _columns = {
-        'delay_close': fields.char('Delay to close', size=20, readonly=True),
+        'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
@@ -56,6 +56,7 @@ class crm_claim_report(osv.osv):
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
+                    to_char(c.create_date, 'YYYY-MM-DD') as day,
                     c.state,
                     c.user_id,
                     c.stage_id,
@@ -67,12 +68,13 @@ class crm_claim_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
-                    to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
+                    date_trunc('day',c.create_date) as create_date,
+                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
                     crm_claim c
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), \
                         c.state, c.user_id,c.section_id, c.stage_id,\
-                        c.categ_id,c.partner_id,c.company_id
+                        c.categ_id,c.partner_id,c.company_id,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
             )""")
 
 crm_claim_report()

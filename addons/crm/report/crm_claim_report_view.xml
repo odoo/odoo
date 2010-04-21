@@ -10,15 +10,16 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Claims">
-					<field name="name" />
-					<field name="month"/>
-					<field name="section_id" />
-                    <field name="user_id" />
-                    <field name="company_id" />
-                    <field name="partner_id" />
-					<field name="nbr" string="#Claim"/>
-	                <field name="delay_close"/>
-	                <field name="state"  invisible="1"/>
+					<field name="name" invisible="1"/>
+					<field name="month" invisible="1"/>
+					<field name="section_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="day" invisible="1"/>
+					<field name="nbr" string="#Claim" sum="#Claim"/>
+	                <field name="delay_close" avg="Avg Closing Delay"/>
+	                <field name="state" invisible="1"/>
 	                <field name="stage_id" invisible="1"/>
 	                <field name="categ_id" invisible="1"/>
                 </tree>
@@ -66,12 +67,19 @@
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
+            <data>
+            	<xpath expr='//search[@string="Search"]/group[@string="Extended options..."]/filter[@string="Cancel"]' position='after'>
+            	    <separator orientation="vertical"/>
+            	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
+	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
+            	</xpath>
              <xpath
              	expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
              	position='after'>
              	<filter string="Stage" icon="terp-sale" domain="[]"
              		context="{'group_by':'stage_id'}" />
              </xpath>
+             </data>
             </field>
         </record>
 
@@ -82,7 +90,7 @@
             <field name="res_model">crm.claim.report</field>
             <field name="view_type">form</field>
   			<field name="view_mode">tree,graph</field>
-  			<field name="context">{"search_default_User":1,"search_default_This Year":1,"search_default_This Month":1}</field>
+  			<field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_claim_tree"/>
             <field name="search_view_id" ref="view_report_crm_claim_filter"/>
 

@@ -17,12 +17,10 @@ class project_issue_report(osv.osv):
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'type_id': fields.many2one('crm.case.resource.type', 'Type', domain="[('object_id.model', '=', 'project.issue')]"),
         'date_closed': fields.datetime('Close Date', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
-        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
-        'day': fields.char('Day', size=128, readonly=True)
+        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" )
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'project_issue_report')

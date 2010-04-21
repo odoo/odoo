@@ -89,6 +89,8 @@ class crm_case_report(osv.osv):
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True),
+        'day': fields.char('Day', size=128, readonly=True)
     }
 
     _order = 'name desc, user_id'
@@ -104,15 +106,18 @@ class crm_case_report(osv.osv):
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
+                    to_char(c.create_date, 'YYYY-MM-DD') as day,
                     c.state,
                     c.user_id,
                     c.section_id,
                     c.company_id,
-                    count(*) as nbr
+                    count(*) as nbr,
+                    c.create_date as create_date
                 from
                     crm_case c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),
                          c.state, c.user_id,c.section_id,c.company_id
+                         ,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
             )""")
 
 crm_case_report()
