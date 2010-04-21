@@ -191,7 +191,7 @@ class act_window(osv.osv):
                 return s.encode('utf8')
             return s
         for act in self.browse(cr, uid, ids):
-            fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid)
+            fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid,None,context)
             search_view_id = False
             if act.search_view_id:
                 search_view_id = act.search_view_id.id
@@ -387,13 +387,13 @@ class actions_server(osv.osv):
                 line = rs[0], "%s - (%s)" % (rs[1], rs[0])
                 res.append(line)
         return res
-    
+
     def _select_objects(self, cr, uid, context={}):
         model_pool = self.pool.get('ir.model')
         ids = model_pool.search(cr, uid, [('name','not ilike','.')])
         res = model_pool.read(cr, uid, ids, ['model', 'name'])
         return [(r['model'], r['name']) for r in res] +  [('','')]
-    
+
     def change_object(self, cr, uid, ids, copy_object, state, context={}):
         if state == 'object_copy':
             model_pool = self.pool.get('ir.model')
@@ -581,10 +581,10 @@ class actions_server(osv.osv):
                     continue
                 if not user:
                     raise osv.except_osv(_('Error'), _("Please specify server option --smtp-from !"))
-                
+
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
-                
+
                 if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
@@ -686,7 +686,7 @@ class actions_server(osv.osv):
                 cr.commit()
                 if action.record_id:
                     self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
-            
+
             if action.state == 'object_copy':
                 res = {}
                 for exp in action.fields_lines:
@@ -701,7 +701,7 @@ class actions_server(osv.osv):
 
                 obj_pool = None
                 res_id = False
-                
+
                 model = action.copy_object.split(',')[0]
                 cid = action.copy_object.split(',')[1]
                 obj_pool = self.pool.get(model)
