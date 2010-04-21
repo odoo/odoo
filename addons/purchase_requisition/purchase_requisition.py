@@ -39,7 +39,7 @@ class purchase_requisition(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),        
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase'),
-        'state': fields.selection([('draft','Draft'),('in_progress','In_progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
+        'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
