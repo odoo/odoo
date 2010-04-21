@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,27 +15,17 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
+class purchase_installer(osv.osv_memory):
+    _name = 'purchase.installer'
+    _inherit = 'res.config.installer'
 
-{
-    'name': 'Purchase Management - Manual Control of Invoice',
-    'version': '1.1',
-    'category': 'Generic Modules/Sales & Purchases',
-    'description': """Module for purchase management, manual control of invoice""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['purchase'],
-    'init_xml': [],
-    'update_xml': [
-        'purchase_manual_view.xml',
-        'purchase_manual_wizard.xml',
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-#    'certificate': False,
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _columns = {
+        'purchase_requisition':fields.boolean('Purchase Requisition'),
+        }
+purchase_installer()
+

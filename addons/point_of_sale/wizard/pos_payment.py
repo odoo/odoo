@@ -137,17 +137,21 @@ class pos_make_payment(osv.osv_memory):
                 jrnl_used=jrnl_obj.browse(cr,uid,data['journal'])
             order_obj.write(cr, uid, [record_id], {'invoice_wanted': invoice_wanted})
             order_obj.add_payment(cr, uid, record_id, data, context=context)            
-        
-        if amount<=0.0:
-            context.update({'flag':True})
-            order_obj.action_paid(cr,uid,[record_id],context)
+        # Todo need to check
+#        if amount<=0.0:
+#            context.update({'flag':True})
+#            order_obj.action_paid(cr,uid,[record_id],context)
         if order_obj.test_paid(cr, uid, [record_id]):
             if order.partner_id and order.invoice_wanted:
                 return self.create_invoice(cr,uid,ids,context)
             else:
+                order_obj.action_paid(cr,uid,[record_id],context)                
                 order_obj.write(cr, uid, [record_id],{'state':'paid'})                            
                 return self.print_report(cr, uid, ids, context)  
         if order.amount_paid > 0.0:
+            context.update({'flag': True})
+            # Todo need to check
+            order_obj.action_paid(cr, uid, [record_id], context)            
             self.pool.get('pos.order').write(cr, uid, [record_id],{'state':'advance'})
             return self.print_report(cr, uid, ids, context)            
         return {}

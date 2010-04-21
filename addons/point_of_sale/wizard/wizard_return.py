@@ -266,6 +266,7 @@ def _create_returns(self, cr, uid, data, context):
     return res
 
 def _create_returns2(self, cr, uid, data, context):
+    act={}
     pool = pooler.get_pool(cr.dbname)
     order_obj = pool.get('pos.order')
     line_obj = pool.get('pos.order.line')
@@ -283,46 +284,49 @@ def _create_returns2(self, cr, uid, data, context):
         res=cr.fetchone()
         location_id=res and res[0] or None
         stock_dest_id = int(val.split(',')[1])
+        if order_id.last_out_picking.id:
+            new_picking=picking_obj.copy(cr, uid, order_id.last_out_picking.id, {'name':'%s (return)' % order_id.name,
+                                                                                'move_lines':[], 'state':'draft', 'type':'in',
+                                                                                'type':'in',
+                                                                                'date':date_cur,   })
+            new_order=order_obj.copy(cr,uid,order_id.id, {'name': 'Refund %s'%order_id.name,
+                                                          'lines':[],
+                                                          'statement_ids':[],
+                                                          'last_out_picking':[]})
+            for line in order_id.lines:
+                for r in data['form'].get('returns',[]):
+                    if line.id==r and (data['form']['return%s' %r]!=0.0):
+                        new_move=stock_move_obj.create(cr, uid,{
+                            'product_qty': data['form']['return%s' %r],
+                            'product_uos_qty': uom_obj._compute_qty(cr, uid,data['form']['return%s' %r] ,line.product_id.uom_id.id),
+                            'picking_id':new_picking,
+                            'product_uom':line.product_id.uom_id.id,
+                            'location_id':location_id,
+                            'product_id':line.product_id.id,
+                            'location_dest_id':stock_dest_id,
+                            'name':'%s (return)' %order_id.name,
+                            'date':date_cur,
+                            'date_planned':date_cur,})
+                        line_obj.copy(cr,uid,line.id,{'qty':-data['form']['return%s' %r],
+                                                    'order_id': new_order,
+                        })
+            order_obj.write(cr,uid, new_order, {'state':'done'})
+            wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
+            picking_obj.force_assign(cr, uid, [new_picking], context)
+            act = {
+            'domain': "[('id', 'in', ["+str(new_order)+"])]",
+            'name': 'Refunded Orders',
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'pos.order',
+            'auto_refresh':0,
+            'res_id':new_order,
+            'view_id': False,
+            'type': 'ir.actions.act_window'
+                        }
+        else:         
+           raise wizard.except_wizard(_('Error'), _('Last out picking No find!'))
 
-        new_picking=picking_obj.copy(cr, uid, order_id.last_out_picking.id, {'name':'%s (return)' % order_id.name,
-                                                                            'move_lines':[], 'state':'draft', 'type':'in',
-                                                                            'type':'in',
-                                                                            'date':date_cur,   })
-        new_order=order_obj.copy(cr,uid,order_id.id, {'name': 'Refund %s'%order_id.name,
-                                                      'lines':[],
-                                                      'statement_ids':[],
-                                                      'last_out_picking':[]})
-        for line in order_id.lines:
-            for r in data['form'].get('returns',[]):
-                if line.id==r and (data['form']['return%s' %r]!=0.0):
-                    new_move=stock_move_obj.create(cr, uid,{
-                        'product_qty': data['form']['return%s' %r],
-                        'product_uos_qty': uom_obj._compute_qty(cr, uid,data['form']['return%s' %r] ,line.product_id.uom_id.id),
-                        'picking_id':new_picking,
-                        'product_uom':line.product_id.uom_id.id,
-                        'location_id':location_id,
-                        'product_id':line.product_id.id,
-                        'location_dest_id':stock_dest_id,
-                        'name':'%s (return)' %order_id.name,
-                        'date':date_cur,
-                        'date_planned':date_cur,})
-                    line_obj.copy(cr,uid,line.id,{'qty':-data['form']['return%s' %r],
-                                                'order_id': new_order,
-                    })
-        order_obj.write(cr,uid, new_order, {'state':'done'})
-        wf_service.trg_validate(uid, 'stock.picking',new_picking,'button_confirm', cr)
-        picking_obj.force_assign(cr, uid, [new_picking], context)
-    act = {
-        'domain': "[('id', 'in', ["+str(new_order)+"])]",
-        'name': 'Refunded Orders',
-        'view_type': 'form',
-        'view_mode': 'form,tree',
-        'res_model': 'pos.order',
-        'auto_refresh':0,
-        'res_id':new_order,
-        'view_id': False,
-        'type': 'ir.actions.act_window'
-    }
     return act
 def test(self,cr,uid,data,context={}):
   #  import pdb; pdb.set_trace()
