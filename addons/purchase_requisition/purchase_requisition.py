@@ -159,7 +159,7 @@ class mrp_procurement(osv.osv):
                     'name': procurement.name,
                     'origin': procurement.name,
                     'date_end': procurement.date_planned,
-                    'lines_ids': [(0,0,{
+                    'line_ids': [(0,0,{
                         'product_id': procurement.product_id.id,
                         'product_uom_id': procurement.product_uom.id,
                         'product_qty': procurement.product_qty
