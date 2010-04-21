@@ -1,0 +1,109 @@
+- |
+  Now I will test Meetings which may be customer meeting or phonecall meeting or
+  internal Meeting.
+-   
+  I start by creating a new Meeting.   
+-
+  For that, I first create alarm.
+- 
+  !record {model: res.alarm, id: res_alarm_minituesbefore0}:
+    name: 40 minutes before
+    trigger_duration: 40
+    trigger_interval: minutes
+    trigger_occurs: before
+    trigger_related: start
+-
+  I create Meeting.       
+- 
+  !record {model: crm.meeting, id: crm_meeting_regardingpresentation0}:
+    categ_id: crm.categ_meet2
+    date: '2010-04-21 16:04:00'
+    date_deadline: '2010-04-22 00:04:00'
+    duration: 8.0
+    email_from: info@balmerinc.be
+    location: Ahmedabad
+    name: Regarding Presentation
+    partner_address_id: base.res_partner_address_1
+    partner_id: base.res_partner_9
+    rrule_type: weekly
+    section_id: crm.section_sales_department
+- |
+  I check that the Meetings is in 'UnConfirmed' state.
+-       
+  !assert {model: crm.meeting, id: crm_meeting_regardingpresentation0}:
+     - state == "draft" 
+- |
+  I can set reminder on meeting if I put reminder "40 minutes before" 
+-
+  For that, I first create alarm.
+- 
+  !record {model: res.alarm, id: res_alarm_minituesbefore0}:
+    name: 40 minutes before
+    trigger_duration: 40
+    trigger_interval: minutes
+    trigger_occurs: before
+    trigger_related: start
+- |
+  Now I will assign this reminder. 
+  
+- !python {model: crm.meeting}: |
+     self.write(cr, uid, [ref('crm_meeting_regardingpresentation0')], {'alarm_id': ref("res_alarm_minituesbefore0")})
+- |
+  In order to check recurrence on meetings I will set Recurrency to Custom
+  and I set the fields so that the meeting will occure weekly on Monday and Friday 10 times
+- 
+  !record {model: crm.meeting, id: crm_meeting_regardingpresentation0}:
+    count: 10
+    fr: 1
+    freq: weekly
+    mo: 1
+    rrule_type: custom
+    th: 1
+    tu: 1
+    we: 1
+- |
+  I can see from the calendar view that the meeting is scheduled on Monday and Friday
+  for 10 times,
+  I will search for one of the recurrent event and count the number of events
+-
+  !python {model: crm.meeting}: |
+     ids = self.search(cr, uid, [('date', '>=', '2010-05-21 00:00:00'), ('date', '<=', '2010-04-21 00:00:00')] )
+     assert len(ids) == 9      
+
+- |
+  Now If I want to edit meetings information for all occurence I click on "Edit All" button.
+-
+  !python {model: crm.meeting}: |
+    self.open_meeting(cr, uid, [ref('crm_meeting_regardingpresentation0')])
+- |   
+  I can see that new meeting form is opened with same value
+  I change some data for meeting and save it
+  I can see from meeting's calendar view that all meeting occurences are changed accordingly
+- 
+  !record {model: crm.meeting, id: crm.crm_meeting_regardingpresentation0}:
+    alarm_id: base_calendar.alarm9
+    rrule_type: weekly
+
+- | 
+  In order to invite people for this meetings, I click on "Invite People" button
+  I can invite internal user. 
+- 
+  !record {model: base_calendar.invite.attendee, id: base_calendar_invite_attendee_0}:
+    type: internal
+    partner_id: base.res_partner_9
+    user_ids:
+      - base.user_demo
+- |
+  If I set Send mail boolean as True I can see that an email is send to 
+    specified email address with proper meeting information.
+-
+   #this is not working for send mail boolean as True.
+-
+  !python {model: base_calendar.invite.attendee}: |
+    self.do_invite(cr, uid, [ref('base_calendar_invite_attendee_0')], {'active_id': ref('crm_meeting_regardingpresentation0'), 'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}) 
+
+- |
+  After direct/indirect confirmation for meetings I can confirm meeting   
+-
+  !python {model: crm.meeting}: |
+    self.case_open(cr, uid, [ref('crm_meeting_regardingpresentation0')])
