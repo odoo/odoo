@@ -26,6 +26,7 @@
 
 import logging
 import logging.handlers
+import os
 import sys
 import threading
 import time
@@ -139,6 +140,30 @@ logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
 logging.TEST = logging.INFO - 5
 logging.addLevelName(logging.TEST, 'TEST')
 
+BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
+#The background is set with 40 plus the number of the color, and the foreground with 30
+#These are the sequences need to get colored ouput
+RESET_SEQ = "\033[0m"
+COLOR_SEQ = "\033[1;%dm"
+BOLD_SEQ = "\033[1m"
+COLOR_PATTERN = "%s%s%%s%s" % (COLOR_SEQ, COLOR_SEQ, RESET_SEQ)
+LEVEL_COLOR_MAPPING = {
+    logging.DEBUG_RPC: (BLUE, WHITE),
+    logging.DEBUG: (BLUE, DEFAULT),
+    logging.INFO: (GREEN, DEFAULT),
+    logging.TEST: (WHITE, BLUE),
+    logging.WARNING: (YELLOW, DEFAULT),
+    logging.ERROR: (RED, DEFAULT),
+    logging.CRITICAL: (WHITE, RED),
+}
+
+class ColoredFormatter(logging.Formatter):
+    def format(self, record):
+        fg_color, bg_color = LEVEL_COLOR_MAPPING[record.levelno]
+        record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
+        return logging.Formatter.format(self, record)
+
+
 def init_logger():
     import os
     from tools.translate import resetlocale
@@ -146,7 +171,7 @@ def init_logger():
 
     logger = logging.getLogger()
     # create a format for log messages and dates
-    formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s')
+    format = '[%(asctime)s] %(levelname)s:%(name)s:%(message)s'
 
     if tools.config['syslog']:
         # SysLog Handler
@@ -154,7 +179,8 @@ def init_logger():
             handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
-        formatter = logging.Formatter("%s %s" % (release.description, release.version) + ':%(levelname)s:%(name)s:%(message)s')
+        format = '%s %s' % (release.description, release.version)
+               + ':%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
         # LogFile Handler
@@ -176,39 +202,16 @@ def init_logger():
         # Normal Handler on standard output
         handler = logging.StreamHandler(sys.stdout)
 
-
-    # tell the handler to use this format
+    if isinstance(handler, logging.StreamHandler) and os.isatty(handler.stream.fileno()):
+        formatter = ColoredFormatter(format)
+    else:
+        formatter = logging.Formatter(format)
     handler.setFormatter(formatter)
 
     # add the handler to the root logger
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
-    if (not isinstance(handler, logging.FileHandler)) and os.name != 'nt':
-        # change color of level names
-        # uses of ANSI color codes
-        # see http://pueblo.sourceforge.net/doc/manual/ansi_color_codes.html
-        # maybe use http://code.activestate.com/recipes/574451/
-        colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', None, 'default']
-        foreground = lambda f: 30 + colors.index(f)
-        background = lambda f: 40 + colors.index(f)
-
-        mapping = {
-            'DEBUG_RPC': ('blue', 'white'),
-            'DEBUG': ('blue', 'default'),
-            'INFO': ('green', 'default'),
-            'TEST': ('white', 'blue'),
-            'WARNING': ('yellow', 'default'),
-            'ERROR': ('red', 'default'),
-            'CRITICAL': ('white', 'red'),
-        }
-
-        for level, (fg, bg) in mapping.items():
-            msg = "\x1b[%dm\x1b[%dm%s\x1b[0m" % (foreground(fg), background(bg), level)
-# jth: we should not override default level name
-# jth: use this instead http://stackoverflow.com/questions/384076/how-can-i-make-the-python-logging-output-to-be-colored
-# jth: also, do not output ANSI if terminal doesn't support it (test it in Eclipse console and on windows)
-            #logging.addLevelName(getattr(logging, level), msg)
 
 
 class Logger(object):
