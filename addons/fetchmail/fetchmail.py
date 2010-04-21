@@ -253,7 +253,8 @@ class mail_server(osv.osv):
 
             msg['body'] = body
             msg['attachments'] = attachents
-        
+
+        res_id = False
         if msg.get('references', False):
             id = False
             ref = msg.get('references')
@@ -274,12 +275,20 @@ class mail_server(osv.osv):
                     vals = {
                     
                     }
-                    model_pool.message_update(cr, uid, [history.res_id], vals, msg, context=context)
+                    if hasattr(model_pool, 'message_update'):
+                        model_pool.message_update(cr, uid, [history.res_id], vals, msg, context=context)
+                    else:
+                        logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_update is not define in model %s' % (model_pool._name))
+                        return False
             res_id = id
         else:
             model_pool = self.pool.get(server.object_id.model)
-            res_id = model_pool.message_new(cr, uid, msg, context)
-
+            if hasattr(model_pool, 'message_new'):
+                res_id = model_pool.message_new(cr, uid, msg, context)
+            else:
+                logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s' % (model_pool._name))
+                return False
+                
             for attactment in attachents or []:
                 data_attach = {
                     'name': attactment,
@@ -333,10 +342,10 @@ class mail_server(osv.osv):
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        self._process_email(cr, uid, server, data[0][1], context)
-                        imap_server.store(num, '+FLAGS', '\\Seen')
-                        count += 1
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (count, server.name))
+                        if self._process_email(cr, uid, server, data[0][1], context):
+                            imap_server.store(num, '+FLAGS', '\\Seen')
+                            count += 1
+                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
                     
                     imap_server.close()
                     imap_server.logout()

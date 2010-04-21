@@ -43,31 +43,6 @@
             <field name="view_id" ref="view_server_statistics_graph" />
         </record>
 
-        <record model="ir.ui.view" id="company_form">
-            <field name="name">smtp.company.form</field>
-            <field name="model">res.company</field>
-            <field name="inherit_id" ref="base.view_company_form" />
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="SMTP Settings">
-                        <field name="addresses" colspan="4"
-                            nolabel="1">
-                            <tree string="Email Address">
-                                <field name="name" />
-                                <field name="email" />
-                            </tree>
-                            <form string="Email Address">
-                                <field name="name" />
-                                <field name="email"
-                                    domain="[('state','=','confirm')]" />
-                            </form>
-                        </field>
-                    </page>
-                </notebook>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="email_smtpclient_form_new">
             <field name="name">email.smtpclient.form</field>
             <field name="model">email.smtpclient</field>

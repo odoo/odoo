@@ -19,23 +19,7 @@
 #
 ##############################################################################
 
+import purchase_requisition_partner
 
-{
-    'name': 'Purchase Management - Manual Control of Invoice',
-    'version': '1.1',
-    'category': 'Generic Modules/Sales & Purchases',
-    'description': """Module for purchase management, manual control of invoice""",
-    'author': 'Tiny',
-    'website': 'http://www.openerp.com',
-    'depends': ['purchase'],
-    'init_xml': [],
-    'update_xml': [
-        'purchase_manual_view.xml',
-        'purchase_manual_wizard.xml',
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-#    'certificate': False,
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
