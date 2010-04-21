@@ -84,8 +84,8 @@
 	                        		help = "My tasks"
 	                        		domain="[('user_id','=',uid)]" />
 	                        <filter icon="terp-project"
-	                        		string="Non Assigned Task"
-	                        		help="Non Assigned Tasks"
+	                        		string="Non Assigned Tasks to users"
+	                        		help="Non Assigned Tasks to users"
 	                        		domain="[('user_id','=',False)]"/>
 	                    </field>
 	                    <field name="project_id">
@@ -94,8 +94,8 @@
 	                        		help="My Tasks"
 	                        		domain="[('project_id','=',context.get('project_id', False)]"/>
 	                        <filter icon="terp-project"
-	                        		string="Non assigned Tasks"
-	                        		help ="Non assigned Tasks"
+	                        		string="Non assigned tasks to projects"
+	                        		help ="Non assigned tasks to projects"
 	                        		domain="[('project_id','=',False"/>
 	                    </field>
                     </group>
