@@ -82,6 +82,20 @@ class openerp_dav_handler(dav_interface):
     def _get_dav_supportedlock(self, uri):
         raise DAV_NotFound
 
+    def match_prop(self, uri, match, ns, propname):        
+        if uri[-1]=='/':uri=uri[:-1]
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        if not dbname:
+            if cr: cr.close()
+            raise DAV_NotFound
+        node = self.uri2object(cr, uid, pool, uri2)        
+        if not node:
+            cr.close()
+            raise DAV_NotFound
+        res = node.match_dav_eprop(cr, match, ns, propname)        
+        cr.close()          
+        return res  
+
     def get_prop(self, uri, ns, propname):
         """ return the value of a given property
 
@@ -209,14 +223,14 @@ class openerp_dav_handler(dav_interface):
             return None
         return pool.get('document.directory').get_object(cr, uid, uri)
 
-    def get_data(self,uri):        
+    def get_data(self,uri):    
         self.parent.log_message('GET: %s' % uri)
         if uri[-1]=='/':uri=uri[:-1]
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         try:
             if not dbname:
                 raise DAV_Error, 409
-            node = self.uri2object(cr,uid,pool, uri2)            
+            node = self.uri2object(cr,uid,pool, uri2)   
             if not node:
                 raise DAV_NotFound(uri2)
             try:
@@ -390,6 +404,7 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr,uid,pool, uri2[:])
         except:
             node = False
+        node.headers = self.parent.headers
         objname = uri2[-1]
         ext = objname.find('.') >0 and objname.split('.')[1] or False
 

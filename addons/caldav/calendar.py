@@ -31,6 +31,7 @@ import pytz
 import re
 import tools
 import time
+from caldav_node import node_calendar
 
 try:
     import vobject
@@ -435,22 +436,34 @@ class Calendar(CalDAV, osv.osv):
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),            
             'create_date': fields.datetime('Created Date'),
             'write_date': fields.datetime('Modifided Date'),
-    }   
+    }
 
-    def get_calendar_object(self, cr, uid, uri, context=None):
-        if not uri:
-            return None
-        if len(uri) > 1:
-            return None
-        name, file_type = tuple(uri[0].split('.'))
-        res = self.name_search(cr, uid, name)
-        if not res:
-            return None
-        calendar_id, calendar_name = res[0]
-        calendar = self.browse(cr, uid, calendar_id)
-        return node_calendar(uri, context, calendar)
+    def get_calendar_object(self, cr, uid, ids, parent=None, context=None):
+        if not context:
+            context = {}
+        res = []
+        ctx_res_id = context.get('res_id', None) 
+        ctx_model = context.get('model', None)  
+        for cal in self.browse(cr, uid, ids):
+            for line in cal.line_ids:
+                if ctx_model and ctx_model != line.object_id.model:
+                    continue
+                if line.name in ('valarm', 'attendee'):
+                    continue
+                domain = eval(line.domain)
+                if ctx_res_id:                    
+                    domain += [('id','=',ctx_res_id)]
+                mod_obj = self.pool.get(line.object_id.model)
+                data_ids = mod_obj.search(cr, uid, domain, context=context)                           
+                for data_id in data_ids:
+                    ctx = parent and parent.context or None
+                    node = node_calendar('%s_%s' %(cal.name, data_id), parent, ctx, cal)
+                    node.model = line.object_id.model
+                    node.res_id = data_id                    
+                    res.append(node)
+        return res
 
-    def export_cal(self, cr, uid, ids, vobj='vevent', context={}):
+    def export_cal(self, cr, uid, ids, vobj='vevent', context=None):
         """ Export Calendar
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -458,20 +471,28 @@ class Calendar(CalDAV, osv.osv):
             @param ids: List of calendar’s IDs
             @param context: A standard dictionary for contextual values
         """
-
-        cal = self.browse(cr, uid, ids[0])
+        if not context:
+           context = {}
+        ctx_model = context.get('model', None)            
+        ctx_res_id = context.get('res_id', None)  
         ical = vobject.iCalendar()
-        for line in cal.line_ids:
-            if line.name in ('valarm', 'attendee'):
-                continue
-            mod_obj = self.pool.get(line.object_id.model)
-            data_ids = mod_obj.search(cr, uid, eval(line.domain), context=context)
-            datas = mod_obj.read(cr, uid, data_ids, context=context)
-            context.update({'model': line.object_id.model,
-                                    'calendar_id': cal.id
-                                    })
-            self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)
-            self.create_ics(cr, uid, datas, line.name, ical, context=context)
+        for cal in self.browse(cr, uid, ids):
+            for line in cal.line_ids:
+                if ctx_model and ctx_model != line.object_id.model:
+                    continue
+                if line.name in ('valarm', 'attendee'):
+                    continue
+                domain = eval(line.domain)
+                if ctx_res_id:                    
+                    domain += [('id','=',ctx_res_id)]
+                mod_obj = self.pool.get(line.object_id.model)
+                data_ids = mod_obj.search(cr, uid, domain, context=context)
+                datas = mod_obj.read(cr, uid, data_ids, context=context)
+                context.update({'model': line.object_id.model,
+                                        'calendar_id': cal.id
+                                        })
+                self.__attribute__ = get_attribute_mapping(cr, uid, line.name, context)            
+                self.create_ics(cr, uid, datas, line.name, ical, context=context)
         return ical.serialize()
 
     def import_cal(self, cr, uid, content, data_id=None, context=None):
@@ -485,20 +506,21 @@ class Calendar(CalDAV, osv.osv):
 
         if not context:
             context = {}
-        vals = []
+        vals = []        
         ical_data = base64.decodestring(content)
         parsedCal = vobject.readOne(ical_data)
         if not data_id:
-            data_id = self.search(cr, uid, [])[0]
-        cal = self.browse(cr, uid, data_id)
+            data_id = self.search(cr, uid, [])[0]            
+        
+        cal = self.read(cr, uid, data_id, context=context)[0]
         cal_children = {}
         count = 0
-        for line in cal.line_ids:
+        for line in self.pool.get('basic.calendar.lines').browse(cr, uid, cal['line_ids']):
             cal_children[line.name] = line.object_id.model
         for child in parsedCal.getChildren():
             if child.name.lower() in cal_children:
                 context.update({'model': cal_children[child.name.lower()],
-                                'calendar_id': cal.id
+                                'calendar_id': cal['id']
                                 })
                 self.__attribute__ = get_attribute_mapping(cr, uid, child.name.lower(), context=context)
                 val = self.parse_ics(cr, uid, child, cal_children=cal_children, context=context)

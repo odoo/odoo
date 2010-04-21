@@ -152,6 +152,12 @@ class node_class(object):
         its capabilities """
         return {}
 
+    def match_dav_eprop(self, cr, match, ns, prop):
+        res = self.get_dav_eprop(cr, ns, prop)
+        if res == match:
+            return True
+        return False
+
     def get_dav_eprop(self,cr,ns,prop):
         return None
 
@@ -259,8 +265,8 @@ class node_dir(node_database):
     
     def get_data(self,cr):
         res = ''
-        for child in self.children(cr):
-            res += child.get_data(cr)        
+        for child in self.children(cr):            
+            res += child.get_data(cr)  
         return res
 
     
