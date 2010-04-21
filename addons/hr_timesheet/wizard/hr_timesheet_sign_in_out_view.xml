@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_hr_timesheet_sign_in_message" model="ir.ui.view">
+            <field name="name">hr.sign.in.project.message.form</field>
+            <field name="model">hr.sign.in.project</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sign In/Out By Project">
+                	<group colspan="4" >
+                	    <separator string="This Wizard will make Sign In/Out By Project" colspan="4"/>
+                	</group>
+                    <group colspan="4" col="6">
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-ok" string="Sign in / Sign out" name="check_state" type="object"/>
+                   </group>
+               </form>
+            </field>
+        </record>
+
+    	<record id="view_hr_timesheet_sign_in" model="ir.ui.view">
+            <field name="name">hr.sign.in.project.form</field>
+            <field name="model">hr.sign.in.project</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sign In/Out By Project">
+                	<group colspan="4" >
+                	    <separator string="Sign in" colspan="4"/>
+   						<field name="name" readonly="True" />
+						<field name="state" readonly="True" />
+						<field name="server_date"/>
+		                <label string="(local time on the server side)" colspan="2"/>
+						<field name="date"/>
+						<label string="(Keep empty for current time)" colspan="2"/>
+                	</group>
+                    <group colspan="4" col="6">
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-ok" string="Start Working" name="sign_in_result" type="object"/>
+                   </group>
+               </form>
+            </field>
+        </record>
+
+		<record id="action_hr_timesheet_sign_in" model="ir.actions.act_window">
+            <field name="name">Sign in / Sign out by project</field>
+            <field name="res_model">hr.sign.in.project</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_hr_timesheet_sign_in_message"/>
+           <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_hr_timesheet_sign_in"
+        	id="menu_hr_timesheet_sign_in"
+        	parent="hr_attendance.menu_hr_time_tracking"
+        	/>
+
+    	<record id="view_hr_timesheet_sign_out" model="ir.ui.view">
+            <field name="name">hr.sign.out.project.form</field>
+            <field name="model">hr.sign.out.project</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sign In/Out By Project">
+                	<group colspan="4" >
+					    <separator string="General Information" colspan="4" />
+					    <field name="name" readonly="True" />
+					    <field name="state" readonly="True" />
+					    <field name="date_start"/>
+					    <field name="server_date"/>
+					    <separator string="Work done in the last period" colspan="4" />
+					    <field name="account_id" colspan="3"/>
+					    <field name="info" colspan="3"/>
+					    <field name="date"/>
+					    <label string="(Keep empty for current_time)" colspan="2"/>
+					    <field name="analytic_amount"/>                	</group>
+                    <group colspan="4" col="6">
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-ok" string="Change Work" name="sign_out_result" type="object"/>
+                    	<button icon="gtk-ok" string="Stop Working" name="sign_out_result_end" type="object"/>
+                   </group>
+               </form>
+            </field>
+        </record>
+
+		<record id="action_hr_timesheet_sign_out" model="ir.actions.act_window">
+            <field name="name">Sign in / Sign out by project</field>
+            <field name="res_model">hr.sign.out.project</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_hr_timesheet_sign_out"/>
+           <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>
