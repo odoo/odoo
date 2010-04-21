@@ -28,6 +28,7 @@ class hr_evaluation_report(osv.osv):
     _rec_name = 'date'
     _columns = {
         'create_date': fields.date('Create Date', readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'deadline': fields.date("Deadline", readonly=True),
         'request_id': fields.many2one('survey.request','Request_id', readonly=True),
         'closed': fields.date("closed", readonly=True),
@@ -61,6 +62,7 @@ class hr_evaluation_report(osv.osv):
                  select
                      min(l.id) as id,
                      date_trunc('day',s.create_date) as create_date,
+                     to_char(s.create_date, 'YYYY-MM-DD') as day,
                      s.employee_id,
                      l.request_id,
                      s.plan_id,
@@ -78,6 +80,9 @@ class hr_evaluation_report(osv.osv):
                  group by
                      s.create_date,
                      date_trunc('day',s.create_date),
+                     to_char(s.create_date, 'YYYY-MM-DD'),
+                     to_char(s.create_date, 'YYYY'),
+                     to_char(s.create_date, 'MM'),
                      s.state,
                      s.employee_id,
                      s.date,
