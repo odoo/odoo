@@ -48,7 +48,7 @@ import account_chart
 import wizard_move_line_select
 
 import account_validate_account_move
-import wizard_use_model
+import account_use_model
 
 import account_state_open
 
