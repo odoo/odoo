@@ -17,12 +17,12 @@
 
 
           <!--Inventory control-->
-      <menuitem id="menu_procurement_management_nventory" name="Inventory Control"
+      <menuitem id="menu_procurement_management_inventory" name="Inventory Control"
             parent="base.menu_purchase_root" sequence="4"/>
-      <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_nventory"
+      <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
               name="Incoming Shipments" sequence="9"/>
         <menuitem action="stock.action_reception_picking_move" id="menu_action_reception_picking_move"
-              name="Incoming Products" parent="menu_procurement_management_nventory" sequence="10"/>
+              name="Incoming Products" parent="menu_procurement_management_inventory" sequence="10"/>
 
      <!--Invoice control-->
       <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
@@ -300,25 +300,6 @@
                 <field name="model">purchase.order</field>
          </record>
           -->
-        <record id="purchase_line_form_action" model="ir.actions.act_window">
-            <field name="name">Purchase Order Lines</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.order.line</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <record id="purchase_line_form_action_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="purchase_order_line_tree"/>
-            <field name="act_window_id" ref="purchase_line_form_action"/>
-        </record>
-        <record id="purchase_line_form_action_form" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="purchase_order_line_form"/>
-            <field name="act_window_id" ref="purchase_line_form_action"/>
-        </record>
-        <menuitem action="purchase_line_form_action" id="menu_purchase_line_form_action" parent="base.menu_purchase_root"/>
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
             <field name="name">Uninvoiced Purchase Order Lines</field>
@@ -340,7 +321,7 @@
             <field name="view_id" ref="purchase_order_line_form"/>
             <field name="act_window_id" ref="purchase_line_form_action2"/>
         </record>
-         <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_purchase_line_form_action"/>
+         <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_procurement_management_invoice"/>
           
 
     </data>
