@@ -9,14 +9,14 @@
             <field name="model">crm.opportunity.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Opportunities">
-	              	<field name="name" />
-					<field name="month"/>
-					<field name="section_id" />
-                    <field name="user_id" />
-                    <field name="company_id"/>
-					<field name="partner_id"/>
-                	<field name="nbr" string="#Opportunities"/>
+                <tree string="Opportunities">
+                    <field name="name"  invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="section_id"  invisible="1"/>
+                    <field name="user_id"  invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="nbr" string="#Opportunities"/>
                     <field name="amount_revenue"  sum="Total Revenue"/>
                     <field name="probability" widget="progressbar"/>
                     <field name="amount_revenue_prob"/>
@@ -37,7 +37,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="nbr" position="after">
-                	<field name="delay_close"/>
+                    <field name="delay_close"/>
                     <field name="amount_revenue"/>
                     <field name="amount_costs"/>
                     <field name="amount_revenue_prob"/>
@@ -69,15 +69,15 @@
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-				<xpath
-					expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
-					position='after'>
-					<filter string="Stage" icon="terp-sale" domain="[]"
-						context="{'group_by':'stage_id'}" />
-					<separator orientation="vertical" />
-					<filter string="Partner" icon="terp-partner"
-						domain="[]" context="{'group_by':'partner_id'}" />
-				</xpath>
+                <xpath
+                    expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
+                    position='after'>
+                    <filter string="Stage" icon="terp-sale" domain="[]"
+                        context="{'group_by':'stage_id'}" />
+                    <separator orientation="vertical" />
+                    <filter string="Partner" icon="terp-partner"
+                        domain="[]" context="{'group_by':'partner_id'}" />
+                </xpath>
             </field>
         </record>
 
@@ -88,25 +88,25 @@
             <field name="res_model">crm.opportunity.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{"search_default_section_id":section_id,"search_default_This Year":1,"search_default_This Month":1,"search_default_User":1}</field>
+            <field name="context">{"search_default_section_id":section_id,"search_default_this_year":1,"search_default_this_month":1,"search_default_by_user":1, "group_by": [], 'group_by_no_leaf': 1}</field>
             <field name="search_view_id" ref="view_report_crm_opportunity_filter"/>
         </record>
-      	<record model="ir.actions.act_window.view" id="action_report_crm_opportunity_tree">
-	        <field name="sequence" eval="1"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="view_report_crm_opportunity_tree"/>
-	        <field name="act_window_id" ref="action_report_crm_opportunity"/>
-	    </record>
+          <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_crm_opportunity_tree"/>
+            <field name="act_window_id" ref="action_report_crm_opportunity"/>
+        </record>
         <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_graph">
-	        <field name="sequence" eval="2"/>
-	        <field name="view_mode">graph</field>
-	        <field name="view_id" ref="view_report_crm_opportunity_graph"/>
-	        <field name="act_window_id" ref="action_report_crm_opportunity"/>
-	    </record>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_opportunity_graph"/>
+            <field name="act_window_id" ref="action_report_crm_opportunity"/>
+        </record>
 
         <menuitem name="Opportunities"
-        	action="action_report_crm_opportunity"
-        	id="menu_report_crm_opportunity_tree" parent="base.next_id_64" />
+            action="action_report_crm_opportunity"
+            id="menu_report_crm_opportunity_tree" parent="base.next_id_64" />
 
     </data>
 </openerp>

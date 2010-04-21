@@ -13,7 +13,7 @@
                             <group colspan="4" col="6">
                                 <field name="user_saleman" />
                                 <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
-                                <field name="contract_number" select="1" />
+                                <field name="contract_number" select="1" groups="base.group_extended"/>
                             </group>
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
@@ -50,13 +50,13 @@
                             <group colspan="4" col="9" groups="base.group_extended">
                             <separator colspan="4" string="Validation of the Sale"/>
                                 <newline/>
-                                <field name="state_2" select="2" />
+                                <field name="state_2" />
                                 <button name="button_validate"
-                                		string="Accept"
-                                		type="object"
+                                        string="Accept"
+                                        type="object"
                                      icon="gtk-ok"
                                     states="paid, draft"
-                                		attrs="{'invisible':[('state_2','=','accepted')]}"/>
+                                        attrs="{'invisible':[('state_2','=','accepted')]}"/>
                               </group>
 
                             <separator colspan="4" string="Actions"/>
@@ -194,7 +194,7 @@
         <menuitem name="Point of Sale" id="menu_point_root" sequence="10"/>
         <menuitem name="Point of Sale" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
         <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1"/>
-		<menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale" sequence="2" name="Products"/>
+        <menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale" sequence="2" name="Products"/>
 
         <!--  POS Order view (date_payment)  -->
          <record model="ir.actions.act_window" id="action_pos_pos_form_user">
@@ -210,7 +210,7 @@
         </record>
 invoiced
 
-		<record model="ir.actions.act_window" id="action_pos_order_tobinvoiced">
+        <record model="ir.actions.act_window" id="action_pos_order_tobinvoiced">
             <field name="name">Sales to Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.order</field>
@@ -222,7 +222,7 @@ invoiced
 		    	             
         </record>
         <menuitem name="Invoicing" id="menu_point_of_sale_invoicing" parent="menu_point_root" sequence="4" />
-		<menuitem name="Sales to Invoice" action="action_pos_order_tobinvoiced" id="menu_point_of_sale_tobinvoiced" parent="menu_point_of_sale_invoicing"/>
+        <menuitem name="Sales to Invoice" action="action_pos_order_tobinvoiced" id="menu_point_of_sale_tobinvoiced" parent="menu_point_of_sale_invoicing"/>
         <record model="ir.actions.act_window" id="action_pos_order_accepted">
             <field name="name">Accepted Sales</field>
             <field name="type">ir.actions.act_window</field>
@@ -288,8 +288,8 @@ invoiced
                 <form string="POS Order line">
                     <field name="product_id"  select="1"/>
                     <field name="qty"  select="1"/>
-                    <field name="discount"  select="2"/>
-                    <field name="price_unit"  select="2"/>
+                    <field name="discount" />
+                    <field name="price_unit" />
                     <field name="create_date"  select="1"/>
                 </form>
             </field>
@@ -304,7 +304,7 @@ invoiced
             <field name="view_id" ref="view_pos_order_line"/>
         </record>
 
-		<record model="ir.actions.act_window" id="action_pos_order_line_form">
+        <record model="ir.actions.act_window" id="action_pos_order_line_form">
             <field name="name">Sale line</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.order.line</field>
@@ -337,9 +337,9 @@ invoiced
                     <field name="journal_id" select="1"/>
                     <field name="jl_id" select="1"/>
                     <field name="date_create" select="1" widget="date"/>
-                    <field name="no_trans" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="invoice_id" select="2"/>
+                    <field name="no_trans"/>
+                    <field name="amount"/>
+                    <field name="invoice_id"/>
                 </form>
             </field>
         </record>
@@ -365,31 +365,31 @@ invoiced
         </record>
 
         <record model="ir.ui.view" id="view_report_transaction_pos_calendar">
-	        <field name="name">report.transaction.pos.calendar</field>
-	        <field name="model">report.transaction.pos</field>
-	        <field name="type">calendar</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <calendar color="user_id" date_start="date_create" string="POS Report">
-	                <field name="journal_id"/>
-	                <field name="amount"/>
-	            </calendar>
-	        </field>
-	     </record>
+            <field name="name">report.transaction.pos.calendar</field>
+            <field name="model">report.transaction.pos</field>
+            <field name="type">calendar</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_create" string="POS Report">
+                    <field name="journal_id"/>
+                    <field name="amount"/>
+                </calendar>
+            </field>
+         </record>
 
-	     <record model="ir.ui.view" id="view_report_transaction_pos_graph">
-	        <field name="name">report.transaction.pos.graph</field>
-	        <field name="model">report.transaction.pos</field>
-	        <field name="type">graph</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <graph  type="bar" string="POS Report">
-	                <field name="user_id" />
-	                <field name="amount"/>
-	                <field group="True" name="journal_id"/>
-	            </graph>
-	        </field>
-	     </record>
+         <record model="ir.ui.view" id="view_report_transaction_pos_graph">
+            <field name="name">report.transaction.pos.graph</field>
+            <field name="model">report.transaction.pos</field>
+            <field name="type">graph</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <graph  type="bar" string="POS Report">
+                    <field name="user_id" />
+                    <field name="amount"/>
+                    <field group="True" name="journal_id"/>
+                </graph>
+            </field>
+         </record>
 
         <record model="ir.actions.act_window" id="action_trans_pos_tree_today">
             <field name="name">Sales by day</field>
@@ -418,16 +418,16 @@ invoiced
         </record>
 
 
-		<record model="ir.ui.view" id="view_report_sales_by_user_pos_form">
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_form">
             <field name="name">report.sales.by.user.pos.form</field>
             <field name="model">report.sales.by.user.pos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS ">
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="user_id" select="2"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
                 </form>
             </field>
         </record>
@@ -440,60 +440,60 @@ invoiced
             <field name="arch" type="xml">
                 <tree string="POS">
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="user_id" select="2"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_calendar">
-	        <field name="name">report.sales.by.user.pos.calendar</field>
-	        <field name="model">report.sales.by.user.pos</field>
-	        <field name="type">calendar</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <calendar color="user_id" date_start="date_order" string="POS Report">
-	            	<field name="qty" select="2"/>
-	                <field name="amount" />
-	            </calendar>
-	        </field>
-	     </record>
+            <field name="name">report.sales.by.user.pos.calendar</field>
+            <field name="model">report.sales.by.user.pos</field>
+            <field name="type">calendar</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_order" string="POS Report">
+                    <field name="qty"/>
+                    <field name="amount" />
+                </calendar>
+            </field>
+         </record>
 
-		<record model="ir.ui.view" id="view_report_sales_by_user_pos_graph">
-	        <field name="name">report.sales.by.user.pos.graph</field>
-	        <field name="model">report.sales.by.user.pos</field>
-	        <field name="type">graph</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <graph  type="bar" string="Sales by User">
-	                <field name="user_id" />
-	                <field name="amount"/>
-	            </graph>
-	        </field>
-	     </record>
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_graph">
+            <field name="name">report.sales.by.user.pos.graph</field>
+            <field name="model">report.sales.by.user.pos</field>
+            <field name="type">graph</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <graph  type="bar" string="Sales by User">
+                    <field name="user_id" />
+                    <field name="amount"/>
+                </graph>
+            </field>
+         </record>
 
-	     <record model="ir.actions.act_window" id="action_report_sales_by_user_pos_today">
+         <record model="ir.actions.act_window" id="action_report_sales_by_user_pos_today">
             <field name="name">Sales by User</field>
             <field name="res_model">report.sales.by.user.pos</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,calendar,form,graph</field>
             <field name="domain">[('date_order','=',time.strftime('%Y-%m-%d'))]</field>
- 		</record>
+         </record>
 
 
-		<!-- Sales of user by month -->
+        <!-- Sales of user by month -->
 
-		<record model="ir.ui.view" id="view_report_sales_by_user_pos_month_form">
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_form">
             <field name="name">report.sales.by.user.pos.month.form</field>
             <field name="model">report.sales.by.user.pos.month</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS ">
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="user_id" select="2"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
                 </form>
             </field>
         </record>
@@ -506,62 +506,62 @@ invoiced
             <field name="arch" type="xml">
                 <tree string="POS">
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="amount" select="2"/>
-                    <field name="user_id" select="2"/>
+                    <field name="qty"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_calendar">
-	        <field name="name">report.sales.by.user.pos.month.calendar</field>
-	        <field name="model">report.sales.by.user.pos.month</field>
-	        <field name="type">calendar</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <calendar color="user_id" date_start="date_order" string="POS Report">
-	            	<field name="qty" select="2"/>
-	                <field name="amount" />
-	            </calendar>
-	        </field>
-	     </record>
+            <field name="name">report.sales.by.user.pos.month.calendar</field>
+            <field name="model">report.sales.by.user.pos.month</field>
+            <field name="type">calendar</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_order" string="POS Report">
+                    <field name="qty"/>
+                    <field name="amount" />
+                </calendar>
+            </field>
+         </record>
 
-		<record model="ir.ui.view" id="view_report_sales_by_user_pos_month_graph">
-	        <field name="name">report.sales.by.user.pos.month.graph</field>
-	        <field name="model">report.sales.by.user.pos.month</field>
-	        <field name="type">graph</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <graph  type="bar" string="Sales by User">
-	                <field name="user_id" />
-	                <field name="amount"/>
-	            </graph>
-	        </field>
-	     </record>
+        <record model="ir.ui.view" id="view_report_sales_by_user_pos_month_graph">
+            <field name="name">report.sales.by.user.pos.month.graph</field>
+            <field name="model">report.sales.by.user.pos.month</field>
+            <field name="type">graph</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <graph  type="bar" string="Sales by User">
+                    <field name="user_id" />
+                    <field name="amount"/>
+                </graph>
+            </field>
+         </record>
 
 
- 		<record model="ir.actions.act_window" id="action_report_sales_by_user_pos_month">
+         <record model="ir.actions.act_window" id="action_report_sales_by_user_pos_month">
             <field name="name">Sales by User Monthly</field>
             <field name="res_model">report.sales.by.user.pos.month</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,calendar,form,graph</field>
             <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
-		</record>
+        </record>
 
-		<!-- Sales by margin -->
+        <!-- Sales by margin -->
 
-		<record model="ir.ui.view" id="view_report_sales_by_margin_pos_form">
+        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_form">
             <field name="name">report.sales.by.margin.pos.form</field>
             <field name="model">report.sales.by.margin.pos</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS ">
-                	<field name="user_id" select="2"/>
-                	<field name="product_name" select="2"/>
+                    <field name="user_id"/>
+                    <field name="product_name"/>
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="net_margin_per_qty" select="2"/>
-                    <field name="total" select="2"/>
+                    <field name="qty"/>
+                    <field name="net_margin_per_qty"/>
+                    <field name="total"/>
                 </form>
             </field>
         </record>
@@ -573,41 +573,41 @@ invoiced
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
-                    <field name="user_id" select="2"/>
-                	<field name="product_name" select="2"/>
+                    <field name="user_id"/>
+                    <field name="product_name"/>
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="net_margin_per_qty" select="2"/>
-                    <field name="total" select="2"/>
+                    <field name="qty"/>
+                    <field name="net_margin_per_qty"/>
+                    <field name="total"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_calendar">
-	        <field name="name">report.sales.by.margin.pos.calendar</field>
-	        <field name="model">report.sales.by.margin.pos</field>
-	        <field name="type">calendar</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
-	            	<field name="product_name" select="2"/>
-	                <field name="total" />
-	            </calendar>
-	        </field>
-	     </record>
+            <field name="name">report.sales.by.margin.pos.calendar</field>
+            <field name="model">report.sales.by.margin.pos</field>
+            <field name="type">calendar</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
+                    <field name="product_name"/>
+                    <field name="total" />
+                </calendar>
+            </field>
+         </record>
 
-		<record model="ir.ui.view" id="view_report_sales_by_margin_pos_graph">
-	        <field name="name">report.sales.by.margin.pos.graph</field>
-	        <field name="model">report.sales.by.margin.pos</field>
-	        <field name="type">graph</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <graph  type="bar" string="Sales by User Margin" orientation="horizontal">
-	                <field name="product_name" />
-	                <field name="total" operator="+"/>
-	            </graph>
-	        </field>
-	     </record>
+        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_graph">
+            <field name="name">report.sales.by.margin.pos.graph</field>
+            <field name="model">report.sales.by.margin.pos</field>
+            <field name="type">graph</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <graph  type="bar" string="Sales by User Margin" orientation="horizontal">
+                    <field name="product_name" />
+                    <field name="total" operator="+"/>
+                </graph>
+            </field>
+         </record>
 
         <record model="ir.actions.act_window" id="action_report_sales_by_margin_pos_today">
             <field name="name">Sales by User Daily margin</field>
@@ -615,20 +615,20 @@ invoiced
             <field name="view_type">form</field>
             <field name="view_mode">tree,calendar,form,graph</field>
             <field name="domain">[('date_order','=',time.strftime('%Y-%m-%d'))]</field>
- 		</record>
+         </record>
 
- 		<record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_form">
+         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_form">
             <field name="name">report.sales.by.margin.pos.month.form</field>
             <field name="model">report.sales.by.margin.pos.month</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS ">
-                	<field name="user_id" select="2"/>
-                	<field name="product_name" select="2"/>
+                    <field name="user_id"/>
+                    <field name="product_name"/>
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="net_margin_per_qty" select="2"/>
-                    <field name="total" select="2"/>
+                    <field name="qty"/>
+                    <field name="net_margin_per_qty"/>
+                    <field name="total"/>
                 </form>
             </field>
         </record>
@@ -640,64 +640,100 @@ invoiced
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
-                    <field name="user_id" select="2"/>
-                	<field name="product_name" select="2"/>
+                    <field name="user_id"/>
+                    <field name="product_name"/>
                     <field name="date_order" select="1" widget="date"/>
-                    <field name="qty" select="2"/>
-                    <field name="net_margin_per_qty" select="2"/>
-                    <field name="total" select="2"/>
+                    <field name="qty"/>
+                    <field name="net_margin_per_qty"/>
+                    <field name="total"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_calendar">
-	        <field name="name">report.sales.by.margin.pos.month.calendar</field>
-	        <field name="model">report.sales.by.margin.pos.month</field>
-	        <field name="type">calendar</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
-	            	<field name="product_name" select="2"/>
-	                <field name="total" />
-	            </calendar>
-	        </field>
-	     </record>
+            <field name="name">report.sales.by.margin.pos.month.calendar</field>
+            <field name="model">report.sales.by.margin.pos.month</field>
+            <field name="type">calendar</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <calendar color="user_id" date_start="date_order" string="Sales by User Margin">
+                    <field name="product_name"/>
+                    <field name="total" />
+                </calendar>
+            </field>
+         </record>
 
-		<record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_graph">
-	        <field name="name">report.sales.by.margin.pos.month.graph</field>
-	        <field name="model">report.sales.by.margin.pos.month</field>
-	        <field name="type">graph</field>
-	        <field eval="2" name="priority"/>
-	        <field name="arch" type="xml">
-	            <graph  type="bar" string="Sales by User Margin" orientation="horizontal">
-	                <field name="product_name" />
-	                <field name="total" operator="+"/>
-	            </graph>
-	        </field>
-	     </record>
+        <record model="ir.ui.view" id="view_report_sales_by_margin_pos_month_graph">
+            <field name="name">report.sales.by.margin.pos.month.graph</field>
+            <field name="model">report.sales.by.margin.pos.month</field>
+            <field name="type">graph</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <graph  type="bar" string="Sales by User Margin" orientation="horizontal">
+                    <field name="product_name" />
+                    <field name="total" operator="+"/>
+                </graph>
+            </field>
+         </record>
 
- 		<record model="ir.actions.act_window" id="action_report_sales_by_margin_pos_month">
+         <record model="ir.actions.act_window" id="action_report_sales_by_margin_pos_month">
             <field name="name">Sales by User Monthly margin</field>
             <field name="res_model">report.sales.by.margin.pos.month</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,calendar,form,graph</field>
             <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
-		</record>
-		<!--  Sales by margin ends -->
-    	<record model="ir.ui.view" id="view_company_form_pos">
+        </record>
+        <!--  Sales by margin ends -->
+        <record model="ir.ui.view" id="view_company_form_pos">
             <field name="name">view.company.form.pos</field>
             <field name="model">res.company</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-				<notebook position="inside">
+                <notebook position="inside">
                     <page string="Other">
                       <field  name="company_discount" colspan="4"/>
                       <field  name="max_diff" colspan="4"/>
                     </page>
                 </notebook>
-        	</field>
-       	</record>
+            </field>
+           </record>
+
+
+        <record model="ir.ui.view" id="form_mode_p_contact">
+            <field name="name">Contact Mode</field>
+            <field name="model">res.mode.contact</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+             <form string="Contact Mode">
+                    <field  name="name" select="1"/>
+                    <field  name="active"/>
+              </form>
+            </field>
+          </record>
+
+        <record model="ir.ui.view" id="tree_mode_p_contact">
+            <field name="name">Contact Mode</field>
+            <field name="model">res.mode.contact</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+             <tree string="Contact Mode">
+                    <field  name="name"/>
+                    <field  name="active"/>
+              </tree>
+            </field>
+          </record>
+
+        <record model="ir.actions.act_window" id="action_mode_p">
+            <field name="name">Contact Mode</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.mode.contact</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Contact Mode" parent="base.menu_base_config" action="action_mode_p" id="menu_mode_po"/>
+
         <record model="ir.ui.view" id="view_partner_contact">
             <field name="name">view.partner.contact</field>
             <field name="model">res.partner</field>
@@ -730,17 +766,17 @@ invoiced
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string="Product">
-				   <group colspan="4" col="6">
+                <form string="Product">
+                   <group colspan="4" col="6">
                     <group colspan="4" col="2">
                         <separator string="Product Description" colspan="4"/>
                         <field name="name" select="1"  />
-                        <field groups="base.group_extended" name="variants" select="2" />
+                        <field groups="base.group_extended" name="variants" />
                     </group>
                     <group colspan="1" col="2">
                         <separator string="Codes" colspan="2"/>
                         <field name="default_code" select="1"/>
-                        <field groups="base.group_extended" name="ean13" select="2"/>
+                        <field groups="base.group_extended" name="ean13"/>
                     </group>
 
                    </group>
@@ -748,30 +784,30 @@ invoiced
                         <page string="Information">
                           <group colspan="2" col="2" name="Type">
                             <separator string="Product Type" colspan="2"/>
-	                          <field name="categ_id" select="1"/>
-	                          <field name="property_account_income" select="1" string="Account" required="1"/>
-	                          <field name="type" select="2"/>
-		                    </group>
-		                    <group colspan="2" col="2" name="Miscelleanous">
-		                      <separator string="Miscelleanous" colspan="2"/>
-	                      		<field name="income_pdt"/>
-	                      		<field name="expense_pdt"/>
+                              <field name="categ_id" select="1"/>
+                              <field name="property_account_income" select="1" string="Account" required="1"/>
+                              <field name="type"/>
+                            </group>
+                            <group colspan="2" col="2" name="Miscelleanous">
+                              <separator string="Miscelleanous" colspan="2"/>
+                                  <field name="income_pdt"/>
+                                  <field name="expense_pdt"/>
                             <field name="am_out"/>
                           <field name="disc_controle"/>
-	                      		<field name="company_id" select="2" groups="base.group_extended"/>
-	                      	</group>
-	                      	<group colspan="2" col="2" name="Prices">
-	                      		<separator string="Prices" colspan="2"/>
-		                      	<field name="lst_price"/>
-			                    <field name="standard_price"/>
-			                 </group>
+                                  <field name="company_id" groups="base.group_extended"/>
+                              </group>
+                              <group colspan="2" col="2" name="Prices">
+                                  <separator string="Prices" colspan="2"/>
+                                  <field name="lst_price"/>
+                                <field name="standard_price"/>
+                             </group>
                         </page>
                    </notebook>
                 </form>
             </field>
         </record>
 
-		<menuitem name="Configuration" parent="menu_point_root"
+        <menuitem name="Configuration" parent="menu_point_root"
             id="menu_point_config_product" sequence="6"/>
 
         <record model="ir.actions.act_window" id="action_product_input">
@@ -783,23 +819,23 @@ invoiced
             <field name="domain">[('income_pdt','=',True)]</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_product_input_tree_tag">
-	        <field name="sequence" eval="1"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="product.product_product_tree_view"/>
-	        <field name="act_window_id" ref="action_product_input"/>
-	    </record>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+            <field name="act_window_id" ref="action_product_input"/>
+        </record>
         <record model="ir.actions.act_window.view" id="action_product_input_form_tag">
-	        <field name="sequence" eval="2"/>
-	        <field name="view_mode">form</field>
-	        <field name="view_id" ref="product_input_output_form_view"/>
-	        <field name="act_window_id" ref="action_product_input"/>
-	    </record>
-		<menuitem name="Products for Input Operations"
-					parent="menu_point_config_product"
-					action="action_product_input"
-					id="products_for_input_operations"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_input_output_form_view"/>
+            <field name="act_window_id" ref="action_product_input"/>
+        </record>
+        <menuitem name="Products for Input Operations"
+                    parent="menu_point_config_product"
+                    action="action_product_input"
+                    id="products_for_input_operations"/>
 
-		<record model="ir.actions.act_window" id="action_product_output">
+        <record model="ir.actions.act_window" id="action_product_output">
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
@@ -808,21 +844,21 @@ invoiced
             <field name="domain">[('expense_pdt','=',True)]</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_product_output_tree_tag">
-	        <field name="sequence" eval="1"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="product.product_product_tree_view"/>
-	        <field name="act_window_id" ref="action_product_output"/>
-	    </record>
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+            <field name="act_window_id" ref="action_product_output"/>
+        </record>
         <record model="ir.actions.act_window.view" id="action_product_output_form_tag">
-	        <field name="sequence" eval="2"/>
-	        <field name="view_mode">form</field>
-	        <field name="view_id" ref="product_input_output_form_view"/>
-	        <field name="act_window_id" ref="action_product_output"/>
-	    </record>
-		<menuitem name="Products for Output Operations"
-					parent="menu_point_config_product"
-					action="action_product_output"
-					id="products_for_output_operations"/>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_input_output_form_view"/>
+            <field name="act_window_id" ref="action_product_output"/>
+        </record>
+        <menuitem name="Products for Output Operations"
+                    parent="menu_point_config_product"
+                    action="action_product_output"
+                    id="products_for_output_operations"/>
 
 <!--        <wizard
             string="Refloat Box entries"
@@ -909,95 +945,94 @@ invoiced
 <!--        <menuitem name="Toutes les lignes de ventes" parent="menu_point_root" id="menu_pos_all_sales_lines" action="action_pos_all_sales_lines" sequence="5" />-->
 
         <!--  Miscelleanous Operations/Reporting -->
-		<menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="5"/>
-		<menuitem name="Registers" parent="menu_point_rep" id="menu_point_report_register" sequence="0" />
-		<menuitem name="Sales" parent="menu_point_rep" id="menu_point_report_sale" sequence="1" />
+        <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="5"/>
+        <menuitem name="Registers" parent="menu_point_rep" id="menu_point_report_register" sequence="0" />
+        <menuitem name="Sales" parent="menu_point_rep" id="menu_point_report_sale" sequence="1" />
 
-		<menuitem name="Details Of Operations" parent="menu_point_report_sale" id="menu_details_of_oper" sequence="1" groups="base.group_extended"/>
-		<menuitem name="All Sales" parent="menu_details_of_oper"
-						id="menu_action_all_sales_tree3" action="action_pos_order_tree3" sequence="1"  groups="base.group_extended"/>
-		<menuitem name="Sales of the day" parent="menu_action_all_sales_tree3"
-						id="menu_action_sale_of_day_tree2" action="action_trans_pos_tree_today"/>
-		<menuitem name="Accepted Sales" parent="menu_action_all_sales_tree3"
-						id="menu_action_sale_of_day_accept" action="action_pos_order_accepted"/>
-<!--		<menuitem name="Open Sales" parent="menu_action_all_sales_tree3"
-						id="menu_action_open_sales_treeop" action="action_pos_order_tree_open"/-->
+        <menuitem name="Details Of Operations" parent="menu_point_report_sale" id="menu_details_of_oper" sequence="1" groups="base.group_extended"/>
+        <menuitem name="All Sales" parent="menu_details_of_oper"
+                        id="menu_action_all_sales_tree3" action="action_pos_order_tree3" sequence="1"  groups="base.group_extended"/>
+        <menuitem name="Sales of the day" parent="menu_action_all_sales_tree3"
+                        id="menu_action_sale_of_day_tree2" action="action_trans_pos_tree_today"/>
+        <menuitem name="Accepted Sales" parent="menu_action_all_sales_tree3"
+                        id="menu_action_sale_of_day_accept" action="action_pos_order_accepted"/>
+<!--        <menuitem name="Open Sales" parent="menu_action_all_sales_tree3"
+                        id="menu_action_open_sales_treeop" action="action_pos_order_tree_open"/-->
 
-		<menuitem name="Sales Reports" parent="menu_point_report_sale" id="menu_sales_report" sequence="2"/>
+        <menuitem name="Sales Reports" parent="menu_point_report_sale" id="menu_sales_report" sequence="2"/>
 
         <menuitem name="Sales of the day" parent="menu_sales_report"
-        		action="action_trans_pos_tree_today" id="menu_trans_pos_tree_today"/>
+                action="action_trans_pos_tree_today" id="menu_trans_pos_tree_today"/>
 
-		<menuitem name="Sales of the month" parent="menu_sales_report"
-				action="action_trans_pos_tree_month" id="menu_trans_pos_tree_month"/>
+        <menuitem name="Sales of the month" parent="menu_sales_report"
+                action="action_trans_pos_tree_month" id="menu_trans_pos_tree_month"/>
 
-		<menuitem name="All the sales" parent="menu_sales_report"
-		 		action="action_trans_pos_tree" id="menu_trans_pos_tree"/>
+        <menuitem name="All the sales" parent="menu_sales_report"
+                 action="action_trans_pos_tree" id="menu_trans_pos_tree"/>
 
-		 <menuitem name="Sales by User" parent="menu_sales_report"
-		 		action="action_report_sales_by_user_pos_today" id="menu_report_sales_by_user_pos_tree"/>
+         <menuitem name="Sales by User" parent="menu_sales_report"
+                 action="action_report_sales_by_user_pos_today" id="menu_report_sales_by_user_pos_tree"/>
 
-		<menuitem name="Sales by User Monthly" parent="menu_sales_report"
-		 		action="action_report_sales_by_user_pos_month" id="menu_report_sales_by_user_pos_month_tree"/>
+        <menuitem name="Sales by User Monthly" parent="menu_sales_report"
+                 action="action_report_sales_by_user_pos_month" id="menu_report_sales_by_user_pos_month_tree"/>
 
-		 <menuitem name="Sales by User Daily Margin" parent="menu_sales_report"
-		 		action="action_report_sales_by_margin_pos_today" id="menu_report_sales_by_user_margin_daily_pos_tree"/>
+         <menuitem name="Sales by User Daily Margin" parent="menu_sales_report"
+                 action="action_report_sales_by_margin_pos_today" id="menu_report_sales_by_user_margin_daily_pos_tree"/>
 
-		<menuitem name="Sales by User Monthly Margin" parent="menu_sales_report"
-		 		action="action_report_sales_by_margin_pos_month" id="menu_report_sales_by_user_pos_month_margin_tree"/>
-		<!-- Invoice -->
+        <menuitem name="Sales by User Monthly Margin" parent="menu_sales_report"
+                 action="action_report_sales_by_margin_pos_month" id="menu_report_sales_by_user_pos_month_margin_tree"/>
+        <!-- Invoice -->
 
-		<record model="ir.actions.act_window" id="action_pos_invoice">
+        <record model="ir.actions.act_window" id="action_pos_invoice">
             <field name="name">Invoices</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-			<field name="domain">[('origin','like','POS')]</field>
+            <field name="domain">[('origin','like','POS')]</field>
         </record>
-		<menuitem name="All Invoices" parent="menu_details_of_oper"
-		 		action="action_pos_invoice" id="menu_pos_invoice_tree"/>
+        <menuitem name="All Invoices" parent="menu_details_of_oper"
+                 action="action_pos_invoice" id="menu_pos_invoice_tree"/>
 
-		<menuitem name="Payments and Sales" parent="menu_point_report_sale"
-		 		 id="menu_cashboxes_closing_tree" sequence="1"/>
-		<menuitem name="Today" parent="menu_cashboxes_closing_tree"
-		 		 id="menu_cashboxes_by_day" sequence="1"/>
+        <menuitem name="Payments and Sales" parent="menu_point_report_sale"
+                  id="menu_cashboxes_closing_tree" sequence="1"/>
+        <menuitem name="Today" parent="menu_cashboxes_closing_tree"
+                  id="menu_cashboxes_by_day" sequence="1"/>
 
-		<menuitem name="All Sales Lines" parent="menu_details_of_oper"
-						id="menu_action_pos_order_line" action="action_pos_order_line" sequence="2"/>
+        <menuitem name="All Sales Lines" parent="menu_details_of_oper"
+                        id="menu_action_pos_order_line" action="action_pos_order_line" sequence="2"/>
 
-		<menuitem name="Sales Lines of the day" parent="menu_action_pos_order_line"
-					id="menu_action_pos_order_line_day" action="action_pos_order_line_day"/>
+        <menuitem name="Sales Lines of the day" parent="menu_action_pos_order_line"
+                    id="menu_action_pos_order_line_day" action="action_pos_order_line_day"/>
 
-<!--		<menuitem name="Open Sales Line" parent="menu_action_pos_order_line"
-					id="menu_action_open_sales_line" action="action_pos_order_line_form"/-->
+<!--        <menuitem name="Open Sales Line" parent="menu_action_pos_order_line"
+                    id="menu_action_open_sales_line" action="action_pos_order_line_form"/-->
 
-<!--		<menuitem icon="STOCK_PRINT" action="wizard_pos_payment_report"
-				id="menu_pos_payment_report" parent="menu_cashboxes_by_day" type="wizard" sequence="4"/-->
+<!--        <menuitem icon="STOCK_PRINT" action="wizard_pos_payment_report"
+                id="menu_pos_payment_report" parent="menu_cashboxes_by_day" type="wizard" sequence="4"/-->
 
-		<menuitem icon="STOCK_PRINT" action="action_report_pos_sale_user"
-				id="menu_pos_sales_user" parent="menu_trans_pos_tree" sequence="3" groups="base.group_extended" />
+        <menuitem icon="STOCK_PRINT" action="action_report_pos_sale_user"
+                id="menu_pos_sales_user" parent="menu_trans_pos_tree" sequence="3" groups="base.group_extended" />
 
 
-		<menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
-				id="menu_pos_payment_report_date" parent="menu_trans_pos_tree" sequence="5" groups="base.group_extended"/>
+        <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
+                id="menu_pos_payment_report_date" parent="menu_trans_pos_tree" sequence="5" groups="base.group_extended"/>
  
-		<menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
-				id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
-		<menuitem icon="STOCK_PRINT" action="action_pos_sales_user_today"
-				id="menu_pos_sales_user_today" parent="menu_trans_pos_tree_today" sequence="2" groups="base.group_extended"/>
+        <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
+                id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
+        <menuitem icon="STOCK_PRINT" action="action_pos_sales_user_today"
+                id="menu_pos_sales_user_today" parent="menu_trans_pos_tree_today" sequence="2" groups="base.group_extended"/>
 
-		<menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
-				id="menu_pos_payment_report_date" parent="menu_trans_pos_tree"  sequence="5" groups="base.group_extended"/>
+        <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_repport_date"
+                id="menu_pos_payment_report_date" parent="menu_trans_pos_tree"  sequence="5" groups="base.group_extended"/>
 
-		<menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
-				id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
-		<menuitem icon="STOCK_PRINT" action="action_report_pos_sales_user_today_current_user"
-				id="menu_pos_sales_user_today_current_user" parent="menu_cashboxes_by_day"  sequence="7"/>
+        <menuitem icon="STOCK_PRINT" action="action_report_pos_payment_report_user"
+                id="menu_pos_payment_report_user" parent="menu_trans_pos_tree_today" sequence="6" groups="base.group_extended"/>
+        <menuitem icon="STOCK_PRINT" action="action_report_pos_sales_user_today_current_user"
+                id="menu_pos_sales_user_today_current_user" parent="menu_cashboxes_by_day"  sequence="7"/>
 
-    	
-    	<menuitem icon="STOCK_PRINT" action="action_report_pos_details"
-				id="menu_pos_details" parent="menu_cashboxes_by_day"  />
+        <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
+                id="menu_pos_details" parent="menu_cashboxes_by_day"  />
 
 
     </data>

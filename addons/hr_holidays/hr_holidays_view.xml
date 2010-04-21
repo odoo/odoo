@@ -12,9 +12,7 @@
                         <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
                         <filter icon="terp-hr" domain="[('state','=','validate')]" string="Validated"/>
                         <separator orientation="vertical"/> 
-                        <filter icon="terp-hr" help="My Leaves" domain="[('user_id','=',uid)]" string="My Leaves"/>
-                        <separator orientation="vertical"/> 
-                        <field name="user_id" widget="selection" />
+                        <field name="user_id" widget="selection" default="uid"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-hr"
                                 domain="[('department_id.manager_id','=',uid)]"
@@ -284,10 +282,10 @@
             <field name="arch" type="xml">
                 <form string="Leave Type">
                     <field colspan="4" name="name" select="1"/>
-                    <field name="limit" select="2"/>
-                    <field name="active" select="2"/>
+                    <field name="limit"/>
+                    <field name="active"/>
                     <field name="categ_id"  select="1" widget="selection"/>
-                    <field name="color_name" select="2"/>
+                    <field name="color_name"/>
                 </form>
             </field>
         </record>

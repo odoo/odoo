@@ -334,12 +334,13 @@ class mrp_bom(osv.osv):
                     d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
                     mult = (d + (m and 1.0 or 0.0))
                     cycle = mult * wc_use.cycle_nbr
+                    print mult, wc_use.hour_nbr, wc.time_start, wc.time_stop, cycle
                     result2.append({
                         'name': bom.routing_id.name,
                         'workcenter_id': wc.id,
                         'sequence': level+(wc_use.sequence or 0),
                         'cycle': cycle,
-                        'hour': float(wc_use.hour_nbr*mult + (wc.time_start+wc.time_stop+cycle*wc.time_cycle) * (wc.time_efficiency or 1.0)),
+                        'hour': float(wc_use.hour_nbr*mult + ((wc.time_start or 0.0)+(wc.time_stop or 0.0)+cycle*(wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)),
                     })
             for bom2 in bom.bom_lines:
                 res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)
@@ -995,16 +996,16 @@ mrp_production_product_line()
 #
 class mrp_procurement(osv.osv):
     """
-    Procument Orders / Requisitions
+    Procument Orders
     """
     _name = "mrp.procurement"
     _description = "Procurement"
     _order = 'priority,date_planned'
     
     _columns = {
-        'name': fields.char('Reason', size=64, required=True, help='Requisition name.'),
+        'name': fields.char('Reason', size=64, required=True, help='Procurement name.'),
         'origin': fields.char('Source Document', size=64,
-            help="Reference of the document that created this Requisition.\n"
+            help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by Open ERP."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
         'date_planned': fields.datetime('Scheduled date', required=True),
@@ -1060,7 +1061,7 @@ class mrp_procurement(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Requisition Order(s) which are in %s State!' % s['state']))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
@@ -1254,7 +1255,7 @@ class mrp_procurement(osv.osv):
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Requisition Order(s), it should not be less than 1!'))
+                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Procurement Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id

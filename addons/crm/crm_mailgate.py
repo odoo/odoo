@@ -32,87 +32,96 @@ import tools
 from osv import fields,osv,orm
 from osv.orm import except_orm
 
+from tools import command_re
+
 class crm_cases(osv.osv):
     """ crm cases """
 
     _name = "crm.case"
     _inherit = "crm.case"    
 
-    def msg_new(self, cr, uid, msg):
-
-        """ @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks
+    def message_new(self, cr, uid, msg, context):
+        """
+        Automatically calls when new email message arrives
+        
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks
         """
 
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_body = mailgate_obj.msg_body_get(msg)
-        msg_subject = mailgate_obj._decode_header(msg['Subject'])
-        msg_from = mailgate_obj._decode_header(msg['From'])
-        msg_cc = mailgate_obj._decode_header(msg['Cc'])
-        body = self.format_body(msg_body['body'])
-        data = {   
-            'name': msg_subject,         
+        mailgate_pool = self.pool.get('email.server.tools')
+
+        subject = msg.get('subject')
+        body = msg.get('body')
+        msg_from = msg.get('from')
+        priority = msg.get('priority')
+        
+        vals = {
+            'name': subject,
             'email_from': msg_from,
-            'email_cc': msg_cc,            
+            'email_cc': msg.get('cc'),
+            'description': body,
             'user_id': False,
-            'description': body,            
         }
-        res = mailgate_obj.partner_get(cr, uid, msg_from)
+        if msg.get('priority', False):
+            vals['priority'] = priority
+        
+        res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
         if res:
-            data.update(res)
-        res = self.create(cr, uid, data)        
-        cases = self.browse(cr, uid, [res])       
-        self._history(cr, uid, cases, _('Receive'), history=True, details=body, email_from=msg_from)
+            vals.update(res)
+        res = self.create(cr, uid, vals, context)
+        cases = self.browse(cr, uid, [res])
+        self._history(cr, uid, cases, _('Receive'), history=True, details=body, email_from=msg_from, message_id=msg.get('id'))
         return res
 
-    def msg_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
-
-        """ @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of update mail’s IDs """
-
+    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
+        """ 
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of update mail’s IDs 
+        """
+        
         if isinstance(ids, (str, int, long)):
-            select = [ids]
-        else:
-            select = ids
-        mailgate_obj = self.pool.get('mail.gateway')
-        msg_actions, body_data = mailgate_obj.msg_act_get(msg)
-        data.update({
-            'description': body_data,
+            ids = [ids]
+        
+        msg_from = msg['from']
+        vals.update({
+            'description': msg['body']
         })
-        act = 'case_'+default_act
-        if 'state' in msg_actions:
-            if msg_actions['state'] in ['draft','close','cancel','open','pending']:
-                act = 'case_' + msg_actions['state']
+        if msg.get('priority', False):
+            vals['priority'] = msg.get('priority')
 
-        for k1,k2 in [('cost','planned_cost'),('revenue','planned_revenue'),('probability','probability')]:
-            if k1 in msg_actions:
-                data[k2] = float(msg_actions[k1])
-
-        if 'priority' in msg_actions:
-            if msg_actions['priority'] in ('1','2','3','4','5'):
-                data['priority'] = msg_actions['priority']
-
-        if 'partner' in msg_actions:
-            data['email_from'] = msg_actions['partner'][:128]        
-        msg_from = self._decode_header(msg['From'])
-        res = self.write(cr, uid, select, data)
-        cases = self.browse(cr, uid, select)       
-        self._history(cr, uid, cases, _('Receive'), history=True, details=body_data, email_from=msg['From'])        
-        getattr(self,act)(cr, uid, select)
+        maps = {
+            'cost':'planned_cost',
+            'revenue': 'planned_revenue',
+            'probability':'probability'
+        }
+        vls = { }
+        for line in msg['body'].split('\n'):
+            line = line.strip()
+            res = command_re.match(line)
+            if res and maps.get(res.group(1).lower(), False):
+                key = maps.get(res.group(1).lower())
+                vls[key] = res.group(2).lower()
+        
+        vals.update(vls)
+        res = self.write(cr, uid, ids, vals)
+        cases = self.browse(cr, uid, ids)
+        message_id = context.get('references_id', False)
+        self._history(cr, uid, cases, _('Receive'), history=True, details=msg['body'], email_from=msg_from, message_id=message_id)        
+        #getattr(self, act)(cr, uid, select)
         return res
 
     def emails_get(self, cr, uid, ids, context={}):
 
-        """ Get Emails
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of email’s IDs
-            @param context: A standard dictionary for contextual values
-
+        """ 
+        Get Emails
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of email’s IDs
+        @param context: A standard dictionary for contextual values
         """
         res = []
         if isinstance(ids, (str, int, long)):

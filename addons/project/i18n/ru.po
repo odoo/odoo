@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-01-25 21:17+0000\n"
-"Last-Translator: marath <Unknown>\n"
+"PO-Revision-Date: 2010-04-13 05:53+0000\n"
+"Last-Translator: grisha <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-03-30 03:52+0000\n"
+"X-Launchpad-Export-Date: 2010-04-17 03:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -24,12 +24,12 @@ msgstr "Назначенные задания"
 #. module: project
 #: model:process.process,name:project.process_process_tasksprocess0
 msgid "Tasks Process"
-msgstr ""
+msgstr "Ход заданий"
 
 #. module: project
 #: help:project.task.delegate,init,name:0
 msgid "New title of the task delegated to the user."
-msgstr "Новое название задания, порученного пользователю."
+msgstr "Новый заголовок задания, назначенного пользователю"
 
 #. module: project
 #: view:config.compute.remaining:0
@@ -44,17 +44,17 @@ msgstr "Закрыть задание"
 #. module: project
 #: view:project.task:0
 msgid "Project Tasks"
-msgstr ""
+msgstr "Задания проекта"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_opendonetask0
 msgid "Open Done Task"
-msgstr ""
+msgstr "Открыть выполненные задания"
 
 #. module: project
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Недопустимое имя модели в определении действия"
 
 #. module: project
 #: wizard_field:project.task.delegate,init,planned_hours_me:0
@@ -108,6 +108,8 @@ msgid ""
 "Header added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
 msgstr ""
+"Заголовок, добавляемый в начало электронного письма для предупреждения, "
+"отправляемого заказчику при закрытии задачи."
 
 #. module: project
 #: field:project.task,priority:0
@@ -182,7 +184,7 @@ msgstr "Мои выполняемые задания"
 #. module: project
 #: view:project.project:0
 msgid "Set as Template"
-msgstr ""
+msgstr "Установить как Шаблон"
 
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
@@ -246,6 +248,8 @@ msgstr "Мои Черновики заданий"
 msgid ""
 "Automatic variables for headers and footer. Use exactly the same notation."
 msgstr ""
+"Автоматические переменные для колонтитулов. Используйте в точности то же "
+"самое написание."
 
 #. module: project
 #: selection:project.project,state:0
@@ -262,7 +266,7 @@ msgstr "Заголовок письма"
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
-msgstr ""
+msgstr "Выполненное задание"
 
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
@@ -272,7 +276,7 @@ msgstr "Задание завершено"
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
 msgid "Delegates tasks to the other user"
-msgstr ""
+msgstr "Поручить задания другому пользователю"
 
 #. module: project
 #: help:project.task,effective_hours:0
@@ -412,7 +416,7 @@ msgstr "Тип"
 #. module: project
 #: selection:res.company,project_time_mode:0
 msgid "Weeks"
-msgstr ""
+msgstr "Нед"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task5_prog
@@ -523,7 +527,7 @@ msgstr "Проекты"
 #. module: project
 #: view:project.task:0
 msgid "Dates"
-msgstr ""
+msgstr "Даты"
 
 #. module: project
 #: field:project.task,history:0
@@ -650,7 +654,7 @@ msgstr "Информация"
 #. module: project
 #: view:project.task:0
 msgid "Review"
-msgstr ""
+msgstr "Обзор"
 
 #. module: project
 #: view:project.project:0
@@ -682,7 +686,7 @@ msgstr "Низкий"
 #. module: project
 #: field:project.project,manager:0
 msgid "Project Manager"
-msgstr ""
+msgstr "Руководитель проекта"
 
 #. module: project
 #: view:project.project:0
@@ -714,7 +718,7 @@ msgstr ""
 #: field:project.project,complete_name:0
 #: field:project.project,name:0
 msgid "Project Name"
-msgstr ""
+msgstr "Наименование проекта"
 
 #. module: project
 #: wizard_button:project.task.close,mail_ask,mail_send:0
@@ -724,7 +728,7 @@ msgstr "Отправить сообщение"
 #. module: project
 #: field:project.project,total_hours:0
 msgid "Total Time"
-msgstr ""
+msgstr "Всего времени"
 
 #. module: project
 #: field:project.task,active:0
@@ -734,7 +738,7 @@ msgstr "Активен"
 #. module: project
 #: model:project.task.type,name:project.project_tt_bug
 msgid "Bug"
-msgstr ""
+msgstr "Ошибка"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_quote
@@ -765,12 +769,12 @@ msgstr "Открыть задание"
 #. module: project
 #: field:project.project,timesheet_id:0
 msgid "Working Time"
-msgstr ""
+msgstr "Рабочее время"
 
 #. module: project
 #: selection:res.company,project_time_mode:0
 msgid "Months"
-msgstr ""
+msgstr "Мес"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
@@ -798,7 +802,7 @@ msgstr "Проекты пользователя"
 #. module: project
 #: view:project.project:0
 msgid "Reactivate Project"
-msgstr ""
+msgstr "Возобновить проект"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -813,7 +817,7 @@ msgstr "Делегировать данное задание пользоват�
 #. module: project
 #: field:project.task,delegated_user_id:0
 msgid "Delegated To"
-msgstr ""
+msgstr "Поручено"
 
 #. module: project
 #: field:project.task,date_close:0

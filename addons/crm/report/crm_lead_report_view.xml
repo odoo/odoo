@@ -10,16 +10,16 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Leads">
-				<field name="name" />
-				<field name="month"/>
-				<field name="section_id" />
-				<field name="user_id" />
-    			<field name="company_id" />
-				<field name="partner_id" />
-				<field name="nbr" string="#Leads"/>
+                <field name="name" />
+                <field name="month"/>
+                <field name="section_id" />
+                <field name="user_id" />
+                <field name="company_id" />
+                <field name="partner_id" />
+                <field name="nbr" string="#Leads"/>
                 <field name="delay_close"/>
                 <field name="state"  invisible="1"/>
-				<field name="stage_id"  invisible="1"/>
+                <field name="stage_id"  invisible="1"/>
                 <field name="categ_id" invisible="1"/>
              </tree>
             </field>
@@ -34,8 +34,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="nbr" position="after">
-                	<field name="delay_close"/>
-                	<field name="stage_id"/>
+                    <field name="delay_close"/>
+                    <field name="stage_id"/>
                 </field>
             </field>
         </record>
@@ -63,12 +63,12 @@
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-			<xpath
-				expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
-				position='after'>
-				<filter string="Stage" icon="terp-sale" domain="[]"
-					context="{'group_by':'stage_id'}" />
-			</xpath>
+            <xpath
+                expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
+                position='after'>
+                <filter string="Stage" icon="terp-sale" domain="[]"
+                    context="{'group_by':'stage_id'}" />
+            </xpath>
             </field>
         </record>
 
@@ -79,27 +79,28 @@
             <field name="res_model">crm.lead.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{"search_default_section_id":section_id,"search_default_This Year":1,"search_default_This Month":1,"search_default_User":1}</field>
+            <field name="context">{"search_default_section_id":section_id,"search_default_this_year":1,"search_default_this_month":1,"search_default_by_user":1}</field>            
             <field name="search_view_id" ref="view_report_crm_lead_filter"/>
 
         </record>
 
-       	<record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
-	        <field name="sequence" eval="1"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="view_report_crm_lead_tree"/>
-	        <field name="act_window_id" ref="action_report_crm_lead"/>
-	    </record>
+       <record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_crm_lead_tree"/>
+            <field name="act_window_id" ref="action_report_crm_lead"/>
+       </record>
 
-       	<record model="ir.actions.act_window.view" id="action_report_crm_lead_graph">
-	        <field name="sequence" eval="2"/>
-	        <field name="view_mode">graph</field>
-	        <field name="view_id" ref="view_report_crm_lead_graph"/>
-	        <field name="act_window_id" ref="action_report_crm_lead"/>
-	    </record>
+       <record model="ir.actions.act_window.view" id="action_report_crm_lead_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_lead_graph"/>
+            <field name="act_window_id" ref="action_report_crm_lead"/>
+       </record>
 
-       	<menuitem name="Leads" id="menu_report_crm_leads_tree"
-       		parent="base.next_id_64" action="action_report_crm_lead" />
+       <menuitem name="Leads" id="menu_report_crm_leads_tree"
+           groups="base.group_extended"
+           parent="base.next_id_64" action="action_report_crm_lead" />
 
     </data>
 </openerp>

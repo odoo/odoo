@@ -13,6 +13,7 @@
         <field name="context">{'object_id':'crm.lead'}</field>
     </record>
     <menuitem action="crm_lead_stage_act" id="menu_crm_lead_stage_act"
+        groups="base.group_extended"
         parent="crm.menu_crm_case_stage" />
 
     <!--  Resource Type Form View -->
@@ -27,6 +28,7 @@
         </record>
         <menuitem action="crm_lead_resource_act"
             id="menu_crm_lead_resource_act"
+            groups="base.group_extended"
             parent="crm.menu_crm_case_resource_type" />
 
 <!-- CRM Lead Form View  -->
@@ -42,18 +44,17 @@
                     <field name="priority"/>
                     <field name="date_deadline"/>
                     <button
-                            name="convert_opportunity"
-                            string="Convert"
-                            help="Convert into Opportunity"
-                            icon="gtk-index"
-                            type="object"
-                            attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                         name="convert_opportunity"
+                         string="Convert"
+                         help="Convert to Opportunity"
+                         icon="gtk-index"   
+                         type="object"
+                         attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                     <newline />
                     <field name="section_id" colspan="1"
                         widget="selection" />
                     <field name="user_id" />
                     <field name="stage_id" widget="selection"
-                        readonly="1"
                         domain="[('object_id.model', '=', 'crm.lead')]" />
                     <group col="2" colspan="1">
                         <button name="stage_previous" string="Previous"
@@ -102,7 +103,7 @@
                     <field name="description" nolabel="1" colspan="4"/>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="2"/>
+                        <field name="state"/>
                         <button name="case_close" string="Close"
                             states="open,draft,pending" type="object"
                             icon="gtk-close" />
@@ -117,6 +118,7 @@
                             icon="gtk-media-pause" />
                         <button name="case_escalate" string="Escalate"
                             states="open,draft,pending" type="object"
+                            groups="base.group_extended"
                             icon="gtk-go-up" />
                         <button name="case_reset"
                             string="Reset to Draft" states="done,cancel"
@@ -166,9 +168,9 @@
                             <newline/>
                             <field name="description" colspan="4" nolabel="1"/>
                             <button colspan="4"
-                                string="Reply to Email"
+                                string="Reply to Last Email"
                                 name="%(action_crm_send_mail)d"
-                                context="{'mail':'reply', 'model': 'crm.lead'}"
+                                context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
                                 icon="gtk-undo" type="action" />
                         </form>
                         <tree string="Communication history">
@@ -223,9 +225,9 @@
                     states="open,draft,pending" type="object"
                     icon="gtk-close" />
                 <button string="Convert to Opportunity"
-                    name="%(action_crm_lead2opportunity)d"
+                    name="convert_opportunity"
                     states="draft,open,pending" icon="gtk-index"
-                    type="action" />
+                    type="object" />
                 <button name="case_escalate" string="Escalate"
                     states="open,draft,pending" type="object"
                     icon="gtk-go-up" />
@@ -262,7 +264,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Leads">
-                <filter icon="terp-project"
+                <filter icon="terp-project" name="current"
                     string="Current"
                     domain="[('state','in',('draft','open'))]"/>
                 <filter icon="terp-project"
@@ -288,7 +290,7 @@
                 <field name="user_id" widget="selection">
                     <filter icon="terp-partner"
                         domain="[('user_id','=',uid)]"
-                        help="My Leads" string="My Lead"
+                        help="My Leads" name="my_lead"
                     />
                     <filter icon="terp-partner"
                         domain="[('user_id','=', False)]"

@@ -41,8 +41,8 @@ bts_form = """<?xml version="1.0" ?>
 
 bts_fields = {
     'sprint_id' : {'string':'Sprint Name', 'type':'many2one', 'relation':'scrum.sprint', 'required':True},
-    'state_open' : {'string':'Set Open', 'type':'boolean'},
-    'convert_to_task' : {'string':'Convert To Task', 'type':'boolean'}
+    'state_open' : {'string':'Set Open', 'type':'boolean', 'default': lambda *a: True},
+    'convert_to_task' : {'string':'Convert To Task', 'type':'boolean', 'default': lambda *a: True}
 }
 
 def _assign_sprint(self, cr, uid, data, context):

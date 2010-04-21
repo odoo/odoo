@@ -23,7 +23,7 @@
             <field name="priority" eval="18"/>
             <field name="arch" type="xml">
                 <field name="partner_bank" position="replace">
-                    <field name="partner_bank" select="2"
+                    <field name="partner_bank"
                         domain="[('partner_id', '=', partner_id)]"
                         on_change="onchange_partner_bank(partner_bank)"/>
                 </field>
@@ -36,7 +36,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_bank" position="replace">
-                    <field name="partner_bank" select="2"
+                    <field name="partner_bank"
                         domain="[('partner_id.ref_companies', 'in', [company_id])]"/>
                 </field>
             </field>

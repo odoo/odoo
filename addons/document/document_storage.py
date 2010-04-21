@@ -103,7 +103,7 @@ class document_storage(osv.osv):
         'create_date': fields.datetime('Date Created', readonly=True),
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'user_id': fields.many2one('res.users', 'Owner'),
-        'group_ids': fields.many2many('res.groups', 'document_directory_group_rel', 'item_id', 'group_id', 'Groups'),
+        'group_ids': fields.many2many('res.groups', 'document_storage_group_rel', 'item_id', 'group_id', 'Groups'),
         'dir_ids': fields.one2many('document.directory', 'parent_id', 'Directories'),
         'type': fields.selection([('db', 'Database'), ('filestore', 'Internal File storage'),
             ('realstore', 'External file storage'), ('virtual', 'Virtual storage')], 'Type', required=True),

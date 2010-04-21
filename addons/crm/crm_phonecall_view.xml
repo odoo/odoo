@@ -161,7 +161,6 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <group>
                <filter icon="gtk-home" string="Today"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),\
                     ('date','&gt;=',datetime.strftime('%%Y-%%m-%%d 00:00:00'))]"
@@ -177,20 +176,19 @@
                <field name="name" string="Call Summary"/>
                <field name="partner_id"/>
                <field name="user_id" widget="selection">
-                   <filter icon="terp-partner" string="My Calls"
-                       domain="[('user_id','=',uid)]"
-                       help="My Phonecalls"/>
+                   <filter icon="terp-partner" name="my_calls" 
+                       domain="[('user_id','=',uid)]" 
+                       help="My Phonecalls"/>               
                    <filter icon="terp-partner"
                        domain="[('user_id','=',False)]"
                        help="Unassigned Phonecalls" />
                </field>
                <field name="section_id"
-                   select="1" widget="selection" string="Section">
+                   select="1" widget="selection" string="Sales Team">
                    <filter icon="terp-crm"
                        domain="[('section_id','=',context.get('section_id',False))]"
                        help="My section" />
                </field>
-               </group>
                <newline/>
                <group expand="1" string="Group By..." colspan="4">
                    <filter string="Partner" icon="terp-crm" domain="[]"

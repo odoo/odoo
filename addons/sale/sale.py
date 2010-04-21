@@ -43,7 +43,9 @@ class sale_shop(osv.osv):
 sale_shop()
 
 
-def _incoterm_get(self, cr, uid, context={}):
+def _incoterm_get(self, cr, uid, context=None):
+    if context is None:
+            context = {}
     cr.execute('select code, code||\', \'||name from stock_incoterms where active')
     return cr.fetchall()
 
@@ -52,7 +54,9 @@ class sale_order(osv.osv):
     _name = "sale.order"
     _description = "Sale Order"
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
         if not default:
             default = {}
         default.update({
@@ -62,18 +66,22 @@ class sale_order(osv.osv):
             'picking_ids': [],
             'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
         })
-        return super(sale_order, self).copy(cr, uid, id, default, context)
+        return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
-    def _amount_line_tax(self, cr, uid, line, context={}):
+    def _amount_line_tax(self, cr, uid, line, context=None):
+        if context is None:
+            context = {}
         val = 0.0
         for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.order_id.partner_invoice_id.id, line.product_id, line.order_id.partner_id):
             val += c['amount']
         return val
 
-    def _amount_all(self, cr, uid, ids, field_name, arg, context):
+    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
         res = {}
         cur_obj = self.pool.get('res.currency')
-        for order in self.browse(cr, uid, ids):
+        for order in self.browse(cr, uid, ids, context):
             res[order.id] = {
                 'amount_untaxed': 0.0,
                 'amount_tax': 0.0,
@@ -83,13 +91,15 @@ class sale_order(osv.osv):
             cur = order.pricelist_id.currency_id
             for line in order.order_line:
                 val1 += line.price_subtotal
-                val += self._amount_line_tax(cr, uid, line, context)
+                val += self._amount_line_tax(cr, uid, line, context=context)
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
             res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
         return res
 
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
         if not ids:
             return {}
         res = {}
@@ -116,12 +126,14 @@ class sale_order(osv.osv):
                 res[r] = 0.0
             else:
                 res[r] = 100.0 * res[r][0] / res[r][1]
-        for order in self.browse(cr, uid, ids, context):
+        for order in self.browse(cr, uid, ids, context=context):
             if order.shipped:
                 res[order.id] = 100.0
         return res
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
+        if context is None:
+            context = {}
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
             if sale.invoiced:
@@ -139,6 +151,8 @@ class sale_order(osv.osv):
         return res
 
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
+        if context is None:
+            context = {}
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
             res[sale.id] = True
@@ -150,7 +164,9 @@ class sale_order(osv.osv):
                 res[sale.id] = False
         return res
 
-    def _invoiced_search(self, cursor, user, obj, name, args, context):
+    def _invoiced_search(self, cursor, user, obj, name, args, context=None):
+        if context is None:
+            context = {}
         if not len(args):
             return []
         clause = ''
@@ -177,7 +193,9 @@ class sale_order(osv.osv):
             return [('id', '=', 0)]
         return [('id', 'in', [x[0] for x in res])]
 
-    def _get_order(self, cr, uid, ids, context={}):
+    def _get_order(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         result = {}
         for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
@@ -277,7 +295,9 @@ class sale_order(osv.osv):
 
     # Form filling
     def unlink(self, cr, uid, ids, context=None):
-        sale_orders = self.read(cr, uid, ids, ['state'])
+        if context is None:
+            context = {}
+        sale_orders = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for s in sale_orders:
             if s['state'] in ['draft', 'cancel']:
@@ -336,7 +356,9 @@ class sale_order(osv.osv):
 
         return {'value': val}
 
-    def shipping_policy_change(self, cr, uid, ids, policy, context={}):
+    def shipping_policy_change(self, cr, uid, ids, policy, context=None):
+        if context is None:
+            context = {}
         if not policy:
             return {}
         inv_qty = 'order'
@@ -347,6 +369,8 @@ class sale_order(osv.osv):
         return {'value': {'invoice_quantity': inv_qty}}
 
     def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
         if 'order_policy' in vals:
             if vals['order_policy'] == 'prepaid':
                 vals.update({'invoice_quantity': 'order'})
@@ -354,7 +378,9 @@ class sale_order(osv.osv):
                 vals.update({'invoice_quantity': 'procurement'})
         return super(sale_order, self).write(cr, uid, ids, vals, context=context)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         if 'order_policy' in vals:
             if vals['order_policy'] == 'prepaid':
                 vals.update({'invoice_quantity': 'order'})
@@ -362,17 +388,23 @@ class sale_order(osv.osv):
                 vals.update({'invoice_quantity': 'procurement'})
         return super(sale_order, self).create(cr, uid, vals, context=context)
 
-    def button_dummy(self, cr, uid, ids, context={}):
+    def button_dummy(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         return True
 
     #FIXME: the method should return the list of invoices created (invoice_ids)
     # and not the id of the last invoice created (res). The problem is that we
     # cannot change it directly since the method is called by the sale order
     # workflow and I suppose it expects a single id...
-    def _inv_get(self, cr, uid, order, context={}):
+    def _inv_get(self, cr, uid, order, context=None):
+        if context is None:
+            context = {}
         return {}
 
-    def _make_invoice(self, cr, uid, order, lines, context={}):
+    def _make_invoice(self, cr, uid, order, lines, context=None):
+        if context is None:
+            context = {}
         a = order.partner_id.property_account_receivable.id
         if order.payment_term:
             pay_term = order.payment_term.id
@@ -408,7 +440,7 @@ class sale_order(osv.osv):
         }
         inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))
-        inv_id = inv_obj.create(cr, uid, inv, context)
+        inv_id = inv_obj.create(cr, uid, inv, context=context)
         data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], pay_term, time.strftime('%Y-%m-%d'))
         if data.get('value', False):
             inv_obj.write(cr, uid, [inv_id], data['value'], context=context)
@@ -458,8 +490,10 @@ class sale_order(osv.osv):
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
         return res
 
-    def action_invoice_cancel(self, cr, uid, ids, context={}):
-        for sale in self.browse(cr, uid, ids):
+    def action_invoice_cancel(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for sale in self.browse(cr, uid, ids, context=context):
             for line in sale.order_line:
                 invoiced = False
                 for iline in line.invoice_lines:
@@ -471,8 +505,10 @@ class sale_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False})
         return True
 
-    def action_invoice_end(self, cr, uid, ids, context={}):
-        for order in self.browse(cr, uid, ids):
+    def action_invoice_end(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for order in self.browse(cr, uid, ids, context=context):
             val = {'invoiced': True}
             if order.state == 'invoice_except':
                 val['state'] = 'progress'
@@ -487,10 +523,12 @@ class sale_order(osv.osv):
 
         return True
 
-    def action_cancel(self, cr, uid, ids, context={}):
+    def action_cancel(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         ok = True
         sale_order_line_obj = self.pool.get('sale.order.line')
-        for sale in self.browse(cr, uid, ids):
+        for sale in self.browse(cr, uid, ids, context=context):
             for pick in sale.picking_ids:
                 if pick.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
@@ -687,8 +725,10 @@ class sale_order(osv.osv):
 
         return True
 
-    def action_ship_end(self, cr, uid, ids, context={}):
-        for order in self.browse(cr, uid, ids):
+    def action_ship_end(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for order in self.browse(cr, uid, ids, context=context):
             val = {'shipped': True}
             if order.state == 'shipping_except':
                 val['state'] = 'progress'
@@ -742,24 +782,30 @@ sale_order()
 # - update it on change product and unit price
 # - use it in report if there is a uos
 class sale_order_line(osv.osv):
-    def _amount_line_net(self, cr, uid, ids, field_name, arg, context):
+    def _amount_line_net(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
         res = {}
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         return res
 
-    def _amount_line(self, cr, uid, ids, field_name, arg, context):
+    def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
         res = {}
         cur_obj = self.pool.get('res.currency')
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
         return res
 
-    def _number_packages(self, cr, uid, ids, field_name, arg, context):
+    def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
         res = {}
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             try:
                 res[line.id] = int(line.product_uom_qty / line.product_packaging.qty)
             except:
@@ -776,12 +822,12 @@ class sale_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
-        'procurement_id': fields.many2one('mrp.procurement', 'Requisition'),
+        'procurement_id': fields.many2one('mrp.procurement', 'Procurement'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
         'price_net': fields.function(_amount_line_net, method=True, string='Net Price', digits_compute= dp.get_precision('Sale Price')),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft':[('readonly',False)]}),
-        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Requisition Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft':[('readonly',False)]}),
         'address_allotment_id': fields.many2one('res.partner.address', 'Allotment Partner'),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -817,7 +863,9 @@ class sale_order_line(osv.osv):
         'product_packaging': lambda *a: False
     }
 
-    def invoice_line_create(self, cr, uid, ids, context={}):
+    def invoice_line_create(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         def _get_line_qty(line):
             if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
                 if line.product_uos:
@@ -825,7 +873,7 @@ class sale_order_line(osv.osv):
                 return line.product_uom_qty
             else:
                 return self.pool.get('mrp.procurement').quantity_get(cr, uid,
-                        line.procurement_id.id, context)
+                        line.procurement_id.id, context=context)
 
         def _get_line_uom(line):
             if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
@@ -834,11 +882,11 @@ class sale_order_line(osv.osv):
                 return line.product_uom.id
             else:
                 return self.pool.get('mrp.procurement').uom_get(cr, uid,
-                        line.procurement_id.id, context)
+                        line.procurement_id.id, context=context)
 
         create_ids = []
         sales = {}
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             if not line.invoiced:
                 if line.product_id:
                     a = line.product_id.product_tmpl_id.property_account_income.id
@@ -889,19 +937,25 @@ class sale_order_line(osv.osv):
             wf_service.trg_write(uid, 'sale.order', sid, cr)
         return create_ids
 
-    def button_cancel(self, cr, uid, ids, context={}):
+    def button_cancel(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
                 raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced !'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
-    def button_confirm(self, cr, uid, ids, context={}):
+    def button_confirm(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         return self.write(cr, uid, ids, {'state': 'confirmed'})
 
-    def button_done(self, cr, uid, ids, context={}):
+    def button_done(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         wf_service = netsvc.LocalService("workflow")
         res = self.write(cr, uid, ids, {'state': 'done'})
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             wf_service.trg_write(uid, 'sale.order', line.order_id.id, cr)
 
         return res
@@ -926,11 +980,13 @@ class sale_order_line(osv.osv):
             pass
         return {'value': value}
 
-    def copy_data(self, cr, uid, id, default=None, context={}):
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
         if not default:
             default = {}
         default.update({'state': 'draft', 'move_ids': [], 'invoiced': False, 'invoice_lines': []})
-        return super(sale_order_line, self).copy_data(cr, uid, id, default, context)
+        return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -961,7 +1017,7 @@ class sale_order_line(osv.osv):
 
         if packaging:
             default_uom = product_obj.uom_id and product_obj.uom_id.id
-            pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
+            pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context=context)
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
 #            qty = qty - qty % q + q
             if qty and (q and not (qty % q) == 0):
@@ -1070,7 +1126,9 @@ class sale_order_line(osv.osv):
             res['value']['price_unit'] = 0.0
         return res
 
-    def unlink(self, cr, uid, ids, context={}):
+    def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         """Allows to delete sale order lines in draft,cancel states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel']:
@@ -1093,7 +1151,8 @@ class sale_config_picking_policy(osv.osv_memory):
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
-        ], 'Shipping Default Policy', required=True),
+        ], 'Shipping Default Policy', required=True,
+           help="You can generate invoices based on sales orders or based on shippings."),
         'step': fields.selection([
             ('one', 'Delivery Order Only'),
             ('two', 'Picking List & Delivery Order')
@@ -1105,11 +1164,13 @@ class sale_config_picking_policy(osv.osv_memory):
     }
     _defaults = {
         'picking_policy': lambda *a: 'direct',
-        'order_policy': lambda *a: 'picking',
+        'order_policy': lambda *a: 'manual',
         'step': lambda *a: 'one'
     }
 
     def execute(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         for o in self.browse(cr, uid, ids, context=context):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
@@ -1118,13 +1179,13 @@ class sale_config_picking_policy(osv.osv_memory):
             if o.step == 'one':
                 md = self.pool.get('ir.model.data')
                 group_id = md._get_id(cr, uid, 'base', 'group_no_one')
-                group_id = md.browse(cr, uid, group_id, context).res_id
+                group_id = md.browse(cr, uid, group_id, context=context).res_id
                 menu_id = md._get_id(cr, uid, 'stock', 'menu_action_picking_tree_delivery')
-                menu_id = md.browse(cr, uid, menu_id, context).res_id
+                menu_id = md.browse(cr, uid, menu_id, context=context).res_id
                 self.pool.get('ir.ui.menu').write(cr, uid, [menu_id], {'groups_id': [(6, 0, [group_id])]})
 
                 location_id = md._get_id(cr, uid, 'stock', 'stock_location_output')
-                location_id = md.browse(cr, uid, location_id, context).res_id
+                location_id = md.browse(cr, uid, location_id, context=context).res_id
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
 sale_config_picking_policy()
 

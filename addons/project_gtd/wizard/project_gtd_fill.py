@@ -19,59 +19,43 @@
 #
 ##############################################################################
 
+from osv import osv, fields
 
-import wizard
-import pooler
-from osv import osv
+class project_timebox_fill(osv.osv_memory):
 
-_gtd_field = {
-    'task_ids': {'relation':'project.task', 'type':'many2many', 'string':'Tasks selection'},
-    'timebox_to_id': {'relation':'project.gtd.timebox', 'type':'many2one', 'string':'Set to Timebox'},
-    'timebox_id': {'relation':'project.gtd.timebox', 'type':'many2one', 'string':'Get from Timebox'}
-}
+    _name = 'project.timebox.fill.plan'
+    _description = 'Project Timebox Fill'
+    _columns = {
+        'timebox_id': fields.many2one('project.gtd.timebox', 'Get from Timebox', required=True),
+        'timebox_to_id': fields.many2one('project.gtd.timebox', 'Set to Timebox', required=True),
+        'task_ids': fields.many2many('project.task', 'project_task_rel', 'task_id', 'fill_id', 'Tasks selection')
+                }
 
-_gtd_arch = """
-    <form string="Timebox tasks selection" width="780">
-        <field name="timebox_id" required="1"/>
-        <field name="timebox_to_id" required="1"/>
-        <field name="task_ids" nolabel="1" colspan="4" height="450" domain="[('timebox_id','=',timebox_id),('state','=','open')]"/>
-    </form>
-"""
+    def _get_from_tb(self, cr, uid, context=None):
+        ids = self.pool.get('project.gtd.timebox').search(cr, uid, [], context=context)
+        return ids and ids[0] or False
 
-class wiz_timebox_fill(wizard.interface):
-    def _fill(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        ids = pool.get('project.gtd.timebox').search(cr, uid, [], context=context)
-        return {
-            'timebox_id': ids and ids[0] or False,
-            'timebox_to_id': data['id']
-        }
+    def _get_to_tb(self, cr, uid, context=None):
+        if 'active_id' in context:
+            return context['active_id']
+        return False
 
-    def _process(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        ids = data['form']['task_ids']
-        pool.get('project.task').write(cr, uid, ids[0][2], {'timebox_id':data['form']['timebox_to_id']})
+    _defaults = {
+         'timebox_id': _get_from_tb,
+         'timebox_to_id': _get_to_tb,
+                 }
+
+    def process(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return {}
+        data = self.read(cr, uid, ids, [])
+        if not data[0]['task_ids']:
+            return {}
+        self.pool.get('project.task').write(cr, uid, data[0]['task_ids'], {'timebox_id':data[0]['timebox_to_id']})
         return {}
 
-    states = {
-        'init' : {
-            'actions' : [_fill],
-            'result' : {
-                'type':'form',
-                'arch':_gtd_arch,
-                'fields':_gtd_field,
-                'state':[
-                    ('end','Cancel', 'gtk-cancel'),
-                    ('process','Add to Timebox')
-                ]
-            }
-        },
-        'process' : {
-            'actions' : [_process],
-            'result' : {'type':'state', 'state':'end'}
-        }
-    }
-wiz_timebox_fill('project.gtd.timebox.fill')
+project_timebox_fill()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

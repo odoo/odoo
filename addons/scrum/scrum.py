@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -75,7 +75,7 @@ class scrum_sprint(osv.osv):
             res.setdefault(sprint.id, 0.0)
             for bl in sprint.backlog_ids:
                 res[sprint.id] += bl.expected_hours
-        return res    
+        return res
     def button_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         return True
@@ -120,7 +120,7 @@ class scrum_sprint(osv.osv):
             v['scrum_master_id']= proj.user_id and proj.user_id.id or False
             v['date_stop'] = (DateTime.now() + DateTime.RelativeDateTime(days=int(proj.sprint_size or 14))).strftime('%Y-%m-%d')
         return {'value':v}
-        
+
 scrum_sprint()
 
 class scrum_product_backlog(osv.osv):
@@ -167,6 +167,8 @@ class scrum_product_backlog(osv.osv):
 
     def button_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        for backlog in self.browse(cr, uid, ids, context=context):
+            self.pool.get('project.task').write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'cancelled'})
         return True
     def button_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
@@ -195,10 +197,12 @@ class scrum_product_backlog(osv.osv):
         'effective_hours': fields.function(_calc_effective, method=True, string='Effective hours'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned Hours'),
         'expected_hours': fields.float('Expected Hours'),
+        'date':fields.datetime("Created Date"),
     }
     _defaults = {
         'state': lambda *a: 'draft',
-        'active': lambda *a: 1
+        'active': lambda *a: 1,
+        'user_id': lambda self,cr,uid,context: uid,
     }
     _order = "sequence"
 scrum_product_backlog()
@@ -234,10 +238,12 @@ class scrum_meeting(osv.osv):
         'name' : fields.char('Meeting Name', size=64, required=True),
         'date': fields.date('Meeting Date', required=True),
         'sprint_id': fields.many2one('scrum.sprint', 'Sprint', required=True),
+        'project_id': fields.many2one('project.project', 'Project'),
         'question_yesterday': fields.text('Tasks since yesterday'),
         'question_today': fields.text('Tasks for today'),
         'question_blocks': fields.text('Blocks encountered'),
         'question_backlog': fields.text('Backlog Accurate'),
+        'task_ids': fields.many2many('project.task', 'meeting_task_rel', 'metting_id', 'task_id', 'Tasks')
     }
     #
     # TODO: Find the right sprint thanks to users and date

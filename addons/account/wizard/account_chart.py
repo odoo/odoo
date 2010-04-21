@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 from tools.translate import _
-import tools
 
 class account_chart(osv.osv_memory):
     """

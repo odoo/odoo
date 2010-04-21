@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <menuitem
+            id="menu_tax_report"
+            name="Taxes"
+            parent="account.menu_finance_generic_reporting" sequence="3"/>
+
+		<record id="view_account_vat_declaration" model="ir.ui.view">
+            <field name="name">Account Vat Declaration</field>
+            <field name="model">account.vat.declaration</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Select Period">
+				    <field name="company_id"/>
+					<newline/>
+				    <field name="based_on"/>
+				    <newline/>
+				    <field name="periods"/>
+			    <group col="2" colspan="4">
+	            		<button icon='gtk-cancel' special="cancel"  string="Cancel" />
+						<button name="create_vat" string="Print VAT Decl." colspan="1" type="object" icon="gtk-ok"/>
+				</group>
+			</form>
+            </field>
+        </record>
+
+        <record id="action_account_vat_declaration" model="ir.actions.act_window">
+            <field name="name">Account Vat Declaration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.vat.declaration</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+		<menuitem
+	        name="Print Taxes Report"
+	        parent="menu_tax_report"
+	        action="action_account_vat_declaration"
+	        id="menu_account_vat_declaration"
+	        icon="STOCK_PRINT"/>
+
+	</data>
+</openerp>

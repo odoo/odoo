@@ -135,7 +135,7 @@
                                     </notebook>
                                   </form>
                              </field>
-                               <button name="%(wizard_schedule_task)d" string="Schedule Tasks" type="action" icon="gtk-jump-to"/>
+                           	<button name="%(action_project_schedule_tasks)d" string="Schedule Tasks" type="action" icon="gtk-jump-to"/>
                         </page>
                     </notebook>
                     <newline/>
@@ -196,7 +196,7 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group colspan="4" col="20">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Phases" icon="terp-project" />
+                        <filter string="Current" domain="[('state','in',('open','draft'))]" help="Draft, Open and Pending Phases" icon="terp-project" name="current"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="Open Phases" icon="terp-project"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-project"/>
                         <separator orientation="vertical"/>
@@ -205,7 +205,7 @@
                             <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-project"/>
                         </field>
                         <field name="responsible_id" widget="selection">
-                            <filter domain="[('responsible_id','=',uid)]" help="My Phase" icon="gtk-execute" string="My Phase"/>
+                            <filter domain="[('responsible_id','=',uid)]" help="My Phase" icon="gtk-execute" name="my_phase"/>
                         </field>
                         <field name="date_start"/>
                     </group>
@@ -225,7 +225,7 @@
             <field name="res_model">project.phase</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,gantt</field>
-            <field name="context">{"search_default_Current":1,"search_default_My Phase":1}</field>
+            <field name="context">{"search_default_current":1,"search_default_my_phase":1}</field>
             <field name="search_view_id" ref="view_project_phase_search"/>
         </record>
 
@@ -296,9 +296,13 @@
     # Menu Items
     # ------------------------------------------------------
 
-        <menuitem action="act_project_phase" id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
+        <menuitem action="act_project_phase"
+            groups="base.group_extended"
+            id="menu_project_phase" parent="project.menu_project_management" sequence="4"/>
         <menuitem icon="terp-project" id="base.menu_main_pm" name="Project Management" sequence="1"/>
-        <menuitem id="menu_pm_resources_project1" name="Resources" parent="base.menu_main_pm" sequence="2"/>
+        <menuitem id="menu_pm_resources_project1"
+            groups="base.group_extended"
+            name="Resources" parent="base.menu_main_pm" sequence="2"/>
         <menuitem action="resource.action_resource_resource_tree" id="menu_view_resource" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_form" id="menu_view_resource_calendar" parent="menu_pm_resources_project1" sequence="1"/>
         <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves" parent="menu_pm_resources_project1" sequence="1"/>

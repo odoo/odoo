@@ -52,7 +52,7 @@ class pos_payment_report(report_sxw.rml_parse):
                                  "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
                                  "and po.state in ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date")
             data=self.cr.dictfetchall()
-        print data
+        
         for d in data:
             self.total += d['price_unit'] * d['qty']
         return data

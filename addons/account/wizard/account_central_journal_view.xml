@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record id="view_account_central_journal" model="ir.ui.view">
+            <field name="name">Account central Journal</field>
+            <field name="model">account.central.journal</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Print Central Journal">
+			    <group col="4" colspan="6">
+				    <field name="journal_id"/>
+				    <field name="period_id"/>
+				</group>
+				<separator colspan="4"/>
+			    <group col="2" colspan="4">
+	            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+						<button name="check_data" string="Print" colspan="1" type="object" icon="gtk-ok"/>
+				</group>
+			</form>
+            </field>
+        </record>
+
+        <record id="action_account_central_journal" model="ir.actions.act_window">
+            <field name="name">Account Central Journal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.central.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+		<menuitem
+	        name="Print Central Journal"
+	        parent="account.menu_generic_report"
+	        action="action_account_central_journal"
+	        id="menu_account_central_journal"
+	        icon="STOCK_PRINT"/>
+
+	</data>
+</openerp>

@@ -81,7 +81,8 @@ class crm_lead(osv.osv):
                     resource_id = False
                     if lead.user_id:
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',lead.user_id.id)])
-                        resource_id = len(resource_ids) or resource_ids[0]
+                        if len(resource_ids):
+                            resource_id = resource_ids[0]
 
                     duration = float(ans.days)
                     if lead.section_id.resource_calendar_id:
@@ -122,7 +123,7 @@ class crm_lead(osv.osv):
         'opportunity_id': fields.many2one('crm.opportunity', 'Opportunity'),
 
         'user_id': fields.many2one('res.users', 'Salesman'),
-        'referred': fields.char('Referred By', size=32),
+        'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 method=True, multi='day_open', type="integer", store=True),

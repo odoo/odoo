@@ -193,7 +193,7 @@ class invoice_create(wizard.interface):
     _create_form = """<?xml version="1.0"?>
     <form string="Invoice on analytic entries">
         <notebook>
-        <page string="Invoicing Data">
+        <page string="Billing Data">
             <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
             <field name="date"/>
             <field name="time"/>

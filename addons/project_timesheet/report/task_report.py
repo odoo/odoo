@@ -18,9 +18,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import mx.DateTime
 
 from osv import fields,osv
-import mx.DateTime
 import tools
 
 #class  task_report(osv.osv):
