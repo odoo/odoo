@@ -179,7 +179,7 @@ def init_logger():
             handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
-        format = '%s %s' % (release.description, release.version)
+        format = '%s %s' % (release.description, release.version) \
                + ':%(levelname)s:%(name)s:%(message)s'
 
     elif tools.config['logfile']:
