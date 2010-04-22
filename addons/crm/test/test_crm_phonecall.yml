@@ -49,7 +49,7 @@
    !python {model: crm.phonecall}: |
      self.action_make_meeting(cr, uid, [ref('crm_phonecall_interviewcall0')])
     
--
+-  |
    I can see that Meeting's calendar view is shown.
    then I click on the date on which I want schedule meeting.
    I fill proper data for that meeting and save it
@@ -69,7 +69,7 @@
 
 -
   #This is not working for yaml    
--
+- |
   I can jump to this meeting by "Meetings" shortcut from my phonecall's form view
 -
   
@@ -84,6 +84,8 @@
     name: Interview call
     section_id: crm.section_sales_department
     user_id: base.user_root
+- |
+  I click on "Schedule" button of this  wizard.    
 -
   !python {model: crm.phonecall2phonecall}: |
     self.action_apply(cr, uid, [ref('crm_phonecall2phonecall_interviewcall0')], {'active_id': ref('crm_phonecall_interviewcall0')})     

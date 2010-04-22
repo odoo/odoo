@@ -1,7 +1,7 @@
 - |
   Now I will test Meetings which may be customer meeting or phonecall meeting or
   internal Meeting.
--  
+- |
   I start by creating a new Meeting.     
 - 
   !record {model: crm.meeting, id: crm_meeting_regardingpresentation0}:
@@ -23,7 +23,7 @@
      - state == "draft" 
 - |
   I can set reminder on meeting if I put reminder "40 minutes before" 
--
+- |
   For that, I first create alarm.
 - 
   !record {model: res.alarm, id: res_alarm_minituesbefore0}:
@@ -51,7 +51,7 @@
 -
   !python {model: crm.meeting}: |
     self.fields_view_get(cr, uid, False, 'calendar', context)
--  
+- | 
   I will search for one of the recurrent event and count the number of meeting.
 -
   !python {model: crm.meeting}: |
