@@ -29,7 +29,8 @@ class report_timesheet_line(osv.osv):
     _columns = {
         'name': fields.char('Year',size=64,required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'day' : fields.date('Day', readonly=True),
+        'date' : fields.date('Date', readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'quantity': fields.float('Quantity', readonly=True),
         'cost': fields.float('Cost', readonly=True),
         'product_id' : fields.many2one('product.product', 'Product',readonly=True),
@@ -46,10 +47,11 @@ class report_timesheet_line(osv.osv):
             create or replace view report_timesheet_line as (
                 select
                     min(l.id) as id,
+                    l.date as date,
                     to_char(l.date,'YYYY') as name,
                     to_char(l.date,'MM') as month,
                     l.user_id,
-                    l.date as day,
+                    to_char(l.date, 'YYYY-MM-DD') as day,
                     l.invoice_id,
                     l.product_id,
                     l.account_id,
@@ -62,8 +64,6 @@ class report_timesheet_line(osv.osv):
                     l.user_id is not null
                 group by
                     l.date,
-                    to_char(l.date,'YYYY'),
-                    to_char(l.date,'MM'),
                     l.user_id,
                     l.product_id,
                     l.account_id,
