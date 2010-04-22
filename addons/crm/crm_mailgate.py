@@ -23,6 +23,7 @@ import time
 import re
 import os
 
+import binascii
 import mx.DateTime
 import base64
 

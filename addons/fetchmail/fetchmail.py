@@ -144,13 +144,14 @@ class mail_server(osv.osv):
         'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]"),
         'object_id': fields.many2one('ir.model',"Model", required=True),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly',False)]}, help="Priority between 0 to 10, select define the order of Processing"),
+        'user_id':fields.many2one('res.users', 'User', required=False),
     }
     _defaults = {
-#        'type': lambda *a: "imap",
         'state': lambda *a: "draft",
         'active': lambda *a: True,
         'priority': lambda *a: 5,
         'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'user_id': lambda self, cr, uid, ctx: uid,
     }
     
     def check_duplicate(self, cr, uid, ids):
