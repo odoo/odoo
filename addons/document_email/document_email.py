@@ -21,11 +21,16 @@
 #
 ##############################################################################
 
+import os
 import binascii
+
+import netsvc
 
 from osv import osv
 from osv import fields
 from tools.translate import _
+
+logger = netsvc.Logger()
 
 class email_to_document(osv.osv):
 
@@ -42,7 +47,7 @@ class email_to_document(osv.osv):
     }
     
     _defaults = {
-        'accept_files': lambda *a: "['txt', 'ppt', 'doc', 'xls', 'pdf', 'jpg', 'png']",
+        'accept_files': lambda *a: "['.txt', '.ppt', '.doc', '.xls', '.pdf', '.jpg', '.png']",
         'user_id': lambda self, cr, uid, ctx: uid,
     }
     
@@ -62,12 +67,19 @@ class email_to_document(osv.osv):
         file_pool = self.pool.get('ir.attachment')
         if server_id:
             ids = self.search(cr, uid, [('server_id', '=', server_id)])
-            id = self.browse(cr, uid, ids[0]).directory_id.id
+            dr = self.browse(cr, uid, ids[0])
+            id = dr.directory_id.id
             
             partner = self.pool.get('email.server.tools').get_partner(cr, uid, msg.get('from'), context)
-            
+            ext = eval(dr.accept_files, {})
             attachents = msg.get('attachments', [])
+
             for attactment in attachents:
+                file_ext = os.path.splitext(attactment)
+                if file_ext[1] not in ext:
+                    logger.notifyChannel('document', netsvc.LOG_WARNING, 'file type %s is not allows to process for directory %s' % (file_ext[1], dr.directory_id.name))
+                    continue
+                    
                 data_attach = {
                     'name': attactment,
                     'datas':binascii.b2a_base64(str(attachents.get(attactment))),
@@ -90,7 +102,7 @@ class email_to_document(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs 
         """
-        
+        logger.notifyChannel('document', netsvc.LOG_WARNING, 'method not implement to keep multipe version of file')
         return True
 email_to_document()
 
