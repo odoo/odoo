@@ -72,6 +72,7 @@ module named account_voucherss
         'wizard/account_invoice_state_view.xml',
         'wizard/account_use_model_view.xml',
         'wizard/account_partner_balance_report_view.xml',
+        'wizard/account_balance_report_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_view.xml',
         'account_end_fy.xml',
