@@ -53,7 +53,10 @@ class crm_opportunity_report(osv.osv):
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date_open': fields.datetime('Opened', readonly=True),
-        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority')
+        'date_deadline': fields.date('Expected Closing', readonly=True),
+        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
+        'date_action': fields.date('Next Action', readonly=True),
+        'planned_revenue': fields.float('Expected Revenue', readonly=True),
     }
 
     def init(self, cr):
@@ -83,6 +86,9 @@ class crm_opportunity_report(osv.osv):
                     c.date_closed as date_closed,
                     c.date_open as date_open,
                     c.priority as priority,
+                    c.date_action as date_action,
+                    c.date_deadline as date_deadline,
+                    sum(c.planned_revenue) as planned_revenue,
                     date_trunc('day',c.create_date) as create_date,
                     sum(planned_revenue) as amount_revenue,
                     sum((planned_revenue*probability)/100.0)::decimal(16,2) as amount_revenue_prob,
@@ -104,7 +110,9 @@ class crm_opportunity_report(osv.osv):
                     create_date,
                     c.date_closed,
                     c.date_open,
-                    c.priority
+                    c.priority,
+                    c.date_action,
+                    c.date_deadline
             )""")
 
 crm_opportunity_report()

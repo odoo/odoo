@@ -28,6 +28,9 @@
                     <field name="date_closed"  invisible="1"/>
                     <field name="date_open" invisible="1"/>
                     <field name="priority" invisible="1"/>
+                    <field name="date_action" invisible="1"/>
+                    <field name="date_deadline" invisible="1"/>
+                    <field name="planned_revenue" sum="Total Expected Revenue"/>
                </tree>
             </field>
         </record>
@@ -82,9 +85,13 @@
             	    <separator orientation="vertical"/>
             	    <field name="priority" />
 	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
+	                <separator orientation="vertical"/>
+	                <field name="date_action" />
 	                <newline/>
 	                <field name="date_closed" />
 	                <field name="date_open" />
+	                <separator orientation="vertical"/>
+	                <field name="date_deadline" />
 	               </group>
             	</xpath>
 				<xpath

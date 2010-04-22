@@ -25,6 +25,8 @@
                     <field name="date_closed" invisible="1"/>
                     <field name="opportunity_id" invisible="1"/>
                     <field name="canal_id" invisible="1"/>
+                    <field name="duration" sum="Total Duration"/>
+                    <field name="date" invisible="1"/>
 				</tree>
             </field>
         </record>
@@ -78,8 +80,11 @@
 	                <separator orientation="vertical"/>
 	                <field name="opportunity_id"/>
 	                <field name="canal_id" widget="selection" />
+	                <separator orientation="vertical"/>
+	                <field name="partner_id"/>
 	                <newline/>
 	                <field name="date_closed"/>
+	                <field name="date"/>
 	             </group>
             	</xpath>
             		<xpath
@@ -92,6 +97,9 @@
 						context="{'group_by':'opportunity_id'}" />
 				    <filter string="Channel" icon="terp-sale" domain="[]"
 						context="{'group_by':'canal_id'}" />
+					<separator orientation="vertical"/>
+					<filter string="Partner" icon="terp-sale" domain="[]"
+						context="{'group_by':'partner_id'}" />
 					</xpath>
               </data>
             </field>
