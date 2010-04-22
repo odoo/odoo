@@ -43,8 +43,11 @@
   !record {model: lunch.order.confirm, id: lunch_order_confirm_0}:
     confirm_cashbox: 'lunch_cashbox_cashbox0'
 -
+  I click on "Confirm Order" button of this wizard.    
+-
   !python {model: lunch.order.confirm}: |
-    self.confirm(cr, uid, [ref('lunch_order_confirm_0')], {'active_ids': [ref('lunch_order_0')]})    
+    self.confirm(cr, uid, [ref('lunch_order_confirm_0')], {'active_ids': [ref('lunch_order_0')]}) 
+       
 - |
   I check that the Cash Moves have been generated with the right box
   name
@@ -73,7 +76,7 @@
 - 
   !record {model: lunch.order.confirm, id: lunch_order_confirm_1}:
     confirm_cashbox: 'lunch_cashbox_cashbox0'
--
+- |
   Now I click on "Confirm Order" button of this wizard.    
 -
   !python {model: lunch.order.confirm}: |
@@ -90,6 +93,8 @@
   !record {model: lunch.cashbox.clean, id: lunch_cashbox_clean_0}:
     {}
 -
+  Now click on "Set to Zero" button of this wizard.
+-
   !python {model: lunch.cashbox.clean, id: lunch_cashbox_clean_0}: |
     self.set_to_zero(cr, uid, [ref('lunch_cashbox_clean_0')], {'active_ids': [ref('lunch_cashbox_cashbox0')]})
       	  
@@ -104,6 +109,9 @@
 - 
   !record {model: lunch.order.cancel, id: lunch_order_cancel_0}:
     {}
+- |
+  I click on "Yes" button of this wizard for cancel order. 
+      
 -
   !python {model: lunch.order.cancel}: |
     self.cancel(cr, uid, [ref('lunch_order_cancel_0')], {'active_ids': [ref('lunch_order_1')]})

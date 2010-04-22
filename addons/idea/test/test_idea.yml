@@ -17,17 +17,20 @@
       are done in our company.\n\n\n\n\n
     title: Technical  presentation for 1 hours in every day
     user_id: base.user_root
+    
 - |
   I check that idea on draft state.
 -
   !assert {model: idea.idea, id: idea_idea_0}:
     - state == 'draft'  
+    
 - |
   I open this idea by click on "Open" button.
 - 
   !workflow {model: idea.idea, action: idea_open, ref: idea_idea_0}
+  
 - |
-  In order to check voting statistics in real systems I will create 2 new Users "user1" and user2"
+  In order to check voting statistics in real systems I will create 2 new Users "user1".
 - 
   !record {model: res.users, id: res_users_user0}: 
     company_id: base.main_company
@@ -35,7 +38,8 @@
     login: user1
     name: user1
     password: user1
-    
+- |
+  And I will also create user2.    
 - 
   !record {model: res.users, id: res_users_user1}:
     company_id: base.main_company
@@ -44,35 +48,41 @@
     name: user2
     password: user2
  
--
+- |
   In order to post vote I connect as user1 and open the idea page
   I click on  "Vote" wizard and vote the idea as "Normal"
 -
   !record {model: idea.post.vote, id: idea_post_vote_0}: 
-    vote: 50 
--
+    vote: 50
+- |
+  Now I click on "Post Vote" button of wizard.     
+- 
   !python {model: idea.post.vote}: |
     uid = ref('res_users_user0')    
     self.do_vote(cr, uid, [ref("idea_post_vote_0")], {'active_id': ref('idea_idea_0')})  
--
+    
+- |
   To add other vote I connect as user2 and open the idea page
   I click on "Vote" wizard and vote the idea as "Very Good"
--
+  
+- |
   !record {model: idea.post.vote, id: idea_post_vote_1}: 
     vote: 100
     
+- |
+  I click on "Post Vote" button of this wizard.    
 -
   !python {model: idea.post.vote}: |
     uid = ref('res_users_user1')
     self.do_vote(cr, uid, [ref("idea_post_vote_1")], {'active_id': ref('idea_idea_0')})  
         
--
+- |
   I can see that the Average score changed in "Average score" field with value 75
 -
   !record {model: idea.idea, id: idea_idea_0}: 
     vote_avg: 75 
    
--
+- |
   I put one comment "We can learn many things from technical presentation" for the idea
 - 
   !record {model: idea.idea, id: idea.idea_idea_0}:
@@ -80,13 +90,12 @@
       - content: We can learn many things from technical presentation
         idea_id: idea.idea_idea_0
         user_id: base.user_root
-
--
+- |
   I close this idea by click on "Close" button.
 -
   !workflow {model: idea.idea, action: idea_close, ref: idea_idea_0}
   
--
+- |
   I check  that the idea's state is now Accepted
 -
   !assert {model: idea.idea, id: idea_idea_0}: 
