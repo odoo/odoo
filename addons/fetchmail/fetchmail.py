@@ -176,6 +176,9 @@ class mail_server(osv.osv):
         return {'value':{'port':port}}
     
     def _process_email(self, cr, uid, server, message, context={}):
+        context.update({
+            'server_id':server.id
+        })
         history_pool = self.pool.get('mail.server.history')
         msg_txt = email.message_from_string(message)
         message_id = msg_txt.get('Message-ID', False)
@@ -289,16 +292,16 @@ class mail_server(osv.osv):
                 logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s' % (model_pool._name))
                 return False
                 
-            for attactment in attachents or []:
-                data_attach = {
-                    'name': attactment,
-                    'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                    'datas_fname': attactment,
-                    'description': 'Mail attachment',
-                    'res_model': server.object_id.model,
-                    'res_id': res_id,
-                }
-                self.pool.get('ir.attachment').create(cr, uid, data_attach)
+#            for attactment in attachents or []:
+#                data_attach = {
+#                    'name': attactment,
+#                    'datas':binascii.b2a_base64(str(attachents.get(attactment))),
+#                    'datas_fname': attactment,
+#                    'description': 'Mail attachment',
+#                    'res_model': server.object_id.model,
+#                    'res_id': res_id,
+#                }
+#                self.pool.get('ir.attachment').create(cr, uid, data_attach)
             
             if server.action_id:
                 action_pool = self.pool.get('ir.actions.server')
@@ -329,53 +332,53 @@ class mail_server(osv.osv):
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             
-            try:
-                if server.type == 'imap':
-                    imap_server = None
-                    if server.is_ssl:
-                        imap_server = IMAP4_SSL(server.server, int(server.port))
-                    else:
-                        imap_server = IMAP4(server.server, int(server.port))
-                    
-                    imap_server.login(server.user, server.password)
-                    imap_server.select()
-                    result, data = imap_server.search(None, '(UNSEEN)')
-                    for num in data[0].split():
-                        result, data = imap_server.fetch(num, '(RFC822)')
-                        if self._process_email(cr, uid, server, data[0][1], context):
-                            imap_server.store(num, '+FLAGS', '\\Seen')
-                            count += 1
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
-                    
-                    imap_server.close()
-                    imap_server.logout()
-                elif server.type == 'pop':
-                    pop_server = None
-                    if server.is_ssl:
-                        pop_server = POP3_SSL(server.server, int(server.port))
-                    else:
-                        pop_server = POP3(server.server, int(server.port))
-                    
-                    #TODO: use this to remove only unread messages
-                    #pop_server.user("recent:"+server.user)
-                    pop_server.user(server.user)
-                    pop_server.pass_(server.password)
-                    pop_server.list()
+            count = 0
+#            try:
+            if server.type == 'imap':
+                imap_server = None
+                if server.is_ssl:
+                    imap_server = IMAP4_SSL(server.server, int(server.port))
+                else:
+                    imap_server = IMAP4(server.server, int(server.port))
+                
+                imap_server.login(server.user, server.password)
+                imap_server.select()
+                result, data = imap_server.search(None, '(UNSEEN)')
+                for num in data[0].split():
+                    result, data = imap_server.fetch(num, '(RFC822)')
+                    if self._process_email(cr, uid, server, data[0][1], context):
+                        imap_server.store(num, '+FLAGS', '\\Seen')
+                        count += 1
+                logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
+                
+                imap_server.close()
+                imap_server.logout()
+            elif server.type == 'pop':
+                pop_server = None
+                if server.is_ssl:
+                    pop_server = POP3_SSL(server.server, int(server.port))
+                else:
+                    pop_server = POP3(server.server, int(server.port))
+                
+                #TODO: use this to remove only unread messages
+                #pop_server.user("recent:"+server.user)
+                pop_server.user(server.user)
+                pop_server.pass_(server.password)
+                pop_server.list()
 
-                    (numMsgs, totalSize) = pop_server.stat()
-                    count = 0
-                    for num in range(1, numMsgs + 1):
-                        (header, msges, octets) = pop_server.retr(num)
-                        msg = '\n'.join(msges)
-                        self._process_email(cr, uid, server, msg, context)
-                        pop_server.dele(num)
+                (numMsgs, totalSize) = pop_server.stat()
+                for num in range(1, numMsgs + 1):
+                    (header, msges, octets) = pop_server.retr(num)
+                    msg = '\n'.join(msges)
+                    self._process_email(cr, uid, server, msg, context)
+                    pop_server.dele(num)
 
-                    pop_server.quit()
-                    
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
-                    
-            except Exception, e:
-                logger.notifyChannel('IMAP', netsvc.LOG_WARNING, '%s' % (e))
+                pop_server.quit()
+                
+                logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
+                
+#            except Exception, e:
+#                logger.notifyChannel('IMAP', netsvc.LOG_WARNING, '%s' % (e))
                 
         return True
 
@@ -404,10 +407,7 @@ class mail_server_history(osv.osv):
 mail_server_history()
 
 class fetchmail_tool(osv.osv):
-    """
-    OpenERP Model : fetchmail_tool
-    """
-    
+
     _name = 'email.server.tools'
     _description = "Email Tools"
     _auto = False
