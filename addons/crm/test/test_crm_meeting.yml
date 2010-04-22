@@ -85,7 +85,9 @@
   If I set Send mail boolean as True I can see that an email is send to 
     specified email address with proper meeting information.
 -
-   #this is not working for send mail boolean as True.
+  #This is not working for send mail boolean as True.
+-
+  I click on "Invite" button of "Invite attendee" wizard.    
 -
   !python {model: base_calendar.invite.attendee}: |
     self.do_invite(cr, uid, [ref('base_calendar_invite_attendee_0')], {'active_id': ref('crm_meeting_regardingpresentation0'), 'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}) 
