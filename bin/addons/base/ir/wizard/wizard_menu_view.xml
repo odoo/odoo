@@ -9,16 +9,9 @@
             <field name="arch" type="xml">
                 <form string="Create Menu">
                     <field name="name"/>
-                    <field name="menu_id"/>
+                    <field name="menu_id" domain="[('parent_id','&lt;&gt;',False)]"/>
                     <field name="model_id"/>
-                    <newline/>
-                    <field colspan="4" name="view_ids">
-                        <tree editable="bottom" string="Views">
-                            <field name="sequence"/>
-                            <field name="view_type"/>
-                            <field name="view_id"/>
-                        </tree>
-                    </field>
+                    <separator colspan="4" string=""/>
                     <label colspan="2" string=""/>
                     <group col="2" colspan="2">
                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
@@ -29,11 +22,11 @@
         </record>
         <act_window context="{'model_id': active_id}" id="act_menu_create" name="Create Menu" res_model="wizard.ir.model.menu.create" target="new" view_mode="form"/>
         <wizard 
-        	id="wizard_server_action_create" 
-        	model="ir.actions.server" 
-        	name="server.action.create" 
-        	string="Create Action"
-        	menu="False"
+            id="wizard_server_action_create" 
+            model="ir.actions.server" 
+            name="server.action.create" 
+            string="Create Action"
+            menu="False"
         />
     </data>
 </openerp>

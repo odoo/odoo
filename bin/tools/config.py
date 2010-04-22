@@ -85,14 +85,14 @@ class configmanager(object):
         }
 
         self.misc = {}
-
-        hasSSL = check_ssl()
+        self.config_file = fname
+        self.has_ssl = check_ssl()
 
         self._LOGLEVELS = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x))
                           for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'NOTSET')])
 
         version = "%s %s" % (release.description, release.version)
-        parser = optparse.OptionParser(version=version)
+        self.parser = parser = optparse.OptionParser(version=version)
 
         parser.add_option("-c", "--config", dest="config", help="specify alternate config file")
         parser.add_option("-s", "--save", action="store_true", dest="save", default=False,
@@ -123,7 +123,7 @@ class configmanager(object):
         parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='deprecated since v6.0, replaced by module decimal_precision')
         parser.add_option('--no-database-list', action="store_false", dest='list_db', default=True, help="disable the ability to return the list of databases")
 
-        if hasSSL:
+        if self.has_ssl:
             group = optparse.OptionGroup(parser, "SSL Configuration")
             group.add_option("-S", "--secure", dest="secure",
                              help="launch server over https instead of http")
@@ -151,7 +151,7 @@ class configmanager(object):
         group.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         group.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
         group.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port', type="int")
-        if hasSSL:
+        if self.has_ssl:
             group.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         group.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
         group.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
@@ -189,7 +189,8 @@ class configmanager(object):
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         parser.add_option_group(group)
 
-        (opt, args) = parser.parse_args()
+    def parse_config(self):
+        (opt, args) = self.parser.parse_args()
 
         def die(cond, msg):
             if cond:
@@ -220,7 +221,8 @@ class configmanager(object):
             rcfilepath = os.path.expanduser('~/.openerp_serverrc')
 
         self.rcfile = os.path.abspath(
-            fname or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath)
+            self.config_file or opt.config \
+                or os.environ.get('OPENERP_SERVER') or rcfilepath)
         self.load()
 
 
@@ -237,7 +239,7 @@ class configmanager(object):
                 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',]
 
-        if hasSSL:
+        if self.has_ssl:
             keys.extend(['smtp_ssl', 'secure_cert_file', 'secure_pkey_file'])
             keys.append('secure')
 
@@ -248,7 +250,7 @@ class configmanager(object):
         keys = ['language', 'translate_out', 'translate_in', 'debug_mode',
                 'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog', 'list_db']
 
-        if hasSSL and not  self.options['secure']:
+        if self.has_ssl and not self.options['secure']:
             keys.append('secure')
 
         for arg in keys:
@@ -440,7 +442,10 @@ class configmanager(object):
 
 config = configmanager()
 
-
+# FIXME:following line should be called explicitly by the server
+# when it starts, to allow doing 'import tools.config' from
+# other python executables without parsing *their* args.
+config.parse_config()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

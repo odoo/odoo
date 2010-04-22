@@ -312,7 +312,13 @@ class YamlInterpreter(object):
         return eval(node.expression, self.eval_context)
     
     def _eval_field(self, model, field_name, expression):
-        column = model._columns[field_name]
+        # TODO this should be refactored as something like model.get_field() in bin/osv
+        if field_name in model._columns:
+            column = model._columns[field_name]
+        elif field_name in model._inherit_fields:
+            column = model._inherit_fields[field_name][2]
+        else:
+            raise KeyError("Object '%s' does not contain field '%s'" % (model, field_name))
         if is_ref(expression):
             elements = self.process_ref(expression)
             if column._type in ("many2many", "one2many"):

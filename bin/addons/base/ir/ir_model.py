@@ -99,8 +99,12 @@ class ir_model(osv.osv):
             pass
         x_custom_model._name = model
         x_custom_model._module = False
-        x_custom_model.createInstance(self.pool, '', cr)
-        x_custom_model._rec_name = 'x_name'
+        a = x_custom_model.createInstance(self.pool, '', cr)
+        if (not a._columns) or ('x_name' in a._columns.keys()):
+            x_name = 'x_name'
+        else:
+            x_name = a._columns.keys()[0]
+        x_custom_model._rec_name = x_name
 ir_model()
 
 

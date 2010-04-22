@@ -76,20 +76,20 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users">
-                	<notebook colspan="4">
-                		<page string="Current Activity">
-                    		<field name="company_id" widget="selection" readonly="0" context="{'user_prefence':True}"/>
-                    		<newline/>
-                    		<separator colspan="4" string="Preferences"/>
-                    	</page>
-                 		<page string="Preferences">
-                    		<field name="password" password="True" readonly="0"/>
-                    		<label colspan="4" string="Please note that you will have to logout and relog if you change your password."/>
-                    		<field name="context_lang" completion="1" readonly="0"/>
-                    		<field name="context_tz" completion="1" readonly="0" colspan="4"/>
-                    		<newline/>
-                    		<field colspan="4" name="signature" readonly="0"/>
-                  		</page>
+                    <notebook colspan="4">
+                        <page string="Current Activity">
+                            <field name="company_id" widget="selection" readonly="0" context="{'user_prefence':True}"/>
+                            <newline/>
+                            <separator colspan="4" string="Preferences"/>
+                        </page>
+                         <page string="Preferences">
+                            <field name="password" password="True" readonly="0"/>
+                            <label colspan="4" string="Please note that you will have to logout and relog if you change your password."/>
+                            <field name="context_lang" completion="1" readonly="0"/>
+                            <field name="context_tz" completion="1" readonly="0" colspan="4"/>
+                            <newline/>
+                            <field colspan="4" name="signature" readonly="0"/>
+                          </page>
                     </notebook>
                 </form>
             </field>
@@ -113,10 +113,14 @@
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field name="context_lang"/>
                             <field name="context_tz"/>
-                            <field colspan="4" name="signature"/>
-                        </page>
-                        <page string="Groups">
-                            <field colspan="4" nolabel="1" name="groups_id"/>
+                            <group colspan="2" col="2">
+                                <separator string="Signature" colspan="2"/>
+                                <field colspan="2" name="signature" nolabel="1"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Access Rights (groups)" colspan="2"/>
+                                <field colspan="2" nolabel="1" name="groups_id"/>
+                            </group>
                         </page>
                         <page string="Roles">
                             <field colspan="4" nolabel="1" name="roles_id"/>
@@ -165,9 +169,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Company">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="partner_id" select="1"/>
-                    <field name="parent_id" select="1"/>
+                    <group colspan="4" col="6">
+                        <field colspan="4" name="name" select="1"/>
+                        <field name="partner_id" select="1"/>
+                        <field name="parent_id" select="1" groups="base.group_multi_company"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field name="rml_header1" colspan="4"/>
@@ -177,13 +183,10 @@
                             <separator colspan="4" string="Your Logo - Use a size of about 450x150 pixels."/>
                             <field colspan="4" name="logo" widget="image"/>
                         </page>
-	                    <page string="Currency">
-	                        <field name="currency_ids" colspan="4" nolabel="1"/>
-	                    </page>
-                        <page string="Header/Footer">
+                        <page string="Header/Footer" groups="base.group_extended">
                             <field colspan="4" name="rml_header" nolabel="1"/>
                         </page>
-                        <page string="Internal Header/Footer">
+                        <page string="Internal Header/Footer" groups="base.group_extended">
                             <field colspan="4" name="rml_header2" nolabel="1"/>
                         </page>
                         <page string="Configuration">
@@ -307,17 +310,12 @@
             <field name="target">new</field>
         </record>
 
-
-
-        <!-- register on configuratuion -->
-
-    </data>
-    <data noupdate="1">
         <record id="config_wizard_step_user" model="ir.actions.todo">
             <field name="action_id" ref="action_config_user_form"/>
             <field name="sequence">10</field>
+            <field name="restart">never</field>
+            <field name="state">done</field>
         </record>
-
         <record id="config_wizard_simple_view" model="ir.actions.todo">
             <field name="action_id" ref="action_config_simple_view_form"/>
             <field name="sequence">1</field>

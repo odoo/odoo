@@ -40,9 +40,7 @@ class res_config_configurable(osv.osv_memory):
         total = self.pool.get('ir.actions.todo')\
             .search_count(cr, uid, [], context)
         open = self.pool.get('ir.actions.todo')\
-            .search_count(cr, uid, [('active','=',True),
-                                    ('state','<>','open')],
-                          context)
+            .search_count(cr, uid, [('state','<>','open')], context)
         if total:
             return round(open*100./total)
         return 100.
@@ -58,8 +56,7 @@ class res_config_configurable(osv.osv_memory):
         todos = self.pool.get('ir.actions.todo')
         self.logger.notifyChannel('actions', netsvc.LOG_INFO,
                                   'getting next %s' % todos)
-        active_todos = todos.search(cr, uid, [('state','=','open'),
-                                              ('active','=',True)],
+        active_todos = todos.search(cr, uid, [('state','=','open')],
                                     limit=1)
         if active_todos:
             return todos.browse(cr, uid, active_todos[0], context=None)
@@ -110,6 +107,13 @@ class res_config_configurable(osv.osv_memory):
         # return the action associated with the menu
         return self.pool.get(current_user_menu.type)\
             .read(cr, uid, current_user_menu.id)
+
+    def start(self, cr, uid, ids, context=None):
+        ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
+        for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
+            if (todo.restart=='always') or (todo.restart=='onskip' and (todo.state in ('skip','cancel'))):
+                todo.write({'state':'open'})
+        return self.next(cr, uid, ids, context)
 
     def next(self, cr, uid, ids, context=None):
         """ Returns the next todo action to execute (using the default
@@ -183,6 +187,7 @@ class res_config_configurable(osv.osv_memory):
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
+
 res_config_configurable()
 
 class res_config_installer(osv.osv_memory):

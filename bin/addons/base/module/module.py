@@ -107,7 +107,11 @@ class module(osv.osv):
                 elif key=='ir.actions.report.xml':
                     res[mnames[data_id.module]]['reports_by_module'] += report_obj.browse(cr,uid,data_id.res_id).name + '\n'
                 elif key=='ir.ui.menu':
-                    res[mnames[data_id.module]]['menus_by_module'] += menu_obj.browse(cr,uid,data_id.res_id).complete_name + '\n'
+                    try:
+                        m = menu_obj.browse(cr,uid,data_id.res_id)
+                        res[mnames[data_id.module]]['menus_by_module'] += m.complete_name + '\n'
+                    except:
+                        pass
             except KeyError, e:
                 pass
         return res

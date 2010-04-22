@@ -68,8 +68,6 @@ class ir_ui_menu(osv.osv):
         if context is None:
             context = {}
         ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order, context=context, count=(count and uid==1))
-        if uid==1:
-            return ids
 
         if not ids:
             if count:
@@ -85,8 +83,8 @@ class ir_ui_menu(osv.osv):
             if key in self._cache:
                 if self._cache[key]:
                     result.append(menu.id)
-                elif not menu.groups_id and not menu.action:
-                    result.append(menu.id)
+                #elif not menu.groups_id and not menu.action:
+                #    result.append(menu.id)
                 continue
 
             self._cache[key] = False

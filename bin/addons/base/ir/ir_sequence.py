@@ -46,7 +46,7 @@ class ir_sequence(osv.osv):
         'suffix': fields.char('Suffix',size=64),
         'number_next': fields.integer('Next Number', required=True),
         'number_increment': fields.integer('Increment Number', required=True),
-        'padding' : fields.integer('Number padding', required=True),
+        'padding' : fields.integer('Number padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {

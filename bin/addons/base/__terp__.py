@@ -30,8 +30,8 @@
     'depends': [],
     'init_xml': [
         'base_data.xml',
-        'base_menu.xml',
         'security/base_security.xml',
+        'base_menu.xml',
         'res/res_security.xml',
         'res/res_config.xml',
         'maintenance/maintenance_security.xml',
