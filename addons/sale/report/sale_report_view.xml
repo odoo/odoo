@@ -24,6 +24,12 @@
                 <field name="state" invisible="1"/>
                 <field name="fiscal_position" invisible="1"/>
                 <field name="payment_term" invisible="1"/>
+                <field name="partner_invoice_id" invisible="1"/>
+                <field name="partner_order_id" invisible="1"/>
+                <field name="partner_shipping_id" invisible="1"/>
+                <field name="pricelist_id" invisible="1"/>
+                <field name="analytic_account_id" invisible="1"/>
+                <field name="date_confirm" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -97,8 +103,16 @@
                     <filter icon="terp-sale" string="Done" domain="[('state','=','done')]"/>
                     <filter icon="terp-sale" string="Cancelled" domain="[('state','=','cancel')]"/>
                     <separator orientation="vertical"/>
+                    <field name="partner_invoice_id"/>
+                    <field name="partner_order_id"/>
+                    <field name="partner_shipping_id"/>
+                    <separator orientation="vertical"/>
+                    <field name="pricelist_id" widget="selection"/>
+                    <field name="analytic_account_id"/>
+                    <newline/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="date"/>
+                    <field name="date_confirm"/>
                 </group>
                 <newline/>
                 <newline/>
@@ -112,6 +126,13 @@
                     <filter string="Partner" icon="terp-sale" context="{'group_by':'partner_id'}"/>
                     <filter string="Payment Term" icon="terp-sale" context="{'group_by':'payment_term'}"/>
                     <filter string="State" icon="terp-sale" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Pricelist" icon="terp-sale" context="{'group_by':'pricelist_id'}"/>
+                    <filter string="Analytic Account" icon="terp-sale" context="{'group_by':'analytic_account_id'}"/>
+                    <newline/>
+                    <filter string="Invoice Address" icon="terp-sale" context="{'group_by':'partner_invoice_id'}"/>
+                    <filter string="Ordering Contact" icon="terp-sale" context="{'group_by':'partner_order_id'}"/>
+                    <filter string="Shipping Address" icon="terp-sale" context="{'group_by':'partner_shipping_id'}"/>
                     <separator orientation="vertical"/>
 					<filter string="Day" icon="terp-sale" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-sale" context="{'group_by':'month'}"/>

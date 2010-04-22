@@ -57,6 +57,12 @@ class sale_report(osv.osv):
             ('done', 'Done'),
             ('cancel', 'Cancelled')
             ], 'Order State', readonly=True),
+        'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True),
+        'partner_order_id': fields.many2one('res.partner.address', 'Ordering Contact', readonly=True),
+        'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address', readonly=True),
+        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'date_confirm': fields.date('Confirmation Date', readonly=True)
     }
     _order = 'date desc'
     def init(self, cr):
@@ -81,7 +87,13 @@ class sale_report(osv.osv):
                      sum(l.product_uom_qty*l.price_unit) as price_total,
                      (sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty * u.factor))::decimal(16,2) as price_average,
                      count(*) as nbr,
-                     s.state
+                     s.state,
+                     s.partner_invoice_id as partner_invoice_id,
+                     s.partner_order_id as partner_order_id,
+                     s.partner_shipping_id as partner_shipping_id,
+                     s.pricelist_id as pricelist_id,
+                     s.project_id as analytic_account_id,
+                     s.date_confirm as date_confirm
                      from
                  sale_order_line l
                  left join
@@ -97,7 +109,13 @@ class sale_report(osv.osv):
                      s.shop_id,
                      s.company_id,
                      s.fiscal_position,
-                     s.payment_term
+                     s.payment_term,
+                     s.partner_invoice_id,
+                     s.partner_order_id,
+                     s.partner_shipping_id,
+                     s.pricelist_id,
+                     s.project_id,
+                     s.date_confirm
             )
         """)
 sale_report()
