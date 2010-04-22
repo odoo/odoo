@@ -66,9 +66,11 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr='//search[@string="Search"]/group[@string="Extended options..."]/filter[@string="Cancel"]' position='after'>
+                <group>
             	    <separator orientation="vertical"/>
             	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
 	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
+	            </group>
             	</xpath>
 			<xpath
 				expr='//search[@string="Search"]/group[@string="Group By..."]/filter[@string="State"]'
