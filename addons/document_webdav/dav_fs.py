@@ -404,7 +404,7 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr,uid,pool, uri2[:])
         except:
             node = False
-        node.headers = self.parent.headers
+        
         objname = uri2[-1]
         ext = objname.find('.') >0 and objname.split('.')[1] or False
 

@@ -57,29 +57,15 @@ class node_calendar_collection(nodes.node_dir):
             }          
     M_NS = { 
            "http://calendarserver.org/ns/" : '_get_dav',
-           }    
-    headers = None
+           }      
+
+
     def get_dav_props(self, cr):                
         return self.PROPS
 
-    def match_dav_eprop(self, cr, match, ns, prop):
-        if ns == "DAV:" and prop == "getetag":
-            dirobj = self.context._dirobj
-            uid = self.context.uid
-            ctx = self.context.context.copy()            
-            tem, dav_time = tuple(match.split(':'))
-            title, cal_id, model, res_id = tuple(tem.split('-'))
-            model_obj = dirobj.pool.get(model)
-            model = model_obj.browse(cr, uid, res_id, context=ctx)
-            write_time = model.write_date or model.create_date
-            wtime = time.mktime(time.strptime(write_time,'%Y-%m-%d %H:%M:%S'))            
-            if dav_time <= wtime:
-                return True
-            return False
-        res = super(node_calendar_collection, self).match_dav_eprop(cr, match, ns, prop)
-        return res
+    
 
-    def get_dav_eprop(self,cr, ns, propname):  
+    def get_dav_eprop(self,cr, ns, propname): 
         if self.M_NS.has_key(ns):
             prefix = self.M_NS[ns]
         else:
@@ -101,88 +87,27 @@ class node_calendar_collection(nodes.node_dir):
         return None
 
     def _file_get(self,cr, nodename=False):
-        return []   
+        return []
 
-    def set_data(self, cr, data, fil_obj = None):
-        res = None
-        uid = self.context.uid
-        calendar_obj = self.context._dirobj.pool.get('basic.calendar')        
-        if self.headers and self.headers.has_key('If-Match'):
-            for match in self.headers['If-Match'].split(','):                
-                if match != '*':                    
-                   tem, dav_time = tuple(match.split(':'))
-                   title, cal_id, model, res_id = tuple(tem.split('-'))
-                   res = calendar_obj.import_cal(cr, uid, base64.encodestring(data), cal_id)
-        
-        return res
+    
+    
 
-
-    def get_domain(self, cr, filters):        
-        res = []
-        dirobj = self.context._dirobj
-        uid = self.context.uid
-        ctx = self.context.context.copy()
-        ctx.update(self.dctx)
-        calendar_obj = dirobj.pool.get('basic.calendar')
-        if not filters:
-            return res
-        if filters.localName == 'calendar-query':      
-            res = []
-            for filter_child in filters.childNodes:
-                if filter_child.nodeType == filter_child.TEXT_NODE:
-                    continue                
-                if filter_child.localName == 'filter':                    
-                    for vcalendar_filter in filter_child.childNodes:
-                        if vcalendar_filter.nodeType == vcalendar_filter.TEXT_NODE:                            
-                            continue
-                        if vcalendar_filter.localName == 'comp-filter':
-                            if vcalendar_filter.getAttribute('name') == 'VCALENDAR':
-                                for vevent_filter in vcalendar_filter.childNodes:
-                                    if vevent_filter.nodeType == vevent_filter.TEXT_NODE:
-                                        continue
-                                    if vevent_filter.localName == 'comp-filter':
-                                        if vevent_filter.getAttribute('name') == 'VEVENT':
-                                            res = [('type','=','vevent')]
-                                        if vevent_filter.getAttribute('name') == 'VTODO':
-                                            res = [('type','=','vtodo')]                               
-            
-            return res
-        elif filters.localName == 'calendar-multiget':
-            ids = []
-            for filter_child in filters.childNodes:
-                if filter_child.nodeType == filter_child.TEXT_NODE:
-                    continue
-                if filter_child.localName == 'href':
-                    if not filter_child.firstChild:
-                        continue
-                    uri = filter_child.firstChild.data  
-                    caluri = uri.split('/')
-                    if len(caluri):
-                        caluri = caluri[-1]
-                        caluri, res_id = tuple(caluri.split('_'))
-                        calendar = calendar_obj.name_search(cr, uid, caluri)
-                        if calendar:                            
-                            calendar_id, calendar_name = calendar[0]                            
-                            if calendar_id not in ids: ids.append(calendar_id)
-            return [('id', 'in', ids)]
-        return res
-
-    def _child_get(self, cr, name=False, parent_id=False, domain=None):
+    def _child_get(self, cr, name=False, parent_id=False, domain=None):        
         dirobj = self.context._dirobj
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
         where = [('collection_id','=',self.dir_id)]                              
-        if name:
-            name, res_id = tuple(name.split('_'))
-            ctx.update({'res_id':res_id})
+        if name:            
             where.append(('name','=',name))
         if not domain:
             domain = []       
         where = where + domain
         fil_obj = dirobj.pool.get('basic.calendar')        
         ids = fil_obj.search(cr,uid,where,context=ctx)
-        res = fil_obj.get_calendar_object(cr, uid, ids, parent=self, context=ctx)        
+        res = []
+        for calender in fil_obj.browse(cr, uid, ids, context=ctx):
+            res.append(node_calendar(calender.name, self, self.context, calender))
         return res
 
     def _get_dav_owner(self, cr):
@@ -210,7 +135,193 @@ class node_calendar_collection(nodes.node_dir):
         return str(result)   
         
 
-class node_calendar(nodes.node_class):
+class node_calendar(nodes.node_class):   
+    our_type = 'collection' 
+    PROPS = {
+            "http://calendarserver.org/ns/" : ('getctag'),
+            "urn:ietf:params:xml:ns:caldav" : (
+                    'calendar-description',
+                    'calendar-data',
+                    'calendar-home-set',
+                    'calendar-user-address-set',
+                    'schedule-inbox-URL',
+                    'schedule-outbox-URL',)}
+    M_NS = {
+           "DAV:" : '_get_dav', 
+           "http://calendarserver.org/ns/" : '_get_dav',
+           "urn:ietf:params:xml:ns:caldav" : '_get_caldav'} 
+
+    def __init__(self,path, parent, context, calendar):
+        super(node_calendar,self).__init__(path, parent,context)
+        self.calendar_id = calendar.id
+        self.mimetype = 'application/x-directory'
+        self.create_date = calendar.create_date
+        self.write_date = calendar.write_date or calendar.create_date
+        self.content_length = 0
+        self.displayname = calendar.name
+        self.cal_type = calendar.type
+
+    def _get_dav_getctag(self, cr):        
+        result = self.get_etag(cr) 
+        return str(result) 
+
+    def match_dav_eprop(self, cr, match, ns, prop):
+        if ns == "DAV:" and prop == "getetag":
+            dirobj = self.context._dirobj
+            uid = self.context.uid
+            ctx = self.context.context.copy()            
+            tem, dav_time = tuple(match.split(':'))
+            model, res_id = tuple(tem.split('_'))
+            model_obj = dirobj.pool.get(model)
+            model = model_obj.browse(cr, uid, res_id, context=ctx)
+            write_time = model.write_date or model.create_date
+            wtime = time.mktime(time.strptime(write_time,'%Y-%m-%d %H:%M:%S'))            
+            if dav_time <= wtime:
+                return True
+            return False
+        res = super(node_calendar, self).match_dav_eprop(cr, match, ns, prop)
+        return res 
+        
+         
+    def get_domain(self, cr, filters):        
+        res = []
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        calendar_obj = dirobj.pool.get('basic.calendar')
+        if not filters:
+            return res
+        if filters.localName == 'calendar-query':      
+            res = []
+            for filter_child in filters.childNodes:
+                if filter_child.nodeType == filter_child.TEXT_NODE:
+                    continue                
+                if filter_child.localName == 'filter':                    
+                    for vcalendar_filter in filter_child.childNodes:
+                        if vcalendar_filter.nodeType == vcalendar_filter.TEXT_NODE:                            
+                            continue
+                        if vcalendar_filter.localName == 'comp-filter':
+                            if vcalendar_filter.getAttribute('name') == 'VCALENDAR':
+                                for vevent_filter in vcalendar_filter.childNodes:
+                                    if vevent_filter.nodeType == vevent_filter.TEXT_NODE:
+                                        continue
+                                    if vevent_filter.localName == 'comp-filter':
+                                        if vevent_filter.getAttribute('name') == 'VEVENT':    
+                                            res = [('type','=','vevent')]
+                                        if vevent_filter.getAttribute('name') == 'VTODO':
+                                            res = [('type','=','vtodo')]                                           
+            return res
+        elif filters.localName == 'calendar-multiget':
+            names = []
+            for filter_child in filters.childNodes:
+                if filter_child.nodeType == filter_child.TEXT_NODE:
+                    continue
+                if filter_child.localName == 'href':
+                    if not filter_child.firstChild:
+                        continue
+                    uri = filter_child.firstChild.data  
+                    caluri = uri.split('/')
+                    if len(caluri):
+                        caluri = caluri[-2]
+                        if caluri not in names : names.append(caluri)
+            res = [('name','in',names)]
+            return res
+        return res  
+
+    def children(self, cr, domain=None):     
+        return self._child_get(cr, domain=domain)
+
+    def child(self,cr, name, domain=None):            
+        res = self._child_get(cr, name, domain=domain)                
+        if res:
+            return res[0]
+        return None 
+
+
+    def _child_get(self, cr, name=False, parent_id=False, domain=None):
+        dirobj = self.context._dirobj
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)   
+        where = []                               
+        if name:            
+            where.append(('id','=',int(name))) 
+        if not domain:
+            domain = []
+        #for opr1, opt, opr2 in domain:
+        #    if opr1 == 'type' and opr2 != self.cal_type:
+        #        return []
+
+        fil_obj = dirobj.pool.get('basic.calendar')  
+        ids = fil_obj.search(cr, uid, domain)
+        res = []
+        if self.calendar_id in ids:
+            res = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self, domain=where, context=ctx)  
+        return res    
+
+       
+   
+    def get_dav_props(self, cr):        
+        return self.PROPS
+
+    def get_dav_eprop(self,cr, ns, propname):
+        if self.M_NS.has_key(ns):
+            prefix = self.M_NS[ns]
+        else:
+            print "No namespace:",ns, "( for prop:", propname,")"
+            return None
+        propname = propname.replace('-','_')
+        mname = prefix + "_" + propname
+        if not hasattr(self, mname):
+            return None
+
+        try:
+            m = getattr(self, mname)
+            r = m(cr)            
+            return r
+        except AttributeError, e:
+            print 'Property %s not supported' % propname
+            print "Exception:", e            
+        return None
+
+
+    def create_child(self,cr,path,data):
+        """ API function to create a child file object and node
+            Return the node_* created
+        """
+        return self.set_data(cr, data)        
+
+
+    def set_data(self, cr, data, fil_obj = None):
+        uid = self.context.uid
+        calendar_obj = self.context._dirobj.pool.get('basic.calendar')
+        return calendar_obj.import_cal(cr, uid, base64.encodestring(data), self.calendar_id)
+
+    def get_data_len(self, cr, fil_obj = None):        
+        return self.content_length
+
+    
+    def _get_ttag(self,cr):
+        return 'calendar-%d' % (self.calendar_id,)   
+    
+    
+
+    def get_etag(self, cr):
+        """ Get a tag, unique per object + modification.
+
+            see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
+        return self._get_ttag(cr) + ':' + self._get_wtag(cr)
+
+    def _get_wtag(self, cr):
+        """ Return the modification time as a unique, compact string """
+        if self.write_date:
+            wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
+        else: wtime = time.time()
+        return str(wtime)   
+
+
+class res_node_calendar(nodes.node_class):
     our_type = 'file'
     PROPS = {
             "http://calendarserver.org/ns/" : ('getctag'),
@@ -225,23 +336,27 @@ class node_calendar(nodes.node_class):
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'} 
 
-    def __init__(self,path, parent, context, calendar):
-        super(node_calendar,self).__init__(path, parent,context)
-        self.calendar_id = calendar.id
+    def __init__(self,path, parent, context, res_obj, res_model, res_id=None):
+        super(res_node_calendar,self).__init__(path, parent, context)
+        self.calendar_id = parent.calendar_id
         self.mimetype = 'text/calendar'
-        self.create_date = calendar.create_date
-        self.write_date = calendar.write_date or calendar.create_date
+        self.create_date = parent.create_date
+        self.write_date = parent.write_date or parent.create_date
+        if res_obj:
+            self.create_date = res_obj.create_date
+            self.write_date = res_obj.write_date or res_obj.create_date
+            self.displayname = res_obj.name
+
         self.content_length = 0
-        self.displayname = calendar.name
-        self.model = False
-        self.res_id = False
+        
+        self.model = res_model
+        self.res_id = res_id
          
     def open(self, cr, mode=False):
         uid = self.context.uid        
         if self.type in ('collection','database'):
-            return False            
-        fobj = self.context._dirobj.pool.get('basic.calendar').browse(cr, uid, self.calendar_id, context=self.context.context)        
-        s = StringIO.StringIO(self.get_data(cr, fobj))        
+            return False           
+        s = StringIO.StringIO(self.get_data(cr))        
         s.name = self
         return s           
 
@@ -288,7 +403,7 @@ class node_calendar(nodes.node_class):
         return calendar_obj.import_cal(cr, uid, base64.encodestring(data), self.calendar_id)
 
     def _get_ttag(self,cr):
-        return 'calendar-%d-%s-%d' % (self.calendar_id, self.model, self.res_id)
+        return '%s_%d' % (self.model, self.res_id)
 
 
     
@@ -370,5 +485,5 @@ class node_calendar(nodes.node_class):
         if self.write_date:
             wtime = time.mktime(time.strptime(self.write_date, '%Y-%m-%d %H:%M:%S'))
         else: wtime = time.time()
-        return str(wtime)             
+        return str(wtime)          
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4

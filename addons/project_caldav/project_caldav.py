@@ -26,6 +26,8 @@ class project_task(osv.osv):
     _name = "project.task"
     _inherit = ["calendar.todo", "project.task"]
     _columns = {
+        'write_date' : fields.datetime('Write Date'),
+        'create_date' : fields.datetime('Create Date'),
         'attendee_ids': fields.many2many('calendar.attendee', \
                                          'task_attendee_rel', 'task_id', 'attendee_id', 'Attendees'),
                 }

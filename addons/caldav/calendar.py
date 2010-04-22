@@ -31,7 +31,7 @@ import pytz
 import re
 import tools
 import time
-from caldav_node import node_calendar
+from caldav_node import res_node_calendar
 
 try:
     import vobject
@@ -258,7 +258,7 @@ class CalDAV(object):
         if not datas:
             return
         timezones = []
-        for data in datas:
+        for data in datas:           
             tzval = None
             vevent = ical.add(name)
             for field in self.__attribute__.keys():
@@ -438,9 +438,11 @@ class Calendar(CalDAV, osv.osv):
             'write_date': fields.datetime('Modifided Date'),
     }
 
-    def get_calendar_object(self, cr, uid, ids, parent=None, context=None):
+    def get_calendar_objects(self, cr, uid, ids, parent=None, domain=None, context=None):
         if not context:
             context = {}
+        if not domain:
+            domain = []
         res = []
         ctx_res_id = context.get('res_id', None) 
         ctx_model = context.get('model', None)  
@@ -450,16 +452,15 @@ class Calendar(CalDAV, osv.osv):
                     continue
                 if line.name in ('valarm', 'attendee'):
                     continue
-                domain = eval(line.domain)
+                line_domain = eval(line.domain)
+                line_domain += domain
                 if ctx_res_id:                    
-                    domain += [('id','=',ctx_res_id)]
+                    line_domain += [('id','=',ctx_res_id)]
                 mod_obj = self.pool.get(line.object_id.model)
-                data_ids = mod_obj.search(cr, uid, domain, context=context)                           
-                for data_id in data_ids:
+                data_ids = mod_obj.search(cr, uid, line_domain, context=context) 
+                for data in mod_obj.browse(cr, uid, data_ids, context):
                     ctx = parent and parent.context or None
-                    node = node_calendar('%s_%s' %(cal.name, data_id), parent, ctx, cal)
-                    node.model = line.object_id.model
-                    node.res_id = data_id                    
+                    node = res_node_calendar('%s' %data.id, parent, ctx, data, line.object_id.model, data.id)                                   
                     res.append(node)
         return res
 
@@ -510,12 +511,11 @@ class Calendar(CalDAV, osv.osv):
         ical_data = base64.decodestring(content)
         parsedCal = vobject.readOne(ical_data)
         if not data_id:
-            data_id = self.search(cr, uid, [])[0]            
-        
-        cal = self.read(cr, uid, data_id, context=context)[0]
+            data_id = self.search(cr, uid, [])[0]  
+        cal = self.browse(cr, uid, data_id, context=context)
         cal_children = {}
         count = 0
-        for line in self.pool.get('basic.calendar.lines').browse(cr, uid, cal['line_ids']):
+        for line in cal.line_ids:
             cal_children[line.name] = line.object_id.model
         for child in parsedCal.getChildren():
             if child.name.lower() in cal_children:
