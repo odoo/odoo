@@ -33,7 +33,6 @@ class report_stock_picking(osv.osv):
         'reference': fields.char('Reference', size=64, select=True),
         'nbr': fields.integer('# of Lines', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
-        'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty': fields.float('# of Products', readonly=True),
         'date': fields.date('Date', readonly=True),
         'avg_days_to_deliver': fields.float('Avg Days to Deliver', digits=(16,2), readonly=True, group_operator="avg",
@@ -54,7 +53,6 @@ class report_stock_picking(osv.osv):
                     sp.address_id as partner_id,
                     to_date(to_char(sp.create_date, 'MM-dd-YYYY'),'MM-dd-YYYY') as date,
                     count(sm.id) as nbr,
-                    sm.product_id,
                     sum(sm.product_qty) as product_qty,
                     sp.type,
                     sp.name as reference,
@@ -65,7 +63,6 @@ class report_stock_picking(osv.osv):
                 left join stock_picking as sp ON (sm.picking_id=sp.id)
                 group by sp.type,
                      sp.create_date,
-                     sm.product_id,
                      sp.address_id,
                      sp.name,
                      sp.origin,

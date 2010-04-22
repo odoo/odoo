@@ -17,7 +17,6 @@
                		<field name="date" invisible="1"/>
 					<field name="reference" invisible="1"/>
 					<field name="partner_id" invisible="1"/>
-					<field name="product_id" invisible="1"/>
 					<field name="origin" invisible="1"/>
 					<field name="type" invisible="1"/>
 					<field name="state" invisible="1"/>
@@ -34,7 +33,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Picking" type="bar">
-                    <field name="product_id"/>
+                    <field name="partner_id"/>
                     <field name="nbr" operator="+"/>
                     <field name="state" group="True"/>
                 </graph>
