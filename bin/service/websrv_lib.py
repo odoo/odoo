@@ -295,7 +295,7 @@ class MultiHTTPHandler(FixSendError,BaseHTTPRequestHandler):
         elif not words:
             return False
         else:
-            self.send_error(400, "Bad request syntax (%r)" % requestline)
+            #self.send_error(400, "Bad request syntax (%r)" % requestline)
             return False
         self.request_version = version
         self.command, self.path, self.version = command, path, version
