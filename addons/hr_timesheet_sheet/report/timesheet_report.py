@@ -31,6 +31,7 @@ class timesheet_report(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'name': fields.char('Description', size=64,readonly=True),
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'nbr': fields.integer('#Nbr',readonly=True),
@@ -61,6 +62,7 @@ class timesheet_report(osv.osv):
                         htss.date_to,
                         to_char(htss.date_current,'YYYY') as year,
                         to_char(htss.date_current,'MM') as month,
+                        to_char(htss.date_current, 'YYYY-MM-DD') as day,
                         count(*) as nbr,
                         sum(day.total_attendance) as total_att,
                         sum(day.total_timesheet) as total_ts,
@@ -77,6 +79,7 @@ class timesheet_report(osv.osv):
                     group by
                         to_char(htss.date_current,'YYYY'),
                         to_char(htss.date_current,'MM'),
+                        to_char(htss.date_current, 'YYYY-MM-DD'),
                         aal.account_id,
                         htss.date_from,
                         htss.date_to,
