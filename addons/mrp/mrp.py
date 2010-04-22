@@ -162,16 +162,20 @@ class mrp_bom(osv.osv):
         """
         result = {}
         bom_obj = self.pool.get('mrp.bom')
+        bom_parent = bom_obj.browse(cr, uid, context['active_id'])
         for bom in self.browse(cr, uid, ids, context=context):
-            result[bom.id] = map(lambda x: x.id, bom.bom_lines)
+            if bom_parent.multi_level_bom or bom.id == context['active_id']:
+                result[bom.id] = map(lambda x: x.id, bom.bom_lines)
+            else:
+                result[bom.id] = []
             if bom.bom_lines:
                 continue
             ok = ((name=='child_complete_ids') and (bom.product_id.supply_method=='produce'))
-            if bom.type=='phantom' or ok:
+            if (bom.type=='phantom' or ok) and bom_parent.multi_level_bom:
                 sids = bom_obj.search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
                 if sids:
                     bom2 = bom_obj.browse(cr, uid, sids[0], context=context)
-                    result[bom.id] += map(lambda x: x.id, bom2.bom_lines)                 
+                    result[bom.id] += map(lambda x: x.id, bom2.bom_lines)
 
         return result
     
@@ -267,7 +271,7 @@ class mrp_bom(osv.osv):
                 v['name'] = prod.name
             return {'value': v}
         return {}
-
+    
     def _bom_find(self, cr, uid, product_id, product_uom, properties=[]):
         """ Finds BoM for particular product and product uom.
         @param product_id: Selected product.
