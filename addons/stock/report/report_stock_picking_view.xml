@@ -21,6 +21,7 @@
 					<field name="type" invisible="1"/>
 					<field name="state" invisible="1"/>
 					<field name="product_qty" sum="# of Products" />
+					<field name="nbp" sum="# of Pickings" />
 					<field name="nbr" sum="# of Lines" />
 			        <field name="avg_days_to_deliver" sum='Avg Days to Deliver'/>
 				</tree>
@@ -35,7 +36,8 @@
                 <graph orientation="horizontal" string="Picking" type="bar">
                     <field name="partner_id"/>
                     <field name="nbr" operator="+"/>
-                    <field name="state" group="True"/>
+                    <field name="product_qty" operator="+"/>
+                    <field name="nbp" operator="+"/>
                 </graph>
             </field>
         </record>
@@ -85,7 +87,7 @@
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_report_stock_picking_tree"/>
             <field name="search_view_id" ref="view_report_report_stock_picking_filter"/>
-            <field name="context">{'search_default_Partner': 1,'search_default_month': 1}</field>
+            <field name="context">{'search_default_Partner':1,'search_default_month':1,'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
        	<record model="ir.actions.act_window.view" id="action_report_report_stock_picking_tree">
