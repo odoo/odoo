@@ -326,10 +326,6 @@ class email_server(osv.osv):
         return self.fetch_mail(cr, uid, ids, context)
     
     def fetch_mail(self, cr, uid, ids, context={}):
-        fp = os.popen('ping www.google.com -c 1 -w 5',"r")
-        if not fp.read():
-            logger.notifyChannel('imap', netsvc.LOG_WARNING, 'No address associated with hostname !')
-
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             

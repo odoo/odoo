@@ -483,10 +483,6 @@ class smtpclient(osv.osv):
         return result
     
     def _send_emails(self, cr, uid, ids, context={}):
-        fp = os.popen('ping www.google.com -c 1 -w 5',"r")
-        if not fp.read():
-            return False
-        
         queue = self.pool.get('email.smtpclient.queue')
         history = self.pool.get('email.smtpclient.history')
         queue.write(cr, uid, ids, {'state':'sending'})
