@@ -33,10 +33,10 @@
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [
-        'wizard/wizard_view.xml',
         'wizard/wiki_wiki_page_open_view.xml',
         'wizard/wiki_create_menu_view.xml',
         'wizard/wiki_make_index_view.xml',
+        'wizard/wiki_show_diff_view.xml',
         'wiki_view.xml',
         'data/wiki_quickstart.xml',
         'data/wiki_main.xml',
