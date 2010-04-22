@@ -3,7 +3,7 @@
   I will create one lunch order and then check the effect on cashboxes and cashmoves
   
 - |
-  Given that I have a category of lunch products "Sandwich".
+  Given that I have a category of lunch products "Burger".
 - 
   !record {model: lunch.category, id: lunch_category_burger0}:
     name: Burger
@@ -60,7 +60,7 @@
     - sum_remain == -2.75
       
 - |
-  I create a new lunch order "LU002" for the "Club" product, at another date.
+  I create a new lunch order "LU002" for the "Club1" product, at another date.
 - 
   !record {model: lunch.order, id: lunch_order_1}:
     date: '2010-04-22'
