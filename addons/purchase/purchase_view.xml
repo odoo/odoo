@@ -17,12 +17,12 @@
 
 
           <!--Inventory control-->
-      <menuitem id="menu_procurement_management_nventory" name="Inventory Control"
+      <menuitem id="menu_procurement_management_inventory" name="Inventory Control"
             parent="base.menu_purchase_root" sequence="4"/>
-      <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_nventory"
+      <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
               name="Incoming Shipments" sequence="9"/>
         <menuitem action="stock.action_reception_picking_move" id="menu_action_reception_picking_move"
-              name="Incoming Products" parent="menu_procurement_management_nventory" sequence="10"/>
+              name="Incoming Products" parent="menu_procurement_management_inventory" sequence="10"/>
 
      <!--Invoice control-->
       <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
@@ -92,7 +92,9 @@
                                     <field name="product_qty"/>
                                     <field name="product_uom"/>
                                     <field name="price_unit"/>
-                                    <field name="price_subtotal" groups="base.group_extended"/>
+ 									<field name="price_subtotal" groups="base.group_extended"/>
+                                    <field name="invoiced"/>
+                        			<field name="state"/>                                    
                                 </tree>
                                 <!-- default form view -->
                             </field>
@@ -224,7 +226,7 @@
                         <page string="Order Line">
                             <field colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
                             <field context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
-                            <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
+                            <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position)"/>
                             <field colspan="4" name="name"/>
                             <field name="date_planned" widget="date"/>
                             <field name="price_unit"/>
@@ -242,8 +244,15 @@
                             <field name="account_analytic_id" colspan="4"/>
                             <separator colspan="4" string="Taxes"/>
                             <field colspan="4" nolabel="1" name="taxes_id" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
+	                        <separator colspan="4" string="Manual Invoices"/>
+	                        <field name="invoiced"/>
+	                        <newline/>
+	                        <field colspan="4" name="invoice_lines" nolabel="1" widget="many2many"/>                            
                         </page>
                     </notebook>
+					<group>
+						<field name="state" />
+                    </group>                    
                 </form>
             </field>
         </record>
@@ -262,6 +271,7 @@
                     <field name="product_uom"/>
                     <field name="price_unit"/>
                     <field name="price_subtotal"/>
+                    <field name="invoiced"/>
                 </tree>
             </field>
         </record>
@@ -280,5 +290,39 @@
             name="Product purchases"
             res_model="purchase.order.line"
             src_model="product.product"/>
+<!-- 
+	<record model="ir.values" id="action_merge_purchase_order">
+                <field name="object" eval="1" />
+                <field name="name">Purchase Order</field>
+                <field name="key2">client_action_multi</field>
+                <field name="value" eval="'ir.actions.act_window,' + str(ref('action_view_purchase_order_group'))" />
+                <field name="key">action</field>
+                <field name="model">purchase.order</field>
+         </record>
+          -->
+
+        <record id="purchase_line_form_action2" model="ir.actions.act_window">
+            <field name="name">Lines To Invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="domain">[('state','in',('confirmed','done')), ('invoiced','=',False)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_order_line_tree"/>
+            <field name="act_window_id" ref="purchase_line_form_action2"/>
+        </record>
+        <record id="purchase_line_form_action_form2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="purchase_order_line_form"/>
+            <field name="act_window_id" ref="purchase_line_form_action2"/>
+        </record>
+         <menuitem action="purchase_line_form_action2" id="menu_purchase_line_order_draft" parent="menu_procurement_management_invoice"/>
+          
+
     </data>
 </openerp>

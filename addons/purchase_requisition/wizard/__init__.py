@@ -19,41 +19,7 @@
 #
 ##############################################################################
 
-import wizard
-import netsvc
-
-def _invoice_confirm(self, cr, uid, data, context):
-    wf_service = netsvc.LocalService('workflow')
-    for id in data['ids']:
-        wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_open', cr)
-    return {}
-
-class wizard_invoice_confirm(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_invoice_confirm], 
-            'result': {'type':'state', 'state':'end'}
-        }
-    }
-wizard_invoice_confirm('account.invoice.state.confirm')
-
-
-def _invoice_cancel(self, cr, uid, data, context):
-    wf_service = netsvc.LocalService('workflow')
-    for id in data['ids']:
-        wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
-    return {}
-
-class wizard_invoice_cancel(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_invoice_cancel], 
-            'result': {'type':'state', 'state':'end'}
-        }
-    }
-wizard_invoice_cancel('account.invoice.state.cancel')
-
-
+import purchase_requisition_partner
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

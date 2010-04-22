@@ -49,7 +49,7 @@
         <!-- manual reconcile -->
         <wizard id="wizard_reconcile" model="account.move.line" name="account.move.line.reconcile" string="Reconcile Entries"/>
 
-        <wizard id="wizard_reconcile_unreconcile" model="account.move.reconcile" name="account.reconcile.unreconcile" string="Unreconcile Entries"/>
+<!--        <wizard id="wizard_reconcile_unreconcile" model="account.move.reconcile" name="account.reconcile.unreconcile" string="Unreconcile Entries"/>-->
 
 
  <!--       <wizard id="wizard_reconcile_select" menu="False" model="account.move.line" name="account.move.line.reconcile.select" string="Reconcile entries"/>
@@ -57,7 +57,7 @@
  -->
 
         <!-- unreconcile -->
-        <wizard id="wizard_unreconcile" model="account.move.line" name="account.move.line.unreconcile" string="Unreconcile Entries"/>
+<!--        <wizard id="wizard_unreconcile" model="account.move.line" name="account.move.line.unreconcile" string="Unreconcile Entries"/>-->
 
 <!--   unreconcile
 
@@ -76,8 +76,8 @@
         <menuitem icon="STOCK_PRINT" action="wizard_aged_trial_balance" id="menu_aged_trial_balance" parent="next_id_22" type="wizard"/>
 
         <!-- report-related wizards -->
-        <wizard id="wizard_partner_balance_report" menu="False" model="res.partner" name="account.partner.balance.report" string="Partner Balance"/>
-        <menuitem icon="STOCK_PRINT" action="wizard_partner_balance_report" id="menu_partner_balance" parent="account.next_id_22" type="wizard"/>
+<!--        <wizard id="wizard_partner_balance_report" menu="False" model="res.partner" name="account.partner.balance.report" string="Partner Balance"/>
+        <menuitem icon="STOCK_PRINT" action="wizard_partner_balance_report" id="menu_partner_balance" parent="account.next_id_22" type="wizard"/> -->
 
         <wizard id="wizard_third_party_ledger" menu="False" model="res.partner" name="account.third_party_ledger.report" string="Partner Ledger"/>
         <menuitem icon="STOCK_PRINT" action="wizard_third_party_ledger" id="menu_third_party_ledger" parent="account.next_id_22" type="wizard"/>
@@ -85,9 +85,9 @@
         <wizard id="wizard_balance_report" keyword="client_print_multi" model="account.account" name="account.account.balance.report" string="Account Balance"/>
         <wizard id="wizard_general_ledger_report" keyword="client_print_multi" model="account.account" name="account.general.ledger.report" string="General Ledger"/>
 
-        <wizard id="wizard_invoice_state_confirm" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.confirm" string="Confirm draft invoices" groups="base.group_user"/>
-        <wizard id="wizard_invoice_state_cancel" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.cancel" string="Cancel selected invoices" groups="base.group_user"/>
-
+<!--        <wizard id="wizard_invoice_state_confirm" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.confirm" string="Confirm draft invoices" groups="base.group_user"/>-->
+<!--        <wizard id="wizard_invoice_state_cancel" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.cancel" string="Cancel selected invoices" groups="base.group_user"/>-->
+<!---->
 
         <!-- account.move validate -->
 <!--        <wizard id="wizard_validate_account_moves" menu="False" model="account.move" name="account.move.validate" string="Validate Ledger Postings"/>
@@ -96,10 +96,10 @@
         <wizard id="wizard_validate_account_moves_line" menu="True" model="account.move.line" name="account.move_line.validate" string="Validate Ledger Postings"/>-->
 
 		<!-- Use Models -->
-        <wizard string="Create Entries From Models" model="account.model" name="account_use_models" menu="False" id="wizard_account_use_model"/>
-        <menuitem action="wizard_account_use_model" type="wizard" parent="account.menu_finance_recurrent_entries" id="menu_account_use_model"/>
+<!--        <wizard string="Create Entries From Models" model="account.model" name="account_use_models" menu="False" id="wizard_account_use_model"/>-->
+<!--        <menuitem action="wizard_account_use_model" type="wizard" parent="account.menu_finance_recurrent_entries" id="menu_account_use_model"/>-->
 
-        <wizard string="Create Entries From Models" model="account.move.line" name="account_use_models" menu="True" id="wizard_line_account_use_model"/>
+<!--        <wizard string="Create Entries From Models" model="account.move.line" name="account_use_models" menu="True" id="wizard_line_account_use_model"/>-->
 
 		<!-- account.invoice -->
 <!--    <wizard string="Open State" model="account.invoice" name="account.wizard_paid_open" menu="False" id="wizard_paid_open" groups="base.group_user"/> -->

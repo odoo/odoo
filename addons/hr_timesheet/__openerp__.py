@@ -44,7 +44,10 @@ to set up a management by affair.
         'hr_timesheet_view.xml',
         'hr_timesheet_report.xml',
         'hr_timesheet_wizard.xml',
-        'process/hr_timesheet_process.xml'
+        'process/hr_timesheet_process.xml',
+        'wizard/hr_timesheet_print_employee_view.xml',
+        'wizard/hr_timesheet_print_users_view.xml',
+        'wizard/hr_timesheet_sign_in_out_view.xml',
     ],
     'demo_xml': ['hr_timesheet_demo.xml'],
     'installable': True,
