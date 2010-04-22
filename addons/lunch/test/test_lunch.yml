@@ -52,8 +52,8 @@
   I check that the Cash Moves have been generated with the right box
   name
 -
- # !assert {model: lunch.order, id: lunch_order_0}: 
- #   - cashmove != False
+  !assert {model: lunch.order, id: lunch_order_0}: 
+    - cashmove.id != False
  
 - |
   I check that the Total on the cashbox is -2.75
@@ -120,7 +120,7 @@
   I test that the Cash Moves revord have been removed for the order LU002.
 -
   !assert {model: lunch.order, id: lunch_order_1}: 
-    - cashmove == False
+    - cashmove.id == False
     
 - |
   I check that the Total on the cashbox is -2.75
