@@ -176,7 +176,7 @@ class node_calendar(nodes.node_class):
             model = model_obj.browse(cr, uid, res_id, context=ctx)
             write_time = model.write_date or model.create_date
             wtime = time.mktime(time.strptime(write_time,'%Y-%m-%d %H:%M:%S'))            
-            if dav_time <= wtime:
+            if float(dav_time) == float(wtime):
                 return True
             return False
         res = super(node_calendar, self).match_dav_eprop(cr, match, ns, prop)
