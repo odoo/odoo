@@ -73,11 +73,10 @@
 				<separator colspan="4"/>
 	                <group col="8" colspan="4">
 	                    <field name="state" select="1" readonly ="1"/>
-						<button name="tender_close" states="open,draft" string="Close" type="object" icon="gtk-close" />
-	                    <button name="tender_open" states="draft,in_progress" string="Open" type="object" icon="gtk-go-forward" />
-	                    <button name="tender_cancel" states="draft,open," string="Cancel" type="object" icon="gtk-cancel" />
-	                    <button name="tender_confirm" states="open" string="Confirm" type="object" icon="gtk-go-up" />
+						<button name="tender_in_progress" states="draft" string="Confirm" type="object" icon="gtk-apply" />
+	                    <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" icon="gtk-cancel" />
 	                    <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
+						<button name="tender_done" states="in_progress" string="Done" type="object" icon="gtk-jump-to" />	                    
 	                </group>
 
                 
@@ -107,8 +106,7 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                  <group col='10' colspan='4'>
-                    <filter icon="terp-purchase" string="Quotations" domain="[('state','=','draft')]" separator="1"/>
-                    <filter icon="terp-purchase" string="Approved" domain="[('state','=','open')]" separator="1"/>
+                    <filter icon="terp-purchase" string=" Current" domain="[('state','=','draft,in_progress')]" separator="1" help="Current Purchaes Requisition"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1" string="Requisition Reference"/>
                     <field name="purchase_ids" select="1"/>

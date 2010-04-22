@@ -84,7 +84,7 @@ class project_issue(osv.osv):
                     resource_id = False
                     if issue.user_id:
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
-                        resource_id = len(resource_ids) or resource_ids[0]
+                        resource_id = len(resource_ids) and resource_ids[0] or False
 
                     duration = float(ans.days)
                     if issue.section_id.resource_calendar_id:
