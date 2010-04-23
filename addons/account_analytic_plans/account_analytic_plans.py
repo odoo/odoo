@@ -234,6 +234,9 @@ class account_analytic_plan_instance_line(osv.osv):
         'analytic_account_id':fields.many2one('account.analytic.account','Analytic Account', required=True),
         'rate':fields.float('Rate (%)', required=True),
     }
+    _defaults = {
+        'rate': lambda *args: 100.0
+    }
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []

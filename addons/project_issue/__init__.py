@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-
 import project_issue
 import report
 import wizard

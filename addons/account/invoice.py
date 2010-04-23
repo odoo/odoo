@@ -324,6 +324,17 @@ class account_invoice(osv.osv):
         'user_id': lambda s,cr,u,c: u,
     }
 
+    def create(self, cr, uid, vals, context={}):
+        try:
+            res = super(account_invoice, self).create(cr, uid, vals, context)
+            return res
+        except Exception,e:
+            if '"journal_id" viol' in e.args[0]:
+                raise except_orm(_('Configuration Error!'),
+                     _('There is no Accounting Journal of type Sale/Purchase defined!'))
+            else:
+                raise except_orm(_('UnknownError'), str(e))
+            
     def unlink(self, cr, uid, ids, context=None):
         invoices = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -443,8 +454,9 @@ class account_invoice(osv.osv):
         return {'value': {}}
 
     def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):
-        val={}
-        dom={}
+        val = {}
+        dom = {}
+        obj_journal = self.pool.get('account.journal')
         if company_id and part_id and type:
             acc_id = False
             partner_obj = self.pool.get('res.partner').browse(cr,uid,part_id)
@@ -488,13 +500,20 @@ class account_invoice(osv.osv):
                                 _('invoice line account company is not match with invoice company.'))
                         else:
                             continue
-        if company_id:
-            val['journal_id']=False
-            journal_ids=self.pool.get('account.journal').search(cr,uid,[('company_id','=',company_id)])
-            dom={'journal_id':  [('id','in',journal_ids)]}
+        if company_id and type:
+            if type in ('out_invoice', 'out_refund'):
+                journal_type = 'sale'
+            else:
+                journal_type = 'purchase'
+            journal_ids = obj_journal.search(cr, uid, [('company_id','=',company_id), ('type', '=', journal_type)])
+            if journal_ids:
+                val['journal_id'] = journal_ids[0]
+            else:
+                raise osv.except_osv(_('Configration Error !'),
+                                _('Can not find account journal for this company in invoice, Please Create journal.'))
+            dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
-            journal_ids=self.pool.get('account.journal').search(cr,uid,[])
-            dom={'journal_id':  [('id','in',journal_ids)]}
+            journal_ids = obj_journal.search(cr, uid, [])
 
         if currency_id and company_id:
             currency = self.pool.get('res.currency').browse(cr, uid, currency_id)
@@ -644,6 +663,7 @@ class account_invoice(osv.osv):
     def compute_invoice_totals(self, cr, uid, inv, company_currency, ref, invoice_move_lines):
         total = 0
         total_currency = 0
+        cur_obj = self.pool.get('res.currency')
         for i in invoice_move_lines:
             if inv.currency_id.id != company_currency:
                 i['currency_id'] = inv.currency_id.id

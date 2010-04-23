@@ -15,6 +15,7 @@
 
     <menuitem action="crm_fund_categ_action"
         id="menu_crm_case_fundraising-act"
+        groups="base.group_extended"
         parent="crm.menu_crm_case_categ" />
 
 <!-- Fund Stage Form View -->
@@ -29,6 +30,7 @@
         </record>
 
         <menuitem action="crm_fundraising_stage_act"
+            groups="base.group_extended"
             id="menu_crm_fundraising_stage_act"
             parent="crm.menu_crm_case_stage" />
 
@@ -44,6 +46,7 @@
         </record>
 
         <menuitem action="crm_fundraising_resource_act"
+            groups="base.group_extended"
             id="menu_crm_fundraising_resource_act"
             parent="crm.menu_crm_case_resource_type" />
 
@@ -78,6 +81,7 @@
                     states="draft,open" type="object" icon="gtk-media-pause" />
                 <button name="case_escalate" string="Escalate"
                     states="open,draft,pending" type="object"
+                    groups="base.group_extended"
                     icon="gtk-go-up" />
                 <button name="case_reset" string="Reset to Draft"
                     states="done,cancel" type="object" icon="gtk-convert" />
@@ -117,7 +121,7 @@
                     <field name="probability"/>
                     <separator colspan="4" string="Categorization"/>
                     <group colspan="4" col="6">
-                        <field name="user_id" select="2" string="Responsible"/>
+                        <field name="user_id" string="Responsible"/>
                         <field name="section_id" colspan="1" widget="selection"/>
                         <field name="categ_id" select="1"
                             widget="selection"
@@ -125,11 +129,11 @@
                         <field name="date"/>
                         <field name="duration"/>
                     </group>
-                    <separator colspan="4" string="Details"/>
+                    <separator colspan="4" string="Notes"/>
                         <field name="description" nolabel="1" colspan="4"/>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="2"/>
+                        <field name="state"/>
                         <button name="case_close" string="Done"
                             states="open,draft,pending" type="object"
                             icon="gtk-close" />
@@ -144,6 +148,7 @@
                             icon="gtk-media-pause" />
                         <button name="case_escalate" string="Escalate"
                             states="open,draft,pending" type="object"
+                            groups="base.group_extended"
                             icon="gtk-go-up" />
                         <button name="case_reset"
                             string="Reset to Draft" states="done,cancel"
@@ -169,7 +174,7 @@
                             <separator string="Action Information" colspan="4"/>
                             <field name="name" colspan="4"/>
                             <field name="date"/>
-                            <field name="user_id"/>                            
+                            <field name="user_id"/>
                         </form>
                     </field>
                 </page>
@@ -181,8 +186,8 @@
                        <form string="Communication history">
                             <group col="7" colspan="4">
                                 <field name="date"/>
-                                <field name="email_to"/>                                
-                                <field name="email_from"/> 
+                                <field name="email_to"/>
+                                <field name="email_from"/>
                                 <button
                                      string="Add a CC"
                                                name="%(crm.action_view_crm_email_add_cc_wizard)d"
@@ -277,9 +282,7 @@
                                domain="[('user_id','=', False)]"
                                help="Unassigned" />
                        </field>
-                       <field name="section_id" select="1"
-                           widget="selection"
-                           default="context.get('section_id', False)">
+                       <field name="section_id" select="1" widget="selection" string="Sales Team">
                            <filter icon="terp-crm"
                                domain="[('section_id','=',context.get('section_id',False))]"
                                help="My section" />

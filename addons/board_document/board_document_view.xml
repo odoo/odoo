@@ -17,7 +17,7 @@
                                 string="New Files"
                                 name="%(document.action_view_all_document_tree1)d"
                                 view_mode="tree"
-                                domain="[('name','=',time.strftime('%%Y-%%m-01'))]"/>
+                                domain="[('name','=',time.strftime('%%Y')),('month','=',time.strftime('%%m'))]"/>
 
                             <action
                                 string="File Size by Month"
@@ -50,7 +50,7 @@
             <field name="view_id" ref="board_document_manager_form"/>
          </record>
 
-		<menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
+        <menuitem icon="terp-graph" id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
          <menuitem
             name="Document"
             id="menu_board_document"

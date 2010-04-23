@@ -28,17 +28,13 @@ class repair_cancel(osv.osv_memory):
     _description = 'Cancel Repair'
 
     def cancel_repair(self, cr, uid, ids, context):
-        """ 
-             Cancels the repair
-        
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: List of IDs selected 
-             @param context: A standard dictionary 
-             
-             @return:  
-        
+        """ Cancels the repair
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of IDs selected 
+        @param context: A standard dictionary 
+        @return:  
         """
         record_id = context and context.get('active_id', False) or False
         assert record_id, _('Active ID is not Found')
@@ -54,16 +50,12 @@ class repair_cancel(osv.osv_memory):
         return {}
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        """ 
-             Changes the view dynamically
-        
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary 
-             
-             @return: New arch of view.
-        
+        """ Changes the view dynamically
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param context: A standard dictionary 
+        @return: New arch of view.
         """
         record_id = context and context.get('active_id', False) or False        
         res = super(repair_cancel, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)

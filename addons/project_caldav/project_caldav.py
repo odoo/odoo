@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -26,14 +26,15 @@ class project_task(osv.osv):
     _name = "project.task"
     _inherit = ["calendar.todo", "project.task"]
     _columns = {
-                'attendee_ids': fields.many2many('calendar.attendee', \
-                    'task_attendee_rel', 'task_id', 'attendee_id', 'Attendees'),
+        'attendee_ids': fields.many2many('calendar.attendee', \
+                                         'task_attendee_rel', 'task_id', 'attendee_id', 'Attendees'),
                 }
-    def import_cal(self, cr, uid, data, data_id=None, context={}):
+
+    def import_cal(self, cr, uid, data, data_id=None, context=None):
         todo_obj = self.pool.get('basic.calendar.todo')
         vals = todo_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
-    
+
     def check_import(self, cr, uid, vals, context={}):
         ids = []
         for val in vals:
@@ -61,7 +62,7 @@ class project_task(osv.osv):
                 task_id = self.create(cr, uid, val)
                 ids.append(task_id)
         return ids
-        
+
     def export_cal(self, cr, uid, ids, context={}):
         task_datas = self.read(cr, uid, ids, [], context ={'read': True})
         tasks = []
@@ -74,7 +75,6 @@ class project_task(osv.osv):
         calendar_val = ical.serialize()
         calendar_val = calendar_val.replace('"', '').strip()
         return calendar_val
-
 
 project_task()
 

@@ -7,8 +7,8 @@
         </record>
 
         <!--
-		 Board for project managers
-		 -->
+         Board for project managers
+         -->
         <act_window domain="[('manager', '=', uid)]" id="act_my_project" name="My projects" res_model="project.project" view_mode="tree,form" view_type="form"/>
 
         <act_window domain="[('user_id','=',uid),('state','&lt;&gt;','close')]" id="act_my_account" name="My accounts to invoice" res_model="account.analytic.account" view_id="view_account_analytic_simplified" view_mode="tree,form" view_type="form"/>

@@ -161,15 +161,16 @@ class mrp_bom(osv.osv):
         @return:  Dictionary of values
         """
         result = {}
+        bom_obj = self.pool.get('mrp.bom')
         for bom in self.browse(cr, uid, ids, context=context):
             result[bom.id] = map(lambda x: x.id, bom.bom_lines)
             if bom.bom_lines:
                 continue
             ok = ((name=='child_complete_ids') and (bom.product_id.supply_method=='produce'))
             if bom.type=='phantom' or ok:
-                sids = self.pool.get('mrp.bom').search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
+                sids = bom_obj.search(cr, uid, [('bom_id','=',False),('product_id','=',bom.product_id.id)])
                 if sids:
-                    bom2 = self.pool.get('mrp.bom').browse(cr, uid, sids[0], context=context)
+                    bom2 = bom_obj.browse(cr, uid, sids[0], context=context)
                     result[bom.id] += map(lambda x: x.id, bom2.bom_lines)                 
 
         return result
@@ -182,13 +183,13 @@ class mrp_bom(osv.osv):
         """  
         res = dict(map(lambda x: (x,''), ids))
         for line in self.browse(cr, uid, ids):
-            if line.type=='phantom' and not line.bom_id:
+            if line.type == 'phantom' and not line.bom_id:
                 res[line.id] = 'set'
                 continue
-            if line.bom_lines or line.type=='phantom':
+            if line.bom_lines or line.type == 'phantom':
                 continue
-            if line.product_id.supply_method=='produce':
-                if line.product_id.procure_method=='make_to_stock':
+            if line.product_id.supply_method == 'produce':
+                if line.product_id.procure_method == 'make_to_stock':
                     res[line.id] = 'stock'
                 else:
                     res[line.id] = 'order'
@@ -223,7 +224,6 @@ class mrp_bom(osv.osv):
         'child_complete_ids': fields.function(_child_compute,relation='mrp.bom', method=True, string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
         'multi_level_bom': fields.boolean('Multi-level BoM'),
-
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -261,8 +261,8 @@ class mrp_bom(osv.osv):
         @return:  Dictionary of changed values
         """
         if product_id:
-            prod=self.pool.get('product.product').browse(cr,uid,[product_id])[0]
-            v = {'product_uom':prod.uom_id.id}
+            prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
+            v = {'product_uom': prod.uom_id.id}
             if not name:
                 v['name'] = prod.name
             return {'value': v}
@@ -285,8 +285,8 @@ class mrp_bom(osv.osv):
             prop = 0
             for prop_id in bom.property_ids:
                 if prop_id.id in properties:
-                    prop+=1
-            if (prop>max_prop) or ((max_prop==0) and not result):
+                    prop += 1
+            if (prop > max_prop) or ((max_prop == 0) and not result):
                 result = bom.id
                 max_prop = prop
         return result
@@ -303,20 +303,20 @@ class mrp_bom(osv.osv):
         """
         factor = factor / (bom.product_efficiency or 1.0)
         factor = rounding(factor, bom.product_rounding)
-        if factor<bom.product_rounding:
+        if factor < bom.product_rounding:
             factor = bom.product_rounding
         result = []
         result2 = []
-        phantom=False
-        if bom.type=='phantom' and not bom.bom_lines:
+        phantom = False
+        if bom.type == 'phantom' and not bom.bom_lines:
             newbom = self._bom_find(cr, uid, bom.product_id.id, bom.product_uom.id, properties)
             if newbom:
                 res = self._bom_explode(cr, uid, self.browse(cr, uid, [newbom])[0], factor*bom.product_qty, properties, addthis=True, level=level+10)
                 result = result + res[0]
                 result2 = result2 + res[1]
-                phantom=True
+                phantom = True
             else:
-                phantom=False
+                phantom = False
         if not phantom:
             if addthis and not bom.bom_lines:
                 result.append(
@@ -334,12 +334,13 @@ class mrp_bom(osv.osv):
                     d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
                     mult = (d + (m and 1.0 or 0.0))
                     cycle = mult * wc_use.cycle_nbr
+                    print mult, wc_use.hour_nbr, wc.time_start, wc.time_stop, cycle
                     result2.append({
                         'name': bom.routing_id.name,
                         'workcenter_id': wc.id,
                         'sequence': level+(wc_use.sequence or 0),
                         'cycle': cycle,
-                        'hour': float(wc_use.hour_nbr*mult + (wc.time_start+wc.time_stop+cycle*wc.time_cycle) * (wc.time_efficiency or 1.0)),
+                        'hour': float(wc_use.hour_nbr*mult + ((wc.time_start or 0.0)+(wc.time_stop or 0.0)+cycle*(wc.time_cycle or 0.0)) * (wc.time_efficiency or 1.0)),
                     })
             for bom2 in bom.bom_lines:
                 res = self._bom_explode(cr, uid, bom2, factor, properties, addthis=True, level=level+10)
@@ -347,7 +348,7 @@ class mrp_bom(osv.osv):
                 result2 = result2 + res[1]
         return result, result2
 
-    def set_indices(self, cr, uid, ids, context = {}):
+    def set_indices(self, cr, uid, ids, context={}):
         """ Sets Indices.
         @return: True
         """
@@ -360,10 +361,10 @@ class mrp_bom(osv.osv):
         bom_rev_obj = self.pool.get('mrp.bom.revision')
         for rev_id in rev_ids:
             if res[0]['revision_type'] == 'numeric':
-                bom_rev_obj.write(cr, uid, [rev_id], {'indice' : idx})
+                bom_rev_obj.write(cr, uid, [rev_id], {'indice': idx})
             else:
-                bom_rev_obj.write(cr, uid, [rev_id], {'indice' : "%c"%(idx+96,)})
-            idx+=1
+                bom_rev_obj.write(cr, uid, [rev_id], {'indice': "%c" %(idx+96,)})
+            idx += 1
         return True
 
 mrp_bom()
@@ -371,6 +372,7 @@ mrp_bom()
 class mrp_bom_revision(osv.osv):
     _name = 'mrp.bom.revision'
     _description = 'Bill of material revisions'
+    
     _columns = {
         'name': fields.char('Modification name', size=64, required=True),
         'description': fields.text('Description'),
@@ -382,7 +384,7 @@ class mrp_bom_revision(osv.osv):
     }
 
     _defaults = {
-        'author_id': lambda x,y,z,c: z,
+        'author_id': lambda x, y, z, c: z,
         'date': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
@@ -442,7 +444,7 @@ class mrp_production(osv.osv):
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
         """ Calculates total hours and total no. of cycles for a production order.
-        @param prop: 
+        @param prop: Name of field.
         @param unknow_none: 
         @return: Dictionary of values.
         """
@@ -540,10 +542,11 @@ class mrp_production(osv.osv):
         'state': lambda *a: 'draft',
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty':  lambda *a: 1.0,
-        'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
+        'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
     }
     _order = 'date_planned asc, priority desc';
+    
     def unlink(self, cr, uid, ids, context=None):
         productions = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
@@ -586,8 +589,8 @@ class mrp_production(osv.osv):
             return {}
         res = self.pool.get('product.product').read(cr, uid, [product], ['uom_id'])[0]
         uom = res['uom_id'] and res['uom_id'][0]
-        result = {'product_uom':uom}
-        return {'value':result}
+        result = {'product_uom': uom}
+        return {'value': result}
 
     def bom_id_change(self, cr, uid, ids, product):
         """ Finds routing for changed BoM.
@@ -598,14 +601,14 @@ class mrp_production(osv.osv):
             return {}
         res = self.pool.get('mrp.bom').read(cr, uid, [product], ['routing_id'])[0]
         routing_id = res['routing_id'] and res['routing_id'][0]
-        result = {'routing_id':routing_id}
-        return {'value':result}
+        result = {'routing_id': routing_id}
+        return {'value': result}
 
     def action_picking_except(self, cr, uid, ids):
         """ Changes the state to Exception.
         @return: True 
         """
-        self.write(cr, uid, ids, {'state':'picking_except'})
+        self.write(cr, uid, ids, {'state': 'picking_except'})
         return True
 
     def action_compute(self, cr, uid, ids, properties=[]):
@@ -656,7 +659,7 @@ class mrp_production(osv.osv):
             if production.move_created_ids:
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
-        self.write(cr, uid, ids, {'state':'cancel'}) #,'move_lines':[(6,0,[])]})
+        self.write(cr, uid, ids, {'state': 'cancel'}) #,'move_lines':[(6,0,[])]})
         return True
 
     #XXX: may be a bug here; lot_lines are unreserved for a few seconds;
@@ -666,11 +669,11 @@ class mrp_production(osv.osv):
         @return: True
         """
         move_obj = self.pool.get('stock.move')
-        self.write(cr, uid, ids, {'state':'ready'})
+        self.write(cr, uid, ids, {'state': 'ready'})
         for production in self.browse(cr, uid, ids):
             if production.move_prod_id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
-                        {'location_id':production.location_dest_id.id})
+                        {'location_id': production.location_dest_id.id})
         return True
 
     def action_production_end(self, cr, uid, ids):
@@ -679,7 +682,7 @@ class mrp_production(osv.osv):
         """
         for production in self.browse(cr, uid, ids):
             self._costs_generate(cr, uid, production)
-        return self.write(cr,  uid, ids, {'state': 'done', 'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return self.write(cr, uid, ids, {'state': 'done', 'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def test_production_done(self, cr, uid, ids):
         """ Tests whether production is done or not.
@@ -764,7 +767,7 @@ class mrp_production(osv.osv):
                 if final_product.id not in parent_move_ids:
                     new_parent_ids.append(final_product.id)
             for new_parent_id in new_parent_ids:
-                stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids':[(4,new_parent_id)]})
+                stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
@@ -785,7 +788,7 @@ class mrp_production(osv.osv):
                 if value and account:
                     amount += value
                     analytic_line_obj.create(cr, uid, {
-                        'name': wc_line.name+' (H)',
+                        'name': wc_line.name + ' (H)',
                         'amount': value,
                         'account_id': account,
                         'general_account_id': wc.costs_general_account_id.id,
@@ -812,7 +815,7 @@ class mrp_production(osv.osv):
         @return: True 
         """
         move_ids = []        
-        self.write(cr, uid, ids, {'state': 'in_production','date_start':time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, ids, {'state': 'in_production', 'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def test_if_product(self, cr, uid, ids):
@@ -833,12 +836,13 @@ class mrp_production(osv.osv):
         """ Confirms production order.
         @return: Newly generated picking Id.
         """
-        picking_id=False
+        picking_id = False
         proc_ids = []
         seq_obj = self.pool.get('ir.sequence')
         pick_obj = self.pool.get('stock.picking')
         move_obj = self.pool.get('stock.move')
         proc_obj = self.pool.get('mrp.procurement')
+        wf_service = netsvc.LocalService("workflow")
         for production in self.browse(cr, uid, ids):
             if not production.product_lines:
                 self.action_compute(cr, uid, [production.id])
@@ -848,14 +852,14 @@ class mrp_production(osv.osv):
             address_id = False
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
                 routing_loc = production.bom_id.routing_id.location_id
-                if routing_loc.usage<>'internal':
+                if routing_loc.usage <> 'internal':
                     pick_type = 'out'
                 address_id = routing_loc.address_id and routing_loc.address_id.id or False
                 routing_loc = routing_loc.id
-            pick_name = seq_obj.get(cr, uid, 'stock.picking.'+pick_type)
+            pick_name = seq_obj.get(cr, uid, 'stock.picking.' + pick_type)
             picking_id = pick_obj.create(cr, uid, {
                 'name': pick_name,
-                'origin': (production.origin or '').split(':')[0] +':'+production.name,
+                'origin': (production.origin or '').split(':')[0] + ':' + production.name,
                 'type': pick_type,
                 'move_type': 'one',
                 'state': 'auto',
@@ -866,7 +870,7 @@ class mrp_production(osv.osv):
 
             source = production.product_id.product_tmpl_id.property_stock_production.id
             data = {
-                'name':'PROD:'+production.name,
+                'name':'PROD:' + production.name,
                 'date_planned': production.date_planned,
                 'product_id': production.product_id.id,
                 'product_qty': production.product_qty,
@@ -884,11 +888,11 @@ class mrp_production(osv.osv):
             self.write(cr, uid, [production.id], {'move_created_ids': [(6, 0, [res_final_id])]})
             moves = []
             for line in production.product_lines:
-                move_id=False
+                move_id = False
                 newdate = production.date_planned
                 if line.product_id.type in ('product', 'consu'):
                     res_dest_id = move_obj.create(cr, uid, {
-                        'name':'PROD:'+production.name,
+                        'name':'PROD:' + production.name,
                         'date_planned': production.date_planned,
                         'product_id': line.product_id.id,
                         'product_qty': line.product_qty,
@@ -903,7 +907,7 @@ class mrp_production(osv.osv):
                     })
                     moves.append(res_dest_id)
                     move_id = move_obj.create(cr, uid, {
-                        'name':'PROD:'+production.name,
+                        'name':'PROD:' + production.name,
                         'picking_id':picking_id,
                         'product_id': line.product_id.id,
                         'product_qty': line.product_qty,
@@ -931,12 +935,10 @@ class mrp_production(osv.osv):
                     'move_id': move_id,
                     'company_id': production.company_id.id,
                 })
-                wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
                 proc_ids.append(proc_id)
-            wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-            self.write(cr, uid, [production.id], {'picking_id':picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
+            self.write(cr, uid, [production.id], {'picking_id': picking_id, 'move_lines': [(6,0,moves)], 'state':'confirmed'})
         return picking_id
 
     def force_production(self, cr, uid, ids, *args):
@@ -954,6 +956,7 @@ class mrp_production_workcenter_line(osv.osv):
     _name = 'mrp.production.workcenter.line'
     _description = 'Work Orders'
     _order = 'sequence'
+    
     _columns = {
         'name': fields.char('Work Order', size=64, required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
@@ -972,6 +975,7 @@ mrp_production_workcenter_line()
 class mrp_production_product_line(osv.osv):
     _name = 'mrp.production.product.line'
     _description = 'Production scheduled products'
+    
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
@@ -992,15 +996,16 @@ mrp_production_product_line()
 #
 class mrp_procurement(osv.osv):
     """
-    Procument Orders / Requisitions
+    Procument Orders
     """
     _name = "mrp.procurement"
     _description = "Procurement"
     _order = 'priority,date_planned'
+    
     _columns = {
-        'name': fields.char('Reason', size=64, required=True, help='Requisition name.'),
+        'name': fields.char('Reason', size=64, required=True, help='Procurement name.'),
         'origin': fields.char('Source Document', size=64,
-            help="Reference of the document that created this Requisition.\n"
+            help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by Open ERP."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
         'date_planned': fields.datetime('Scheduled date', required=True),
@@ -1037,7 +1042,7 @@ class mrp_procurement(osv.osv):
             ('waiting','Waiting')], 'State', required=True,
             help='When a procurement is created the state is set to \'Draft\'.\n If the procurement is confirmed, the state is set to \'Confirmed\'.\
             \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
-        'note' : fields.text('Note'),
+        'note': fields.text('Note'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -1046,7 +1051,7 @@ class mrp_procurement(osv.osv):
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.procurement', context=c)
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.procurement', context=c)
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1056,7 +1061,7 @@ class mrp_procurement(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Requisition Order(s) which are in %s State!' % s['state']))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Procurement Order(s) which are in %s State!' % s['state']))
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
@@ -1065,10 +1070,10 @@ class mrp_procurement(osv.osv):
         @return: Dictionary of values.
         """
         if product_id:
-            w=self.pool.get('product.product').browse(cr,uid,product_id, context)
+            w = self.pool.get('product.product').browse(cr, uid, product_id, context)
             v = {
-                'product_uom':w.uom_id.id,
-                'product_uos':w.uos_id and w.uos_id.id or w.uom_id.id
+                'product_uom': w.uom_id.id,
+                'product_uos': w.uos_id and w.uos_id.id or w.uom_id.id
             }
             return {'value': v}
         return {}
@@ -1091,7 +1096,7 @@ class mrp_procurement(osv.osv):
         for procurement in self.browse(cr, uid, ids, context):
             if procurement.move_id:
                 ok = True
-                if not procurement.move_id.state=='cancel':
+                if not procurement.move_id.state == 'cancel':
                     res = False
         return res and ok
 
@@ -1102,7 +1107,7 @@ class mrp_procurement(osv.osv):
         res = True
         for proc in self.browse(cr, uid, ids, context):
             if proc.move_id:
-                if not proc.move_id.state=='done':
+                if not proc.move_id.state == 'done':
                     res = False
         return res
 
@@ -1115,7 +1120,7 @@ class mrp_procurement(osv.osv):
         @param proc: Current procurement.
         @return: Quantity or False.
         """
-        if proc.product_id.type=='product':
+        if proc.product_id.type == 'product':
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos_qty
         return False
@@ -1125,7 +1130,7 @@ class mrp_procurement(osv.osv):
         @param proc: Current procurement.
         @return: UoS or False.
         """
-        if proc.product_id.type=='product':
+        if proc.product_id.type == 'product':
             if proc.move_id.product_uos:
                 return proc.move_id.product_uos.id
         return False
@@ -1159,7 +1164,7 @@ class mrp_procurement(osv.osv):
         @return: True or False 
         """
         for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.move_id and procurement.move_id.state=='auto':
+            if procurement.move_id and procurement.move_id.state == 'auto':
                 return True
         return False
 
@@ -1184,7 +1189,7 @@ class mrp_procurement(osv.osv):
         """
         ok = True
         for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.product_id.type=='service':
+            if procurement.product_id.type == 'service':
                 ok = ok and self._check_make_to_stock_service(cr, uid, procurement, context)
             else:
                 ok = ok and self._check_make_to_stock_product(cr, uid, procurement, context)
@@ -1197,7 +1202,7 @@ class mrp_procurement(osv.osv):
         res = True
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method<>'produce':
+            if procurement.product_id.product_tmpl_id.supply_method <> 'produce':
                 if procurement.product_id.seller_ids:
                     partner = procurement.product_id.seller_ids[0].name
                     if user.company_id and user.company_id.partner_id:
@@ -1219,7 +1224,7 @@ class mrp_procurement(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         partner_obj = self.pool.get('res.partner')
         for procurement in self.browse(cr, uid, ids):
-            if procurement.product_id.product_tmpl_id.supply_method<>'buy':
+            if procurement.product_id.product_tmpl_id.supply_method <> 'buy':
                 return False
             if not procurement.product_id.seller_ids:
                 cr.execute('update mrp_procurement set message=%s where id=%s', (_('No supplier defined for this product !'), procurement.id))
@@ -1239,7 +1244,7 @@ class mrp_procurement(osv.osv):
         @return: True or False
         """
         for record in self.browse(cr, uid, ids):
-            if record.move_id and record.move_id.state=='cancel':
+            if record.move_id and record.move_id.state == 'cancel':
                 return True
         return False
 
@@ -1250,36 +1255,36 @@ class mrp_procurement(osv.osv):
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Requisition Order(s), it should not be less than 1!'))
+                raise osv.except_osv(_('Data Insufficient !'), _('Please check the Quantity of Procurement Order(s), it should not be less than 1!'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
-                    if procurement.procure_method=='make_to_order':
+                    if procurement.procure_method == 'make_to_order':
                         source = procurement.product_id.product_tmpl_id.property_stock_procurement.id
                     id = move_obj.create(cr, uid, {
-                        'name': 'PROC:'+procurement.name,
+                        'name': 'PROC:' + procurement.name,
                         'location_id': source,
                         'location_dest_id': procurement.location_id.id,
                         'product_id': procurement.product_id.id,
-                        'product_qty':procurement.product_qty,
+                        'product_qty': procurement.product_qty,
                         'product_uom': procurement.product_uom.id,
                         'date_planned': procurement.date_planned,
-                        'state':'confirmed',
+                        'state': 'confirmed',
                         'company_id': procurement.company_id.id,
                     })
-                    self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move':1})
+                    self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
                 else:
                     # TODO: check this
-                    if procurement.procure_method=='make_to_stock' and procurement.move_id.state in ('waiting',):
+                    if procurement.procure_method == 'make_to_stock' and procurement.move_id.state in ('waiting',):
                         id = move_obj.write(cr, uid, [procurement.move_id.id], {'state':'confirmed'})
-        self.write(cr, uid, ids, {'state':'confirmed','message':''})
+        self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
         return True
 
     def action_move_assigned(self, cr, uid, ids, context={}):
         """ Changes procurement state to Running and writes message.
         @return: True 
         """
-        self.write(cr, uid, ids, {'state':'running','message':_('from stock: products assigned.')})
+        self.write(cr, uid, ids, {'state': 'running', 'message': _('from stock: products assigned.')})
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context={}):
@@ -1305,7 +1310,7 @@ class mrp_procurement(osv.osv):
         @return: True 
         """
         for procurement in self.browse(cr, uid, ids):
-            self.write(cr, uid, [procurement.id], {'state':'running'})
+            self.write(cr, uid, [procurement.id], {'state': 'running'})
         return True
 
     def action_produce_assign_product(self, cr, uid, ids, context={}):
@@ -1345,12 +1350,12 @@ class mrp_procurement(osv.osv):
                 'company_id': procurement.company_id.id,
             })
             res[procurement.id] = produce_id
-            self.write(cr, uid, [procurement.id], {'state':'running'})
+            self.write(cr, uid, [procurement.id], {'state': 'running'})
             bom_result = production_obj.action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
             move_obj.write(cr, uid, [res_id],
-                    {'location_id':procurement.location_id.id})
+                    {'location_id': procurement.location_id.id})
         return res
     
     def action_po_assign(self, cr, uid, ids, context={}):
@@ -1384,7 +1389,7 @@ class mrp_procurement(osv.osv):
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
             if procurement.product_id.seller_ids[0].qty:
-                qty=max(qty,procurement.product_id.seller_ids[0].qty)
+                qty = max(qty,procurement.product_id.seller_ids[0].qty)
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
@@ -1393,9 +1398,9 @@ class mrp_procurement(osv.osv):
             newdate = newdate - procurement.product_id.seller_ids[0].delay
 
             #Passing partner_id to context for purchase order line integrity of Line name
-            context.update({'lang':partner.lang, 'partner_id':partner_id})
+            context.update({'lang': partner.lang, 'partner_id': partner_id})
 
-            product = prod_obj.browse(cr,uid,procurement.product_id.id,context=context)
+            product = prod_obj.browse(cr, uid, procurement.product_id.id, context=context)
 
             line = {
                 'name': product.partner_ref,
@@ -1405,13 +1410,13 @@ class mrp_procurement(osv.osv):
                 'price_unit': price,
                 'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_dest_id': res_id,
-                'notes':product.description_purchase,
+                'notes': product.description_purchase,
             }
 
             taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
             taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
             line.update({
-                'taxes_id':[(6,0,taxes)]
+                'taxes_id': [(6,0,taxes)]
             })
             purchase_id = po_obj.create(cr, uid, {
                 'origin': procurement.origin,
@@ -1424,7 +1429,7 @@ class mrp_procurement(osv.osv):
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             })
             res[procurement.id] = purchase_id
-            self.write(cr, uid, [procurement.id], {'state':'running', 'purchase_id':purchase_id})
+            self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': purchase_id})
         return res
 
     def action_cancel(self, cr, uid, ids):
@@ -1436,16 +1441,16 @@ class mrp_procurement(osv.osv):
         move_obj = self.pool.get('stock.move')
         for proc in self.browse(cr, uid, ids):
             if proc.close_move:
-                if proc.move_id.state not in ('done','cancel'):
+                if proc.move_id.state not in ('done', 'cancel'):
                     todo2.append(proc.move_id.id)
             else:
-                if proc.move_id and proc.move_id.state=='waiting':
+                if proc.move_id and proc.move_id.state == 'waiting':
                     todo.append(proc.move_id.id)
         if len(todo2):
             move_obj.action_cancel(cr, uid, todo2)
         if len(todo):
-            move_obj.write(cr, uid, todo, {'state':'assigned'})
-        self.write(cr, uid, ids, {'state':'cancel'})
+            move_obj.write(cr, uid, todo, {'state': 'assigned'})
+        self.write(cr, uid, ids, {'state': 'cancel'})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)
@@ -1460,7 +1465,7 @@ class mrp_procurement(osv.osv):
         """
         ok = False
         for procurement in self.browse(cr, uid, ids):
-            if procurement.move_id.state=='assigned' or procurement.move_id.state=='done':
+            if procurement.move_id.state == 'assigned' or procurement.move_id.state == 'done':
                 self.action_done(cr, uid, [procurement.id])
                 ok = True
         return ok
@@ -1469,7 +1474,7 @@ class mrp_procurement(osv.osv):
         """ Changes procurement state to Ready.
         @return: True 
         """
-        res = self.write(cr, uid, ids, {'state':'ready'})
+        res = self.write(cr, uid, ids, {'state': 'ready'})
         return res
 
     def action_done(self, cr, uid, ids):
@@ -1481,7 +1486,7 @@ class mrp_procurement(osv.osv):
             if procurement.move_id:
                 if procurement.close_move and (procurement.move_id.state <> 'done'):
                     move_obj.action_done(cr, uid, [procurement.move_id.id])
-        res = self.write(cr, uid, ids, {'state':'done', 'date_close':time.strftime('%Y-%m-%d')})
+        res = self.write(cr, uid, ids, {'state': 'done', 'date_close': time.strftime('%Y-%m-%d')})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)

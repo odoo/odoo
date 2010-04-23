@@ -3,20 +3,20 @@
     <data>
           <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="15"/>
           <menuitem name="Lunch Order" parent="base.menu_tools"
-          	id="menu_lunch" sequence="1" />
+              id="menu_lunch" sequence="1" />
 
           <menuitem name="Reporting" parent="base.menu_tools"
-          	id="base.menu_lunch_reporting" sequence="5" />
+              id="base.menu_lunch_reporting" sequence="5" />
 
           <menuitem name="Lunch Orders"
-          	parent="base.menu_lunch_reporting"
-          	id="menu_lunch_reporting_order" sequence="1" />
+              parent="base.menu_lunch_reporting"
+              id="menu_lunch_reporting_order" sequence="1" />
 
           <menuitem name="Configuration" parent="base.menu_tools"
-          	id="base.menu_lunch_survey_root" sequence="6" />
+              id="base.menu_lunch_survey_root" sequence="6" />
 
           <menuitem name="Lunch" parent="base.menu_lunch_survey_root"
-          	id="menu_lunch_category_root_configuration" sequence="1" />
+              id="menu_lunch_category_root_configuration" sequence="1" />
 
 <!-- Lunch order Form view -->
 
@@ -32,7 +32,7 @@
                         <field name="price"/>
                         <field name="descript"/>
                         <field name="cashmove"/>
-                        <field name="state" select="2"/>
+                        <field name="state"/>
                     </group>
                 </form>
             </field>
@@ -66,7 +66,7 @@
         </record>
 
         <menuitem name="Lunch Order" parent="menu_lunch"
-        	id="menu_lunch_order_form" action="action_lunch_order_form" />
+            id="menu_lunch_order_form" action="action_lunch_order_form" />
 
 <!--  Cash Box Form view  -->
 
@@ -104,9 +104,9 @@
         </record>
 
         <menuitem name="CashBox"
-        	parent="menu_lunch_category_root_configuration"
-        	id="menu_lunch_cashbox_form"
-        	action="action_lunch_cashbox_form" />
+            parent="menu_lunch_category_root_configuration"
+            id="menu_lunch_cashbox_form"
+            action="action_lunch_cashbox_form" />
 
 <!-- Cash Move Form view  -->
 
@@ -117,7 +117,7 @@
                 <form string="CashMove">
                     <field name="name" select="1"/>
                     <field name="user_cashmove" select="1"/>
-                    <field name="amount" select="2"/>
+                    <field name="amount"/>
                     <field name="box" select="1"/>
                     <field name="create_date" select="1"/>
                     <field name="active" select="1"/>
@@ -150,8 +150,8 @@
         </record>
 
         <menuitem name="Cash Moves" parent="menu_lunch"
-        	id="menu_lunch_cashmove_form"
-        	action="action_lunch_cashmove_form" />
+            id="menu_lunch_cashmove_form"
+            action="action_lunch_cashmove_form" />
 
 <!-- Lunch Category Form view  -->
 
@@ -227,18 +227,18 @@
         </record>
 
         <menuitem name="Tools/Lunch/Configuration/Products"
-        	id="menu_lunch_product_form" action="action_lunch_product_form"
-        	sequence="1" />
+            id="menu_lunch_product_form" action="action_lunch_product_form"
+            sequence="1" />
 
         <menuitem name="Products"
-        	parent="menu_lunch_category_root_configuration"
-        	id="menu_lunch_product_form" action="action_lunch_product_form"
-        	sequence="2" />
+            parent="menu_lunch_category_root_configuration"
+            id="menu_lunch_product_form" action="action_lunch_product_form"
+            sequence="2" />
 
         <menuitem name="Category of product"
-        	parent="menu_lunch_category_root_configuration"
-        	id="menu_lunch_category_form"
-        	action="action_lunch_category_form" sequence="1" />
+            parent="menu_lunch_category_root_configuration"
+            id="menu_lunch_category_form"
+            action="action_lunch_category_form" sequence="1" />
 
 
 <!-- Lunch Amount Tree view -->
@@ -281,9 +281,9 @@
         </record>
 
         <menuitem name="Cash Position by User"
-        	parent="menu_lunch_reporting_order"
-        	action="action_report_lunch_amount_tree"
-        	id="menu_lunch_report_amount_tree" />
+            parent="menu_lunch_reporting_order"
+            action="action_report_lunch_amount_tree"
+            id="menu_lunch_report_amount_tree" />
 
     </data>
 </openerp>

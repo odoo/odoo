@@ -67,11 +67,11 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     
     soup = BeautifulSoup(html, parseOnlyThese=strainer, fromEncoding=encoding)
     for link in soup.findAll('a'):
-        title = link.renderContents()
+        title = unicode(link)
         for url in [x[1] for x in link.attrs if x[0]=='href']:
-            urls.append(dict(url=url, tag=str(link), title=title))
+            urls.append(dict(url=url, tag=unicode(link), title=title))
 
-    html = soup.__str__()
+    html = unicode(soup)
             
     url_index = []
     i = 0
@@ -162,12 +162,9 @@ class email_parser(object):
            if charset:
                try:
                    return s.decode(charset)
-               except UnicodeError:  
-                    pass         
-       try:
-           return s.decode('ascii')
-       except UnicodeError:
-           return s 
+               except UnicodeError:
+                    pass
+       return s.decode('latin1')
 
     def _decode_header(self, s):
         from email.Header import decode_header
@@ -285,7 +282,7 @@ class email_parser(object):
             if actions['state'] in ['draft', 'close', 'cancel', 'open', 'pending']:
                 act = 'case_' + actions['state']
 
-        for k1, k2 in [('cost', 'planned_cost'), ('revenue', 'planned_revenue'), ('probability', 'probability')]:
+            for k1, k2 in [('cost', 'planned_cost'), ('revenue', 'planned_revenue'), ('probability', 'probability')]:
             try:
                 data[k2] = float(actions[k1])
             except:

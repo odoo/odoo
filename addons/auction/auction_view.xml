@@ -1,1012 +1,1012 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-	<menuitem name="Auction Management" id="auction_menu_root" icon="terp-purchase"/>
-	<menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="7"/>
-	<menuitem name="Tools Bar Codes" id="auction_outils_menu" parent="auction_menu_root" sequence="5" />
+    <menuitem name="Auction Management" id="auction_menu_root" icon="terp-purchase"/>
+    <menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="7"/>
+    <menuitem name="Tools Bar Codes" id="auction_outils_menu" parent="auction_menu_root" sequence="5" />
     <menuitem name="Deliveries Management" action="action_auction_taken" id="menu_wizard_emporte" parent="auction_outils_menu"/>
-	=======================================================
-	Auction Management/Configuration/artist
-	=======================================================
-	<record model="ir.ui.view" id="view_auction_artist_tree">
-		<field name="name">auction.artists.tree</field>
-		<field name="model">auction.artists</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Artists">
-			<field name="name"/>
-				<field name="birth_death_dates"/>
-				<field name="biography"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_artist_form">
-		<field name="name">auction.artists.form</field>
-		<field name="model">auction.artists</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Artists">
-				<field colspan="4" name="name" select="1"/>
-				<field colspan="4" name="pseudo" select="1"/>
-					<newline/>
-				<field colspan="4" name="birth_death_dates"/>
-					<newline/>
-				<field colspan="4" name="biography"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_auction_artist">
-		<field name="res_model">auction.artists</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="view_auction_artist_tree"/>
-	</record>
-	<menuitem name="Define Artists" parent="auction_config_menu" action="action_auction_artist" id="menu_auction_artist"/>
+    =======================================================
+    Auction Management/Configuration/artist
+    =======================================================
+    <record model="ir.ui.view" id="view_auction_artist_tree">
+        <field name="name">auction.artists.tree</field>
+        <field name="model">auction.artists</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Artists">
+            <field name="name"/>
+                <field name="birth_death_dates"/>
+                <field name="biography"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_artist_form">
+        <field name="name">auction.artists.form</field>
+        <field name="model">auction.artists</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Artists">
+                <field colspan="4" name="name" select="1"/>
+                <field colspan="4" name="pseudo" select="1"/>
+                    <newline/>
+                <field colspan="4" name="birth_death_dates"/>
+                    <newline/>
+                <field colspan="4" name="biography"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_auction_artist">
+        <field name="res_model">auction.artists</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_auction_artist_tree"/>
+    </record>
+    <menuitem name="Define Artists" parent="auction_config_menu" action="action_auction_artist" id="menu_auction_artist"/>
 
-	=======================================================
-	Auction Management/Configuration/objectcategories
-	=======================================================
-	<record model="ir.ui.view" id="view_auction_object_categories_tree">
-		<field name="name">auction.lot.category.tree</field>
-		<field name="model">auction.lot.category</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-				<tree string="Lot Category">
-					<field name="name"/>
-				</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_object_categories_form">
-		<field name="name">auction.lot.category.form</field>
-		<field name="model">auction.lot.category</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-				<form string="Lot Category">
-					<field name="name" colspan="4" select="1"/>
-					<newline/>
-					<field name="aie_categ" colspan="4"/>
-					<field name="priority"/>
-					<newline/>
-					<field name="active" select="2"/>
-				</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_auction_object_categories">
-		<field name="res_model">auction.lot.category</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="view_auction_object_categories_tree"/>
-	</record>
-	<menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories" id="menu_auction_object_cat"/>
-	=======================================================
+    =======================================================
+    Auction Management/Configuration/objectcategories
+    =======================================================
+    <record model="ir.ui.view" id="view_auction_object_categories_tree">
+        <field name="name">auction.lot.category.tree</field>
+        <field name="model">auction.lot.category</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+                <tree string="Lot Category">
+                    <field name="name"/>
+                </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_object_categories_form">
+        <field name="name">auction.lot.category.form</field>
+        <field name="model">auction.lot.category</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+                <form string="Lot Category">
+                    <field name="name" colspan="4" select="1"/>
+                    <newline/>
+                    <field name="aie_categ" colspan="4"/>
+                    <field name="priority"/>
+                    <newline/>
+                    <field name="active"/>
+                </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_auction_object_categories">
+        <field name="res_model">auction.lot.category</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_auction_object_categories_tree"/>
+    </record>
+    <menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories" id="menu_auction_object_cat"/>
+    =======================================================
     Auction Management/Auction Dates/New Auction Dates
-	=======================================================
-	<record model="ir.ui.view" id="view_auction_dates_tree">
-		<field name="name">Auction dates</field>
-		<field name="model">auction.dates</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Auction Dates">
-				<field name="auction1" string="Beginning of the auction"/>
-				<field name="auction2" string="End of auction"/>
-				<field name="name" string="Names"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_dates_form">
-		<field name="name">Auction dates</field>
-		<field name="model">auction.dates</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Auctions">
-				<field name="name" colspan="2" select="1"/>
-				<separator string="Dates" colspan="4"/>
-				<field name="expo1"/>
-				<field name="expo2"/>
-				<field name="auction1" select="1"/>
-				<field name="auction2" select="1"/>
-				<separator string="Commissions" colspan="4"/>
-				<field name="seller_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','&lt;&gt;','purchase')]"/>
-				<field name="buyer_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','&lt;&gt;','sale')]"/>
-				<separator string="Accounting" colspan="4"/>
-				<field name="acc_expense"/>
-				<field name="acc_income"/>
-				<separator string="Analytic" colspan="4"/>
-				<field name="journal_id"/>
-				<field name="journal_seller_id"/>
-				<field name="account_analytic_id"/>
-				<separator string="State" colspan="4"/>
-				<field name="state"/>
-				<button name="close" states="draft" string="Close + Create all invoices" type="object" colspan="2" icon="gtk-print"/>
-			</form>
-		</field>
-	</record>
+    =======================================================
+    <record model="ir.ui.view" id="view_auction_dates_tree">
+        <field name="name">Auction dates</field>
+        <field name="model">auction.dates</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Auction Dates">
+                <field name="auction1" string="Beginning of the auction"/>
+                <field name="auction2" string="End of auction"/>
+                <field name="name" string="Names"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_dates_form">
+        <field name="name">Auction dates</field>
+        <field name="model">auction.dates</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auctions">
+                <field name="name" colspan="2" select="1"/>
+                <separator string="Dates" colspan="4"/>
+                <field name="expo1"/>
+                <field name="expo2"/>
+                <field name="auction1" select="1"/>
+                <field name="auction2" select="1"/>
+                <separator string="Commissions" colspan="4"/>
+                <field name="seller_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','&lt;&gt;','purchase')]"/>
+                <field name="buyer_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','&lt;&gt;','sale')]"/>
+                <separator string="Accounting" colspan="4"/>
+                <field name="acc_expense"/>
+                <field name="acc_income"/>
+                <separator string="Analytic" colspan="4"/>
+                <field name="journal_id"/>
+                <field name="journal_seller_id"/>
+                <field name="account_analytic_id"/>
+                <separator string="State" colspan="4"/>
+                <field name="state"/>
+                <button name="close" states="draft" string="Close + Create all invoices" type="object" colspan="2" icon="gtk-print"/>
+            </form>
+        </field>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_auction_dates_next">
-		<field name="name">Next Auctions</field>
-		<field name="res_model">auction.dates</field>
-		<field name="view_type">form</field>
-		<field name="domain">[('state','=','draft')]</field>
-		<field name="view_id" eval="False"/>
-	</record>
+    <record model="ir.actions.act_window" id="action_auction_dates_next">
+        <field name="name">Next Auctions</field>
+        <field name="res_model">auction.dates</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('state','=','draft')]</field>
+        <field name="view_id" eval="False"/>
+    </record>
 
-	<menuitem name="Auction Dates" parent="auction_menu_root" id="auction_date_menu" sequence="1"/>
-	<menuitem name="Next Auction Dates" parent="auction_date_menu" id="menu_auction_dates_next1" action="action_auction_dates_next"/>
-	=======================================================
-	Auction Management/Auction Dates/Old Auction Dates
-	=======================================================
-	<record model="ir.actions.act_window" id="action_auction_dates_old">
-		<field name="name">Old Auctions</field>
-		<field name="res_model">auction.dates</field>
-		<field name="view_type">form</field>
-		<field name="domain">[('state','=','closed')]</field>
-		<field name="view_id" ref="view_auction_dates_tree"/>
-		<field name="filter" eval="True"/>
-	</record>
+    <menuitem name="Auction Dates" parent="auction_menu_root" id="auction_date_menu" sequence="1"/>
+    <menuitem name="Next Auction Dates" parent="auction_date_menu" id="menu_auction_dates_next1" action="action_auction_dates_next"/>
+    =======================================================
+    Auction Management/Auction Dates/Old Auction Dates
+    =======================================================
+    <record model="ir.actions.act_window" id="action_auction_dates_old">
+        <field name="name">Old Auctions</field>
+        <field name="res_model">auction.dates</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('state','=','closed')]</field>
+        <field name="view_id" ref="view_auction_dates_tree"/>
+        <field name="filter" eval="True"/>
+    </record>
 
     =======================================================
     Auction Management/Auction Dates/Reporting
-	=======================================================
-	<!-- tree1 form1 for NEW object in the deposit border -->
-	<record model="ir.ui.view" id="v5">
-		<field name="name">Auction lots</field>
-		<field name="model">auction.lots</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-				<tree string="Auction Objects">
-					<field name="lot_num"/>
-					<field name="obj_num"/>
-					<field name="name"/>
-					<field name="auction_id"/>
-					<field name="vnd_lim"/>
-					<field name="lot_est1"/>
-					<field name="lot_est2"/>
-					<field name="buyer_price"/>
-					<field name="is_ok"/>
-					<field name="seller_price"/>
-					<field name="gross_revenue"/>
-					<field name="net_revenue"/>
-					<field name="gross_margin"/>
-					<field name="net_margin"/>
-					<field name="costs"/>
-					<field name="obj_price_l"/>
+    =======================================================
+    <!-- tree1 form1 for NEW object in the deposit border -->
+    <record model="ir.ui.view" id="v5">
+        <field name="name">Auction lots</field>
+        <field name="model">auction.lots</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+                <tree string="Auction Objects">
+                    <field name="lot_num"/>
+                    <field name="obj_num"/>
+                    <field name="name"/>
+                    <field name="auction_id"/>
+                    <field name="vnd_lim"/>
+                    <field name="lot_est1"/>
+                    <field name="lot_est2"/>
+                    <field name="buyer_price"/>
+                    <field name="is_ok"/>
+                    <field name="seller_price"/>
+                    <field name="gross_revenue"/>
+                    <field name="net_revenue"/>
+                    <field name="gross_margin"/>
+                    <field name="net_margin"/>
+                    <field name="costs"/>
+                    <field name="obj_price_l"/>
 
-				</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="auction_lot_simplified">
-		<field name="name">Auction lots</field>
-		<field name="model">auction.lots</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Catalog">
-				<field name="auction_id"/>
-				<field name="obj_num"/>
-				<field name="bord_vnd_id"/>
-				<field name="lot_num"/>
-				<field name="buyer_price"/>
-				<field name="seller_price"/>
-				<field name="gross_revenue"/>
-				<field name="net_revenue"/>
-				<field name="gross_margin"/>
-				<field name="net_margin"/>
-				<field name="costs"/>
-				<newline/>
-				<field name="name"/>
-				<field name="lot_type" select="1"/>
-				<field name="name2"/>
-				<newline/>
-				<field name="artist_id"/>
-				<field name="artist2_id"/>
-				<field name="obj_desc" colspan="4"/>
-				<field name="vnd_lim"/>
-				<field name="vnd_lim_net"/>
-				<field name="lot_est1"/>
-				<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
-				<field name="lot_est2"/>
-				<field name="product_id"/>
-				<field name="state" readonly="1"/>
-				
-			</form>
-		</field>
-	</record>
+                </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="auction_lot_simplified">
+        <field name="name">Auction lots</field>
+        <field name="model">auction.lots</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Catalog">
+                <field name="auction_id"/>
+                <field name="obj_num"/>
+                <field name="bord_vnd_id"/>
+                <field name="lot_num"/>
+                <field name="buyer_price"/>
+                <field name="seller_price"/>
+                <field name="gross_revenue"/>
+                <field name="net_revenue"/>
+                <field name="gross_margin"/>
+                <field name="net_margin"/>
+                <field name="costs"/>
+                <newline/>
+                <field name="name"/>
+                <field name="lot_type" select="1"/>
+                <field name="name2"/>
+                <newline/>
+                <field name="artist_id"/>
+                <field name="artist2_id"/>
+                <field name="obj_desc" colspan="4"/>
+                <field name="vnd_lim"/>
+                <field name="vnd_lim_net"/>
+                <field name="lot_est1"/>
+                <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
+                <field name="lot_est2"/>
+                <field name="product_id"/>
+                <field name="state" readonly="1"/>
+                
+            </form>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="auction_lot_graph">
-		<field name="name">Auction lots</field>
-		<field name="model">auction.lots</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Lots" type="bar">
-				<field name="lot_type"/>
-				<field name="lot_est1" operator="+"/>
-				<field name="lot_est2" operator="+"/>
-				<field name="obj_price" operator="+"/>
-			</graph>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="auction_lot_graph">
+        <field name="name">Auction lots</field>
+        <field name="model">auction.lots</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Lots" type="bar">
+                <field name="lot_type"/>
+                <field name="lot_est1" operator="+"/>
+                <field name="lot_est2" operator="+"/>
+                <field name="obj_price" operator="+"/>
+            </graph>
+        </field>
+    </record>
 
 
-	<!-- tree2 form2 for Catalog, All object and Unclassified objects -->
-	<record model="ir.ui.view" id="v7">
-		<field name="name">Auction lots</field>
-		<field name="model">auction.lots</field>
-		<field name="type">tree</field>
-		<field name="priority" eval="1"/>
-		<field name="arch" type="xml">
-			<tree string="Catalog">
-				<field name="obj_num" string="Ref" select="1"/>
-				<field name="name" select="1"/>
-				<field name="ach_login"/>
-				<field name="obj_price" sum="Total Adj."/>
-				<field name="state" select="1"/>
-				<field name="obj_comm"/>
-				<field name="bord_vnd_id"/>
-				<field name="lot_num"/>
-				<field name="lot_est1"/>
-				<field name="lot_est2"/>
-				<field name="lot_type" select="1"/>
-				<field name="auction_id"/>
-			</tree>
-		</field>
-	</record>
+    <!-- tree2 form2 for Catalog, All object and Unclassified objects -->
+    <record model="ir.ui.view" id="v7">
+        <field name="name">Auction lots</field>
+        <field name="model">auction.lots</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree string="Catalog">
+                <field name="obj_num" string="Ref" select="1"/>
+                <field name="name" select="1"/>
+                <field name="ach_login"/>
+                <field name="obj_price" sum="Total Adj."/>
+                <field name="state" select="1"/>
+                <field name="obj_comm"/>
+                <field name="bord_vnd_id"/>
+                <field name="lot_num"/>
+                <field name="lot_est1"/>
+                <field name="lot_est2"/>
+                <field name="lot_type" select="1"/>
+                <field name="auction_id"/>
+            </tree>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="auction_lot_detailed">
-		<field name="name">Auction lots</field>
-		<field name="model">auction.lots</field>
-		<field name="type">form</field>
-		<field name="priority" eval="8"/>
-		<field name="arch" type="xml">
-			<form string="Catalog">
-				<notebook>
+    <record model="ir.ui.view" id="auction_lot_detailed">
+        <field name="name">Auction lots</field>
+        <field name="model">auction.lots</field>
+        <field name="type">form</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <form string="Catalog">
+                <notebook>
 
-				<page string="Object">
-					<group colspan="2" col="2">
-						<field name="obj_num" select="1"/>
-						<field name="name" select="1"/>
-						<field name="name2" select="2"/>
-						<field name="artist_id" select="2"/>
-						<field name="artist2_id"/>
-						<field name="product_id"/>
-					</group>
-					<field widget="image" name="image" nolabel="1" colspan="2"/>
-					<field name="lot_est1" select="2"/>
-					<field name="lot_est2"/>
-					<field name="auction_id" colspan="2" select="1"/>
-					<field name="lot_type" select="2"/>
-					<field name="lot_local"/>
+                <page string="Object">
+                    <group colspan="2" col="2">
+                        <field name="obj_num" select="1"/>
+                        <field name="name" select="1"/>
+                        <field name="name2"/>
+                        <field name="artist_id"/>
+                        <field name="artist2_id"/>
+                        <field name="product_id"/>
+                    </group>
+                    <field widget="image" name="image" nolabel="1" colspan="2"/>
+                    <field name="lot_est1"/>
+                    <field name="lot_est2"/>
+                    <field name="auction_id" colspan="2" select="1"/>
+                    <field name="lot_type"/>
+                    <field name="lot_local"/>
 
-					<field name="bord_vnd_id" select="1"/>
-					<field name="lot_num"/>
+                    <field name="bord_vnd_id" select="1"/>
+                    <field name="lot_num"/>
 
-					<separator string="Description" colspan="4"/>
-					<field name="obj_desc" colspan="4" nolabel="1" select="2"/>
-					<field name="state" colspan="1" select="2"/>
-				 	<group col="8" colspan="2">
-				 	   <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
+                    <separator string="Description" colspan="4"/>
+                    <field name="obj_desc" colspan="4" nolabel="1"/>
+                    <field name="state" colspan="1"/>
+                     <group col="8" colspan="2">
+                        <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
                        <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
                        <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
                        <button name="button_draft" string="Set to draft" states="sold,unsold" type="object" icon="gtk-convert"/>
                        <button name="button_unpaid" string="Set to draft" states="paid" type="object" icon="gtk-convert"/>
-					</group>
-				</page>
-
-				<page string="Seller">
-					<separator string="Seller information" colspan="4"/>
-
-					<field name="vnd_lim"/>
-					<field name="vnd_lim_net"/>
-					<field name="sel_inv_id"/>
-					<field name="paid_vnd"/>
-					<field name="history_ids" colspan="4" readonly="1">
-						<tree string="History">
-							<field name="name"/>
-							<field name="lot_id"/>
-							<field name="auction_id"/>
-							<field name="price"/>
-						</tree>
-					</field>
-					</page>
-				<page string="Buyer">
-					<separator string="Buyer information" colspan="4"/>
-					<field name="ach_uid"  select="2"/>
-					<field name="ach_login" select="1" />
-					<field name="obj_price" select="2"/>
-					<field name="obj_comm" select="2"/>
-					<field name="obj_ret"/>
-					<field name="ach_emp"/>
-					<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
-					<field name="buyer_price"/>
-					<field name="seller_price"/>
-					<field name="gross_revenue"/>
-					<field name="net_revenue"/>
-					<field name="gross_margin"/>
-					<field name="net_margin"/>
-					<field name="costs"/>
-					<newline/>
-					<field name="ach_inv_id"/>
-					<field name="paid_ach"/>
-					<field name="is_ok" select="2"/>
-					<field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
-						widget="one2many_list">
-						<tree string="Payment's history">
-							<field name="statement_id"/>
-							<field name="amount"/>
-							<field name="date"/>
-						</tree>
-					</field>
-				</page>
-			<page string="Bids">
-				<field name="bid_lines" colspan="4" nolabel="1" editable="top">
-						<tree string="Bids"  editable="top">
-							<field name="bid_id"/>
-							<field name="price"/>
-							<field name="call"/>
-						</tree>
-					</field>
-			</page>
-				</notebook>
-			</form>
-		</field>
-	</record>
-
-
-
-	<record model="ir.actions.act_window" id="action_all_objects">
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="action_all_objects_sold">
-		<field name="name">Sold Objects</field>
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="domain">[('state','=','sold')]</field>
-        <field name="filter" eval="True"/>
-	</record>
-
-	<menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu" sequence="2"/>
-	<menuitem name="All objects" action="action_all_objects" parent="auction_objects_menu" id="auction_all_objects_menu"/>
-
-	<record model="ir.actions.act_window" id="action_all_objects_to_sell">
-		<field name="name">Objects to sell</field>
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','&lt;&gt;','sold')]</field>
-        <field name="filter" eval="True"/>
-	</record>
-
-	<record model="ir.actions.act_window" id="action_all_objects_unplanned">
-		<field name="name">Unplanned objects</field>
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('auction_id','=', False),('state','=','draft')]</field>
-        <field name="filter" eval="True"/>
-	</record>
-
-	<!--		for the sold object  start-->
-
-	<record model="ir.actions.act_window" id="action_all_objects_unsold">
-		<field name="name">Unsold objects</field>
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="domain">[('state','=','unsold')]</field>
-        <field name="filter" eval="True"/>
-	</record>
-
-	<!-- form3: simplified form meant for during the sale (action button in dates) -->
-	<!--form par defaut-->
-	<record model="ir.ui.view" id="auction_lots_sell_form">
-		<field name="name">auction.lots.form3</field>
-		<field name="model">auction.lots</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Auction">
-				<notebook>
-				<page string="Auction">
-					<field name="obj_num" readonly="1" select="1"/>
-					<field name="auction_id" select="2"/>
-					<field name="obj_price" select="1"/>
-					<field name="ach_login" select="1" comparator="="/>
-					<field name="ach_emp"/>
-					<field name="obj_comm"/>
-					<field name="obj_ret" on_change="onchange_obj_ret(obj_ret)"/>
-					<newline/>
-					<field name="name" readonly="1" select="1"/>
-					<field name="name2" readonly="2" select="1"/>
-					<field name="artist_id" readonly="1"/>
-					<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
-					<newline/>
-					<field name="buyer_price"/>
-					<field name="is_ok" select="1"/>
-					<field name="obj_desc" readonly="1" colspan="4"/>
-					<field name="lot_est1" readonly="1"/>
-					<field name="lot_est2" readonly="1"/>
-					<field name="vnd_lim" readonly="1"/>
-					<field name="vnd_lim_net"/>
-					<field name="bid_lines" colspan="4" readonly="1">
-						<tree string="Bids">
-							<field name="name"/>
-							<field name="bid_id"/>
-							<field name="price"/>
-							<field name="call"/>
-						</tree>
-					</field>
-					<field name="state" readonly="1"/>
-					<group colspan="2" col="4">
-	                    <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to" />
-	                    <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
-	                    <button name="button_draft" string="Set to draft" states="sold,unsold" type="object" icon="gtk-convert"/>
-	                    <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
                     </group>
-				</page>
-				<page string="Statements">
-					<field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
-						widget="one2many_list">
-						<tree string="Payment's history" editable="top">
-							<field name="name"/>
-							<field name="amount"/>
-							<field name="date"/>
-				</tree>
-					</field>
-				</page>
-			</notebook>
-			</form>
-		</field>
-	</record>
+                </page>
+
+                <page string="Seller">
+                    <separator string="Seller information" colspan="4"/>
+
+                    <field name="vnd_lim"/>
+                    <field name="vnd_lim_net"/>
+                    <field name="sel_inv_id"/>
+                    <field name="paid_vnd"/>
+                    <field name="history_ids" colspan="4" readonly="1">
+                        <tree string="History">
+                            <field name="name"/>
+                            <field name="lot_id"/>
+                            <field name="auction_id"/>
+                            <field name="price"/>
+                        </tree>
+                    </field>
+                    </page>
+                <page string="Buyer">
+                    <separator string="Buyer information" colspan="4"/>
+                    <field name="ach_uid" />
+                    <field name="ach_login" select="1" />
+                    <field name="obj_price"/>
+                    <field name="obj_comm"/>
+                    <field name="obj_ret"/>
+                    <field name="ach_emp"/>
+                    <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
+                    <field name="buyer_price"/>
+                    <field name="seller_price"/>
+                    <field name="gross_revenue"/>
+                    <field name="net_revenue"/>
+                    <field name="gross_margin"/>
+                    <field name="net_margin"/>
+                    <field name="costs"/>
+                    <newline/>
+                    <field name="ach_inv_id"/>
+                    <field name="paid_ach"/>
+                    <field name="is_ok"/>
+                    <field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
+                        widget="one2many_list">
+                        <tree string="Payment's history">
+                            <field name="statement_id"/>
+                            <field name="amount"/>
+                            <field name="date"/>
+                        </tree>
+                    </field>
+                </page>
+            <page string="Bids">
+                <field name="bid_lines" colspan="4" nolabel="1" editable="top">
+                        <tree string="Bids"  editable="top">
+                            <field name="bid_id"/>
+                            <field name="price"/>
+                            <field name="call"/>
+                        </tree>
+                    </field>
+            </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
 
 
-	=======================================================
-	Auction Management/seller
-	=======================================================
-	<record model="ir.actions.act_window" id="action_unclassified_objects">
-		<field name="name">Unclassified objects</field>
-		<field name="res_model">report.unclassified.objects</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
+
+    <record model="ir.actions.act_window" id="action_all_objects">
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_all_objects_sold">
+        <field name="name">Sold Objects</field>
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('state','=','sold')]</field>
         <field name="filter" eval="True"/>
-	 </record>
+    </record>
 
-	<record model="ir.ui.view" id="v12">
-		<field name="name">Auction.deposit.tree</field>
-		<field name="model">auction.deposit</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Deposit Border">
-				<field name="name"/>
-				<field name="partner_id"/>
-				<field name="date_dep"/>
-			</tree>
-		</field>
-	</record>
+    <menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu" sequence="2"/>
+    <menuitem name="All objects" action="action_all_objects" parent="auction_objects_menu" id="auction_all_objects_menu"/>
 
-	<record model="ir.ui.view" id="view_deposit_border_form">
-		<field name="name">auction.deposit.form</field>
-		<field name="model">auction.deposit</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Deposit Border Form">
-				<notebook>
-					<page string="General Informations">
-						<field name="name" select="1"/>
-						<field name="date_dep" select="1"/>
-						<field name="partner_id" select="1" on_change="partner_id_change(partner_id)"/>
-						<field name="method"/>
-						<newline/>
-						<field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-						<field name="transfer"/>
-						<newline/>
-						<field name="lot_id" colspan="4" mode="tree,graph" nolabel="1">
-							<tree string="Objects">
-								<field name="lot_num"/>
-								<field name="obj_num"/>
-								<field name="auction_id"/>
-								<field name="name"/>
-								<field name="obj_price"/>
-								<field name="vnd_lim"/>
-								<field name="lot_est1"/>
-								<field name="lot_est2"/>
-							</tree>
-							<form string="Objects">
-								<notebook colspan="4">
-								<page string="Description">
-									<field name="auction_id" colspan="4"/>
-									<field name="lot_num"/>
-									<field name="obj_num"/>
+    <record model="ir.actions.act_window" id="action_all_objects_to_sell">
+        <field name="name">Objects to sell</field>
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','&lt;&gt;','sold')]</field>
+        <field name="filter" eval="True"/>
+    </record>
 
-									<newline/>
-									<field name="name"/>
-									<field name="lot_type" select="1"/>
-									<field name="name2"/>
+    <record model="ir.actions.act_window" id="action_all_objects_unplanned">
+        <field name="name">Unplanned objects</field>
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('auction_id','=', False),('state','=','draft')]</field>
+        <field name="filter" eval="True"/>
+    </record>
 
-									<newline/>
-									<field name="artist_id"/>
-									<field name="artist2_id"/>
-									<field name="obj_desc" colspan="4"/>
-									<field name="vnd_lim"/>
-									<field name="vnd_lim_net"/>
-									<field name="lot_est1"/>
-									<field name="lot_est2"/>
+    <!--        for the sold object  start-->
 
-									<field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
-									<field name="product_id" domain="[('sale_ok','=',True)]"/>
-									<field name="state" readonly="1"/>
-								</page><page string="Photos">
-									<field name="image" colspan="4" widget="image"/>
-								</page>
-								</notebook>
-							</form>
-						</field>
-					</page>
-					<page string="Extra Costs">
-						<field name="specific_cost_ids" widget="one2many_list" nolabel="1" colspan="4">
-							<tree string="Deposit Costs" editable="top">
-								<field name="name"/>
-								<field name="amount"/>
-								<field name="account" domain="[('type','=','income')]"/>
-							</tree>
-							<form string="Deposit Costs">
-								<field name="name"/>
-								<field name="amount"/>
-								<field name="account"/>
-							</form>
+    <record model="ir.actions.act_window" id="action_all_objects_unsold">
+        <field name="name">Unsold objects</field>
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('state','=','unsold')]</field>
+        <field name="filter" eval="True"/>
+    </record>
 
-						</field>
-					</page>
-				</notebook>
-			</form>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="view_deposit_border_tree2">
-		<field name="name">Deposit border</field>
-		<field name="model">auction.deposit</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="">
-				<field name="name"/>
-				<field name="partner_id"/>
-				<field name="date_dep"/>
-				<field name="method"/>
-				<field name="tax_id"/>
-				<field name="info"/>
-
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="action_deposit_border">
-		<field name="name">Deposit border</field>
-		<field name="res_model">auction.deposit</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="view_deposit_border_tree2"/>
-	</record>
-
-	<menuitem name="Sellers" id="auction_seller_menu" parent="auction_menu_root" sequence="3"/>
-	<menuitem name="Deposit border" parent="auction_seller_menu" action="action_deposit_border" id="menu_auction_deposit_border"/>
-
-	=======================================================
-		"Auction Management/Buyers/Bids
-	=======================================================
-	<record model="ir.ui.view" id="view_bids_tree">
-		<field name="name">auction.bid_line.tree1</field>
-		<field name="model">auction.bid_line</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Bids">
-				<field name="bid_id"/>
-			<!--	<field name="lot_id"/>-->
-				<field name="price"/>
-				<field name="call"/>
-				<field name="auction"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_bids_form">
-		<field name="name">auction.bid_line.form1</field>
-		<field name="model">auction.bid_line</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Bids">
-				<field name="bid_id" select="1"/>
-				<field name="lot_id" domain="[('auction_id','=',parent['auction_id'])]" on_change="onchange_name(lot_id)" colspan="4"/>
-				<field name="call" colspan="4" select="1"/>
-				<field name="price"/>
-				<!--field name="auction"/-->
-
-			</form>
-		</field>
-	</record>
+    <!-- form3: simplified form meant for during the sale (action button in dates) -->
+    <!--form par defaut-->
+    <record model="ir.ui.view" id="auction_lots_sell_form">
+        <field name="name">auction.lots.form3</field>
+        <field name="model">auction.lots</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auction">
+                <notebook>
+                <page string="Auction">
+                    <field name="obj_num" readonly="1" select="1"/>
+                    <field name="auction_id"/>
+                    <field name="obj_price" select="1"/>
+                    <field name="ach_login" select="1" comparator="="/>
+                    <field name="ach_emp"/>
+                    <field name="obj_comm"/>
+                    <field name="obj_ret" on_change="onchange_obj_ret(obj_ret)"/>
+                    <newline/>
+                    <field name="name" readonly="1" select="1"/>
+                    <field name="name2" readonly="2" select="1"/>
+                    <field name="artist_id" readonly="1"/>
+                    <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
+                    <newline/>
+                    <field name="buyer_price"/>
+                    <field name="is_ok" select="1"/>
+                    <field name="obj_desc" readonly="1" colspan="4"/>
+                    <field name="lot_est1" readonly="1"/>
+                    <field name="lot_est2" readonly="1"/>
+                    <field name="vnd_lim" readonly="1"/>
+                    <field name="vnd_lim_net"/>
+                    <field name="bid_lines" colspan="4" readonly="1">
+                        <tree string="Bids">
+                            <field name="name"/>
+                            <field name="bid_id"/>
+                            <field name="price"/>
+                            <field name="call"/>
+                        </tree>
+                    </field>
+                    <field name="state" readonly="1"/>
+                    <group colspan="2" col="4">
+                        <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to" />
+                        <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
+                        <button name="button_draft" string="Set to draft" states="sold,unsold" type="object" icon="gtk-convert"/>
+                        <button name="button_taken_away" string="Taken away" states="sold" type="object" icon="gtk-goto-last"/>
+                    </group>
+                </page>
+                <page string="Statements">
+                    <field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
+                        widget="one2many_list">
+                        <tree string="Payment's history" editable="top">
+                            <field name="name"/>
+                            <field name="amount"/>
+                            <field name="date"/>
+                </tree>
+                    </field>
+                </page>
+            </notebook>
+            </form>
+        </field>
+    </record>
 
 
-	<record model="ir.actions.act_window" id="b11">
-		<field name="res_model">auction.bid</field>
-		<field name="view_type">form</field>
-	</record>
+    =======================================================
+    Auction Management/seller
+    =======================================================
+    <record model="ir.actions.act_window" id="action_unclassified_objects">
+        <field name="name">Unclassified objects</field>
+        <field name="res_model">report.unclassified.objects</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="filter" eval="True"/>
+     </record>
+
+    <record model="ir.ui.view" id="v12">
+        <field name="name">Auction.deposit.tree</field>
+        <field name="model">auction.deposit</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Deposit Border">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date_dep"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_deposit_border_form">
+        <field name="name">auction.deposit.form</field>
+        <field name="model">auction.deposit</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Deposit Border Form">
+                <notebook>
+                    <page string="General Informations">
+                        <field name="name" select="1"/>
+                        <field name="date_dep" select="1"/>
+                        <field name="partner_id" select="1" on_change="partner_id_change(partner_id)"/>
+                        <field name="method"/>
+                        <newline/>
+                        <field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                        <field name="transfer"/>
+                        <newline/>
+                        <field name="lot_id" colspan="4" mode="tree,graph" nolabel="1">
+                            <tree string="Objects">
+                                <field name="lot_num"/>
+                                <field name="obj_num"/>
+                                <field name="auction_id"/>
+                                <field name="name"/>
+                                <field name="obj_price"/>
+                                <field name="vnd_lim"/>
+                                <field name="lot_est1"/>
+                                <field name="lot_est2"/>
+                            </tree>
+                            <form string="Objects">
+                                <notebook colspan="4">
+                                <page string="Description">
+                                    <field name="auction_id" colspan="4"/>
+                                    <field name="lot_num"/>
+                                    <field name="obj_num"/>
+
+                                    <newline/>
+                                    <field name="name"/>
+                                    <field name="lot_type" select="1"/>
+                                    <field name="name2"/>
+
+                                    <newline/>
+                                    <field name="artist_id"/>
+                                    <field name="artist2_id"/>
+                                    <field name="obj_desc" colspan="4"/>
+                                    <field name="vnd_lim"/>
+                                    <field name="vnd_lim_net"/>
+                                    <field name="lot_est1"/>
+                                    <field name="lot_est2"/>
+
+                                    <field name="author_right" domain="[('domain','=','sabam'),('parent_id','=',False),('type_tax_use','&lt;&gt;','sale')]"/>
+                                    <field name="product_id" domain="[('sale_ok','=',True)]"/>
+                                    <field name="state" readonly="1"/>
+                                </page><page string="Photos">
+                                    <field name="image" colspan="4" widget="image"/>
+                                </page>
+                                </notebook>
+                            </form>
+                        </field>
+                    </page>
+                    <page string="Extra Costs">
+                        <field name="specific_cost_ids" widget="one2many_list" nolabel="1" colspan="4">
+                            <tree string="Deposit Costs" editable="top">
+                                <field name="name"/>
+                                <field name="amount"/>
+                                <field name="account" domain="[('type','=','income')]"/>
+                            </tree>
+                            <form string="Deposit Costs">
+                                <field name="name"/>
+                                <field name="amount"/>
+                                <field name="account"/>
+                            </form>
+
+                        </field>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_deposit_border_tree2">
+        <field name="name">Deposit border</field>
+        <field name="model">auction.deposit</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date_dep"/>
+                <field name="method"/>
+                <field name="tax_id"/>
+                <field name="info"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_deposit_border">
+        <field name="name">Deposit border</field>
+        <field name="res_model">auction.deposit</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_deposit_border_tree2"/>
+    </record>
+
+    <menuitem name="Sellers" id="auction_seller_menu" parent="auction_menu_root" sequence="3"/>
+    <menuitem name="Deposit border" parent="auction_seller_menu" action="action_deposit_border" id="menu_auction_deposit_border"/>
+
+    =======================================================
+        "Auction Management/Buyers/Bids
+    =======================================================
+    <record model="ir.ui.view" id="view_bids_tree">
+        <field name="name">auction.bid_line.tree1</field>
+        <field name="model">auction.bid_line</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Bids">
+                <field name="bid_id"/>
+            <!--    <field name="lot_id"/>-->
+                <field name="price"/>
+                <field name="call"/>
+                <field name="auction"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_bids_form">
+        <field name="name">auction.bid_line.form1</field>
+        <field name="model">auction.bid_line</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Bids">
+                <field name="bid_id" select="1"/>
+                <field name="lot_id" domain="[('auction_id','=',parent['auction_id'])]" on_change="onchange_name(lot_id)" colspan="4"/>
+                <field name="call" colspan="4" select="1"/>
+                <field name="price"/>
+                <!--field name="auction"/-->
+
+            </form>
+        </field>
+    </record>
 
 
-	=======================================================
-		"Auction Management/Buyers/Reporting
-	=======================================================
-
-	<record model="ir.ui.view" id="v19">
-		<field name="name">auction.bid.form</field>
-		<field name="model">auction.bid</field>
-		<field name="arch" type="xml">
-			<form string="Bids">
-				<separator string="Bid information" colspan="4"/>
-				<field name="name" select="1"/>
-				<newline/>
-				<field name="partner_id" select="1" on_change="onchange_contact(partner_id)"/>
-				<field  name="contact_tel" select="2"/>
-				<field name="auction_id" select="1"/>
-				<field name="bid_lines" colspan="4">
-					<tree string="Bids" editable="bottom">
-						<field name="lot_id" domain="[('auction_id','=',parent.auction_id)]"/>
-						<field name="price"/>
-						<field name="call"/>
-					</tree>
-					<form string="Bids" editable="top">
-						<field name="lot_id" domain="[('auction_id','=',parent.auction_id)]"/>
-						<field name="price"/>
-						<field name="call"/>
-					</form>
-
-				</field>
-			</form>
-		</field>
-	</record>
+    <record model="ir.actions.act_window" id="b11">
+        <field name="res_model">auction.bid</field>
+        <field name="view_type">form</field>
+    </record>
 
 
+    =======================================================
+        "Auction Management/Buyers/Reporting
+    =======================================================
 
-	<record model="ir.ui.view" id="view_auction_bid_tree">
-		<field name="name">auction.bid.tree</field>
-		<field name="model">auction.bid</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Bids">
-				<field name="name"/>
-				<field name="auction_id"/>
-				<field name="partner_id"/>
-				<field name="contact_tel"/>
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="v19">
+        <field name="name">auction.bid.form</field>
+        <field name="model">auction.bid</field>
+        <field name="arch" type="xml">
+            <form string="Bids">
+                <separator string="Bid information" colspan="4"/>
+                <field name="name" select="1"/>
+                <newline/>
+                <field name="partner_id" select="1" on_change="onchange_contact(partner_id)"/>
+                <field  name="contact_tel"/>
+                <field name="auction_id" select="1"/>
+                <field name="bid_lines" colspan="4">
+                    <tree string="Bids" editable="bottom">
+                        <field name="lot_id" domain="[('auction_id','=',parent.auction_id)]"/>
+                        <field name="price"/>
+                        <field name="call"/>
+                    </tree>
+                    <form string="Bids" editable="top">
+                        <field name="lot_id" domain="[('auction_id','=',parent.auction_id)]"/>
+                        <field name="price"/>
+                        <field name="call"/>
+                    </form>
 
-	<record model="ir.actions.act_window" id="action_bid_open">
-		<field name="res_model">auction.bid</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-
-	<menuitem name="Buyers" id="auction_buyers_menu" parent="auction_menu_root" sequence="4"/>
-	<menuitem name="Bids" parent="auction_buyers_menu" action="action_bid_open" id="menu_action_bid_open"/>
+                </field>
+            </form>
+        </field>
+    </record>
 
 
-	<record model="ir.actions.act_window" id="action_bids_form">
-		<field name="res_model">auction.bid_line</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
 
-	<menuitem name="Bids line" parent="menu_action_bid_open" action="action_bids_form" id="menu_action_bids_form"/>
+    <record model="ir.ui.view" id="view_auction_bid_tree">
+        <field name="name">auction.bid.tree</field>
+        <field name="model">auction.bid</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Bids">
+                <field name="name"/>
+                <field name="auction_id"/>
+                <field name="partner_id"/>
+                <field name="contact_tel"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_bid_open">
+        <field name="res_model">auction.bid</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Buyers" id="auction_buyers_menu" parent="auction_menu_root" sequence="4"/>
+    <menuitem name="Bids" parent="auction_buyers_menu" action="action_bid_open" id="menu_action_bid_open"/>
+
+
+    <record model="ir.actions.act_window" id="action_bids_form">
+        <field name="res_model">auction.bid_line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Bids line" parent="menu_action_bid_open" action="action_bids_form" id="menu_action_bids_form"/>
 
 
 <!--start : creating auction Reporting menu for the auction by pmo-->
 
 <record model="ir.ui.view" id="view_auction_reports_tree">
-		<field name="name">auction.reports.tree</field>
-		<field name="model">report.auction.view</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Auction results">
-				<field name="auction_id" />
-				<field name="nobjects" />
-				<field name="nbuyer" />
-				<field name="obj_ret" />
-				<field name="nseller" />
-				<field name="min_est" />
-				<field name="max_est" />
-				<field name="adj_price" />
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_reports_form">
-		<field name="name">auction.reports.form</field>
-		<field name="model">report.auction.view</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Auctions results">
-				<field name="auction_id" />
-				<field name="nobjects" />
-				<field name="nbuyer" />
-				<field name="nseller" />
-				<field name="min_est" />
-				<field name="max_est" />
-				<field name="adj_price" />
-			</form>
-		</field>
-	</record>
+        <field name="name">auction.reports.tree</field>
+        <field name="model">report.auction.view</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Auction results">
+                <field name="auction_id" />
+                <field name="nobjects" />
+                <field name="nbuyer" />
+                <field name="obj_ret" />
+                <field name="nseller" />
+                <field name="min_est" />
+                <field name="max_est" />
+                <field name="adj_price" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_reports_form">
+        <field name="name">auction.reports.form</field>
+        <field name="model">report.auction.view</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auctions results">
+                <field name="auction_id" />
+                <field name="nobjects" />
+                <field name="nbuyer" />
+                <field name="nseller" />
+                <field name="min_est" />
+                <field name="max_est" />
+                <field name="adj_price" />
+            </form>
+        </field>
+    </record>
 
-	<menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6"/>
+    <menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6"/>
 
 
 <record model="ir.actions.act_window" id="action_auction_report_allmonth_view1">
-		<field name="name">Auction report</field>
-		<field name="res_model">report.auction.view</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<!--field name="domain">[('auction_id','=', active_id)]</field-->
-	</record>
-	<menuitem name="Auction" id="auction_report_auction_menu" parent="auction_report_menu"/>
+        <field name="name">Auction report</field>
+        <field name="res_model">report.auction.view</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <!--field name="domain">[('auction_id','=', active_id)]</field-->
+    </record>
+    <menuitem name="Auction" id="auction_report_auction_menu" parent="auction_report_menu"/>
    <menuitem name="Auction's Summary"  parent="auction_report_auction_menu" action="action_auction_report_allmonth_view1" id="menu_auction_allmonth_view1"/>
 
 
 
-	<!--start : auction reporting view 2-->
+    <!--start : auction reporting view 2-->
 
 <record model="ir.ui.view" id="view_auction_reports_tree2">
-		<field name="name">auction.reports.tree2</field>
-		<field name="model">report.auction.view2</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Auction Reporting tree view2">
-				<field name="date" />
-				<field name="auction" />
-				<field name="sum_adj" />
-				<field name="obj_number" />
-				<field name="gross_revenue" />
-				<field name="net_revenue" />
-				<field name="obj_margin" />
-				<field name="obj_margin_procent" />
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_reports_form2">
-		<field name="name">Auction report</field>
-		<field name="model">report.auction.view2</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Auctions">
-				<field name="auction" />
-				<field name="sum_adj" />
-				<field name="gross_revenue" />
-				<field name="net_revenue" />
-				<field name="obj_margin" />
-				<field name="obj_margin_procent" />
-			</form>
-		</field>
-	</record>
+        <field name="name">auction.reports.tree2</field>
+        <field name="model">report.auction.view2</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Auction Reporting tree view2">
+                <field name="date" />
+                <field name="auction" />
+                <field name="sum_adj" />
+                <field name="obj_number" />
+                <field name="gross_revenue" />
+                <field name="net_revenue" />
+                <field name="obj_margin" />
+                <field name="obj_margin_procent" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_reports_form2">
+        <field name="name">Auction report</field>
+        <field name="model">report.auction.view2</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auctions">
+                <field name="auction" />
+                <field name="sum_adj" />
+                <field name="gross_revenue" />
+                <field name="net_revenue" />
+                <field name="obj_margin" />
+                <field name="obj_margin_procent" />
+            </form>
+        </field>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_auction_report_thismonth_view2">
-		<field name="name">Auction report</field>
-		<field name="res_model">report.auction.view2</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
-	</record>
+    <record model="ir.actions.act_window" id="action_auction_report_thismonth_view2">
+        <field name="name">Auction report</field>
+        <field name="res_model">report.auction.view2</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
+    </record>
 
-<!--	<menuitem name="This Month" id="auction_report_thismonth_menu" parent="auction_report_menu"/>   -->
-<!--	<menuitem name="Result of Auction" action="action_auction_report_thismonth_view2" id="menu_auction_thismonth_view2" parent="auction_report_thismonth_menu"/> -->
+<!--    <menuitem name="This Month" id="auction_report_thismonth_menu" parent="auction_report_menu"/>   -->
+<!--    <menuitem name="Result of Auction" action="action_auction_report_thismonth_view2" id="menu_auction_thismonth_view2" parent="auction_report_thismonth_menu"/> -->
 
 
 <record model="ir.actions.act_window" id="action_auction_report_allmonth_view2">
-		<field name="name">Auction report</field>
-		<field name="res_model">report.auction.view2</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-	</record>
-	<menuitem name="Auction's Revenues" parent="auction_report_auction_menu" action="action_auction_report_allmonth_view2" id="menu_auction_allmonth_view2"/>
+        <field name="name">Auction report</field>
+        <field name="res_model">report.auction.view2</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem name="Auction's Revenues" parent="auction_report_auction_menu" action="action_auction_report_allmonth_view2" id="menu_auction_allmonth_view2"/>
 
 <!--start : creating seller Reporting menu for the selller by pmo-->
 
 <record model="ir.ui.view" id="view_auction_form">
-		<field name="name">Seller's auction</field>
-		<field name="model">report.seller.auction</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Auction reporting form view">
-				<field name="seller" select="1"/>
-				<field name="total_price"/>
-				<field name="avg_price"/>
-				<field name="state" select="1"/>
-			</form>
-		</field>
-	</record>
+        <field name="name">Seller's auction</field>
+        <field name="model">report.seller.auction</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auction reporting form view">
+                <field name="seller" select="1"/>
+                <field name="total_price"/>
+                <field name="avg_price"/>
+                <field name="state" select="1"/>
+            </form>
+        </field>
+    </record>
 
 
-	<record model="ir.ui.view" id="view_auction_tree">
-		<field name="name">Seller's auction</field>
-		<field name="model">report.seller.auction</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Auction reporting tree view">
-				<field name="auction" />
-				<!--field name="date" /-->
-				<field name="seller" select="1"/>
-				<field name="object_number" select="2"/>
-				<field name="total_price" select="2"/>
-				<field name="avg_price" select="2" />
-				<field name="avg_estimation" select="2" />
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_graph">
-		<field name="name">Seller's auction</field>
-		<field name="model">report.seller.auction</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Auction reporting graph view" orientation="vertical" type="bar">
-				<field name="seller" />
-			<!--	<field name="object_sold"/>	-->
-				<field name="total_price" operator="+"/>
-				<field name="avg_price" operator="+" />
-				<field name="avg_estimation" operator="+" />
+    <record model="ir.ui.view" id="view_auction_tree">
+        <field name="name">Seller's auction</field>
+        <field name="model">report.seller.auction</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Auction reporting tree view">
+                <field name="auction" />
+                <!--field name="date" /-->
+                <field name="seller" select="1"/>
+                <field name="object_number"/>
+                <field name="total_price"/>
+                <field name="avg_price" />
+                <field name="avg_estimation" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_graph">
+        <field name="name">Seller's auction</field>
+        <field name="model">report.seller.auction</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Auction reporting graph view" orientation="vertical" type="bar">
+                <field name="seller" />
+            <!--    <field name="object_sold"/>    -->
+                <field name="total_price" operator="+"/>
+                <field name="avg_price" operator="+" />
+                <field name="avg_estimation" operator="+" />
 
-			</graph>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_auction_reporting1">
-		<field name="name">Seller's auction</field>
-		<field name="res_model">report.seller.auction</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_auction_reporting_all1">
-		<field name="name">Seller's auction</field>
-		<field name="res_model">report.seller.auction</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-	</record>
-		<menuitem name="Sellers" id="auction_report_seller_menu" parent="auction_report_menu"/>
-	<menuitem name="Seller's Summary" action="action_auction_reporting_all1" id="menu_seller_allmonth_view1" parent="auction_report_seller_menu"/>
+            </graph>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_auction_reporting1">
+        <field name="name">Seller's auction</field>
+        <field name="res_model">report.seller.auction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_auction_reporting_all1">
+        <field name="name">Seller's auction</field>
+        <field name="res_model">report.seller.auction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+    </record>
+        <menuitem name="Sellers" id="auction_report_seller_menu" parent="auction_report_menu"/>
+    <menuitem name="Seller's Summary" action="action_auction_reporting_all1" id="menu_seller_allmonth_view1" parent="auction_report_seller_menu"/>
 
 <record model="ir.ui.view" id="view_auction_form2">
-		<field name="name">Seller's auction</field>
-		<field name="model">report.seller.auction2</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Auction reporting2 form view">
-				<field name="auction" select="1"/>
-				<field name="seller" select="1"/>
-				<field name="sum_adj" select="1"/>
-				<field name="gross_revenue" select="1"/>
-				<field name="net_revenue" select="1"/>
-				<field name="net_margin" select="1" />
-				<field name="date" select="1"/>
+        <field name="name">Seller's auction</field>
+        <field name="model">report.seller.auction2</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auction reporting2 form view">
+                <field name="auction" select="1"/>
+                <field name="seller" select="1"/>
+                <field name="sum_adj" select="1"/>
+                <field name="gross_revenue" select="1"/>
+                <field name="net_revenue" select="1"/>
+                <field name="net_margin" select="1" />
+                <field name="date" select="1"/>
 
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_tree2">
-		<field name="name">Seller's auction</field>
-		<field name="model">report.seller.auction2</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Auction reporting2 tree view">
-				<field name="auction" select="1"/>
-				<field name="seller" select="1"/>
-				<field name="sum_adj" select="1" sum="Sum adj"/>
-				<field name="gross_revenue" select="1"/>
-				<field name="net_revenue" select="1"/>
-				<field name="net_margin" select="1" sum="Sum net margin"/>
-				<field name="date" select="1"/>
-				</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_graph2">
-		<field name="name">Seller's auction</field>
-		<field name="model">report.seller.auction2</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Auction seller reporting2 graph view" orientation="vertical" type="bar">
-				<field name="seller" />
-				<field name="net_revenue" operator="+"/>
-				<field name="gross_revenue" operator="+" />
-				<field name="net_margin" operator="+" />
-				</graph>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_auction_reporting_all2">
-		<field name="name">Seller's auction</field>
-		<field name="res_model">report.seller.auction2</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
-	</record>
-	<menuitem name="Seller's Revenues" action="action_auction_reporting_all2" id="menu_seller_allmonth_view2" parent="auction_report_seller_menu"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_tree2">
+        <field name="name">Seller's auction</field>
+        <field name="model">report.seller.auction2</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Auction reporting2 tree view">
+                <field name="auction" select="1"/>
+                <field name="seller" select="1"/>
+                <field name="sum_adj" select="1" sum="Sum adj"/>
+                <field name="gross_revenue" select="1"/>
+                <field name="net_revenue" select="1"/>
+                <field name="net_margin" select="1" sum="Sum net margin"/>
+                <field name="date" select="1"/>
+                </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_graph2">
+        <field name="name">Seller's auction</field>
+        <field name="model">report.seller.auction2</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Auction seller reporting2 graph view" orientation="vertical" type="bar">
+                <field name="seller" />
+                <field name="net_revenue" operator="+"/>
+                <field name="gross_revenue" operator="+" />
+                <field name="net_margin" operator="+" />
+                </graph>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_auction_reporting_all2">
+        <field name="name">Seller's auction</field>
+        <field name="res_model">report.seller.auction2</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
+    </record>
+    <menuitem name="Seller's Revenues" action="action_auction_reporting_all2" id="menu_seller_allmonth_view2" parent="auction_report_seller_menu"/>
 
 <record model="ir.ui.view" id="view_auction_buyer_form">
-		<field name="name">Buyer's auction</field>
-		<field name="model">report.buyer.auction</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Auction buyer reporting form view">
-				<field name="buyer_login" select="1"/>
-				<field name="buyer" select="1"/>
-				<field name="object"/>
-				<field name="total_price"/>
-				<field name="avg_price"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_buyer_tree">
-		<field name="name">Buyer's auction</field>
-		<field name="model">report.buyer.auction</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Auction buyer reporting tree view">
-				<field name="auction" select="1"/>
-				<field name="buyer_login" select="1"/>
-				<field name="buyer" select="1"/>
-				<field name="object" select="1"/>
-				<field name="total_price" select="1"/>
-				<field name="avg_price" select="1"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_auction_buyer_reporting">
-		<field name="name">Buyer's auction</field>
-		<field name="res_model">report.buyer.auction</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
-	</record>
+        <field name="name">Buyer's auction</field>
+        <field name="model">report.buyer.auction</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auction buyer reporting form view">
+                <field name="buyer_login" select="1"/>
+                <field name="buyer" select="1"/>
+                <field name="object"/>
+                <field name="total_price"/>
+                <field name="avg_price"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_buyer_tree">
+        <field name="name">Buyer's auction</field>
+        <field name="model">report.buyer.auction</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Auction buyer reporting tree view">
+                <field name="auction" select="1"/>
+                <field name="buyer_login" select="1"/>
+                <field name="buyer" select="1"/>
+                <field name="object" select="1"/>
+                <field name="total_price" select="1"/>
+                <field name="avg_price" select="1"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_auction_buyer_reporting">
+        <field name="name">Buyer's auction</field>
+        <field name="res_model">report.buyer.auction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
+    </record>
 
 <record model="ir.ui.view" id="view_auction_buyer_form2">
-		<field name="name">Buyer's auction</field>
-		<field name="model">report.buyer.auction2</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Auction buyer reporting form view2">
-				<field name="buyer_login" select="1"/>
-				<field name="buyer" select="1"/>
-				<field name="sumadj" />
-				<field name="gross_revenue" />
-				<field name="net_revenue" />
-				<field name="net_margin" />
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_auction_buyer_tree2">
-		<field name="name">Buyer's auction</field>
-		<field name="model">report.buyer.auction2</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Auction buyer reporting tree view2">
-					<field name="auction" select="1"/>
-					<field name="buyer_login" select="1"/>
-					<field name="buyer" select="1"/>
-					<field name="sumadj" select="1" sum="Sum adj"/>
-					<field name="gross_revenue" select="1"/>
-					<field name="net_revenue" select="1"/>
-					<field name="net_margin" select="1" sum="Sum net margin"/>
-		</tree>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_auction_buyer_reporting2">
-		<field name="name">Buyer's auction</field>
-		<field name="res_model">report.buyer.auction2</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
-	</record>
+        <field name="name">Buyer's auction</field>
+        <field name="model">report.buyer.auction2</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Auction buyer reporting form view2">
+                <field name="buyer_login" select="1"/>
+                <field name="buyer" select="1"/>
+                <field name="sumadj" />
+                <field name="gross_revenue" />
+                <field name="net_revenue" />
+                <field name="net_margin" />
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_auction_buyer_tree2">
+        <field name="name">Buyer's auction</field>
+        <field name="model">report.buyer.auction2</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Auction buyer reporting tree view2">
+                    <field name="auction" select="1"/>
+                    <field name="buyer_login" select="1"/>
+                    <field name="buyer" select="1"/>
+                    <field name="sumadj" select="1" sum="Sum adj"/>
+                    <field name="gross_revenue" select="1"/>
+                    <field name="net_revenue" select="1"/>
+                    <field name="net_margin" select="1" sum="Sum net margin"/>
+        </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_auction_buyer_reporting2">
+        <field name="name">Buyer's auction</field>
+        <field name="res_model">report.buyer.auction2</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_auction_buyer_reporting_all1">
-		<field name="name">Buyer's auction</field>
-		<field name="res_model">report.buyer.auction</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-	</record>
-	<menuitem name="Buyer" id="auction_report_buyer_menu" parent="auction_report_menu"/>
-	<menuitem name="Buyer's Summary" action="action_auction_buyer_reporting_all1" id="menu_buyer_allmonth_view1" parent="auction_report_buyer_menu"/>
+    <record model="ir.actions.act_window" id="action_auction_buyer_reporting_all1">
+        <field name="name">Buyer's auction</field>
+        <field name="res_model">report.buyer.auction</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem name="Buyer" id="auction_report_buyer_menu" parent="auction_report_menu"/>
+    <menuitem name="Buyer's Summary" action="action_auction_buyer_reporting_all1" id="menu_buyer_allmonth_view1" parent="auction_report_buyer_menu"/>
 
-	<record model="ir.actions.act_window" id="action_auction_buyer_reporting_all2">
-		<field name="name">Buyer's auction for all months</field>
-		<field name="res_model">report.buyer.auction2</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-	</record>
+    <record model="ir.actions.act_window" id="action_auction_buyer_reporting_all2">
+        <field name="name">Buyer's auction for all months</field>
+        <field name="res_model">report.buyer.auction2</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+    </record>
 
 
 
@@ -1014,107 +1014,107 @@
 
 <!--end : creating buyer Reporting menu for the buyer by pmo-->
 
-		<record model="ir.ui.view" id="view_report_unplanned_object_tree">
-		<field name="name">Unplanned objects</field>
-		<field name="model">report.unplanned.object</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Unplanned Objects">
-				<field name="depos" select="1"/>
-				<field name="lot" select="1"/>
-				<field name="product_l" select="1"/>
-				<field name="lot_est1_l" select="2"/>
-				<field name="lot_est2_l" select="1"/>
-				<field name="artist_id_l" select="1"/>
-				<field name="name_l" select="1"/>
-				<field name="obj_desc_l" select="2"/>
-			</tree>
-		</field>
-	</record>
-		<record model="ir.ui.view" id="view_report_unplanned_object_form">
-			<field name="name">Unplanned objects</field>
-			<field name="model">report.unplanned.object</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-			<form string="Unplanned Objects">
-				<field name="depos" select="1"/>
-				<field name="lot" select="1"/>
-				<field name="product_l" select="1"/>
-				<field name="lot_est1_l" select="1"/>
-				<field name="lot_est2_l" select="1"/>
-				<field name="artist_id_l" select="1"/>
-				<field name="obj_desc_l" select="1"/>
-				<field name="name_l" select="1"/>
-			</form>
-		</field>
-	</record>
+        <record model="ir.ui.view" id="view_report_unplanned_object_tree">
+        <field name="name">Unplanned objects</field>
+        <field name="model">report.unplanned.object</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Unplanned Objects">
+                <field name="depos" select="1"/>
+                <field name="lot" select="1"/>
+                <field name="product_l" select="1"/>
+                <field name="lot_est1_l"/>
+                <field name="lot_est2_l" select="1"/>
+                <field name="artist_id_l" select="1"/>
+                <field name="name_l" select="1"/>
+                <field name="obj_desc_l"/>
+            </tree>
+        </field>
+    </record>
+        <record model="ir.ui.view" id="view_report_unplanned_object_form">
+            <field name="name">Unplanned objects</field>
+            <field name="model">report.unplanned.object</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Unplanned Objects">
+                <field name="depos" select="1"/>
+                <field name="lot" select="1"/>
+                <field name="product_l" select="1"/>
+                <field name="lot_est1_l" select="1"/>
+                <field name="lot_est2_l" select="1"/>
+                <field name="artist_id_l" select="1"/>
+                <field name="obj_desc_l" select="1"/>
+                <field name="name_l" select="1"/>
+            </form>
+        </field>
+    </record>
 
 =============================
 estimation.adj.category
 ==============================
-	<record model="ir.ui.view" id="view_report_auction_estimation_adj_category_form">
-		<field name="name">report.auction.estimation.adj.category.form</field>
-		<field name="model">report.auction.estimation.adj.category</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Min est/Adj/Max est">
-				<!--field name="date" select="1"/-->
-				<field name="lot_type" select="1"/>
-				<field name="user_id" select="1"/>
-				<field name="lot_est1" select="2"/>
-				<field name="lot_est2" select="2"/>
-				<field name="adj_total" select="2"/>
-				<field name="date" select="1"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_report_auction_estimation_adj_category_tree">
-		<field name="name">report.auction.estimation.adj.category.tree</field>
-		<field name="model">report.auction.estimation.adj.category</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Min est/Adj/Max est">
-				<!--field name="date" select="1"/-->
-				<field name="user_id" select="1"/>
-				<field name="lot_type" select="1"/>
-				<field name="lot_est1" select="1"/>
-				<field name="lot_est2" select="1"/>
-				<field name="adj_total" select="1"/>
-				<field name="date" select="1"/>
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_auction_estimation_adj_category_form">
+        <field name="name">report.auction.estimation.adj.category.form</field>
+        <field name="model">report.auction.estimation.adj.category</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Min est/Adj/Max est">
+                <!--field name="date" select="1"/-->
+                <field name="lot_type" select="1"/>
+                <field name="user_id" select="1"/>
+                <field name="lot_est1"/>
+                <field name="lot_est2"/>
+                <field name="adj_total"/>
+                <field name="date" select="1"/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_report_auction_estimation_adj_category_tree">
+        <field name="name">report.auction.estimation.adj.category.tree</field>
+        <field name="model">report.auction.estimation.adj.category</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Min est/Adj/Max est">
+                <!--field name="date" select="1"/-->
+                <field name="user_id" select="1"/>
+                <field name="lot_type" select="1"/>
+                <field name="lot_est1" select="1"/>
+                <field name="lot_est2" select="1"/>
+                <field name="adj_total" select="1"/>
+                <field name="date" select="1"/>
+            </tree>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_report_auction_estimation_adj_category_graph">
-		<field name="name">report.auction.estimation.adj.category.graph</field>
-		<field name="model">report.auction.estimation.adj.category</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Min est/Adj/Max est" orientation="vertical" type="bar">
-				<!--field name="date" operator="+"/-->
-				<field name="lot_type" select="1"/>
-				<field name="lot_est1" operator="+"/>
-				<field name="adj_total" operator="+"/>
-				<field name="lot_est2" operator="+"/>
-				<field name="user_id" group="True"/>
-			</graph>
-		</field>
-	</record>
-		<record model="ir.actions.act_window" id="action_report_auction_estimation_adj_category_manager_tree">
-		<field name="name">Min est/Adj/Max est</field>
-		<field name="res_model">report.auction.estimation.adj.category</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain">[('date','like',time.strftime('%Y-%m'))]</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_auction_estimation_adj_category_graph">
+        <field name="name">report.auction.estimation.adj.category.graph</field>
+        <field name="model">report.auction.estimation.adj.category</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Min est/Adj/Max est" orientation="vertical" type="bar">
+                <!--field name="date" operator="+"/-->
+                <field name="lot_type" select="1"/>
+                <field name="lot_est1" operator="+"/>
+                <field name="adj_total" operator="+"/>
+                <field name="lot_est2" operator="+"/>
+                <field name="user_id" group="True"/>
+            </graph>
+        </field>
+    </record>
+        <record model="ir.actions.act_window" id="action_report_auction_estimation_adj_category_manager_tree">
+        <field name="name">Min est/Adj/Max est</field>
+        <field name="res_model">report.auction.estimation.adj.category</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('date','like',time.strftime('%Y-%m'))]</field>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_report_auction_estimation_adj_category_member_tree">
-		<field name="name">Min est/Adj/Max est</field>
-		<field name="res_model">report.auction.estimation.adj.category</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain">[('date','like',time.strftime('%Y-%m')),('user_id','=',uid)]</field>
-	</record>
+    <record model="ir.actions.act_window" id="action_report_auction_estimation_adj_category_member_tree">
+        <field name="name">Min est/Adj/Max est</field>
+        <field name="res_model">report.auction.estimation.adj.category</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('date','like',time.strftime('%Y-%m')),('user_id','=',uid)]</field>
+    </record>
 
 <menuitem name="Employees" id="auction_report_employees_menu" parent="auction_report_menu"/>
 <menuitem name="Comparison of estimations" action="action_report_auction_estimation_adj_category_member_tree" id="menu_report_auction_estimation_adj_category_member" parent="auction_report_employees_menu"/>
@@ -1126,325 +1126,325 @@ estimation.adj.category
 sign in sign out report by user
 ==============================
 
-	<record model="ir.ui.view" id="view_report_auction_sign_in_out_tree">
-		<field name="name">report.auction.user.pointing.tree</field>
-		<field name="model">report.auction.user.pointing</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Summary pointing by user ">
-				<field name="user_id" select="1"/>
-				<field name="total_timesheet" widget="float_time"/>
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_auction_sign_in_out_tree">
+        <field name="name">report.auction.user.pointing.tree</field>
+        <field name="model">report.auction.user.pointing</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Summary pointing by user ">
+                <field name="user_id" select="1"/>
+                <field name="total_timesheet" widget="float_time"/>
+            </tree>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_report_auction_sign_in_out_graph">
-		<field name="name">report.auction.user.pointing.graph</field>
-		<field name="model">report.auction.user.pointing</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
+    <record model="ir.ui.view" id="view_report_auction_sign_in_out_graph">
+        <field name="name">report.auction.user.pointing.graph</field>
+        <field name="model">report.auction.user.pointing</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
 
-			<graph string="Summary pointing by user " orientation="vertical" type="bar">
-				<field name="user_id" select="1"/>
-				<field name="total_timesheet" />
-			</graph>
-		</field>
-	</record>
+            <graph string="Summary pointing by user " orientation="vertical" type="bar">
+                <field name="user_id" select="1"/>
+                <field name="total_timesheet" />
+            </graph>
+        </field>
+    </record>
 
 
-	<record model="ir.actions.act_window" id="action_report_auction_sign_in_out_member_tree">
-		<field name="res_model">report.auction.user.pointing</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_report_auction_sign_in_out_manager_tree">
-		<field name="res_model">report.auction.user.pointing</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-	</record>
-	<menuitem name="Summury of Sign_in Sign_out" action="action_report_auction_sign_in_out_member_tree" id="menu_report_auction_sign_in_out_member_tree" parent="auction_report_manager_menu"/>
-	<menuitem name="Summury of Sign_in Sign_out"  action="action_report_auction_sign_in_out_manager_tree" id="menu_report_auction_sign_in_out_manager_tree" parent="auction_report_manager_menu"/>
+    <record model="ir.actions.act_window" id="action_report_auction_sign_in_out_member_tree">
+        <field name="res_model">report.auction.user.pointing</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_report_auction_sign_in_out_manager_tree">
+        <field name="res_model">report.auction.user.pointing</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+    </record>
+    <menuitem name="Summury of Sign_in Sign_out" action="action_report_auction_sign_in_out_member_tree" id="menu_report_auction_sign_in_out_member_tree" parent="auction_report_manager_menu"/>
+    <menuitem name="Summury of Sign_in Sign_out"  action="action_report_auction_sign_in_out_manager_tree" id="menu_report_auction_sign_in_out_manager_tree" parent="auction_report_manager_menu"/>
 
 -->
-	<record model="ir.ui.view" id="view_report_auction_sign_in_out_tree1">
-		<field name="name">report attendance</field>
-		<field name="model">report.attendance</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="User's pointing">
-				<field name="employee_id" select="1"/>
-				<field name="name" select="1"/>
-				<field name="total_attendance" select="1"/>
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_auction_sign_in_out_tree1">
+        <field name="name">report attendance</field>
+        <field name="model">report.attendance</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="User's pointing">
+                <field name="employee_id" select="1"/>
+                <field name="name" select="1"/>
+                <field name="total_attendance" select="1"/>
+            </tree>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_report_auction_sign_in_out_graph1">
-		<field name="name">Graph attendance</field>
-		<field name="model">report.attendance</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="User's pointing"  orientation="vertical" type="bar">
-				<field name="employee_id" select="1"/>
-				<field name="total_attendance" operator="+"/>
-				<field name="name" select="1"/>
-		</graph>
+    <record model="ir.ui.view" id="view_report_auction_sign_in_out_graph1">
+        <field name="name">Graph attendance</field>
+        <field name="model">report.attendance</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="User's pointing"  orientation="vertical" type="bar">
+                <field name="employee_id" select="1"/>
+                <field name="total_attendance" operator="+"/>
+                <field name="name" select="1"/>
+        </graph>
 
-		</field>
-	</record>
-
-
-	<record model="ir.actions.act_window" id="action_report_auction_sign_in_out_member_tree1">
-		<field name="res_model">report.attendance</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-		<field name="domain"> [('name','=',time.strftime('%Y-%m-%d')),('employee_id','=',uid)]</field>
-		<!--<field name="domain"> [('name','ilike',time.strftime('%Y-%m'))]</field>-->
-	</record>
-	<menuitem name="Attendance" action="action_report_auction_sign_in_out_member_tree1" id="menu_report_auction_sign_in_out_member_tree1" parent="auction_report_employees_menu"/>
+        </field>
+    </record>
 
 
-	<record model="ir.actions.act_window" id="action_report_auction_sign_in_out_manager_tree1">
-		<field name="res_model">report.attendance</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-		<field name="domain"> [('name','=',time.strftime('%Y-%m-%d'))]</field>
-	</record>
+    <record model="ir.actions.act_window" id="action_report_auction_sign_in_out_member_tree1">
+        <field name="res_model">report.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="domain"> [('name','=',time.strftime('%Y-%m-%d')),('employee_id','=',uid)]</field>
+        <!--<field name="domain"> [('name','ilike',time.strftime('%Y-%m'))]</field>-->
+    </record>
+    <menuitem name="Attendance" action="action_report_auction_sign_in_out_member_tree1" id="menu_report_auction_sign_in_out_member_tree1" parent="auction_report_employees_menu"/>
 
-	<menuitem name="Attendance"  action="action_report_auction_sign_in_out_manager_tree1" id="menu_report_auction_sign_in_out_manager_tree1" parent="auction_report_manager_menu"/>
+
+    <record model="ir.actions.act_window" id="action_report_auction_sign_in_out_manager_tree1">
+        <field name="res_model">report.attendance</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="domain"> [('name','=',time.strftime('%Y-%m-%d'))]</field>
+    </record>
+
+    <menuitem name="Attendance"  action="action_report_auction_sign_in_out_manager_tree1" id="menu_report_auction_sign_in_out_manager_tree1" parent="auction_report_manager_menu"/>
 
 ==============================
 My Latest Objects
 ==============================
-	<record model="ir.actions.act_window" id="action_report_latest_objects_tree">
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('create_uid','=',uid)]</field>
-	</record>
+    <record model="ir.actions.act_window" id="action_report_latest_objects_tree">
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('create_uid','=',uid)]</field>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_report_latest_objects_manager_tree">
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="limit" eval="80"/>
-	</record>
+    <record model="ir.actions.act_window" id="action_report_latest_objects_manager_tree">
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="limit" eval="80"/>
+    </record>
 
 
 =============================
 My Latest Deposit
 ==============================
 
-	<record model="ir.actions.act_window" id="action_report_latest_doposit_manager_tree">
-		<field name="res_model">auction.deposit</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
+    <record model="ir.actions.act_window" id="action_report_latest_doposit_manager_tree">
+        <field name="res_model">auction.deposit</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 
-	<menuitem name="Latest Deposits" action="action_report_latest_doposit_manager_tree" id="menu_report_latest_doposit_tree_manager" parent="auction_report_manager_menu"/>
+    <menuitem name="Latest Deposits" action="action_report_latest_doposit_manager_tree" id="menu_report_latest_doposit_tree_manager" parent="auction_report_manager_menu"/>
 =============================
 Objects per Day
 ==============================
-	<record model="ir.ui.view" id="view_report_auction_object_date_tree">
-	   <field name="name">Objects by date</field>
-	   <field name="model">report.auction.object.date</field>
-		<field name="type">tree</field>
-			<field name="arch" type="xml">
-			<tree string="Objects per Day">
-				<field name="month" select="1" />
-				<field name="user_id" select="1"/>
-				<field name="obj_num"/>
-				<field name="name" />
-			</tree>
-		</field>
-	 </record>
+    <record model="ir.ui.view" id="view_report_auction_object_date_tree">
+       <field name="name">Objects by date</field>
+       <field name="model">report.auction.object.date</field>
+        <field name="type">tree</field>
+            <field name="arch" type="xml">
+            <tree string="Objects per Day">
+                <field name="month" select="1" />
+                <field name="user_id" select="1"/>
+                <field name="obj_num"/>
+                <field name="name" />
+            </tree>
+        </field>
+     </record>
 
-	 <record model="ir.ui.view" id="view_report_auction_object_date_form">
-		<field name="name">Object date</field>
-		<field name="model">report.auction.object.date</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Objects per Day">
-				<field name="user_id" />
-				<field name="name" select="1"/>
-				<field name="obj_num" />
-				<field name="month" select="1"/>
-			 </form>
-		 </field>
-	 </record>
+     <record model="ir.ui.view" id="view_report_auction_object_date_form">
+        <field name="name">Object date</field>
+        <field name="model">report.auction.object.date</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Objects per Day">
+                <field name="user_id" />
+                <field name="name" select="1"/>
+                <field name="obj_num" />
+                <field name="month" select="1"/>
+             </form>
+         </field>
+     </record>
 
-	<record model="ir.ui.view" id="view_report_auction_object_date_graph">
-		<field name="name">report.auction.object.date.graph</field>
-		<field name="model">report.auction.object.date</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Objects per day"  type="bar">
-				<field name="name" select="1"/>
-				<field name="obj_num" operator="+"/>
-				<field name="user_id" group="True"/>
-			</graph>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_auction_object_date_graph">
+        <field name="name">report.auction.object.date.graph</field>
+        <field name="model">report.auction.object.date</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Objects per day"  type="bar">
+                <field name="name" select="1"/>
+                <field name="obj_num" operator="+"/>
+                <field name="user_id" group="True"/>
+            </graph>
+        </field>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_report_auction_object_date_tree">
-		<field name="res_model">report.auction.object.date</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain">[('month','=',time.strftime('%Y-%m-01'))]</field>
-	</record>
-	<menuitem
-		name="Encoded Objects Per Day"
-		action="action_report_auction_object_date_tree"
-		id="menu_report_auction_object_date_tree"
-		parent="auction_report_manager_menu"/>
+    <record model="ir.actions.act_window" id="action_report_auction_object_date_tree">
+        <field name="res_model">report.auction.object.date</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('month','=',time.strftime('%Y-%m-01'))]</field>
+    </record>
+    <menuitem
+        name="Encoded Objects Per Day"
+        action="action_report_auction_object_date_tree"
+        id="menu_report_auction_object_date_tree"
+        parent="auction_report_manager_menu"/>
 
-	<record model="ir.actions.act_window" id="view_report_object_by_auction">
-		<field name="name">Detailed lots</field>
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="domain">[('auction_id','=', active_id)]</field>
-		<field name="limit" eval="2000"/>
-	</record>
-	<record model="ir.values" id="ir_open_auction_lots">
-		<field name="key2">tree_but_open</field>
-		<field name="model">auction.dates</field>
-		<field name="name">Open auction</field>
-		<field name="value" eval="'ir.actions.act_window,%d'%view_report_object_by_auction"/>
-		<field name="object" eval="True"/>
-	</record>
+    <record model="ir.actions.act_window" id="view_report_object_by_auction">
+        <field name="name">Detailed lots</field>
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('auction_id','=', active_id)]</field>
+        <field name="limit" eval="2000"/>
+    </record>
+    <record model="ir.values" id="ir_open_auction_lots">
+        <field name="key2">tree_but_open</field>
+        <field name="model">auction.dates</field>
+        <field name="name">Open auction</field>
+        <field name="value" eval="'ir.actions.act_window,%d'%view_report_object_by_auction"/>
+        <field name="object" eval="True"/>
+    </record>
 
-	<record model="ir.actions.act_window" id="auction_lots_open">
-		<field name="name">Simplified lots for adjudication</field>
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="domain">[('auction_id','=',active_id)]</field>
-		<field name="limit" eval="2000"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_auction_lots_open_view1">
-		<field name="sequence" eval="1"/>
-		<field name="view_mode">tree</field>
-		<field name="act_window_id" ref="auction_lots_open"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="action_auction_lots_open_view2">
-		<field name="sequence" eval="2"/>
-		<field name="view_mode">form</field>
-		<field name="act_window_id" ref="auction_lots_open"/>
-		<field name="view_id" ref="auction_lots_sell_form"/>
-	</record>
+    <record model="ir.actions.act_window" id="auction_lots_open">
+        <field name="name">Simplified lots for adjudication</field>
+        <field name="res_model">auction.lots</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('auction_id','=',active_id)]</field>
+        <field name="limit" eval="2000"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_auction_lots_open_view1">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="auction_lots_open"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="action_auction_lots_open_view2">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="auction_lots_open"/>
+        <field name="view_id" ref="auction_lots_sell_form"/>
+    </record>
 
-	<record model="ir.values" id="ir_open_auction_lots_adj">
-		<field name="key2">tree_but_action</field>
-		<field name="model">auction.dates</field>
-		<field name="name">Open lots for adjudication</field>
-		<field name="value" eval="'ir.actions.act_window,%d'%auction_lots_open"/>
-		<field name="object" eval="True"/>
-	</record>
+    <record model="ir.values" id="ir_open_auction_lots_adj">
+        <field name="key2">tree_but_action</field>
+        <field name="model">auction.dates</field>
+        <field name="name">Open lots for adjudication</field>
+        <field name="value" eval="'ir.actions.act_window,%d'%auction_lots_open"/>
+        <field name="object" eval="True"/>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_report_object_by_auction">
-		<field name="name">Auction dates</field>
-		<field name="res_model">auction.dates</field>
-		<field name="view_type">tree</field>
-		<field name="domain">[('state','=', 'draft')]</field>
-	</record>
-	<menuitem name="Objects by Auction"
-		parent="auction_objects_menu"
-		id="menu_auction_dates_next_by_auction"
-		action="action_report_object_by_auction" sequence="11"/>
+    <record model="ir.actions.act_window" id="action_report_object_by_auction">
+        <field name="name">Auction dates</field>
+        <field name="res_model">auction.dates</field>
+        <field name="view_type">tree</field>
+        <field name="domain">[('state','=', 'draft')]</field>
+    </record>
+    <menuitem name="Objects by Auction"
+        parent="auction_objects_menu"
+        id="menu_auction_dates_next_by_auction"
+        action="action_report_object_by_auction" sequence="11"/>
 
-	<act_window name="Open lots"
-		domain="[('auction_id', '=', active_id)]"
-		res_model="auction.lots"
-		src_model="auction.dates"
-		id="act_auction_lot_line_open"/>
+    <act_window name="Open lots"
+        domain="[('auction_id', '=', active_id)]"
+        res_model="auction.lots"
+        src_model="auction.dates"
+        id="act_auction_lot_line_open"/>
 
 =============================
 Auction adjudication
 ==============================
 
-	<record model="ir.ui.view" id="view_report_auction_adjudication_tree">
-		<field name="name">report.auction.adjudication.tree</field>
-		<field name="model">report.auction.adjudication</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Total adjudication">
-				<field name="name" select="1"/>
-				<field name="adj_total" select="1"/>
-				<field name="state" select="1"/>
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_auction_adjudication_tree">
+        <field name="name">report.auction.adjudication.tree</field>
+        <field name="model">report.auction.adjudication</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Total adjudication">
+                <field name="name" select="1"/>
+                <field name="adj_total" select="1"/>
+                <field name="state" select="1"/>
+            </tree>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_report_auction_adjudication_graph">
-		<field name="name">report.auction.adjudication.graph</field>
-		<field name="model">report.auction.adjudication</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Total adjudication" type="bar">
-				<field name="name" select="1"/>
-				<field name="adj_total" select="1" />
-				<field name="user_id" group="True"/>
+    <record model="ir.ui.view" id="view_report_auction_adjudication_graph">
+        <field name="name">report.auction.adjudication.graph</field>
+        <field name="model">report.auction.adjudication</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Total adjudication" type="bar">
+                <field name="name" select="1"/>
+                <field name="adj_total" select="1" />
+                <field name="user_id" group="True"/>
 
-			</graph>
-		</field>
+            </graph>
+        </field>
 
-	</record>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_report_auction_adjudication_tree">
-		<field name="res_model">report.auction.adjudication</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-	</record>
-	<menuitem name="Adjudication by Auction" action="action_report_auction_adjudication_tree" id="menu_report_auction_adjudication_tree" parent="auction_report_manager_menu"/>
+    <record model="ir.actions.act_window" id="action_report_auction_adjudication_tree">
+        <field name="res_model">report.auction.adjudication</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+    </record>
+    <menuitem name="Adjudication by Auction" action="action_report_auction_adjudication_tree" id="menu_report_auction_adjudication_tree" parent="auction_report_manager_menu"/>
 
 
-	<record model="ir.ui.view" id="view_auction_deposit_tree">
-		<field name="name">Depositer's statistics</field>
-		<field name="model">report.deposit.border</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Depositer's statistics">
-				<field name="bord" select="1"/>
-				<field name="seller" select="1"/>
-				<field name="moy_est" select="1"/>
-				<field name="total_marge" select="1"/>
-				<field name="nb_obj" select="1"/>
-				</tree>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="menu_view_auction_deposit_tree">
-		<field name="res_model">report.deposit.border</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-	</record>
-	<menuitem name="Depositer's Statistics" action="menu_view_auction_deposit_tree" id="menu_report_deposit_tree_m" parent="auction_report_manager_menu"/>
-	<menuitem name="Depositer's Statistics" action="menu_view_auction_deposit_tree" id="menu_report_deposit_tree_member" parent="auction_report_employees_menu"/>
+    <record model="ir.ui.view" id="view_auction_deposit_tree">
+        <field name="name">Depositer's statistics</field>
+        <field name="model">report.deposit.border</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Depositer's statistics">
+                <field name="bord" select="1"/>
+                <field name="seller" select="1"/>
+                <field name="moy_est" select="1"/>
+                <field name="total_marge" select="1"/>
+                <field name="nb_obj" select="1"/>
+                </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="menu_view_auction_deposit_tree">
+        <field name="res_model">report.deposit.border</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <menuitem name="Depositer's Statistics" action="menu_view_auction_deposit_tree" id="menu_report_deposit_tree_m" parent="auction_report_manager_menu"/>
+    <menuitem name="Depositer's Statistics" action="menu_view_auction_deposit_tree" id="menu_report_deposit_tree_member" parent="auction_report_employees_menu"/>
 =============================
 Object encoded
 ==============================
-	<record model="ir.ui.view" id="view_report_object_encoded_form">
-		<field name="name">report.object.encoded.form</field>
-		<field name="model">report.object.encoded</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Objects statistics">
-				<field name="date" select="1"/>
-				<field name="state" select="1"/>
-				<field name="user_id" select="1"/>
-				<field name="estimation" select="2"/>
-				<field name="obj_ret" select="2"/>
-				<field name="obj_num" select="2" sum="# objects"/>
-			</form>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_object_encoded_form">
+        <field name="name">report.object.encoded.form</field>
+        <field name="model">report.object.encoded</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Objects statistics">
+                <field name="date" select="1"/>
+                <field name="state" select="1"/>
+                <field name="user_id" select="1"/>
+                <field name="estimation"/>
+                <field name="obj_ret"/>
+                <field name="obj_num" sum="# objects"/>
+            </form>
+        </field>
+    </record>
 
 <record model="ir.ui.view" id="view_report_object_encoded_tree">
 <field name="name">report.object.encoded.tree</field>
 <field name="model">report.object.encoded</field>
 <field name="type">tree</field>
 
-	<field name="arch" type="xml">
+    <field name="arch" type="xml">
 
-	<tree string="Objects statistics">
+    <tree string="Objects statistics">
 <field name="date" select="1"/>
 <field name="state" select="1"/>
 <field name="user_id" select="1"/>
@@ -1454,114 +1454,114 @@ Object encoded
 </tree>
 </field>
 </record>
-<!--	<record model="ir.ui.view" id="view_report_object_encoded_tree">
-		<field name="name">report.object.encoded.tree</field>
-		<field name="model">report.object.encoded</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Objects statistics" >
-				<field name="date" select="1"/>
-				<field name="state" select="1"/>
-				<field name="user_id" select="1"/>
-				<field name="estimation" />
-				<field name="obj_ret" />
-				<field name="obj_num" />
-			</tree>
-		</field>
-	</record>
+<!--    <record model="ir.ui.view" id="view_report_object_encoded_tree">
+        <field name="name">report.object.encoded.tree</field>
+        <field name="model">report.object.encoded</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Objects statistics" >
+                <field name="date" select="1"/>
+                <field name="state" select="1"/>
+                <field name="user_id" select="1"/>
+                <field name="estimation" />
+                <field name="obj_ret" />
+                <field name="obj_num" />
+            </tree>
+        </field>
+    </record>
 -->
-	<record model="ir.ui.view" id="view_report_object_encoded_graph">
-		<field name="name">report.object.encoded.graph</field>
-		<field name="model">report.object.encoded</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Objects statistics" type="bar">
-				<field name="user_id" select="1"/>
-				<field name="estimation" operator="+" />
-				<field name="obj_ret"  operator="+" />
-				<field name="obj_num"  operator="+" />
-			</graph>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_object_encoded_graph">
+        <field name="name">report.object.encoded.graph</field>
+        <field name="model">report.object.encoded</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Objects statistics" type="bar">
+                <field name="user_id" select="1"/>
+                <field name="estimation" operator="+" />
+                <field name="obj_ret"  operator="+" />
+                <field name="obj_num"  operator="+" />
+            </graph>
+        </field>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_report_object_encoded_member_tree">
-		<field name="res_model">report.object.encoded</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain"> [('user_id','=',uid),('date','ilike',time.strftime('%Y-%m'))]</field>
-	</record>
+    <record model="ir.actions.act_window" id="action_report_object_encoded_member_tree">
+        <field name="res_model">report.object.encoded</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="domain"> [('user_id','=',uid),('date','ilike',time.strftime('%Y-%m'))]</field>
+    </record>
 
 
-	<record model="ir.ui.view" id="view_report_object_encoded_manager_tree">
-		<field name="name">report.object.encoded.tree</field>
-		<field name="model">report.object.encoded.manager</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Objects statistics">
-				<field name="user_id" select="1"/>
-				<field name="estimation" />
-				<field name="obj_ret" />
-				<field name="obj_num" sum="# objects" select="1"/>
-				<field name="adj" sum="Total adj."/>
-				<field name="obj_margin" />
-				<field name="net_revenue"  sum="Total net rev."/>
-				<field name="gross_revenue"  sum="Total gross rev."/>
-				<field name="date" select="1"/>
+    <record model="ir.ui.view" id="view_report_object_encoded_manager_tree">
+        <field name="name">report.object.encoded.tree</field>
+        <field name="model">report.object.encoded.manager</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Objects statistics">
+                <field name="user_id" select="1"/>
+                <field name="estimation" />
+                <field name="obj_ret" />
+                <field name="obj_num" sum="# objects" select="1"/>
+                <field name="adj" sum="Total adj."/>
+                <field name="obj_margin" />
+                <field name="net_revenue"  sum="Total net rev."/>
+                <field name="gross_revenue"  sum="Total gross rev."/>
+                <field name="date" select="1"/>
 
-			</tree>
-		</field>
-	</record>
+            </tree>
+        </field>
+    </record>
 
-	<record model="ir.ui.view" id="view_report_object_encoded_manager_graph">
-		<field name="name">report.object.encoded.graph</field>
-		<field name="model">report.object.encoded.manager</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Object statistic" type="bar">
-				<field name="user_id" select="1"/>
-				<field name="obj_ret"  operator="+" />
-				<field name="obj_num"  operator="+" />
-				<field name="obj_margin"  operator="+" />
-				<field name="net_revenue" operator="+" />
-				<field name="gross_revenue" operator="+" />
-			</graph>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_object_encoded_manager_graph">
+        <field name="name">report.object.encoded.graph</field>
+        <field name="model">report.object.encoded.manager</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Object statistic" type="bar">
+                <field name="user_id" select="1"/>
+                <field name="obj_ret"  operator="+" />
+                <field name="obj_num"  operator="+" />
+                <field name="obj_margin"  operator="+" />
+                <field name="net_revenue" operator="+" />
+                <field name="gross_revenue" operator="+" />
+            </graph>
+        </field>
+    </record>
 
-	<record model="ir.actions.act_window" id="action_report_object_encoded_manager_tree">
-		<field name="res_model">report.object.encoded.manager</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
-	</record>
+    <record model="ir.actions.act_window" id="action_report_object_encoded_manager_tree">
+        <field name="res_model">report.object.encoded.manager</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
+    </record>
 
-	<record model="ir.ui.view" id="view_report_unclassified_objects">
-		<field name="name">report.unclassified.objects</field>
-		<field name="model">report.unclassified.objects</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Unclassified objects">
-				<field name="obj_num" string="Ref" select="1"/>
-				<field name="name" select="1"/>
-				<field name="ach_login"/>
-				<field name="obj_price"/>
-				<field name="state" select="1"/>
-				<field name="obj_comm"/>
-				<field name="bord_vnd_id"/>
-				<field name="lot_num"/>
-				<field name="lot_est1"/>
-				<field name="lot_est2"/>
-				<field name="lot_type" select="1"/>
-				<field name="auction"/>
-			</tree>
-		</field>
-	</record>
+    <record model="ir.ui.view" id="view_report_unclassified_objects">
+        <field name="name">report.unclassified.objects</field>
+        <field name="model">report.unclassified.objects</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Unclassified objects">
+                <field name="obj_num" string="Ref" select="1"/>
+                <field name="name" select="1"/>
+                <field name="ach_login"/>
+                <field name="obj_price"/>
+                <field name="state" select="1"/>
+                <field name="obj_comm"/>
+                <field name="bord_vnd_id"/>
+                <field name="lot_num"/>
+                <field name="lot_est1"/>
+                <field name="lot_est2"/>
+                <field name="lot_type" select="1"/>
+                <field name="auction"/>
+            </tree>
+        </field>
+    </record>
 
-	<act_window name="Bordereau de dépôt"
-		domain="[('partner_id', '=', active_id)]"
-		res_model="auction.deposit"
-		src_model="res.partner"
-		id="act_auction_lot_open_deposit"/>
+    <act_window name="Bordereau de dépôt"
+        domain="[('partner_id', '=', active_id)]"
+        res_model="auction.deposit"
+        src_model="res.partner"
+        id="act_auction_lot_open_deposit"/>
 
 </data>
 </openerp>

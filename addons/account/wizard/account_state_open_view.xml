@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    	<record id="view_account_state_open" model="ir.ui.view">
+            <field name="name">Account State Open</field>
+            <field name="model">account.state.open</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+					<form string="Open Invoice">
+				    <label string="Are you sure you want to open this invoice ?"/>
+				    <newline/>
+				    <label string="(Invoice should be unreconciled if you want to open it)"/>
+				    <separator colspan="4"/>
+              		<group colspan="2" col="4">
+            			<button special="cancel" string="No"  icon="gtk-no"/>
+            			<button name="change_inv_state" string="Yes" type="object" icon="gtk-yes"/>
+                	</group>
+				</form>
+            </field>
+		</record>
+
+		<record id="action_account_state_open" model="ir.actions.act_window">
+            <field name="name">Account State Open</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.state.open</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_state_open"/>
+	        <field name="context">{'record_id' : active_id}</field>
+            <field name="target">new</field>
+    	</record>
+
+
+    </data>
+</openerp>

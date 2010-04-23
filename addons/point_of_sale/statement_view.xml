@@ -58,12 +58,12 @@
                     	<field name="starting_details_ids" nolabel = "1" colspan="4">
                     		<tree string = "Starting Details" editable="bottom">
                     			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
+                        		<field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
                         		<field name="subtotal" sum="Total"/>
                     		</tree>
                     		<form string = "Ending Details">
                     			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
+                        		<field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
                         		<field name="subtotal"/>
                     		</form>
                     	</field>
@@ -72,12 +72,12 @@
                     	<field name="ending_details_ids" nolabel = "1" colspan="4">
                     		<tree string = "Ending Details" editable="bottom">
                     			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
+                        		<field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
                         		<field name="subtotal" sum="Total"/>
                     		</tree>
                     		<form string = "Ending Details">
                     			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
+                        		<field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
                         		<field name="subtotal"/>
                     		</form>
                     	</field>
@@ -102,7 +102,7 @@
                         </page>
                     </notebook>
                     <group col="7" colspan="4">
-                        <field name="state" select="2" colspan="4"/>
+                        <field name="state" colspan="4"/>
                         <field name="total_entry_encoding"/>
                         </group>
                         <group colspan="4">
@@ -135,12 +135,12 @@
                     	<field name="ending_details_ids" nolabel = "1" colspan="4">
                     		<tree string = "Ending Details" editable="bottom">
                     			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
+                        		<field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
                         		<field name="subtotal" sum="Total"/>
                     		</tree>
                     		<form string = "Ending Details">
                     			<field name="pieces"/>
-                        		<field name="number" on_change="on_change_sub2(pieces,number, parent.balance_end)"/>
+                        		<field name="number" on_change="on_change_sub(pieces,number, parent.balance_end)"/>
                         		<field name="subtotal"/>
                     		</form>
                     	</field>
@@ -165,7 +165,7 @@
                         </page>
                     </notebook>
                     <group col="7" colspan="4">
-                        <field name="state" select="2" colspan="4"/>
+                        <field name="state" colspan="4"/>
                         <field name="total_entry_encoding"/>
                         </group>
                         <group colspan="4">
@@ -294,7 +294,7 @@
                     </page>
                     </notebook>
                     <group col="7" colspan="4">
-                        <field name="state" select="2" colspan="4"/>
+                        <field name="state" colspan="4"/>
                         <field name="total_entry_encoding"/>
                       </group>
                       <group colspan="4">

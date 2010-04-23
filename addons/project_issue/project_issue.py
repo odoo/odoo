@@ -23,11 +23,11 @@ import base64
 import os
 import re
 import time
-import time
-import tools
-from crm import crm
 import mx.DateTime
 from datetime import datetime, timedelta
+
+import tools
+from crm import crm
 from osv import fields,osv,orm
 from osv.orm import except_orm
 from tools.translate import _
@@ -84,7 +84,7 @@ class project_issue(osv.osv):
                     resource_id = False
                     if issue.user_id:
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
-                        resource_id = len(resource_ids) or resource_ids[0]
+                        resource_id = len(resource_ids) and resource_ids[0] or False
 
                     duration = float(ans.days)
                     if issue.section_id.resource_calendar_id:
@@ -124,9 +124,9 @@ class project_issue(osv.osv):
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
+                                method=True, multi='day_open', type="integer", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
+                                method=True, multi='day_close', type="integer", store=True),
         'assigned_to' : fields.many2one('res.users', 'Assigned to'),
         'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
         'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account',
@@ -139,6 +139,60 @@ class project_issue(osv.osv):
        if user.context_project_id:
            return user.context_project_id
        return False
+
+    def convert_issue_task(self, cr, uid, ids, context=None):
+        case_obj = self.pool.get('project.issue')
+        data_obj = self.pool.get('ir.model.data')
+        task_obj = self.pool.get('project.task')
+
+        if context is None:
+            context = {}
+
+#        for case in case_obj.browse(cr, uid, ids, context=context):
+#            if case.state != 'open':
+#                raise osv.except_osv(_('Warning !'),
+#                    _('Issues or Feature Requests should be in \'Open\' state before converting into Task.'))
+
+        result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
+        res = data_obj.read(cr, uid, result, ['res_id'])
+        id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
+        id3 = data_obj._get_id(cr, uid, 'project', 'view_task_tree2')
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+
+        for bug in case_obj.browse(cr, uid, ids, context=context):
+            new_task_id = task_obj.create(cr, uid, {
+                'name': bug.name,
+                'partner_id': bug.partner_id.id,
+                'description':bug.description,
+                'date': bug.date,
+                'project_id':bug.project_id.id,
+                'priority':bug.priority,
+                'user_id':bug.user_id.id,
+                'planned_hours': 0.0,
+            })
+
+            new_task = task_obj.browse(cr, uid, new_task_id)
+
+            vals = {
+                'task_id': new_task_id,
+                }
+            case_obj.write(cr, uid, [bug.id], vals)
+
+        return  {
+            'name': _('Tasks'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'project.task',
+            'res_id': int(new_task_id),
+            'view_id': False,
+            'views': [(id2,'form'),(id3,'tree'),(False,'calendar'),(False,'graph')],
+            'type': 'ir.actions.act_window',
+            'search_view_id': res['res_id'],
+            'nodestroy': True
+        }
 
     def _convert(self, cr, uid, ids, xml_id, context=None):
         data_obj = self.pool.get('ir.model.data')

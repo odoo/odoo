@@ -26,11 +26,10 @@
             <field name="model">hr.expense.expense</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Expenses"
-                    colors="blue:state == 'draft'">
+                <tree string="Expenses" colors="blue:state=='draft'">
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="amount"/>
@@ -49,7 +48,7 @@
                 <tree string="Expenses" editable="top">
                     <field name="date"/>
                     <field name="employee_id"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="amount"/>
@@ -70,32 +69,32 @@
                         <field name="employee_id" select="1"/>
                         <field name="name" select="1"/>
                         <field name="employee_id" select="1"/>
-                        <field name="ref" select="2"/>
+                        <field name="ref"/>
                         <field name="date" select="1"/>
                         <field name="amount"/>
                         <field name="currency_id"/>
-                        <field name="department_id"/>
-                        <field name="company_id"/>
+                        <field name="department_id" groups="base.group_extended"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Expense Sheet">
                             <newline/>
                             <field colspan="4" name="line_ids" nolabel="1">
                                 <form string="Expense Lines">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" select="2"/>
-                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)" select="2"/>
+                                    <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
+                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
                                     <field name="name" select="1"/>
                                     <field name="date_value" select="1"/>
-                                    <field name="unit_quantity" select="2"/>
-                                    <field name="unit_amount" select="2"/>
-                                    <field name="ref" select="2"/>
-                                    <field name="sequence"/>
-                                    <field domain="[('type','=','normal')]" name="analytic_account"/>
+                                    <field name="unit_quantity"/>
+                                    <field name="unit_amount"/>
+                                    <field name="ref"/>
+                                    <field name="sequence" groups="base.group_extended"/>
+                                    <field domain="[('type','=','normal')]" name="analytic_account" groups="base.group_extended"/>
                                     <newline/>
                                     <field name="total_amount"/>
                                 </form>
                             </field>
-                            <field name="state" select="2"/>
+                            <field name="state"/>
                             <group col="6" colspan="2">
                                 <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
                                 <button name="cancel" states="cancel" string="Cancel" type="workflow" icon="gtk-cancel"/>
@@ -105,14 +104,14 @@
                                 <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no"/>
                             </group>
                         </page>
-                        <page string="Other Info">
+                        <page string="Other Info" groups="base.group_extended">
                             <separator colspan="4" string="Accounting data"/>
                             <field name="journal_id"/>
                             <separator colspan="4" string="Validation"/>
-                            <field name="date_confirm" select="2" readonly = "1"/>
-                            <field name="date_valid" select="2" readonly = "1"/>
-                            <field name="user_valid" select="2"/>
-                            <field name="invoice_id" select="2"/>
+                            <field name="date_confirm" readonly = "1"/>
+                            <field name="date_valid" readonly = "1"/>
+                            <field name="user_valid"/>
+                            <field name="invoice_id"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
@@ -128,7 +127,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Expense">
-                <group col="20" colspan="4">
+                    <group>
                       <filter
                         icon="terp-hr"
                         domain="[('state','=','draft')]"
@@ -157,7 +156,7 @@
                             domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
-                      <field name="department_id" widget="selection" />
+                      <field name="department_id" widget="selection" groups="base.group_extended"/>
                 </group>
                 <newline />
                 <group expand="1" string="Group By..." colspan="11" col="11">

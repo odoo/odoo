@@ -52,4 +52,7 @@ class hr_installer(osv.osv_memory):
         'hr_holidays': True,
         'hr_expense': True,
         }
+
 hr_installer()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

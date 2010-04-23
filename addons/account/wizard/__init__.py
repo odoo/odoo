@@ -23,40 +23,39 @@ import wizard_automatic_reconcile
 import account_move_line_reconcile_select
 import account_move_line_unreconcile_select
 import wizard_reconcile
-import wizard_unreconcile
+import account_unreconcile
 import account_invoice_refund
-import wizard_pay_invoice
+import account_pay_invoice
 import account_move_journal
-import wizard_journal_select
+import account_journal_select
 import account_move_bank_reconcile
 import account_subscription_generate
 import wizard_aged_trial_balance
 import wizard_general_ledger_report
 import wizard_third_party_ledger
-import wizard_account_balance_report
-import wizard_partner_balance_report
+import account_partner_balance_report
 import account_period_close
-import wizard_fiscalyear_close
+import account_fiscalyear_close
 import account_fiscalyear_close_state
-import wizard_open_closed_fiscalyear
+import account_vat
+import account_open_closed_fiscalyear
 
-import wizard_vat
 import wizard_compare_account_balance_report
-import wizard_invoice_state
+import account_invoice_state
 import wizard_account_duplicate
 import account_chart
 import wizard_move_line_select
 
-import wizard_validate_account_move
-import wizard_use_model
+import account_validate_account_move
+import account_use_model
 
-import wizard_state_open
+import account_state_open
 
-import wizard_statement_from_invoice
-import wizard_print_journal
-import wizard_central_journal
-import wizard_general_journal
-import wizard_change_currency
+import account_statement_from_invoice
+import account_print_journal
+import account_central_journal
+import account_general_journal
+import account_change_currency
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

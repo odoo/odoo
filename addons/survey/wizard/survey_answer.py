@@ -588,14 +588,15 @@ class survey_question_wiz(osv.osv_memory):
                     self.pool.get(context.get('object',False)).survey_req_done(cr, uid, [int(context.get('cur_id'))], context)
                 else:
                     self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})
-
-        for key,val in sur_name_read['store_ans'].items():
-            for field in vals:
-                if field.split('_')[0] == val['question_id']:
-                    click_state = False
-                    click_update.append(key)
-                    break
-
+        if sur_name_read['store_ans'] and type(sur_name_read['store_ans']) == dict:
+            for key,val in sur_name_read['store_ans'].items():
+                for field in vals:
+                    if field.split('_')[0] == val['question_id']:
+                        click_state = False
+                        click_update.append(key)
+                        break
+        else:
+            sur_name_read['store_ans'] = {}
         if click_state:
             que_li = []
             resp_id_list = []

@@ -12,10 +12,8 @@
                         <filter icon="terp-hr" domain="[('state','=','confirm')]" string="To Validate"/>
                         <filter icon="terp-hr" domain="[('state','=','validate')]" string="Validated"
                             default="context.get('report', False)"/>
-                        <separator orientation="vertical"/> 
-                        <filter icon="terp-hr" help="My Leaves" domain="[('user_id','=',uid)]" string="My Leaves" default="1"/>
-                        <separator orientation="vertical"/> 
-                        <field name="user_id" widget="selection" />
+                        <separator orientation="vertical"/>
+                        <field name="user_id" widget="selection" default="uid"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-hr"
                                 domain="[('department_id.manager_id','=',uid)]"
@@ -28,7 +26,7 @@
                         <filter string="Department" icon="terp-sale" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Manager" icon="terp-sale" domain="[]" context="{'group_by':'manager_id'}"/>
                         <filter string="User" icon="terp-sale" domain="[]" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/> 
+                        <separator orientation="vertical"/>
                         <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Type" icon="terp-sale" domain="[]" context="{'group_by':'holiday_status_id'}"
                             default="context.get('report', False)"/>
@@ -286,10 +284,10 @@
             <field name="arch" type="xml">
                 <form string="Leave Type">
                     <field colspan="4" name="name" select="1"/>
-                    <field name="limit" select="2"/>
-                    <field name="active" select="2"/>
+                    <field name="limit"/>
+                    <field name="active"/>
                     <field name="categ_id"  select="1" widget="selection"/>
-                    <field name="color_name" select="2"/>
+                    <field name="color_name"/>
                 </form>
             </field>
         </record>

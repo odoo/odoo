@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,46 +15,52 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
-import wizard
-import netsvc
-import time
-import pooler
-from osv import osv
+from osv import osv, fields
 from tools.translate import _
 
-class wiz_timebox_empty(wizard.interface):
-    def _empty(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        ids = pool.get('project.gtd.timebox').search(cr, uid, [])
-        if not len(ids):
-            raise wizard.except_wizard(_('Error !'), _('No timebox child of this one !'))
-        tids = pool.get('project.task').search(cr, uid, [('timebox_id','=',data['id'])])
+class project_timebox_empty(osv.osv_memory):
+
+    _name = 'project.timebox.empty'
+    _description = 'Project Timebox Empty'
+    _columns = {
+        'name': fields.char('Name', size=32)
+                }
+
+    def view_init(self, cr , uid , fields_list, context=None):
+        if context is None:
+            context = {}
+        self._empty(cr, uid, context=context)
+        pass
+
+    def _empty(self, cr, uid, context=None):
         close = []
         up = []
-        for task in pool.get('project.task').browse(cr, uid, tids, context):
-            if (task.state in ('cancel','done')) or (task.user_id.id<>uid):
+        obj_tb = self.pool.get('project.gtd.timebox')
+        obj_task = self.pool.get('project.task')
+
+        if context is None:
+            context = {}
+        if not 'active_id' in context:
+            return {}
+
+        ids = obj_tb.search(cr, uid, [], context=context)
+        if not len(ids):
+            raise osv.except_osv(_('Error !'), _('No timebox child of this one !'))
+        tids = obj_task.search(cr, uid, [('timebox_id', '=', context['active_id'])])
+        for task in obj_task.browse(cr, uid, tids, context):
+            if (task.state in ('cancel','done')) or (task.user_id.id <> uid):
                 close.append(task.id)
             else:
                 up.append(task.id)
         if up:
-            pool.get('project.task').write(cr, uid, up, {'timebox_id':ids[0]})
+            obj_task.write(cr, uid, up, {'timebox_id':ids[0]})
         if close:
-            pool.get('project.task').write(cr, uid, close, {'timebox_id':False})
+            obj_task.write(cr, uid, close, {'timebox_id':False})
         return {}
 
-    states = {
-        'init' : {
-            'actions' : [_empty],
-            'result' : {'type':'state', 'state':'end'}
-        }
-    }
-wiz_timebox_empty('project.gtd.timebox.empty')
-
+project_timebox_empty()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

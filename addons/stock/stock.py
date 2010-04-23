@@ -1370,8 +1370,11 @@ class stock_move(osv.osv):
             new_moves = []
             for picking, todo in self._chain_compute(cr, uid, moves, context).items():
                 ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
+                pick_name = ''
+                if ptype == 'delivery':
+                    pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.delivery')
                 pickid = self.pool.get('stock.picking').create(cr, uid, {
-                    'name': picking.name,
+                    'name': pick_name or picking.name,
                     'origin': str(picking.origin or ''),
                     'type': ptype,
                     'note': picking.note,

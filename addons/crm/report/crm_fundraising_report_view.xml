@@ -37,7 +37,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="nbr" position="after">
-                	<field name="delay_close"/>
+                    <field name="delay_close"/>
                     <field name="amount_revenue"/>
                     <field name="amount_revenue_prob"/>
                     <field name="probability"/>
@@ -92,23 +92,24 @@
         </record>
 
 
-       	<record model="ir.actions.act_window.view" id="action_report_crm_fundrising_tree">
-	        <field name="sequence" eval="1"/>
-	        <field name="view_mode">tree</field>
-	        <field name="view_id" ref="view_report_crm_fundraising_tree"/>
-	        <field name="act_window_id" ref="action_report_crm_fundraising"/>
-	    </record>
+           <record model="ir.actions.act_window.view" id="action_report_crm_fundrising_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_crm_fundraising_tree"/>
+            <field name="act_window_id" ref="action_report_crm_fundraising"/>
+        </record>
 
         <record model="ir.actions.act_window.view" id="action_report_crm_fundrising_graph">
-	        <field name="sequence" eval="2"/>
-	        <field name="view_mode">graph</field>
-	        <field name="view_id" ref="view_report_crm_fundraising_graph"/>
-	        <field name="act_window_id" ref="action_report_crm_fundraising"/>
-	    </record>
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_fundraising_graph"/>
+            <field name="act_window_id" ref="action_report_crm_fundraising"/>
+        </record>
 
         <menuitem name="Fundraising"
-        	action="action_report_crm_fundraising"
-        	id="menu_report_crm_fundraising_tree" parent="base.next_id_64" />
+            action="action_report_crm_fundraising"
+            groups="base.group_extended"
+            id="menu_report_crm_fundraising_tree" parent="base.next_id_64" />
 
     </data>
 </openerp>

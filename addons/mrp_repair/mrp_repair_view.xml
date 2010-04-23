@@ -9,17 +9,17 @@
             <field name="arch" type="xml">
                 <form string="Repairs order">
                     <group col="6" colspan="4">
-                    	<field name="name"/>
+                        <field name="name"/>
                         <field name="product_id" select="1"  on_change="onchange_product_id(product_id)"/>
                         <field name="deliver_bool"/>
-                    	<newline/>
-                        <field name="prodlot_id" select="2" on_change="onchange_lot_id(prodlot_id,product_id)"/>
+                        <newline/>
+                        <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)"/>
                         <field name="move_id" on_change="onchange_move_id(product_id, move_id)"/>
                         <field name="repaired"/>
-                    	<newline/>
-                        <field name="partner_id" select="2" on_change="onchange_partner_id(partner_id,address_id)"/>
+                        <newline/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)"/>
                         <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}"/>
-                    	<field name="invoiced"/>
+                        <field name="invoiced"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Operations">
@@ -29,25 +29,25 @@
                                 <form string="Operations">
                                     <notebook>
                                         <page string="Repair Line">
-		                                    <field name="name" colspan="4"/>
-		                                    <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)" colspan="4"/>
-		                                    <field name="product_uom_qty" string="Qty" />
-		                                    <field name="product_uom" string="UoM"/>
-		                                    <field name="price_unit"/>
-		                                    <field name="price_subtotal"/>
-		                                    <field name="location_id"/>
-		                                    <field name="location_dest_id"/>
+                                            <field name="name" colspan="4"/>
+                                            <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)" colspan="4"/>
+                                            <field name="product_uom_qty" string="Qty" />
+                                            <field name="product_uom" string="UoM"/>
+                                            <field name="price_unit"/>
+                                            <field name="price_subtotal"/>
+                                            <field name="location_id"/>
+                                            <field name="location_dest_id"/>
                                             <newline/>
                                             <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
                                             <group colspan="2">
                                                 <field name="to_invoice"/>
-    		                                    <field name="invoiced"/>
+                                                <field name="invoiced"/>
                                             </group>
                                             <newline/>
                                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                             <separator colspan="4" string="States"/>
                                             <field name="state"/>
-										</page>
+                                        </page>
                                         <page string="History" groups="base.group_extended">
                                             <field colspan="4" name="move_id" />
                                             <field colspan="4" name="invoice_line_id"/>
@@ -78,7 +78,7 @@
                             </group>
                             <newline/>
                             <group col="13" colspan="4">
-                                <field name="state" select="2"/>
+                                <field name="state"/>
                                 <button name="repair_confirm" states="draft" string="Confirm Repair"/>
                                 <button name="repair_ready" states="confirmed" string="Start Repair"/>
                                 <button name="action_repair_start" states="ready" string="Start Repair"/>
@@ -93,10 +93,12 @@
                             </group>
                         </page>
                         <page string="Invoicing">
-                            <field name="invoice_method" colspan="4" />
-                            <field name="pricelist_id" context="product_id=product_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
+                            <field name="invoice_method" colspan="4"/>
+                            <field
+                                name="pricelist_id" context="product_id=product_id"
+                                attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                             <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
-                            <!--<field name="invoice_id"/>-->
+                            <!-- <field name="invoice_id"/> -->
                             <field colspan="4" mode="tree,form" name="fees_lines" nolabel="1" widget="one2many_list">
                                 <form string="Fees">
                                     <notebook>
@@ -115,7 +117,7 @@
                                             <newline/>
                                             <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&gt;&gt;','purchase')]"/>
                                          </page>
-										 <page string="History" groups="base.group_extended">
+                                         <page string="History" groups="base.group_extended">
                                             <field colspan="4" name="invoice_line_id" />
                                         </page>
                                       </notebook>
@@ -154,13 +156,13 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Repairs order">
-                	<field name="name" select="1" />
+                    <field name="name" select="1" />
                         <field name="product_id" select="1" />
-                        <field name="prodlot_id" select="2"/>
-                        <field name="partner_id" select="2"/>
+                        <field name="prodlot_id"/>
+                        <field name="partner_id"/>
                         <field name="address_id"/>
                             <field name="location_id"/>
-                            <field name="state" select="2"/>
+                            <field name="state"/>
                             <field name="move_id"/>
                             <field name="location_dest_id"/>
                             <field name="guarantee_limit"/>
@@ -191,7 +193,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
-        	<field name="filter" eval="True"/>
+            <field name="filter" eval="True"/>
         </record>
 
         <record id="action_repair_progress_tree" model="ir.actions.act_window">
@@ -201,7 +203,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','under_repair')]</field>
-        	<field name="filter" eval="True"/>
+            <field name="filter" eval="True"/>
         </record>
 
         <record id="action_repair_ready_tree" model="ir.actions.act_window">
@@ -211,7 +213,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','!=','draft'),('state','!=','under_repair'),('state','!=','2binvoiced'),('state','!=','invoice_except'),('state','!=','done'),('state','!=','cancel'),]</field>
-        	<field name="filter" eval="True"/>
+            <field name="filter" eval="True"/>
         </record>
 
         <record id="action_repair_2binvoiced_tree" model="ir.actions.act_window">

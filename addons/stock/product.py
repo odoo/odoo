@@ -335,7 +335,7 @@ class product_template(osv.osv):
             'stock.location',
             type='many2one',
             relation='stock.location',
-            string="Requisition Location",
+            string="Procurement Location",
             method=True,
             view_load=True,
             domain=[('usage','like','procurement')],
