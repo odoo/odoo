@@ -67,7 +67,9 @@ class res_currency(osv.osv):
         if currency.rounding == 0:
             return 0.0
         else:
-            return round(amount / currency.rounding,6) * currency.rounding
+            # /!\ First member below must be rounded to full unit!
+            # Do not pass a rounding digits value to round()
+            return round(amount / currency.rounding) * currency.rounding
 
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
