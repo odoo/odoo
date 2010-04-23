@@ -43,7 +43,6 @@ import account_open_closed_fiscalyear
 
 import wizard_compare_account_balance_report
 import account_invoice_state
-import wizard_account_duplicate
 import account_chart
 import account_move_line_select
 
