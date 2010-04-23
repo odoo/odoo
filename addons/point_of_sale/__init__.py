@@ -21,10 +21,11 @@
 ##############################################################################
 
 import pos
+import pos_account_bank_statement
 import stock
 import wizard
 import report
-import pos_account_bank_statement
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1038,31 +1038,6 @@ class pos_order(osv.osv):
 
 pos_order()
 
-class account_bank_statement(osv.osv):
-    _inherit = 'account.bank.statement'
-    _columns={
-        'user_id': fields.many2one('res.users',ondelete='cascade',string='User', readonly=True),
-    }
-    _defaults = {
-        'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id
-    }
-account_bank_statement()
-
-class account_bank_statement_line(osv.osv):
-    _inherit = 'account.bank.statement.line'
-    def _get_statement_journal(self, cr, uid, ids, context, *a):
-        res = {}
-        for line in self.browse(cr, uid, ids):
-            res[line.id] = line.statement_id and line.statement_id.journal_id and line.statement_id.journal_id.name or None
-        return res
-    _columns={
-        'journal_id': fields.function(_get_statement_journal, method=True,store=True, string='Journal', type='char', size=64),
-        'am_out':fields.boolean("To count"),
-        'is_acc':fields.boolean("Is accompte"),
-        'pos_statement_id': fields.many2one('pos.order',ondelete='cascade'),
-    }
-account_bank_statement_line()
-
 class pos_order_line(osv.osv):
     _name = "pos.order.line"
     _description = "Lines of Point of Sale"
@@ -1297,44 +1272,6 @@ class pos_payment(osv.osv):
         return super(pos_payment, self).write(cr, user, ids, values, context)
 
 pos_payment()
-
-class account_move_line(osv.osv):
-    _inherit = 'account.move.line'
-    def create(self, cr, user, vals, context={}):
-        pos_obj = self.pool.get('pos.order')
-        val_name = vals.get('name', '')
-        val_ref = vals.get('ref', '')
-        if (val_name and 'POS' in val_name) and (val_ref and 'PACK' in val_ref):
-            aaa = re.search(r'Stock move.\((.*)\)', vals.get('name'))
-            name_pos = aaa.groups()[0]
-            pos_id = name_pos.replace('POS ','')
-            if pos_id and pos_id.isdigit():
-                pos_curr = pos_obj.browse(cr,user,int(pos_id))
-                pos_curr = pos_curr  and pos_curr.contract_number or ''
-                vals['ref'] = pos_curr or vals.get('ref')
-        return super(account_move_line, self).create(cr, user, vals, context)
-
-account_move_line()
-
-
-class account_move(osv.osv):
-    _inherit = 'account.move'
-    def create(self, cr, user, vals, context={}):
-        pos_obj = self.pool.get('pos.order')
-        val_name = vals.get('name', '')
-        val_ref = vals.get('ref', '')
-        if (val_name and 'POS' in val_name) and (val_ref and 'PACK' in val_ref):
-            aaa = re.search(r'Stock move.\((.*)\)', vals.get('name'))
-            name_pos = aaa.groups()[0]
-            pos_id = name_pos.replace('POS ','')
-            if pos_id and pos_id.isdigit():
-                pos_curr = pos_obj.browse(cr,user,int(pos_id))
-                pos_curr = pos_curr  and pos_curr.contract_number or ''
-                vals['ref'] = pos_curr or vals.get('ref')
-        return super(account_move, self).create(cr, user, vals, context)
-
-account_move()
-
 
 class product_product(osv.osv):
     _inherit = 'product.product'
