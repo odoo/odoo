@@ -97,7 +97,13 @@ class node_calendar_collection(nodes.node_dir):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
-        where = [('collection_id','=',self.dir_id)]                              
+        where = [('collection_id','=',self.dir_id)]  
+        ext = False 
+        if name: 
+            res = name.split('.ics') 
+            if len(res) > 1:
+                name = res[0]
+                ext = '.ics'
         if name:            
             where.append(('name','=',name))
         if not domain:
@@ -107,7 +113,10 @@ class node_calendar_collection(nodes.node_dir):
         ids = fil_obj.search(cr,uid,where,context=ctx)
         res = []
         for calender in fil_obj.browse(cr, uid, ids, context=ctx):
-            res.append(node_calendar(calender.name, self, self.context, calender))
+            if not ext:
+                res.append(node_calendar(calender.name, self, self.context, calender))
+            else:
+                res.append(res_node_calendar(name, self, self.context, calender))
         return res
 
     def _get_dav_owner(self, cr):
@@ -336,13 +345,14 @@ class res_node_calendar(nodes.node_class):
            "http://calendarserver.org/ns/" : '_get_dav',
            "urn:ietf:params:xml:ns:caldav" : '_get_caldav'} 
 
-    def __init__(self,path, parent, context, res_obj, res_model, res_id=None):
-        super(res_node_calendar,self).__init__(path, parent, context)
-        self.calendar_id = parent.calendar_id
+    def __init__(self,path, parent, context, res_obj, res_model=None, res_id=None):
+        super(res_node_calendar,self).__init__(path, parent, context)        
         self.mimetype = 'text/calendar'
         self.create_date = parent.create_date
         self.write_date = parent.write_date or parent.create_date
+        self.calendar_id = hasattr(parent, 'calendar_id') and parent.calendar_id or False
         if res_obj:
+            if not self.calendar_id: self.calendar_id = res_obj.id
             self.create_date = res_obj.create_date
             self.write_date = res_obj.write_date or res_obj.create_date
             self.displayname = res_obj.name
@@ -403,7 +413,12 @@ class res_node_calendar(nodes.node_class):
         return calendar_obj.import_cal(cr, uid, base64.encodestring(data), self.calendar_id)
 
     def _get_ttag(self,cr):
-        return '%s_%d' % (self.model, self.res_id)
+        res = False
+        if self.model and self.res_id:
+            res = '%s_%d' % (self.model, self.res_id)
+        elif self.calendar_id:
+            res = '%d' % (self.calendar_id)
+        return res
 
 
     
