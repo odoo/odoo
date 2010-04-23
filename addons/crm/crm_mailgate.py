@@ -23,6 +23,7 @@ import time
 import re
 import os
 
+import binascii
 import mx.DateTime
 import base64
 
@@ -72,6 +73,19 @@ class crm_cases(osv.osv):
         res = self.create(cr, uid, vals, context)
         cases = self.browse(cr, uid, [res])
         self._history(cr, uid, cases, _('Receive'), history=True, details=body, email_from=msg_from, message_id=msg.get('id'))
+        
+        attachents = msg.get('attachments', [])
+        for attactment in attachents or []:
+            data_attach = {
+                'name': attactment,
+                'datas':binascii.b2a_base64(str(attachents.get(attactment))),
+                'datas_fname': attactment,
+                'description': 'Mail attachment',
+                'res_model': self._name,
+                'res_id': res,
+            }
+            self.pool.get('ir.attachment').create(cr, uid, data_attach)
+
         return res
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context={}):
