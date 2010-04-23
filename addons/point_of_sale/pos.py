@@ -227,12 +227,6 @@ class pos_order(osv.osv):
             res[order.id] = val
         return res
 
-#    def payment_get(self, cr, uid, ids, context=None):
-#        """  Calculates Total Returned  from the order
-#        @return: Dictionary of values """          
-#        cr.execute("select id from pos_payment where order_id =ANY(%s)",(ids,))
-#        return [i[0] for i in cr.fetchall()]
-
     def _sale_journal_get(self, cr, uid, context):
         
         """ To get  sale journal for this order" 
@@ -253,7 +247,6 @@ class pos_order(osv.osv):
                
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         res = self.pool.get('sale.shop').search(cr, uid, [])
-       # res = self.pool.get('sale.shop').search(cr, uid, [('company_id', '=', company.id)])
         if res:
             return res[0]
         else:
@@ -345,19 +338,9 @@ class pos_order(osv.osv):
         'first_name': fields.char('First Name', size=64),
         'state_2': fields.function(_get_v,type='selection',selection=[('to_verify', 'To Verify'), ('accepted', 'Accepted'),
             ('refused', 'Refused')], string='State', readonly=True, method=True, store=True),
-        
-    #    'last_name': fields.char('Last Name', size=64),
-    #    'street': fields.char('Street', size=64),
-    #    'zip2': fields.char('Zip', size=64),
-    #    'city': fields.char('City', size=64),
-    #    'mobile': fields.char('Mobile', size=64),
-    #    'email': fields.char('Email', size=64),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
         'sale_journal': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True, ),
-      #  'account_receivable': fields.many2one('account.account',
-      #      'Default Receivable', required=True, states={'draft': [('readonly', False)]},
-      #      readonly=True, ),
         'invoice_wanted': fields.boolean('Create Invoice'),
         'note_2': fields.char('Customer Note',size=64),
         'type_rec': fields.char('Type of Receipt',size=64),
@@ -543,7 +526,6 @@ class pos_order(osv.osv):
                     cr.execute("select s.id from stock_location s, stock_warehouse w where w.lot_stock_id=s.id and w.id= %d "%(order.shop_id.warehouse_id.id))
                     res=cr.fetchone()
                     location_id=res and res[0] or None
-#                    location_id = order and order.shop_id and order.shop_id.warehouse_id and order.shop_id.warehouse_id.lot_stock_id.id or None
                     stock_dest_id = int(val.split(',')[1])
                     if line.qty < 0:
                         location_id, stock_dest_id = stock_dest_id, location_id
@@ -1002,9 +984,7 @@ class pos_order(osv.osv):
                                                                         'statement_id': False,
                                                                         'account_id':order_account
                                                                      })
-           #     account_move_obj.button_validate(cr, uid, [move_id, payment_move_id], context=context)
             self.write(cr,uid,order.id,{'state':'done'})
-         #       account_move_line_obj.reconcile(cr, uid, to_reconcile, type='manual', context=context)
         return True
 
     def cancel_picking(self, cr, uid, ids, context=None):
@@ -1045,7 +1025,6 @@ class pos_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             if not order.journal_entry:
                 self.create_account_move(cr, uid, ids, context={})
-        #self.write(cr, uid, ids, {'state': 'done'})
         return True
 
     def compute_state(self, cr, uid, id):
@@ -1119,7 +1098,6 @@ class pos_order_line(osv.osv):
             price = self.price_by_product(cr, uid, ids, line.order_id.pricelist_id.id, line.product_id.id, line.qty, line.order_id.partner_id.id)
             if line.discount!=0.0:
                 res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
-#                res[line.id] = price * line.qty * (1 - (line.discount or 0.0) / 100.0)
             else:
                 res[line.id]=line.price_unit*line.qty
         return res
@@ -1192,9 +1170,7 @@ class pos_order_line(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', required=True),
         'notice': fields.char('Discount Notice', size=128, required=True),
         'serial_number': fields.char('Serial Number', size=128),
-#        'contract_number': fields.char('Contract Number', size=512),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
-#        'price_unit': fields.float('Unit Price'),
         'price_unit': fields.function(_get_amount, method=True, string='Unit Price', store=True),
         'price_ded': fields.float('Discount(Amount)'),
         'qty': fields.float('Quantity'),
@@ -1496,10 +1472,9 @@ class report_sales_by_margin_pos_month(osv.osv):
     _description = "Sales by margin monthly"
     _auto = False
     _columns = {
-#        'pos_name': fields.char('POS Order', size=64, readonly=True),
+
         'product_name':fields.char('Product Name', size=64, readonly=True),
         'date_order': fields.date('Order Date',required=True, select=True),
-        #'amount': fields.float('Total', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'User', readonly=True, select=True),
         'qty': fields.float('Qty', readonly=True, select=True),
         'net_margin_per_qty':fields.float('Net margin per Qty', readonly=True, select=True),

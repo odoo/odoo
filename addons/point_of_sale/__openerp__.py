@@ -37,7 +37,6 @@ Main features :
     """,
     'author': 'Tiny',
     'depends': ['sale', 'delivery'],
-#    'depends': ['sale', 'purchase', 'account', 'account_tax_include','board','mrp','board_manufacturing','delivery','profile_manufacturing','account','multi_company'],
     'init_xml': [],
 
     'update_xml': [
@@ -73,7 +72,6 @@ Main features :
         'statement_view.xml',
         'statement_report.xml',
         'statement_data.xml',
-        'statement_wizard.xml',    
     ],
     'demo_xml': ['pos_demo.xml','singer_statement_demo.xml','multi_company_stock_data.xml'],
     'installable': True,
