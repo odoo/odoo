@@ -39,24 +39,18 @@ class purchase_requisition(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),        
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase'),
-        'state': fields.selection([('draft','Draft'),('open','Open'),('cancel','Cancelled'),('close','Close'),('done','Done')], 'State', required=True)
+        'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'state': lambda *args: 'open',
+        'state': lambda *args: 'draft',
         'exclusive': lambda *args: 'multiple',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
         'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id ,       
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
 
-    def tender_close(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state': 'done', 'date_end': time.strftime('%Y-%m-%d %H:%M:%S')})
-        return True
-    
-    def tender_open(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'open'}, context=context)
-        return True        
+            
     def tender_cancel(self, cr, uid, ids, context={}):
         purchase_order_obj = self.pool.get('purchase.order')
         for purchase in self.browse(cr, uid, ids):
@@ -65,14 +59,14 @@ class purchase_requisition(osv.osv):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])     
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True        
-    def tender_confirm(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+    def tender_in_progress(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
         return True 
     def tender_reset(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'draft'})
         return True    
     def tender_done(self, cr, uid, ids, context={}):
-        self.write(cr, uid, ids, {'state':'done'}, context=context)
+        self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         return True     
     
       
@@ -84,7 +78,7 @@ class purchase_requisition_line(osv.osv):
     _description="Purchase Requisition Line"
     _rec_name = 'product_id'
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product'),
+        'product_id': fields.many2one('product.product', 'Product' , domain=[('purchase_requisition', '=', True)]),
         'product_uom_id': fields.many2one('product.uom', 'Product UoM'),
         'product_qty': fields.float('Quantity', digits=(16,2)),
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
@@ -156,10 +150,10 @@ class mrp_procurement(osv.osv):
             procurement = self.browse(cr, uid, proc_id)
             if procurement.product_id.purchase_requisition:
                 self.pool.get('purchase.requisition').create(cr, uid, {
-                    'name': procurement.name,
+                    'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
                     'origin': procurement.name,
                     'date_end': procurement.date_planned,
-                    'lines_ids': [(0,0,{
+                    'line_ids': [(0,0,{
                         'product_id': procurement.product_id.id,
                         'product_uom_id': procurement.product_uom.id,
                         'product_qty': procurement.product_qty

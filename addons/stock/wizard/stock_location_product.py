@@ -25,35 +25,34 @@ class stock_location_product(osv.osv_memory):
     _name = "stock.location.product"
     _description = "Products by Location"
     _columns = {
-                'from_date': fields.datetime('From'), 
-                'to_date': fields.datetime('To'), 
+        'from_date': fields.datetime('From'), 
+        'to_date': fields.datetime('To'), 
     }
 
     def action_open_window(self, cr, uid, ids, context):
         """ 
-             To open location wise product information specific to given duration
-            
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs if we want more than one 
-             @param context: A standard dictionary 
-             
-             @return: invoice type
+         To open location wise product information specific to given duration
         
-        """                
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param ids: the ID or list of IDs if we want more than one 
+         @param context: A standard dictionary 
+         
+         @return: invoice type
+        """
         mod_obj = self.pool.get('ir.model.data')
         for location_obj in self.read(cr, uid, ids, ['from_date', 'to_date']):
             return {
-                    'name': False, 
-                    'view_type': 'form', 
-                    'view_mode': 'tree,form', 
-                    'res_model': 'product.product', 
-                    'type': 'ir.actions.act_window', 
-                    'context': {'location': context['active_id'], 
-                           'from_date': location_obj['from_date'], 
-                           'to_date': location_obj['to_date']}, 
-                    'domain': [('type', '<>', 'service')], 
+                'name': False, 
+                'view_type': 'form', 
+                'view_mode': 'tree,form', 
+                'res_model': 'product.product', 
+                'type': 'ir.actions.act_window', 
+                'context': {'location': context['active_id'], 
+                       'from_date': location_obj['from_date'], 
+                       'to_date': location_obj['to_date']}, 
+                'domain': [('type', '<>', 'service')], 
             }
 
 stock_location_product()
