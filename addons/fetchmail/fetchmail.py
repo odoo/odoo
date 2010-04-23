@@ -117,7 +117,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
         html += '[%s] %s\n' % (i+1, url)
     return html
     
-class mail_server(osv.osv):
+class email_server(osv.osv):
     
     _name = 'email.server'
     _description = "POP/IMAP Server"
@@ -144,13 +144,14 @@ class mail_server(osv.osv):
         'action_id':fields.many2one('ir.actions.server', 'Reply Email', required=False, domain="[('state','=','email')]"),
         'object_id': fields.many2one('ir.model',"Model", required=True),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly',False)]}, help="Priority between 0 to 10, select define the order of Processing"),
+        'user_id':fields.many2one('res.users', 'User', required=False),
     }
     _defaults = {
-#        'type': lambda *a: "imap",
         'state': lambda *a: "draft",
         'active': lambda *a: True,
         'priority': lambda *a: 5,
         'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'user_id': lambda self, cr, uid, ctx: uid,
     }
     
     def check_duplicate(self, cr, uid, ids):
@@ -176,6 +177,9 @@ class mail_server(osv.osv):
         return {'value':{'port':port}}
     
     def _process_email(self, cr, uid, server, message, context={}):
+        context.update({
+            'server_id':server.id
+        })
         history_pool = self.pool.get('mail.server.history')
         msg_txt = email.message_from_string(message)
         message_id = msg_txt.get('Message-ID', False)
@@ -289,16 +293,16 @@ class mail_server(osv.osv):
                 logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s' % (model_pool._name))
                 return False
                 
-            for attactment in attachents or []:
-                data_attach = {
-                    'name': attactment,
-                    'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                    'datas_fname': attactment,
-                    'description': 'Mail attachment',
-                    'res_model': server.object_id.model,
-                    'res_id': res_id,
-                }
-                self.pool.get('ir.attachment').create(cr, uid, data_attach)
+#            for attactment in attachents or []:
+#                data_attach = {
+#                    'name': attactment,
+#                    'datas':binascii.b2a_base64(str(attachents.get(attactment))),
+#                    'datas_fname': attactment,
+#                    'description': 'Mail attachment',
+#                    'res_model': server.object_id.model,
+#                    'res_id': res_id,
+#                }
+#                self.pool.get('ir.attachment').create(cr, uid, data_attach)
             
             if server.action_id:
                 action_pool = self.pool.get('ir.actions.server')
@@ -322,13 +326,10 @@ class mail_server(osv.osv):
         return self.fetch_mail(cr, uid, ids, context)
     
     def fetch_mail(self, cr, uid, ids, context={}):
-        fp = os.popen('ping www.google.com -c 1 -w 5',"r")
-        if not fp.read():
-            logger.notifyChannel('imap', netsvc.LOG_WARNING, 'No address associated with hostname !')
-
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             
+            count = 0
             try:
                 if server.type == 'imap':
                     imap_server = None
@@ -363,7 +364,6 @@ class mail_server(osv.osv):
                     pop_server.list()
 
                     (numMsgs, totalSize) = pop_server.stat()
-                    count = 0
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
@@ -379,7 +379,7 @@ class mail_server(osv.osv):
                 
         return True
 
-mail_server()
+email_server()
 
 class mail_server_history(osv.osv):
 
@@ -404,10 +404,7 @@ class mail_server_history(osv.osv):
 mail_server_history()
 
 class fetchmail_tool(osv.osv):
-    """
-    OpenERP Model : fetchmail_tool
-    """
-    
+
     _name = 'email.server.tools'
     _description = "Email Tools"
     _auto = False
