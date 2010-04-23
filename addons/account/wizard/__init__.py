@@ -45,7 +45,7 @@ import wizard_compare_account_balance_report
 import account_invoice_state
 import wizard_account_duplicate
 import account_chart
-import wizard_move_line_select
+import account_move_line_select
 
 import account_validate_account_move
 import account_use_model
