@@ -152,7 +152,7 @@ def _check(self, cr, uid, data, context):
                 action = 'invoice'
             else:
                 action = 'paid'
-        elif order.date_payment:
+        elif order.date_validation:
             action = 'receipt'
         else:
             action='paid'

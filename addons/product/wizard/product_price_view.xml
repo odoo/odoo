@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!--   Product Price List -->
+
+		<record id="view_product_price_list" model="ir.ui.view">
+		      <field name="name">Price List</field>
+		      <field name="model">product.price_list</field>
+		      <field name="type">form</field>
+		      <field name="arch" type="xml">
+				<form string="Price list">
+				    <field name="price_list" />
+				    <field name="qty1" colspan="2" />
+				    <field name="qty2" colspan="2" />
+				    <field name="qty3" colspan="2" />
+				    <field name="qty4" colspan="2" />
+				    <field name="qty5" colspan="2" />
+					<button icon='gtk-cancel' special="cancel"
+				                  string="Close" />
+					<button name="print_report" string="Print Report"
+				                  colspan="1" type="object" icon="gtk-print" />
+				</form>
+		      </field>
+    	</record>
+
+        <act_window id="action_product_price_list"
+    		key2="client_action_multi" name="Price List"
+    		res_model="product.price_list" src_model="product.product"
+    		view_mode="form" target="new" view_type="form" />
+
+</data>
+</openerp>
