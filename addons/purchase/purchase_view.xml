@@ -302,7 +302,7 @@
           -->
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">Uninvoiced Purchase Order Lines</field>
+            <field name="name">Lines To Invoices</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('state','in',('confirmed','done')), ('invoiced','=',False)]</field>

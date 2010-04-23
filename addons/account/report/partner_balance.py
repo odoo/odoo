@@ -67,10 +67,10 @@ class partner_balance(report_sxw.rml_parse):
         ## Get All Period Date
         #
         # If we have no period we will take all perdio in the FiscalYear.
-        if not data['form']['periods'][0][2] :
+        if not data['form']['periods']:
             periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
         else:
-            periods_id = data['form']['periods'][0][2]
+            periods_id = data['form']['periods']
         date_array = []
         for period_id in periods_id:
             period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
@@ -85,35 +85,38 @@ class partner_balance(report_sxw.rml_parse):
         self.date_lst.sort()
 
     def transform_both_into_date_array(self,data):
-        if not data['form']['periods'][0][2] :
+        final_date_array = []
+        date_start_date = data['form']['date1']
+        date_stop_date = data['form']['date2']
+        if not data['form']['periods']:
             periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
         else:
-            periods_id = data['form']['periods'][0][2]
+            periods_id = data['form']['periods']
         date_array = []
-        for period_id in periods_id:
-            period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
-            date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
+        if periods_id:
+            for period_id in periods_id:
+                period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
+                date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
+            period_start_date = date_array[0]
+            period_stop_date = date_array[-1]
 
-        period_start_date = date_array[0]
-        date_start_date = data['form']['date1']
-        period_stop_date = date_array[-1]
-        date_stop_date = data['form']['date2']
+            if period_start_date<date_start_date:
+                start_date = period_start_date
+            else :
+                start_date = date_start_date
 
-        if period_start_date<date_start_date:
-            start_date = period_start_date
+            if date_stop_date<period_stop_date:
+                stop_date = period_stop_date
+            else :
+                stop_date = date_stop_date
+
+            final_date_array = final_date_array + self.date_range(start_date,stop_date)
+            self.date_lst = final_date_array
+            self.date_lst.sort()
         else :
-            start_date = date_start_date
-
-        if date_stop_date<period_stop_date:
-            stop_date = period_stop_date
-        else :
-            stop_date = date_stop_date
-
-
-        final_date_array = []
-        final_date_array = final_date_array + self.date_range(start_date,stop_date)
-        self.date_lst = final_date_array
-        self.date_lst.sort()
+            final_date_array = final_date_array + self.date_range(date_start_date,date_stop_date)
+            self.date_lst = final_date_array
+            self.date_lst.sort()
 
     def transform_none_into_date_array(self,data):
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+        <record id="account_partner_balance_view" model="ir.ui.view">
+             <field name="name">Select period</field>
+             <field name="model">account.partner.balance</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+              	<form string="Select Date-Period">
+     				<field name="company_id"/>
+     				<field name="result_selection" required = "True"/>
+    	 			<newline/>
+     				<field name="fiscalyear"/>
+     				<label colspan="2" string="(Keep empty for all open fiscal years)" align="0.0"/>
+     				<newline/>
+     				<separator string="Filters" colspan="4"/>
+     				<field name="state" required="True"/>
+    					<newline/>
+     				<group attrs="{'invisible':[('state','=','none')]}" colspan="4">
+         				<group attrs="{'invisible':[('state','=','byperiod')]}" colspan="4">
+             				<separator string="Date Filter" colspan="4"/>
+             				<field name="date1"/>
+             				<field name="date2"/>
+         				</group>
+         				<group attrs="{'invisible':[('state','=','bydate')]}" colspan="4">
+             				<separator string="Filter on Periods" colspan="4"/>
+             				<field name="periods" colspan="4" nolabel="1"/>
+         				</group>
+     				</group>
+     				<newline/>
+     				<group colspan="4" col="6">
+                       	<label string ="" colspan="2"/>
+     					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+               			<button name="check_state" string="Print" type="object" icon="gtk-print"/>
+ 					</group>
+ 				</form>
+             </field>
+ 		</record>
+
+ 		<record id="action_account_partner_balance" model="ir.actions.act_window">
+             <field name="name">Select Period</field>
+             <field name="res_model">account.partner.balance</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="account_partner_balance_view"/>
+             <field name="context">{'record_id':active_id}</field>
+             <field name="target">new</field>
+       </record>
+
+ 	   <menuitem icon="STOCK_PRINT"
+ 	   		name="Partner Balance"
+ 	   		action="action_account_partner_balance"
+ 			id="menu_account_partner_balance_report"
+ 			parent="account.next_id_22"/>
+
+     </data>
+ </openerp>
