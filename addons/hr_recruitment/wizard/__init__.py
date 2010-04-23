@@ -20,7 +20,7 @@
 ##############################################################################
 
 
-import hr_recruitment_wizard
+import hr_recruitment_phonecall
 
 
 
