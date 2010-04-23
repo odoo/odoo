@@ -41,7 +41,7 @@ import account_fiscalyear_close_state
 import account_vat
 import account_open_closed_fiscalyear
 
-import wizard_compare_account_balance_report
+import account_compare_account_balance_report
 import account_invoice_state
 import account_chart
 import account_move_line_select
