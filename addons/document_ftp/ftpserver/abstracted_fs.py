@@ -97,7 +97,7 @@ class content_wrapper(StringIO.StringIO):
         cr = db.cursor()
         cr.commit()
         try:
-            getattr(self.pool.get('document.directory.content'), 'process_write_'+self.node.content.extension[1:])(cr, self.uid, self.node, self.getvalue())
+            getattr(self.pool.get('document.directory.content'), 'process_write')(cr, self.uid, self.node, self.getvalue())
         finally:
             cr.commit()
             cr.close()
