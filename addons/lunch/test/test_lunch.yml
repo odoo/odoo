@@ -16,11 +16,11 @@
     name: Club1
     price: 2.75 
 - |
-  Given that I have a cashbox "Cashbox"
+  Given that I have a cashbox "Employee Cashbox"
 - 
   !record {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
     manager: base.user_root
-    name: CashBox
+    name: Employee Cashbox
 - |
   I create a lunch order "LU001" for the "Club1" product
 - |
@@ -56,7 +56,7 @@
     - cashmove.id != False
  
 - |
-  I check that the Total on the cashbox is -2.75
+  I check that the Total on the "Employee Cashbox" is -2.75
   
 -
   !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
@@ -72,7 +72,7 @@
     user_id: base.user_root
     
 - |
-  I confirm this order.open wizard and select cashbox.
+  I confirm this order.open wizard and select "Employee Cashbox".
 - 
   !record {model: lunch.order.confirm, id: lunch_order_confirm_1}:
     confirm_cashbox: 'lunch_cashbox_cashbox0'
@@ -83,12 +83,12 @@
     self.confirm(cr, uid, [ref('lunch_order_confirm_1')],  {'active_ids': [ref('lunch_order_1')]})
         
 - |
-  I check that the Total on the cashbox is -5.50
+  I check that the Total on the "Employee Cashbox" is -5.50
 -
   !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
     - sum_remain == -5.50  
 - |
-  I reset the cashbox to zero using the "Set CashBox to Zero" wizard.
+  I reset the "Employee Cashbox" to zero using the "Set CashBox to Zero" wizard.
 - 
   !record {model: lunch.cashbox.clean, id: lunch_cashbox_clean_0}:
     {}
@@ -99,7 +99,7 @@
     self.set_to_zero(cr, uid, [ref('lunch_cashbox_clean_0')], {'active_ids': [ref('lunch_cashbox_cashbox0')]})
       	  
 - |
-  I check that the Total on the cashbox is 0.0
+  I check that the Total on the "Employee Cashbox" is 0.0
 -
   !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
     - sum_remain == 0.00
@@ -123,7 +123,7 @@
     - cashmove.id == False
     
 - |
-  I check that the Total on the cashbox is -2.75
+  I check that the Total on the "Employee Cashbox" is -2.75
 -
   !assert {model: lunch.cashbox, id: lunch_cashbox_cashbox0}:
     - sum_remain == -2.75
