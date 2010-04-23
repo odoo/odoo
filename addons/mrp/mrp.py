@@ -162,9 +162,14 @@ class mrp_bom(osv.osv):
         """
         result = {}
         bom_obj = self.pool.get('mrp.bom')
-        bom_parent = bom_obj.browse(cr, uid, context['active_id'])
+        bom_id = context and context.get('active_id', False) or False
+        cr.execute('select id from mrp_bom')
+        if all(bom_id != r[0] for r in cr.fetchall()):
+            ids.sort()
+            bom_id = ids[0]
+        bom_parent = bom_obj.browse(cr, uid, bom_id)
         for bom in self.browse(cr, uid, ids, context=context):
-            if bom_parent.multi_level_bom or bom.id == context['active_id']:
+            if (bom_parent and bom_parent.multi_level_bom) or bom.id == bom_id:
                 result[bom.id] = map(lambda x: x.id, bom.bom_lines)
             else:
                 result[bom.id] = []
