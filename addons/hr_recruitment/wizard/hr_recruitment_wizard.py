@@ -68,15 +68,15 @@ class job2phonecall(wizard.interface):
         form = data['form']
         pool = pooler.get_pool(cr.dbname)
         mod_obj = pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'hr', 'view_hr_case_phonecalls_filter')
+        result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        phonecall_case_obj = pool.get('hr.phonecall')
+        phonecall_case_obj = pool.get('crm.phonecall')
         job_case_obj = pool.get('hr.applicant')
         # Select the view
 
         data_obj = pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'hr', 'hr_case_phone_tree_view')
-        id3 = data_obj._get_id(cr, uid, 'hr', 'hr_case_phone_form_view')
+        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
+        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
@@ -101,8 +101,8 @@ class job2phonecall(wizard.interface):
                     }, context=context)
             new_phonecall = phonecall_case_obj.browse(cr, uid, new_phonecall_id)
             vals = {}
-            if not job.case_id:
-                vals.update({'phonecall_id' : new_phonecall.id})
+#            if not job.case_id:
+#                vals.update({'phonecall_id' : new_phonecall.id})
             job_case_obj.write(cr, uid, [job.id], vals)
             job_case_obj.case_cancel(cr, uid, [job.id])
             phonecall_case_obj.case_open(cr, uid, [new_phonecall_id])
@@ -110,7 +110,7 @@ class job2phonecall(wizard.interface):
             'name': _('Phone Call'),
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'hr.phonecall',
+            'res_model': 'crm.phonecall',
             'res_id' : new_phonecall_id,
             'views': [(id3,'form'),(id2,'tree'),(False,'calendar'),(False,'graph')],
             'type': 'ir.actions.act_window',
@@ -174,7 +174,7 @@ class partner_create(wizard.interface):
                 })
             contact_id = contact_obj.create(cr, uid, {
                 'partner_id': partner_id,
-                'name': case.partner_name2,
+                'name': case.partner_name,
                 'phone': case.partner_phone,
                 'mobile': case.partner_mobile,
                 'email': case.email_from
