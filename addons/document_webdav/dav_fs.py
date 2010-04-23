@@ -433,6 +433,7 @@ class openerp_dav_handler(dav_interface):
         return 201
 
     def rmcol(self,uri):
+        print ' REMOVE COLLL :::::', uri
         """ delete a collection """
         if uri[-1]=='/':uri=uri[:-1]
 
@@ -440,39 +441,23 @@ class openerp_dav_handler(dav_interface):
         if not dbname: # *-*
             raise DAV_Error, 409
         node = self.uri2object(cr, uid, pool, uri2)             
-        object = node.context._dirobj.browse(cr, uid, node.dir_id)
-        
-        if not object:
-            raise OSError(2, 'Not such file or directory.')        
-        if object._table_name=='document.directory':
-            if node.children(cr):
-                raise OSError(39, 'Directory not empty.')
-            res = pool.get('document.directory').unlink(cr, uid, [object.id])
-        else:
-            raise OSError(1, 'Operation not permited.')
+        node.rmcol(cr)
 
         cr.commit()
         cr.close()
         return 204
 
     def rm(self,uri):
-        if uri[-1]=='/':uri=uri[:-1]
-
-        object=False
+        print ' REMOVE EVENT :::::', uri
+        if uri[-1]=='/':uri=uri[:-1]        
         cr, uid, pool,dbname, uri2 = self.get_cr(uri)
         if not dbname:        
             cr.close()
             raise DAV_Error, 409
         node = self.uri2object(cr,uid,pool, uri2)
-        object = pool.get('ir.attachment').browse(cr, uid, node.file_id)
-        self.parent.log_message(' rm %s "%s"'%(object._table_name,uri))
-        if not object:
-            raise OSError(2, 'Not such file or directory.')
-        if object._table_name == 'ir.attachment':
-            res = pool.get('ir.attachment').unlink(cr, uid, [object.id])
-        else:
-            raise OSError(1, 'Operation not permited.')       
-        
+        res = node.rm(cr)
+        if not res:
+            raise OSError(1, 'Operation not permited.')        
         cr.commit()
         cr.close()
         return 204

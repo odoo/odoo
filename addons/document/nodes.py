@@ -161,6 +161,12 @@ class node_class(object):
     def get_dav_eprop(self,cr,ns,prop):
         return None
 
+    def rm(self, cr):
+        raise RuntimeError("Not Implemented")
+
+    def rmcol(self, cr):
+        raise RuntimeError("Not Implemented")
+
     def get_domain(self, cr, filters):
         return []
 
@@ -278,6 +284,20 @@ class node_dir(node_database):
 
     def _child_get(self, cr, name=None, domain=None):
         return super(node_dir,self)._child_get(cr, name, self.dir_id, domain=domain)
+
+    def rmcol(self, cr):
+        uid = self.context.uid
+        directory = self.context._dirobj.browse(cr, uid, self.dir_id) 
+        res = False       
+        if not directory:
+            raise OSError(2, 'Not such file or directory.')        
+        if directory._table_name=='document.directory':
+            if self.children(cr):
+                raise OSError(39, 'Directory not empty.')
+            res = self.context._dirobj.unlink(cr, uid, [directory.id])
+        else:
+            raise OSError(1, 'Operation not permited.')
+        return res
 
     def create_child_collection(self, cr, objname):
         object2 = False            
@@ -671,7 +691,18 @@ class node_file(node_class):
         else:
             s = StringIO.StringIO(base64.decodestring(fobj.db_datas or ''))
         s.name = self
-        return s                   
+        return s   
+
+    def rm(self, cr):
+        uid = self.context.uid
+        document_obj = self.context._dirobj.pool.get('ir.attachment')
+        if self.type in ('collection','database'):
+            return False  
+        document = document_obj.browse(cr, uid, self.file_id, context=self.context.context)        
+        res = False
+        if document and document._table_name == 'ir.attachment':
+            res = document_obj.unlink(cr, uid, [document.id])
+        return res                 
 
     def fix_ppath(self, cr, fbro):
         """Sometimes we may init this w/o path, parent.

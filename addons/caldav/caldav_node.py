@@ -171,7 +171,7 @@ class node_calendar(nodes.node_class):
         self.cal_type = calendar.type
 
     def _get_dav_getctag(self, cr):        
-        result = self.get_etag(cr) 
+        result = self._get_ttag(cr) + ':' + str(time.time())
         return str(result) 
 
     def match_dav_eprop(self, cr, match, ns, prop):
@@ -329,6 +329,9 @@ class node_calendar(nodes.node_class):
         else: wtime = time.time()
         return str(wtime)   
 
+    def rmcol(self, cr):
+        return False
+
 
 class res_node_calendar(nodes.node_class):
     our_type = 'file'
@@ -482,6 +485,20 @@ class res_node_calendar(nodes.node_class):
         huri = doc.createTextNode(urllib.quote('/%s/%s' % (cr.dbname, res)))
         href.appendChild(huri)
         return href
+
+
+    def rm(self, cr):
+        uid = self.context.uid
+        res = False
+        if self.type in ('collection','database'):
+            return False          
+        if self.model and self.res_id:            
+            document_obj = self.context._dirobj.pool.get(self.model)
+            if document_obj:
+                res = False
+                #res = document_obj.unlink(cr, uid, [self.res_id]) #TOFIX
+                
+        return res 
 
 
 
