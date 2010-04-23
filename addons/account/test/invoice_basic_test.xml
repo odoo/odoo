@@ -32,17 +32,16 @@
         <assert id="test_invoice_1" model="account.invoice" string="The currency unit of Test invoice 1 is EUR">
             <test expr="currency_id.code">EUR</test>
         </assert>
-        
         <assert id="test_invoice_1" model="account.invoice" severity="error" string="The amount of Test invoice 1 is correct">
             <test expr="sum([l.price_subtotal for l in invoice_line]) == 1850"/>
             <test expr="sum([l.price_subtotal for l in invoice_line]) == amount_untaxed"/>
         </assert>
         
         <workflow action="invoice_open" model="account.invoice" ref="test_invoice_1"/>
-        
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now open">
             <test expr="state">open</test>
         </assert>
+        
         <function model="account.invoice" name="pay_and_reconcile">
 			<!-- ids = -->					<value eval="[ref('test_invoice_1')]"/>
 			<!-- pay_amount = -->			<value eval="1850"/>
