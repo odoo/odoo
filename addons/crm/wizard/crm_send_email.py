@@ -97,7 +97,6 @@ class crm_send_new_email(osv.osv_memory):
             }
             flag = False
             if case.section_id and case.section_id.server_id:
-                
                 flag = smtp_pool.send_email(
                     cr=cr,
                     uid=uid, 

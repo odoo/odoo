@@ -704,9 +704,9 @@
         </record>
 
         <record id="view_partners_form_crm2" model="ir.ui.view">
-                <field name="name">view.res.partner.form.crm.inherited2</field>
+                <field name="name">view.res.partner.tree.crm.inherited2</field>
                 <field name="model">res.partner</field>
-                <field name="type">form</field>
+                <field name="type">tree</field>
                 <field name="inherit_id" ref="base.view_partner_tree"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
@@ -718,9 +718,9 @@
         </record>
 
         <record id="view_partners_form_crm3" model="ir.ui.view">
-                <field name="name">view.res.partner.form.crm.inherited3</field>
+                <field name="name">view.res.partner.search.crm.inherited3</field>
                 <field name="model">res.partner</field>
-                <field name="type">form</field>
+                <field name="type">search</field>
                 <field name="inherit_id" ref="base.view_res_partner_filter"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
