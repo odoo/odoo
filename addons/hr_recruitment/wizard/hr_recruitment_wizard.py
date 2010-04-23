@@ -40,16 +40,16 @@ class job2phonecall(wizard.interface):
                     <newline />
                     <field name='note' colspan="4"/>
                     <newline />
-                    <field name='section_id' />
+
                     <field name='category_id'/>
                 </form>"""
-
+                #<field name='section_id' />
     case_fields = {
         'user_id' : {'string' : 'Assign To', 'type' : 'many2one', 'relation' : 'res.users'},
         'deadline' : {'string' : 'Planned Date', 'type' : 'datetime'},
         'note' : {'string' : 'Goals', 'type' : 'text'},
         'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.case.categ', 'required' : True},
-        'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'hr.case.section'},
+        #'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'hr.case.section'},
 
     }
     def _default_values(self, cr, uid, data, context):
@@ -60,7 +60,7 @@ class job2phonecall(wizard.interface):
         return {
                 'user_id' : case.user_id and case.user_id.id,
                 'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id,
-                'section_id' : case.section_id and case.section_id.id or False,
+#                'section_id' : case.section_id and case.section_id.id or False,
                 'note' : case.description
                }
 
@@ -90,7 +90,7 @@ class job2phonecall(wizard.interface):
                         'categ_id' : form['category_id'],
                         'description' : form['note'],
                         'date' : form['deadline'],
-                        'section_id' : form['section_id'],
+#                        'section_id' : form['section_id'],
                         'description':job.description,
                         'partner_id':job.partner_id.id,
                         'partner_address_id':job.partner_address_id.id,
