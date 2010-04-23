@@ -49,7 +49,7 @@ class purchase_requisition(osv.osv):
         'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id ,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
-purchase_tender()
+
 
     def tender_cancel(self, cr, uid, ids, context={}):
         purchase_order_obj = self.pool.get('purchase.order')
@@ -128,6 +128,7 @@ class purchase_order(osv.osv):
 
 
 purchase_order()
+
 
 class product_product(osv.osv):
     _inherit = 'product.product'
