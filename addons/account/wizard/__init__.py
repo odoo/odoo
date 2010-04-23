@@ -30,7 +30,7 @@ import account_move_journal
 import account_journal_select
 import account_move_bank_reconcile
 import account_subscription_generate
-import wizard_aged_trial_balance
+import account_aged_trial_balance
 import account_general_ledger_report
 import wizard_third_party_ledger
 import account_partner_balance_report
