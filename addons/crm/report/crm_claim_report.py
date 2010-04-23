@@ -21,6 +21,7 @@
 
 from osv import fields,osv
 import tools
+import crm_report
 
 
 class crm_claim_report(osv.osv):
@@ -41,6 +42,10 @@ class crm_claim_report(osv.osv):
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
+        'type_id': fields.many2one('crm.case.resource.type', 'Claim Type',\
+                         domain="[('section_id','=',section_id),\
+                         ('object_id.model', '=', 'crm.claim')]"),
     }
 
     def init(self, cr):
@@ -68,6 +73,8 @@ class crm_claim_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    c.priority as priority,
+                    c.type_id as type_id,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
@@ -75,6 +82,7 @@ class crm_claim_report(osv.osv):
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), \
                         c.state, c.user_id,c.section_id, c.stage_id,\
                         c.categ_id,c.partner_id,c.company_id,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
+                        ,c.priority,c.type_id,c.som
             )""")
 
 crm_claim_report()
