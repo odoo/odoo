@@ -187,7 +187,6 @@ class account_invoice(osv.osv):
     ## @param partner_bank_id the partner linked invoice bank
     ## @return the dict of values with the reference type  value updated 
     def onchange_partner_bank(self, cursor, user, ids, partner_bank):
-        print "onchange_partner_bank::::",partner_bank
         """update the reference type depending of the partner bank"""
         res = {'value': {}}
         partner_bank_obj = self.pool.get('res.partner.bank')
