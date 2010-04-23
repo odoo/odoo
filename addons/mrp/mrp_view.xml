@@ -253,13 +253,13 @@
                         <field name="product_uos" groups="product.group_uos"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <newline/>
-                        <field name="multi_level_bom" invisible="1"/>
+                        <field name="multi_level_bom" />
                         <field name="type" groups="base.group_extended"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list"/>
+                            <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list" />
                         </page>
                         <page string="Revisions" groups="base.group_extended">
                             <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
