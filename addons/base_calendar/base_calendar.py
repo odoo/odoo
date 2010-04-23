@@ -469,6 +469,7 @@ property or property parameter."),
                     reply_to=email_from
                 )
             return True
+
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         """
         Make entry on email and availbility on change of user_id field.
@@ -795,7 +796,26 @@ class calendar_event(osv.osv):
     def _tz_get(self, cr, uid, context={}):
         return [(x.lower(), x) for x in pytz.all_timezones]
 
-    def onchange_dates(self, cr, uid, ids, start_date, duration=False, end_date=False, context={}):
+    def onchange_allday(self, cr, uid, ids, allday, context={}):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of calendar event’s IDs.
+        @param allday: Value of allday boolean
+        @param context: A standard dictionary for contextual values
+        """
+        if not allday or not ids:
+            return {}
+        event = self.browse(cr, uid, ids, context=context)[0]
+        value = {
+                 'date': event.date and event.date[:11] + '00:00:00', 
+                 'date_deadline': event.date_deadline and event.date_deadline[:11] + '00:00:00', 
+                 'duration': 24 
+                 }
+        return {'value': value}
+    
+    def onchange_dates(self, cr, uid, ids, start_date, duration=False, end_date=False, allday=False, context={}):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -805,14 +825,23 @@ class calendar_event(osv.osv):
         @param duration: Get Duration between start date and end date or False
         @param end_date: Get Ending Date or False
         @param context: A standard dictionary for contextual values
-
         """
-        if not start_date:
-            return {}
         value = {}
+        if not start_date:
+            return value
         if not end_date and not duration:
             duration = 8.00
-            value['duration'] = 8.00
+            value['duration'] = duration
+
+        if allday: # For all day event
+            start = start_date[:11] + '00:00:00'
+            value = {
+                 'date': start, 
+                 'date_deadline': start, 
+                 'duration': 24
+                 }
+            return {'value': value}
+
         start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         if end_date and not duration:
             end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
@@ -822,6 +851,7 @@ class calendar_event(osv.osv):
         elif not end_date:
             end = start + timedelta(hours=duration)
             value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
+
         return {'value': value}
 
     def _set_rrulestring(self, cr, uid, id, name, value, arg, context):
@@ -998,8 +1028,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                    ('3', 'Third'), ('4', 'Fourth'), \
                                    ('5', 'Fifth'), ('-1', 'Last')], 'By day'), 
         'month_list': fields.selection(months.items(), 'Month'), 
-        'end_date': fields.date('Repeat Until')
+        'end_date': fields.date('Repeat Until'), 
+        'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel',\
+                                 'event_id', 'attendee_id', 'Attendees'),
+        'allday': fields.boolean('All Day')
     }
+
     _defaults = {
          'class': lambda *a: 'public', 
          'show_as': lambda *a: 'busy', 
@@ -1007,6 +1041,46 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
          'select1': lambda *x: 'date', 
          'interval': lambda *x: 1, 
     }
+    
+    def open_event(self, cr, uid, ids, context=None):
+        """
+        Open Event From for Editing
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of event’s IDs
+        @param context: A standard dictionary for contextual values
+        @return: Dictionary value which open Crm Meeting form.
+        """
+        if not context:
+            context = {}
+            
+        data_obj = self.pool.get('ir.model.data')
+        
+        value = {}
+        
+        id2 = data_obj._get_id(cr, uid, 'base_calendar', 'event_form_view')
+        id3 = data_obj._get_id(cr, uid, 'base_calendar', 'event_tree_view')
+        id4 = data_obj._get_id(cr, uid, 'base_calendar', 'event_calendar_view')
+        if id2:
+            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+        if id4:
+            id4 = data_obj.browse(cr, uid, id4, context=context).res_id
+        for id in ids:
+            value = {
+                    'name': _('Event'), 
+                    'view_type': 'form', 
+                    'view_mode': 'form,tree', 
+                    'res_model': 'calendar.event', 
+                    'view_id': False, 
+                    'views': [(id2, 'form'), (id3, 'tree'), (id4, 'calendar')],
+                    'type': 'ir.actions.act_window', 
+                    'res_id': base_calendar_id2real_id(id), 
+                    'nodestroy': True
+                    }
+        
+        return value
 
     def modify_this(self, cr, uid, event_id, defaults, real_date, context=None, *args):
         """
@@ -1085,8 +1159,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
 
             count = 0
             for data in cr.dictfetchall():
-                start_date = base_start_date and datetime.strptime(base_start_date, "%Y-%m-%d") or False
-                until_date = base_until_date and datetime.strptime(base_until_date, "%Y-%m-%d") or False
+                start_date = base_start_date and datetime.strptime(base_start_date[:10], "%Y-%m-%d") or False
+                until_date = base_until_date and datetime.strptime(base_until_date[:10], "%Y-%m-%d") or False
                 if count > limit:
                     break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
@@ -1124,7 +1198,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
-                    start_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date)
                     for rdate in rdates:
                         r_date = datetime.strptime(rdate, "%Y-%m-%d %H:%M:%S")
@@ -1216,8 +1289,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 args_without_date.append(arg)
             else:
                 if arg[1] in ('>', '>='):
+                    if start_date:
+                        continue
                     start_date = arg[2]
                 elif arg[1] in ('<', '<='):
+                    if until_date:
+                        continue
                     until_date = arg[2]
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
                                  offset, limit, order, context, count)
@@ -1261,7 +1338,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             context.update({'alarm_id': vals.get('alarm_id')})
             alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', \
                                             context=context)
-
         return res
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process={}):

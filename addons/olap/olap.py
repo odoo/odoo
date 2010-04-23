@@ -96,8 +96,8 @@ class olap_fact_database(osv.osv):
                         raise osv.except_osv('Error (cx_Oracle) : ', e)
 
         except Exception,e:
-            raise osv.except_osv('BI Error !', e)
-
+            raise osv.except_osv('Error !', e)
+        raise osv.except_osv('Message', 'Connection Successful !')
         return True
 
     _columns = {
