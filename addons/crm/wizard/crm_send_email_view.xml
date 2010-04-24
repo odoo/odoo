@@ -9,27 +9,26 @@
             <field name="model">crm.send.mail</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Send New Mail" col="4">
-                    <field name="email_to" />
-                    <field name="email_cc"/>
-                    <field name="subject" colspan="4"/>
-                    <group colspan="4" string="Extended Options" expand="1">
-                        <field name="email_from" />
-                        <newline/>
-                        <field name="doc1" filename="doc1_fname"/>
-                        <field name="doc1_fname"/>
-                        <field name="doc2" filename="doc2_fname" />
-                        <field name="doc2_fname"/>
-                        <field name="doc3" filename="doc3_fname" />
-                        <field name="doc3_fname"/>
-                    </group>
-                    <separator string="" colspan="4"/>
-                    <field name="text" nolabel="1" colspan="4"/>
-                    <newline/>
-                    <field name="state" />
-                    <separator string=" " colspan="4"/>
-                    <group colspan="4" col="3" >
-                        <label string=" " />
+                <form string="Send New Mail" col="2">
+                    <field name="email_from" />
+                    <field name="email_to"  />
+                    <field name="email_cc" />
+                    <field name="subject" />
+                    <notebook colspan="2">
+                        <page string="Message">
+                            <field name="text" nolabel="1" colspan="4"/>
+                        </page>
+                        <page string="Attachments">
+                            <field name="doc1" filename="doc1_fname"/>
+                            <field name="doc1_fname"/>
+                            <field name="doc2" filename="doc2_fname" />
+                            <field name="doc2_fname"/>
+                            <field name="doc3" filename="doc3_fname" />
+                            <field name="doc3_fname"/>
+                        </page>
+                    </notebook>
+                    <group colspan="2" col="4" >
+                        <field name="state" />
                         <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
                         <button name="action_send" type="object" string="_Send" icon="gtk-go-forward" />
                     </group>
