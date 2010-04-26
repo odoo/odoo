@@ -58,6 +58,8 @@ class singer_statement(osv.osv):
         @param arg: User defined arguments
         @return: Dictionary of values.
         """
+        if context==None:
+            context={}            
         res = {}
         for obj in self.browse(cr, uid, ids):
             res[obj.id] = obj.pieces * obj.number
@@ -92,7 +94,9 @@ class account_bank_statement(osv.osv):
         @param name: Names of fields.
         @param arg: User defined arguments
         @return: Dictionary of values.
-        """          
+        """    
+        if context==None:
+            context={}    
         res ={}
         for statement in self.browse(cr, uid, ids):
             amount_total=0.0
@@ -107,7 +111,9 @@ class account_bank_statement(osv.osv):
         @param name: Names of fields.
         @param arg: User defined arguments
         @return: Dictionary of values.
-        """              
+        """          
+        if context==None:
+            context={}    
         res2={}
         for statement in self.browse(cr, uid, ids):
             encoding_total=0.0
@@ -122,6 +128,9 @@ class account_bank_statement(osv.osv):
         @param name: Names of fields.
         @return: journal 
         """  
+        if context==None:
+            context={}    
+                    
         company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
         journal = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('auto_cash','=',False), ('company_id', '=', company_id)])
         if journal:
@@ -152,6 +161,8 @@ class account_bank_statement(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         
+        if context==None:
+            context={}            
         company_id = vals and vals.get('company_id',False)
         if company_id:
             open_jrnl = self.search(cr, uid, [('company_id', '=', vals['company_id']), ('journal_id', '=', vals['journal_id']), ('state', '=', 'open')])
@@ -172,6 +183,8 @@ class account_bank_statement(osv.osv):
         @param journal_id: Changed journal_id
         @return:  Dictionary of changed values
         """  
+        if context==None:
+            context={}            
         id_s=[]
         if not journal_id:
             return {'value': {'balance_start': 0.0}}
@@ -205,6 +218,8 @@ class account_bank_statement(osv.osv):
         """ Changes statement state to Running.
         @return: True 
         """       
+        if context==None:
+            context={}            
         obj_inv = self.browse(cr, uid, ids)[0]
         sequence_obj=self.pool.get('ir.sequence')
         s_id=obj_inv.journal_id
@@ -222,6 +237,8 @@ class account_bank_statement(osv.osv):
         """ Check the starting and ending detail of  statement 
         @return: True 
         """         
+        if context==None:
+            context={}            
         val = 0.0
         val2 = 0.0
         val_statement_line = 0.0
@@ -240,7 +257,7 @@ class account_bank_statement(osv.osv):
                     raise osv.except_osv(_('Invalid action !'), _(' You can not confirm your cashbox, Please enter ending details, missing value matches to "%s"')%(abs(Decimal(str(val))-(Decimal(str(val_statement_line))+Decimal(str(val2))))))
 
             self.write(cr, uid, statement.id, {'balance_end_real':Decimal(str(val_statement_line))+Decimal(str(val2)),'closing_date':time.strftime("%Y-%m-%d %H:%M:%S"),'state':'draft'})
-        return  super(account_bank_statement, self).button_confirm(cr, uid, ids, context=None)
+        return  super(account_bank_statement, self).button_confirm(cr, uid, ids, context=context)
 
 account_bank_statement()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
