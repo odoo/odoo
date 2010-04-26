@@ -36,7 +36,7 @@ class delivery_carrier(osv.osv):
             res = super(delivery_carrier, self).name_get(cr, uid, ids, context=context)
         else:
             order = self.pool.get('sale.order').browse(cr, uid, [order_id])[0]
-            currency = order.partner_id.property_product_pricelist.currency_id.name or ''
+            currency = order.pricelist_id.currency_id.name or ''
             res = [(r['id'], r['name']+' ('+(str(r['price']))+' '+currency+')') for r in self.read(cr, uid, ids, ['name', 'price'], context)]
         return res
     def get_price(self, cr, uid, ids, field_name, arg=None, context={}):
