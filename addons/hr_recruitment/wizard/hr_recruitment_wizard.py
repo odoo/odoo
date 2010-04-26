@@ -20,69 +20,61 @@
 #
 ##############################################################################
 
-from mx.DateTime import now
-
-import wizard
-import netsvc
-import ir
-import pooler
 import time
 
+from osv import osv, fields
 from tools.translate import _
 
-class job2phonecall(wizard.interface):
-    case_form = """<?xml version="1.0"?>
-                <form string="Schedule Phone Call">
-                    <separator string="Phone Call Description" colspan="4" />
-                    <newline />
-                    <field name='user_id' />
-                    <field name='deadline' />
-                    <newline />
-                    <field name='note' colspan="4"/>
-                    <newline />
-                    <field name='section_id' />
-                    <field name='category_id'/>
-                </form>"""
+class job2phonecall(osv.osv_memory):
+    _name = 'hr.recruitment.job2phonecall'
+    _description = 'Schedule Phone Call'
+    _columns = {
+        'user_id': fields.many2one('res.users', 'Assign To'),
+        'deadline': fields.datetime('Planned Date'),
+        'note': fields.text('Goals'),
+        'category_id': fields.many2one('crm.case.categ', 'Category', required=True),
+                }
 
-    case_fields = {
-        'user_id' : {'string' : 'Assign To', 'type' : 'many2one', 'relation' : 'res.users'},
-        'deadline' : {'string' : 'Planned Date', 'type' : 'datetime'},
-        'note' : {'string' : 'Goals', 'type' : 'text'},
-        'category_id' : {'string' : 'Category', 'type' : 'many2one', 'relation' : 'crm.case.categ', 'required' : True},
-        'section_id' : {'string' : 'Section', 'type' : 'many2one', 'relation' : 'hr.case.section'},
+    def _date_user(self, cr, uid, context=None):
+        case_obj = self.pool.get('hr.applicant')
+        case = case_obj.browse(cr, uid, context['active_id'])
+        return case.user_id and case.user_id.id or False
 
-    }
-    def _default_values(self, cr, uid, data, context):
+    def _date_category(self, cr, uid, context=None):
+        categ_id = self.pool.get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])
+        return categ_id and categ_id[0] or case.categ_id and case.categ_id.id or False
 
-        case_obj = pooler.get_pool(cr.dbname).get('hr.applicant')
-        categ_id=pooler.get_pool(cr.dbname).get('crm.case.categ').search(cr, uid, [('name','=','Outbound')])
-        case = case_obj.browse(cr, uid, data['id'])
-        return {
-                'user_id' : case.user_id and case.user_id.id,
-                'category_id' : categ_id and categ_id[0] or case.categ_id and case.categ_id.id,
-                'section_id' : case.section_id and case.section_id.id or False,
-                'note' : case.description
-               }
+    def _get_note(self, cr, uid, context=None):
+        case_obj = self.pool.get('hr.applicant')
+        case = case_obj.browse(cr, uid, context['active_id'])
+        return case.description or ''
 
-    def _doIt(self, cr, uid, data, context):
-        form = data['form']
-        pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'hr', 'view_hr_case_phonecalls_filter')
+    _defaults = {
+         'user_id': _date_user,
+         'category_id': _date_category,
+         'note': _get_note
+                 }
+
+    def make_phonecall(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        job_case_obj = self.pool.get('hr.applicant')
+        data_obj = self.pool.get('ir.model.data')
+        phonecall_case_obj = self.pool.get('crm.phonecall')
+
+        form = self.read(cr, uid, ids, [], context=context)[0]
+#        form = data['form']
+        result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        phonecall_case_obj = pool.get('hr.phonecall')
-        job_case_obj = pool.get('hr.applicant')
         # Select the view
 
-        data_obj = pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'hr', 'hr_case_phone_tree_view')
-        id3 = data_obj._get_id(cr, uid, 'hr', 'hr_case_phone_form_view')
+        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
+        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         if id3:
             id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
-        for job in job_case_obj.browse(cr, uid, data['ids']):
+        for job in job_case_obj.browse(cr, uid, context['active_ids']):
             #TODO : Take other info from job
             new_phonecall_id = phonecall_case_obj.create(cr, uid, {
                         'name' : job.name,
@@ -90,7 +82,7 @@ class job2phonecall(wizard.interface):
                         'categ_id' : form['category_id'],
                         'description' : form['note'],
                         'date' : form['deadline'],
-                        'section_id' : form['section_id'],
+#                        'section_id' : form['section_id'],
                         'description':job.description,
                         'partner_id':job.partner_id.id,
                         'partner_address_id':job.partner_address_id.id,
@@ -101,16 +93,17 @@ class job2phonecall(wizard.interface):
                     }, context=context)
             new_phonecall = phonecall_case_obj.browse(cr, uid, new_phonecall_id)
             vals = {}
-            if not job.case_id:
-                vals.update({'phonecall_id' : new_phonecall.id})
+#            if not job.case_id:
+#                vals.update({'phonecall_id' : new_phonecall.id})
             job_case_obj.write(cr, uid, [job.id], vals)
             job_case_obj.case_cancel(cr, uid, [job.id])
             phonecall_case_obj.case_open(cr, uid, [new_phonecall_id])
+
         value = {
             'name': _('Phone Call'),
             'view_type': 'form',
             'view_mode': 'tree,form',
-            'res_model': 'hr.phonecall',
+            'res_model': 'crm.phonecall',
             'res_id' : new_phonecall_id,
             'views': [(id3,'form'),(id2,'tree'),(False,'calendar'),(False,'graph')],
             'type': 'ir.actions.act_window',
@@ -118,156 +111,6 @@ class job2phonecall(wizard.interface):
         }
         return value
 
-    states = {
-        'init': {
-            'actions': [_default_values],
-            'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
-                'state' : [('end', 'Cancel','gtk-cancel'),('order', 'Schedule Phone Call','gtk-go-forward')]}
-        },
-        'order': {
-            'actions': [],
-            'result': {'type': 'action', 'action': _doIt, 'state': 'end'}
-        }
-    }
+job2phonecall()
 
-job2phonecall('hr.applicant.reschedule_phone_call')
-
-class job2meeting(wizard.interface):
-
-    def _makeMeeting(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        job_case_obj = pool.get('hr.applicant')
-        meeting_case_obj = pool.get('hr.meeting')
-        for job in job_case_obj.browse(cr, uid, data['ids']):
-            new_meeting_id = meeting_case_obj.create(cr, uid, {
-                'name': job.name,
-                'date': job.date,
-                'duration': job.duration,
-                })
-            new_meeting = meeting_case_obj.browse(cr, uid, new_meeting_id)
-            vals = {}
-            job_case_obj.write(cr, uid, [job.id], vals)
-            job_case_obj.case_cancel(cr, uid, [job.id])
-            meeting_case_obj.case_open(cr, uid, [new_meeting_id])
-
-        data_obj = pool.get('ir.model.data')
-        result = data_obj._get_id(cr, uid, 'hr', 'view_hr_case_meetings_filter')
-        id = data_obj.read(cr, uid, result, ['res_id'])
-        id1 = data_obj._get_id(cr, uid, 'hr', 'hr_case_calendar_view_meet')
-        id2 = data_obj._get_id(cr, uid, 'hr', 'hr_case_form_view_meet')
-        id3 = data_obj._get_id(cr, uid, 'hr', 'hr_case_tree_view_meet')
-        if id1:
-            id1 = data_obj.browse(cr, uid, id1, context=context).res_id
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        return {
-            'name': _('Meetings'),
-            'view_type': 'form',
-            'view_mode': 'calendar,form,tree',
-            'res_model': 'hr.meeting',
-            'view_id': False,
-            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree'),(False,'graph')],
-            'type': 'ir.actions.act_window',
-            'search_view_id': id['res_id']
-            }
-
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'order'}
-        },
-        'order': {
-            'actions': [],
-            'result': {'type': 'state', 'state': 'end'}
-        }
-    }
-
-job2meeting('hr.applicant.meeting_set')
-
-
-class partner_create(wizard.interface):
-
-    case_form = """<?xml version="1.0"?>
-    <form string="Convert To Partner">
-        <label string="Are you sure you want to create a partner based on this job request ?" colspan="4"/>
-        <label string="You may have to verify that this partner does not exist already." colspan="4"/>
-        <!--field name="close"/-->
-    </form>"""
-
-    case_fields = {
-        'close': {'type':'boolean', 'string':'Close job request'}
-    }
-
-    def _selectPartner(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        case_obj = pool.get('hr.applicant')
-        for case in case_obj.browse(cr, uid, data['ids']):
-            if case.partner_id:
-                raise wizard.except_wizard(_('Warning !'),
-                    _('A partner is already defined on this job request.'))
-        return {}
-
-    def _makeOrder(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
-        case_obj = pool.get('hr.applicant')
-        partner_obj = pool.get('res.partner')
-        contact_obj = pool.get('res.partner.address')
-        for case in case_obj.browse(cr, uid, data['ids']):
-            partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)])
-            if partner_id:
-                raise wizard.except_wizard(_('Warning !'),_('A partner is already existing with the same name.'))
-            else:
-                partner_id = partner_obj.create(cr, uid, {
-                    'name': case.partner_name or case.name,
-                    'user_id': case.user_id.id,
-                    'comment': case.description,
-                })
-            contact_id = contact_obj.create(cr, uid, {
-                'partner_id': partner_id,
-                'name': case.partner_name2,
-                'phone': case.partner_phone,
-                'mobile': case.partner_mobile,
-                'email': case.email_from
-            })
-
-
-        case_obj.write(cr, uid, data['ids'], {
-            'partner_id': partner_id,
-            'partner_address_id': contact_id
-        })
-        if data['form']['close']:
-            case_obj.case_close(cr, uid, data['ids'])
-
-        value = {
-            'domain': "[]",
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'res.partner',
-            'res_id': int(partner_id),
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id']
-        }
-        return value
-
-    states = {
-        'init': {
-            'actions': [_selectPartner],
-            'result': {'type': 'form', 'arch': case_form, 'fields': case_fields,
-                'state' : [('end', 'Cancel', 'gtk-cancel'),('confirm', 'Create Partner', 'gtk-go-forward')]}
-        },
-        'confirm': {
-            'actions': [],
-            'result': {'type': 'action', 'action': _makeOrder, 'state': 'end'}
-        }
-    }
-
-partner_create('hr.applicant.partner_create')
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:>>>>>>> MERGE-SOURCE
