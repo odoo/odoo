@@ -106,9 +106,10 @@
                         help="My company"/>
                         </field>
 
-                      	<field name="user_id" select="1" widget="selection">
-	            			<filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
-               			</field>
+                		<field name="user_id" widget="selection">
+                   			<filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My Case" />
+                   		    <filter icon="terp-partner" domain="[('user_id','=', False)]" help="Unassigned Case"/>
+                		</field>
                    </group>
                    <newline/>
                    <group  expand="0" string="Extended options..." colspan="10" col="12">

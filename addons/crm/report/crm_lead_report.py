@@ -21,6 +21,7 @@
 
 from osv import fields,osv
 import tools
+import crm_report
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -47,6 +48,12 @@ class crm_lead_report(osv.osv):
                         ('object_id.model', '=', 'crm.lead')]", readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
+        'type_id': fields.many2one('crm.case.resource.type', 'Lead Type', \
+                         domain="[('section_id','=',section_id),\
+                        ('object_id.model', '=', 'crm.lead')]"),
+         'date_closed': fields.datetime('Closed', readonly=True),
+         'date_open': fields.datetime('Opened', readonly=True),
     }
     def init(self, cr):
 
@@ -74,6 +81,10 @@ class crm_lead_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    c.priority as priority,
+                    c.type_id as type_id,
+                    c.date_closed as date_closed,
+                    c.date_open as date_open,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
@@ -81,6 +92,7 @@ class crm_lead_report(osv.osv):
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
                      c.state, c.user_id,c.section_id,c.stage_id,categ_id,c.partner_id,c.company_id
                      ,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
+                     ,c.priority,c.type_id,c.date_closed,c.date_open
             )""")
 
 crm_lead_report()

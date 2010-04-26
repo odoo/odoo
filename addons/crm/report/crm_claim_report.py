@@ -82,7 +82,7 @@ class crm_claim_report(osv.osv):
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), \
                         c.state, c.user_id,c.section_id, c.stage_id,\
                         c.categ_id,c.partner_id,c.company_id,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
-                        ,c.priority,c.type_id,c.som
+                        ,c.priority,c.type_id
             )""")
 
 crm_claim_report()
