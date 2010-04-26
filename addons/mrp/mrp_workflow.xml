@@ -163,7 +163,8 @@
         <record id="act_produce" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">produce</field>
-            <field name="kind">function</field>
+            <field name="kind">subflow</field>
+            <field name="subflow_id" search="[('osv','=','mrp.production')]"/>
             <field name="action">action_produce_assign_product()</field>
         </record>
         <record id="act_produce_check" model="workflow.activity">
@@ -179,7 +180,8 @@
         <record id="act_buy" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">buy</field>
-            <field name="kind">function</field>
+            <field name="kind">subflow</field>
+            <field name="subflow_id" search="[('osv','=','purchase.order')]"/>
             <field name="action">action_po_assign()</field>
         </record>
         <record id="act_make_done" model="workflow.activity">
@@ -306,8 +308,18 @@
             <field name="trigger_model" eval="False"/>
             <field name="trigger_expr_id" eval="False"/>
         </record>
+        <record id="trans_produce_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_produce"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">subflow.cancel</field>
+        </record>
         <record id="trans_produce_service_cancel" model="workflow.transition">
             <field name="act_from" ref="act_produce_service"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">subflow.cancel</field>
+        </record>
+        <record id="trans_buy_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_buy"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">subflow.cancel</field>
         </record>
@@ -315,7 +327,7 @@
         <record id="trans_produce_make_done" model="workflow.transition">
             <field name="act_from" ref="act_produce"/>
             <field name="act_to" ref="act_make_done"/>
-            <field name="signal" eval="False"/>
+            <field name="signal">subflow.done</field>
         </record>
 
         <record id="trans_produce_service_make_done" model="workflow.transition">
@@ -325,14 +337,12 @@
         <record id="trans_buy_make_done" model="workflow.transition">
             <field name="act_from" ref="act_buy"/>
             <field name="act_to" ref="act_make_done"/>
-            <field name="signal" eval="False"/>
+            <field name="signal">subflow.delivery_done</field>
         </record>
         <record id="trans_make_done_done" model="workflow.transition">
             <field name="act_from" ref="act_make_done"/>
             <field name="act_to" ref="act_done"/>
-            <field name="condition">action_check_finnished() or (not move_id)</field>
-            <field name="trigger_model">stock.move</field>
-            <field name="trigger_expr_id">[move_id.id]</field>
+            <field name="condition">action_check_finnished()</field>
         </record>
         <record id="trans_make_done_confirm" model="workflow.transition">
             <field name="act_from" ref="act_make_done"/>

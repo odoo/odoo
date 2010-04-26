@@ -26,7 +26,6 @@ class olap_load_column(osv.osv_memory):
     _description = "Olap Load Column"
 
     def get_table_data(self, cr, uid, ids, context={}):
-
         """
         This function load column
         @param cr: the current row, from the database cursor,

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record id="view_hr_timesheet_analytic_profit" model="ir.ui.view">
+            <field name="name">Timesheet Profit</field>
+            <field name="model">hr.timesheet.analytic.profit</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Timesheet Profit">
+			    <group col="4" colspan="6">
+		    	    <field name="date_from"/>
+				    <field name="date_to"/>
+				    <field name="journal_ids" colspan="4"/>
+				    <field name="employee_ids" colspan="4"/>
+				</group>
+				<separator colspan="4"/>
+			    <group col="2" colspan="4">
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+					<button name="print_report" string="Print" colspan="1" type="object" icon="gtk-print"/>
+				</group>
+			</form>
+            </field>
+        </record>
+
+        <record id="action_hr_timesheet_analytic_profit" model="ir.actions.act_window">
+            <field name="name">Timesheet Profit</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.timesheet.analytic.profit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+       	<menuitem action="action_hr_timesheet_analytic_profit"
+        	id="menu_hr_timesheet_analytic_profit"
+        	parent="menu_hr_reporting_timesheet_invoice" groups="hr.group_hr_manager" />
+
+	</data>
+</openerp>

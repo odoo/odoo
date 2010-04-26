@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,15 +15,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
-import pooler
 import time
-from tools.translate import _
 
+from osv import osv, fields
+from tools.translate import _
 #
 # Create an final invoice based on selected timesheet lines
 #
@@ -31,26 +30,37 @@ from tools.translate import _
 #
 # TODO: check unit of measure !!!
 #
-class final_invoice_create(wizard.interface):
-    def _get_defaults(self, cr, uid, data, context):
-        return {}
+class final_invoice_create(osv.osv_memory):
+    _name = 'hr.timesheet.invoice.create.final'
+    _description = 'Create invoice from timesheet final'
+    _columns = {
+        'date': fields.boolean('Date', help='Display date in the history of works'),
+        'time': fields.boolean('Time spent', help='Display time in the history of works'),
+        'name': fields.boolean('Name of entry', help='Display detail of work in the invoice line.'),
+        'price': fields.boolean('Cost', help='Display cost of the item you reinvoice'),
+        'balance_product': fields.many2one('product.product', 'Balance product', help='The product that will be used to invoice the remaining amount'),
+                }
 
-    def _do_create(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        mod_obj = pool.get('ir.model.data') 
+    def do_create(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        analytic_account_obj = self.pool.get('account.analytic.account')
+        res_partner_obj = self.pool.get('res.partner')
+        account_payment_term_obj = self.pool.get('account.payment.term')
+        invoices = []
+
+        if context is None:
+            context = {}
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        analytic_account_obj = pool.get('account.analytic.account')
-        res_partner_obj = pool.get('res.partner')
-        account_payment_term_obj = pool.get('account.payment.term')
 
-        account_ids = data['ids']
-        invoices = []
+        data = self.read(cr, uid, ids, [], context)[0]
+        account_ids = 'active_ids' in context and context['active_ids'] or []
+
         for account in analytic_account_obj.browse(cr, uid, account_ids, context):
             partner = account.partner_id
             amount_total=0.0
             if (not partner) or not (account.pricelist_id):
-                raise wizard.except_wizard(_('Analytic account incomplete'),
+                raise osv.except_osv(_('Analytic account incomplete'),
                         _('Please fill in the partner and pricelist field '
                         'in the analytic account:\n%s') % (account.name,))
 
@@ -67,15 +77,15 @@ class final_invoice_create(wizard.interface):
             curr_invoice = {
                 'name': time.strftime('%D')+' - '+account.name,
                 'partner_id': account.partner_id.id,
-                'address_contact_id': pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['contact'])['contact'],
-                'address_invoice_id': pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['invoice'])['invoice'],
+                'address_contact_id': self.pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['contact'])['contact'],
+                'address_invoice_id': self.pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['invoice'])['invoice'],
                 'payment_term': partner.property_payment_term.id or False,
                 'account_id': partner.property_account_receivable.id,
                 'currency_id': account.pricelist_id.currency_id.id,
                 'date_due': date_due,
                 'fiscal_position': account.partner_id.property_account_position.id
             }
-            last_invoice = pool.get('account.invoice').create(cr, uid, curr_invoice)
+            last_invoice = self.pool.get('account.invoice').create(cr, uid, curr_invoice)
             invoices.append(last_invoice)
 
             context2=context.copy()
@@ -106,14 +116,14 @@ class final_invoice_create(wizard.interface):
                     line.product_uom_id,
                     move_line.ref""", (account.id,))
             for product_id, amount, account_id, product_uom_id, ref in cr.fetchall():
-                product = pool.get('product.product').browse(cr, uid, product_id, context2)
+                product = self.pool.get('product.product').browse(cr, uid, product_id, context2)
 
                 if product:
                     taxes = product.taxes_id
                 else:
                     taxes = []
 
-                tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 curr_line = {
                     'price_unit': -amount,
                     'quantity': 1.0,
@@ -126,14 +136,14 @@ class final_invoice_create(wizard.interface):
                     'account_id': account_id,
                     'account_analytic_id': account.id
                 }
-                pool.get('account.invoice.line').create(cr, uid, curr_line)
+                self.pool.get('account.invoice.line').create(cr, uid, curr_line)
 
-            if not data['form']['balance_product']:
-                raise wizard.except_wizard(_('Balance product needed'), _('Please fill a Balance product in the wizard'))
-            product = pool.get('product.product').browse(cr, uid, data['form']['balance_product'], context2)
+            if not data['balance_product']:
+                raise osv.except_osv(_('Balance product needed'), _('Please fill a Balance product in the wizard'))
+            product = self.pool.get('product.product').browse(cr, uid, data['balance_product'], context2)
 
             taxes = product.taxes_id
-            tax = pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+            tax = self.pool.get('account.fiscal.position').map_tax(cr, uid, account.partner_id.property_account_position, taxes)
             account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
             curr_line = {
                 'price_unit': account.amount_max - amount_total,
@@ -147,9 +157,9 @@ class final_invoice_create(wizard.interface):
                 'account_id': account_id,
                 'account_analytic_id': account.id
             }
-            pool.get('account.invoice.line').create(cr, uid, curr_line)
+            self.pool.get('account.invoice.line').create(cr, uid, curr_line)
             if account.amount_max < amount_total:
-                pool.get('account.invoice').write(cr, uid, [last_invoice], {'type': 'out_refund',})
+                self.pool.get('account.invoice').write(cr, uid, [last_invoice], {'type': 'out_refund',})
             cr.execute('update account_analytic_line set invoice_id=%s where invoice_id is null and account_id=%s', (last_invoice, account.id))
 
         return {
@@ -161,40 +171,9 @@ class final_invoice_create(wizard.interface):
             'view_id': False,
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id'] 
-        }
+            'search_view_id': res['res_id']
+                }
 
-
-    _create_form = """<?xml version="1.0"?>
-    <form title="Final invoice for analytic account">
-        <separator string="Do you want details for each line of the invoices ?" colspan="4"/>
-        <field name="date"/>
-        <field name="time"/>
-        <field name="name"/>
-        <field name="price"/>
-        <separator string="Invoice Balance amount" colspan="4"/>
-        <field name="balance_product" required="1"/>
-    </form>"""
-
-    _create_fields = {
-        'date': {'string':'Date', 'type':'boolean', 'help':"Display date in the history of works"},
-        'time': {'string':'Time spent', 'type':'boolean', 'help':"Display time in the history of works"},
-        'name': {'string':'Name of entry', 'type':'boolean', 'help':"Display detail of work in the invoice line."},
-        'price': {'string':'Cost', 'type':'boolean', 'help':"Display cost of the item you reinvoice"},
-        'balance_product': {'string':'Balance product', 'type': 'many2one', 'relation':'product.product', 'help':"The product that will be used to invoice the remaining amount."},
-    }
-
-    states = {
-        'init' : {
-            'actions' : [_get_defaults],
-            'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end','Cancel', 'gtk-cancel'),('create','Create invoices', 'gtk-ok')]},
-        },
-        'create' : {
-            'actions' : [],
-            'result' : {'type':'action', 'action':_do_create, 'state':'end'},
-        },
-    }
-final_invoice_create('hr.timesheet.final.invoice.create')
+final_invoice_create()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

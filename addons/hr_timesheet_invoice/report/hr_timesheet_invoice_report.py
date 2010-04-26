@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,66 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields,osv
 from tools.sql import drop_view_if_exists
+
+class report_timesheet_line(osv.osv):
+    _name = "report.timesheet.line"
+    _description = "Timesheet Line"
+    _auto = False
+    _columns = {
+        'name': fields.char('Year',size=64,required=False, readonly=True),
+        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'date' : fields.date('Date', readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
+        'quantity': fields.float('Quantity', readonly=True),
+        'cost': fields.float('Cost', readonly=True),
+        'product_id' : fields.many2one('product.product', 'Product',readonly=True),
+        'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
+        'invoice_id': fields.many2one('account.invoice', 'Invoiced', readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
+                                  ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
+    }
+    _order = 'name desc,user_id desc'
+    def init(self, cr):
+        drop_view_if_exists(cr, 'report_timesheet_line')
+        cr.execute("""
+            create or replace view report_timesheet_line as (
+                select
+                    min(l.id) as id,
+                    l.date as date,
+                    to_char(l.date,'YYYY') as name,
+                    to_char(l.date,'MM') as month,
+                    l.user_id,
+                    to_char(l.date, 'YYYY-MM-DD') as day,
+                    l.invoice_id,
+                    l.product_id,
+                    l.account_id,
+                    l.general_account_id,
+                    sum(l.unit_amount) as quantity,
+                    sum(l.amount) as cost
+                from
+                    account_analytic_line l
+                where
+                    l.user_id is not null
+                group by
+                    l.date,
+                    l.user_id,
+                    l.product_id,
+                    l.account_id,
+                    l.general_account_id,
+                    l.invoice_id
+            )
+        """)
+report_timesheet_line()
+
+
+
 
 class report_timesheet_user(osv.osv):
     _name = "report_timesheet.user"
@@ -102,7 +156,7 @@ class report_timesheet_account_date(osv.osv):
                           ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
     }
     _order = 'name desc,account_id desc,user_id desc'
-    
+
     def init(self, cr):
         drop_view_if_exists(cr, 'report_timesheet_account_date')
         cr.execute("""
@@ -167,7 +221,7 @@ class report_random_timsheet(osv.osv):
     _name = "report.random.timesheet"
     _description = "Random Timesheet Report"
     _auto = False
-    
+
     _columns = {
         'analytic_account_id' : fields.many2one('account.analytic.account','Analytic Account', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
@@ -176,34 +230,34 @@ class report_random_timsheet(osv.osv):
         'user_id' : fields.many2one('res.users', 'User', readonly=True)
     }
     _order = "date desc"
-    
+
     def __init__(self, pool, cr):
         super(report_random_timsheet, self).__init__(pool, cr)
         self.called = False
-    
+
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ To call the init() method timely
         """
         if not self.called:
             self.init(cr, user)
         self.called = True # To make sure that init doesn't get called multiple times
-        
+
         res = super(report_random_timsheet, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return res
-    
+
     def init(self, cr, uid=1):
         drop_view_if_exists(cr, 'report_random_timesheet')
-        
+
         cr.execute("""create or replace view report_random_timesheet as (
 
-            select 
+            select
                 line.id as id, line.account_id as analytic_account_id, line.name as name,
                 line.unit_amount as quantity, line.date as date, line.user_id as user_id
-            from 
+            from
                 account_analytic_line line, hr_department dept,hr_department_user_rel dept_user
             where
                 (dept.id = dept_user.department_id AND dept_user.user_id=line.user_id AND line.user_id is not null)
-                AND (dept.manager_id = """ + str(uid) + """ ) 
+                AND (dept.manager_id = """ + str(uid) + """ )
                 AND (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-3))
             LIMIT 10
             )
@@ -215,32 +269,32 @@ class random_timesheet_lines(osv.osv):
     _name = "random.timesheet.lines"
     _description = "Random Timesheet Lines"
     _auto = False
-    
+
     _columns = {
-        'date': fields.date('Date', readonly=True),     
+        'date': fields.date('Date', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
         'user_id' : fields.many2one('res.users', 'User', readonly=True),
         'quantity' : fields.float('Quantity', readonly=True),
-        'product_id' : fields.many2one('product.product', 'Product', readonly=True), 
+        'product_id' : fields.many2one('product.product', 'Product', readonly=True),
         'analytic_account_id' : fields.many2one('account.analytic.account','Analytic Account', readonly=True),
         'uom_id' : fields.many2one('product.uom', 'UoM', readonly=True),
         'amount' : fields.float('Amount', readonly=True),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoicing', readonly=True),
         'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True)
     }
-    
+
     _order = "date desc"
-    
+
     def init(self, cr):
         drop_view_if_exists(cr, 'random_timesheet_lines')
-        
+
         cr.execute("""create or replace view random_timesheet_lines as (
-            select 
+            select
                 line.id as id, line.date as date, line.name as name, line.unit_amount as quantity,
                 line.product_id as product_id, line.account_id as analytic_account_id,
                 line.product_uom_id as uom_id, line.amount as amount, line.to_invoice as to_invoice,
-                line.general_account_id as general_account_id, line.user_id as user_id 
-            from 
+                line.general_account_id as general_account_id, line.user_id as user_id
+            from
                 account_analytic_line line
             where
                 (line.date <= CURRENT_DATE AND line.date > (CURRENT_DATE-15))

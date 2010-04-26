@@ -7,16 +7,32 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Evaluations Statistics">
-                <field name="create_date"/>
-                <field name="employee_id"/>
-                <field name="deadline"/>
+                <field name="create_date" invisible="1"/>
+                <field name="employee_id" invisible="1"/>
+                <field name="deadline" invisible="1"/>
                 <field name="closed" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="plan_id" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
+                <field name="rating" invisible="1"/>
                 <field name="nbr" sum="# of Requests"/>
-                <field name="state"/>
+                <field name="state" invisible="1"/>
             </tree>
         </field>
+    </record>
+
+    <record id="view_evaluation_report_graph" model="ir.ui.view">
+            <field name="name">hr.evaluation.report.graph</field>
+            <field name="model">hr.evaluation.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+            <graph string="Evaluations" type="bar">
+                 <field name="employee_id"/>
+                 <field name="nbr" operator="+"/>
+                 <field name="state" group="True"/>
+             </graph>
+         </field>
     </record>
 
     <record id="view_evaluation_report_search" model="ir.ui.view">
@@ -25,31 +41,61 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Evaluations">
-                <group>
-                <filter icon="terp-hr"
-                    string="This Year"
-                    domain="[('year','=',time.strftime('%%Y'))]"
-                    help="Evaluations of the year"/>
-                <filter icon="terp-hr"
-                    string="This Month"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    help="Evaluations of this month"/>
-                <separator orientation="vertical"/>
-                <filter icon="terp-hr"
-                    string="Deadline"
-                    domain="[('deadline','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                <filter icon="terp-hr"
-                    string="Closed"
-                    domain="[('closed','=',time.strftime('%%Y/%%m/%%d'))]"/>
-                <separator orientation="vertical"/>
-                <field name="employee_id"/>
+            	<group>
+            		<filter icon="terp-hr" string="This Year"
+                    	    domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+                    	    help="Tasks performed in this year"/>
+                    <filter icon="terp-hr" string="This Month"
+                    		name="month"
+                    		domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                    		help="Tasks performed in this month"/>
+	                <filter icon="gtk-media-rewind"
+                            string="    7 Days    "
+                            separator="1"
+                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                            help="Tasks during last 7 days"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Draft"
+                    		icon="terp-hr"
+                    		domain="[('state','=','draft')]"
+                    		help = "Draft Evaluations"/>
+	                <filter string="Plan In Progress"
+	                		icon="terp-hr"
+	                		domain="[('state', '=' ,'wait')]"
+	                		help = "In progress Evaluations"/>
+                   	<filter string="Final Validation"
+                   			icon="terp-hr"
+                   			domain="[('state','=','progress')]"
+                   			help = "Final Validation Evaluations"/>
+  					<separator orientation="vertical"/>
+	                <field name="employee_id" widget="selection"/>
+                </group>
+                <newline/>
+				<group expand="0" string="Extended options..." colspan="10" col="12">
+                	<filter icon="terp-hr"
+                    		string="Done"
+                    		domain="[('state','=','done')]"/>
+                    <filter icon="terp-hr"
+                    		string="Cancelled"
+                    		domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="rating"/>
+                    <field name="plan_id" widget="selection"/>
+                    <separator orientation="vertical"/>
+                    <field name="deadline"/>
+                    <newline/>
+                    <field name="create_date"/>
+                    <field name="closed"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Employee" name="employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Rating" icon="terp-hr" context="{'group_by':'rating'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Plan" icon="terp-hr" context="{'group_by':'plan_id'}"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
                     <filter string="Month" icon="terp-hr" context="{'group_by':'create_date'}"/>
                     <filter string="Year" icon="terp-hr" context="{'group_by':'year'}"/>
                 </group>
@@ -61,7 +107,8 @@
         <field name="name">Evaluations</field>
         <field name="res_model">hr.evaluation.report</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_month':1,'search_default_employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_evaluation_report_search"/>
     </record>
 

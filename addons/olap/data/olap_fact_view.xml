@@ -41,10 +41,7 @@
                         <field name="loaded"/>
                         <separator string="Connection url" colspan="4"/>
                         <field name="connection_url" nolabel="1" colspan="2"/>
-<!--
                         <button name="test_connection" string="Test Connection" type="object" colspan="2"/>
--->
-                        <button name="%(bi_test_connection)d" string="Test Connection" type="action" colspan="2"/>
                     </page>
                     <page string="Tables">
                         <field name="table_ids" colspan="4" nolabel="1"/>
@@ -277,7 +274,7 @@
                 <field name="table_name" select="1" />
                 <field name="application_id" select="1" />
                 <field name="is_hidden" select="1" colspan="2" />
-                
+
             </form>
         </field>
     </record>
@@ -325,7 +322,7 @@
                 <field name="application_id" select="1" />
                 <newline/>
                 <field name="is_hidden" select="1" colspan="2"/>
-                
+
             </form>
         </field>
     </record>
@@ -339,10 +336,6 @@
         action="action_view_olap_application_field_form"
         id="menu_view_olap_application_field_form"
         parent="menu_bi_conf_known_application"/>
-
-
-
-
 
 </data>
 </openerp>
