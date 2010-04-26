@@ -279,7 +279,7 @@ class ir_model_access(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Object', required=True),
-        'group_id': fields.many2one('res.groups', 'Group'),
+        'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade'),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
         'perm_create': fields.boolean('Create Access'),

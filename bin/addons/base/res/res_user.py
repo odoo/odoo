@@ -267,9 +267,16 @@ users()
 
 class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
+    
     _columns = {
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
     }
+    
+    def unlink(self, cr, uid, ids, context=None):
+        for record in self.read(cr, uid, ids, ['users'], context=context):
+            if record['users']:
+                raise osv.except_osv(_('Warning !'), _('Make sure you have no users linked with the group(s)!'))
+        return super(groups2, self).unlink(cr, uid, ids, context=context)
 groups2()
 
 
