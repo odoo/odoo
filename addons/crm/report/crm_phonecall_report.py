@@ -21,6 +21,7 @@
 
 from osv import fields,osv
 import tools
+import crm_report
 
 class crm_phonecall_report(osv.osv):
     """ Phone calls by user and section """
@@ -37,6 +38,10 @@ class crm_phonecall_report(osv.osv):
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
+        'canal_id': fields.many2one('res.partner.canal','Channel',domain="[('section_id','=',section_id),('object_id.model', '=', 'crm.phonecall')]")
     }
 
     def init(self, cr):
@@ -63,6 +68,10 @@ class crm_phonecall_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    c.priority as priority,
+                    c.date_closed as date_closed,
+                    c.opportunity_id as opportunity_id,
+                    c.canal_id as canal_id,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
@@ -70,6 +79,7 @@ class crm_phonecall_report(osv.osv):
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
                      c.state, c.user_id,c.section_id, c.categ_id,c.partner_id,c.company_id
                      ,to_char(c.create_date, 'YYYY-MM-DD'),c.create_date
+                     ,c.priority,c.date_closed,opportunity_id,canal_id
             )""")
 
 crm_phonecall_report()
