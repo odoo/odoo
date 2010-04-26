@@ -320,12 +320,22 @@ class email_server(osv.osv):
             
         return res_id
     
+    def __fetch_mail(self, cr, uid, ids, context={}):
+        sendmail_thread = threading.Thread(target=self.fetch_mail, args=(cr, uid, ids))
+        sendmail_thread.start()
+        return True
+        
     def _fetch_mails(self, cr, uid, ids=False, context={}):
         if not ids:
             ids = self.search(cr, uid, [])
         return self.fetch_mail(cr, uid, ids, context)
     
     def fetch_mail(self, cr, uid, ids, context={}):
+
+        fp = os.popen('ping www.google.com -c 1 -w 5',"r")
+        if not fp.read():
+            logger.notifyChannel('imap', netsvc.LOG_WARNING, 'lost internet connection !')
+
         for server in self.browse(cr, uid, ids, context):
             logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             
@@ -356,7 +366,7 @@ class email_server(osv.osv):
                         pop_server = POP3_SSL(server.server, int(server.port))
                     else:
                         pop_server = POP3(server.server, int(server.port))
-                    
+                   
                     #TODO: use this to remove only unread messages
                     #pop_server.user("recent:"+server.user)
                     pop_server.user(server.user)
@@ -373,9 +383,10 @@ class email_server(osv.osv):
                     pop_server.quit()
                     
                     logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
-                    
+                
+                self.write(cr, uid, [server.id], {'state':'done'})
             except Exception, e:
-                logger.notifyChannel('IMAP', netsvc.LOG_WARNING, '%s' % (e))
+                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
                 
         return True
 
