@@ -287,7 +287,7 @@ class pos_order(osv.osv):
         res3= statement_obj.search(cr,uid,[('pos_statement_id','=', ids[0])])
         list_jrnl=[]
         for r in res3:
-            cr.execute("select id from account_journal where name= '%s' and special_journal='t'"%(r[0]))
+            cr.execute("select id from account_journal where name= '%s' and special_journal='t'"%(r))
             res3=cr.fetchone()
             is_special=res3 and res3[0] or None
             if is_special:
