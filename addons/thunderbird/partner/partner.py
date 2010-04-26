@@ -162,12 +162,15 @@ class tinythunderbird_partner(osv.osv):
         dictcreate = dict(vals)
         datas = [dictcreate['datas']]
         name = [dictcreate['name']]
+        f_name = [dictcreate['datas_fname']]
         if(dictcreate['datas'].__contains__(',')):
             name = dictcreate['name'].split(',')
             datas = dictcreate['datas'].split(',')
+            f_name = dictcreate['datas_fname'].split(',')
         for i in range(0,datas.__len__()):
             dictcreate['name'] = name[i]
             dictcreate['datas'] = datas[i]
+            dictcreate['datas_fname'] = f_name[i]
             create_id = self.pool.get('ir.attachment').create(cr,user,dictcreate)
         return 0
 
