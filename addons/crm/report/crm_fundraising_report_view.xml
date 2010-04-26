@@ -26,6 +26,8 @@
                     <field name="day" invisible="1"/>
                     <field name="priority" invisible="1"/>
                     <field name="date_closed" invisible="1"/>
+                    <field name="canal_id" invisible="1"/>
+                    <field name="som" invisible="1"/>
                </tree>
             </field>
 
@@ -77,7 +79,10 @@
 	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
 	                <field name="priority"/>
 	                <separator orientation="vertical"/>
-	                <field name="date_closed"/>
+	                <field name="canal_id" widget="selection" />
+	                <field name="som" widget="selection" />
+	                <newline/>
+	                <field name="date_closed" />
 	             </group>
             	</xpath>
             	<xpath
@@ -85,6 +90,11 @@
                  position='after'>
                  <filter string="Priority" icon="terp-sale" domain="[]"
                      context="{'group_by':'priority'}" />
+                 <separator orientation="vertical"/>
+                 <filter string="Channel" icon="terp-sale" domain="[]"
+                     context="{'group_by':'canal_id'}" />
+                <filter string="State of Mind" icon="terp-sale" domain="[]"
+                     context="{'group_by':'som'}" />
              </xpath>
                 </data>
             </field>

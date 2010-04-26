@@ -24,6 +24,9 @@
 	                <field name="categ_id" invisible="1"/>
 	                <field name="priority" invisible="1"/>
 	                <field name="type_id" invisible="1"/>
+                    <field name="date_closed" invisible="1"/>
+                    <field name="canal_id" invisible="1"/>
+                    <field name="som" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -78,6 +81,11 @@
 	                <separator orientation="vertical"/>
 	                <field name="priority" />
 	                <field name="type_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
+	                <separator orientation="vertical"/>
+	                <field name="canal_id" widget="selection" />
+	                <field name="som" widget="selection" />
+	                <newline/>
+	                <field name="date_closed" />
                 </group>
             	</xpath>
              <xpath
@@ -94,6 +102,11 @@
                      context="{'group_by':'priority'}" />
                  <filter string="Type" icon="terp-sale" domain="[]"
                      context="{'group_by':'type_id'}" />
+                 <separator orientation="vertical"/>
+                 <filter string="Channel" icon="terp-sale" domain="[]"
+                     context="{'group_by':'canal_id'}" />
+                <filter string="State of Mind" icon="terp-sale" domain="[]"
+                     context="{'group_by':'som'}" />
              </xpath>
              </data>
             </field>
