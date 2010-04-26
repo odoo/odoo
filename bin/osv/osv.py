@@ -240,7 +240,8 @@ class osv(orm.orm):
                         for c in cls.__dict__.get(s, []):
                             exist = False
                             for c2 in range(len(new)):
-                                if new[c2][2]==c[2]:
+                                #For _constraints, we should check field and methods as well
+                                if new[c2][2]==c[2] and new[c2][0]==c[0]:
                                     new[c2] = c
                                     exist = True
                                     break
