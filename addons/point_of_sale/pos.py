@@ -28,7 +28,7 @@ from tools.translate import _
 from decimal import Decimal
 import tools
 import re
-
+import decimal_precision as dp
 
 class pos_config_journal(osv.osv):
     
@@ -49,8 +49,8 @@ class pos_company_discount(osv.osv):
          
     _inherit = 'res.company'
     _columns = {
-        'company_discount': fields.float('Max Discount(%)', digits=(16,2)),
-        'max_diff': fields.float('Max Difference for Cashboxes', digits=(16,2)),
+        'company_discount': fields.float('Max Discount(%)', digits_compute= dp.get_precision('Point Of Sale')),
+        'max_diff': fields.float('Max Difference for Cashboxes', digits_compute= dp.get_precision('Point Of Sale Discount')),
      }
 
 pos_company_discount()
@@ -123,8 +123,11 @@ class pos_order(osv.osv):
         tot =0.0
         val=None
         for order in self.browse(cr, uid, ids):
-            if order.date_payment:
-                res[order.id]=order.date_payment
+            cr.execute("select date_payment from pos_order where id=%d"%(order.id))
+            date_p=cr.fetchone()
+            date_p=date_p and date_p[0] or None
+            if date_p:
+                res[order.id]=date_p
                 return res
             cr.execute(" SELECT max(l.date) from account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o where i.move_id=m.id and l.move_id=m.id and l.reconcile_id=r.id and o.id=%d and o.invoice_id=i.id"%(order.id))
             val=cr.fetchone()
@@ -147,18 +150,21 @@ class pos_order(osv.osv):
         tot =0.0
         val=None
         for order in self.browse(cr, uid, ids):
-            if order.date_validation:
-                res[order.id]=order.date_validation
+            cr.execute("select date_validation from pos_order where id=%d"%(order.id))
+            date_p=cr.fetchone()
+            date_p=date_p and date_p[0] or None
+            if date_p:
+                res[order.id]=date_p
                 return res
             discount_allowed=order.company_id.company_discount
             for line in order.lines:
                 if line.discount > discount_allowed:
                     return {order.id: None }
-            if order.amount_paid == order.amount_total and not order.date_validation:
+            if order.amount_paid == order.amount_total and not date_p:
                 cr.execute("select max(date) from account_bank_statement_line where pos_statement_id=%d"%(order.id))
                 val=cr.fetchone()
                 val=val and val[0] or None
-            if order.invoice_id and order.invoice_id.move_id and not order.date_validation and not val:
+            if order.invoice_id and order.invoice_id.move_id and not date_p and not val:
                 for o in order.invoice_id.move_id.line_id:
                     if o.balance==0:
                         if val<o.date_created:
@@ -167,59 +173,36 @@ class pos_order(osv.osv):
                 res[order.id]=val
         return res
 
-    def _amount_tax(self, cr, uid, ids, field_name, arg, context):
-        
-        """  Calculates Taxes of order
-        @return: Dictionary of values """    
-                  
-        res = {}
-        tax_obj = self.pool.get('account.tax')
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
+        tax_obj = self.pool.get('account.tax')        
+        res={}
         for order in self.browse(cr, uid, ids):
-            val = 0.0
+            res[order.id] = {
+                'amount_paid': 0.0,
+                'amount_return':0.0,
+                'amount_tax':0.0,
+            }            
+            for payment in order.statement_ids:
+                 res[order.id]['amount_paid'] +=  payment.amount 
+            for payment in order.payments:
+                res[order.id]['amount_return']  += (payment.amount < 0 and payment.amount or 0)   
             for line in order.lines:
                 if order.price_type!='tax_excluded':
-                    val = reduce(lambda x, y: x+round(y['amount'], 2),
+                    res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
                         tax_obj.compute_inv(cr, uid, line.product_id.taxes_id,
                             line.price_unit * \
                             (1-(line.discount or 0.0)/100.0), line.qty),
-                            val)
+                            res[order.id]['amount_tax'])
                 else:
-                    val = reduce(lambda x, y: x+round(y['amount'], 2),
+                    res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
                         tax_obj.compute(cr, uid, line.product_id.taxes_id,
                             line.price_unit * \
                             (1-(line.discount or 0.0)/100.0), line.qty),
-                            val)
-
-            res[order.id] = val
+                            res[order.id]['amount_tax'])                                                    
         return res
-
-    def _total_payment(self, cr, uid, ids, field_name, arg, context):
         
-        """  Calculates Total payment  of order
-        @return: Dictionary of values """     
-             
-        res = {}
-        i=0
-        for order in self.browse(cr, uid, ids):
-            val = 0.0
-            for payment in order.statement_ids:
-                val += payment.amount
-            res[order.id] = val
-            return res
-        return {order.id:val}
 
-    def _total_return(self, cr, uid, ids, field_name, arg, context):
-        
-        """  Calculates Total Returned  from the order
-        @return: Dictionary of values """   
-                  
-        res = {}
-        for order in self.browse(cr, uid, ids):
-            val = 0.0
-            for payment in order.payments:
-                val += (payment.amount < 0 and payment.amount or 0)
-            res[order.id] = val
-        return res
+
     def _sale_journal_get(self, cr, uid, context):
         
         """ To get  sale journal for this order" 
@@ -268,31 +251,21 @@ class pos_order(osv.osv):
         flag=False
         res_company = self.pool.get('res.company')
         res_obj = self.pool.get('res.users')
-        res=0.0
-        res2=0.0
-        statement_obj = self.pool.get('account.bank.statement.line')   
-        obj_journal = self.pool.get('account.journal')         
         company_disc=self.browse(cr,uid,ids)
         if not company_disc:
             comp=res_obj.browse(cr,uid,uid).company_id.company_discount or 0.0
         else:
             comp= company_disc[0] and company_disc[0].company_id and  company_disc[0].company_id.company_discount  or 0.0
-        for order in self.browse(cr,uid,ids):
-            for line in order.lines:   
-                if line.discount <=comp:
-                    res=line.discount
-                if line.discount >comp:
-                    res2=line.discount     
-                                
-       
-        statement_id= statement_obj.search(cr,uid,[('pos_statement_id','=', ids[0])])
-        res3=[]
-        if statement_id:
-            statement=statement_obj.browse(cr,uid,statement_id[0])
-            res3.append(statement.journal_id)
+        cr.execute("select discount from pos_order_line where order_id=%s and discount <= %s"%(ids[0],comp))
+        res=cr.fetchone()
+        cr.execute("select discount from pos_order_line where order_id=%s and discount > %s"%(ids[0],comp))
+        res2=cr.fetchone()
+        cr.execute("select journal_id from account_bank_statement_line where pos_statement_id=%s "%(ids[0]))
+        res3=cr.fetchall()
         list_jrnl=[]
         for r in res3:
-            res3=obj_journal.search(cr,uid,[('name','=',r),('special_journal','=','t')])
+            cr.execute("select id from account_journal where name= '%s' and special_journal='t'"%(r[0]))
+            res3=cr.fetchone()
             is_special=res3 and res3[0] or None
             if is_special:
                 list_jrnl.append(is_special)
@@ -316,10 +289,10 @@ class pos_order(osv.osv):
         'user_id': fields.many2one('res.users', 'Connected Salesman', readonly=True),
         'user_saleman': fields.many2one('res.users', 'Salesman', required=True),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
-        'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
+        'amount_tax': fields.function(_amount_all, method=True, string='Taxes',digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
-        'amount_paid': fields.function(_total_payment, 'Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True),
-        'amount_return': fields.function(_total_return, 'Returned', method=True),
+        'amount_paid': fields.function(_amount_all, 'Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True,digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
+        'amount_return': fields.function(_amount_all, 'Returned', method=True,digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True),
         'price_type': fields.selection([
             ('tax_excluded','Tax excluded')
@@ -1176,7 +1149,7 @@ class pos_order_line(osv.osv):
         'serial_number': fields.char('Serial Number', size=128),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
         'price_unit': fields.function(_get_amount, method=True, string='Unit Price', store=True),
-        'price_ded': fields.float('Discount(Amount)'),
+        'price_ded': fields.float('Discount(Amount)',digits_compute=dp.get_precision('Point Of Sale')),
         'qty': fields.float('Quantity'),
         'qty_rfd': fields.float('Refunded Quantity'),
         'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal w/o Tax'),
