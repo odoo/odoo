@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="action_view_current_project_issue_tree" model="ir.actions.act_window">
+            <field name="name">Project issues</field>
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('create_date', '&gt;=', time.strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
+           <field name="view_id" ref="project_issue.project_issue_tree_view"/>
+        </record>
+
+        <record id="board_project_issue_form" model="ir.ui.view">
+            <field name="name">board.project.issue.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Project Issue Board">
+                    <vpaned>
+                        <child1>
+                   			<action colspan="4" height="220" name="%(action_view_current_project_issue_tree)d" string="Current Project Issues" width="510"/>
+                        </child1>
+                        <child2>
+                   			<action colspan="4" height="220" name="%(project.action_task_by_days_graph)d" string="Project Tasks By Days" width="510"/>
+                        </child2>
+                    </vpaned>
+                </form>
+            </field>
+        </record>
+
+        <record id="open_board_project_issue" model="ir.actions.act_window">
+            <field name="name">Project Issue Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="board_project_issue_form"/>
+        </record>
+        <menuitem
+            id="menu_deshboard_project_issue"
+            name="Project Issue Dashboard" parent="next_id_86"
+            icon="terp-graph" action="open_board_project_issue"/>
+    </data>
+</openerp>

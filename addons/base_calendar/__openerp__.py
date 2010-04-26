@@ -40,6 +40,7 @@
         'wizard/base_calendar_invite_attendee_view.xml', 
         'base_calendar_view.xml'
     ], 
+    "test" : ['test/base_calendar_test.yml'], 
     "installable" : True, 
     "active" : False, 
 }

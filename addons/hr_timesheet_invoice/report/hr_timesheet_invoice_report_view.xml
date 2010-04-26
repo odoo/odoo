@@ -6,6 +6,106 @@
             name="Reporting"
             parent="hr.menu_hr_root"
             sequence="40" />
+
+        <record id="view_timesheet_line_graph" model="ir.ui.view">
+            <field name="name">report.timesheet.line.graph</field>
+            <field name="model">report.timesheet.line</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet Line" type="bar">
+                    <field name="account_id"/>
+                    <field name="quantity" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_timesheet_line_tree" model="ir.ui.view">
+            <field name="name">report.timesheet.line.tree</field>
+            <field name="model">report.timesheet.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet Line">
+                    <field name="date" invisible="1"/>
+                    <field name="day" invisible="1"/>
+                    <field name="quantity" sum="Quantity"/>
+                    <field name="cost" sum="Cost"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="account_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="invoice_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_timesheet_line_search" model="ir.ui.view">
+            <field name="name">report.timesheet.line.search</field>
+            <field name="model">report.timesheet.line</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet by user">
+                    <group col="10" colspan="4">
+                    	<filter icon="terp-hr" string="This Year"
+	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                    	    help="Timesheet lines in this year"/>
+	                    <filter icon="terp-hr" string="This Month"
+	                    		name="month"
+	                    		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                    		help="Timesheet lines in this month"/>
+		                <filter icon="gtk-media-rewind"
+	                            string="    7 Days    "
+	                            separator="1"
+	                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                            help="Timesheet lines during last 7 days"/>
+	                    <separator orientation="vertical"/>
+	  					<field name="user_id" widget="selection">
+	                        <filter icon="terp-hr"
+	                        		string="My timesheet lines"
+	                        		help = "My timesheet lines"
+	                        		domain="[('user_id','=',uid)]" />
+	                        <filter icon="terp-hr"
+	                        		string="Non Assigned timesheets to users"
+	                        		help="Non Assigned timesheets to users"
+	                        		domain="[('user_id','=',False)]"/>
+	                    </field>
+	                    <field name="account_id"/>
+                        <field name="product_id"/>
+                    </group>
+                    <newline/>
+	                <group expand="0" string="Extended options..." colspan="10" col="12">
+	                    <field name="date"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="invoice_id" widget="selection"/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="10" col="12">
+	                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="Account" icon="terp-hr" context="{'group_by':'account_id'}"/>
+	                    <filter string="Product" icon="terp-hr" context="{'group_by':'product_id'}"/>
+	                    <filter string="Invoice" icon="terp-hr" context="{'group_by':'invoice_id'}"/>
+	                    <separator orientation="vertical"/>
+	                    <filter string="Day" icon="terp-hr" context="{'group_by':'day'}"/>
+	                    <filter string="Month" icon="terp-hr" context="{'group_by':'month'}"/>
+	                    <filter string="Year" icon="terp-hr" context="{'group_by':'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_timesheet_line_stat_all" model="ir.actions.act_window">
+            <field name="name">Timesheet Line</field>
+            <field name="res_model">report.timesheet.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="search_view_id" ref="view_timesheet_line_search"/>
+        </record>
+        <menuitem action="action_timesheet_line_stat_all" id="menu_report_timesheet_line_all" parent="hr.menu_hr_reporting"/>
+
+
         <!-- Statistics report on timesheet by user -->
 
         <record id="view_timesheet_user_graph" model="ir.ui.view">
@@ -89,7 +189,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_timesheet_user_search"/>
         </record>
-        <menuitem action="action_timesheet_user_stat_all" id="menu_report_timesheet_user_all" parent="hr.menu_hr_reporting"/>
+        <!-- <menuitem action="action_timesheet_user_stat_all" id="menu_report_timesheet_user_all" parent="hr.menu_hr_reporting"/> -->
 
         <!-- Statistics report on timesheets to invoice -->
 
@@ -155,7 +255,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_timesheet_invoice_search"/>
         </record>
-        <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="hr.menu_hr_reporting"/>
+       <!--  <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="hr.menu_hr_reporting"/> -->
 
         <!-- Statistics report on daily timesheets per account -->
 
@@ -229,7 +329,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_timesheet_account_date_search"/>
         </record>
-        <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="hr.menu_hr_reporting"/>
+        <!--  <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="hr.menu_hr_reporting"/>-->
 
         <!-- Statistics report on timesheets per account -->
 
@@ -304,7 +404,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="search_view_id" ref="view_timesheet_account_search"/>
         </record>
-        <menuitem action="action_timesheet_account_stat_all" id="menu_report_timesheet_account_all" parent="hr.menu_hr_reporting"/>
+        <!-- <menuitem action="action_timesheet_account_stat_all" id="menu_report_timesheet_account_all" parent="hr.menu_hr_reporting"/> -->
 
         <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_timesheet_user" name="Timesheets per day" res_model="report_timesheet.user" src_model="res.users"/>
 

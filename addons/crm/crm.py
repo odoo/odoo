@@ -432,11 +432,20 @@ class crm_case(osv.osv):
         """
         if not context:
             context = {}
+        
+        hist_obj = self.pool.get('crm.case.history') 
+        log_obj = self.pool.get('crm.case.log')
 
         for case in self.browse(cr, uid, ids, context):
             if (not case.section_id.allow_unlink) and (case.state <> 'draft'):
                 raise osv.except_osv(_('Warning !'), 
                     _('You can not delete this case. You should better cancel it.'))
+
+            # Also removing history and logs 
+            history_ids = map(lambda x: x.id, case.history_line)
+            log_ids = map(lambda x: x.id, case.log_ids)
+            hist_obj.unlink(cr, uid, history_ids, context=context)
+            log_obj.unlink(cr, uid, log_ids, context=context)
         return super(crm_case, self).unlink(cr, uid, ids, context)
 
     def stage_next(self, cr, uid, ids, context=None):

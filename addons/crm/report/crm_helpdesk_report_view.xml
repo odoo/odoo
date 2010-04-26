@@ -66,40 +66,40 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="9">
-                           <filter string="This Year" icon="terp-hr"
-                               domain="[('name','=',time.localtime()[0])]"
-                               name="this_year" />
+                   		<filter string="This Year" icon="terp-hr"
+                   			domain="[('name','=',time.localtime()[0])]"
+                   			default="1" />
 
-                           <filter string="This Month" icon="terp-hr"
-                               domain="[('month','=',time.strftime('%%m'))]"
-                               name="this_month" />
+                   		<filter string="This Month" icon="terp-hr"
+                   			domain="[('month','=',time.strftime('%%m'))]"
+                   			default="1" />
 
-                           <separator orientation="vertical" />
-                           <filter string="Current" icon="terp-hr"
-                               domain="[('state','in',('open','draft'))]" />
+                   		<separator orientation="vertical" />
+                   		<filter string="Current" icon="terp-hr"
+                   			domain="[('state','in',('open','draft'))]" />
 
-                           <filter string="Won" icon="terp-hr"
-                               domain="[('state','=','done')]" />
+                   		<filter string="Won" icon="terp-hr"
+                   			domain="[('state','=','done')]" />
 
-                           <filter string="Lost" icon="terp-hr"
-                               domain="[('state','=','cancel')]" />
+                   		<filter string="Lost" icon="terp-hr"
+                   			domain="[('state','=','cancel')]" />
 
-                           <filter string="Deadline" icon="terp-hr"
-                               domain="[('date_deadline','=',time.strftime('%%m/%%d/%%Y'))]" />
+                   		<filter string="Deadline" icon="terp-hr"
+                   			domain="[('date_deadline','=',time.strftime('%%m/%%d/%%Y'))]" />
 
-                           <separator orientation="vertical" />
-                           <field name="section_id"
-                               widget="selection"
-                               context="{'invisible_section': False}">
+                   		<separator orientation="vertical" />
+                   		<field name="section_id"
+                   			default="context.get('section_id', False)"
+                   			widget="selection"
+                   			context="{'invisible_section': False}">
 
-                               <filter icon="terp-crm"
-                                   context="{'invisible_section': False}"
-                                   domain="[('section_id.user_id','=',uid)]"
-                                   help="My section" />
+                   			<filter icon="terp-crm"
+                   				context="{'invisible_section': False}"
+                   				domain="[('section_id.user_id','=',uid)]"
+                   				help="My section" />
 
-                           </field>
-                           <field name="company_id" widget="selection">
-
+                   		</field>
+                   		<field name="company_id" widget="selection">
                            <filter icon="terp-crm"
                         context="{'invisible_section': False}"
                         domain="[('section_id.user_id.company_id','=',uid)]"
@@ -137,7 +137,8 @@
 
                   <group expand="1" string="Group By..." colspan="4" col="8">
                         <filter string="User" icon="terp-sale"
-                            domain="[]" context="{'group_by':'user_id'}" />
+                        	domain="[]" context="{'group_by':'user_id'}"
+                        	default="1" />
 
                         <filter string="Company" icon="terp-sale"
                             domain="[]"
@@ -175,7 +176,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_crm_helpdesk_tree"/>
-            <field name="context">{"search_default_section_id":section_id,"search_default_this_year":1,"search_default_this_month":1,"search_default_by_user":1}</field>            
             <field name="search_view_id" ref="view_report_crm_helpdesk_filter"/>
         </record>
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,54 +15,61 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
-import pooler
+from osv import fields, osv
+from tools.translate import _
 
-class wizard_move_line_select(wizard.interface):
-    def _open_window(self, cr, uid, data, context):
-        mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
-        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
-        account_obj = pooler.get_pool(cr.dbname).get('account.account')
-        fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+class account_move_line_select(osv.osv_memory):
+    """
+        Account move line select
+    """
+    _name = "account.move.line.select"
+    _description = "Account move line select"
 
-        if not context.get('fiscalyear', False):
+    def open_window(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        account_obj = self.pool.get('account.account')
+        fiscalyear_obj = self.pool.get('account.fiscalyear')
+
+        if context is None:
+            context = {}
+
+        if 'fiscalyear' not in context:
             fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
         else:
             fiscalyear_ids = [context['fiscalyear']]
 
+        fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
         fiscalyears = fiscalyear_obj.browse(cr, uid, fiscalyear_ids)
+
         period_ids = []
-        for fiscalyear in fiscalyears:
-            for period in fiscalyear.period_ids:
-                period_ids.append(period.id)
-        domain = str(('period_id', 'in', period_ids))
+        if fiscalyears :
+            for fiscalyear in fiscalyears:
+                for period in fiscalyear.period_ids:
+                    period_ids.append(period.id)
+            domain = str(('period_id', 'in', period_ids))
 
         result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_tree1')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id])[0]
         result['context'] = {
-            'fiscalyear': context.get('fiscalyear', False),
-            'account_id': data['id']
+            'fiscalyear': False ,
+            'account_id': context['active_id'],
+            'active_id': context['active_id'],
         }
-        if data['id']:
-            acc_data = account_obj.browse(cr, uid, data['id']).child_consol_ids
+
+        if context['active_id']:
+            acc_data = account_obj.browse(cr, uid, context['active_id']).child_consol_ids
             if acc_data:
                 result['context'].update({'consolidate_childs': True})
         result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
         return result
 
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'action', 'action': _open_window, 'state': 'end'}
-        }
-    }
-wizard_move_line_select('account.move.line.select')
-
+account_move_line_select()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

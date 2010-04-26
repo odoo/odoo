@@ -1,23 +1,14 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
-        <report id="report_holidays_summary"
-                string="Summary Of Leaves"
-                model="hr.holidays"
-                name="holidays.summary"
-                xsl="hr_holidays/report/holidays_summary.xsl"
-                auto="False"
-                menu="False"/>
+	<data>
+		<report id="report_holidays_summary"
+				string="Summary Of Leaves"
+				model="hr.holidays"
+				name="holidays.summary"
+				xsl="hr_holidays/report/holidays_summary.xsl"
+				auto="False"
+				menu="False"/>
 
-        <menuitem
-            name="Leaves Summary"
-            parent="menu_hr_reporting_holidays"
-            id="menu_report_hr_holiday_tree"
-            action="open_company_allocation"
-            groups="hr.group_hr_manager"
-            sequence="40"/>
-
-
-    </data>
+	</data>
 </openerp>
 
