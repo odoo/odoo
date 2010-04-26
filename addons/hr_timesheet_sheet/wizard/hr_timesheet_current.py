@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,27 +15,27 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-
-import wizard
-import netsvc
 import time
-import pooler
-from osv import osv
+
+from osv import osv, fields
 from tools.translate import _
 
-class wiz_timesheet_open(wizard.interface):
-    def _open_timesheet(self, cr, uid, data, context):
-        pool = pooler.get_pool(cr.dbname)
-        user_ids = pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
-        if not len(user_ids):
-            raise wizard.except_wizard(_('Error !'), _('No employee defined for your user !'))
-        ts = pool.get('hr_timesheet_sheet.sheet')
-        ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))])
+class hr_timesheet_current_open(osv.osv_memory):
+    _name = 'hr.timesheet.current.open'
+    _description = 'hr.timesheet.current.open'
+
+    def open_timesheet(self, cr, uid, ids, context=None):
+        ts = self.pool.get('hr_timesheet_sheet.sheet')
         view_type = 'form,tree'
+
+        user_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
+        if not len(user_ids):
+            raise osv.except_osv(_('Error !'), _('No employee defined for your user !'))
+        ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))])
+
         if len(ids) > 1:
             view_type = 'tree,form'
             domain = "[('id','in',["+','.join(map(str, ids))+"]),('user_id', '=', uid)]"
@@ -46,7 +46,7 @@ class wiz_timesheet_open(wizard.interface):
             domain = "[('user_id', '=', uid)]"
         value = {
             'domain': domain,
-            'name': 'Open timesheet',
+            'name': 'Open Timesheet',
             'view_type': 'form',
             'view_mode': view_type,
             'res_model': 'hr_timesheet_sheet.sheet',
@@ -57,14 +57,6 @@ class wiz_timesheet_open(wizard.interface):
             value['res_id'] = ids[0]
         return value
 
-    states = {
-        'init' : {
-            'actions' : [],
-            'result' : {'type':'action', 'action':_open_timesheet, 'state':'end'}
-        }
-    }
-wiz_timesheet_open('hr_timesheet_sheet.current.open')
-
+hr_timesheet_current_open()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

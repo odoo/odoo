@@ -1382,14 +1382,14 @@
             <field name="domain">[('account_id','child_of', [active_id]),('state','&lt;&gt;','draft')]</field>
             <field name="context">{'account_id':active_id}</field>
         </record>
-        <wizard id="wizard_move_line_select" menu="False" model="account.move.line" name="account.move.line.select" string="Move line select"/>
-        <record id="ir_open_account_account" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'account.account'" name="model"/>
-            <field name="name">Account Entries</field>
-            <field eval="'ir.actions.wizard,%d'%wizard_move_line_select" name="value"/>
-            <field eval="True" name="object"/>
-        </record>
+<!--        <wizard id="wizard_move_line_select" menu="False" model="account.move.line" name="account.move.line.select" string="Move line select"/>-->
+<!--        <record id="ir_open_account_account" model="ir.values">-->
+<!--            <field eval="'tree_but_open'" name="key2"/>-->
+<!--            <field eval="'account.account'" name="model"/>-->
+<!--            <field name="name">Account Entries</field>-->
+<!--            <field eval="'ir.actions.wizard,%d'%wizard_move_line_select" name="value"/>-->
+<!--            <field eval="True" name="object"/>-->
+<!--        </record>-->
 
 
         <record id="view_move_line_tax_tree" model="ir.ui.view">

@@ -318,8 +318,7 @@ class hr_evaluation_interview(osv.osv):
         record = record and record[0]
         context.update({'survey_id': record.survey_id.id, 'response_id' : [record.response.id], 'response_no':0,})
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
-        return value            
-
+        return value
 hr_evaluation_interview()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:1

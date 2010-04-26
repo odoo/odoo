@@ -128,7 +128,7 @@ class survey(osv.osv):
                 'context' : context
             }
         else:
-            
+
             datas['form'] = page_setting
             datas['model'] = 'survey.print'
             report = {
@@ -139,7 +139,6 @@ class survey(osv.osv):
                 'context' : context
             }
         return report
-
 survey()
 
 class survey_history(osv.osv):

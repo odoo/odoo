@@ -18,8 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
+
 import pooler
 import rml_parse
 from report import report_sxw
@@ -45,7 +45,6 @@ class aged_trial_report(rml_parse.rml_parse):
 
 
 	def _get_lines(self, form):
-
 		if (form['result_selection'] == 'customer' ):
 			self.ACCOUNT_TYPE = ['receivable']
 		elif (form['result_selection'] == 'supplier'):
