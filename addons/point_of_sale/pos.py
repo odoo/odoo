@@ -270,7 +270,8 @@ class pos_order(osv.osv):
         res_obj = self.pool.get('res.users')
         res=0.0
         res2=0.0
-        statement_obj = self.pool.get('account.bank.statement.line')            
+        statement_obj = self.pool.get('account.bank.statement.line')   
+        obj_journal = self.pool.get('account.journal')         
         company_disc=self.browse(cr,uid,ids)
         if not company_disc:
             comp=res_obj.browse(cr,uid,uid).company_id.company_discount or 0.0
@@ -284,11 +285,14 @@ class pos_order(osv.osv):
                     res2=line.discount     
                                 
        
-        res3= statement_obj.search(cr,uid,[('pos_statement_id','=', ids[0])])
+        statement_id= statement_obj.search(cr,uid,[('pos_statement_id','=', ids[0])])
+        res3=[]
+        if statement_id:
+            statement=statement_obj.browse(cr,uid,statement_id[0])
+            res3.append(statement.journal_id)
         list_jrnl=[]
         for r in res3:
-            cr.execute("select id from account_journal where name= '%s' and special_journal='t'"%(r))
-            res3=cr.fetchone()
+            res3=obj_journal.search(cr,uid,[('name','=',r),('special_journal','=','t')])
             is_special=res3 and res3[0] or None
             if is_special:
                 list_jrnl.append(is_special)
