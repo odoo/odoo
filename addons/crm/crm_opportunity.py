@@ -27,7 +27,7 @@ import time
 import mx.DateTime
 
 AVAILABLE_STATES = [
-    ('draft','New'),
+    ('draft','Draft'),
     ('open','Open'),
     ('cancel', 'Lost'),
     ('done', 'Converted'),
@@ -190,6 +190,7 @@ class crm_opportunity(osv.osv):
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.opportunity', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'state' : 'draft',
     }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):

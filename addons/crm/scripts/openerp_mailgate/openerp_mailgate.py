@@ -183,6 +183,7 @@ class email_parser(object):
             'email_cc': msg_cc,             
             'user_id': False, 
             'description': message['body'], 
+            'state' : 'draft',
         }
         data.update(self.partner_get(msg_from))
 
