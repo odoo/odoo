@@ -9,7 +9,6 @@
             <tree string="Leaves Statistics">
                 <field name="date"/>
                 <field name="employee_id"/>
-                <field name="user_id" invisible="1"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="number_of_days_temp"/>
@@ -47,6 +46,20 @@
                     domain="[('month','=',time.strftime('%%m'))]"
                     help="Leaves of this month"/>
                 <separator orientation="vertical"/>
+                <filter icon="terp-hr"
+                    string="Draft"
+                    domain="[('state','=','draft')]"/>
+                <filter icon="terp-hr"
+                    string="Validate"
+                    domain="[('state','=','validate')]"/>
+                <filter icon="terp-hr"
+                    string="Start Leaves"
+                    domain="[('date_from','=',time.strftime('%%Y/%%m/%%d'))]"/>
+                <filter icon="terp-hr"
+                    string="End Leaves"
+                    domain="[('date_to','=',time.strftime('%%Y/%%m/%%d'))]"/>
+
+                <separator orientation="vertical"/>
                 <field name="employee_id"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-sale"
@@ -56,7 +69,7 @@
                 </field>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="Employee" name="employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
@@ -72,10 +85,36 @@
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="context">{'search_default_employee': 1}</field>
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 
-    <menuitem action="action_hr_holidays_report_all" id="menu_hr_holidays_report_all" parent="hr.menu_hr_reporting" sequence="0"/>
+    <menuitem action="action_hr_holidays_report_all" id="menu_hr_holidays_report_all" parent="menu_hr_reporting_holidays" sequence="0"/>
 
-</data>
+	<record id="view_hr_holidays_remaining_leaves_user_tree" model="ir.ui.view">
+        <field name="name">hr.holidays.remaining.leaves.user.tree</field>
+        <field name="model">hr.holidays.remaining.leaves.user</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Leaves by Type">
+                <field name="name"/>
+                <field name="leave_type"/>
+                <field name="no_of_leaves"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_holidays_remaining_leaves_user_graph" model="ir.ui.view">
+        <field name="name">hr.holidays.remaining.leaves.user.graph</field>
+        <field name="model">hr.holidays.remaining.leaves.user</field>
+        <field name="type">graph</field>
+        <field name="arch" type="xml">
+            <graph string="Leaves by Type" orientation = "horizontal" type="bar">
+                <field name="name" />
+                <field name="no_of_leaves" operator = "+"/>
+                <field name="leave_type" group = "True"/>
+            </graph>
+        </field>
+    </record>
+            </data>
 </openerp>

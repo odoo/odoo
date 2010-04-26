@@ -44,6 +44,9 @@
                    'wizard/survey_print.xml',
                    'wizard/survey_send_invitation.xml'],
     'demo_xml': ['survey_demo.xml'],
+    'test': [
+        'test/survey00.yml',
+    ],
     'installable': True,
     'active': False,
 }
