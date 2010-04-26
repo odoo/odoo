@@ -21,6 +21,7 @@
 
 from osv import fields,osv
 import tools
+import crm_report
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -50,6 +51,9 @@ class crm_opportunity_report(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'date_closed': fields.datetime('Closed', readonly=True),
+        'date_open': fields.datetime('Opened', readonly=True),
+        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority')
     }
 
     def init(self, cr):
@@ -76,6 +80,9 @@ class crm_opportunity_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    c.date_closed as date_closed,
+                    c.date_open as date_open,
+                    c.priority as priority,
                     date_trunc('day',c.create_date) as create_date,
                     sum(planned_revenue) as amount_revenue,
                     sum((planned_revenue*probability)/100.0)::decimal(16,2) as amount_revenue_prob,
@@ -94,7 +101,10 @@ class crm_opportunity_report(osv.osv):
                     c.categ_id,
                     c.partner_id,
                     company_id,
-                    create_date
+                    create_date,
+                    c.date_closed,
+                    c.date_open,
+                    c.priority
             )""")
 
 crm_opportunity_report()

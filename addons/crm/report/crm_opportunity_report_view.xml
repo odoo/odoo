@@ -25,6 +25,9 @@
                     <field name="stage_id"  invisible="1"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="day" invisible="1"/>
+                    <field name="date_closed"  invisible="1"/>
+                    <field name="date_open" invisible="1"/>
+                    <field name="priority" invisible="1"/>
                </tree>
             </field>
         </record>
@@ -75,7 +78,13 @@
                  <group>
             	    <separator orientation="vertical"/>
             	    <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
+            	    <field name="partner_id" />
+            	    <separator orientation="vertical"/>
+            	    <field name="priority" />
 	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.opportunity')]"/>
+	                <newline/>
+	                <field name="date_closed" />
+	                <field name="date_open" />
 	               </group>
             	</xpath>
 				<xpath
@@ -83,9 +92,11 @@
 					position='after'>
 					<filter string="Stage" icon="terp-sale" domain="[]"
 						context="{'group_by':'stage_id'}" />
-					<separator orientation="vertical" />
 					<filter string="Partner" icon="terp-partner"
 						domain="[]" context="{'group_by':'partner_id'}" />
+					<separator orientation="vertical"/>
+				    <filter string="Priority" icon="terp-sale"
+						domain="[]" context="{'group_by':'priority'}" />
 				</xpath>
 			 </data>
             </field>
