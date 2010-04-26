@@ -1056,7 +1056,13 @@ class account_move(osv.osv):
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
                         raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
 
-            if abs(amount) < 0.0001:
+            # Check that the move balances, the tolerance for debit/credit must
+            # be smaller than the smallest value according to price accuracy
+            # (hence the +1 below)
+            # Example:
+            #    difference == 0.01 is OK iff price_accuracy <= 1!
+            #    difference == 0.0001 is OK iff price_accuracy <= 3!
+            if abs(amount) < 10 ** -(int(config['price_accuracy'])1):
                 if not len(line_draft_ids):
                     continue
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
