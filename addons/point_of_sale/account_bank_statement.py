@@ -178,11 +178,9 @@ class account_bank_statement(osv.osv):
         balance_start=0.0
         cash_obj = self.pool.get('singer.statement')
         statement_obj = self.pool.get('account.bank.statement')
-        cursor.execute("Select a.id from account_bank_statement a where journal_id=%d and user_id=%d order by a.id desc limit 1"%(journal_id,user))
-        res2=cursor.fetchone()
-        res2=res2 and res2[0] or None
-        if res2:
-            statmt_id=statement_obj.browse(cursor,user,res2)
+        statement_ids=statement_obj.search(cursor, user, [('journal_id','=',journal_id), ('user_id','=',user)])
+        if statement_ids:
+            statmt_id=statement_obj.browse(cursor,user,statement_ids[0])
             check_det=statmt_id.journal_id.check_dtls
             if not check_det:
                 balance_start=statmt_id.balance_end_real or 0.0
@@ -208,14 +206,14 @@ class account_bank_statement(osv.osv):
         @return: True 
         """       
         obj_inv = self.browse(cr, uid, ids)[0]
+        sequence_obj=self.pool.get('ir.sequence')
         s_id=obj_inv.journal_id
         if s_id.statement_sequence_id:
             s_id=s_id.id
-            number = self.pool.get('ir.sequence').get_id(cr, uid, s_id)
+            number = sequence_obj.get_id(cr, uid, s_id)
         else:
-            number = self.pool.get('ir.sequence').get(cr, uid,
+            number = sequence_obj.get(cr, uid,
                             'account.bank.statement')
-
         self.write(cr, uid, ids, {'date':time.strftime("%Y-%m-%d %H:%M:%S"), 'state':'open', 'name':number})
         return True
 
