@@ -192,10 +192,10 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <group col="10" colspan="4">
-                        <filter icon="terp-partner" domain="[('user_id','=',uid)]" help="My" default="1"/>
+                        <filter icon="terp-partner" string="My Timesheet" domain="[('user_id','=',uid)]" help="My Timesheets" />
                         <separator orientation="vertical"/>
-                        <filter icon="terp-crm" string="In Progress" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
-                        <filter icon="terp-crm" string="To Validate" domain="[('state','=','confirmed')]" help="Confirmed Timesheets"/>
+                        <filter icon="terp-crm" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
+                        <filter icon="terp-crm" string="To Validate" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
                         <field name="user_id" select="1" widget="selection"/>
                         <field name="date_from"/>
