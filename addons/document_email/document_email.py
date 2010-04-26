@@ -79,7 +79,7 @@ class email_to_document(osv.osv):
                 if file_ext[1] not in ext:
                     logger.notifyChannel('document', netsvc.LOG_WARNING, 'file type %s is not allows to process for directory %s' % (file_ext[1], dr.directory_id.name))
                     continue
-                    
+                
                 data_attach = {
                     'name': attactment,
                     'datas':binascii.b2a_base64(str(attachents.get(attactment))),

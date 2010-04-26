@@ -46,7 +46,7 @@
                     string="This Month"
                     domain="[('month','=',time.strftime('%%m'))]"
                     help="Stock Moves of this month"/>
-	            <filter icon="gtk-media-rewind"
+	            <filter icon="terp-stock"
                     string="Current Stock"
                     separator="1"
                     domain="[('date', '=', time.strftime('%%Y-%%m-%%d')]"
@@ -94,10 +94,13 @@
  		<field name="search_view_id"  ref="view_stock_search"/>
  	
     </record>
-		<menuitem
-            id="stock.next_id_61"
-            name="Reporting"
-            parent="stock.menu_stock_root" groups="base.group_user"/>    
+
+	<menuitem
+        id="stock.next_id_61"
+        name="Reporting"
+        parent="stock.menu_stock_root" groups="base.group_user"/>    
+
 	<menuitem action="action_stock_move_report" id="menu_action_stock_move_report" parent="next_id_61" sequence="5"/>
+	
 </data>
 </openerp>

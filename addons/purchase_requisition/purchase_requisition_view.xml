@@ -39,7 +39,7 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="origin"/>
-					<field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>                    
+					<field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                 </group>
 
                 <notebook colspan="4">
@@ -52,11 +52,11 @@
                             </tree>
                             <form string="Products" editable="bottom">
                                 <field name="product_id"/>
-								<field name="product_qty"/>                                
+								<field name="product_qty"/>
                                 <field name="product_uom_id"/>
-								<field name="company_id" groups="base.group_multi_company" widget="selection"/>                                
+								<field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </form>
-							                            
+
                         </field>
                     </page>
                     <page string="Notes">
@@ -79,7 +79,7 @@
 						<button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" icon="gtk-cancel" />
 	                </group>
 
-                
+
             </form>
         </field>
     </record>
@@ -111,36 +111,36 @@
                     <field name="name" select="1" string="Requisition Reference"/>
                     <field name="purchase_ids" select="1"/>
                     <field name="user_id" select="1" widget="selection">
-                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Requisition "/>                        
+                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Requisition "/>
                     </field>
                     <field name="exclusive" select="1" />
                     <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="10">
-                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>                
+                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Date Start" icon="terp-purchase" domain="[]" context="{'group_by':'date_start'}"/>
                     <filter string="Date End" icon="terp-purchase" domain="[]" context="{'group_by':'date_end'}"/>
                 </group>
               </search>
             </field>
         </record>
-    
+
 
     <record model="ir.actions.act_window" id="action_purchase_requisition">
         <field name="name">Purchase Requisitions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>  
-        <field name="search_view_id" ref="view_purchase_requisition_filter"/>          
+		<field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_purchase_requisition_filter"/>
     </record>
 
-    <menuitem 
-        id="menu_purchase_requisition_pro_mgt" 
+    <menuitem
+        id="menu_purchase_requisition_pro_mgt"
         sequence="0"
         groups="base.group_extended"
-        parent="purchase.menu_procurement_management" 
+        parent="purchase.menu_procurement_management"
         action="action_purchase_requisition"/>
 
     <record model="ir.ui.view" id="product_normal_form_view_inherit">
@@ -156,7 +156,6 @@
             </field>
         </field>
     </record>
-
 
     </data>
 </openerp>
