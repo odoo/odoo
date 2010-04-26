@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import wizard_automatic_reconcile
+import account_automatic_reconcile
 import account_move_line_reconcile_select
 import account_move_line_unreconcile_select
 import wizard_reconcile

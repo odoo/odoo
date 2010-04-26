@@ -80,6 +80,7 @@ module named account_voucherss
         'wizard/account_aged_trial_balance_view.xml',
         'wizard/account_compare_account_balance_report_view.xml',
         'wizard/account_third_party_ledger.xml',
+        'wizard/account_automatic_reconcile_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_end_fy.xml',
         'account_invoice_view.xml',
