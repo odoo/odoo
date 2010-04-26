@@ -50,7 +50,7 @@ class account_balance_report(osv.osv_memory):
         'date_to': fields.date('End date', required=True),
         }
 
-    def _get_company(self, cr, uid, ids, context=None):
+    def _get_company(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         company_obj = self.pool.get('res.company')
         user = user_obj.browse(cr, uid, uid, context=context)

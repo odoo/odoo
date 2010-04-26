@@ -43,7 +43,7 @@ class account_aged_trial_balance(osv.osv_memory):
                                                  'Analysis Direction', required=True),
         }
 
-    def _get_company(self, cr, uid, ids, context=None):
+    def _get_company(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         company_obj = self.pool.get('res.company')
         if context is None:

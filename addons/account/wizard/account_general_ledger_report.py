@@ -50,7 +50,7 @@ class account_general_ledger_report(osv.osv_memory):
         'date_to': fields.date("End date", required=True)
                 }
 
-    def _get_company(self, cr, uid, ids, context=None):
+    def _get_company(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         company_obj = self.pool.get('res.company')
         if context is None:
@@ -63,8 +63,8 @@ class account_general_ledger_report(osv.osv_memory):
 
     _defaults = {
             'state' : 'none',
-            'date_from' : lambda *a: time.strftime('%Y-01-01'),
-            'date_to' : lambda *a: time.strftime('%Y-%m-%d'),
+            'date_from' : time.strftime('%Y-01-01'),
+            'date_to' : time.strftime('%Y-%m-%d'),
             'company_id' : _get_company,
             'display_account' : 'bal_all',
             'sortbydate' : 'sort_date',

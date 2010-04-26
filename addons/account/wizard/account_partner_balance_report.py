@@ -48,7 +48,7 @@ class account_partner_balance(osv.osv_memory):
         'date2': fields.date('End date', required=True),
             }
 
-    def _get_company(self, cr, uid, ids, context=None):
+    def _get_company(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         company_obj = self.pool.get('res.company')
         user = user_obj.browse(cr, uid, uid, context=context)
@@ -59,9 +59,9 @@ class account_partner_balance(osv.osv_memory):
 
     _defaults={
                'state' :  'none',
-               'date1' : lambda *a: time.strftime('%Y-01-01'),
-               'date2' : lambda *a: time.strftime('%Y-%m-%d'),
-               'result_selection' : lambda *a: 'all',
+               'date1' : time.strftime('%Y-01-01'),
+               'date2' : time.strftime('%Y-%m-%d'),
+               'result_selection' : 'all',
                'soldeinit' : True,
                'company_id' : _get_company,
                'fiscalyear' : False,
