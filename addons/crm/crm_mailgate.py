@@ -144,7 +144,7 @@ class crm_cases(osv.osv):
             select = ids
         for case in self.browse(cr, uid, select):
             user_email = (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or False
-            res += [(user_email, case.email_from, case.email_cc, getattr(case,'priority') and case.priority or False)]
+            res += [(user_email, case.email_from, case.email_cc or False, getattr(case,'priority') and case.priority or False)]
         if isinstance(ids, (str, int, long)):
             return len(res) and res[0] or False
         return res
