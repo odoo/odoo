@@ -28,6 +28,7 @@ import lot_overview
 import lot_overview_all
 import report_stock
 import report_stock_picking
+import report_stock_move
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
