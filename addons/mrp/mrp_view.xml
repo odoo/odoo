@@ -618,7 +618,8 @@
                        <filter icon="terp-mrp" string="Draft"
                            domain="[('state','=','draft')]"
                            help="Non confirmed manufacturing orders"/>
-                       <filter icon="terp-mrp" string="Current" name="current"
+                       <filter icon="terp-mrp" string="Current"
+                           default="1"
                            domain="[('state','in',('confirmed','ready'))]"
                            help="Manufacturing Orders which are waiting for raw materials"/>
                        <filter icon="terp-mrp" string="Ready"
@@ -656,7 +657,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_current":1}</field>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" sequence="1"/>
@@ -852,7 +852,7 @@
             <field name="arch" type="xml">
                 <search string="Search Procurement">
                     <group col='10' colspan='4'>
-                       <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" name="current" help="Procurement Orders in draft or open state."/>
+                       <filter icon="terp-mrp" string="Current" domain="[('state','in',('draft','confirmed'))]" default="1" help="Procurement Orders in draft or open state."/>
                        <filter icon="terp-mrp" string="Exceptions" domain="[('state','=','exception')]" help="Procurement Orders with exceptions"/>
                        <filter icon="terp-mrp" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
@@ -879,7 +879,6 @@
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{"search_default_current":1}</field>
             <field name="search_view_id" ref="view_mrp_procurement_filter"/>
         </record>
         <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_manufacturing"

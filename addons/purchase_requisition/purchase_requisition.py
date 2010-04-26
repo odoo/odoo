@@ -36,7 +36,7 @@ class purchase_requisition(osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible'),
         'exclusive': fields.selection([('exclusive','Purchase Tender (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', help="If the requisition is exclusive, it will cancel all purchase orders when you confirm one of them", required=True),
         'description': fields.text('Description'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),        
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase'),
         'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
@@ -46,30 +46,30 @@ class purchase_requisition(osv.osv):
         'state': lambda *args: 'draft',
         'exclusive': lambda *args: 'multiple',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-        'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id ,       
+        'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id ,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order.requisition'),
     }
 
-            
+
     def tender_cancel(self, cr, uid, ids, context={}):
         purchase_order_obj = self.pool.get('purchase.order')
         for purchase in self.browse(cr, uid, ids):
             for purchase_id in purchase.purchase_ids:
                 if str(purchase_id.state) in('draft','wait'):
-                    purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])     
+                    purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         self.write(cr, uid, ids, {'state': 'cancel'})
-        return True        
+        return True
     def tender_in_progress(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
-        return True 
+        return True
     def tender_reset(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'draft'})
-        return True    
+        return True
     def tender_done(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
-        return True     
-    
-      
+        return True
+
+
 
 purchase_requisition()
 
@@ -87,21 +87,21 @@ class purchase_requisition_line(osv.osv):
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
-        
+
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
         value = {}
-        
+
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, [product_id])[0]
-        
+
             value = {'product_uom_id': prod.uom_id.id}
-        
+
         return {'value': value}
-    _defaults = {    
+    _defaults = {
                  'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
                  }
 
@@ -125,8 +125,8 @@ class purchase_order(osv.osv):
                     self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'close','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
 
         return res
-    
-    
+
+
 purchase_order()
 
 
