@@ -51,7 +51,7 @@ class crm_meeting(osv.osv):
             ),
         'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
         'opportunity_id': fields.many2one ('crm.opportunity', 'Opportunity'),
-        'attendee_ids': fields.many2many('calendar.attendee', 'event_attendee_rel',\
+        'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
                                  'event_id', 'attendee_id', 'Attendees'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date_deadline': fields.datetime('Deadline'),
@@ -115,16 +115,13 @@ class calendar_attendee(osv.osv):
     _description = 'Calendar Attendee'
 
     def _compute_data(self, cr, uid, ids, name, arg, context):
-
        """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of compute data’s IDs
         @param context: A standard dictionary for contextual values
-
         """
-
        name = name[0]
        result = super(calendar_attendee, self)._compute_data(cr, uid, ids, name, arg, context)
 
@@ -132,7 +129,7 @@ class calendar_attendee(osv.osv):
             id = attdata.id
             result[id] = {}
             if name == 'categ_id':
-                if attdata.ref:
+                if attdata.ref and 'categ_id' in attdata.ref._columns:
                     result[id][name] = (attdata.ref.categ_id.id, attdata.ref.categ_id.name,)
                 else:
                     result[id][name] = False

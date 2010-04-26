@@ -404,7 +404,7 @@
                                    <newline/>
                                    <field name="description" colspan="4" nolabel="1"/>
                                    <button colspan="4"
-                                       string="Reply to Email"
+                                       string="Reply to Last Email"
                                        name="%(action_crm_send_mail)d"
                                        context="{'mail':'reply', 'model': 'crm.case'}"
                                        icon="gtk-undo" type="action" />
@@ -436,7 +436,7 @@
                     <group col='6' colspan='4'>
                         <filter icon="terp-partner" string="My Cases"
                             domain="[('user_id','=',uid)]" separator="1"
-                            help="Cases Related to Current User" />
+                            default="1" help="Cases Related to Current User" />
                         <field name="state" select="1">
                             <filter icon="gtk-new"
                                 domain="[('state','in',('draft', 'open'))]"
@@ -453,7 +453,8 @@
                             widget="selection" />
                     </group>
                     <field name="section_id"
-                        select="1" widget="selection" string="Section"/>
+                        default="context.get('section_id', False)" select="1"
+                        widget="selection"/>
                 </search>
             </field>
         </record>
@@ -528,6 +529,7 @@
                        <field name="date" select="1"/>
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="section_id"
+                        default="context.get('section_id', False)"
                         select="1" widget="selection"/>
                      </group>
                 </search>
@@ -704,9 +706,9 @@
         </record>
 
         <record id="view_partners_form_crm2" model="ir.ui.view">
-                <field name="name">view.res.partner.form.crm.inherited2</field>
+                <field name="name">view.res.partner.tree.crm.inherited2</field>
                 <field name="model">res.partner</field>
-                <field name="type">form</field>
+                <field name="type">tree</field>
                 <field name="inherit_id" ref="base.view_partner_tree"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
@@ -718,9 +720,9 @@
         </record>
 
         <record id="view_partners_form_crm3" model="ir.ui.view">
-                <field name="name">view.res.partner.form.crm.inherited3</field>
+                <field name="name">view.res.partner.search.crm.inherited3</field>
                 <field name="model">res.partner</field>
-                <field name="type">form</field>
+                <field name="type">search</field>
                 <field name="inherit_id" ref="base.view_res_partner_filter"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">

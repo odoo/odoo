@@ -1,0 +1,72 @@
+-
+    In order to test the wiki in OpenERP, I create a new wiki group on Select Display Method Tree
+-
+    !record {model: wiki.groups, id: wiki_groups_wikigrouptest0}:
+      method: tree
+      name: Wiki Group Test
+      notes: I can Generate New Group for Select Display method = Tree.
+-
+    Now I will create new wikipage and assign Group test to this page
+- 
+    !record {model: wiki.wiki, id: wiki_wiki_openerpwikiediting0}:
+      group_id: wiki.wiki_groups_wikigrouptest0
+      name: OpenERP Wiki Test
+      section: '1.1'
+      text_area: '=The Open ERP wiki=
+    
+      The Open ERP wiki allows you to manage your enterprise contents using wiki
+    
+      restructured texts. This module provides a collaborative way to manage internal
+    
+      FAQs, quality manuals, technical references, etc.
+    
+      '    
+-
+    I Get Help on this current page by clicking on "Basic wiki Editing" wizard
+-
+    !python {model: wiki.wiki}: |
+      self.open_wiki_page(cr, uid, [ref("wiki_wiki_openerpwikiediting0")], context)
+-
+    I create Index on this current page by clicking on "Create Index" wizard
+-
+    !python {model: wiki.make.index}: |
+      ids = self.search(cr, uid, []) 
+      self.wiki_do_index(cr, uid, ids , {'active_ids': [ref('wiki_wiki_openerpwikiediting0')]})
+-
+    # Remaining Act window
+    I check the page history for the current page by clicking on "Page History".After that find difference between history.
+-
+    I create a new wiki group on the Given Home Page
+-
+    !record {model: wiki.groups, id: wiki_groups_wikigroupediting0}:
+      name: Wiki Group Editing
+      home: wiki.wiki_wiki_quickstart0
+-
+    I open a wiki page on this given group and page by clicking on Open wiki Page wizard.
+-
+    !python {model: wiki.wiki.page.open}: |
+      ids = self.search(cr, uid, [])
+      self.open_wiki_page(cr, uid, ids, {'active_ids': [ref('wiki_groups_wikigroupediting0')]})
+-
+    # Remaining beacuse of Act window (I search the page by clicking on the "search page".)
+    In order to create a menu I will create wizard data
+-   
+    !record {model: wiki.groups, id: wiki.wiki_groups_wikiformatting0}:
+      home: wiki.wiki_wiki_main
+-
+    I create a Menu by clicking on "create menu" button.
+    # The folowing is not running properly because of osv memory problem
+-
+    !record {model: wiki.create.menu, id: wiki_create_menu_0}:
+      menu_name: Wiki Test menu
+      menu_parent_id: base.menu_base_partner
+      page: wiki.wiki_wiki_openerpwikiediting0
+-
+    #I will check that menu is generated properly
+-
+    # Remaining because some problem occur
+    #!python {model: wiki.create.menu}: |
+    #  ids = self.search(cr, uid, []) 
+    #  self.wiki_menu_create(cr, uid, ids, context)
+    
+

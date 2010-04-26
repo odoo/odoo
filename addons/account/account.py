@@ -291,7 +291,7 @@ class account_account(osv.osv):
             "special effects in Open ERP: view can not have entries, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
-        'user_type': fields.many2one('account.account.type', 'Account Type', required=True, 
+        'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
             help="These types are defined according to your country. The type contains more information "\
             "about the account and its specificities."),
         'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade'),
@@ -437,18 +437,18 @@ class account_account(osv.osv):
             elif method == 'unlink':
                 raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
         return True
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
             context = {}
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
-    
+
     def unlink(self, cr, uid, ids, context={}):
         self._check_moves(cr, uid, ids, "unlink", context)
         return super(account_account, self).unlink(cr, uid, ids, context)
-    
+
 account_account()
 
 class account_journal_view(osv.osv):
@@ -791,7 +791,7 @@ class account_move(osv.osv):
         for id in ids:
             result.setdefault(id, 0.0)
         return result
-    
+
     def _search_amount(self, cr, uid, obj, name, args, context):
         ids = []
         cr.execute('select move_id,sum(debit) from account_move_line group by move_id')
@@ -801,10 +801,10 @@ class account_move(osv.osv):
             if item[1] == '>=':
                 res = [('id', 'in', [k for k,v in result.iteritems() if v >= item[2]])]
             else:
-                res = [('id', 'in', [k for k,v in result.iteritems() if v <= item[2]])]    
+                res = [('id', 'in', [k for k,v in result.iteritems() if v <= item[2]])]
             ids += res
 
-        if not ids:    
+        if not ids:
             return [('id', '>', '0')]
 
         return ids
@@ -1056,7 +1056,13 @@ class account_move(osv.osv):
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
                         raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
 
-            if abs(amount) < 0.0001:
+            # Check that the move balances, the tolerance for debit/credit must
+            # be smaller than the smallest value according to price accuracy
+            # (hence the +1 below)
+            # Example:
+            #    difference == 0.01 is OK iff price_accuracy <= 1!
+            #    difference == 0.0001 is OK iff price_accuracy <= 3!
+            if abs(amount) < 10 ** -(int(config['price_accuracy'])):
                 if not len(line_draft_ids):
                     continue
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
@@ -1126,7 +1132,7 @@ class account_move_reconcile(osv.osv):
         'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
     }
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context={}):
-        total = 0.0 
+        total = 0.0
         for rec in self.browse(cr, uid, ids, context):
             for line in rec.line_partial_ids:
                 total += (line.debit or 0.0) - (line.credit or 0.0)
@@ -1880,7 +1886,7 @@ account_account_template()
 
 class account_add_tmpl_wizard(osv.osv_memory):
     """Add one more account from the template.
-    
+
     With the 'nocreate' option, some accounts may not be created. Use this to add them later."""
     _name = 'account.addtmpl.wizard'
 
@@ -1906,7 +1912,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
     _defaults = {
         'cparent_id': _get_def_cparent,
     }
-    
+
     def action_create(self,cr,uid,ids,context=None):
         acc_obj=self.pool.get('account.account')
         tmpl_obj=self.pool.get('account.account.template')
@@ -1933,7 +1939,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
         # print "Creating:", vals
         new_account = acc_obj.create(cr,uid,vals)
         return {'type':'state', 'state': 'end' }
-    
+
     def action_cancel(self,cr,uid,ids,context=None):
         return { 'type': 'state', 'state': 'end' }
 
