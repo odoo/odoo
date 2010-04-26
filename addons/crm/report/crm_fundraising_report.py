@@ -21,7 +21,7 @@
 
 from osv import fields,osv
 import tools
-
+import crm_report
 
 class crm_fundraising_report(osv.osv):
     """CRM Fundraising Report"""
@@ -41,6 +41,8 @@ class crm_fundraising_report(osv.osv):
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'priority': fields.selection(crm_report.AVAILABLE_PRIORITIES, 'Priority'),
+        'date_closed': fields.datetime('Closed', readonly=True)
     }
 
     def init(self, cr):
@@ -67,6 +69,8 @@ class crm_fundraising_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    c.priority as priority,
+                    c.date_closed as date_closed,
                     date_trunc('day',c.create_date) as create_date,
                     sum(planned_revenue) as amount_revenue,
                     sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
@@ -76,7 +80,7 @@ class crm_fundraising_report(osv.osv):
                     crm_fundraising c
                 group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
                      c.state, c.user_id,c.section_id,c.categ_id,c.partner_id,c.company_id,
-                     c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
+                     c.create_date,to_char(c.create_date, 'YYYY-MM-DD'),c.priority,c.date_closed
             )""")
 
 crm_fundraising_report()
