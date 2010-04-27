@@ -41,7 +41,7 @@ class base_setup_config_choice(osv.osv_memory):
         return _('The following users have been installed on your database: \n')+ user_str
 
     _columns = {
-        'installed_users':fields.text('Installed Users')
+        'installed_users':fields.text('Installed Users', readonly=True)
         }
 
     _defaults = {
