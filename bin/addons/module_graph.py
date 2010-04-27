@@ -26,6 +26,17 @@ import os
 import sys
 import glob
 
+def load_information_from_description_file(module):
+    """
+    :param module: The name of the module (sale, purchase, ...)
+    """
+    for filename in ['__openerp__.py', '__terp__.py']:
+        description_file = os.path.join(module, filename)
+        if os.path.isfile(description_file):
+            return eval(file(description_file).read())
+
+    return {}
+
 if len(sys.argv) == 2 and (sys.argv[1] in ['-h', '--help']):
     print >>sys.stderr, 'Usage: module_graph.py [module1 module2 module3]\n\tWhen no module is specified, all modules in current directory are used'
     sys.exit(1)
@@ -41,7 +52,7 @@ print 'digraph G {'
 while len(modules):
     f = modules.pop(0)
     done.append(f)
-    info = addons.load_information_from_description_file(f)
+    info = load_information_from_description_file(f)
     if info.get('installable', True):
         for name in info['depends']:
             if name not in done+modules:
