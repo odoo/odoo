@@ -12,31 +12,38 @@
           </form>
 
           <group string="res_config_contents" position="replace">
-            <field name="company_id" invisible="1"/>
+          	<group colspan="4">
+          		<group colspan="2">
+          			<image name="gtk-dialog-info"/>
+          			<label colspan="4" align="0.0" width= "100" string="Information of your company will be used to custiomize your documents like Invoices, Sale Orders,..."/>
+          		</group>
+          		<group colspan="2">
+	            	<field name="company_id" invisible="1"/>
+		            <separator string="Configure Your Company" colspan="4"/>
+		            <field name="name" colspan="4" required="True"/>
+		            <newline/>
+		            <field name="street"/>
+		            <field name="street2"/>
+		            <field name="zip"/>
+		            <field name="city"/>
+		            <field name="country_id"/>
+		            <field name="state_id"/>
+		            <field name="email"/>
+		            <field name="phone"/>
+		            <field name="currency"/>
 
-            <separator string="Configure Your Company" colspan="4"/>
-            <field name="name" colspan="4" required="True"/>
-            <newline/>
-            <field name="street"/>
-            <field name="street2"/>
-            <field name="zip"/>
-            <field name="city"/>
-            <field name="country_id"/>
-            <field name="state_id"/>
-            <field name="email"/>
-            <field name="phone"/>
-            <field name="currency"/>
+		            <separator string="Report Information" colspan="4"/>
+		            <field name="rml_header1" colspan="4"/>
+		            <field name="rml_footer1" colspan="4"/>
+		            <field name="rml_footer2" colspan="4"/>
 
-            <separator string="Report Information" colspan="4"/>
-            <field name="rml_header1" colspan="4"/>
-            <field name="rml_footer1" colspan="4"/>
-            <field name="rml_footer2" colspan="4"/>
-
-            <separator colspan="4"
-                       string="Your Logo - Use a size of about 450x150 pixels."/>
-            <field colspan="4" name="logo" widget="image"
-                   nolabel="1"/>
-          </group>
+		            <separator colspan="4"
+		                       string="Your Logo - Use a size of about 450x150 pixels."/>
+		            <field colspan="4" name="logo" widget="image"
+		                   nolabel="1"/>
+		          </group>
+	        </group>
+	       </group>
 
           <xpath expr='//button[@name="action_skip"]' position='replace'/>
         </data>
