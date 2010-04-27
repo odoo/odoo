@@ -424,10 +424,10 @@ class smtpclient(osv.osv):
             msg['Message-Id'] = "<%s-openerp-@%s>" % (time.time(), socket.gethostname())
             
             if smtp_server.cc_to:
-                msg['Cc'] = smtp_server.cc_to
+                msg['Cc'] = COMMASPACE.join(smtp_server.cc_to)
                 
             if smtp_server.bcc_to:
-                msg['Bcc'] = smtp_server.bcc_to
+                msg['Bcc'] = COMMASPACE.join(smtp_server.bcc_to)
             
             #attach files from disc
             for file in attachments:
