@@ -105,11 +105,9 @@ class document_directory(osv.osv):
     ]
     def name_get(self, cr, uid, ids, context={}):
         res = []
-        all_ids = self.search(cr,uid,[])
+        if not self.search(cr,uid,[('id','in',ids)]):
+            ids = []
         for d in self.browse(cr, uid, ids, context=context):
-            if d.id not in all_ids:
-                continue
-
             s = ''
             d2 = d
             while d2 and d2.parent_id:
