@@ -48,7 +48,6 @@ class verifycode(wizard.interface):
         if code == data['form']['code']:
             if server_pool.create_process(cr, uid, [data['id']], context={}):
                 server_pool.write(cr, uid, [data['id']], {'state':'confirm', 'pstate':'running'})
-                print 'process created'
         else:
             raise osv.except_osv(_('Error'), _('Verification failed. Invalid Verification Code!'))
         

@@ -69,8 +69,8 @@ class smtpclient(osv.osv):
         'name' : fields.char('Server Name', size=256, required=True),
         'from_email' : fields.char('Email From', size=256),
         'email':fields.char('Email Address', size=256, required=True, readonly=True, states={'new':[('readonly',False)]}),
-        'cc_to':fields.char('Send copy to', size=256, readonly=True, states={'new':[('readonly',False)]}),
-        'bcc_to':fields.char('Send blank copy to', size=256, readonly=True, states={'new':[('readonly',False)]}),
+        'cc_to':fields.char('Send copy to', size=256, readonly=True, states={'new':[('readonly',False)]}, help="use comma to supply multiple address. email@domain.com, email2@domain.com"),
+        'bcc_to':fields.char('Send blind copy to', size=256, readonly=True, states={'new':[('readonly',False)]}, help="use comma to supply multiple address. email@domain.com, email2@domain.com"),
         'user' : fields.char('User Name', size=256, readonly=True, states={'new':[('readonly',False)]}),
         'password' : fields.char('Password', size=1024, invisible=True, readonly=True, states={'new':[('readonly',False)]}),
         'server' : fields.char('SMTP Server', size=256, required=True, readonly=True, states={'new':[('readonly',False)]}),
@@ -424,10 +424,10 @@ class smtpclient(osv.osv):
             msg['Message-Id'] = "<%s-openerp-@%s>" % (time.time(), socket.gethostname())
             
             if smtp_server.cc_to:
-                msg['Cc'] = COMMASPACE.join(smtp_server.cc_to)
+                msg['Cc'] = smtp_server.cc_to
                 
             if smtp_server.bcc_to:
-                msg['Bcc'] = COMMASPACE.join(smtp_server.bcc_to)
+                msg['Bcc'] = smtp_server.bcc_to
             
             #attach files from disc
             for file in attachments:
@@ -547,6 +547,7 @@ class smtpclient(osv.osv):
         return result
         
     def set_to_draft(self, cr, uid, ids, context={}):
+        self.stop_process(cr, uid, ids, context)
         self.write(cr, uid, ids, {'state':'new', 'code':False})
         return True
     
@@ -567,13 +568,16 @@ class smtpclient(osv.osv):
             }
             id = self.pool.get('ir.cron').create(cr, uid, res)
             self.write(cr, uid, ids, {'process_id':id})
+        else:
+            self.start_process(cr, uid, ids, context)
+        
         return True
         
     def start_process(self, cr, uid, ids, context={}):
         process = self.browse(cr, uid, ids[0], context)
         if not process.process_id:
             raise osv.except_osv(_('SMTP Server Error !'), _('Server is not Verified, Please Verify the Server !'))
-            
+
         pid = process.process_id.id
         self.pool.get('ir.cron').write(cr, uid, [pid], {'active':True})
         self.write(cr, uid, ids, {'pstate':'running'})
