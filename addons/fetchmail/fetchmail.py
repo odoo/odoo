@@ -137,7 +137,8 @@ class email_server(osv.osv):
             ('imap','IMAP Server'),
         ],'State', select=True, readonly=False),
         'is_ssl':fields.boolean('SSL ?', required=False),
-        'date': fields.date('Date'),
+        'attach':fields.boolean('Add Attachments ?', required=False),
+        'date': fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}),
         'user' : fields.char('User Name', size=256, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'note': fields.text('Description'),
@@ -292,17 +293,18 @@ class email_server(osv.osv):
             else:
                 logger.notifyChannel('imap', netsvc.LOG_WARNING, 'method def message_new is not define in model %s' % (model_pool._name))
                 return False
-                
-#            for attactment in attachents or []:
-#                data_attach = {
-#                    'name': attactment,
-#                    'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-#                    'datas_fname': attactment,
-#                    'description': 'Mail attachment',
-#                    'res_model': server.object_id.model,
-#                    'res_id': res_id,
-#                }
-#                self.pool.get('ir.attachment').create(cr, uid, data_attach)
+            
+            if server.attach:
+                for attactment in attachents or []:
+                    data_attach = {
+                        'name': attactment,
+                        'datas':binascii.b2a_base64(str(attachents.get(attactment))),
+                        'datas_fname': attactment,
+                        'description': 'Mail attachment',
+                        'res_model': server.object_id.model,
+                        'res_id': res_id,
+                    }
+                    self.pool.get('ir.attachment').create(cr, uid, data_attach)
             
             if server.action_id:
                 action_pool = self.pool.get('ir.actions.server')

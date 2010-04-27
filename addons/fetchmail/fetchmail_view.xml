@@ -26,15 +26,15 @@
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="4"/>
                         <field name="type" select="1" on_change="onchange_server_type(type, is_ssl)"/>
-                        
                         <field name="date" select="1"/>
-                        <field name="is_ssl" select="1" on_change="onchange_server_type(type, is_ssl)"/>
+                        <field name="attach"/>
                         <field name="active" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Server &amp; Login">
                             <group col="2" colspan="2">
                                 <separator string="Server Information" colspan="2"/>
+                                <field name="is_ssl" select="1" on_change="onchange_server_type(type, is_ssl)"/>
                                 <field name="server" />
                                 <field name="port" />
                             </group>
