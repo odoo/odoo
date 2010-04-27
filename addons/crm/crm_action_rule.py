@@ -180,6 +180,17 @@ class base_action_rule(osv.osv):
         if not emailfrom:
             raise osv.except_osv(_('Error!'),
                     _("No E-Mail ID Found for your Company address!"))
+        if hasattr(obj, 'section_id'):
+            smtp_pool = self.pool.get('email.smtpclient')
+            if obj.section_id and obj.section_id.server_id:
+                flag = smtp_pool.send_email(
+                    cr=cr,
+                    uid=uid, 
+                    server_id=obj.section_id.server_id.id,
+                    emailto=emails,
+                    subject=name, 
+                    body="<pre>%s</pre>" % body,
+                )
         return tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, openobject_id=str(obj.id))
     
     def do_check(self, cr, uid, action, obj, context={}):
@@ -251,17 +262,7 @@ class base_action_rule(osv.osv):
         @param context: A standard dictionary for contextual values """
 
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
-        return res + [('escalate','Escalate')] + crm.AVAILABLE_STATES
-
-    def priority_get(self, cr, uid, context={}):
-
-        """@param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values """
-
-        res = super(base_action_rule, self).priority_get(cr, uid, context=context)
-        return res + crm.AVAILABLE_PRIORITIES
+        return res + [('escalate', 'Escalate')] + crm.AVAILABLE_STATES
 
 
 base_action_rule()
