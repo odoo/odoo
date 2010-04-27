@@ -195,4 +195,13 @@ class tinythunderbird_partner(osv.osv):
         self.pool.get('ir.attachment').unlink(cr,uid,attachments)
         return super(tinythunderbird_partner, self).unlink(cr, uid, ids,context)
 
+    def thunderbird_objectsearch(self,cr,user,vals):
+        obj_list= [('crm.claim', 'Claim'), ('crm.lead','Lead'), ('crm.meeting','Metting'), ('crm.opportunity','Opportunity'), ('crm.phonecall','Phonecall'), ('crm.fundraising','Fund raising'), ('crm.helpdesk','Helpdesk')]
+        object=[]
+        model_obj = self.pool.get('ir.model')
+        for obj in obj_list:
+            if model_obj.search(cr, user, [('model', '=', obj[0])]):
+                object.append(obj)
+        return object
+
 tinythunderbird_partner()
