@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+		<record id="view_hr_recruitment_partner_create" model="ir.ui.view">
+            <field name="name">hr.recruitment.partner.create.form</field>
+            <field name="model">hr.recruitment.partner.create</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Convert To Partner">
+			    <group col="4" colspan="6">
+			            <label string="Are you sure you want to create a partner based on this job request ?" colspan="4"/>
+       					<label string="You may have to verify that this partner does not exist already." colspan="4"/>
+        				<!--field name="close"/-->
+				</group>
+				<separator colspan="4"/>
+			    <group col="2" colspan="4">
+            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+					<button name="make_order" string="Create Partner" colspan="1" type="object" icon="gtk-execute"/>
+				</group>
+			</form>
+            </field>
+        </record>
+
+        <record id="action_hr_recruitment_partner_create" model="ir.actions.act_window">
+            <field name="name">Create Partner</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.recruitment.partner.create</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+		<record model="ir.values" id="hr_recruitment_partner_create_values">
+            <field name="model_id" ref="model_hr_applicant" />
+            <field name="object" eval="1" />
+            <field name="name">Create Partner</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_recruitment_partner_create'))" />
+            <field name="key">action</field>
+            <field name="model">hr.applicant</field>
+        </record>
+
+	</data>
+</openerp>

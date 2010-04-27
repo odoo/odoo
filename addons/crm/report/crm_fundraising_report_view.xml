@@ -9,20 +9,21 @@
             <field name="model">crm.fundraising.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Fundraising">
-                      <field name="name" />
-                    <field name="month"/>
-                    <field name="section_id" />
-                    <field name="user_id" />
-                    <field name="company_id" />
-                    <field name="partner_id" />
-                    <field name="nbr" string="#Fundraising"/>
-                    <field name="amount_revenue"  sum="Total Revenue"/>
-                    <field name="probability"/>
-                    <field name="amount_revenue_prob"/>
-                    <field name="delay_close"/>
+            	<tree string="Fundraising">
+	              	<field name="name" invisible="1"/>
+					<field name="month" invisible="1"/>
+					<field name="section_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+    				<field name="company_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                	<field name="nbr" string='#Fundraising' sum="#Fundraising"/>
+                    <field name="amount_revenue"  sum='Est.Revenue'/>
+                    <field name="probability" avg='Avg. Probability' widget="progressbar"/>
+                    <field name="amount_revenue_prob" sum='Est. Rev*Prob.'/>
+                    <field name="delay_close" avg='Avg Closing Delay'/>
                     <field name="state" invisible="1"/>
                     <field name="categ_id" invisible="1"/>
+                    <field name="day" invisible="1"/>
                </tree>
             </field>
 
@@ -67,8 +68,14 @@
             <field name="inherit_id" ref="view_crm_case_filter"/>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <field name="user_id" position="before">
-               </field>
+            <data>
+            	<xpath expr='//search[@string="Search"]/group[@string="Extended options..."]/filter[@string="Cancel"]' position='after'>
+            	<group>
+            	    <separator orientation="vertical"/>
+	                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
+	             </group>
+            	</xpath>
+                </data>
             </field>
         </record>
 
@@ -79,8 +86,8 @@
             <field name="res_model">crm.fundraising.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
+            <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_fundraising_tree"/>
-            <field name="context">{"search_default_section_id":section_id,"search_default_this_year":1,"search_default_this_month":1,"search_default_by_user":1}</field>
             <field name="search_view_id" ref="view_report_crm_fundraising_filter"/>
         </record>
 

@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields,osv,orm
-from tools.translate import _
 
 AVAILABLE_STATES = [
     ('draft','New'),
@@ -55,8 +54,8 @@ class hr_applicant(osv.osv):
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('object_id.model', '=', 'hr.applicant')]"),
-        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('object_id.model', '=', 'hr.applicant')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
+        'type_id': fields.many2one('crm.case.resource.type', 'Degree', domain="[('section_id','=',section_id),('object_id.model', '=', 'hr.applicant')]"),
         'department_id':fields.many2one('hr.department','Department'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
@@ -65,7 +64,7 @@ class hr_applicant(osv.osv):
 
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current stage
-             using available stage for that case type 
+             using available stage for that case type
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -83,7 +82,7 @@ class hr_applicant(osv.osv):
 
     def stage_next(self, cr, uid, ids, context=None):
         """This function computes next stage for case from its current stage
-             using available stage for that case type 
+             using available stage for that case type
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -168,7 +167,6 @@ class hr_applicant(osv.osv):
         context.update({'survey_id': record.survey.id, 'response_id' : [record.response], 'response_no':0,})
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
         return value
-    
 hr_applicant()
 
 class hr_job(osv.osv):

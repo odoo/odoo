@@ -29,6 +29,13 @@ AVAILABLE_STATES = [
     ('done', 'Closed'),
     ('pending','Pending')
 ]
+AVAILABLE_PRIORITIES = [
+    ('5', 'Lowest'),
+    ('4', 'Low'),
+    ('3', 'Normal'),
+    ('2', 'High'),
+    ('1', 'Highest')
+]
 
 class crm_case_report(osv.osv):
     """ Cases and section """
@@ -89,6 +96,8 @@ class crm_case_report(osv.osv):
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True),
+        'day': fields.char('Day', size=128, readonly=True)
     }
 
     _order = 'name desc, user_id'
@@ -104,15 +113,18 @@ class crm_case_report(osv.osv):
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
+                    to_char(c.create_date, 'YYYY-MM-DD') as day,
                     c.state,
                     c.user_id,
                     c.section_id,
                     c.company_id,
-                    count(*) as nbr
+                    count(*) as nbr,
+                    c.create_date as create_date
                 from
                     crm_case c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),\
+                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'),
                          c.state, c.user_id,c.section_id,c.company_id
+                         ,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
             )""")
 
 crm_case_report()
@@ -124,7 +136,6 @@ class report_crm_case_service_dashboard(osv.osv):
     _name = "report.crm.case.service.dashboard"
     _description = "Report of Closed and Open CRM Cases within past 15 days"
     _auto = False
-
     _columns = {
         'date_deadline': fields.datetime('Deadline', readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
@@ -143,7 +154,7 @@ class report_crm_case_service_dashboard(osv.osv):
             select
                 cse.id as id, cse.date_deadline as date_deadline,
                 cse.name as name, cse.user_id as user_id,
-                 cse.state as state,
+                cse.state as state,
                 cse.create_date as create_date
             from
                 crm_case cse

@@ -55,9 +55,9 @@ class crm_lead(osv.osv):
         @param ids: List of Openday’s IDs
         @return: difference between current date and log date
         @param context: A standard dictionary for contextual values
-        """        
-        cal_obj = self.pool.get('resource.calendar') 
-        res_obj = self.pool.get('resource.resource')     
+        """
+        cal_obj = self.pool.get('resource.calendar')
+        res_obj = self.pool.get('resource.resource')
 
         res = {}
         for lead in self.browse(cr, uid, ids , context):
@@ -86,7 +86,7 @@ class crm_lead(osv.osv):
 
                     duration = float(ans.days)
                     if lead.section_id.resource_calendar_id:
-                        duration =  float(ans.days) * 24                        
+                        duration =  float(ans.days) * 24
                         new_dates = cal_obj.interval_get(cr,
                             uid,
                             lead.section_id.resource_calendar_id and lead.section_id.resource_calendar_id.id or False,
@@ -98,9 +98,9 @@ class crm_lead(osv.osv):
                         date_until = mx.DateTime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
                         for in_time, out_time in new_dates:
                             if in_time.date not in no_days:
-                                no_days.append(in_time.date)                            
+                                no_days.append(in_time.date)
                             if out_time > date_until:
-                                break                            
+                                break
                         duration =  len(no_days)
                 res[lead.id][field] = abs(int(duration))
         return res
@@ -126,9 +126,9 @@ class crm_lead(osv.osv):
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="integer", store=True),
+                                method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="integer", store=True),
+                                method=True, multi='day_close', type="float", store=True),
         'function_name': fields.char('Function', size=64),
         }
 

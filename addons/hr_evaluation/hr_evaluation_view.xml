@@ -202,14 +202,24 @@
                 </tree>
             </field>
         </record>
-
+        <record model="ir.ui.view" id="view_hr_evaluation_graph">
+            <field name="name">hr_evaluation.evaluation.graph</field>
+            <field name="model">hr_evaluation.evaluation</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Evaluation" type="bar">
+                    <field name="employee_id"/>
+                    <field name="progress"  operator="+"/>
+                </graph>
+            </field>
+        </record>
        <record id="hr_evaluation.evaluation_search" model="ir.ui.view">
             <field name="name">hr_evaluation.evaluation_search</field>
             <field name="model">hr_evaluation.evaluation</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
-                        <group>
+                   <group col='10' colspan='4'>
                         <filter icon="terp-hr" string="Draft" domain="[('state','=','draft')]"/>
                         <filter icon="terp-crm" string="In progress" domain="[('state','=','wait')]"/>
                         <filter icon="terp-mrp" string="Final Step" domain="[('state','=','progress')]"/>
@@ -242,7 +252,7 @@
         <record model="ir.actions.act_window" id="open_view_hr_evaluation_tree">
             <field name="res_model">hr_evaluation.evaluation</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
         </record>
         <menuitem
@@ -261,8 +271,8 @@
                         <group  colspan="1">
                             <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
                                 icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                            <button name="action_print_survey" string="Print Interview" type="object" states="waiting_answer,done,cancel"
-                                icon="gtk-print"  attrs="{'readonly':[('survey_id','=',False)]}" />
+                            <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done"
+                                icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
                         </group>
                     </group>
                     <group col="4" colspan="4">
@@ -297,8 +307,8 @@
                     <field name="response" readonly="1" invisible="True"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel"
                         icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                    <button name="action_print_survey" string="Print Interview" type="object" states="waiting_answer,done,cancel"
-                        icon="gtk-print" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                    <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done"
+                        icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','=',False)]}" />
                     <field name="state"/>
                 </tree>
             </field>

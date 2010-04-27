@@ -165,7 +165,7 @@ class crm_send_new_email(osv.osv_memory):
             if 'email_cc' in fields:
                 res.update({'email_cc': case.email_cc or ''})
             if 'text' in fields:
-                res.update({'text': '\n\n'+(case.user_id.signature or '')})
+                res.update({'text': '\n\n'+(case.user_id.signature or '') + '\n\n' +  (case.description or '')})
             if 'state' in fields:
                 res.update({'state': 'pending'})
         return res
