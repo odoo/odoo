@@ -8,7 +8,7 @@
       <field name="arch" type="xml">
         <data>
           <form position="attributes">
-            <attribute name="string">Human Resources Modules Installation</attribute>
+            <attribute name="string">Select Human Resources Modules To Install</attribute>
           </form>
 
           <separator string="title" position="attributes">
@@ -19,7 +19,7 @@
             <attribute name="string">The base Human Resources addon will help you manage your employee roster, but your can enhance it even further by installing a few HR-related applications.</attribute>
           </xpath>
           <group colspan="8">
-            <separator string="Human Resources Management" colspan="4"/>
+            <separator string="Select Human Resources Modules To Install" colspan="4"/>
             <field name="hr_holidays"/>
             <field name="hr_expense"/>
             <field name="hr_recruitment"/>
@@ -28,6 +28,9 @@
             <field name="hr_evaluation"/>
             <field name="hr_attendance"/>
           </group>
+          <xpath expr="//button[@string='Install Modules']" position="attributes">
+          	<attribute name="string">Configure</attribute>
+          </xpath>
         </data>
       </field>
     </record>
