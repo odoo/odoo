@@ -65,7 +65,7 @@ class crm_meeting(osv.osv):
     _defaults = {
         'state': lambda *a: 'draft',
     }
-    
+
     def open_meeting(self, cr, uid, ids, context=None):
         """
         Open Crm Meeting Form for Crm Meeting.
@@ -75,13 +75,14 @@ class crm_meeting(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary value which open Crm Meeting form.
         """
+
         if not context:
             context = {}
-            
+
         data_obj = self.pool.get('ir.model.data')
-        
+
         value = {}
-        
+
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
         id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
         id4 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
@@ -93,17 +94,17 @@ class crm_meeting(osv.osv):
             id4 = data_obj.browse(cr, uid, id4, context=context).res_id
         for id in ids:
             value = {
-                    'name': _('Meeting'), 
-                    'view_type': 'form', 
-                    'view_mode': 'form,tree', 
-                    'res_model': 'crm.meeting', 
-                    'view_id': False, 
+                    'name': _('Meeting'),
+                    'view_type': 'form',
+                    'view_mode': 'form,tree',
+                    'res_model': 'crm.meeting',
+                    'view_id': False,
                     'views': [(id2, 'form'), (id3, 'tree'), (id4, 'calendar')],
-                    'type': 'ir.actions.act_window', 
-                    'res_id': base_calendar.base_calendar_id2real_id(id), 
+                    'type': 'ir.actions.act_window',
+                    'res_id': base_calendar.base_calendar_id2real_id(id),
                     'nodestroy': True
                     }
-        
+
         return value
 
 crm_meeting()
