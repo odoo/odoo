@@ -28,14 +28,14 @@ class hr_holidays_report(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.datetime('Date', readonly=True),
+        'date': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'day': fields.char('Day', size=15, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'date_from' : fields.datetime('Start Date', readonly=True),
-        'date_to' : fields.datetime('End Date', readonly=True),
+        'date_from' : fields.date('Start Date', readonly=True),
+        'date_to' : fields.date('End Date', readonly=True),
         'number_of_days_temp': fields.float('#Days', readonly=True),
         'employee_id' : fields.many2one('hr.employee', "Employee's Name",readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
