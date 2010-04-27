@@ -69,7 +69,7 @@ class base_setup_installer(osv.osv_memory):
             help="Helps you manage your marketing campaigns step by step."),
         'misc_tools':fields.boolean('Miscellaneous Tools',
             help="Lets you install various interesting but non-essential "
-                 "tools."),
+                 "tools like Survey, Lunch,..."),
         'report_designer':fields.boolean('Advanced Reporting',
             help="Lets you install various tools to simplify and enhance "
                  "OpenERP's report creation."),
