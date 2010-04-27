@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:28:12+0000\n"
-"PO-Revision-Date: 2010-04-06 10:28:12+0000\n"
+"POT-Creation-Date: 2010-04-27 11:13:21+0000\n"
+"PO-Revision-Date: 2010-04-27 11:13:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -160,9 +160,9 @@ msgid "Company's Structure"
 msgstr "公司结构"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_report_custom_fields
-msgid "ir.report.custom.fields"
-msgstr "ir.report.custom.fields"
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_NO"
+msgstr "STOCK_NO"
 
 #. module: base
 #: code:addons/base/module/wizard/wizard_export_lang.py:0
@@ -396,6 +396,11 @@ msgstr "ISO 国家代码使用两个字符。\n"
 #: selection:workflow.activity,split_mode:0
 msgid "Xor"
 msgstr "异或"
+
+#. module: base
+#: view:ir.values:0
+msgid "Action To Launch"
+msgstr "要启动的动作"
 
 #. module: base
 #: view:res.partner:0
@@ -1321,9 +1326,9 @@ msgid "STOCK_SELECT_COLOR"
 msgstr "STOCK_SELECT_COLOR"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_NO"
-msgstr "STOCK_NO"
+#: model:ir.model,name:base.model_ir_report_custom_fields
+msgid "ir.report.custom.fields"
+msgstr "ir.report.custom.fields"
 
 #. module: base
 #: model:res.country,name:base.st
@@ -1379,9 +1384,10 @@ msgid "Original View"
 msgstr "原始视图"
 
 #. module: base
-#: view:ir.values:0
-msgid "Action To Launch"
-msgstr "要启动的动作"
+#: code:addons/base/res/res_user.py:0
+#, python-format
+msgid "Make sure you have no users linked with the group(s)!"
+msgstr ""
 
 #. module: base
 #: selection:ir.report.custom.fields,fc0_op:0
@@ -2733,10 +2739,9 @@ msgid "Hungary"
 msgstr "匈牙利"
 
 #. module: base
-#: field:res.bank,street2:0
-#: field:res.partner.address,street2:0
-msgid "Street2"
-msgstr "街区地址2"
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "组"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -4290,7 +4295,7 @@ msgstr "您选择的语言已经成功安装。您必须在用户偏好中修改
 #: model:ir.ui.menu,name:base.next_id_14
 #: view:res.partner.event:0
 msgid "Partner Events"
-msgstr "业务伙伴活动"
+msgstr "业务伙伴事件"
 
 #. module: base
 #: model:ir.model,name:base.model_workflow_transition
@@ -4338,7 +4343,7 @@ msgstr "iCal 标识符"
 #: model:ir.ui.menu,name:base.menu_partner_function_form
 #: view:res.partner.function:0
 msgid "Partner Functions"
-msgstr "业务伙伴功能"
+msgstr "业务伙伴职能"
 
 #. module: base
 #: wizard_view:res.partner.sms_send,init:0
@@ -4636,7 +4641,7 @@ msgstr "用户界面"
 #: field:res.partner,child_ids:0
 #: field:res.request,ref_partner_id:0
 msgid "Partner Ref."
-msgstr "业务伙伴参照"
+msgstr "业务伙伴参考"
 
 #. module: base
 #: selection:ir.ui.menu,icon:0
@@ -5014,7 +5019,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field_contry
 msgid "country_id"
-msgstr "国家 - ID"
+msgstr "country_id"
 
 #. module: base
 #: field:ir.cron,interval_type:0
@@ -5578,9 +5583,10 @@ msgid "Normal"
 msgstr "一般"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "res.groups"
-msgstr "组"
+#: field:res.bank,street2:0
+#: field:res.partner.address,street2:0
+msgid "Street2"
+msgstr "街区地址2"
 
 #. module: base
 #: field:ir.cron,user_id:0
@@ -5869,6 +5875,12 @@ msgstr "导出翻译文件"
 #: field:ir.ui.view_sc,user_id:0
 msgid "User Ref."
 msgstr "用户参照"
+
+#. module: base
+#: code:addons/base/res/res_user.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -7161,6 +7173,11 @@ msgstr "资源"
 #: field:maintenance.contract.wizard,name:0
 msgid "Contract ID"
 msgstr "合同号"
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "Persian / فارس"
+msgstr ""
 
 #. module: base
 #: selection:ir.report.custom.fields,alignment:0

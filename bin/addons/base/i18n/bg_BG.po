@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.8\n"
+"Project-Id-Version: OpenERP Server 5.0.9\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-04-06 10:26:36+0000\n"
-"PO-Revision-Date: 2010-04-06 10:26:36+0000\n"
+"POT-Creation-Date: 2010-04-27 11:11:48+0000\n"
+"PO-Revision-Date: 2010-04-27 11:11:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -158,9 +158,9 @@ msgid "Company's Structure"
 msgstr "Структура на компанията"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_report_custom_fields
-msgid "ir.report.custom.fields"
-msgstr "ir.report.custom.fields"
+#: selection:ir.ui.menu,icon:0
+msgid "STOCK_NO"
+msgstr "STOCK_NO"
 
 #. module: base
 #: code:addons/base/module/wizard/wizard_export_lang.py:0
@@ -394,6 +394,11 @@ msgstr "Кодът на държавата по ISO е от 2 символа\n"
 #: selection:workflow.activity,split_mode:0
 msgid "Xor"
 msgstr "Xor"
+
+#. module: base
+#: view:ir.values:0
+msgid "Action To Launch"
+msgstr ""
 
 #. module: base
 #: view:res.partner:0
@@ -1319,9 +1324,9 @@ msgid "STOCK_SELECT_COLOR"
 msgstr "STOCK_SELECT_COLOR"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_NO"
-msgstr "STOCK_NO"
+#: model:ir.model,name:base.model_ir_report_custom_fields
+msgid "ir.report.custom.fields"
+msgstr "ir.report.custom.fields"
 
 #. module: base
 #: model:res.country,name:base.st
@@ -1377,8 +1382,9 @@ msgid "Original View"
 msgstr ""
 
 #. module: base
-#: view:ir.values:0
-msgid "Action To Launch"
+#: code:addons/base/res/res_user.py:0
+#, python-format
+msgid "Make sure you have no users linked with the group(s)!"
 msgstr ""
 
 #. module: base
@@ -2729,10 +2735,9 @@ msgid "Hungary"
 msgstr ""
 
 #. module: base
-#: field:res.bank,street2:0
-#: field:res.partner.address,street2:0
-msgid "Street2"
-msgstr "Улица2"
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -5573,9 +5578,10 @@ msgid "Normal"
 msgstr "Нормален"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "res.groups"
-msgstr "res.groups"
+#: field:res.bank,street2:0
+#: field:res.partner.address,street2:0
+msgid "Street2"
+msgstr "Улица2"
 
 #. module: base
 #: field:ir.cron,user_id:0
@@ -5863,6 +5869,12 @@ msgstr "Извличане на файл с превод"
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
 msgid "User Ref."
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_user.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: base
@@ -7153,6 +7165,11 @@ msgstr "Ресурс"
 #: field:maintenance.contract,name:0
 #: field:maintenance.contract.wizard,name:0
 msgid "Contract ID"
+msgstr ""
+
+#. module: base
+#: selection:module.lang.install,init,lang:0
+msgid "Persian / فارس"
 msgstr ""
 
 #. module: base
