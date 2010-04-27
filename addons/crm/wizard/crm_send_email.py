@@ -76,7 +76,8 @@ class crm_send_new_email(osv.osv_memory):
             
             case = case_pool.browse(cr, uid, res_id)
             if context.get('mail', 'new') == 'new':
-                message_id = case.history_line[0].message_id
+                if len(case.history_line):
+                    message_id = case.history_line[0].message_id
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id
@@ -92,9 +93,10 @@ class crm_send_new_email(osv.osv_memory):
             case_pool._history(cr, uid, [case], _('Send'), history=True, email=data['email_to'], details=body, email_from=email_from, message_id=message_id)
 
             x_headers = {
-                'References':"%s" % (message_id),
                 'Reply-To':"%s" % case.section_id.reply_to,
             }
+            if message_id:
+                'References':"%s" % (message_id)
             flag = False
             if case.section_id and case.section_id.server_id:
                 flag = smtp_pool.send_email(
