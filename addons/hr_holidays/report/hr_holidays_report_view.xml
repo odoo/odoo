@@ -9,6 +9,7 @@
             <tree string="Leaves Statistics">
                 <field name="date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
+                <field name="user_id" invisible="1"/>
                 <field name="date_from" invisible="1"/>
                 <field name="date_to" invisible="1"/>
                 <field name="number_of_days_temp" sum="#Days"/>
@@ -68,7 +69,8 @@
 	               		domain="[('state','=','validate')]"
 	               		help = "Pending Leaves"/>
 					<separator orientation="vertical"/>
-	                <field name="employee_id" widget="selection">
+					<field name="employee_id"/>
+	                <field name="user_id" widget="selection">
 	                    <filter icon="terp-hr"
 	                        string="My Leaves"
 	                        domain="[('user_id','=',uid)]"/>
@@ -95,9 +97,10 @@
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
-                    <filter string="Employee" name="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
-                    <filter string="Type" icon="terp-hr" context="{'group_by':'holiday_status_id'}"/>
+                    <filter string="Employee" icon="terp-hr" context="{'group_by':'employee_id'}"/>
+                    <filter string="User" name="User" icon="terp-hr" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
+                    <filter string="Type" icon="terp-hr" context="{'group_by':'holiday_status_id'}"/>
                     <filter string="Department" icon="terp-hr" context="{'group_by':'department_id'}"/>
                     <filter string="State" icon="terp-hr" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
@@ -114,7 +117,7 @@
         <field name="res_model">hr.holidays.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1,'search_default_Employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="search_view_id" ref="view_hr_holidays_report_search"/>
     </record>
 
