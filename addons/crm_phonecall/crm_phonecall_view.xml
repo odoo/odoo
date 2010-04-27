@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+<!--  Phonecall Categories Form View  -->
+
+    <record id="crm_phonecall_categ_action" model="ir.actions.act_window">
+        <field name="name">Phonecall Categories</field>
+        <field name="res_model">crm.case.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+        <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
+        <field name="context">{'object_id':'crm.phonecall'}</field>
+    </record>
+
+    <menuitem action="crm_phonecall_categ_action"
+        id="menu_crm_case_phonecall-act" parent="crm.menu_crm_case_categ" />
+
+<!-- ResourceType Form View -->
+
+    <record id="crm_phonecall_resource_act" model="ir.actions.act_window">
+            <field name="name">Phonecall Resource Type</field>
+            <field name="res_model">crm.case.resource.type</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="crm.crm_case_resource_type_tree"/>
+            <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
+            <field name="context">{'object_id':'crm.phonecall'}</field>
+        </record>
+
+    <menuitem action="crm_phonecall_resource_act"
+        id="menu_crm_phonecall_resource_act"
+        parent="crm.menu_crm_case_resource_type" />
+
+
+<!--  PhoneCalls Tree View -->
+
+    <record model="ir.ui.view" id="crm_case_phone_tree_view">
+        <field name="name">CRM - Phone Calls Tree</field>
+        <field name="model">crm.phonecall</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+
+            <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)">
+                <field name="date" string="Date"/>
+                <field name="name" string="Call Summary"/>
+                <field name="partner_id" string="Partner"/>
+                <field name="partner_contact"/>
+                <field name="partner_phone"/>
+                <field name="user_id"/>
+                <button string="Opportunity"
+                    name="%(phonecall2opportunity_act)d"
+                    states="draft,open,pending"
+                    type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                <button string="Meeting"
+                    states="draft,open,pending"
+                     name="action_make_meeting" type="action" />
+                <field name="state"/>
+                <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
+                <button name="case_pending" string="Not Held" states="open" type="object" icon="gtk-media-pause"/>
+                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
+            </tree>
+        </field>
+    </record>
+
+<!-- Phonecalls Form View -->
+
+    <record model="ir.ui.view" id="crm_case_phone_form_view">
+        <field name="name">CRM - Phone Call Form</field>
+        <field name="model">crm.phonecall</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Phone Call">
+                <group colspan="4" col="7">
+                    <field name="name" string="Call Summary"/>
+                    <field name="date" string="Planned Date"/>
+                    <field name="user_id"/>
+<!--                    <button string="Schedule a Meeting"-->
+<!--                        name="action_make_meeting"-->
+<!--                        icon="gtk-redo"-->
+<!--                        type="object" />-->
+					<newline/>
+                    <field name="partner_phone"/>
+                    <field name="duration"/>
+                    <field name="section_id" colspan="1" widget="selection" />
+<!--                    <button string="Convert to Opportunity"-->
+<!--                        name="%(phonecall2opportunity_act)d"-->
+<!--                        icon="gtk-index" type="action"-->
+<!--                        attrs="{'invisible':[('opportunity_id','!=',False)]}" />-->
+                    <label colspan="6"  string=""/>
+                    <button string="Schedule Other Call"
+                     icon="gtk-redo"
+                    name="%(phonecall_to_phonecall_act)d"
+                    type="action"  />
+
+                </group>
+                <group col="3" colspan="2">
+                    <separator colspan="3" string="Contacts" />
+                    <field name="partner_id"
+                        on_change="onchange_partner_id(partner_id, email_from)" />
+                    <button string="Create a Partner"
+                        icon="terp-crm"
+                        name="%(action_crm_phonecall2partner)d"
+                        type="action"
+                        attrs="{'invisible':[('partner_id','!=',False)]}" />
+                    <newline/>
+                    <field name="partner_address_id" string="Contact"
+                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                    <newline/>
+                    <field name="partner_mobile" />
+                </group>
+                <group col="2" colspan="2">
+                    <separator colspan="2" string="Categorization" />
+                    <field name="priority"/>
+                    <field name="opportunity_id"/>
+                </group>
+                <separator string="Description" colspan="4" />
+                <field name="description" nolabel="1" colspan="4" />
+                <separator colspan="4" />
+                <group col="8" colspan="4">
+                    <field name="state" select="1" />
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
+                    <button name="case_open" string="Open"
+                        states="draft,pending" type="object"
+                        icon="gtk-go-forward" />
+                    <button name="case_pending" string="Not Held"
+                        states="open" type="object" icon="gtk-undo" />
+                    <button name="case_close" string="Held"
+                        states="open,draft,pending" type="object"
+                        icon="gtk-jump-to" />
+                    <button name="case_reset" string="Reset to Draft"
+                        states="done,cancel" type="object"
+                        icon="gtk-convert" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+<!-- Phonecalls Calendar View -->
+
+    <record model="ir.ui.view" id="crm_case_phone_calendar_view">
+        <field name="name">CRM - Phone Calls Calendar</field>
+        <field name="model">crm.phonecall</field>
+        <field name="type">calendar</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Phone Calls" date_start="date" color="user_id" date_delay="duration">
+                <field name="name"/>
+                <field name="partner_id"/>
+            </calendar>
+        </field>
+    </record>
+
+<!-- Phonecalls Search View  -->
+
+    <record id="view_crm_case_phonecalls_filter" model="ir.ui.view">
+        <field name="name">CRM - Phone Calls Search</field>
+        <field name="model">crm.phonecall</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Phonecalls">
+               <filter icon="gtk-home" string="Today"
+                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),\
+                    ('date','&gt;=',datetime.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                   help="Todays's Phonecalls"
+               />
+               <filter icon="gtk-media-rewind"
+                   string="7 Days"
+                   help="Phonecalls during last 7 days"
+                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')),\
+                    ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+               />
+               <separator orientation="vertical"/>
+               <field name="name" string="Call Summary"/>
+               <field name="partner_id"/>
+               <field name="user_id" widget="selection">
+                   <filter icon="terp-partner"
+                       domain="[('user_id','=',uid)]" help="My Phonecalls"
+                       default="1" />
+                   <filter icon="terp-partner"
+                       domain="[('user_id','=',False)]"
+                       help="Unassigned Phonecalls" />
+               </field>
+               <field name="section_id"
+                   select="1" widget="selection" string="Sales Team">
+                   <filter icon="terp-crm"
+                       domain="[('section_id','=',context.get('section_id',False))]"
+                       help="My section" />
+               </field>
+               <newline/>
+               <group expand="1" string="Group By..." colspan="4">
+                   <filter string="Partner" icon="terp-crm" domain="[]"
+                       context="{'group_by':'partner_id'}" />
+                   <filter string="Responsible" icon="terp-crm"
+                       domain="[]" context="{'group_by':'user_id'}" />
+                   <separator orientation="vertical" />
+                   <filter string="Creation" icon="terp-project"
+                       domain="[]" context="{'group_by':'create_date'}" />
+                   <filter string="Date" icon="terp-project" domain="[]"
+                       context="{'group_by':'date'}" />
+               </group>
+           </search>
+        </field>
+    </record>
+    </data>
+</openerp>
