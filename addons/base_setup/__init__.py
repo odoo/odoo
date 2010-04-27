@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,14 +23,30 @@ import installer
 import todo
 import wizard
 
-from osv import osv
+from osv import fields, osv
 import netsvc
+from tools.translate import _
 
 class base_setup_config_choice(osv.osv_memory):
     """
     """
     _name = 'base.setup.config'
     logger = netsvc.Logger()
+
+    def get_users(self, cr, uid, context={}):
+        user_obj = self.pool.get('res.users')
+        user_ids = user_obj.search(cr, uid, [])
+        users = user_obj.browse(cr, uid, user_ids)
+        user_str = '\n'.join(map(lambda x: '    - %s: %s / %s' % (x.name, x.login, x.password), users))
+        return _('The following users have been installed on your database: \n')+ user_str
+
+    _columns = {
+        'installed_users':fields.text('Installed Users')
+        }
+
+    _defaults = {
+        'installed_users':get_users
+        }
 
     def set_default_menu(self, cr, uid, menu, context=None):
         user = self.pool.get('res.users')\
