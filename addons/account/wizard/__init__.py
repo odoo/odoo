@@ -30,25 +30,24 @@ import account_move_journal
 import account_journal_select
 import account_move_bank_reconcile
 import account_subscription_generate
-import wizard_aged_trial_balance
-import wizard_general_ledger_report
-import wizard_third_party_ledger
-import wizard_account_balance_report
-import wizard_partner_balance_report
+import account_aged_trial_balance
+import account_general_ledger_report
+import account_third_party_ledger
+import account_partner_balance_report
+import account_balance_report
 import account_period_close
 import account_fiscalyear_close
 import account_fiscalyear_close_state
 import account_vat
 import account_open_closed_fiscalyear
 
-import wizard_compare_account_balance_report
+import account_compare_account_balance_report
 import account_invoice_state
-import wizard_account_duplicate
 import account_chart
-import wizard_move_line_select
+import account_move_line_select
 
 import account_validate_account_move
-import wizard_use_model
+import account_use_model
 
 import account_state_open
 

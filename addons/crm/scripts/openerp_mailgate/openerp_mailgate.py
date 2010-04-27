@@ -168,8 +168,8 @@ class email_parser(object):
 
     def _decode_header(self, s):
         from email.Header import decode_header
-        s = decode_header(s)        
-        return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s))
+        s = decode_header(s) 
+        return ''.join(map(lambda x:self._to_decode(x[0], [x[1]]), s or []))
 
     def msg_new(self, msg):
         message = self.msg_body_get(msg)
@@ -183,6 +183,7 @@ class email_parser(object):
             'email_cc': msg_cc,             
             'user_id': False, 
             'description': message['body'], 
+            'state' : 'draft',
         }
         data.update(self.partner_get(msg_from))
 

@@ -1,12 +1,5 @@
-- |
-  In order to test the Preorder Traversal Tree algorythm to organize tree
-  structure, we retrieve all accounts and test their parent_left and
-  parent_right values with the following assertions
-    . parent_left < parent_right
-    . parent_left < parent_left of all childs
-    . parent_right > parent_right of all childs
-    . if an account is a child it is included in parent_left-parent_right
-    . if an account is not a child it is not included in parent_left-parent_right
+-
+  We retrieve all accounts and test they are in a tree data structure.
 - 
   !python {model: account.account}: |
     ids = self.search(cr, uid, [])

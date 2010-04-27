@@ -29,6 +29,7 @@ from report import report_sxw
 class account_balance(report_sxw.rml_parse):
         _name = 'report.account.account.balance'
         def __init__(self, cr, uid, name, context):
+            print " KKKKKKKKKKKKKKKKKKKKKKKK"
             super(account_balance, self).__init__(cr, uid, name, context=context)
             self.sum_debit = 0.00
             self.sum_credit = 0.00
@@ -95,12 +96,12 @@ class account_balance(report_sxw.rml_parse):
             ctx['state'] = form['context'].get('state','all')
             ctx['fiscalyear'] = form['fiscalyear']
             if form['state']=='byperiod' :
-                ctx['periods'] = form['periods'][0][2]
+                ctx['periods'] = form['periods']
             elif form['state']== 'bydate':
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to']
             elif form['state'] == 'all' :
-                ctx['periods'] = form['periods'][0][2]
+                ctx['periods'] = form['periods']
                 ctx['date_from'] = form['date_from']
                 ctx['date_to'] =  form['date_to']
 #            accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)

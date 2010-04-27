@@ -3,7 +3,7 @@
     <data>
         <record model="ir.ui.view" id="view_purchase_order_graph">
             <field name="name">product.month.graph</field>
-            <field name="model">report.purchase.order</field>
+            <field name="model">purchase.report</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Purchase Orders Statistics" type="bar">
@@ -15,73 +15,106 @@
         </record>
 
         <record id="view_purchase_order_tree" model="ir.ui.view">
-            <field name="name">report.purchase.order.tree</field>
-            <field name="model">report.purchase.order</field>
+            <field name="name">purchase.order.tree</field>
+            <field name="model">purchase.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Orders Statistics">
-                    <field name="name"/>
-                    <field name="month"/>
-                    <field name="partner_id"/>
-                    <field name="product_id"/>
-                    <field name="user_id" invisible="1"/>
+                	<field name="date" invisible="1"/>
+                	<field name="user_id" invisible="1"/>
+                	<field name="partner_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="quantity" invisible="1"/>
+                    <field name="nbr" sum="# of Lines"/>
+                    <field name="price_average" avg="Average Price"/>
+                	<field name="price_total" sum="Total Price"/>
+                	<field name="day" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="month" invisible="1"/>
                     <field name="warehouse_id" invisible="1"/>
-                    <field name="category_id" invisible="1"/>
-                    <field name="date" invisible="1"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="count"/>
-                    <field name="quantity"/>
-                    <field name="price_total"/>
-                    <field name="price_average"/>
-                    <field name="state"/>
+                    <field name="state" invisible="1"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="fiscal_position" invisible="1"/>
                 </tree>
             </field>
         </record>
 
         <record id="view_purchase_order_search" model="ir.ui.view">
         <field name="name">report.purchase.order.search</field>
-        <field name="model">report.purchase.order</field>
+        <field name="model">purchase.report</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Purchase Orders">
-                <group>
-                <filter icon="terp-purchase"
-                    string="This Year" name="this_year"
-                    domain="[('name','=',time.strftime('%%Y'))]"
-                    help="Purchase orders of the year"/>
-                <filter icon="terp-purchase"
-                    string="This Month" name="this_month"
-                    domain="[('month','=',time.strftime('%%m'))]"
-                    help="Purchase orders of this month"/>
+            <group>
+            	<filter icon="terp-purchase" string="This Year"
+	                    	    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                    	    help="Tasks performed in this year"/>
+                <filter icon="terp-purchase" string="This Month"
+                		name="month"
+                		domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+                		help="Tasks performed in this month"/>
+                <filter icon="gtk-media-rewind"
+                        string="    7 Days    "
+                        separator="1"
+                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                        help="Tasks during last 7 days"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-purchase"
-                    string="Quotations"
-                    domain="[('state','=','draft')]"/>
+                    	string="Quotations"
+                    	domain="[('state','=','draft')]"/>
                 <filter icon="terp-purchase"
-                    string="Purchase" name="purchase"
-                    domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
+                		string="Waiting Schedule"
+                		domain="[('state','=','waiting_date')]"/>
+                <filter icon="terp-purchase"
+                		string="Manual in progress"
+                		domain="[('state','=','manual')]"/>
+
                 <separator orientation="vertical"/>
-                <field name="product_id"/>
                 <field name="user_id" widget="selection">
                     <filter icon="terp-purchase"
-                        string="My Purchases"
-                        domain="[('user_id','=',uid)]"/>
+                    		string="My Purchaes"
+                    		help = "My Purchaes"
+                    		domain="[('user_id','=',uid)]" />
+                    <filter icon="terp-purchase"
+                    		string="Purchase Non User"
+                    		help="Purchase Non User"
+                    		domain="[('user_id','=',False)]"/>
                 </field>
                 <field name="partner_id"/>
-                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                <field name="product_id"/>
+
+				</group>
+				<newline/>
+                <group expand="0" string="Extended options..." colspan="10" col="12">
+                    <filter icon="terp-purchase" string="Shipping Exception" domain="[('state','=','shipping_except')]"/>
+                    <filter icon="terp-purchase" string="Done" domain="[('state','=','done')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="invoice_method"/>
+                    <field name="warehouse_id" widget="selection"/>
+                    <field name="location_id" widget="selection"/>
+                    <newline/>
+                    <filter icon="terp-purchase" string="Invoice Exception  " domain="[('state','=','invoice_except')]"/>
+                    <filter icon="terp-purchase" string="Cancel" domain="[('state','=','cancel')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="fiscal_position" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="date"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By...">
-                    <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}"/>
+                <group expand="1" string="Group By..." colspan="10" col="12">
+                    <filter string="Company" icon="terp-purchase" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <filter string="Warehouse" icon="terp-purchase" context="{'group_by':'warehouse_id'}"/>
-                    <filter string="Responsible" name="by_user" icon="terp-purchase" context="{'group_by':'user_id'}"/>
+                    <filter string="Location" icon="terp-purchase" context="{'group_by':'location_id'}"/>
+                    <filter string="Responsible" name="Responsible" icon="terp-purchase" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Product" name="by_product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
-                    <filter string="Product Category" icon="terp-purchase" context="{'group_by':'category_id'}"/>
-                    <filter string="Supplier" name="by_partner" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
+                    <filter string="Product" icon="terp-purchase" context="{'group_by':'product_id'}"/>
+                    <filter string="Partner" name="partner_id" icon="terp-purchase" context="{'group_by':'partner_id'}"/>
                     <filter string="State" icon="terp-purchase" context="{'group_by':'state'}"/>
+                    <filter string="Fiscal Position" icon="terp-purchase" context="{'group_by':'fiscal_position'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-purchase" context="{'group_by':'date'}"/>
+                    <filter string="Day" icon="terp-purchase" context="{'group_by':'day'}"/>
+                    <filter string="Month" icon="terp-purchase" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-purchase" context="{'group_by':'name'}"/>
                 </group>
             </search>
@@ -90,15 +123,80 @@
 
     <record id="action_purchase_order_report_all" model="ir.actions.act_window">
         <field name="name">Purchase Orders</field>
-        <field name="res_model">report.purchase.order</field>
+        <field name="res_model">purchase.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{"search_default_this_year":1,"search_default_this_month":1,"search_default_purchase":1,"search_default_by_product":1}</field>
         <field name="search_view_id" ref="view_purchase_order_search"/>
+        <field name="context">{'search_default_month':1,'search_default_Responsible':1,'group_by_no_leaf':1,'group_by':[]}</field>
     </record>
 
     <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"/>
     <menuitem action="action_purchase_order_report_all" id="menu_action_purchase_order_report_all" parent="base.next_id_73" sequence="3"/>
 
+	<record model="ir.ui.view" id="view_purchase_order_qty_amount_graph">
+            <field name="name">purchase.order.qty.amount.graph</field>
+            <field name="model">purchase.order.qty.amount</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Total Qty and Amount by month" type="bar">
+                    <field name="month"/>
+                    <field name="total_qty" operator="+"/>
+                    <field name="total_amount" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_purchase_order_qty_amount_tree">
+            <field name="name">purchase.order.qty.amount.tree</field>
+            <field name="model">purchase.order.qty.amount</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Total Qty and Amount by month" >
+                    <field name="month"/>
+                    <field name="total_qty" />
+                    <field name="total_amount"/>
+                </tree>
+            </field>
+        </record>
+
+	    <record id="action_purchase_order_qty_amount_all" model="ir.actions.act_window">
+	        <field name="name">Total Qty and Amount by month</field>
+	        <field name="res_model">purchase.order.qty.amount</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+	    </record>
+
+	    <record model="ir.ui.view" id="view_purchase_order_by_user_graph">
+            <field name="name">purchase.order.by.user.graph</field>
+            <field name="model">purchase.order.by.user</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Total Orders by User per month" type="bar">
+                    <field name="name" />
+                    <field name="month" group="True" />
+                    <field name="nbr" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_purchase_order_by_user_tree">
+            <field name="name">purchase.order.by.user.tree</field>
+            <field name="model">purchase.order.by.user</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Total Orders by User per month" >
+                	<field name="name"/>
+                    <field name="month"/>
+                    <field name="nbr" />
+                </tree>
+            </field>
+        </record>
+
+	    <record id="action_purchase_order_by_user_all" model="ir.actions.act_window">
+	        <field name="name">Total Orders by User per month</field>
+	        <field name="res_model">purchase.order.by.user</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+	    </record>
     </data>
 </openerp>

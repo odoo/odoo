@@ -39,7 +39,7 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="origin"/>
-					<field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>                    
+					<field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                 </group>
 
                 <notebook colspan="4">
@@ -52,11 +52,11 @@
                             </tree>
                             <form string="Products" editable="bottom">
                                 <field name="product_id"/>
-								<field name="product_qty"/>                                
+								<field name="product_qty"/>
                                 <field name="product_uom_id"/>
-								<field name="company_id" groups="base.group_multi_company" widget="selection"/>                                
+								<field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             </form>
-							                            
+
                         </field>
                     </page>
                     <page string="Notes">
@@ -73,14 +73,13 @@
 				<separator colspan="4"/>
 	                <group col="8" colspan="4">
 	                    <field name="state" select="1" readonly ="1"/>
-						<button name="tender_close" states="open,draft" string="Close" type="object" icon="gtk-close" />
-	                    <button name="tender_open" states="draft,in_progress" string="Open" type="object" icon="gtk-go-forward" />
-	                    <button name="tender_cancel" states="draft,open," string="Cancel" type="object" icon="gtk-cancel" />
-	                    <button name="tender_confirm" states="open" string="Confirm" type="object" icon="gtk-go-up" />
+						<button name="tender_in_progress" states="draft" string="Confirm" type="object" icon="gtk-apply" />
 	                    <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
+						<button name="tender_done" states="in_progress" string="Done" type="object" icon="gtk-jump-to" />
+						<button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" icon="gtk-cancel" />
 	                </group>
 
-                
+
             </form>
         </field>
     </record>
@@ -107,42 +106,41 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                  <group col='10' colspan='4'>
-                    <filter icon="terp-purchase" string="Quotations" domain="[('state','=','draft')]" separator="1"/>
-                    <filter icon="terp-purchase" string="Approved" domain="[('state','=','open')]" separator="1"/>
+                    <filter icon="terp-purchase" string=" Current" domain="[('state','=','draft,in_progress')]" separator="1" help="Current Purchaes Requisition"/>
                     <separator orientation="vertical"/>
                     <field name="name" select="1" string="Requisition Reference"/>
                     <field name="purchase_ids" select="1"/>
                     <field name="user_id" select="1" widget="selection">
-                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Requisition "/>                        
+                        <filter icon="terp-partner" domain="[('create_uid','=',uid)]" help="My Requisition "/>
                     </field>
                     <field name="exclusive" select="1" />
                     <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                 </group>
                 <newline/>
                   <group expand="1" string="Group By..." colspan="4" col="10">
-                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>                
+                    <filter string="State" icon="terp-sale" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Date Start" icon="terp-purchase" domain="[]" context="{'group_by':'date_start'}"/>
                     <filter string="Date End" icon="terp-purchase" domain="[]" context="{'group_by':'date_end'}"/>
                 </group>
               </search>
             </field>
         </record>
-    
+
 
     <record model="ir.actions.act_window" id="action_purchase_requisition">
         <field name="name">Purchase Requisitions</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>  
-        <field name="search_view_id" ref="view_purchase_requisition_filter"/>          
+		<field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_purchase_requisition_filter"/>
     </record>
 
-    <menuitem 
-        id="menu_purchase_requisition_pro_mgt" 
+    <menuitem
+        id="menu_purchase_requisition_pro_mgt"
         sequence="0"
         groups="base.group_extended"
-        parent="purchase.menu_procurement_management" 
+        parent="purchase.menu_procurement_management"
         action="action_purchase_requisition"/>
 
     <record model="ir.ui.view" id="product_normal_form_view_inherit">
@@ -158,7 +156,6 @@
             </field>
         </field>
     </record>
-
 
     </data>
 </openerp>
