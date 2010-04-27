@@ -25,10 +25,11 @@
    !record {model: crm.lead, id: crm_lead_newcustomer0}:
      email_from: info@mycustomer.com
      name: New Customer
-     partner_name: Stonage IT
+     partner_name: Sandip zala
      phone: (855) 924-4364
      mobile: (333) 715-1450
      section_id: crm.section_sales_department
+     referred: False
      title: M.
 -  |
    I check that the lead is in 'draft' state, 
@@ -49,28 +50,54 @@
    !python {model: crm.lead}: |
      lead = self.browse(cr, uid, ref('crm_lead_newcustomer0'))
      if not lead.partner_id:
-       self.convert_opportunity(cr, uid, [ref("crm_lead_newcustomer0")])
--  
-   #!act_window {target: new, res_model: crm.lead2opportunity, id: action_crm_lead2opportunity, name: Create Opportunity}
+       self.convert_opportunity(cr, uid, [ref("crm_lead_newcustomer0")], {'active_ids': [ref("crm_lead_newcustomer0")]})
+-
+   |
+   Now, select "create a new partner" option in this wizard.
+-
+   !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_0}:
+      action: 'create'
+-
+   I click on "Continue" button of this wizard.
+-
+   !python {model: crm.lead2opportunity.partner}: |
+      self.make_partner(cr, uid, [ref("crm_lead2opportunity_partner_create_0")], {'active_ids': [ref("crm_lead_newcustomer0")]})
+-
+  Now, I give value to this wizard field.     
+-
+  !record {model: crm.lead2opportunity, id: crm_lead2opportunity_stonage_0}: 
+      name:  Sandip zala
+      planned_revenue: 0.00
+      probability: 0.00
+-
+  Then, Click on "Create Opportunity" button of this wizard.
+-      
+  !python {model: crm.lead2opportunity}: |
+     self.action_apply(cr, uid, [ref('crm_lead2opportunity_stonage_0')], {'active_id': ref('crm_lead_newcustomer0')})
+
 -  |   
    I can check that a lead and a business opportunity is now assigned to this
    lead.
+-
+  # !python {model: crm.lead, id: crm_lead_newcustomer0}: 
+    #   - opportunity_id.id != False
+         
 -  |
    I check that the partner associated to this lead as the same country, phone number
    and name than the opportunity.
--
-  #Remaining 
 -  
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref("crm_lead_newcustomer0"))
+    print "lead",  lead.partner_name
+    obj_opportunity = self.pool.get('crm.opportunity')
+    ids = obj_opportunity.search(cr, uid, [('name', '=', lead.partner_name)])
+    opportunity = obj_opportunity.browse(cr, uid, ids)[0]
+    assert lead.partner_name == opportunity.partner_id.name
+    assert lead.phone == opportunity.phone
+-
+  |
+  # yaml is also not working  smpt server and send new email.
   
-#   !python {model: crm.lead}: |
-#     lead = self.browse(cr, uid, ref("crm_lead_newcustomer0"))
-#     print "lead",  lead.partner_name
-#     obj_opportunity = self.pool.get('crm.opportunity')
-#     ids = obj_opportunity.search(cr, uid, [('name', '=', lead.partner_name)])
-#     opportunity = obj_opportunity.browse(cr, uid, ids)[0]
-#     assert lead.partner_name == opportunity.partner_id.name
-#     assert lead.phone == opportunity.phone
-
 - |
   I configure with smtp server.
 - |
