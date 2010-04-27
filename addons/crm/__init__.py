@@ -27,13 +27,11 @@ import crm_meeting
 import crm_opportunity
 import crm_lead
 import crm_phonecall
-import crm_claim
 import crm_fundraising
 import crm_helpdesk
 
 import report
 import wizard
-
 
 
 
