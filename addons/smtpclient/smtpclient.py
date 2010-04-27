@@ -564,18 +564,17 @@ class smtpclient(osv.osv):
                 'interval_type':'minutes',
                 'user_id':uid,
                 'numbercall':-1,
-                'doall':False
+                'doall':False,
+                'active':False
             }
             id = self.pool.get('ir.cron').create(cr, uid, res)
             self.write(cr, uid, ids, {'process_id':id})
-        else:
-            self.start_process(cr, uid, ids, context)
         
         return True
         
     def start_process(self, cr, uid, ids, context={}):
         process = self.browse(cr, uid, ids[0], context)
-        if not process.process_id:
+        if not process.process_id or process.state != 'confirm':
             raise osv.except_osv(_('SMTP Server Error !'), _('Server is not Verified, Please Verify the Server !'))
 
         pid = process.process_id.id
