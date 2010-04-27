@@ -32,7 +32,7 @@ This module implements a dashboard for human resource management that includes:
     """,
     'author': 'Tiny',
     'depends': [ 'project_issue','board','hr_expense','hr_timesheet_sheet','hr_holidays'
-    ],
+   , 'hr_evaluation'],
     'update_xml': ['board_hr_view.xml'],
     'demo_xml': [],
     'installable': True,

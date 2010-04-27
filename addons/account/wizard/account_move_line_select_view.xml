@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_move_line_select_button_view" model="ir.ui.view">
+            <field name="name">Open Move Line Button</field>
+            <field name="model">account.move.line.select</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Account Select">
+                		<label string="Are you sure you want to open Account move line entries!" colspan="4"/>
+                       	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                    	<button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    	<button icon="gtk-open" string="Open Entries" name="open_window" type="object" default_focus="1"/>
+                   </group>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_move_line_select_button" model="ir.actions.act_window">
+            <field name="name">Open Account</field>
+            <field name="res_model">account.move.line.select</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+           <field name="view_id" ref="account_move_line_select_button_view"/>
+           <field name="target">new</field>
+        </record>
+
+        <record id="ir_account_move_line_select" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">account.account</field>
+            <field name="name">Open Account</field>
+            <field eval="'ir.actions.act_window,%d'%action_account_move_line_select_button" name="value"/>
+            <field eval="True" name="object"/>
+        </record>
+
+    </data>
+</openerp>

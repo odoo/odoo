@@ -63,26 +63,33 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="8">
+                   		<!--  <filter string="This Year" name="This Year" icon="terp-hr"
+                   			domain="[('name','=',time.localtime()[0])]"/>-->
                    		<filter string="This Year" icon="terp-hr"
-                   			domain="[('name','=',time.localtime()[0])]"
-                   			name="this_year" />
+                   			domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
 
-                   		<filter string="This Month" icon="terp-hr"
-                   			domain="[('month','=',time.strftime('%%m'))]"
-                   			name="this_month" />
+                   		<!-- <filter string="This Month" name="This Year" icon="terp-hr"
+                   			domain="[('month','=',time.strftime('%%m'))]" />-->
+                       <filter string="This Month" icon="terp-hr" name="This Month"
+                    	   domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+
+                       <filter icon="gtk-media-rewind" string="7 Days" separator="1"
+                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
 
                    		<separator orientation="vertical" />
-                   		<filter string="Current" icon="terp-hr"
-                   			domain="[('state','in',('open','draft'))]" />
-
-                   		<filter string="Won" icon="terp-hr"
-                   			domain="[('state','=','done')]" />
-
-                   		<filter string="Lost" icon="terp-hr"
-                   			domain="[('state','=','cancel')]" />
+                        <filter icon="terp-hr"
+                    		string="Draft"
+                    		domain="[('state','=','draft')]"/>
+					   <filter icon="terp-hr"
+                    		string="Open"
+                    		domain="[('state','=','open')]"/>
+					   <filter icon="terp-hr"
+                    		string="Pending"
+                    		domain="[('state','=','pending')]"/>
 
                    		<separator orientation="vertical" />
                    		<field name="section_id"
+                   			default="context.get('section_id', False)"
                    			widget="selection"
                    			context="{'invisible_section': False}">
 
@@ -100,14 +107,23 @@
                         </field>
 
                       	<field name="user_id" select="1" widget="selection">
-	            			<filter icon="terp-crm" string="My Task" domain="[('user_id','=',uid)]" />
+	            			<filter icon="terp-crm" string="My Case" help="My Case" domain="[('user_id','=',uid)]" />
                			</field>
                    </group>
                    <newline/>
-                  <group expand="1" string="Group By..." colspan="4" col="8">
-                        <filter string="User" icon="terp-sale"
-                        	domain="[]" context="{'group_by':'user_id'}"
-                        	name="by_user" />
+                   <group  expand="0" string="Extended options..." colspan="10" col="12">
+                         <filter icon="terp-sale"
+                    		string="Done"
+                    		domain="[('state','=','done')]"/>
+
+                    	<filter icon="terp-sale"
+                    		string="Cancel"
+                    		domain="[('state','=','cancel')]"/>
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Group By..." colspan="4" col="8">
+                        <filter string="User" name="User" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'user_id'}" />
 
                         <filter string="Company" icon="terp-sale"
                         	domain="[]"
@@ -125,6 +141,9 @@
                         	domain="[]" context="{'group_by':'categ_id'}" />
 
                         <separator orientation="vertical" />
+                        <filter string="Day" icon="terp-sale"
+                        	domain="[]" context="{'group_by':'day'}"/>
+
                         <filter string="Month" icon="terp-sale"
                         	domain="[]" context="{'group_by':'month'}" />
 
@@ -145,7 +164,6 @@
             <field name="res_model">crm.case.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{"search_default_section_id":section_id,"search_default_this_year":1,"search_default_this_month":1}</field>            
             <field name="search_view_id" ref="view_crm_case_filter"/>
         </record>
 

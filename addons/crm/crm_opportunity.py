@@ -138,9 +138,9 @@ class crm_opportunity(osv.osv):
 
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="integer", store=True),
+                                method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="integer", store=True),
+                                method=True, multi='day_close', type="float", store=True),
          }
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):

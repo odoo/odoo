@@ -22,6 +22,14 @@
 from osv import fields,osv
 import tools
 
+AVAILABLE_STATES = [
+    ('draft','Draft'),
+    ('open','Open'),
+    ('cancel', 'Cancelled'),
+    ('done', 'Closed'),
+    ('pending','Pending')
+]
+
 class crm_opportunity_report(osv.osv):
     """ CRM Opportunity Report """
     _name = "crm.opportunity.report"
@@ -29,11 +37,10 @@ class crm_opportunity_report(osv.osv):
     _inherit = "crm.case.report"
     _description = "CRM Opportunity Report"
     _columns = {
-        'probability': fields.float('Avg. Probability', readonly=True, group_operator="avg"),
+        'probability': fields.float('Avg. Probability', readonly=True,group_operator='avg'),
         'amount_revenue': fields.float('Est.Revenue', readonly=True),
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
-        'delay_close': fields.float('Days to Close', digits=(16,2), readonly=True, group_operator="avg",
-            help="Number of Days to close the opportunities"),
+        'delay_close': fields.float('Delay to close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                      domain="[('section_id','=',section_id),\
                     ('object_id.model', '=', 'crm.opportunity')]", readonly=True),
@@ -57,7 +64,8 @@ class crm_opportunity_report(osv.osv):
                     min(c.id) as id,
                     to_char(c.create_date, 'YYYY') as name,
                     to_char(c.create_date, 'MM') as month,
-                    c.state,
+                    to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    c.state as state,
                     c.user_id,
                     c.section_id,
                     c.categ_id,
@@ -68,21 +76,25 @@ class crm_opportunity_report(osv.osv):
                     0 as avg_answers,
                     0.0 as perc_done,
                     0.0 as perc_cancel,
+                    date_trunc('day',c.create_date) as create_date,
                     sum(planned_revenue) as amount_revenue,
                     sum((planned_revenue*probability)/100.0)::decimal(16,2) as amount_revenue_prob,
                     avg(probability)::decimal(16,2) as probability,
-                    avg(extract('epoch' from (date_closed-c.create_date)))/(3600*24) as delay_close
+                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
                 from
                     crm_opportunity c
                 group by
                     to_char(c.create_date, 'YYYY'),
                     to_char(c.create_date, 'MM'),
+                    to_char(c.create_date, 'YYYY-MM-DD'),
                     c.state,
                     c.user_id,
                     c.section_id,
                     c.stage_id,
                     c.categ_id,
-                    c.partner_id,company_id
+                    c.partner_id,
+                    company_id,
+                    create_date
             )""")
 
 crm_opportunity_report()
