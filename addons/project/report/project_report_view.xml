@@ -9,22 +9,41 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Tasks">
-                    <field name="name" invisible="1"/>
-                    <field name="month" invisible="1"/>
-                    <field name="user_id"/>
-                    <field name="project_id"/>
-                    <field name="nbr"/>
+                	<field name="name" invisible="1"/>
+                    <field name="project_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="date_deadline" invisible="1"/>
+                    <field name="state" invisible="1"/>
                     <field name="date_start" invisible="1"/>
                     <field name="date_end" invisible="1"/>
-                    <field name="date_deadline" invisible="1"/>
-                    <field name="hours_planned"/>
-                    <field name="hours_effective"/>
-                    <field name="hours_delay"/>
-                    <field name="closing_days"/>
-                    <field name="state"/>
+                    <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                    <field name="day" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="year" invisible="1"/>
+                    <field name="nbr" sum='#Number of tasks'/>
+                    <field name="no_of_days" sum="#Days"/>
+                    <field name="hours_planned" sum='Planned Hours'/>
+                    <field name="hours_effective" sum='Effective Hours'/>
+                    <field name="hours_delay" sum='Avg. Plan.-Eff.'/>
+                    <field name="closing_days" sum='Avg Closing Delay'/>
                 </tree>
             </field>
         </record>
+
+        <record id="view_task_project_user_graph" model="ir.ui.view">
+            <field name="name">report.project.task.user.graph</field>
+            <field name="model">report.project.task.user</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+            <graph string="Tasks" type="bar">
+                 <field name="name"/>
+                 <field name="state" group="True"/>
+                 <field name="no_of_days" operator="+"/>
+             </graph>
+         </field>
+    </record>
 
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
@@ -32,28 +51,86 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks">
-                    <group>
-	                    <filter icon="terp-project" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Tasks performed in this year"/>
-	                    <filter icon="terp-project" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Tasks performed in this month"/>
+                	<group>
+	                    <filter icon="terp-project" string="This Year"
+	                    	    domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
+	                    	    help="Tasks performed in this year"/>
+	                    <filter icon="terp-project" string="This Month"
+	                    		name="month"
+	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                    		help="Tasks performed in this month"/>
+		                <filter icon="gtk-media-rewind"
+	                            string="    7 Days    "
+	                            separator="1"
+	                            domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+	                            help="Tasks during last 7 days"/>
 	                    <separator orientation="vertical"/>
-	                    <filter string="In Progress" icon="terp-project" domain="[('state','=','open')]"/>
-	                    <filter string="Pending" icon="terp-project" domain="[('state','=','pending')]"/>
-	                    <filter string="Closed" icon="terp-project" domain="[('state','=','done')]"/>
-	                    <separator orientation="vertical"/>
-	                    <field name="project_id"/>
+	                    <filter string="Draft"
+	                    		icon="terp-project"
+	                    		domain="[('state','=','draft')]"
+	                    		help = "Draft tasks"/>
+		                <filter string="Current"
+		                		icon="terp-project"
+		                		domain="[('state', '=' ,'open')]"
+		                		help = "In progress tasks"/>
+	                   	<filter string="Pending"
+	                   			icon="terp-project"
+	                   			domain="[('state','=','pending')]"
+	                   			help = "Pending tasks"/>
+	  					<separator orientation="vertical"/>
 	                    <field name="user_id" widget="selection">
-	                        <filter icon="terp-project" string="My Task" domain="[('user_id','=',uid)]" name="my_task"/>
+	                        <filter icon="terp-project"
+	                        		string="My Task"
+	                        		help = "My tasks"
+	                        		domain="[('user_id','=',uid)]" />
+	                        <filter icon="terp-project"
+	                        		string="Non Assigned Tasks to users"
+	                        		help="Non Assigned Tasks to users"
+	                        		domain="[('user_id','=',False)]"/>
 	                    </field>
-                    </group>                    
+	                    <field name="project_id">
+	                        <filter icon="terp-project"
+	                        		string="My Task"
+	                        		help="My Tasks"
+	                        		domain="[('project_id','=',context.get('project_id', False)]"/>
+	                        <filter icon="terp-project"
+	                        		string="Non assigned tasks to projects"
+	                        		help ="Non assigned tasks to projects"
+	                        		domain="[('project_id','=',False"/>
+	                    </field>
+                    </group>
                     <newline/>
-                    <group expand="1" string="Group By...">
-                        <filter string="User" icon="terp-project" context="{'group_by':'user_id'}" />
-                        <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}" />
+	                <group expand="0" string="Extended options..." colspan="10" col="12">
+                      	<filter string="Done"
+                    			icon="terp-project"
+                    			name="done"
+                    			domain="[('state','=','done')]"/>
+                    	<filter string="Cancelled"
+                    			icon="terp-project"
+                    			domain="[('state','=','cancelled')]"/>
+                    	<separator orientation="vertical"/>
+	                    <field name="type" widget="selection"/>
+	                    <field name="priority"/>
+	                    <field name="partner_id" widget="selection"/>
+	                    <separator orientation="vertical"/>
+	                    <field name="date_deadline"/>
+	                    <newline/>
+	                    <field name="date_start"/>
+	                    <field name="date_end"/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By..." colspan="10" col="11">
+                        <filter string="User" name="User" icon="terp-project" context="{'group_by':'user_id'}" />
+                        <filter string="Project" icon="terp-project" context="{'group_by':'project_id'}"/>
+                        <filter string="Partner" icon="terp-project" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical"/>
                         <filter string="State" icon="terp-project" context="{'group_by':'state'}"/>
+                        <filter string="Company" icon="terp-project" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
+                        <filter string="Stage" icon="terp-project" context="{'group_by':'type'}" />
                         <separator orientation="vertical"/>
+                        <filter string="Day" icon="terp-project" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-project" context="{'group_by':'month'}"/>
-                        <filter string="Year" icon="terp-project" context="{'group_by':'name'}"/>
+                        <filter string="Year" icon="terp-project" context="{'group_by':'year'}"/>
                     </group>
                 </search>
             </field>
@@ -63,11 +140,117 @@
             <field name="name">Tasks</field>
             <field name="res_model">report.project.task.user</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-            <field name="context">{"search_default_my_task":1}</field>            
+            <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
+            <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+
         </record>
         <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
 
+   <!-- Views and action for project dashboard -->
+   <record id="view_project_vs_remaining_hours_tree" model="ir.ui.view">
+        <field name="name">project.vs.remaining.hour.tree</field>
+        <field name="model">project.vs.remaining.hours</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Project and remaining hours" colors="pink:state=='draft';blue:state=='pending';black:state=='open';red:state=='cancelled';grey:state=='close';yellow:state=='template'">
+                <field name="project"/>
+                <field name="remaining_hours"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_project_vs_remaining_hours_graph" model="ir.ui.view">
+         <field name="name">project.vs.remaining.hour.graph</field>
+         <field name="model">project.vs.remaining.hours</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Project vs remaining hours" type="bar">
+                 <field name="project"/>
+                 <field name="state" group="True"/>
+                 <field name="remaining_hours" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+   <record id="action_project_vs_remaining_hours_graph" model="ir.actions.act_window">
+        <field name="name">Project and remaining hours</field>
+        <field name="res_model">project.vs.remaining.hours</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('uid','=',uid)]</field>
+        <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
+    </record>
+    <!-- Views and action for project issue dashboard -->
+       <record id="view_task_by_days_tree" model="ir.ui.view">
+        <field name="name">task.by.days.tree</field>
+        <field name="model">task.by.days</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Task By Days" >
+                <field name="day"/>
+                <field name="total_task"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_task_by_days_graph" model="ir.ui.view">
+         <field name="name">task.by.days.graph</field>
+         <field name="model">task.by.days</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Task By Days" type="bar">
+                 <field name="day"/>
+                 <field name="state" group="True"/>
+                 <field name="project_id" group="True"/>
+                 <field name="total_task" operator="+"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="action_task_by_days_graph" model="ir.actions.act_window">
+        <field name="name">Task By Days</field>
+        <field name="res_model">task.by.days</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="domain">[('day','&lt;=',time.strftime('%Y-%m-%d')),('day','&gt;=', time.strftime('%Y-%m-%d', time.localtime(time.time()-(15*24*3600))))]</field>
+        <field name="view_id" ref="view_task_by_days_graph"/>
+    </record>
+
+    <!-- Views and action for project  dashboard -->
+       <record id="view_task_by_days_vs_planned_hours_tree" model="ir.ui.view">
+        <field name="name">task.by.days.vs.planned.hours.tree</field>
+        <field name="model">task.by.days.vs.planned.hours</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Task By Days vs Planned Hours" >
+                <field name="day"/>
+                <field name="planned_hour"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_task_by_days_vs_planned_hours_graph" model="ir.ui.view">
+         <field name="name">task.by.days.vs.planned.hours.graph</field>
+         <field name="model">task.by.days.vs.planned.hours</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Task By Days vs Planned Hours" type="bar">
+                 <field name="day"/>
+                 <field name="planned_hour" operator="+"/>
+                 <field name="project_id" group="True"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="action_task_by_days_vs_planned_hours_graph" model="ir.actions.act_window">
+        <field name="name">Task By Days vs Planned Hours</field>
+        <field name="res_model">task.by.days.vs.planned.hours</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="view_id" ref="view_task_by_days_vs_planned_hours_graph"/>
+    </record>
     </data>
 </openerp>

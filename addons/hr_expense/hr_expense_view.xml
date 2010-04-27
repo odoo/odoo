@@ -66,6 +66,7 @@
             <field name="arch" type="xml">
                 <form string="Expenses Sheet">
                     <group colspan="4" col="6">
+                        <field name="employee_id" select="1"/>
                         <field name="name" select="1"/>
                         <field name="employee_id" select="1"/>
                         <field name="ref"/>
@@ -147,10 +148,11 @@
                       <field name="date" select='1'/>
                       <field name="user_id" select="1" widget="selection">
                           <filter
-                            icon="gtk-execute" name="my_expns"
+                            icon="gtk-execute"
                             help="My Expenses"
+                            default="1"
                             domain="[('user_id','=',uid)]"/>
-                          <filter icon="terp-hr"
+                        <filter icon="terp-hr"
                             domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
@@ -171,7 +173,6 @@
             <field name="name">Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_my_expns":1}</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
         </record>
 

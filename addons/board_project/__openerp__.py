@@ -34,16 +34,14 @@ This module implements a dashboard for project member that includes:
     'author': 'Tiny',
     'depends': [
         'project',
-        'report_timesheet',
         'board',
         'project_planning',
-        'report_analytic_line',
-        'report_task',
         'hr_timesheet_sheet',
         'project_issue',
-        'resource'
+        'resource',
+        'scrum'
     ],
-    'update_xml': ['board_project_view.xml', 'board_project_manager_view.xml'],
+    'update_xml': ['board_project_view.xml', 'board_project_manager_view.xml','board_project_issue_view.xml','board_scrum_view.xml'],
     'demo_xml': ['board_project_demo.xml'],
     'installable': True,
     'active': False,
