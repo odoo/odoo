@@ -20,7 +20,7 @@
 ##############################################################################
 
 import wizard_account_analytic_journal_report
-import wizard_account_analytic_balance_report
+import account_analytic_balance_report
 import wizard_account_analytic_inverted_balance_report
 import wizard_account_analytic_cost_ledger_report
 import wizard_account_analytic_cost_ledger_for_journal_report
