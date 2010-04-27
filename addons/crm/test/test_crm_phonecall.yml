@@ -1,0 +1,91 @@
+- |
+  I start by creating a new phonecall.
+- 
+  !record {model: crm.phonecall, id: crm_phonecall_interviewcall0}:
+    date: '2010-04-21 18:59:00'
+    name: Interview call
+    partner_address_id: base.res_partner_address_1
+    partner_id: base.res_partner_9
+    partner_mobile: (+32)2 211 34 83
+    section_id: crm.section_sales_department
+    
+- |
+  As the success of phonecall seems to be a real business opportunity, I will convert
+  it to opportunity by clicking on the "Convert to Opportunity" button.
+-    
+#  !python {model: crm.phonecall2opportunity}: |
+#    self.action_apply(cr, uid, [1], {'active_id': ref('crm_phonecall_interviewcall0')})  
+
+-
+  # This is not working, find a way to do that in YAML
+      
+- |
+  I can see that a business opportunity is now assigned to this phonecall
+- |
+  I check that the partner associated to this as the same country, phone number
+  and name than the phonecall.
+- |
+  In order to avoid the duplication of similar partner, OpenERP should be able to
+  detect if the partner exists or if it should be created from the phonecall during the
+  conversion.
+- |
+  In order to test this, I log as the user "user_crm2"
+- |
+  Then, I create the same phonecall than the preceeding one but I change the name
+  of the phonecall.  But this customer keeps the same email.
+- |
+  This time OpenERP should detect that this customer already exists in the
+  partner base and I check that in the wizard, proposes me to link to this existing
+  partner instead of creating another one.
+- |
+  I confirm the conversion wizard.
+- |
+  And I check that the phonecall and the newly created business opportunity is linked
+  to the partner
+- |
+  I schedule Meeting on this current phonecall by clicking on "schedule
+  Meeting"
+-
+   !python {model: crm.phonecall}: |
+     self.action_make_meeting(cr, uid, [ref('crm_phonecall_interviewcall0')])
+    
+-  |
+   I can see that Meeting's calendar view is shown.
+   then I click on the date on which I want schedule meeting.
+   I fill proper data for that meeting and save it
+- 
+  !record {model: crm.meeting, id: crm_meeting_interviewcall0}:
+    alarm_id: base_calendar.alarm3
+    date: '2010-04-20 00:00:00'
+    date_deadline: '2010-04-20 08:00:00'
+    duration: 8.0
+    email_from: info@balmerinc.be
+    name: Interview call
+    partner_address_id: base.res_partner_address_1
+    partner_id: base.res_partner_9
+    phonecall_id: 'crm_phonecall_interviewcall0'
+    rrule_type: weekly
+    state: open
+
+-
+  #This is not working for yaml    
+- |
+  I can jump to this meeting by "Meetings" shortcut from my phonecall's form view
+-
+  
+- |
+  In order to schedule other phonecall to the partner
+  I click on "schedule other call" button. and plan for other call
+  I can see that it will open other phonecall view with some data same as current
+  phonecall.
+- 
+  !record {model: crm.phonecall2phonecall, id: crm_phonecall2phonecall_interviewcall0}:
+    date: '2010-04-21 19:49:00'
+    name: Interview call
+    section_id: crm.section_sales_department
+    user_id: base.user_root
+- |
+  I click on "Schedule" button of this  wizard.    
+-
+  !python {model: crm.phonecall2phonecall}: |
+    self.action_apply(cr, uid, [ref('crm_phonecall2phonecall_interviewcall0')], {'active_id': ref('crm_phonecall_interviewcall0')})     
