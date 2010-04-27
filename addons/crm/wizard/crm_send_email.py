@@ -76,7 +76,8 @@ class crm_send_new_email(osv.osv_memory):
             
             case = case_pool.browse(cr, uid, res_id)
             if context.get('mail', 'new') == 'new':
-                message_id = case.history_line[0].message_id
+                if case.history_line:
+                   message_id = case.history_line[0].message_id
             else:
                 hist = hist_obj.browse(cr, uid, res_id)
                 message_id = hist.message_id

@@ -21,10 +21,6 @@
 
 import crm_send_email
 import crm_email_add_cc
-
-import crm_lead_to_partner
-import crm_lead_to_opportunity
-import crm_opportunity_to_phonecall
 import crm_phonecall_to_phonecall
 import crm_phonecall_to_partner
 import crm_phonecall_to_opportunity
